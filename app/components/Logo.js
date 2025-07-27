@@ -2,8 +2,8 @@ export default function Logo({ size = "default" }) {
   // Size configurations
   const sizes = {
     default: {
-      containerHeight: "h-10",
-      gap: "gap-2",
+      containerHeight: "h-[41px]",
+      gap: "gap-[8.28px]",
       textSize: "text-[21.97px]",
       lineHeight: "leading-[27.05px]",
       iconSize: "w-[27.05px] h-[27.05px]",
