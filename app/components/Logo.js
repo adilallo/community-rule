@@ -12,8 +12,15 @@ export default function Logo({ size = "default", showText = true }) {
       containerHeight: "h-[20.85px]",
       gap: "gap-[2.11px]",
       textSize: "text-[11.57px]",
-      lineHeight: "leading-[14px]",
+      lineHeight: "leading-[14.24px]",
       iconSize: "w-[14.24px] h-[14.24px]",
+    },
+    headerMd: {
+      containerHeight: "h-[17.91px]",
+      gap: "gap-[6.51px]",
+      textSize: "text-[17.89px]",
+      lineHeight: "leading-[22.02px]",
+      iconSize: "w-[22.02px] h-[22.02px]",
     },
     headerLg: {
       containerHeight: "h-[36px]",
