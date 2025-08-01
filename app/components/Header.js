@@ -12,8 +12,6 @@ export default function Header() {
           h-[40px]
           px-[var(--spacing-measures-spacing-016)]
           py-[var(--spacing-measures-spacing-008)]
-          sm:px-[var(--spacing-measures-spacing-032)]
-          sm:py-[var(--spacing-measures-spacing-012)]
           lg:px-[var(--spacing-measures-spacing-120,120px)]
           lg:py-[var(--spacing-measures-spacing-016,16px)]"
       >
@@ -22,11 +20,8 @@ export default function Header() {
           <div className="block sm:hidden">
             <Logo size="header" showText={false} />
           </div>
-          <div className="hidden sm:block lg:hidden">
-            <Logo size="header" showText={false} />
-          </div>
-          <div className="hidden lg:block">
-            <Logo size="headerLg" showText={false} />
+          <div className="hidden sm:block">
+            <Logo size="header" showText={true} />
           </div>
         </div>
 
