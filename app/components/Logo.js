@@ -1,4 +1,4 @@
-export default function Logo({ size = "default" }) {
+export default function Logo({ size = "default", showText = true }) {
   // Size configurations
   const sizes = {
     default: {
@@ -7,6 +7,20 @@ export default function Logo({ size = "default" }) {
       textSize: "text-[21.97px]",
       lineHeight: "leading-[27.05px]",
       iconSize: "w-[27.05px] h-[27.05px]",
+    },
+    header: {
+      containerHeight: "h-[14.24px]",
+      gap: "gap-[2.11px]",
+      textSize: "text-[18px]",
+      lineHeight: "leading-[22px]",
+      iconSize: "w-[22px] h-[22px]",
+    },
+    headerLg: {
+      containerHeight: "h-[36px]",
+      gap: "gap-[7px]",
+      textSize: "text-[20px]",
+      lineHeight: "leading-[24px]",
+      iconSize: "w-[24px] h-[24px]",
     },
     footer: {
       containerHeight: "h-[calc(40px*1.37)]",
@@ -25,7 +39,11 @@ export default function Logo({ size = "default" }) {
   };
 
   const config =
-    size === "footer"
+    size === "header"
+      ? sizes.header
+      : size === "headerLg"
+      ? sizes.headerLg
+      : size === "footer"
       ? sizes.footer
       : size === "footerLg"
       ? sizes.footerLg
@@ -33,14 +51,18 @@ export default function Logo({ size = "default" }) {
 
   return (
     <div
-      className={`flex items-center ${config.containerHeight} ${config.gap}`}
+      className={`flex items-center ${config.containerHeight} ${
+        showText ? config.gap : ""
+      }`}
     >
-      {/* Logo Text */}
-      <div
-        className={`font-['Bricolage_Grotesque'] text-[var(--color-content-default-primary)] ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
-      >
-        CommunityRule
-      </div>
+      {/* Logo Text - only show if showText is true */}
+      {showText && (
+        <div
+          className={`font-['Bricolage_Grotesque'] text-[var(--color-content-default-primary)] ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
+        >
+          CommunityRule
+        </div>
+      )}
 
       {/* Vector Icon */}
       <img
