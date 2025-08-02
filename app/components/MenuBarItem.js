@@ -17,6 +17,8 @@ export default function MenuBarItem({
       "px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-016)] gap-[var(--spacing-scale-004)]",
     xsmall:
       "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)] gap-[var(--spacing-scale-004)]",
+    large:
+      "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)]",
   };
 
   const textStyles = {
@@ -24,6 +26,8 @@ export default function MenuBarItem({
       "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
     xsmall:
       "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
+    large:
+      "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]",
   };
 
   const baseStyles = `inline-flex items-center ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${textStyles[size]} transition-all duration-200 cursor-pointer`;

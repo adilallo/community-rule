@@ -4,10 +4,10 @@ export default function AvatarContainer({
   className = "",
   ...props
 }) {
-  // Size styles - container sizes to fit content, not fixed dimensions
   const sizeStyles = {
-    small: "flex -space-x-2", // Just flex with -8px spacing, no fixed width/height
-    // Add more sizes as needed: medium, large, xlarge
+    small: "flex -space-x-2",
+    medium: "flex -space-x-[var(--spacing-scale-009)]",
+    xlarge: "flex -space-x-[13px]",
   };
 
   const baseStyles = `items-center ${sizeStyles[size]} ${className}`;

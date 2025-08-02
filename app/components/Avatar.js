@@ -5,10 +5,10 @@ export default function Avatar({
   className = "",
   ...props
 }) {
-  // Size styles - avatars scale to fit inside the 60px container
   const sizeStyles = {
-    small: "w-4 h-4", // 16px x 16px to fit in 60px container
-    // Add more sizes as needed: medium, large, xlarge
+    small: "w-5 h-5",
+    medium: "w-[18px] h-[18px]",
+    xlarge: "w-[32px] h-[32px]",
   };
 
   const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover ${sizeStyles[size]} ${className}`;

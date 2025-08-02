@@ -23,11 +23,11 @@ export default function Logo({ size = "default", showText = true }) {
       iconSize: "w-[22.02px] h-[22.02px]",
     },
     headerLg: {
-      containerHeight: "h-[36px]",
-      gap: "gap-[7px]",
-      textSize: "text-[20px]",
-      lineHeight: "leading-[24px]",
-      iconSize: "w-[24px] h-[24px]",
+      containerHeight: "h-[27.05px]",
+      gap: "gap-[6.55px]",
+      textSize: "text-[21.97px]",
+      lineHeight: "leading-[27.05px]",
+      iconSize: "w-[27.05px] h-[27.05px]",
     },
     footer: {
       containerHeight: "h-[calc(40px*1.37)]",

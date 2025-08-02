@@ -12,56 +12,52 @@ export default function Button({
   ariaLabel,
   ...props
 }) {
-  // Size styles
   const sizeStyles = {
     xsmall:
       "px-[var(--spacing-scale-006)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)]",
     small:
       "px-[var(--spacing-measures-spacing-008)] py-[var(--spacing-measures-spacing-008)] gap-[var(--spacing-scale-004)]",
-    // Add more sizes as needed: medium, large, xlarge
+    large:
+      "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-010)] gap-[var(--spacing-scale-004)]",
   };
 
-  // Font styles based on size
   const fontStyles = {
     xsmall:
       "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
     small:
       "font-['Inter'] text-[10px] leading-[12.5px] font-medium tracking-[0%]",
+    large:
+      "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]",
   };
 
-  // Variant styles
   const variantStyles = {
     default:
       "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] border-2 border-transparent hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:border-[var(--border-color-default-brandprimary)] active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:border-[var(--border-color-default-brandprimary)] focus:bg-[var(--color-surface-inverse-primary)] focus:text-[var(--color-content-inverse-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
     secondary:
-      "bg-transparent text-[var(--color-content-default-primary)] border-2 border-[var(--color-content-default-primary)] hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-default-primary)] active:bg-[var(--color-surface-default-secondary)] active:text-[var(--color-content-default-primary)] focus:bg-transparent focus:text-[var(--color-content-default-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
+      "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border-2 border-[var(--border-color-default-primary)] hover:bg-[var(--color-surface-default-secondary)] hover:text-[var(--color-content-default-primary)] hover:border-[var(--border-color-default-primary)] active:bg-[var(--color-surface-default-tertiary)] active:text-[var(--color-content-default-primary)] active:border-[var(--border-color-default-primary)] focus:bg-[var(--color-surface-default-primary)] focus:text-[var(--color-content-default-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
   };
 
-  const baseStyles = `inline-flex items-center justify-start ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 cursor-pointer`;
+  const baseStyles = `inline-flex items-center justify-start ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 cursor-pointer ${variantStyles[variant]}`;
 
-  // Determine which variant to use
   let finalVariant = variant;
   if (disabled) {
-    finalVariant = "default"; // The disabled state is handled by disabled: utilities
+    finalVariant = "default";
   }
 
-  const combinedStyles = `${baseStyles} ${variantStyles[finalVariant]} ${className}`;
+  const combinedStyles = `${baseStyles} ${className}`;
 
-  // Accessibility attributes
   const accessibilityProps = {
     ...(ariaLabel && { "aria-label": ariaLabel }),
-    ...(disabled && { "aria-disabled": true }),
-    ...(onClick && { role: "button", tabIndex: 0 }),
+    ...(target && { target }),
+    ...(rel && { rel }),
   };
 
-  // If href is provided, render as anchor tag
   if (href && !disabled) {
     return (
       <a
         href={href}
-        target={target}
-        rel={rel}
         className={combinedStyles}
+        onClick={onClick}
         {...accessibilityProps}
         {...props}
       >
@@ -70,7 +66,6 @@ export default function Button({
     );
   }
 
-  // Render as button
   return (
     <button
       type={type}
