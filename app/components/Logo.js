@@ -10,7 +10,7 @@ export default function Logo({ size = "default", showText = true }) {
     },
     header: {
       containerHeight: "h-[20.85px]",
-      gap: "gap-[2.11px]",
+      gap: "gap-[4.21px]",
       textSize: "text-[11.57px]",
       lineHeight: "leading-[14.24px]",
       iconSize: "w-[14.24px] h-[14.24px]",
@@ -48,6 +48,8 @@ export default function Logo({ size = "default", showText = true }) {
   const config =
     size === "header"
       ? sizes.header
+      : size === "headerMd"
+      ? sizes.headerMd
       : size === "headerLg"
       ? sizes.headerLg
       : size === "footer"

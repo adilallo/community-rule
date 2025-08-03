@@ -32,12 +32,12 @@ export default function Button({
 
   const variantStyles = {
     default:
-      "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] border-2 border-transparent hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:border-[var(--border-color-default-brandprimary)] active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:border-[var(--border-color-default-brandprimary)] focus:bg-[var(--color-surface-inverse-primary)] focus:text-[var(--color-content-inverse-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
+      "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:outline-1 hover:outline-[var(--border-color-default-brandprimary)] hover:outline-inset active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:outline-[1.5px] active:outline-[var(--border-color-default-brandprimary)] active:outline-offset-1 focus:bg-[var(--color-surface-inverse-primary)] focus:text-[var(--color-content-inverse-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
     secondary:
       "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border-2 border-[var(--border-color-default-primary)] hover:bg-[var(--color-surface-default-secondary)] hover:text-[var(--color-content-default-primary)] hover:border-[var(--border-color-default-primary)] active:bg-[var(--color-surface-default-tertiary)] active:text-[var(--color-content-default-primary)] active:border-[var(--border-color-default-primary)] focus:bg-[var(--color-surface-default-primary)] focus:text-[var(--color-content-default-primary)] focus:shadow-[0_0_10px_#FFFDD2] focus:outline-none disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
   };
 
-  const baseStyles = `inline-flex items-center justify-start ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 cursor-pointer ${variantStyles[variant]}`;
+  const baseStyles = `inline-flex items-center justify-start box-border ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 cursor-pointer ${variantStyles[variant]}`;
 
   let finalVariant = variant;
   if (disabled) {

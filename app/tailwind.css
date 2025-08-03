@@ -11,8 +11,7 @@
   --breakpoint-sm: 430px;
   --breakpoint-md: 640px;
   --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
+  --breakpoint-xl: 1440px;
 
   /* Reset default Tailwind configuration */
   --color-*: initial;

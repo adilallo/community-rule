@@ -6,7 +6,7 @@ export default function Avatar({
   ...props
 }) {
   const sizeStyles = {
-    small: "w-5 h-5",
+    small: "w-[16px] h-[16px]",
     medium: "w-[18px] h-[18px]",
     xlarge: "w-[32px] h-[32px]",
   };

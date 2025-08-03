@@ -9,7 +9,7 @@ export default function MenuBarItem({
 }) {
   const variantStyles = {
     default:
-      "bg-transparent text-[var(--color-content-default-brand-primary)] border border-transparent hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-default-brand-primary)] active:bg-transparent active:text-[var(--color-content-default-brand-primary)] active:border-[var(--color-content-default-brand-primary)] disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed",
+      "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-default-brand-primary)] active:bg-transparent active:text-[var(--color-content-default-brand-primary)] active:outline-1 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1 disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed",
   };
 
   const sizeStyles = {
@@ -17,17 +17,22 @@ export default function MenuBarItem({
       "px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-016)] gap-[var(--spacing-scale-004)]",
     xsmall:
       "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)] gap-[var(--spacing-scale-004)]",
+    xsmallUseCases:
+      "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-002)] gap-[var(--spacing-scale-004)]",
     large:
       "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)]",
   };
 
+  const smallTextStyle =
+    "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]";
+  const largeTextStyle =
+    "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]";
+
   const textStyles = {
-    default:
-      "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
-    xsmall:
-      "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
-    large:
-      "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]",
+    default: smallTextStyle,
+    xsmall: smallTextStyle,
+    xsmallUseCases: smallTextStyle,
+    large: largeTextStyle,
   };
 
   const baseStyles = `inline-flex items-center ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${textStyles[size]} transition-all duration-200 cursor-pointer`;
