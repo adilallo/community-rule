@@ -26,7 +26,12 @@ export default function Header() {
       size: "headerMd",
       showText: true,
     },
-    { breakpoint: "hidden lg:block", size: "headerLg", showText: true },
+    {
+      breakpoint: "hidden lg:block xl:hidden",
+      size: "headerLg",
+      showText: true,
+    },
+    { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
   ];
 
   const renderNavigationItems = (size) => {
@@ -84,7 +89,7 @@ export default function Header() {
 
   return (
     <header className="bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]">
-      <div className="flex items-center justify-between mx-auto max-w-[1920px] h-[40px] lg:h-[84px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
+      <div className="flex items-center justify-between mx-auto max-w-[1920px] h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
         <div>
           {logoConfig.map((config, index) => (
             <div key={index} className={config.breakpoint}>
@@ -114,8 +119,12 @@ export default function Header() {
             </MenuBar>
           </div>
 
-          <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 -ml-[var(--spacing-scale-024)]">
+          <div className="hidden lg:block xl:hidden absolute left-1/2 transform -translate-x-1/2 -ml-[var(--spacing-scale-024)]">
             <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
+          </div>
+
+          <div className="hidden xl:block absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-032)]">
+            <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
           </div>
 
           <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
@@ -125,9 +134,14 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex xl:hidden items-center">
             {renderLoginButton("large", "mr-[var(--spacing-scale-012)]")}
             {renderCreateRuleButton("large", "xlarge", "xlarge")}
+          </div>
+
+          <div className="hidden xl:flex items-center">
+            {renderLoginButton("xlarge", "mr-[var(--spacing-scale-012)]")}
+            {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
           </div>
 
           <div className="block md:hidden">
