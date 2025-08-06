@@ -27,7 +27,7 @@ export default function Button({
     xsmall:
       "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
     small:
-      "font-['Inter'] text-[10px] leading-[12.5px] font-medium tracking-[0%]",
+      "font-['Inter'] text-[12px] leading-[14px] font-medium tracking-[0%]",
     large:
       "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]",
     xlarge:

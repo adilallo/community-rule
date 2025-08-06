@@ -22,6 +22,13 @@ export default function Logo({ size = "default", showText = true }) {
       lineHeight: "leading-[14.39px]",
       iconSize: "w-[14.39px] h-[14.39px]",
     },
+    homeHeaderMd: {
+      containerHeight: "h-[32.24px]",
+      gap: "gap-[4.89px]",
+      textSize: "text-[17.89px]",
+      lineHeight: "leading-[22.02px]",
+      iconSize: "w-[22.02px] h-[22.02px]",
+    },
     header: {
       containerHeight: "h-[20.85px]",
       gap: "gap-[4.21px]",
@@ -71,6 +78,8 @@ export default function Logo({ size = "default", showText = true }) {
       ? sizes.homeHeaderXsmall
       : size === "homeHeaderSm"
       ? sizes.homeHeaderSm
+      : size === "homeHeaderMd"
+      ? sizes.homeHeaderMd
       : size === "header"
       ? sizes.header
       : size === "headerMd"
@@ -95,7 +104,9 @@ export default function Logo({ size = "default", showText = true }) {
       {showText && (
         <div
           className={`font-['Bricolage_Grotesque'] ${
-            size === "homeHeaderXsmall" || size === "homeHeaderSm"
+            size === "homeHeaderXsmall" ||
+            size === "homeHeaderSm" ||
+            size === "homeHeaderMd"
               ? "text-[var(--color-content-inverse-primary)]"
               : "text-[var(--color-content-default-primary)]"
           } ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
@@ -111,7 +122,9 @@ export default function Logo({ size = "default", showText = true }) {
         width={27.05}
         height={27.05}
         className={`flex-shrink-0 ${config.iconSize} ${
-          size === "homeHeaderXsmall" || size === "homeHeaderSm"
+          size === "homeHeaderXsmall" ||
+          size === "homeHeaderSm" ||
+          size === "homeHeaderMd"
             ? "filter brightness-0"
             : ""
         }`}

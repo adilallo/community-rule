@@ -15,13 +15,15 @@ export default function MenuBarItem({
 
   const activeOutlineStyles = {
     xsmall:
-      "active:outline-1 active:outline-[var(--color-content-default-primary)] active:outline-offset-1",
+      "active:outline-1 active:outline-[var(--color-content-default-primary)]",
     default:
-      "active:outline-1 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
+      "active:outline-1 active:outline-[var(--color-content-default-brand-primary)]",
+    homeMd:
+      "active:outline-[1.5px] active:outline-[var(--color-content-default-brand-primary)]",
     large:
-      "active:outline-[1.75px] active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
+      "active:outline-[1.75px] active:outline-[var(--color-content-default-brand-primary)]",
     xlarge:
-      "active:outline-2 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
+      "active:outline-2 active:outline-[var(--color-content-default-brand-primary)]",
   };
 
   const homeOutlineStyles = {
@@ -30,7 +32,11 @@ export default function MenuBarItem({
     xsmallUseCases:
       "active:outline-1 active:outline-[var(--color-content-default-primary)]",
     default:
-      "active:outline-1 active:outline-[var(--color-content-default-primary)]",
+      "active:outline-[1.5px] active:outline-[var(--color-content-default-primary)]",
+    homeMd:
+      "active:outline-[1.5px] active:outline-[var(--color-content-default-primary)]",
+    homeUseCases:
+      "active:outline-[1.5px] active:outline-[var(--color-content-default-primary)]",
     large:
       "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
     xlarge:
@@ -44,6 +50,10 @@ export default function MenuBarItem({
       "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)] gap-[var(--spacing-scale-004)]",
     xsmallUseCases:
       "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-002)] gap-[var(--spacing-scale-004)]",
+    homeMd:
+      "px-[var(--spacing-scale-008)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
+    homeUseCases:
+      "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
     large:
       "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)]",
     xlarge:
@@ -52,6 +62,8 @@ export default function MenuBarItem({
 
   const smallTextStyle =
     "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]";
+  const mediumTextStyle =
+    "font-['Inter'] text-[12px] leading-[14px] font-medium tracking-[0%]";
   const largeTextStyle =
     "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]";
   const xlargeTextStyle =
@@ -61,6 +73,9 @@ export default function MenuBarItem({
     default: smallTextStyle,
     xsmall: smallTextStyle,
     xsmallUseCases: smallTextStyle,
+    home: smallTextStyle,
+    homeMd: mediumTextStyle,
+    homeUseCases: mediumTextStyle,
     large: largeTextStyle,
     xlarge: xlargeTextStyle,
   };

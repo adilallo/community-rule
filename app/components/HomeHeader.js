@@ -32,7 +32,7 @@ export default function HomeHeader() {
     },
     {
       breakpoint: "hidden md:block lg:hidden",
-      size: "headerMd",
+      size: "homeHeaderMd",
       showText: true,
     },
     {
@@ -48,8 +48,25 @@ export default function HomeHeader() {
       <MenuBarItem
         key={index}
         href={item.href}
-        size={item.extraPadding && size === "xsmall" ? "xsmallUseCases" : size}
-        variant={size === "xsmall" ? "home" : "default"}
+        size={
+          item.extraPadding &&
+          (size === "xsmall" ||
+            size === "default" ||
+            size === "home" ||
+            size === "homeMd")
+            ? size === "home" || size === "homeMd"
+              ? "homeMd"
+              : "xsmallUseCases"
+            : size
+        }
+        variant={
+          size === "xsmall" ||
+          size === "default" ||
+          size === "home" ||
+          size === "homeMd"
+            ? "home"
+            : "default"
+        }
       >
         {item.text}
       </MenuBarItem>
@@ -76,7 +93,7 @@ export default function HomeHeader() {
       <MenuBarItem
         href="#"
         size={size}
-        variant={size === "xsmall" ? "home" : "default"}
+        variant={size === "xsmall" || size === "default" ? "home" : "default"}
         className={marginRight}
       >
         Log in
@@ -104,7 +121,7 @@ export default function HomeHeader() {
 
   return (
     <header className="w-full bg-transparent overflow-hidden">
-      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
+      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] md:h-[68px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
         <HeaderTab className="flex items-center self-end">
           <div>
             {logoConfig.map((config, index) => (
@@ -116,23 +133,21 @@ export default function HomeHeader() {
 
           <div className="flex items-center">
             <div className="block sm:hidden -me-[2px]">
-              <MenuBar size="xsmall">
+              <MenuBar size="default">
                 {renderNavigationItems("xsmall")}
                 {renderLoginButton("xsmall")}
               </MenuBar>
             </div>
 
             <div className="hidden sm:block md:hidden sm:ml-[var(--spacing-scale-002)]">
-              <MenuBar size="xsmall">
+              <MenuBar size="default">
                 {renderNavigationItems("xsmall")}
                 {renderLoginButton("xsmall")}
               </MenuBar>
             </div>
 
-            <div className="hidden md:block lg:hidden absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-024)]">
-              <MenuBar className="gap-[var(--spacing-scale-001)]">
-                {renderNavigationItems("xsmall")}
-              </MenuBar>
+            <div className="hidden md:block lg:hidden md:-ml-[var(--spacing-scale-012)]">
+              <MenuBar size="medium">{renderNavigationItems("homeMd")}</MenuBar>
             </div>
 
             <div className="hidden lg:block xl:hidden absolute left-1/2 transform -translate-x-1/2 -ml-[var(--spacing-scale-024)]">
@@ -141,12 +156,6 @@ export default function HomeHeader() {
 
             <div className="hidden xl:block absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-032)]">
               <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
-            </div>
-
-            <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
-              <div className="flex items-center">
-                {renderLoginButton("xsmall", "mr-[var(--spacing-scale-010)]")}
-              </div>
             </div>
 
             <div className="hidden lg:flex xl:hidden items-center">
@@ -164,7 +173,10 @@ export default function HomeHeader() {
           {renderCreateRuleButton("xsmall", "small", "small")}
         </div>
         <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
-          {renderCreateRuleButton("xsmall", "medium", "medium")}
+          <div className="flex items-center">
+            {renderLoginButton("homeMd", "mr-[var(--spacing-scale-010)]")}
+            {renderCreateRuleButton("small", "medium", "medium")}
+          </div>
         </div>
         <div className="hidden lg:flex xl:hidden items-center">
           {renderCreateRuleButton("large", "xlarge", "xlarge")}
