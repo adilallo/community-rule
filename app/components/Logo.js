@@ -8,6 +8,13 @@ export default function Logo({ size = "default", showText = true }) {
       lineHeight: "leading-[27.05px]",
       iconSize: "w-[27.05px] h-[27.05px]",
     },
+    homeHeaderXsmall: {
+      containerHeight: "h-[14.11px]",
+      gap: "gap-[4.21px]",
+      textSize: "text-[11.57px]",
+      lineHeight: "leading-[14.24px]",
+      iconSize: "w-[14.11px] h-[14.11px]",
+    },
     header: {
       containerHeight: "h-[20.85px]",
       gap: "gap-[4.21px]",
@@ -53,7 +60,9 @@ export default function Logo({ size = "default", showText = true }) {
   };
 
   const config =
-    size === "header"
+    size === "homeHeaderXsmall"
+      ? sizes.homeHeaderXsmall
+      : size === "header"
       ? sizes.header
       : size === "headerMd"
       ? sizes.headerMd
@@ -76,7 +85,11 @@ export default function Logo({ size = "default", showText = true }) {
       {/* Logo Text - only show if showText is true */}
       {showText && (
         <div
-          className={`font-['Bricolage_Grotesque'] text-[var(--color-content-default-primary)] ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
+          className={`font-['Bricolage_Grotesque'] ${
+            size === "homeHeaderXsmall"
+              ? "text-[var(--color-content-inverse-primary)]"
+              : "text-[var(--color-content-default-primary)]"
+          } ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
         >
           CommunityRule
         </div>
@@ -88,7 +101,9 @@ export default function Logo({ size = "default", showText = true }) {
         alt="CommunityRule Logo Icon"
         width={27.05}
         height={27.05}
-        className={`flex-shrink-0 ${config.iconSize}`}
+        className={`flex-shrink-0 ${config.iconSize} ${
+          size === "homeHeaderXsmall" ? "filter brightness-0" : ""
+        }`}
       />
     </div>
   );
