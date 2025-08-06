@@ -10,18 +10,31 @@ export default function MenuBarItem({
   const variantStyles = {
     default:
       "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-default-brand-primary)] active:bg-transparent active:text-[var(--color-content-default-brand-primary)] disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed",
-    home: "bg-transparent text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-inverse-primary)] active:bg-transparent active:text-[var(--color-content-inverse-primary)] disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed",
+    home: "bg-transparent text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-content-default-brand-accent)] hover:text-[var(--color-content-inverse-primary)] active:bg-transparent active:text-[var(--color-content-inverse-primary)] disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed",
   };
 
   const activeOutlineStyles = {
     xsmall:
-      "active:outline-1 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
+      "active:outline-1 active:outline-[var(--color-content-default-primary)] active:outline-offset-1",
     default:
       "active:outline-1 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
     large:
       "active:outline-[1.75px] active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
     xlarge:
       "active:outline-2 active:outline-[var(--color-content-default-brand-primary)] active:outline-offset-1",
+  };
+
+  const homeOutlineStyles = {
+    xsmall:
+      "active:outline-1 active:outline-[var(--color-content-default-primary)]",
+    xsmallUseCases:
+      "active:outline-1 active:outline-[var(--color-content-default-primary)]",
+    default:
+      "active:outline-1 active:outline-[var(--color-content-default-primary)]",
+    large:
+      "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
+    xlarge:
+      "active:outline-2 active:outline-[var(--color-content-default-primary)]",
   };
 
   const sizeStyles = {
@@ -59,7 +72,11 @@ export default function MenuBarItem({
     finalVariant = "default";
   }
 
-  const combinedStyles = `${baseStyles} ${variantStyles[finalVariant]} ${activeOutlineStyles[size]} ${className}`;
+  const combinedStyles = `${baseStyles} ${variantStyles[finalVariant]} ${
+    finalVariant === "home"
+      ? homeOutlineStyles[size]
+      : activeOutlineStyles[size]
+  } ${className}`;
 
   if (disabled) {
     return (

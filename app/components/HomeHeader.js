@@ -25,7 +25,11 @@ export default function HomeHeader() {
       size: "homeHeaderXsmall",
       showText: false,
     },
-    { breakpoint: "hidden sm:block md:hidden", size: "header", showText: true },
+    {
+      breakpoint: "hidden sm:block md:hidden",
+      size: "homeHeaderSm",
+      showText: true,
+    },
     {
       breakpoint: "hidden md:block lg:hidden",
       size: "headerMd",
@@ -99,8 +103,8 @@ export default function HomeHeader() {
   };
 
   return (
-    <header className="w-full bg-transparent">
-      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
+    <header className="w-full bg-transparent overflow-hidden">
+      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
         <HeaderTab className="flex items-center self-end">
           <div>
             {logoConfig.map((config, index) => (
@@ -118,8 +122,8 @@ export default function HomeHeader() {
               </MenuBar>
             </div>
 
-            <div className="hidden sm:block md:hidden absolute left-1/2 transform -translate-x-1/2">
-              <MenuBar className="gap-[var(--spacing-scale-001)]">
+            <div className="hidden sm:block md:hidden sm:ml-[var(--spacing-scale-002)]">
+              <MenuBar size="xsmall">
                 {renderNavigationItems("xsmall")}
                 {renderLoginButton("xsmall")}
               </MenuBar>
