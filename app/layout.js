@@ -1,5 +1,6 @@
 import { Inter, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
+import HomeHeader from "./components/HomeHeader";
 import Footer from "./components/Footer";
 
 const inter = Inter({
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.variable} ${bricolageGrotesque.variable}`}>
         <div className="min-h-screen flex flex-col">
+          <HomeHeader />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>

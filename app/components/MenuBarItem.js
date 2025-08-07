@@ -22,6 +22,8 @@ export default function MenuBarItem({
       "active:outline-[1.5px] active:outline-[var(--color-content-default-brand-primary)]",
     large:
       "active:outline-[1.75px] active:outline-[var(--color-content-default-brand-primary)]",
+    homeXlarge:
+      "active:outline-[2px] active:outline-[var(--color-content-default-brand-primary)]",
     xlarge:
       "active:outline-2 active:outline-[var(--color-content-default-brand-primary)]",
   };
@@ -59,11 +61,11 @@ export default function MenuBarItem({
     homeUseCases:
       "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
     large:
-      "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)]",
+      "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)] h-[44px]",
     homeXlarge:
       "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] gap-[var(--spacing-scale-004)] h-[44px]",
     xlarge:
-      "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
+      "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)] h-[44px]",
   };
 
   const smallTextStyle =

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Logo from "./Logo";
 import MenuBar from "./MenuBar";
 import MenuBarItem from "./MenuBarItem";
@@ -5,8 +8,11 @@ import Button from "./Button";
 import AvatarContainer from "./AvatarContainer";
 import Avatar from "./Avatar";
 import HeaderTab from "./HeaderTab";
+import Header from "./Header";
 
 export default function HomeHeader() {
+  const [showRegularHeader, setShowRegularHeader] = useState(false);
+
   const navigationItems = [
     { href: "#", text: "Use cases", extraPadding: true },
     { href: "#", text: "Learn" },
@@ -75,6 +81,7 @@ export default function HomeHeader() {
             ? "home"
             : "default"
         }
+        onClick={() => setShowRegularHeader(!showRegularHeader)}
       >
         {item.text}
       </MenuBarItem>
@@ -126,6 +133,10 @@ export default function HomeHeader() {
   const renderLogo = (size, showText) => {
     return <Logo size={size} showText={showText} />;
   };
+
+  if (showRegularHeader) {
+    return <Header onToggle={() => setShowRegularHeader(false)} />;
+  }
 
   return (
     <header className="w-full bg-transparent overflow-hidden">

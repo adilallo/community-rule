@@ -5,7 +5,7 @@ import Button from "./Button";
 import AvatarContainer from "./AvatarContainer";
 import Avatar from "./Avatar";
 
-export default function Header() {
+export default function Header({ onToggle }) {
   const navigationItems = [
     { href: "#", text: "Use cases", extraPadding: true },
     { href: "#", text: "Learn" },
@@ -40,6 +40,7 @@ export default function Header() {
         key={index}
         href={item.href}
         size={item.extraPadding && size === "xsmall" ? "xsmallUseCases" : size}
+        onClick={onToggle}
       >
         {item.text}
       </MenuBarItem>
