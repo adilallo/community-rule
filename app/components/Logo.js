@@ -36,6 +36,13 @@ export default function Logo({ size = "default", showText = true }) {
       lineHeight: "leading-[27.05px]",
       iconSize: "w-[27.05px] h-[27.05px]",
     },
+    homeHeaderXl: {
+      containerHeight: "h-[36px]",
+      gap: "gap-[8.64px]",
+      textSize: "text-[29.01px]",
+      lineHeight: "leading-[35.7px]",
+      iconSize: "w-[35.7px] h-[35.7px]",
+    },
     header: {
       containerHeight: "h-[20.85px]",
       gap: "gap-[4.21px]",
@@ -89,6 +96,8 @@ export default function Logo({ size = "default", showText = true }) {
       ? sizes.homeHeaderMd
       : size === "homeHeaderLg"
       ? sizes.homeHeaderLg
+      : size === "homeHeaderXl"
+      ? sizes.homeHeaderXl
       : size === "header"
       ? sizes.header
       : size === "headerMd"
@@ -116,7 +125,8 @@ export default function Logo({ size = "default", showText = true }) {
             size === "homeHeaderXsmall" ||
             size === "homeHeaderSm" ||
             size === "homeHeaderMd" ||
-            size === "homeHeaderLg"
+            size === "homeHeaderLg" ||
+            size === "homeHeaderXl"
               ? "text-[var(--color-content-inverse-primary)]"
               : "text-[var(--color-content-default-primary)]"
           } ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
@@ -135,7 +145,8 @@ export default function Logo({ size = "default", showText = true }) {
           size === "homeHeaderXsmall" ||
           size === "homeHeaderSm" ||
           size === "homeHeaderMd" ||
-          size === "homeHeaderLg"
+          size === "homeHeaderLg" ||
+          size === "homeHeaderXl"
             ? "filter brightness-0"
             : ""
         }`}

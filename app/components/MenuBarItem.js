@@ -41,6 +41,8 @@ export default function MenuBarItem({
       "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
     large:
       "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
+    homeXlarge:
+      "active:outline-[2px] active:outline-[var(--color-content-default-primary)]",
     xlarge:
       "active:outline-2 active:outline-[var(--color-content-default-primary)]",
   };
@@ -58,6 +60,8 @@ export default function MenuBarItem({
       "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
     large:
       "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-004)]",
+    homeXlarge:
+      "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] gap-[var(--spacing-scale-004)] h-[44px]",
     xlarge:
       "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)] gap-[var(--spacing-scale-004)]",
   };
@@ -79,6 +83,7 @@ export default function MenuBarItem({
     homeMd: mediumTextStyle,
     homeUseCases: mediumTextStyle,
     large: largeTextStyle,
+    homeXlarge: xlargeTextStyle,
     xlarge: xlargeTextStyle,
   };
 
