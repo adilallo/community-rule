@@ -6,6 +6,12 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* Custom breakpoints */
+  --breakpoint-xsm: 429px;
+  --breakpoint-sm: 430px;
+  --breakpoint-md: 640px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
 
   /* Reset default Tailwind configuration */
   --color-*: initial;

@@ -1,3 +1,3 @@
 export default function Page() {
-  return <></>;
+  return <div>{/* home page content will go here */}</div>;
 }
