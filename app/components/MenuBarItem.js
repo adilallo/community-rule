@@ -37,6 +37,8 @@ export default function MenuBarItem({
       "active:outline-[1.5px] active:outline-[var(--color-content-default-primary)]",
     homeUseCases:
       "active:outline-[1.5px] active:outline-[var(--color-content-default-primary)]",
+    largeUseCases:
+      "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
     large:
       "active:outline-[1.75px] active:outline-[var(--color-content-default-primary)]",
     xlarge:

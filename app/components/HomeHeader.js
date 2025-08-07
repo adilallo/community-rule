@@ -37,7 +37,7 @@ export default function HomeHeader() {
     },
     {
       breakpoint: "hidden lg:block xl:hidden",
-      size: "headerLg",
+      size: "homeHeaderLg",
       showText: true,
     },
     { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
@@ -53,9 +53,12 @@ export default function HomeHeader() {
           (size === "xsmall" ||
             size === "default" ||
             size === "home" ||
-            size === "homeMd")
+            size === "homeMd" ||
+            size === "large")
             ? size === "home" || size === "homeMd"
               ? "homeMd"
+              : size === "large"
+              ? "large"
               : "xsmallUseCases"
             : size
         }
@@ -63,7 +66,8 @@ export default function HomeHeader() {
           size === "xsmall" ||
           size === "default" ||
           size === "home" ||
-          size === "homeMd"
+          size === "homeMd" ||
+          size === "large"
             ? "home"
             : "default"
         }
@@ -121,8 +125,8 @@ export default function HomeHeader() {
 
   return (
     <header className="w-full bg-transparent overflow-hidden">
-      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] md:h-[68px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
-        <HeaderTab className="flex items-center self-end">
+      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] md:h-[68px] lg:h-[68px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:pl-[var(--spacing-scale-024)] lg:pt-[var(--spacing-scale-016)] lg:pr-[var(--spacing-scale-056)]">
+        <HeaderTab className="flex items-center justify-between lg:gap-[var(--spacing-scale-120)] self-end">
           <div>
             {logoConfig.map((config, index) => (
               <div key={index} className={config.breakpoint}>
@@ -150,20 +154,12 @@ export default function HomeHeader() {
               <MenuBar size="medium">{renderNavigationItems("homeMd")}</MenuBar>
             </div>
 
-            <div className="hidden lg:block xl:hidden absolute left-1/2 transform -translate-x-1/2 -ml-[var(--spacing-scale-024)]">
+            <div className="hidden lg:block xl:hidden">
               <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
             </div>
 
             <div className="hidden xl:block absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-032)]">
               <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
-            </div>
-
-            <div className="hidden lg:flex xl:hidden items-center">
-              {renderLoginButton("large", "mr-[var(--spacing-scale-012)]")}
-            </div>
-
-            <div className="hidden xl:flex items-center">
-              {renderLoginButton("xlarge", "mr-[var(--spacing-scale-012)]")}
             </div>
           </div>
         </HeaderTab>
@@ -179,7 +175,8 @@ export default function HomeHeader() {
           </div>
         </div>
         <div className="hidden lg:flex xl:hidden items-center">
-          {renderCreateRuleButton("large", "xlarge", "xlarge")}
+          {renderLoginButton("large", "mr-[var(--spacing-scale-004)]")}
+          {renderCreateRuleButton("large", "large", "large")}
         </div>
         <div className="hidden xl:flex items-center">
           {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}

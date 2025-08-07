@@ -29,6 +29,13 @@ export default function Logo({ size = "default", showText = true }) {
       lineHeight: "leading-[22.02px]",
       iconSize: "w-[22.02px] h-[22.02px]",
     },
+    homeHeaderLg: {
+      containerHeight: "h-[28px]",
+      gap: "gap-[6.55px]",
+      textSize: "text-[21.97px]",
+      lineHeight: "leading-[27.05px]",
+      iconSize: "w-[27.05px] h-[27.05px]",
+    },
     header: {
       containerHeight: "h-[20.85px]",
       gap: "gap-[4.21px]",
@@ -80,6 +87,8 @@ export default function Logo({ size = "default", showText = true }) {
       ? sizes.homeHeaderSm
       : size === "homeHeaderMd"
       ? sizes.homeHeaderMd
+      : size === "homeHeaderLg"
+      ? sizes.homeHeaderLg
       : size === "header"
       ? sizes.header
       : size === "headerMd"
@@ -106,7 +115,8 @@ export default function Logo({ size = "default", showText = true }) {
           className={`font-['Bricolage_Grotesque'] ${
             size === "homeHeaderXsmall" ||
             size === "homeHeaderSm" ||
-            size === "homeHeaderMd"
+            size === "homeHeaderMd" ||
+            size === "homeHeaderLg"
               ? "text-[var(--color-content-inverse-primary)]"
               : "text-[var(--color-content-default-primary)]"
           } ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
@@ -124,7 +134,8 @@ export default function Logo({ size = "default", showText = true }) {
         className={`flex-shrink-0 ${config.iconSize} ${
           size === "homeHeaderXsmall" ||
           size === "homeHeaderSm" ||
-          size === "homeHeaderMd"
+          size === "homeHeaderMd" ||
+          size === "homeHeaderLg"
             ? "filter brightness-0"
             : ""
         }`}

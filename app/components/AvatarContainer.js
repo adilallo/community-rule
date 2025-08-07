@@ -7,6 +7,7 @@ export default function AvatarContainer({
   const sizeStyles = {
     small: "flex -space-x-2",
     medium: "flex -space-x-[9px]",
+    large: "flex -space-x-[10px]",
     xlarge: "flex -space-x-[13px]",
   };
 

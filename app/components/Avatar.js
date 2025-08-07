@@ -8,6 +8,7 @@ export default function Avatar({
   const sizeStyles = {
     small: "w-[16px] h-[16px]",
     medium: "w-[18px] h-[18px]",
+    large: "w-[24px] h-[24px]",
     xlarge: "w-[32px] h-[32px]",
   };
 
