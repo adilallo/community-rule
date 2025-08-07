@@ -116,7 +116,9 @@ export default function Logo({ size = "default", showText = true }) {
     <div
       className={`flex items-center ${config.containerHeight} ${
         showText ? config.gap : ""
-      }`}
+      } transition-all duration-200 ease-in-out hover:scale-[1.02] cursor-pointer`}
+      role="banner"
+      aria-label="CommunityRule Logo"
     >
       {/* Logo Text - only show if showText is true */}
       {showText && (
@@ -129,7 +131,10 @@ export default function Logo({ size = "default", showText = true }) {
             size === "homeHeaderXl"
               ? "text-[var(--color-content-inverse-primary)]"
               : "text-[var(--color-content-default-primary)]"
-          } ${config.textSize} ${config.lineHeight} font-normal tracking-[0px]`}
+          } ${config.textSize} ${
+            config.lineHeight
+          } font-normal tracking-[0px] transition-colors duration-200`}
+          aria-label="CommunityRule"
         >
           CommunityRule
         </div>
@@ -141,7 +146,9 @@ export default function Logo({ size = "default", showText = true }) {
         alt="CommunityRule Logo Icon"
         width={27.05}
         height={27.05}
-        className={`flex-shrink-0 ${config.iconSize} ${
+        className={`flex-shrink-0 ${
+          config.iconSize
+        } transition-all duration-200 ${
           size === "homeHeaderXsmall" ||
           size === "homeHeaderSm" ||
           size === "homeHeaderMd" ||
@@ -150,6 +157,7 @@ export default function Logo({ size = "default", showText = true }) {
             ? "filter brightness-0"
             : ""
         }`}
+        aria-hidden="true"
       />
     </div>
   );

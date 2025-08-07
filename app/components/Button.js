@@ -36,9 +36,9 @@ export default function Button({
 
   const variantStyles = {
     default:
-      "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:outline-[var(--border-color-default-brandprimary)] hover:outline-inset active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:outline-[var(--border-color-default-brandprimary)] active:outline-offset-1 disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
+      "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:outline-[var(--border-color-default-brandprimary)] hover:outline-inset hover:scale-[1.02] hover:shadow-lg active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:outline-[var(--border-color-default-brandprimary)] active:outline-offset-1 active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none",
     secondary:
-      "bg-transparent text-[var(--color-content-default-brand-primary)] hover:text-[var(--color-content-default-primary)] focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_#FFFDD2] focus:blur-[0px] active:outline-[1.5px] active:outline-inset active:outline-[var(--color-content-default-brand-primary)] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50",
+      "bg-transparent text-[var(--color-content-default-brand-primary)] hover:text-[var(--color-content-default-primary)] hover:scale-[1.02] hover:bg-[var(--color-surface-default-tertiary)] focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_#FFFDD2] focus:blur-[0px] active:outline-[1.5px] active:outline-inset active:outline-[var(--color-content-default-brand-primary)] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
   };
 
   const hoverOutlineStyles = {
@@ -48,9 +48,10 @@ export default function Button({
     xlarge: "hover:outline-[2.5px]",
   };
 
-  const focusStyles = "focus:shadow-[0_0_10px_1px_#FFFDD2] focus:outline-none";
+  const focusStyles =
+    "focus:shadow-[0_0_10px_1px_#FFFDD2] focus:outline-none focus:ring-1 focus:ring-[var(--color-content-default-brand-primary)] focus:ring-offset-1 focus:scale-[1.02]";
 
-  const baseStyles = `inline-flex items-center justify-start box-border ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 cursor-pointer ${variantStyles[variant]} ${hoverOutlineStyles[size]} ${focusStyles}`;
+  const baseStyles = `inline-flex items-center justify-start box-border ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-200 ease-in-out cursor-pointer ${variantStyles[variant]} ${hoverOutlineStyles[size]} ${focusStyles}`;
 
   let finalVariant = variant;
   if (disabled) {
@@ -61,8 +62,11 @@ export default function Button({
 
   const accessibilityProps = {
     ...(ariaLabel && { "aria-label": ariaLabel }),
+    ...(disabled && { "aria-disabled": "true" }),
     ...(target && { target }),
     ...(rel && { rel }),
+    tabIndex: disabled ? -1 : 0,
+    ...props,
   };
 
   if (href && !disabled) {
@@ -72,7 +76,6 @@ export default function Button({
         className={combinedStyles}
         onClick={onClick}
         {...accessibilityProps}
-        {...props}
       >
         {children}
       </a>
@@ -86,7 +89,6 @@ export default function Button({
       disabled={disabled}
       onClick={onClick}
       {...accessibilityProps}
-      {...props}
     >
       {children}
     </button>

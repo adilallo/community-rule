@@ -82,6 +82,7 @@ export default function HomeHeader() {
             : "default"
         }
         onClick={() => setShowRegularHeader(!showRegularHeader)}
+        ariaLabel={`Navigate to ${item.text} page`}
       >
         {item.text}
       </MenuBarItem>
@@ -103,27 +104,26 @@ export default function HomeHeader() {
     );
   };
 
-  const renderLoginButton = (size, marginRight) => {
+  const renderLoginButton = (size) => {
     return (
       <MenuBarItem
         href="#"
         size={size}
         variant={size === "xsmall" || size === "default" ? "home" : "default"}
-        className={marginRight}
+        ariaLabel="Log in to your account"
       >
         Log in
       </MenuBarItem>
     );
   };
 
-  const renderCreateRuleButton = (
-    buttonSize,
-    containerSize,
-    avatarSize,
-    marginLeft
-  ) => {
+  const renderCreateRuleButton = (buttonSize, containerSize, avatarSize) => {
     return (
-      <Button size={buttonSize} className={marginLeft} variant="secondary">
+      <Button
+        size={buttonSize}
+        variant="secondary"
+        ariaLabel="Create a new rule with avatar decoration"
+      >
         {renderAvatarGroup(containerSize, avatarSize)}
         <span>Create rule</span>
       </Button>
@@ -139,9 +139,18 @@ export default function HomeHeader() {
   }
 
   return (
-    <header className="w-full bg-transparent overflow-hidden">
-      <div className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] md:h-[68px] lg:h-[68px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:pl-[var(--spacing-scale-024)] lg:pt-[var(--spacing-scale-016)] lg:pr-[var(--spacing-scale-056)] xl:pl-[var(--spacing-scale-048)] xl:pt-[var(--spacing-scale-024)] xl:pr-[var(--spacing-scale-056)]">
+    <header
+      className="w-full bg-transparent overflow-hidden"
+      role="banner"
+      aria-label="Home page navigation header"
+    >
+      <nav
+        className="relative flex items-center justify-between mx-auto max-w-[1920px] h-[50px] sm:h-[62px] md:h-[68px] lg:h-[68px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:pl-[var(--spacing-scale-024)] lg:pt-[var(--spacing-scale-016)] lg:pr-[var(--spacing-scale-056)] xl:pl-[var(--spacing-scale-048)] xl:pt-[var(--spacing-scale-024)] xl:pr-[var(--spacing-scale-056)]"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         <HeaderTab className="flex items-center justify-between lg:gap-[var(--spacing-scale-120)] self-end">
+          {/* Logo - Consistent left positioning within HeaderTab */}
           <div>
             {logoConfig.map((config, index) => (
               <div key={index} className={config.breakpoint}>
@@ -150,6 +159,7 @@ export default function HomeHeader() {
             ))}
           </div>
 
+          {/* Navigation Links - Consistent center positioning within HeaderTab */}
           <div className="flex items-center">
             <div className="block sm:hidden -me-[2px]">
               <MenuBar size="default">
@@ -181,25 +191,38 @@ export default function HomeHeader() {
           </div>
         </HeaderTab>
 
-        {/* Create rule button positioned outside HeaderTab */}
-        <div className="block md:hidden">
-          {renderCreateRuleButton("xsmall", "small", "small")}
-        </div>
-        <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
-          <div className="flex items-center">
-            {renderLoginButton("homeMd", "mr-[var(--spacing-scale-010)]")}
-            {renderCreateRuleButton("small", "medium", "medium")}
+        {/* Authentication Elements - Consistent right alignment outside HeaderTab */}
+        <div className="flex items-center">
+          {/* XSmall and Small breakpoints - create rule button outside HeaderTab */}
+          <div className="block md:hidden">
+            {renderCreateRuleButton("xsmall", "small", "small")}
+          </div>
+
+          {/* Medium breakpoint - login outside HeaderTab, create rule outside */}
+          <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
+            <div className="flex items-center gap-[var(--spacing-scale-010)]">
+              {renderLoginButton("homeMd")}
+              {renderCreateRuleButton("small", "medium", "medium")}
+            </div>
+          </div>
+
+          {/* Large breakpoint */}
+          <div className="hidden lg:flex xl:hidden items-center">
+            <div className="flex items-center gap-[var(--spacing-scale-004)]">
+              {renderLoginButton("large")}
+              {renderCreateRuleButton("large", "large", "large")}
+            </div>
+          </div>
+
+          {/* XLarge breakpoint */}
+          <div className="hidden xl:flex items-center">
+            <div className="flex items-center gap-[var(--spacing-scale-004)]">
+              {renderLoginButton("homeXlarge")}
+              {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
+            </div>
           </div>
         </div>
-        <div className="hidden lg:flex xl:hidden items-center">
-          {renderLoginButton("large", "mr-[var(--spacing-scale-004)]")}
-          {renderCreateRuleButton("large", "large", "large")}
-        </div>
-        <div className="hidden xl:flex items-center">
-          {renderLoginButton("homeXlarge", "mr-[var(--spacing-scale-004)]")}
-          {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
-        </div>
-      </div>
+      </nav>
     </header>
   );
 }

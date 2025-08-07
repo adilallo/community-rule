@@ -18,7 +18,12 @@ export default function MenuBar({
   const baseStyles = `flex items-center ${sizeStyles[size]} ${className}`;
 
   return (
-    <nav className={baseStyles} {...props}>
+    <nav
+      className={baseStyles}
+      role="menubar"
+      aria-label="Main navigation menu"
+      {...props}
+    >
       {children}
     </nav>
   );

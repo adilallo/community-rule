@@ -41,6 +41,7 @@ export default function Header({ onToggle }) {
         href={item.href}
         size={item.extraPadding && size === "xsmall" ? "xsmallUseCases" : size}
         onClick={onToggle}
+        ariaLabel={`Navigate to ${item.text} page`}
       >
         {item.text}
       </MenuBarItem>
@@ -62,22 +63,20 @@ export default function Header({ onToggle }) {
     );
   };
 
-  const renderLoginButton = (size, marginRight) => {
+  const renderLoginButton = (size) => {
     return (
-      <MenuBarItem href="#" size={size} className={marginRight}>
+      <MenuBarItem href="#" size={size} ariaLabel="Log in to your account">
         Log in
       </MenuBarItem>
     );
   };
 
-  const renderCreateRuleButton = (
-    buttonSize,
-    containerSize,
-    avatarSize,
-    marginLeft
-  ) => {
+  const renderCreateRuleButton = (buttonSize, containerSize, avatarSize) => {
     return (
-      <Button size={buttonSize} className={marginLeft}>
+      <Button
+        size={buttonSize}
+        ariaLabel="Create a new rule with avatar decoration"
+      >
         {renderAvatarGroup(containerSize, avatarSize)}
         <span>Create rule</span>
       </Button>
@@ -89,9 +88,18 @@ export default function Header({ onToggle }) {
   };
 
   return (
-    <header className="bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]">
-      <div className="flex items-center justify-between mx-auto max-w-[1920px] h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]">
-        <div>
+    <header
+      className="bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
+      role="banner"
+      aria-label="Main navigation header"
+    >
+      <nav
+        className="flex items-center justify-between mx-auto max-w-[1920px] h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        {/* Logo - Consistent left positioning across all breakpoints */}
+        <div className="flex items-center">
           {logoConfig.map((config, index) => (
             <div key={index} className={config.breakpoint}>
               {renderLogo(config.size, config.showText)}
@@ -99,57 +107,71 @@ export default function Header({ onToggle }) {
           ))}
         </div>
 
+        {/* Navigation Links - Consistent center positioning */}
         <div className="flex items-center">
-          <div className="block sm:hidden">
-            <MenuBar className="gap-[var(--spacing-scale-001)]">
-              {renderNavigationItems("xsmall")}
-              {renderLoginButton("xsmall")}
-            </MenuBar>
+          <div className="block sm:hidden -me-[2px]">
+            <MenuBar size="default">{renderNavigationItems("xsmall")}</MenuBar>
           </div>
 
-          <div className="hidden sm:block md:hidden absolute left-1/2 transform -translate-x-1/2">
-            <MenuBar className="gap-[var(--spacing-scale-001)]">
-              {renderNavigationItems("xsmall")}
-              {renderLoginButton("xsmall")}
-            </MenuBar>
+          <div className="hidden sm:block md:hidden">
+            <MenuBar size="default">{renderNavigationItems("xsmall")}</MenuBar>
           </div>
 
-          <div className="hidden md:block lg:hidden absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-024)]">
-            <MenuBar className="gap-[var(--spacing-scale-001)]">
-              {renderNavigationItems("xsmall")}
-            </MenuBar>
+          <div className="hidden md:block lg:hidden">
+            <MenuBar size="default">{renderNavigationItems("xsmall")}</MenuBar>
           </div>
 
-          <div className="hidden lg:block xl:hidden absolute left-1/2 transform -translate-x-1/2 -ml-[var(--spacing-scale-024)]">
+          <div className="hidden lg:block xl:hidden">
             <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
           </div>
 
-          <div className="hidden xl:block absolute left-1/2 transform -translate-x-1/2 ml-[var(--spacing-scale-032)]">
+          <div className="hidden xl:block">
             <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
           </div>
+        </div>
 
-          <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
-            <div className="flex items-center">
-              {renderLoginButton("xsmall", "mr-[var(--spacing-scale-010)]")}
+        {/* Authentication Elements - Consistent right alignment across all breakpoints */}
+        <div className="flex items-center">
+          {/* XSmall and Small breakpoints */}
+          <div className="block sm:hidden">
+            <div className="flex items-center gap-[var(--spacing-scale-004)]">
+              {renderLoginButton("xsmall")}
+              {renderCreateRuleButton("xsmall", "small", "small")}
+            </div>
+          </div>
+
+          <div className="hidden sm:block md:hidden">
+            <div className="flex items-center gap-[var(--spacing-scale-004)]">
+              {renderLoginButton("xsmall")}
+              {renderCreateRuleButton("xsmall", "small", "small")}
+            </div>
+          </div>
+
+          {/* Medium breakpoint */}
+          <div className="hidden md:block lg:hidden">
+            <div className="flex items-center gap-[var(--spacing-measures-spacing-010)]">
+              {renderLoginButton("xsmall")}
               {renderCreateRuleButton("xsmall", "medium", "medium")}
             </div>
           </div>
 
-          <div className="hidden lg:flex xl:hidden items-center">
-            {renderLoginButton("large", "mr-[var(--spacing-scale-012)]")}
-            {renderCreateRuleButton("large", "xlarge", "xlarge")}
+          {/* Large breakpoint */}
+          <div className="hidden lg:block xl:hidden">
+            <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
+              {renderLoginButton("large")}
+              {renderCreateRuleButton("large", "xlarge", "xlarge")}
+            </div>
           </div>
 
-          <div className="hidden xl:flex items-center">
-            {renderLoginButton("xlarge", "mr-[var(--spacing-scale-012)]")}
-            {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
-          </div>
-
-          <div className="block md:hidden">
-            {renderCreateRuleButton("xsmall", "small", "small")}
+          {/* XLarge breakpoint */}
+          <div className="hidden xl:block">
+            <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
+              {renderLoginButton("xlarge")}
+              {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
+            </div>
           </div>
         </div>
-      </div>
+      </nav>
     </header>
   );
 }
