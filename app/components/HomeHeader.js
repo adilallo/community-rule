@@ -149,7 +149,7 @@ export default function HomeHeader() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <HeaderTab className="flex items-center justify-between lg:gap-[var(--spacing-scale-120)] self-end">
+        <HeaderTab className="flex items-center self-end" stretch={true}>
           {/* Logo - Consistent left positioning within HeaderTab */}
           <div>
             {logoConfig.map((config, index) => (
@@ -159,37 +159,38 @@ export default function HomeHeader() {
             ))}
           </div>
 
-          {/* Navigation Links - Consistent center positioning within HeaderTab */}
-          <div className="flex items-center">
-            <div className="block sm:hidden -me-[2px]">
-              <MenuBar size="default">
-                {renderNavigationItems("xsmall")}
-                {renderLoginButton("xsmall")}
-              </MenuBar>
-            </div>
-
-            <div className="hidden sm:block md:hidden sm:ml-[var(--spacing-scale-002)]">
-              <MenuBar size="default">
-                {renderNavigationItems("xsmall")}
-                {renderLoginButton("xsmall")}
-              </MenuBar>
-            </div>
-
-            <div className="hidden md:block lg:hidden md:-ml-[var(--spacing-scale-012)]">
-              <MenuBar size="medium">{renderNavigationItems("homeMd")}</MenuBar>
-            </div>
-
-            <div className="hidden lg:block xl:hidden">
-              <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
-            </div>
-
-            <div className="hidden xl:block xl:ml-[var(--spacing-scale-032)]">
-              <MenuBar size="large">
-                {renderNavigationItems("homeXlarge")}
-              </MenuBar>
-            </div>
+          {/* XSmall menu bar - positioned next to logo */}
+          <div className="block sm:hidden -me-[2px]">
+            <MenuBar size="default">
+              {renderNavigationItems("xsmall")}
+              {renderLoginButton("xsmall")}
+            </MenuBar>
           </div>
         </HeaderTab>
+
+        {/* Navigation Links - Centered in header for SM and up */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 hidden sm:block">
+          <div className="hidden sm:block md:hidden">
+            <MenuBar size="default">
+              {renderNavigationItems("xsmall")}
+              {renderLoginButton("xsmall")}
+            </MenuBar>
+          </div>
+
+          <div className="hidden md:block lg:hidden">
+            <MenuBar size="medium">{renderNavigationItems("homeMd")}</MenuBar>
+          </div>
+
+          <div className="hidden lg:block xl:hidden">
+            <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
+          </div>
+
+          <div className="hidden xl:block">
+            <MenuBar size="large">
+              {renderNavigationItems("homeXlarge")}
+            </MenuBar>
+          </div>
+        </div>
 
         {/* Authentication Elements - Consistent right alignment outside HeaderTab */}
         <div className="flex items-center">
