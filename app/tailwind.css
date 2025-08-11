@@ -5,6 +5,11 @@
 
 @import "tailwindcss";
 
+/* Make sure Tailwind scans stories and .storybook files */
+@source "../stories/**/*";
+@source "../app/**/*";
+@source "../.storybook/**/*";
+
 @theme inline {
   /* Custom breakpoints */
   --breakpoint-xsm: 429px;
