@@ -109,12 +109,17 @@ export default function Header({ onToggle }) {
 
         {/* Navigation Links - Consistent center positioning */}
         <div className="flex items-center">
-          <div className="block sm:hidden -me-[2px]">
-            <MenuBar size="default">{renderNavigationItems("xsmall")}</MenuBar>
+          {/* XSmall breakpoint - Navigation items moved to right section */}
+          <div className="block sm:hidden">
+            {/* Empty for XSmall - navigation moved to right */}
           </div>
 
+          {/* Small breakpoint - All items grouped together, centered */}
           <div className="hidden sm:block md:hidden">
-            <MenuBar size="default">{renderNavigationItems("xsmall")}</MenuBar>
+            <MenuBar size="default">
+              {renderNavigationItems("xsmall")}
+              {renderLoginButton("xsmall")}
+            </MenuBar>
           </div>
 
           <div className="hidden md:block lg:hidden">
@@ -132,17 +137,18 @@ export default function Header({ onToggle }) {
 
         {/* Authentication Elements - Consistent right alignment across all breakpoints */}
         <div className="flex items-center">
-          {/* XSmall and Small breakpoints */}
+          {/* XSmall breakpoint - All navigation items + Create Rule button */}
           <div className="block sm:hidden">
-            <div className="flex items-center gap-[var(--spacing-scale-004)]">
+            <div className="flex items-center gap-[var(--spacing-scale-001)]">
+              {renderNavigationItems("xsmall")}
               {renderLoginButton("xsmall")}
               {renderCreateRuleButton("xsmall", "small", "small")}
             </div>
           </div>
 
+          {/* Small breakpoint - Only Create Rule button */}
           <div className="hidden sm:block md:hidden">
             <div className="flex items-center gap-[var(--spacing-scale-004)]">
-              {renderLoginButton("xsmall")}
               {renderCreateRuleButton("xsmall", "small", "small")}
             </div>
           </div>
