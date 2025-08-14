@@ -15,12 +15,19 @@ export default {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["default", "secondary"],
+      options: [
+        "default",
+        "secondary",
+        "primary",
+        "outlined",
+        "dark",
+        "inverse",
+      ],
       description: "The visual style variant of the button",
     },
     size: {
       control: { type: "select" },
-      options: ["xsmall", "small", "large", "xlarge"],
+      options: ["xsmall", "small", "medium", "large", "xlarge"],
       description: "The size of the button",
     },
     disabled: {
@@ -56,6 +63,18 @@ export const Variants = {
         <Button {...args} variant="secondary">
           Secondary
         </Button>
+        <Button {...args} variant="primary">
+          Primary
+        </Button>
+        <Button {...args} variant="outlined">
+          Outlined
+        </Button>
+        <Button {...args} variant="dark">
+          Dark
+        </Button>
+        <Button {...args} variant="inverse">
+          Inverse
+        </Button>
       </div>
     </div>
   ),
@@ -81,6 +100,9 @@ export const Sizes = {
         </Button>
         <Button {...args} size="small">
           Small
+        </Button>
+        <Button {...args} size="medium">
+          Medium
         </Button>
         <Button {...args} size="large">
           Large
@@ -134,6 +156,7 @@ export const AllVariants = {
         <div className="space-x-4">
           <Button size="xsmall">XSmall</Button>
           <Button size="small">Small</Button>
+          <Button size="medium">Medium</Button>
           <Button size="large">Large</Button>
           <Button size="xlarge">XLarge</Button>
         </div>
@@ -148,10 +171,97 @@ export const AllVariants = {
           <Button variant="secondary" size="small">
             Small
           </Button>
+          <Button variant="secondary" size="medium">
+            Medium
+          </Button>
           <Button variant="secondary" size="large">
             Large
           </Button>
           <Button variant="secondary" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-semibold mb-3">Primary Variant</h3>
+        <div className="space-x-4">
+          <Button variant="primary" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="primary" size="small">
+            Small
+          </Button>
+          <Button variant="primary" size="medium">
+            Medium
+          </Button>
+          <Button variant="primary" size="large">
+            Large
+          </Button>
+          <Button variant="primary" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-semibold mb-3">Outlined Variant</h3>
+        <div className="space-x-4">
+          <Button variant="outlined" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="outlined" size="small">
+            Small
+          </Button>
+          <Button variant="outlined" size="medium">
+            Medium
+          </Button>
+          <Button variant="outlined" size="large">
+            Large
+          </Button>
+          <Button variant="outlined" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-semibold mb-3">Dark Variant</h3>
+        <div className="space-x-4">
+          <Button variant="dark" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="dark" size="small">
+            Small
+          </Button>
+          <Button variant="dark" size="medium">
+            Medium
+          </Button>
+          <Button variant="dark" size="large">
+            Large
+          </Button>
+          <Button variant="dark" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-semibold mb-3">Inverse Variant</h3>
+        <div className="space-x-4">
+          <Button variant="inverse" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="inverse" size="small">
+            Small
+          </Button>
+          <Button variant="inverse" size="medium">
+            Medium
+          </Button>
+          <Button variant="inverse" size="large">
+            Large
+          </Button>
+          <Button variant="inverse" size="xlarge">
             XLarge
           </Button>
         </div>
@@ -165,6 +275,18 @@ export const AllVariants = {
           </Button>
           <Button variant="secondary" size="large" disabled>
             Secondary Disabled
+          </Button>
+          <Button variant="primary" size="large" disabled>
+            Primary Disabled
+          </Button>
+          <Button variant="outlined" size="large" disabled>
+            Outlined Disabled
+          </Button>
+          <Button variant="dark" size="large" disabled>
+            Dark Disabled
+          </Button>
+          <Button variant="inverse" size="large" disabled>
+            Inverse Disabled
           </Button>
         </div>
       </div>
