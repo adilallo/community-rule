@@ -1,3 +1,31 @@
+import NumberedCards from "./components/NumberedCards";
+
 export default function Page() {
-  return <div>{/* home page content will go here */}</div>;
+  const numberedCardsData = {
+    title: "How CommunityRule works",
+    subtitle: "Here's a quick overview of the process, from start to finish.",
+    cards: [
+      {
+        text: "Document how your community makes decisions",
+        iconShape: "blob",
+        iconColor: "green",
+      },
+      {
+        text: "Build an operating manual for a successful community",
+        iconShape: "gear",
+        iconColor: "purple",
+      },
+      {
+        text: "Get a link to your manual for your group to review and evolve",
+        iconShape: "star",
+        iconColor: "orange",
+      },
+    ],
+  };
+
+  return (
+    <div>
+      <NumberedCards {...numberedCardsData} />
+    </div>
+  );
 }
