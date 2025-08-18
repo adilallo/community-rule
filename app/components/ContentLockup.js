@@ -1,0 +1,43 @@
+"use client";
+
+import Button from "./Button";
+
+const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
+  return (
+    <div className="flex flex-col gap-[var(--spacing-scale-006)] relative z-10">
+      {/* Text content container */}
+      <div className="flex flex-col">
+        {/* Title container */}
+        <div className="flex gap-[var(--spacing-scale-008)] items-center">
+          <h1 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[var(--color-content-inverse-primary)]">
+            {title}
+          </h1>
+          <img
+            src="/assets/Shapes_1.svg"
+            alt="Decorative shapes"
+            className="w-[27.2px] h-[27.2px]"
+          />
+        </div>
+
+        {/* Subtitle */}
+        <h2 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[var(--color-content-inverse-primary)]">
+          {subtitle}
+        </h2>
+
+        {/* Description */}
+        <p className="font-inter font-normal text-[14px] leading-[20px] text-[var(--color-content-inverse-primary)]">
+          {description}
+        </p>
+      </div>
+
+      {/* CTA Button */}
+      <div className="flex justify-start">
+        <Button variant="primary" size="small">
+          {ctaText}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default ContentLockup;
