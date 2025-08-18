@@ -6,7 +6,7 @@ import Button from "./Button";
 
 const NumberedCards = ({ title, subtitle, cards }) => {
   return (
-    <section className="bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] sm:py-[var(--spacing-scale-048)] sm:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)]">
+    <section className="bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] sm:py-[var(--spacing-scale-048)] sm:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-076)] xl:px-[var(--spacing-scale-064)]">
       <div className="max-w-[var(--spacing-measures-max-width-lg)] mx-auto">
         <div className="grid grid-cols-1 gap-y-[var(--spacing-scale-032)] lg:gap-y-[var(--spacing-scale-056)]">
           {/* Section Header */}

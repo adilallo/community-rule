@@ -12,7 +12,7 @@ const NumberedCard = ({ number, text, iconShape, iconColor }) => {
 
       {/* Card Content - Bottom left (lg breakpoint) */}
       <div className="sm:flex-1 lg:absolute lg:bottom-8 lg:left-8 lg:right-16">
-        <p className="font-bricolage-grotesque font-medium text-[24px] leading-[32px] sm:font-normal sm:leading-[24px] sm:text-[24px] text-[#141414]">
+        <p className="font-bricolage-grotesque font-medium text-[24px] leading-[32px] sm:font-normal sm:leading-[24px] sm:text-[24px] lg:text-[24px] lg:leading-[24px] xl:text-[32px] xl:leading-[32px] text-[#141414]">
           {text}
         </p>
       </div>
