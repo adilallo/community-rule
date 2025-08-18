@@ -22,7 +22,7 @@ export default function HeaderTab({
       <img
         src="/assets/Union_sm_md_lg.svg"
         alt="Union"
-        className="absolute -bottom-[3.5px] -right-[53px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] hidden sm:block xl:hidden -z-10"
+        className="absolute -bottom-[3.7px] -right-[53px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] hidden sm:block xl:hidden -z-10"
       />
       <img
         src="/assets/Union_xlg.svg"
