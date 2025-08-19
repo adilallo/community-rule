@@ -4,12 +4,12 @@ import Button from "./Button";
 
 const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
   return (
-    <div className="flex flex-col gap-[var(--spacing-scale-006)] relative z-10">
+    <div className="flex flex-col gap-[var(--spacing-scale-006)] sm:gap-[var(--spacing-scale-012)] relative z-10">
       {/* Text content container */}
       <div className="flex flex-col">
         {/* Title container */}
         <div className="flex gap-[var(--spacing-scale-008)] items-center">
-          <h1 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[var(--color-content-inverse-primary)]">
+          <h1 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] sm:text-[52px] sm:leading-[52px] text-[var(--color-content-inverse-primary)]">
             {title}
           </h1>
           <img
@@ -20,12 +20,12 @@ const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
         </div>
 
         {/* Subtitle */}
-        <h2 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[var(--color-content-inverse-primary)]">
+        <h2 className="font-bricolage-grotesque font-medium text-[32px] leading-[32px] sm:text-[52px] sm:leading-[52px] text-[var(--color-content-inverse-primary)]">
           {subtitle}
         </h2>
 
         {/* Description */}
-        <p className="font-inter font-normal text-[14px] leading-[20px] text-[var(--color-content-inverse-primary)]">
+        <p className="font-inter font-[400] text-[18px] leading-[130%] text-[var(--color-content-inverse-primary)] pr-[var(--spacing-scale-032)]">
           {description}
         </p>
       </div>
