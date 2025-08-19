@@ -5,15 +5,15 @@ import HeroDecor from "./HeroDecor";
 
 const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
   return (
-    <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)]">
+    <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] lg:px-[var(--spacing-scale-024)]">
       <div className="flex flex-col gap-[var(--spacing-scale-010)]">
         {/* Frame container for content */}
-        <div className="bg-[var(--color-surface-default-brand-primary)] p-[var(--spacing-scale-012)] sm:p-[var(--spacing-scale-016)] md:p-[var(--spacing-scale-064)] rounded-tl-none rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px] flex flex-col gap-[var(--spacing-scale-024)] sm:gap-[var(--spacing-scale-024)] md:flex-row md:gap-[var(--spacing-scale-048)] relative overflow-hidden">
+        <div className="bg-[var(--color-surface-default-brand-primary)] p-[var(--spacing-scale-012)] sm:p-[var(--spacing-scale-016)] md:p-[var(--spacing-scale-064)] lg:py-[var(--spacing-scale-096)] lg:px-[var(--spacing-scale-064)] rounded-tl-none rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px] flex flex-col gap-[var(--spacing-scale-024)] sm:gap-[var(--spacing-scale-024)] md:flex-row md:gap-[var(--spacing-scale-048)] relative overflow-hidden">
           {/* DECORATIONS (behind content) */}
           <HeroDecor
             className="pointer-events-none absolute z-0
                         left-0 top-0
-                        translate-x-[-72px] translate-y-[26px] sm:translate-x-[-78px] sm:translate-y-[24px] md:translate-x-[-86px] md:translate-y-[16px]
+                        translate-x-[-72px] translate-y-[26px] sm:translate-x-[-78px] sm:translate-y-[24px] md:translate-x-[-86px] md:translate-y-[16px] lg:translate-x-[-88px] lg:translate-y-[16px]
                         w-[1540px] h-[645px] scale-[1.04]"
           />
 
