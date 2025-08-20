@@ -43,7 +43,11 @@ const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
         </div>
         {/* Large button for md and lg breakpoints */}
         <div className="hidden md:block xl:hidden">
-          <Button variant="primary" size="large">
+          <Button
+            variant="primary"
+            size="large"
+            className="shrink-0 whitespace-nowrap min-w-[280px]"
+          >
             {ctaText}
           </Button>
         </div>
