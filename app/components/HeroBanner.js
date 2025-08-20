@@ -25,6 +25,7 @@ const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
               description={description}
               ctaText={ctaText}
               ctaHref={ctaHref}
+              buttonClassName="shrink-0 whitespace-nowrap min-w-[280px]"
             />
           </div>
 

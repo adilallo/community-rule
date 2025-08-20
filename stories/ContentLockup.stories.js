@@ -33,6 +33,11 @@ export default {
       control: { type: "text" },
       description: "The call-to-action button link",
     },
+    buttonClassName: {
+      control: { type: "text" },
+      description:
+        "Additional CSS classes to apply to the large button (md/lg breakpoints)",
+    },
   },
   tags: ["autodocs"],
 };
@@ -86,6 +91,26 @@ export const ShortContent = {
     docs: {
       description: {
         story: "Content lockup with minimal content to test compact layouts.",
+      },
+    },
+  },
+};
+
+export const CustomButtonStyling = {
+  args: {
+    title: "Collaborate",
+    subtitle: "with clarity",
+    description:
+      "Help your community make important decisions in a way that reflects its unique values.",
+    ctaText: "Learn how Community Rule works",
+    ctaHref: "#",
+    buttonClassName: "shrink-0 whitespace-nowrap min-w-[280px]",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Content lockup with custom button styling applied to the large button (md/lg breakpoints).",
       },
     },
   },

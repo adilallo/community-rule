@@ -2,7 +2,14 @@
 
 import Button from "./Button";
 
-const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
+const ContentLockup = ({
+  title,
+  subtitle,
+  description,
+  ctaText,
+  ctaHref,
+  buttonClassName = "",
+}) => {
   return (
     <div className="flex flex-col gap-[var(--spacing-scale-006)] sm:gap-[var(--spacing-scale-012)] md:gap-[var(--spacing-scale-020)] lg:gap-[var(--spacing-scale-020)] relative z-10">
       {/* Text content container */}
@@ -43,11 +50,7 @@ const ContentLockup = ({ title, subtitle, description, ctaText, ctaHref }) => {
         </div>
         {/* Large button for md and lg breakpoints */}
         <div className="hidden md:block xl:hidden">
-          <Button
-            variant="primary"
-            size="large"
-            className="shrink-0 whitespace-nowrap min-w-[280px]"
-          >
+          <Button variant="primary" size="large" className={buttonClassName}>
             {ctaText}
           </Button>
         </div>
