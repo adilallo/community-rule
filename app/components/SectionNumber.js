@@ -4,13 +4,13 @@ const SectionNumber = ({ number }) => {
   const getImageSrc = (num) => {
     switch (num) {
       case 1:
-        return "/assets/SectionNumber_1.png";
+        return "assets/SectionNumber_1.png";
       case 2:
-        return "/assets/SectionNumber_2.png";
+        return "assets/SectionNumber_2.png";
       case 3:
-        return "/assets/SectionNumber_3.png";
+        return "assets/SectionNumber_3.png";
       default:
-        return "/assets/SectionNumber_1.png";
+        return "assets/SectionNumber_1.png";
     }
   };
 

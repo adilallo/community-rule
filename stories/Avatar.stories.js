@@ -36,7 +36,7 @@ export default {
 
 export const Default = {
   args: {
-    src: "/assets/Avatar_1.png",
+    src: "assets/Avatar_1.png",
     alt: "User Avatar",
     size: "medium",
   },
@@ -44,7 +44,7 @@ export const Default = {
 
 export const Sizes = {
   args: {
-    src: "/assets/Avatar_1.png",
+    src: "assets/Avatar_1.png",
     alt: "User Avatar",
   },
   render: (args) => (
@@ -73,9 +73,9 @@ export const DifferentAvatars = {
   render: (args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <Avatar {...args} src="/assets/Avatar_1.png" alt="User 1" />
-        <Avatar {...args} src="/assets/Avatar_2.png" alt="User 2" />
-        <Avatar {...args} src="/assets/Avatar_3.png" alt="User 3" />
+        <Avatar {...args} src="assets/Avatar_1.png" alt="User 1" />
+        <Avatar {...args} src="assets/Avatar_2.png" alt="User 2" />
+        <Avatar {...args} src="assets/Avatar_3.png" alt="User 3" />
       </div>
     </div>
   ),
@@ -95,36 +95,36 @@ export const AllSizesWithDifferentAvatars = {
       <div>
         <h3 className="text-white font-semibold mb-3">Small Size</h3>
         <div className="space-x-4">
-          <Avatar size="small" src="/assets/Avatar_1.png" alt="User 1" />
-          <Avatar size="small" src="/assets/Avatar_2.png" alt="User 2" />
-          <Avatar size="small" src="/assets/Avatar_3.png" alt="User 3" />
+          <Avatar size="small" src="assets/Avatar_1.png" alt="User 1" />
+          <Avatar size="small" src="assets/Avatar_2.png" alt="User 2" />
+          <Avatar size="small" src="assets/Avatar_3.png" alt="User 3" />
         </div>
       </div>
 
       <div>
         <h3 className="text-white font-semibold mb-3">Medium Size</h3>
         <div className="space-x-4">
-          <Avatar size="medium" src="/assets/Avatar_1.png" alt="User 1" />
-          <Avatar size="medium" src="/assets/Avatar_2.png" alt="User 2" />
-          <Avatar size="medium" src="/assets/Avatar_3.png" alt="User 3" />
+          <Avatar size="medium" src="assets/Avatar_1.png" alt="User 1" />
+          <Avatar size="medium" src="assets/Avatar_2.png" alt="User 2" />
+          <Avatar size="medium" src="assets/Avatar_3.png" alt="User 3" />
         </div>
       </div>
 
       <div>
         <h3 className="text-white font-semibold mb-3">Large Size</h3>
         <div className="space-x-4">
-          <Avatar size="large" src="/assets/Avatar_1.png" alt="User 1" />
-          <Avatar size="large" src="/assets/Avatar_2.png" alt="User 2" />
-          <Avatar size="large" src="/assets/Avatar_3.png" alt="User 3" />
+          <Avatar size="large" src="assets/Avatar_1.png" alt="User 1" />
+          <Avatar size="large" src="assets/Avatar_2.png" alt="User 2" />
+          <Avatar size="large" src="assets/Avatar_3.png" alt="User 3" />
         </div>
       </div>
 
       <div>
         <h3 className="text-white font-semibold mb-3">XLarge Size</h3>
         <div className="space-x-4">
-          <Avatar size="xlarge" src="/assets/Avatar_1.png" alt="User 1" />
-          <Avatar size="xlarge" src="/assets/Avatar_2.png" alt="User 2" />
-          <Avatar size="xlarge" src="/assets/Avatar_3.png" alt="User 3" />
+          <Avatar size="xlarge" src="assets/Avatar_1.png" alt="User 1" />
+          <Avatar size="xlarge" src="assets/Avatar_2.png" alt="User 2" />
+          <Avatar size="xlarge" src="assets/Avatar_3.png" alt="User 3" />
         </div>
       </div>
     </div>
@@ -132,7 +132,8 @@ export const AllSizesWithDifferentAvatars = {
   parameters: {
     docs: {
       description: {
-        story: "Complete overview of all avatar sizes with different user images.",
+        story:
+          "Complete overview of all avatar sizes with different user images.",
       },
     },
   },
