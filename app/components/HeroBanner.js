@@ -5,7 +5,7 @@ import HeroDecor from "./HeroDecor";
 
 const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
   return (
-    <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] lg:px-[var(--spacing-scale-024)]">
+    <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] lg:px-[var(--spacing-scale-024)] xl:px-[var(--spacing-scale-048)]">
       <div className="flex flex-col gap-[var(--spacing-scale-010)]">
         {/* Frame container for content */}
         <div className="bg-[var(--color-surface-default-brand-primary)] p-[var(--spacing-scale-012)] sm:p-[var(--spacing-scale-016)] md:p-[var(--spacing-scale-064)] lg:py-[var(--spacing-scale-096)] lg:px-[var(--spacing-scale-064)] rounded-tl-none rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px] flex flex-col gap-[var(--spacing-scale-024)] sm:gap-[var(--spacing-scale-024)] md:flex-row md:gap-[var(--spacing-scale-048)] relative overflow-hidden">
