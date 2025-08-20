@@ -23,7 +23,7 @@ export default function Footer() {
       />
       <footer className="bg-[var(--color-surface-default-primary)] w-full">
         <div
-          className="flex flex-col items-start mx-auto max-w-[1920px]
+          className="flex flex-col items-start mx-auto
           px-[var(--spacing-measures-spacing-016)]
           py-[var(--spacing-measures-spacing-040)]
           gap-[var(--spacing-measures-spacing-040)]

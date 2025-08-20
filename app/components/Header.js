@@ -111,7 +111,7 @@ export default function Header({ onToggle }) {
         aria-label="Main navigation header"
       >
         <nav
-          className="flex items-center justify-between mx-auto max-w-[1920px] h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]"
+          className="flex items-center justify-between mx-auto h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]"
           role="navigation"
           aria-label="Main navigation"
         >
