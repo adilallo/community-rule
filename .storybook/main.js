@@ -16,9 +16,11 @@ const config = {
     options: {},
   },
   staticDirs: ["../public"],
+  managerHead: (head) => `${head}<base href="/communityrulestorybook/">`,
+  previewHead: (head) => `${head}<base href="/communityrulestorybook/">`,
   async viteFinal(cfg) {
     // IMPORTANT: Set base path for GitHub Pages sub-path hosting
-    cfg.base = "/CommunityRuleStorybook/";
+    cfg.base = "/communityrulestorybook/";
 
     // Ensure esbuild treats .js as JSX during dep pre-bundling
     cfg.optimizeDeps ??= {};
