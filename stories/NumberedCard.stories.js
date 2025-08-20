@@ -94,20 +94,3 @@ export const LongText = {
     },
   },
 };
-
-export const ResponsiveTest = {
-  args: {
-    number: 2,
-    text: "Test responsive behavior by resizing your browser window",
-    iconShape: "gear",
-    iconColor: "purple",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Test the responsive behavior by resizing your browser window or using the viewport controls in Storybook.",
-      },
-    },
-  },
-};
