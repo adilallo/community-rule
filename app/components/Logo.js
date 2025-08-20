@@ -142,7 +142,7 @@ export default function Logo({ size = "default", showText = true }) {
 
       {/* Vector Icon */}
       <img
-        src="/assets/Logo.svg"
+        src="assets/Logo.svg"
         alt="CommunityRule Logo Icon"
         width={27.05}
         height={27.05}

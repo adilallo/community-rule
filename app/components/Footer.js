@@ -70,7 +70,7 @@ export default function Footer() {
                   aria-label="Follow us on Bluesky"
                 >
                   <img
-                    src="/assets/Bluesky_Logo.svg"
+                    src="assets/Bluesky_Logo.svg"
                     alt="Bluesky"
                     width={24}
                     height={22}
@@ -86,7 +86,7 @@ export default function Footer() {
                   aria-label="Follow us on GitLab"
                 >
                   <img
-                    src="/assets/GitLab_Icon.png"
+                    src="assets/GitLab_Icon.png"
                     alt="GitLab"
                     width={22}
                     height={22}

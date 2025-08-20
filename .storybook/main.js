@@ -17,6 +17,9 @@ const config = {
   },
   staticDirs: ["../public"],
   async viteFinal(cfg) {
+    // IMPORTANT: Set base path for GitHub Pages sub-path hosting
+    cfg.base = "/CommunityRuleStorybook/";
+
     // Ensure esbuild treats .js as JSX during dep pre-bundling
     cfg.optimizeDeps ??= {};
     cfg.optimizeDeps.esbuildOptions ??= {};

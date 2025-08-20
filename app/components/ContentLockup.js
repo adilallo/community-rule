@@ -22,7 +22,7 @@ const ContentLockup = ({
               {title}
             </h1>
             <img
-              src="/assets/Shapes_1.svg"
+              src="assets/Shapes_1.svg"
               alt="Decorative shapes"
               className="w-[27.2px] h-[27.2px] md:w-[34px] md:h-[34px] lg:w-[50px] lg:h-[50px]"
             />
