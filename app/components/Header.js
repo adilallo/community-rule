@@ -25,10 +25,10 @@ export default function Header({ onToggle }) {
   ];
 
   const avatarImages = [
-    { src: "/assets/Avatar_1.png", alt: "Avatar 1" },
-    { src: "/assets/Avatar_2.png", alt: "Avatar 2" },
-    { src: "/assets/Avatar_3.png", alt: "Avatar 3" },
-  ];
+  { src: "assets/Avatar_1.png", alt: "Avatar 1" },
+  { src: "assets/Avatar_2.png", alt: "Avatar 2" },
+  { src: "assets/Avatar_3.png", alt: "Avatar 3" },
+];
 
   const logoConfig = [
     { breakpoint: "block sm:hidden", size: "header", showText: false },

@@ -36,7 +36,7 @@ export default {
 
 export const Default = {
   args: {
-    src: "/assets/Avatar_1.png",
+    src: "assets/Avatar_1.png",
     alt: "User Avatar",
     size: "medium",
   },
@@ -44,7 +44,7 @@ export const Default = {
 
 export const Sizes = {
   args: {
-    src: "/assets/Avatar_1.png",
+    src: "assets/Avatar_1.png",
     alt: "User Avatar",
   },
   render: (args) => (
