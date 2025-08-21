@@ -45,7 +45,7 @@ const LogoWall = ({ logos = [] }) => {
 
   return (
     <section className="p-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-024)] md:py-[var(--spacing-scale-032)] lg:px-[var(--spacing-scale-064)] lg:py-[var(--spacing-scale-048)] xl:px-[160px] xl:py-[var(--spacing-scale-064)]">
-      <div className="flex flex-col gap-[var(--spacing-scale-032)] md:gap-[var(--spacing-scale-024)] xlg:gap-[var(--spacing-scale-032)]">
+      <div className="flex flex-col gap-[var(--spacing-scale-032)] md:gap-[var(--spacing-scale-024)] xl:gap-[var(--spacing-scale-032)]">
         {/* Label */}
         <p className="font-inter font-medium text-[10px] leading-[12px] xl:text-[14px] xl:leading-[12px] uppercase text-[var(--color-content-default-secondary)] text-center">
           Trusted by leading cooperators
