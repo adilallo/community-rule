@@ -1,33 +1,43 @@
 "use client";
 
 const LogoWall = ({ logos = [] }) => {
-  // Default logos if none provided - ordered to match the screenshot
+  // Default logos if none provided - ordered for mobile (3 rows × 2 columns)
   const defaultLogos = [
     {
       src: "assets/Section/Logo_FoodNotBombs.png",
       alt: "Food Not Bombs",
       size: "h-11",
+      order: "order-1 sm:order-4", // Mobile: row 1 col 1, SM: row 2 col 1 (bottom left)
     },
     {
       src: "assets/Section/Logo_StartCOOP.png",
       alt: "Start COOP",
       size: "h-11",
+      order: "order-2 sm:order-2", // Mobile: row 1 col 2, SM: row 1 col 2 (top middle)
     },
-    { src: "assets/Section/Logo_Metagov.png", alt: "Metagov", size: "h-7" },
+    {
+      src: "assets/Section/Logo_Metagov.png",
+      alt: "Metagov",
+      size: "h-7",
+      order: "order-3 sm:order-1", // Mobile: row 2 col 1, SM: row 1 col 1 (top left)
+    },
     {
       src: "assets/Section/Logo_OpenCivics.png",
       alt: "Open Civics",
-      size: "h-7",
+      size: "h-8",
+      order: "order-4 sm:order-5", // Mobile: row 2 col 2, SM: row 2 col 2 (bottom middle)
     },
     {
       src: "assets/Section/Logo_MutualAidCO.png",
       alt: "Mutual Aid CO",
       size: "h-11",
+      order: "order-5 sm:order-6", // Mobile: row 3 col 1, SM: row 2 col 3 (bottom right)
     },
     {
       src: "assets/Section/Logo_CUBoulder.png",
       alt: "CU Boulder",
       size: "h-11",
+      order: "order-6 sm:order-3", // Mobile: row 3 col 2, SM: row 1 col 3 (top right)
     },
   ];
 
@@ -43,9 +53,14 @@ const LogoWall = ({ logos = [] }) => {
 
         {/* Logo Grid Container */}
         <div className="opacity-60">
-          <div className="grid grid-cols-2 grid-rows-3 gap-[var(--spacing-scale-032)]">
+          <div className="grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-rows-2 gap-x-[var(--spacing-scale-032)] gap-y-[var(--spacing-scale-032)] sm:gap-y-[var(--spacing-scale-048)]">
             {displayLogos.map((logo, index) => (
-              <div key={index} className="flex items-center justify-center">
+              <div
+                key={index}
+                className={`flex items-center justify-center ${
+                  logo.order || ""
+                }`}
+              >
                 <img
                   src={logo.src}
                   alt={logo.alt}
