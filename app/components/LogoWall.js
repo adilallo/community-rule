@@ -12,31 +12,31 @@ const LogoWall = ({ logos = [] }) => {
     {
       src: "assets/Section/Logo_StartCOOP.png",
       alt: "Start COOP",
-      size: "h-11",
+      size: "h-[42px]",
       order: "order-2 sm:order-2", // Mobile: row 1 col 2, SM: row 1 col 2 (top middle)
     },
     {
       src: "assets/Section/Logo_Metagov.png",
       alt: "Metagov",
-      size: "h-7",
+      size: "h-6",
       order: "order-3 sm:order-1", // Mobile: row 2 col 1, SM: row 1 col 1 (top left)
     },
     {
       src: "assets/Section/Logo_OpenCivics.png",
       alt: "Open Civics",
       size: "h-8",
-      order: "order-4 sm:order-5", // Mobile: row 2 col 2, SM: row 2 col 2 (bottom middle)
+      order: "order-4 sm:order-5 md:order-6", // Mobile: row 2 col 2, SM: row 2 col 2, MD: swapped with Mutual Aid CO
     },
     {
       src: "assets/Section/Logo_MutualAidCO.png",
       alt: "Mutual Aid CO",
       size: "h-11",
-      order: "order-5 sm:order-6", // Mobile: row 3 col 1, SM: row 2 col 3 (bottom right)
+      order: "order-5 sm:order-6 md:order-5", // Mobile: row 3 col 1, SM: row 2 col 3, MD: swapped with OpenCivics
     },
     {
       src: "assets/Section/Logo_CUBoulder.png",
       alt: "CU Boulder",
-      size: "h-11",
+      size: "h-10",
       order: "order-6 sm:order-3", // Mobile: row 3 col 2, SM: row 1 col 3 (top right)
     },
   ];
@@ -44,8 +44,8 @@ const LogoWall = ({ logos = [] }) => {
   const displayLogos = logos.length > 0 ? logos : defaultLogos;
 
   return (
-    <section className="p-[var(--spacing-scale-032)]">
-      <div className="flex flex-col gap-[var(--spacing-scale-032)]">
+    <section className="p-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-024)] md:py-[var(--spacing-scale-032)]">
+      <div className="flex flex-col gap-[var(--spacing-scale-032)] md:gap-[var(--spacing-scale-024)]">
         {/* Label */}
         <p className="font-inter font-medium text-[10px] leading-[12px] uppercase text-[var(--color-content-default-secondary)] text-center">
           Trusted by leading cooperators
@@ -53,7 +53,7 @@ const LogoWall = ({ logos = [] }) => {
 
         {/* Logo Grid Container */}
         <div className="opacity-60">
-          <div className="grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-rows-2 gap-x-[var(--spacing-scale-032)] gap-y-[var(--spacing-scale-032)] sm:gap-y-[var(--spacing-scale-048)]">
+          <div className="grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-rows-2 md:flex md:justify-between md:items-center gap-x-[var(--spacing-scale-032)] gap-y-[var(--spacing-scale-032)] sm:gap-y-[var(--spacing-scale-048)]">
             {displayLogos.map((logo, index) => (
               <div
                 key={index}
