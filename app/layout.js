@@ -11,7 +11,7 @@ const inter = Inter({
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400", "500"],
   variable: "--font-bricolage-grotesque",
 });
 
