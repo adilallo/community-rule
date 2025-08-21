@@ -6,37 +6,37 @@ const LogoWall = ({ logos = [] }) => {
     {
       src: "assets/Section/Logo_FoodNotBombs.png",
       alt: "Food Not Bombs",
-      size: "h-11",
+      size: "h-11 lg:h-14",
       order: "order-1 sm:order-4", // Mobile: row 1 col 1, SM: row 2 col 1 (bottom left)
     },
     {
       src: "assets/Section/Logo_StartCOOP.png",
       alt: "Start COOP",
-      size: "h-[42px]",
+      size: "h-[42px] lg:h-[53px]",
       order: "order-2 sm:order-2", // Mobile: row 1 col 2, SM: row 1 col 2 (top middle)
     },
     {
       src: "assets/Section/Logo_Metagov.png",
       alt: "Metagov",
-      size: "h-6",
+      size: "h-6 lg:h-8",
       order: "order-3 sm:order-1", // Mobile: row 2 col 1, SM: row 1 col 1 (top left)
     },
     {
       src: "assets/Section/Logo_OpenCivics.png",
       alt: "Open Civics",
-      size: "h-8",
+      size: "h-8 lg:h-10",
       order: "order-4 sm:order-5 md:order-6", // Mobile: row 2 col 2, SM: row 2 col 2, MD: swapped with Mutual Aid CO
     },
     {
       src: "assets/Section/Logo_MutualAidCO.png",
       alt: "Mutual Aid CO",
-      size: "h-11",
+      size: "h-11 lg:h-14",
       order: "order-5 sm:order-6 md:order-5", // Mobile: row 3 col 1, SM: row 2 col 3, MD: swapped with OpenCivics
     },
     {
       src: "assets/Section/Logo_CUBoulder.png",
       alt: "CU Boulder",
-      size: "h-10",
+      size: "h-10 lg:h-12",
       order: "order-6 sm:order-3", // Mobile: row 3 col 2, SM: row 1 col 3 (top right)
     },
   ];
@@ -44,7 +44,7 @@ const LogoWall = ({ logos = [] }) => {
   const displayLogos = logos.length > 0 ? logos : defaultLogos;
 
   return (
-    <section className="p-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-024)] md:py-[var(--spacing-scale-032)]">
+    <section className="p-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-024)] md:py-[var(--spacing-scale-032)] lg:px-[var(--spacing-scale-064)] lg:py-[var(--spacing-scale-048)]">
       <div className="flex flex-col gap-[var(--spacing-scale-032)] md:gap-[var(--spacing-scale-024)]">
         {/* Label */}
         <p className="font-inter font-medium text-[10px] leading-[12px] uppercase text-[var(--color-content-default-secondary)] text-center">
