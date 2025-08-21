@@ -10,7 +10,7 @@
     "postinstall": "npm rebuild lightningcss",
     "storybook": "storybook dev -p 6006",
     "storybook:local": "cp .storybook/main.local.js .storybook/main.js && cp .storybook/preview.local.js .storybook/preview.js && storybook dev -p 6006",
-    "storybook:restore": "git checkout .storybook/main.js .storybook/preview.js",
+    "storybook:restore": "cp .storybook/main.github.js .storybook/main.js && cp .storybook/preview.github.js .storybook/preview.js",
     "build-storybook": "storybook build"
   },
   "dependencies": {

@@ -48,3 +48,5 @@ storybook-static
 .storybook/preview.js
 .storybook/main.local.js
 .storybook/preview.local.js
+.storybook/main.github.js
+.storybook/preview.github.js
