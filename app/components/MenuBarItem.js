@@ -78,13 +78,13 @@ export default function MenuBarItem({
   };
 
   const smallTextStyle =
-    "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]";
+    "font-inter text-[10px] leading-[12px] font-medium tracking-[0%]";
   const mediumTextStyle =
-    "font-['Inter'] text-[12px] leading-[14px] font-medium tracking-[0%]";
+    "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]";
   const largeTextStyle =
-    "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]";
+    "font-inter text-[16px] leading-[20px] font-medium tracking-[0%]";
   const xlargeTextStyle =
-    "font-['Inter'] text-[24px] leading-[28px] font-normal tracking-[0%]";
+    "font-inter text-[24px] leading-[28px] font-normal tracking-[0%]";
 
   const textStyles = {
     default: smallTextStyle,

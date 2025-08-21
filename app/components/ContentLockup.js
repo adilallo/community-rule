@@ -35,7 +35,7 @@ const ContentLockup = ({
         </div>
 
         {/* Description - 20px gap from subtitle at xl */}
-        <p className="font-inter font-[400] text-[18px] leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] text-[var(--color-content-inverse-primary)] pr-[var(--spacing-scale-032)] md:pr-[var(--spacing-scale-008)] lg:pr-[var(--spacing-scale-032)]">
+        <p className="font-inter font-normal text-[18px] leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] text-[var(--color-content-inverse-primary)]">
           {description}
         </p>
       </div>
