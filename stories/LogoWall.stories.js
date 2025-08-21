@@ -17,6 +17,15 @@ export default {
 - **LG**: Larger logo sizes and 64px horizontal padding
 - **XL**: Largest logo sizes, 160px horizontal padding, and 14px label text
 
+## Animations & Transitions
+
+- **Fade-in Effect**: Logos fade in from opacity 0 to 60% after component mounts (500ms transition)
+- **Hover Interactions**: Individual logos respond to hover with:
+  - Opacity change from 60% to 100%
+  - Scale transform (105% zoom)
+  - 500ms smooth transitions for all effects
+- **Loading States**: Progressive loading with fallback timer for reliable display
+
 ## Props
 
 - **logos** (optional): Array of logo objects with src, alt, size, and order properties. If not provided, uses default partner logos.
@@ -67,7 +76,7 @@ export const Default = {
     docs: {
       description: {
         story:
-          "Default LogoWall with all partner logos. Displays in a 3×2 grid on mobile, 2×3 grid on small screens, single row on medium screens, and larger sizes on large screens.",
+          "Default LogoWall with all partner logos. Displays in a 3×2 grid on mobile, 2×3 grid on small screens, single row on medium screens, and larger sizes on large screens. Features smooth fade-in animations and hover interactions.",
       },
     },
   },
