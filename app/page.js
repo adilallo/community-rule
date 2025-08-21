@@ -1,5 +1,6 @@
 import NumberedCards from "./components/NumberedCards";
 import HeroBanner from "./components/HeroBanner";
+import LogoWall from "./components/LogoWall";
 
 export default function Page() {
   const heroBannerData = {
@@ -36,6 +37,7 @@ export default function Page() {
   return (
     <div>
       <HeroBanner {...heroBannerData} />
+      <LogoWall />
       <NumberedCards {...numberedCardsData} />
     </div>
   );
