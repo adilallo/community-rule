@@ -46,7 +46,3 @@ storybook-static
 # storybook config files (to avoid git changes when switching between local and production)
 .storybook/main.js
 .storybook/preview.js
-.storybook/main.local.js
-.storybook/preview.local.js
-.storybook/main.github.js
-.storybook/preview.github.js
