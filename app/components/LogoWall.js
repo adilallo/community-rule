@@ -82,13 +82,14 @@ const LogoWall = ({ logos = [] }) => {
                 <Image
                   src={logo.src}
                   alt={logo.alt}
-                  width={120}
-                  height={60}
                   className={`${
                     logo.size || "h-8"
                   } w-auto object-contain transition-transform duration-500 hover:scale-105`}
                   priority={index < 2} // Prioritize first 2 logos for above-the-fold loading
                   unoptimized // Skip optimization for local images
+                  width={0}
+                  height={0}
+                  sizes="100vw"
                 />
               </div>
             ))}
