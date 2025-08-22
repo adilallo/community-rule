@@ -33,7 +33,14 @@ const NumberedCards = ({ title, subtitle, cards }) => {
               <SectionHeader
                 title={title}
                 subtitle={subtitle}
-                titleLg="How CommunityRule helps"
+                titleLg={
+                  <>
+                    How <br />
+                    CommunityRule
+                    <br />
+                    helps
+                  </>
+                }
               />
             </div>
 
