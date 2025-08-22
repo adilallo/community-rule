@@ -8,8 +8,8 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
         <h2
           className={
             variant === "small"
-              ? "font-bricolage-grotesque font-bold text-medium-heading text-[var(--color-content-default-primary)]"
-              : "font-bricolage-grotesque font-bold text-medium-heading sm:text-large-heading lg:text-large-heading lg:w-[369px] lg:pr-[var(--spacing-scale-024)] xl:text-xx-large-heading xl:w-[452px] xl:pr-[var(--spacing-scale-024)] text-[var(--color-content-default-primary)]"
+              ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] text-[var(--color-content-default-primary)]"
+              : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px] lg:text-[32px] lg:leading-[40px] lg:w-[369px] lg:pr-24 xl:text-[40px] xl:leading-[52px] xl:w-[452px] xl:pr-24 text-[var(--color-content-default-primary)]"
           }
         >
           <span className="block lg:hidden">{title}</span>
@@ -18,12 +18,12 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
       </div>
 
       {/* Subtitle Container */}
-      <div className="lg:w-[928px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end xl:w-[763px] xl:h-[156px] xl:flex xl:items-center xl:justify-end">
+      <div className="lg:w-[928px] lg:h-[120px] lg:flex lg:items-center lg:justify-end xl:w-[763px] xl:h-[156px] xl:flex xl:items-center xl:justify-end">
         <p
           className={
             variant === "small"
-              ? "font-inter font-normal text-small-paragraph text-[var(--color-content-default-tertiary)]"
-              : "font-inter font-normal text-large-paragraph sm:text-large-paragraph lg:text-x-large-paragraph xl:text-xx-large-paragraph xl:text-right text-[#484848] sm:text-[var(--color-content-default-tertiary)] lg:text-[var(--color-content-default-tertiary)] xl:text-[var(--color-content-default-tertiary)] tracking-[0px]"
+              ? "font-inter font-normal text-[14px] leading-[20px] text-[var(--color-content-default-tertiary)]"
+              : "font-inter font-normal text-[18px] leading-[130%] sm:text-[18px] sm:leading-[32px] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] xl:text-right text-[#484848] sm:text-[var(--color-content-default-tertiary)] lg:text-[var(--color-content-default-tertiary)] xl:text-[var(--color-content-default-tertiary)] tracking-[0px]"
           }
         >
           {subtitle}
