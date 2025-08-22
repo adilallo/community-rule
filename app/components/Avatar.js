@@ -6,10 +6,10 @@ export default function Avatar({
   ...props
 }) {
   const sizeStyles = {
-    small: "w-[16px] h-[16px]",
+    small: "w-[var(--spacing-scale-016)] h-[var(--spacing-scale-016)]",
     medium: "w-[18px] h-[18px]",
-    large: "w-[24px] h-[24px]",
-    xlarge: "w-[32px] h-[32px]",
+    large: "w-[var(--spacing-scale-024)] h-[var(--spacing-scale-024)]",
+    xlarge: "w-[var(--spacing-scale-032)] h-[var(--spacing-scale-032)]",
   };
 
   const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover ${sizeStyles[size]} ${className}`;

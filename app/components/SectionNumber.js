@@ -15,14 +15,14 @@ const SectionNumber = ({ number }) => {
   };
 
   return (
-    <div className="relative size-[40px] overflow-visible -rotate-[15deg]">
+    <div className="relative size-[var(--spacing-scale-040)] overflow-visible -rotate-[15deg]">
       <img
         src={getImageSrc(number)}
         alt={`Section ${number}`}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[47.37px] max-w-none"
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[var(--font-size-body-small)] font-[var(--font-weight-bold)] text-[var(--color-content-inverse-primary)]">
+        <span className="text-small-label font-bold text-[var(--color-content-inverse-primary)]">
           {number}
         </span>
       </div>

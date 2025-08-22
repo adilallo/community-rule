@@ -26,7 +26,7 @@ const RuleStack = ({ children, className = "" }) => {
               height={40}
             />
           }
-          backgroundColor="bg-[var(--color-community-kiwi-200)]"
+          backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
         />
         <RuleCard
           title="Consensus"
@@ -39,7 +39,7 @@ const RuleStack = ({ children, className = "" }) => {
               height={40}
             />
           }
-          backgroundColor="bg-[var(--color-community-red-200)]"
+          backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
         />
         <RuleCard
           title="Elected Board"
@@ -52,7 +52,7 @@ const RuleStack = ({ children, className = "" }) => {
               height={40}
             />
           }
-          backgroundColor="bg-[var(--color-surface-default-brand-accent)]"
+          backgroundColor="bg-[var(--color-surface-default-brand-red)]"
         />
         <RuleCard
           title="Petition"
@@ -65,7 +65,7 @@ const RuleStack = ({ children, className = "" }) => {
               height={40}
             />
           }
-          backgroundColor="bg-[var(--color-community-blue-300)]"
+          backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
         />
       </div>
     </div>
