@@ -25,16 +25,11 @@ export default function Button({
   };
 
   const fontStyles = {
-    xsmall:
-      "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
-    small:
-      "font-['Inter'] text-[12px] leading-[14px] font-medium tracking-[0%]",
-    medium:
-      "font-['Inter'] text-[14px] leading-[16px] font-medium tracking-[0%]",
-    large:
-      "font-['Inter'] text-[16px] leading-[20px] font-medium tracking-[0%]",
-    xlarge:
-      "font-['Inter'] text-[24px] leading-[28px] font-normal tracking-[0%]",
+    xsmall: "font-inter text-[10px] leading-[12px] font-medium tracking-[0%]",
+    small: "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]",
+    medium: "font-inter text-[14px] leading-[16px] font-medium tracking-[0%]",
+    large: "font-inter text-[16px] leading-[20px] font-medium tracking-[0%]",
+    xlarge: "font-inter text-[24px] leading-[28px] font-normal tracking-[0%]",
   };
 
   const variantStyles = {

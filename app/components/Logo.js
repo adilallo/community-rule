@@ -123,7 +123,7 @@ export default function Logo({ size = "default", showText = true }) {
       {/* Logo Text - only show if showText is true */}
       {showText && (
         <div
-          className={`font-['Bricolage_Grotesque'] ${
+          className={`font-bricolage-grotesque ${
             size === "homeHeaderXsmall" ||
             size === "homeHeaderSm" ||
             size === "homeHeaderMd" ||
@@ -142,7 +142,7 @@ export default function Logo({ size = "default", showText = true }) {
 
       {/* Vector Icon */}
       <img
-        src="/assets/Logo.svg"
+        src="assets/Logo.svg"
         alt="CommunityRule Logo Icon"
         width={27.05}
         height={27.05}

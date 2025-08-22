@@ -90,36 +90,3 @@ export const CustomContent = {
     },
   },
 };
-
-export const ResponsiveBreakpoints = {
-  args: {
-    title: "Responsive Design Test",
-    subtitle:
-      "This story demonstrates how the component adapts across different breakpoints: xsm, sm, lg, and xl.",
-    cards: [
-      {
-        text: "Mobile-first design approach",
-        iconShape: "blob",
-        iconColor: "green",
-      },
-      {
-        text: "Tablet and desktop optimization",
-        iconShape: "gear",
-        iconColor: "purple",
-      },
-      {
-        text: "Large screen layouts and spacing",
-        iconShape: "star",
-        iconColor: "orange",
-      },
-    ],
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Test the responsive behavior by resizing your browser window or using the viewport controls in Storybook.",
-      },
-    },
-  },
-};

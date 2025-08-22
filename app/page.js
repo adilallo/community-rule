@@ -1,6 +1,17 @@
 import NumberedCards from "./components/NumberedCards";
+import HeroBanner from "./components/HeroBanner";
+import LogoWall from "./components/LogoWall";
 
 export default function Page() {
+  const heroBannerData = {
+    title: "Collaborate",
+    subtitle: "with clarity",
+    description:
+      "Help your community make important decisions in a way that reflects its unique values.",
+    ctaText: "Learn how CommunityRule works",
+    ctaHref: "#",
+  };
+
   const numberedCardsData = {
     title: "How CommunityRule works",
     subtitle: "Here's a quick overview of the process, from start to finish.",
@@ -25,6 +36,8 @@ export default function Page() {
 
   return (
     <div>
+      <HeroBanner {...heroBannerData} />
+      <LogoWall />
       <NumberedCards {...numberedCardsData} />
     </div>
   );

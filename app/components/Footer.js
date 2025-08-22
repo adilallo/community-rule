@@ -23,7 +23,7 @@ export default function Footer() {
       />
       <footer className="bg-[var(--color-surface-default-primary)] w-full">
         <div
-          className="flex flex-col items-start mx-auto max-w-[1920px]
+          className="flex flex-col items-start mx-auto
           px-[var(--spacing-measures-spacing-016)]
           py-[var(--spacing-measures-spacing-040)]
           gap-[var(--spacing-measures-spacing-040)]
@@ -51,12 +51,12 @@ export default function Footer() {
             <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-064,64px)] order-2 sm:order-1">
               {/* Contact info */}
               <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-016,16px)]">
-                <div className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
+                <div className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
                   Media Economies Design Lab
                 </div>
                 <a
                   href="mailto:medlab@colorado.edu"
-                  className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                  className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
                 >
                   medlab@colorado.edu
                 </a>
@@ -70,13 +70,13 @@ export default function Footer() {
                   aria-label="Follow us on Bluesky"
                 >
                   <img
-                    src="/assets/Bluesky_Logo.svg"
+                    src="assets/Bluesky_Logo.svg"
                     alt="Bluesky"
                     width={24}
                     height={22}
                     className="flex-shrink-0 group-hover:scale-110 transition-transform"
                   />
-                  <div className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
+                  <div className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
                     medlabboulder
                   </div>
                 </a>
@@ -86,13 +86,13 @@ export default function Footer() {
                   aria-label="Follow us on GitLab"
                 >
                   <img
-                    src="/assets/GitLab_Icon.png"
+                    src="assets/GitLab_Icon.png"
                     alt="GitLab"
                     width={22}
                     height={22}
                     className="flex-shrink-0 grayscale group-hover:scale-110 transition-transform"
                   />
-                  <div className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
+                  <div className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal">
                     medlabboulder
                   </div>
                 </a>
@@ -103,19 +103,19 @@ export default function Footer() {
             <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-032,32px)] order-1 sm:order-2 sm:items-end">
               <a
                 href="#"
-                className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Use cases
               </a>
               <a
                 href="#"
-                className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Learn
               </a>
               <a
                 href="#"
-                className="text-[var(--color-content-default-primary)] font-['Inter'] text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 About
               </a>
@@ -126,25 +126,25 @@ export default function Footer() {
 
           {/* Bottom section */}
           <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-032,32px)] sm:flex-row sm:justify-between sm:items-center w-full">
-            <div className="text-[var(--color-content-default-secondary)] font-['Inter'] text-sm leading-5 font-medium sm:text-xs sm:leading-4 lg:text-sm lg:leading-5 lg:font-normal">
+            <div className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-medium sm:text-xs sm:leading-4 lg:text-sm lg:leading-5 lg:font-normal">
               © All right reserved
             </div>
             <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-040,40px)] sm:flex-row sm:gap-[var(--spacing-measures-spacing-040,40px)]">
               <a
                 href="#"
-                className="text-[var(--color-content-default-secondary)] font-['Inter'] text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Privacy Policy
               </a>
               <a
                 href="#"
-                className="text-[var(--color-content-default-secondary)] font-['Inter'] text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Terms of Service
               </a>
               <a
                 href="#"
-                className="text-[var(--color-content-default-secondary)] font-['Inter'] text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+                className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-medium underline sm:text-xs sm:leading-4 sm:no-underline lg:text-sm lg:leading-5 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-secondary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Cookies Settings
               </a>

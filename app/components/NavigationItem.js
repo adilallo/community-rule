@@ -23,10 +23,8 @@ export default function NavigationItem({
 
   // Text styles based on size
   const textStyles = {
-    default:
-      "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
-    xsmall:
-      "font-['Inter'] text-[10px] leading-[12px] font-medium tracking-[0%]",
+    default: "font-inter text-[10px] leading-[12px] font-medium tracking-[0%]",
+    xsmall: "font-inter text-[10px] leading-[12px] font-medium tracking-[0%]",
   };
 
   const baseStyles = `inline-flex items-center ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${textStyles[size]} transition-all duration-200 cursor-pointer`;

@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Community Rule
+
+A Next.js application for community decision-making and governance documentation.
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Storybook Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project includes Storybook for component development and documentation. The setup supports both local development and GitHub Pages deployment.
 
-## Learn More
+### Local Development
 
-To learn more about Next.js, take a look at the following resources:
+For local Storybook development (no base path):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run storybook:local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This will:
 
-## Deploy on Vercel
+- Copy local configuration files (without GitHub Pages base path)
+- Start Storybook at `http://localhost:6006`
+- Ignore configuration changes in git
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Production Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+When ready to deploy to GitHub Pages:
+
+1. **Restore GitHub Pages configuration:**
+
+   ```bash
+   npm run storybook:restore
+   ```
+
+2. **Build Storybook:**
+
+   ```bash
+   npm run build-storybook
+   ```
+
+3. **Deploy to GitHub Pages repository:**
+
+   ```bash
+   # Copy the build to your GitHub Pages repository
+   cp -r storybook-static/* /path/to/communityrulestorybook/
+
+   # Or if you have it as a git submodule:
+   cp -r storybook-static/* communityrulestorybook/
+   cd communityrulestorybook
+   git add .
+   git commit -m "Update Storybook build"
+   git push origin main
+   ```
+
+### Switching Between Configurations
+
+- **Local Development:** `npm run storybook:local`
+- **Production Build:** `npm run storybook:restore` then `npm run build-storybook`
+- **Back to Local:** `npm run storybook:local`
+
+The gitignore is configured to prevent configuration file changes from triggering git changes during local development.
+
+### Available Scripts
+
+- `npm run dev` - Start Next.js development server
+- `npm run build` - Build Next.js application for production
+- `npm run start` - Start Next.js production server
+- `npm run storybook:local` - Start Storybook with local configuration
+- `npm run storybook:restore` - Restore GitHub Pages configuration
+- `npm run build-storybook` - Build Storybook for production
+- `npm run storybook` - Start Storybook with current configuration
