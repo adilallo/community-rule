@@ -344,7 +344,7 @@
   --color-content-brand-teal: var(--color-teal-teal500);
 
   --color-content-default-brand-accent: var(--color-opacity-700);
-  --color-content-default-brand-primary: var(--color-yellow-yellow100);
+  --color-content-default-brand-primary: var(--color-yellow-yellow50);
   --color-content-default-brand-secondary: var(--color-rust-rust400);
   --color-content-default-primary: var(--color-gray-000);
   --color-content-default-secondary: var(--color-gray-200);
