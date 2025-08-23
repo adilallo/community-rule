@@ -30,7 +30,7 @@ const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
           </div>
 
           {/* Hero Image Container */}
-          <div className="w-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
+          <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
             <img
               src="assets/HeroImage.png"
               alt="Hero illustration"

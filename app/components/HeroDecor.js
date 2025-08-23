@@ -3,7 +3,7 @@
 const HeroDecor = ({ className = "" }) => {
   return (
     <svg
-      className={`text-[#FDFAA8] opacity-50 ${className}`}
+      className={`text-[var(--color-surface-default-brand-lighter-accent)] opacity-50 ${className}`}
       viewBox="0 0 1540 645"
       aria-hidden="true"
       overflow="visible"
