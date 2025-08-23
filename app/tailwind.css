@@ -4,6 +4,7 @@
 @source "../stories/**/*";
 @source "../app/**/*";
 @source "../.storybook/**/*";
+@source "./**/*";
 
 @theme inline {
   /* Custom breakpoints */
@@ -15,6 +16,14 @@
 
   /* Reset Tailwind color defaults to avoid collisions */
   --color-*: initial;
+
+  /* Font families */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-bricolage-grotesque), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-space-grotesk), ui-monospace, SFMono-Regular,
+    "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Dimension */
   --spacing-scale-000: 0px;
@@ -409,7 +418,6 @@
   --shadow-subtle: 0px 0px 48px 0px oklch(0% 0 0 / 10%);
   --shadow-minimal-shadow: 0px 0px 8px 0px oklch(0% 0 0 / 15%);
   --shadow-focus-inverse: 0px 0px 10px 1px oklch(23.93% 0 263.28);
-  --shadow-subtle: 0px 0px 48px 0px oklch(0% 0 0 / 10%);
   /* Use this shadow most of the time */
   --shadow-shallow-below: 0px 4px 16px 0px oklch(0% 0 0 / 12%);
   --shadow-default: 0px 4px 6px 0px oklch(0% 0 0 / 9%);
