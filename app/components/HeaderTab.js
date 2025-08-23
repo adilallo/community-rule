@@ -10,7 +10,7 @@ export default function HeaderTab({
 
   return (
     <div
-      className={`HeaderTab header-breakpoint-transition relative bg-[var(--color-surface-default-brand-primary)] rounded-t-[32px] sm:rounded-t-[32px] md:rounded-t-[32px] lg:rounded-t-[32px] xl:rounded-t-[32px] pl-[var(--spacing-scale-012)] h-[40px] sm:h-[52px] md:h-[52px] lg:h-[52px] xl:h-[64px] sm:pr-[var(--spacing-scale-006)] md:pl-[var(--spacing-scale-024)] lg:pl-[var(--spacing-scale-024)] xl:pl-[var(--spacing-scale-032)] md:pr-[var(--spacing-scale-012)] lg:pr-[var(--spacing-scale-048)] xl:pr-[var(--spacing-scale-120)] md:gap-[var(--spacing-scale-032)] ${stretchClasses} ${className}`}
+      className={`HeaderTab header-breakpoint-transition relative bg-[var(--color-surface-inverse-brand-primary)] rounded-t-[32px] sm:rounded-t-[32px] md:rounded-t-[32px] lg:rounded-t-[32px] xl:rounded-t-[32px] pl-[var(--spacing-scale-012)] h-[40px] sm:h-[52px] md:h-[52px] lg:h-[52px] xl:h-[64px] sm:pr-[var(--spacing-scale-006)] md:pl-[var(--spacing-scale-024)] lg:pl-[var(--spacing-scale-024)] xl:pl-[var(--spacing-scale-032)] md:pr-[var(--spacing-scale-012)] lg:pr-[var(--spacing-scale-048)] xl:pr-[var(--spacing-scale-120)] md:gap-[var(--spacing-scale-032)] ${stretchClasses} ${className}`}
       {...props}
     >
       {children}

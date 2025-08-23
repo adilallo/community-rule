@@ -372,7 +372,7 @@
   --color-surface-default-brand-lavender: var(--color-lavender-lavender200);
   --color-surface-default-brand-lighter-accent: var(--color-yellow-yellow100);
   --color-surface-default-brand-lime: var(--color-lime-lime100);
-  --color-surface-default-brand-primary: var(--color-yellow-yellow50);
+  --color-surface-default-brand-primary: var(--color-yellow-yellow100);
   --color-surface-default-brand-royal: var(--color-royal-blue-royal-blue50);
   --color-surface-default-brand-rust: var(--color-rust-rust100);
   --color-surface-default-brand-teal: var(--color-teal-teal50);
@@ -389,7 +389,7 @@
   --color-surface-default-utility-warning: var(--color-yellow-yellow500);
 
   --color-surface-inverse-brand-accent: var(--color-yellow-yellow100);
-  --color-surface-inverse-brand-primary: var(--color-yellow-yellow100);
+  --color-surface-inverse-brand-primary: var(--color-yellow-yellow50);
   --color-surface-inverse-brand-secondary: var(--color-rust-rust300);
   --color-surface-inverse-primary: var(--color-gray-000);
   --color-surface-inverse-secondary: var(--color-gray-100);
