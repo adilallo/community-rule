@@ -2,6 +2,7 @@
 
 import SectionHeader from "./SectionHeader";
 import RuleCard from "./RuleCard";
+import Button from "./Button";
 import Image from "next/image";
 
 const RuleStack = ({ children, className = "" }) => {
@@ -67,6 +68,13 @@ const RuleStack = ({ children, className = "" }) => {
           }
           backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
         />
+      </div>
+
+      {/* See all templates button */}
+      <div className="flex justify-center">
+        <Button variant="outlined" size="large">
+          See all templates
+        </Button>
       </div>
     </div>
   );

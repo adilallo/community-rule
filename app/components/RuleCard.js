@@ -9,7 +9,7 @@ const RuleCard = ({
 }) => {
   return (
     <div
-      className={`${backgroundColor} rounded-[var(--spacing-scale-012)] pt-[var(--spacing-scale-012)] pr-[var(--spacing-scale-012)] pl-[var(--spacing-scale-012)] pb-[var(--spacing-scale-024)] flex flex-col gap-[18px] shadow-lg backdrop-blur-sm ${className}`}
+      className={`${backgroundColor} rounded-[var(--radius-measures-radius-small)] pt-[var(--spacing-scale-012)] pr-[var(--spacing-scale-012)] pl-[var(--spacing-scale-012)] pb-[var(--spacing-scale-024)] flex flex-col gap-[18px] shadow-lg backdrop-blur-sm ${className}`}
     >
       {/* Header Container */}
       <div className="grid grid-cols-[auto_1fr] h-[72px] border-b border-[var(--color-surface-default-primary)]">
