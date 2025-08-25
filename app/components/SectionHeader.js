@@ -13,8 +13,8 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
       <div
         className={
           variant === "multi-line"
-            ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[50%] xl:h-[var(--spacing-scale-156)] xl:flex xl:items-center"
-            : "lg:w-[369px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[452px] xl:h-[var(--spacing-scale-156)] xl:flex xl:items-center"
+            ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[50%] xl:h-[156px] xl:flex xl:items-center"
+            : "lg:w-[369px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[452px] xl:h-[156px] xl:flex xl:items-center"
         }
       >
         <h2
@@ -33,8 +33,8 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
       <div
         className={
           variant === "multi-line"
-            ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end lg:ml-[var(--spacing-scale-016)] xl:ml-[0px] xl:w-[50%] xl:h-[var(--spacing-scale-156)] xl:flex xl:items-center xl:justify-end"
-            : "lg:w-[928px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end xl:w-[763px] xl:h-[var(--spacing-scale-156)] xl:flex xl:items-center xl:justify-end"
+            ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end lg:ml-[var(--spacing-scale-016)] xl:ml-[0px] xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-end"
+            : "lg:w-[928px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end xl:h-[156px] xl:flex xl:items-center xl:justify-end"
         }
       >
         <p
