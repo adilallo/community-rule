@@ -8,14 +8,14 @@ import Image from "next/image";
 const RuleStack = ({ children, className = "" }) => {
   return (
     <div
-      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] flex flex-col gap-[var(--spacing-scale-024)] ${className}`}
+      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] ${className}`}
     >
       <SectionHeader
         title="Popular templates"
         subtitle="These are popular patterns for making decisions in mutual aid and open source communities. You can use them as they are or as a starting place for customizing your own CommunityRule."
         variant="multi-line"
       />
-      <div className="flex flex-col gap-[18px]">
+      <div className="flex flex-col gap-[18px] xmd:grid xmd:grid-cols-2">
         <RuleCard
           title="Consensus clusters"
           description="Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council."
