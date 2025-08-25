@@ -8,7 +8,7 @@ import Image from "next/image";
 const RuleStack = ({ children, className = "" }) => {
   return (
     <div
-      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
+      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] xl:px-[var(--spacing-scale-096)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
     >
       <SectionHeader
         title="Popular templates"
