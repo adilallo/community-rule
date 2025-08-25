@@ -46,7 +46,7 @@ export const Default = {
     backgroundColor: "bg-[var(--color-surface-default-brand-lime)]",
     icon: (
       <Image
-        src="/assets/Icon_Sociocracy.svg"
+        src="assets/Icon_Sociocracy.svg"
         alt="Sociocracy"
         width={40}
         height={40}
@@ -65,7 +65,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
         icon={
           <Image
-            src="/assets/Icon_Sociocracy.svg"
+            src="assets/Icon_Sociocracy.svg"
             alt="Sociocracy"
             width={40}
             height={40}
@@ -80,7 +80,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
         icon={
           <Image
-            src="/assets/Icon_Consensus.svg"
+            src="assets/Icon_Consensus.svg"
             alt="Consensus"
             width={40}
             height={40}
@@ -95,7 +95,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-red)]"
         icon={
           <Image
-            src="/assets/Icon_ElectedBoard.svg"
+            src="assets/Icon_ElectedBoard.svg"
             alt="Elected Board"
             width={40}
             height={40}
@@ -110,7 +110,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
         icon={
           <Image
-            src="/assets/Icon_Petition.svg"
+            src="assets/Icon_Petition.svg"
             alt="Petition"
             width={40}
             height={40}
