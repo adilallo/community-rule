@@ -6,6 +6,12 @@ import Button from "./Button";
 import Image from "next/image";
 
 const RuleStack = ({ children, className = "" }) => {
+  const handleTemplateClick = (templateName) => {
+    console.log(`Template selected: ${templateName}`);
+    // This would typically navigate to template details or open a modal
+    // For now, we'll just log the selection
+  };
+
   return (
     <div
       className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] xl:px-[var(--spacing-scale-096)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
@@ -29,6 +35,7 @@ const RuleStack = ({ children, className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
+          onClick={() => handleTemplateClick("Consensus clusters")}
         />
         <RuleCard
           title="Consensus"
@@ -43,6 +50,7 @@ const RuleStack = ({ children, className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
+          onClick={() => handleTemplateClick("Consensus")}
         />
         <RuleCard
           title="Elected Board"
@@ -57,6 +65,7 @@ const RuleStack = ({ children, className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-red)]"
+          onClick={() => handleTemplateClick("Elected Board")}
         />
         <RuleCard
           title="Petition"
@@ -71,6 +80,7 @@ const RuleStack = ({ children, className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
+          onClick={() => handleTemplateClick("Petition")}
         />
       </div>
 
