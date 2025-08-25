@@ -8,7 +8,7 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
         <h2
           className={
             variant === "multi-line"
-              ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:font-bold md:text-[32px] md:leading-[40px] text-[var(--color-content-default-primary)]"
+              ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:font-bold md:text-[32px] md:leading-[40px] lg:w-[410px] lg:text-left text-[var(--color-content-default-primary)]"
               : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px] lg:text-[32px] lg:leading-[40px] lg:w-[369px] lg:pr-24 xl:text-[40px] xl:leading-[52px] xl:w-[452px] xl:pr-24 text-[var(--color-content-default-primary)]"
           }
         >
@@ -22,7 +22,7 @@ const SectionHeader = ({ title, subtitle, titleLg, variant = "default" }) => {
         <p
           className={
             variant === "multi-line"
-              ? "font-inter font-normal text-[14px] leading-[20px] md:font-normal md:text-[18px] md:leading-[130%] text-[var(--color-content-default-tertiary)]"
+              ? "font-inter font-normal text-[14px] leading-[20px] md:font-normal md:text-[18px] md:leading-[130%] lg:w-[497px] text-[var(--color-content-default-tertiary)]"
               : "font-inter font-normal text-[18px] leading-[130%] sm:text-[18px] sm:leading-[32px] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] xl:text-right text-[#484848] sm:text-[var(--color-content-default-tertiary)] lg:text-[var(--color-content-default-tertiary)] xl:text-[var(--color-content-default-tertiary)] tracking-[0px]"
           }
         >

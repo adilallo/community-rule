@@ -8,14 +8,14 @@ import Image from "next/image";
 const RuleStack = ({ children, className = "" }) => {
   return (
     <div
-      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] ${className}`}
+      className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
     >
       <SectionHeader
         title="Popular templates"
         subtitle="These are popular patterns for making decisions in mutual aid and open source communities. You can use them as they are or as a starting place for customizing your own CommunityRule."
         variant="multi-line"
       />
-      <div className="flex flex-col gap-[18px] xmd:grid xmd:grid-cols-2">
+      <div className="flex flex-col gap-[18px] xmd:grid xmd:grid-cols-2 lg:gap-[var(--spacing-scale-024)]">
         <RuleCard
           title="Consensus clusters"
           description="Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council."
@@ -25,7 +25,7 @@ const RuleStack = ({ children, className = "" }) => {
               alt="Sociocracy"
               width={40}
               height={40}
-              className="md:w-[56px] md:h-[56px]"
+              className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
@@ -39,7 +39,7 @@ const RuleStack = ({ children, className = "" }) => {
               alt="Consensus"
               width={40}
               height={40}
-              className="md:w-[56px] md:h-[56px]"
+              className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
@@ -53,7 +53,7 @@ const RuleStack = ({ children, className = "" }) => {
               alt="Elected Board"
               width={40}
               height={40}
-              className="md:w-[56px] md:h-[56px]"
+              className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-red)]"
@@ -67,7 +67,7 @@ const RuleStack = ({ children, className = "" }) => {
               alt="Petition"
               width={40}
               height={40}
-              className="md:w-[56px] md:h-[56px]"
+              className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
