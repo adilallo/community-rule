@@ -2,6 +2,7 @@ import NumberedCards from "./components/NumberedCards";
 import HeroBanner from "./components/HeroBanner";
 import LogoWall from "./components/LogoWall";
 import RuleStack from "./components/RuleStack";
+import QuoteBlock from "./components/QuoteBlock";
 
 export default function Page() {
   const heroBannerData = {
@@ -41,6 +42,7 @@ export default function Page() {
       <LogoWall />
       <NumberedCards {...numberedCardsData} />
       <RuleStack />
+      <QuoteBlock />
     </div>
   );
 }
