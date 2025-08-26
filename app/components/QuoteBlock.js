@@ -140,30 +140,32 @@ const QuoteBlock = ({
           <div className={`flex flex-col ${config.avatarGap}`}>
             {/* Avatar with error handling */}
             <div className="relative">
-              <Image
-                src={currentAvatarSrc}
-                alt={`Portrait of ${author}`}
-                width={64}
-                height={64}
-                className={`filter sepia ${
-                  config.avatar
-                } transition-opacity duration-300 ${
-                  imageLoading ? "opacity-0" : "opacity-100"
-                }`}
-                loading="lazy"
-                onError={handleImageError}
-                onLoad={handleImageLoad}
-              />
+              {!imageError ? (
+                <Image
+                  src={avatarSrc}
+                  alt={`Portrait of ${author}`}
+                  width={64}
+                  height={64}
+                  className={`filter sepia ${
+                    config.avatar
+                  } transition-opacity duration-300 ${
+                    imageLoading ? "opacity-0" : "opacity-100"
+                  }`}
+                  loading="lazy"
+                  onError={handleImageError}
+                  onLoad={handleImageLoad}
+                />
+              ) : null}
 
               {/* Loading state */}
-              {imageLoading && (
+              {imageLoading && !imageError && (
                 <div
                   className={`absolute inset-0 bg-gray-200 animate-pulse rounded-full ${config.avatar}`}
                 />
               )}
 
               {/* Error state - show initials */}
-              {imageError && !imageLoading && (
+              {imageError && (
                 <div
                   className={`flex items-center justify-center bg-gray-300 rounded-full ${config.avatar} text-gray-600 font-bold`}
                 >
@@ -184,7 +186,20 @@ const QuoteBlock = ({
               className="relative"
             >
               <p
-                className={`font-bricolage-grotesque font-normal ${config.quote} text-[var(--color-content-inverse-primary)] -indent-[0.5em] relative before:content-['\\201C'] after:content-['\\201D'] before:mr-[0.05em] after:ml-[0.05em] before:[font-family:var(--font-bricolage-grotesque)] after:[font-family:var(--font-bricolage-grotesque)]`}
+                data-qopen="&ldquo;"
+                data-qclose="&rdquo;"
+                className={[
+                  "font-bricolage-grotesque font-normal",
+                  config.quote,
+                  "text-[var(--color-content-inverse-primary)]",
+                  // give space for the hanging open-quote so it's not clipped:
+                  "pl-[0.6em] -indent-[0.6em]",
+                  // inject quotes
+                  "relative before:content-[attr(data-qopen)] after:content-[attr(data-qclose)]",
+                  // lock quote glyphs to your display face
+                  "before:[font-family:var(--font-bricolage-grotesque)]",
+                  "after:[font-family:var(--font-bricolage-grotesque)]",
+                ].join(" ")}
               >
                 {quote}
               </p>
@@ -199,7 +214,16 @@ const QuoteBlock = ({
             </cite>
             {source && (
               <p
-                className={`font-inter font-normal ${config.source} text-[var(--color-content-inverse-primary)] uppercase -indent-[0.5em] relative before:content-['\\201C'] after:content-['\\201D'] before:mr-[0.05em] after:ml-[0.05em] before:[font-family:var(--font-inter)] after:[font-family:var(--font-inter)]`}
+                data-qopen="&ldquo;"
+                data-qclose="&rdquo;"
+                className={[
+                  "font-inter font-normal",
+                  config.source,
+                  "text-[var(--color-content-inverse-primary)] uppercase",
+                  "pl-[0.6em] -indent-[0.6em]",
+                  "relative before:content-[attr(data-qopen)] after:content-[attr(data-qclose)]",
+                  "before:[font-family:var(--font-inter)] after:[font-family:var(--font-inter)]",
+                ].join(" ")}
               >
                 {source}
               </p>
