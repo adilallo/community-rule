@@ -3,7 +3,7 @@
 const QuoteDecor = ({ className = "" }) => {
   return (
     <svg
-      className={`text-[var(--color-surface-inverse-brand-primary)] opacity-100 w-full h-full md:max-w-[640px] lg:max-w-[1440px] ${className}`}
+      className={`text-[var(--color-surface-inverse-brand-primary)] opacity-100 w-full h-full md:max-w-[640px] lg:max-w-[850px] xl:max-w-[850px] ${className}`}
       viewBox="400 0 442 163"
       aria-hidden="true"
       overflow="visible"
