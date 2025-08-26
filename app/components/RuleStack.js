@@ -1,26 +1,32 @@
 "use client";
 
-import SectionHeader from "./SectionHeader";
+import React from "react";
+import Image from "next/image";
 import RuleCard from "./RuleCard";
 import Button from "./Button";
-import Image from "next/image";
 
-const RuleStack = ({ children, className = "" }) => {
+const RuleStack = ({ className = "" }) => {
   const handleTemplateClick = (templateName) => {
-    console.log(`Template selected: ${templateName}`);
-    // This would typically navigate to template details or open a modal
-    // For now, we'll just log the selection
+    // Basic analytics tracking
+    if (typeof window !== "undefined") {
+      if (window.gtag) {
+        window.gtag("event", "template_click", {
+          template_name: templateName,
+        });
+      }
+      if (window.analytics) {
+        window.analytics.track("Template Clicked", {
+          templateName: templateName,
+        });
+      }
+    }
+    console.log(`${templateName} template clicked`);
   };
 
   return (
-    <div
+    <section
       className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] xl:px-[var(--spacing-scale-096)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
     >
-      <SectionHeader
-        title="Popular templates"
-        subtitle="These are popular patterns for making decisions in mutual aid and open source communities. You can use them as they are or as a starting place for customizing your own CommunityRule."
-        variant="multi-line"
-      />
       <div className="flex flex-col gap-[18px] xmd:grid xmd:grid-cols-2 lg:gap-[var(--spacing-scale-024)]">
         <RuleCard
           title="Consensus clusters"
@@ -90,7 +96,7 @@ const RuleStack = ({ children, className = "" }) => {
           See all templates
         </Button>
       </div>
-    </div>
+    </section>
   );
 };
 
