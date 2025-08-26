@@ -12,6 +12,11 @@
     -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
+.font-space-grotesk {
+  font-family: var(--font-space-grotesk), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
 /* Set default body text face */
 html,
 body {
