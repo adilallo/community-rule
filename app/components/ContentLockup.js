@@ -59,11 +59,13 @@ const ContentLockup = ({
           {/* Title container */}
           <div className={styles.titleContainer}>
             <h1 className={styles.title}>{title}</h1>
-            <img
-              src="assets/Shapes_1.svg"
-              alt="Decorative shapes"
-              className={styles.shape}
-            />
+            {variant === "hero" && (
+              <img
+                src="assets/Shapes_1.svg"
+                alt="Decorative shapes"
+                className={styles.shape}
+              />
+            )}
           </div>
 
           {/* Subtitle */}
