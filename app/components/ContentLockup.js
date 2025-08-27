@@ -46,35 +46,58 @@ const ContentLockup = ({
       shape:
         "w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]",
     },
+    ask: {
+      container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10",
+      textContainer: "flex flex-col gap-[var(--spacing-scale-008)]",
+      titleGroup: "flex flex-col gap-[var(--spacing-scale-008)]",
+      titleContainer:
+        "flex gap-[var(--spacing-scale-008)] items-center justify-center",
+      title:
+        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] text-[var(--color-content-default-brand-primary)] text-center",
+      subtitle:
+        "font-inter font-normal text-[18px] leading-[130%] tracking-[0] text-[var(--color-content-default-primary)] text-center",
+      shape:
+        "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
+    },
   };
 
   const styles = variantStyles[variant] || variantStyles.hero;
 
   return (
     <div className={styles.container}>
-      {/* Text content container */}
-      <div className={styles.textContainer}>
-        {/* Title and subtitle group */}
+      {variant === "ask" ? (
+        /* Simplified structure for ask variant */
         <div className={styles.titleGroup}>
-          {/* Title container */}
           <div className={styles.titleContainer}>
             <h1 className={styles.title}>{title}</h1>
-            {variant === "hero" && (
-              <img
-                src="assets/Shapes_1.svg"
-                alt="Decorative shapes"
-                className={styles.shape}
-              />
-            )}
           </div>
-
-          {/* Subtitle */}
           <h2 className={styles.subtitle}>{subtitle}</h2>
         </div>
+      ) : (
+        /* Full structure for other variants */
+        <div className={styles.textContainer}>
+          {/* Title and subtitle group */}
+          <div className={styles.titleGroup}>
+            {/* Title container */}
+            <div className={styles.titleContainer}>
+              <h1 className={styles.title}>{title}</h1>
+              {variant === "hero" && (
+                <img
+                  src="assets/Shapes_1.svg"
+                  alt="Decorative shapes"
+                  className={styles.shape}
+                />
+              )}
+            </div>
 
-        {/* Description */}
-        {description && <p className={styles.description}>{description}</p>}
-      </div>
+            {/* Subtitle */}
+            <h2 className={styles.subtitle}>{subtitle}</h2>
+          </div>
+
+          {/* Description */}
+          {description && <p className={styles.description}>{description}</p>}
+        </div>
+      )}
 
       {/* Link for feature variant */}
       {variant === "feature" && linkText && (
