@@ -7,7 +7,7 @@ import MiniCard from "./MiniCard";
 const FeatureGrid = ({ title, subtitle, className = "" }) => {
   return (
     <section
-      className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] bg-transparent ${className}`}
+      className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:pt-[var(--spacing-scale-076)] md:pb-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-048)] bg-transparent ${className}`}
       aria-labelledby="feature-grid-headline"
       role="region"
     >
@@ -22,7 +22,7 @@ const FeatureGrid = ({ title, subtitle, className = "" }) => {
         />
 
         {/* MiniCard Grid */}
-        <div className="grid grid-cols-2 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)]">
           <MiniCard
             backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
             labelLine1="Decision-making"
