@@ -32,16 +32,47 @@ export default {
       control: "text",
       description: "URL for the button link",
     },
+    variant: {
+      control: { type: "select" },
+      options: ["centered", "left-aligned", "compact"],
+      description: "Layout variant for the component",
+    },
+    onContactClick: {
+      action: "contact clicked",
+      description: "Analytics callback for contact button clicks",
+    },
   },
 };
 
 export const Default = {
   args: {
-    title: "Need help getting started?",
-    subtitle: "Our organizers are here to support you",
-    description:
-      "Whether you're forming a new community or improving an existing one, our experienced organizers can provide guidance tailored to your specific needs.",
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
     buttonText: "Ask an organizer",
     buttonHref: "#contact",
+    variant: "centered",
+    onContactClick: (data) => console.log("Contact clicked:", data),
+  },
+};
+
+export const LeftAligned = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an organizer",
+    buttonHref: "#contact",
+    variant: "left-aligned",
+    onContactClick: (data) => console.log("Contact clicked:", data),
+  },
+};
+
+export const Compact = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an organizer",
+    buttonHref: "#contact",
+    variant: "compact",
+    onContactClick: (data) => console.log("Contact clicked:", data),
   },
 };

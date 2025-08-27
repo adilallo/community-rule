@@ -12,6 +12,7 @@ const ContentLockup = ({
   variant = "hero",
   linkText,
   linkHref,
+  alignment = "center", // center, left
 }) => {
   // Variant-specific styling
   const variantStyles = {
@@ -50,12 +51,11 @@ const ContentLockup = ({
       container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10",
       textContainer: "flex flex-col gap-[var(--spacing-scale-008)]",
       titleGroup: "flex flex-col gap-[var(--spacing-scale-008)]",
-      titleContainer:
-        "flex gap-[var(--spacing-scale-008)] items-center justify-center",
+      titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
       title:
-        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] md:text-[44px] md:leading-[110%] xl:text-[52px] xl:leading-[110%] text-[var(--color-content-default-brand-primary)] text-center",
+        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] md:text-[44px] md:leading-[110%] xl:text-[52px] xl:leading-[110%] text-[var(--color-content-default-brand-primary)]",
       subtitle:
-        "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-default-primary)] text-center",
+        "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-default-primary)]",
       shape:
         "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
     },
@@ -67,8 +67,16 @@ const ContentLockup = ({
     <div className={styles.container}>
       {variant === "ask" ? (
         /* Simplified structure for ask variant */
-        <div className={styles.titleGroup}>
-          <div className={styles.titleContainer}>
+        <div
+          className={`${styles.titleGroup} ${
+            alignment === "left" ? "text-left" : "text-center"
+          }`}
+        >
+          <div
+            className={`${styles.titleContainer} ${
+              alignment === "left" ? "justify-start" : "justify-center"
+            }`}
+          >
             <h1 className={styles.title}>{title}</h1>
           </div>
           <h2 className={styles.subtitle}>{subtitle}</h2>
