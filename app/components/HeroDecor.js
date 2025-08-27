@@ -35,9 +35,9 @@ const HeroDecor = ({ className = "" }) => {
               result="softNoise"
               type="matrix"
               values="
-              0.1 0 0 0 0.05
-              0 0.1 0 0 0.05
-              0 0 0.1 0 0.05
+              0.8 0 0 0 0.3
+              0 0.6 0 0 0.2
+              0 0 1.0 0 0.4
               0 0 0 0.25 0"
             />
             {/* 3) MASK noise to the element's alpha only */}
