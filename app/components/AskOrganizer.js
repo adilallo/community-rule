@@ -14,7 +14,7 @@ const AskOrganizer = ({
 }) => {
   return (
     <section
-      className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-032)] ${className}`}
+      className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-032)] md:py-[var(--spacing-scale-096)] md:px-[var(--spacing-scale-064)] ${className}`}
       aria-labelledby="ask-organizer-headline"
       role="region"
       tabIndex={-1}
@@ -30,7 +30,7 @@ const AskOrganizer = ({
 
         {/* Button */}
         <div className="flex justify-center">
-          <Button href={buttonHref} size="small" variant="default">
+          <Button href={buttonHref} size="large" variant="default">
             {buttonText}
           </Button>
         </div>
