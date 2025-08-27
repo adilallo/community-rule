@@ -3,6 +3,7 @@ import HeroBanner from "./components/HeroBanner";
 import LogoWall from "./components/LogoWall";
 import RuleStack from "./components/RuleStack";
 import QuoteBlock from "./components/QuoteBlock";
+import FeatureGrid from "./components/FeatureGrid";
 
 export default function Page() {
   const heroBannerData = {
@@ -36,12 +37,19 @@ export default function Page() {
     ],
   };
 
+  const featureGridData = {
+    title: "We've got your back, every step of the way",
+    subtitle:
+      "Use our toolkit to improve, document, and evolve your organization.",
+  };
+
   return (
     <div>
       <HeroBanner {...heroBannerData} />
       <LogoWall />
       <NumberedCards {...numberedCardsData} />
       <RuleStack />
+      <FeatureGrid {...featureGridData} />
       <QuoteBlock />
     </div>
   );
