@@ -25,30 +25,42 @@ const FeatureGrid = ({ title, subtitle, className = "" }) => {
           </div>
 
           {/* MiniCard Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)] lg:mt-0 lg:flex-grow lg:shrink-0">
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)] lg:mt-0 lg:flex-grow lg:shrink-0"
+            role="grid"
+            aria-label="Feature tools and services"
+          >
             <MiniCard
               backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
               labelLine1="Decision-making"
               labelLine2="support"
               panelContent="assets/Feature_Support.png"
+              ariaLabel="Decision-making support tools"
+              href="#decision-making"
             />
             <MiniCard
               backgroundColor="bg-[#D1FFE2]"
               labelLine1="Values alignment"
               labelLine2="exercises"
               panelContent="assets/Feature_Exercises.png"
+              ariaLabel="Values alignment exercises"
+              href="#values-alignment"
             />
             <MiniCard
               backgroundColor="bg-[#F4CAFF]"
               labelLine1="Membership"
               labelLine2="guidance"
               panelContent="assets/Feature_Guidance.png"
+              ariaLabel="Membership guidance resources"
+              href="#membership-guidance"
             />
             <MiniCard
               backgroundColor="bg-[#CBDDFF]"
               labelLine1="Conflict resolution"
               labelLine2="tools"
               panelContent="assets/Feature_Tools.png"
+              ariaLabel="Conflict resolution tools"
+              href="#conflict-resolution"
             />
           </div>
         </div>
