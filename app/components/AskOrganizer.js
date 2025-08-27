@@ -30,7 +30,12 @@ const AskOrganizer = ({
 
         {/* Button */}
         <div className="flex justify-center">
-          <Button href={buttonHref} size="large" variant="default">
+          <Button
+            href={buttonHref}
+            size="large"
+            variant="default"
+            className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
+          >
             {buttonText}
           </Button>
         </div>

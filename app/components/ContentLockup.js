@@ -53,7 +53,7 @@ const ContentLockup = ({
       titleContainer:
         "flex gap-[var(--spacing-scale-008)] items-center justify-center",
       title:
-        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] md:text-[44px] md:leading-[110%] text-[var(--color-content-default-brand-primary)] text-center",
+        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] md:text-[44px] md:leading-[110%] xl:text-[52px] xl:leading-[110%] text-[var(--color-content-default-brand-primary)] text-center",
       subtitle:
         "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-default-primary)] text-center",
       shape:
