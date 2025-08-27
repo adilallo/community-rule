@@ -80,7 +80,7 @@ const ContentLockup = ({
       {variant === "feature" && linkText && (
         <a
           href={linkHref || "#"}
-          className="font-inter font-medium text-[16px] leading-[20px] underline text-[var(--color-content-default-primary)] hover:text-gray-300 transition-colors"
+          className="font-inter font-medium text-[16px] leading-[20px] underline text-[var(--color-content-default-primary)] hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-surface-default-brand-royal)] focus:ring-offset-2 focus:ring-offset-[#171717] rounded-sm px-1 py-0.5"
         >
           {linkText}
         </a>

@@ -8,9 +8,10 @@ const FeatureGrid = ({ title, subtitle, className = "" }) => {
   return (
     <div className="p-0 lg:p-[var(--spacing-scale-064)]">
       <section
-        className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:pt-[var(--spacing-scale-076)] md:pb-[var(--spacing-scale-048)] lg:pb-[var(--spacing-scale-076)] md:px-[var(--spacing-scale-048)] bg-[#171717] rounded-[var(--radius-measures-radius-xlarge)] ${className}`}
+        className={`py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:pt-[var(--spacing-scale-076)] md:pb-[var(--spacing-scale-048)] lg:pb-[var(--spacing-scale-076)] md:px-[var(--spacing-scale-048)] bg-[#171717] rounded-[var(--radius-measures-radius-xlarge)] focus-within:ring-2 focus-within:ring-[var(--color-surface-default-brand-royal)] focus-within:ring-offset-2 ${className}`}
         aria-labelledby="feature-grid-headline"
         role="region"
+        tabIndex={-1}
       >
         <div className="w-full mx-auto gap-[var(--spacing-scale-048)] lg:flex lg:items-start lg:gap-[var(--spacing-scale-048)] [container-type:inline-size]">
           {/* Feature Content Lockup */}
