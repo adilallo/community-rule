@@ -15,7 +15,7 @@ export default {
     buttonClassName: { control: { type: "text" } },
     variant: {
       control: { type: "select" },
-      options: ["hero", "feature"],
+      options: ["hero", "feature", "ask"],
     },
     linkText: { control: { type: "text" } },
     linkHref: { control: { type: "text" } },
@@ -54,5 +54,13 @@ export const FeatureWithLink = {
     variant: "feature",
     linkText: "Learn more",
     linkHref: "#",
+  },
+};
+
+export const Ask = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    variant: "ask",
   },
 };

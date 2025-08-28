@@ -4,6 +4,7 @@ import LogoWall from "./components/LogoWall";
 import RuleStack from "./components/RuleStack";
 import QuoteBlock from "./components/QuoteBlock";
 import FeatureGrid from "./components/FeatureGrid";
+import AskOrganizer from "./components/AskOrganizer";
 
 export default function Page() {
   const heroBannerData = {
@@ -43,6 +44,13 @@ export default function Page() {
       "Use our toolkit to improve, document, and evolve your organization.",
   };
 
+  const askOrganizerData = {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an organizer",
+    buttonHref: "#contact",
+  };
+
   return (
     <div>
       <HeroBanner {...heroBannerData} />
@@ -51,6 +59,7 @@ export default function Page() {
       <RuleStack />
       <FeatureGrid {...featureGridData} />
       <QuoteBlock />
+      <AskOrganizer {...askOrganizerData} />
     </div>
   );
 }
