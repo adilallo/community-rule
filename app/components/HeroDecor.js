@@ -23,9 +23,9 @@ const HeroDecor = ({ className = "" }) => {
             {/* 1) make noise */}
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.8"
-              numOctaves="2"
-              seed="3"
+              baseFrequency="0.4"
+              numOctaves="3"
+              seed="7"
               stitchTiles="stitch"
               result="noise"
             />
@@ -35,10 +35,10 @@ const HeroDecor = ({ className = "" }) => {
               result="softNoise"
               type="matrix"
               values="
-              0 0 0 0 0
-              0 0 0 0 0
-              0 0 0 0 0
-              0 0 0 0.15 0"
+              0.8 0 0 0 0.3
+              0 0.6 0 0 0.2
+              0 0 1.0 0 0.4
+              0 0 0 0.25 0"
             />
             {/* 3) MASK noise to the element's alpha only */}
             <feComposite

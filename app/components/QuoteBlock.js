@@ -126,6 +126,15 @@ const QuoteBlock = ({
       <div
         className={`${config.card} bg-[var(--color-surface-default-brand-darker-accent)] relative overflow-hidden`}
       >
+        {/* Background with noise texture */}
+        <div
+          className="absolute inset-0 bg-[var(--color-surface-default-brand-darker-accent)]"
+          style={{
+            filter:
+              'url(\'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><defs><filter id="grain" filterUnits="objectBoundingBox" x="0" y="0" width="1" height="1" colorInterpolationFilters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="3" seed="7" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" result="softNoise" type="matrix" values="0.8 0 0 0 0.3 0 0.6 0 0 0.2 0 0 1.0 0 0.4 0 0 0 0.25 0"/><feComposite in="softNoise" in2="SourceAlpha" operator="in" result="maskedNoise"/><feBlend in="SourceGraphic" in2="maskedNoise" mode="multiply"/></filter></defs></svg>#grain\')',
+          }}
+        />
+
         {/* DECORATIONS (behind content) */}
         {config.showDecor && (
           <QuoteDecor
