@@ -3,6 +3,7 @@
 import React from "react";
 import ContentLockup from "./ContentLockup";
 import MiniCard from "./MiniCard";
+import Image from "next/image";
 
 const FeatureGrid = ({ title, subtitle, className = "" }) => {
   return (

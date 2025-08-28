@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 const MiniCard = ({
   children,
@@ -23,7 +24,7 @@ const MiniCard = ({
         {/* Content for the inner panel */}
         {panelContent && (
           <div className="flex items-center justify-center w-full h-full">
-            <img
+            <Image
               src={panelContent}
               alt={
                 ariaLabel ||
@@ -32,6 +33,10 @@ const MiniCard = ({
                 "Feature icon"
               }
               className="max-w-[58px] max-h-[58px] w-auto h-auto object-contain"
+              unoptimized
+              width={0}
+              height={0}
+              sizes="100vw"
             />
           </div>
         )}
