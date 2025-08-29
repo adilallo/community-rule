@@ -8,233 +8,137 @@ on:
     branches: [main, develop]
 
 jobs:
-  # Unit and Integration Tests
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        node-version: [18, 20]
-
+      matrix: { node-version: [18, 20] }
+    env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          node-options: "--max_old_space_size=4096"
+          cache: npm
+      - run: npm ci
+      - run: npm test
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run unit and integration tests
-        run: npm test
-
-      - name: Upload coverage reports
+      # If the Codecov Action fails on Gitea, replace this with the bash uploader below
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/lcov.info
+          files: ./coverage/lcov.info
           flags: unittests
-          name: codecov-umbrella
 
-  # E2E Tests
+      # Bash uploader alternative (uncomment if the action above has issues)
+      # - name: Upload coverage to Codecov (bash)
+      #   run: |
+      #     curl -s https://codecov.io/bash > codecov.sh
+      #     bash codecov.sh -t "${{ secrets.CODECOV_TOKEN }}" -f coverage/lcov.info -F unittests
+
   e2e:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-
+      matrix: { browser: [chromium, firefox, webkit] }
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
+      # start app, wait, run tests
+      - run: npm run preview &
+        env: { CI: true }
+      - run: npx wait-on http://localhost:3000
+      - run: npx playwright test --project=${{ matrix.browser }}
+        env: { CI: true }
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ matrix.browser }}
-
-      - name: Build application
-        run: npm run build
-
-      - name: Start application
-        run: npm run preview &
-        env:
-          CI: true
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run E2E tests
-        run: npx playwright test --project=${{ matrix.browser }}
-        env:
-          CI: true
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
+      # package artifacts (keeps file count small)
+      - name: Package E2E artifacts
         if: always()
+        run: |
+          tar -czf playwright-${{ matrix.browser }}.tgz playwright-report test-results || true
+
+      - name: Upload E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
         with:
           name: playwright-results-${{ matrix.browser }}
-          path: |
-            test-results/
-            playwright-report/
+          path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
 
-  # Visual Regression Tests
   visual-regression:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npm run build
+      - run: npm run preview &
+        env: { CI: true }
+      - run: npx wait-on http://localhost:3000
+      - run: npx playwright test tests/e2e/visual-regression.spec.ts
+        env: { CI: true }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Build application
-        run: npm run build
-
-      - name: Start application
-        run: npm run preview &
-        env:
-          CI: true
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run visual regression tests
-        run: npx playwright test tests/e2e/visual-regression.spec.ts
-        env:
-          CI: true
-
-      - name: Upload visual regression results
-        uses: actions/upload-artifact@v4
+      - name: Package visual artifacts
         if: always()
+        run: |
+          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots || true
+
+      - name: Upload visual artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
         with:
           name: visual-regression-results
-          path: |
-            test-results/
-            tests/e2e/visual-regression.spec.ts-snapshots/
+          path: visual-regression.tgz
           retention-days: 30
 
-  # Performance Tests
   performance:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run build
+      - run: npm run preview &
+        env: { CI: true }
+      - run: npx wait-on http://localhost:3000
+      - run: npm run lhci
+        env: { CI: true }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build application
-        run: npm run build
-
-      - name: Start application
-        run: npm run preview &
-        env:
-          CI: true
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:3000
-
-      - name: Run Lighthouse CI
-        run: npm run lhci
-        env:
-          CI: true
-
-  # Storybook Tests
   storybook:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run build-storybook
+      - run: npm run test:sb
+        env: { CI: true }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build Storybook
-        run: npm run build-storybook
-
-      - name: Run Storybook tests
-        run: npm run test:sb
-        env:
-          CI: true
-
-  # Lint and Format
   lint:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
-
-  # Build Verification
   build:
-    runs-on: macos-latest
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build application
-        run: npm run build
-
-      - name: Build Storybook
-        run: npm run build-storybook
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run build
+      - run: npm run build-storybook
