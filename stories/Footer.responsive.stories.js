@@ -1,9 +1,9 @@
-import Header from "../app/components/Header.js";
+import Footer from "../app/components/Footer.js";
 import { within, userEvent } from "@storybook/testing-library";
 
 export default {
-  title: "Components/Header/Responsive",
-  component: Header,
+  title: "Components/Footer/Responsive",
+  component: Footer,
   parameters: {
     // Chromatic configuration for responsive testing
     chromatic: {
@@ -74,21 +74,15 @@ export default {
       },
     },
   },
-  argTypes: {
-    onToggle: { action: "toggled" },
-  },
 };
 
 // Default story - will be captured at all viewports by Chromatic
 export const Default = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     docs: {
       description: {
         story:
-          "Header component at different breakpoints. Chromatic will capture screenshots at 360px, 640px, 768px, 1024px, and 1280px viewport widths to test responsive behavior.",
+          "Footer component at different breakpoints. Chromatic will capture screenshots at 320px, 360px, 480px, 640px, 768px, 1024px, 1280px, 1440px, and 1920px viewport widths to test responsive behavior.",
       },
     },
   },
@@ -96,9 +90,6 @@ export const Default = {
 
 // Story for each breakpoint to make testing easier
 export const ExtraSmall = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "xs",
@@ -106,16 +97,13 @@ export const ExtraSmall = {
     docs: {
       description: {
         story:
-          "Header at extra small breakpoint (360px). Navigation items are moved to the right section.",
+          "Footer at extra small breakpoint (360px). Tests mobile layout and stacking behavior.",
       },
     },
   },
 };
 
 export const Small = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "sm",
@@ -123,16 +111,13 @@ export const Small = {
     docs: {
       description: {
         story:
-          "Header at small breakpoint (640px). All navigation items are grouped together in the center.",
+          "Footer at small breakpoint (640px). Tests tablet layout and responsive behavior.",
       },
     },
   },
 };
 
 export const Medium = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "md",
@@ -140,33 +125,26 @@ export const Medium = {
     docs: {
       description: {
         story:
-          "Header at medium breakpoint (768px). Navigation items are in the center, login and create rule buttons on the right.",
+          "Footer at medium breakpoint (768px). Tests small desktop layout.",
       },
     },
   },
 };
 
 export const Large = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "lg",
     },
     docs: {
       description: {
-        story:
-          "Header at large breakpoint (1024px). Full navigation layout with larger elements.",
+        story: "Footer at large breakpoint (1024px). Tests desktop layout.",
       },
     },
   },
 };
 
 export const ExtraLarge = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "xl",
@@ -174,7 +152,35 @@ export const ExtraLarge = {
     docs: {
       description: {
         story:
-          "Header at extra large breakpoint (1280px). Maximum size layout with largest elements.",
+          "Footer at extra large breakpoint (1280px). Tests large desktop layout.",
+      },
+    },
+  },
+};
+
+export const TwoXL = {
+  parameters: {
+    viewport: {
+      defaultViewport: "xxl",
+    },
+    docs: {
+      description: {
+        story:
+          "Footer at 2XL breakpoint (1440px). Tests very large desktop layout.",
+      },
+    },
+  },
+};
+
+export const FullHD = {
+  parameters: {
+    viewport: {
+      defaultViewport: "full",
+    },
+    docs: {
+      description: {
+        story:
+          "Footer at Full HD breakpoint (1920px). Tests maximum desktop layout.",
       },
     },
   },
@@ -182,21 +188,18 @@ export const ExtraLarge = {
 
 // Interactive story for testing user interactions
 export const Interactive = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     docs: {
       description: {
         story:
-          "Interactive header for testing user interactions. Check the Actions panel to see triggered events.",
+          "Interactive footer for testing user interactions. Check the Actions panel to see triggered events.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Click navigation items", async () => {
+    await step("Click footer links", async () => {
       const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
       await userEvent.click(useCasesLink);
 
@@ -205,42 +208,44 @@ export const Interactive = {
 
       const aboutLink = canvas.getByRole("link", { name: /about/i });
       await userEvent.click(aboutLink);
+
+      const privacyLink = canvas.getByRole("link", { name: /privacy policy/i });
+      await userEvent.click(privacyLink);
+
+      const termsLink = canvas.getByRole("link", { name: /terms of service/i });
+      await userEvent.click(termsLink);
     });
 
-    await step("Click authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
-        name: /log in to your account/i,
+    await step("Click social media links", async () => {
+      const blueskyLink = canvas.getByRole("link", {
+        name: /follow us on bluesky/i,
       });
-      await userEvent.click(loginLink);
+      await userEvent.click(blueskyLink);
 
-      const createRuleButton = canvas.getByRole("button", {
-        name: /create a new rule with avatar decoration/i,
+      const gitlabLink = canvas.getByRole("link", {
+        name: /follow us on gitlab/i,
       });
-      await userEvent.click(createRuleButton);
+      await userEvent.click(gitlabLink);
     });
   },
 };
 
 // Story for testing hover states
 export const HoverStates = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     docs: {
       description: {
         story:
-          "Header with hover states visible. This story captures the visual appearance when elements are hovered.",
+          "Footer with hover states visible. This story captures the visual appearance when elements are hovered.",
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Hover over navigation items", async () => {
+    await step("Hover over footer links", async () => {
       const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
       await userEvent.hover(useCasesLink);
-      // Wait for hover state to be visible
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const learnLink = canvas.getByRole("link", { name: /learn/i });
@@ -252,88 +257,38 @@ export const HoverStates = {
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
-    await step("Hover over authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
-        name: /log in to your account/i,
+    await step("Hover over social media links", async () => {
+      const blueskyLink = canvas.getByRole("link", {
+        name: /follow us on bluesky/i,
       });
-      await userEvent.hover(loginLink);
+      await userEvent.hover(blueskyLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const createRuleButton = canvas.getByRole("button", {
-        name: /create a new rule with avatar decoration/i,
+      const gitlabLink = canvas.getByRole("link", {
+        name: /follow us on gitlab/i,
       });
-      await userEvent.hover(createRuleButton);
+      await userEvent.hover(gitlabLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
   },
 };
 
-// Story for testing focus states
-export const FocusStates = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Header with focus states visible. This story captures the visual appearance when elements are focused.",
-      },
-    },
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("Focus on navigation items", async () => {
-      const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
-      useCasesLink.focus();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      const learnLink = canvas.getByRole("link", { name: /learn/i });
-      learnLink.focus();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      const aboutLink = canvas.getByRole("link", { name: /about/i });
-      aboutLink.focus();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
-
-    await step("Focus on authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
-        name: /log in to your account/i,
-      });
-      loginLink.focus();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      const createRuleButton = canvas.getByRole("button", {
-        name: /create a new rule with avatar decoration/i,
-      });
-      createRuleButton.focus();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
-  },
-};
-
-// Story for testing with long content
+// Story for testing with long content above
 export const WithLongContent = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   render: () => (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
-      <Header onToggle={() => console.log("Navigation toggled")} />
       <main className="p-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold text-white mb-4">
-            Header with Long Content
+            Footer with Long Content Above
           </h1>
           <p className="text-white mb-4">
-            This story tests how the header looks with a lot of content below
-            it. This helps ensure the header maintains its visual integrity in
+            This story tests how the footer looks with a lot of content above
+            it. This helps ensure the footer maintains its visual integrity in
             real-world scenarios.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Array.from({ length: 12 }, (_, i) => (
+            {Array.from({ length: 20 }, (_, i) => (
               <div
                 key={i}
                 className="bg-[var(--color-surface-default-secondary)] p-4 rounded-lg"
@@ -342,7 +297,7 @@ export const WithLongContent = {
                   Content Block {i + 1}
                 </h3>
                 <p className="text-[var(--color-content-default-secondary)] text-sm">
-                  This is example content to show how the header integrates with
+                  This is example content to show how the footer integrates with
                   page content. This block contains enough text to test layout
                   behavior.
                 </p>
@@ -351,13 +306,14 @@ export const WithLongContent = {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   ),
   parameters: {
     docs: {
       description: {
         story:
-          "Header with long content below to test visual integration and layout stability.",
+          "Footer with long content above to test visual integration and layout stability.",
       },
     },
   },
@@ -365,9 +321,6 @@ export const WithLongContent = {
 
 // Story for testing edge cases
 export const EdgeCases = {
-  args: {
-    onToggle: () => console.log("Navigation toggled"),
-  },
   parameters: {
     viewport: {
       defaultViewport: "xs",
@@ -375,7 +328,7 @@ export const EdgeCases = {
     docs: {
       description: {
         story:
-          "Header at the smallest breakpoint to test edge case behavior and ensure no layout issues.",
+          "Footer at the smallest breakpoint to test edge case behavior and ensure no layout issues.",
       },
     },
   },

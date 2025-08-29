@@ -1,11 +1,15 @@
 import { test, expect } from "@playwright/test";
 
 const breakpoints = [
-  { name: "xs", width: 360, height: 700 },
-  { name: "sm", width: 640, height: 700 },
-  { name: "md", width: 768, height: 700 },
-  { name: "lg", width: 1024, height: 700 },
-  { name: "xl", width: 1280, height: 700 },
+  { name: "xs", width: 320, height: 700 },
+  { name: "sm", width: 360, height: 700 },
+  { name: "md", width: 480, height: 700 },
+  { name: "lg", width: 640, height: 700 },
+  { name: "xl", width: 768, height: 700 },
+  { name: "2xl", width: 1024, height: 700 },
+  { name: "3xl", width: 1280, height: 700 },
+  { name: "4xl", width: 1440, height: 700 },
+  { name: "full", width: 1920, height: 700 },
 ];
 
 for (const bp of breakpoints) {
@@ -131,6 +135,89 @@ for (const bp of breakpoints) {
     }
   });
 }
+
+// Visual regression tests
+test.describe("Header visual regression", () => {
+  test("header visual consistency across breakpoints", async ({ page }) => {
+    // Test visual consistency at all breakpoints
+    for (const bp of breakpoints) {
+      await page.setViewportSize({ width: bp.width, height: bp.height });
+      await page.goto("/");
+
+      // Wait for layout to stabilize
+      await page.waitForTimeout(500);
+
+      // Take a screenshot for visual regression testing
+      await expect(page.locator("header").first()).toHaveScreenshot(
+        `header-${bp.name}.png`
+      );
+    }
+  });
+
+  test("header hover states visual consistency", async ({ page }) => {
+    // Test hover states at key breakpoints
+    const keyBreakpoints = [
+      { name: "xs", width: 320, height: 700 },
+      { name: "md", width: 768, height: 700 },
+      { name: "xl", width: 1280, height: 700 },
+    ];
+
+    for (const bp of keyBreakpoints) {
+      await page.setViewportSize({ width: bp.width, height: bp.height });
+      await page.goto("/");
+
+      // Test hover on navigation items
+      const useCasesLink = page.getByRole("link", { name: /use cases/i });
+      await useCasesLink.hover();
+      await page.waitForTimeout(200);
+      await expect(page.locator("header").first()).toHaveScreenshot(
+        `header-${bp.name}-hover-nav.png`
+      );
+
+      // Test hover on create rule button
+      const createRuleButton = page.getByRole("button", {
+        name: /create a new rule with avatar decoration/i,
+      });
+      await createRuleButton.hover();
+      await page.waitForTimeout(200);
+      await expect(page.locator("header").first()).toHaveScreenshot(
+        `header-${bp.name}-hover-button.png`
+      );
+    }
+  });
+
+  test("header focus states visual consistency", async ({ page }) => {
+    // Test focus states at key breakpoints
+    const keyBreakpoints = [
+      { name: "xs", width: 320, height: 700 },
+      { name: "md", width: 768, height: 700 },
+      { name: "xl", width: 1280, height: 700 },
+    ];
+
+    for (const bp of keyBreakpoints) {
+      await page.setViewportSize({ width: bp.width, height: bp.height });
+      await page.goto("/");
+
+      // Test focus on navigation items
+      const useCasesLink = page.getByRole("link", { name: /use cases/i });
+      await useCasesLink.focus();
+      await page.waitForTimeout(200);
+      await expect(page.locator("header").first()).toHaveScreenshot(
+        `header-${bp.name}-focus-nav.png`
+      );
+
+      // Test focus on create rule button
+      const createRuleButton = page.getByRole("button", {
+        name: /create a new rule with avatar decoration/i,
+      });
+      await createRuleButton.focus();
+      await page.waitForTimeout(200);
+      await expect(page.locator("header").first()).toHaveScreenshot(
+        `header-${bp.name}-focus-button.png`
+      );
+    }
+  });
+});
 
 // Additional responsive behavior tests
 test.describe("Header responsive behavior", () => {
