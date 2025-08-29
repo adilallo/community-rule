@@ -3,7 +3,7 @@ run-name: ${{ gitea.actor }} triggered CI pipeline
 
 on:
   push:
-    branches: [main, develop, adilallo/enhancement/TestingFramework]
+    branches: [main, develop]
   pull_request:
     branches: [main, develop]
 
