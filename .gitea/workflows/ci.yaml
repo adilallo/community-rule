@@ -3,14 +3,14 @@ run-name: ${{ gitea.actor }} triggered CI pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, adilallo/enhancement/TestingFramework]
   pull_request:
     branches: [main, develop]
 
 jobs:
   # Unit and Integration Tests
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         node-version: [18, 20]
@@ -41,7 +41,7 @@ jobs:
 
   # E2E Tests
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
@@ -90,7 +90,7 @@ jobs:
 
   # Visual Regression Tests
   visual-regression:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -136,7 +136,7 @@ jobs:
 
   # Performance Tests
   performance:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -169,7 +169,7 @@ jobs:
 
   # Storybook Tests
   storybook:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -194,7 +194,7 @@ jobs:
 
   # Lint and Format
   lint:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code
@@ -217,7 +217,7 @@ jobs:
 
   # Build Verification
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout code

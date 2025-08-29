@@ -9,7 +9,6 @@ runner:
   fetch_timeout: 5s
   fetch_interval: 2s
   labels:
-    - "ubuntu-latest:docker://mcr.microsoft.com/playwright:v1.54.2-jammy"
     - "macos-latest:host"
     - "self-hosted:host"
 
