@@ -1,5 +1,5 @@
 import Footer from "../app/components/Footer.js";
-import { within, userEvent } from "@storybook/testing-library";
+import { within, userEvent } from "@storybook/test";
 
 export default {
   title: "Components/Footer/Responsive",

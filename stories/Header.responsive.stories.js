@@ -1,5 +1,5 @@
 import Header from "../app/components/Header.js";
-import { within, userEvent } from "@storybook/testing-library";
+import { within, userEvent } from "@storybook/test";
 
 export default {
   title: "Components/Header/Responsive",
