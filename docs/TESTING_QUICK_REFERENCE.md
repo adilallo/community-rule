@@ -18,6 +18,19 @@ npm run e2e
 npm run lhci
 ```
 
+### Manual Runner Management
+
+```bash
+# Start runner (before creating PR)
+./start-runner.sh
+
+# Check runner status
+./status-runner.sh
+
+# Stop runner (after PR complete)
+./stop-runner.sh
+```
+
 ### Visual Regression
 
 ```bash

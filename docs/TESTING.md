@@ -90,6 +90,17 @@ tests/
     └── visual-regression.spec.ts # 23 tests per browser
 ```
 
+## 🚀 Runner Management Scripts
+
+```
+community-rule/
+├── start-runner.sh               # Start Gitea Actions runner
+├── stop-runner.sh                # Stop Gitea Actions runner
+├── status-runner.sh              # Check runner status
+├── config.yaml                   # Runner configuration
+└── act_runner                    # Gitea Actions runner binary
+```
+
 ## 🧪 Unit & Integration Testing
 
 ### Framework
@@ -421,6 +432,43 @@ npm run e2e
 # Commit changes
 git add .
 git commit -m "feat: add new component with tests"
+```
+
+### 2. Manual Runner Management
+The Gitea Actions runner is managed manually to save resources and provide control over when CI runs.
+
+#### Start Runner (Before Creating PR)
+```bash
+# Start the runner to execute CI jobs
+./start-runner.sh
+```
+
+#### Check Runner Status
+```bash
+# Check if runner is running and see recent logs
+./status-runner.sh
+```
+
+#### Stop Runner (After PR Complete)
+```bash
+# Stop the runner to free up resources
+./stop-runner.sh
+```
+
+#### Complete PR Workflow
+```bash
+# 1. Start runner
+./start-runner.sh
+
+# 2. Create Pull Request
+# Go to repository → New Pull Request
+
+# 3. Monitor CI progress
+./status-runner.sh
+# Or check Gitea Actions page
+
+# 4. Stop runner when done
+./stop-runner.sh
 ```
 
 ### 2. Pull Request Process
