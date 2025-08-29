@@ -107,19 +107,43 @@ jobs:
           path: visual-regression.tgz
           retention-days: 30
 
-  performance:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
-      - run: npm ci
-      - run: npm run build
-      - run: npm run preview &
-        env: { CI: true }
-      - run: npx wait-on http://localhost:3000
-      - run: npm run lhci
-        env: { CI: true }
+           performance:
+           runs-on: ubuntu-latest
+           steps:
+             - uses: actions/checkout@v4
+             - uses: actions/setup-node@v4
+               with: { node-version: 20, cache: npm }
+             - run: npm ci
+             
+             - name: Install LHCI
+               run: npm i -D @lhci/cli
+             
+             # Ensure a Chrome binary is available (works on Linux/macOS runners)
+             - name: Install Chrome via Puppeteer (portable)
+               run: |
+                 npx @puppeteer/browsers install chrome@stable -P .cache/puppeteer
+                 echo "CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable -P .cache/puppeteer)" >> $GITHUB_ENV
+             
+             - name: Build application
+               run: npm run build
+             
+             - name: Start application
+               run: npm run preview &
+               env: { CI: true }
+             
+             - name: Wait for application
+               run: npx wait-on http://localhost:3000
+             
+             - name: Run Lighthouse CI
+               run: npx lhci autorun --chrome-path="$CHROME_PATH"
+               env: { CI: true }
+             
+             - name: Upload LHCI results
+               if: always()
+               uses: actions/upload-artifact@v3
+               with:
+                 name: lhci-results
+                 path: lhci-results
 
   storybook:
     runs-on: ubuntu-latest
