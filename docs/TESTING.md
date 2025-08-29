@@ -435,27 +435,32 @@ git commit -m "feat: add new component with tests"
 ```
 
 ### 2. Manual Runner Management
+
 The Gitea Actions runner is managed manually to save resources and provide control over when CI runs.
 
 #### Start Runner (Before Creating PR)
+
 ```bash
 # Start the runner to execute CI jobs
 ./start-runner.sh
 ```
 
 #### Check Runner Status
+
 ```bash
 # Check if runner is running and see recent logs
 ./status-runner.sh
 ```
 
 #### Stop Runner (After PR Complete)
+
 ```bash
 # Stop the runner to free up resources
 ./stop-runner.sh
 ```
 
 #### Complete PR Workflow
+
 ```bash
 # 1. Start runner
 ./start-runner.sh
