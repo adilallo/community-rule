@@ -165,8 +165,10 @@ export default function Header({ onToggle }) {
             {/* XSmall breakpoint - All navigation items + Create Rule button */}
             <div className="block sm:hidden" data-testid="auth-xs">
               <div className="flex items-center gap-[var(--spacing-scale-001)]">
-                {renderNavigationItems("xsmall")}
-                {renderLoginButton("xsmall")}
+                <MenuBar size="default">
+                  {renderNavigationItems("xsmall")}
+                  {renderLoginButton("xsmall")}
+                </MenuBar>
                 {renderCreateRuleButton("xsmall", "small", "small")}
               </div>
             </div>
@@ -181,7 +183,7 @@ export default function Header({ onToggle }) {
             {/* Medium breakpoint */}
             <div className="hidden md:block lg:hidden" data-testid="auth-md">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-010)]">
-                {renderLoginButton("xsmall")}
+                <MenuBar size="default">{renderLoginButton("xsmall")}</MenuBar>
                 {renderCreateRuleButton("xsmall", "medium", "medium")}
               </div>
             </div>
@@ -189,7 +191,7 @@ export default function Header({ onToggle }) {
             {/* Large breakpoint */}
             <div className="hidden lg:block xl:hidden" data-testid="auth-lg">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
-                {renderLoginButton("large")}
+                <MenuBar size="large">{renderLoginButton("large")}</MenuBar>
                 {renderCreateRuleButton("large", "xlarge", "xlarge")}
               </div>
             </div>
@@ -197,7 +199,7 @@ export default function Header({ onToggle }) {
             {/* XLarge breakpoint */}
             <div className="hidden xl:block" data-testid="auth-xl">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
-                {renderLoginButton("xlarge")}
+                <MenuBar size="large">{renderLoginButton("xlarge")}</MenuBar>
                 {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
               </div>
             </div>
