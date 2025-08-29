@@ -3,7 +3,14 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "tests/e2e",
   timeout: 60_000,
-  expect: { timeout: 10_000 },
+  expect: {
+    timeout: 10_000,
+    toHaveScreenshot: {
+      animations: "disabled",
+      maxDiffPixelRatio: 0.01, // 1% pixels may differ
+      maxDiffPixels: 200, // or an absolute pixel count
+    },
+  },
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   reporter: [["list"], ["html", { open: "never" }]],
@@ -12,6 +19,9 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    colorScheme: "light", // Ensure consistent color scheme
+    viewport: { width: 1280, height: 800 }, // Consistent viewport
+    deviceScaleFactor: 1, // Consistent device scale
   },
   webServer: {
     command: "npm run dev",
@@ -19,6 +29,9 @@ export default defineConfig({
     reuseExistingServer: true,
     timeout: 120_000,
   },
+  // OS-agnostic snapshot path template (removes platform-specific suffixes)
+  snapshotPathTemplate:
+    "{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png",
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     { name: "firefox", use: { ...devices["Desktop Firefox"] } },

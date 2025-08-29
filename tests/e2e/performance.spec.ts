@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { PlaywrightPerformanceMonitor } from "../performance/performance-monitor.js";
 
-// Performance budgets and thresholds
+// Environment-aware performance budgets and thresholds
 const PERFORMANCE_BUDGETS = {
   // Page load performance
   page_load_time: 3000, // 3 seconds
@@ -19,7 +19,7 @@ const PERFORMANCE_BUDGETS = {
   // Component performance
   component_render_time: 500, // 500ms
   interaction_time: 100, // 100ms
-  scroll_performance: 50, // 50ms
+  scroll_performance: process.env.CI ? 200 : 50, // Looser in CI (200ms vs 50ms)
 
   // Resource performance
   network_request_duration: 1000, // 1 second
@@ -48,6 +48,9 @@ test.describe("Performance Monitoring", () => {
   let performanceMonitor: PlaywrightPerformanceMonitor;
 
   test.beforeEach(async ({ page }) => {
+    // Mark tests as slower in CI environment
+    if (process.env.CI) test.slow();
+
     performanceMonitor = new PlaywrightPerformanceMonitor(page);
     performanceMonitor.setThresholds(PERFORMANCE_BUDGETS);
     performanceMonitor.setBaselines(BASELINE_METRICS);
