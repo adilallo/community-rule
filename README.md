@@ -52,59 +52,46 @@ npm run test:sb
 
 ## 📚 Storybook Development
 
-This project includes Storybook for component development and documentation. The setup supports both local development and GitHub Pages deployment.
+This project includes Storybook for component development and documentation. The setup automatically detects the environment and applies the appropriate configuration.
 
 ### Local Development
 
-For local Storybook development (no base path):
+For local Storybook development:
 
 ```bash
 npm run storybook:local
+# or simply
+npm run storybook
 ```
 
 This will:
 
-- Copy local configuration files (without GitHub Pages base path)
 - Start Storybook at `http://localhost:6006`
-- Ignore configuration changes in git
+- Use relative paths for assets (no base path)
 
-### Production Deployment
+### GitHub Pages Deployment
 
-When ready to deploy to GitHub Pages:
+For GitHub Pages deployment with base path:
 
-1. **Restore GitHub Pages configuration:**
+```bash
+npm run storybook:build:github
+```
 
-   ```bash
-   npm run storybook:restore
-   ```
+This will:
 
-2. **Build Storybook:**
+- Build Storybook with `/communityrulestorybook/` base path
+- Generate files ready for GitHub Pages deployment
 
-   ```bash
-   npm run build-storybook
-   ```
+### CI/CD Integration
 
-3. **Deploy to GitHub Pages repository:**
+The CI pipeline automatically uses the GitHub Pages configuration when building Storybook.
 
-   ```bash
-   # Copy the build to your GitHub Pages repository
-   cp -r storybook-static/* /path/to/communityrulestorybook/
+### Configuration
 
-   # Or if you have it as a git submodule:
-   cp -r storybook-static/* communityrulestorybook/
-   cd communityrulestorybook
-   git add .
-   git commit -m "Update Storybook build"
-   git push origin main
-   ```
+The Storybook configuration automatically detects the environment:
 
-### Switching Between Configurations
-
-- **Local Development:** `npm run storybook:local`
-- **Production Build:** `npm run storybook:restore` then `npm run build-storybook`
-- **Back to Local:** `npm run storybook:local`
-
-The gitignore is configured to prevent configuration file changes from triggering git changes during local development.
+- **Local development**: No base path, relative assets
+- **CI/Production**: Base path `/communityrulestorybook/` for GitHub Pages
 
 ## 📋 Available Scripts
 
@@ -127,9 +114,10 @@ The gitignore is configured to prevent configuration file changes from triggerin
 
 ### Storybook
 
-- `npm run storybook:local` - Start Storybook with local configuration
-- `npm run storybook:restore` - Restore GitHub Pages configuration
-- `npm run build-storybook` - Build Storybook for production
+- `npm run storybook:local` - Start Storybook for local development
+- `npm run storybook:github` - Start Storybook with GitHub Pages configuration
+- `npm run storybook:build` - Build Storybook for local deployment
+- `npm run storybook:build:github` - Build Storybook for GitHub Pages
 - `npm run storybook` - Start Storybook with current configuration
 
 ## 🏗️ Project Structure

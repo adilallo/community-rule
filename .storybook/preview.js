@@ -34,9 +34,6 @@ const preview = {
         date: /Date$/i,
       },
     },
-    a11y: { element: '#storybook-root', manual: false },
-    viewport: { defaultViewport: 'responsive' },
-    chromatic: { viewports: [360, 768, 1024, 1440] } // breakpoints
   },
   decorators: [
     (Story) => (

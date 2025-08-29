@@ -17,7 +17,30 @@ const config = {
     options: {},
   },
   staticDirs: ["../public"],
+
+  // Auto-detect environment and apply appropriate settings
+  managerHead: (head) => {
+    // Only add base href for GitHub Pages (when CI=true or specific environment)
+    if (process.env.CI || process.env.STORYBOOK_BASE_PATH) {
+      return `${head}<base href="/communityrulestorybook/">`;
+    }
+    return head;
+  },
+
+  previewHead: (head) => {
+    // Only add base href for GitHub Pages
+    if (process.env.CI || process.env.STORYBOOK_BASE_PATH) {
+      return `${head}<base href="/communityrulestorybook/">`;
+    }
+    return head;
+  },
+
   async viteFinal(cfg) {
+    // Set base path for GitHub Pages when needed
+    if (process.env.CI || process.env.STORYBOOK_BASE_PATH) {
+      cfg.base = "/communityrulestorybook/";
+    }
+
     // Ensure esbuild treats .js as JSX during dep pre-bundling
     cfg.optimizeDeps ??= {};
     cfg.optimizeDeps.esbuildOptions ??= {};
@@ -29,4 +52,5 @@ const config = {
     return cfg;
   },
 };
+
 export default config;

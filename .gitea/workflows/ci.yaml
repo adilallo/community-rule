@@ -152,7 +152,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      - run: npm run build-storybook
+      - run: npm run storybook:build:github
       - run: npm run test:sb
         env: { CI: true }
 
@@ -174,4 +174,4 @@ jobs:
         with: { node-version: 20, cache: npm }
       - run: npm ci
       - run: npm run build
-      - run: npm run build-storybook
+      - run: npm run storybook:build:github
