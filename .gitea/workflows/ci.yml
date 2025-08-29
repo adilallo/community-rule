@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - name: Unit & integration tests (Vitest)
+        run: npm test
+      - name: Storybook a11y (axe via test-runner)
+        run: npm run test:sb
+      - name: E2E (Playwright)
+        run: npm run e2e:serve
+      - name: Performance (Lighthouse CI)
+        run: npm run lhci
