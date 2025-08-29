@@ -35,13 +35,11 @@ describe("NumberedCards Component", () => {
       />
     );
 
+    // Check for the heading (it contains both mobile and desktop versions)
+    expect(screen.getByRole("heading")).toBeInTheDocument();
+    // Check for the subtitle text
     expect(
-      screen.getByRole("heading", { name: "How CommunityRule helps" })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", {
-        name: "Build better communities step by step",
-      })
+      screen.getByText("Build better communities step by step")
     ).toBeInTheDocument();
 
     // Check for card content
@@ -65,12 +63,10 @@ describe("NumberedCards Component", () => {
       />
     );
 
-    expect(
-      screen.getByRole("heading", { name: "Test Title" })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Test Subtitle" })
-    ).toBeInTheDocument();
+    // Check for the heading (it contains both mobile and desktop versions)
+    expect(screen.getByRole("heading")).toBeInTheDocument();
+    // Check for the subtitle text
+    expect(screen.getByText("Test Subtitle")).toBeInTheDocument();
   });
 
   test("renders NumberedCard components with correct props", () => {

@@ -148,10 +148,16 @@ describe("RuleStack Component", () => {
   test("applies different background colors to cards", () => {
     render(<RuleStack />);
 
-    const cards = document.querySelectorAll(
-      '[class*="bg-[var(--color-surface-default-brand-"]'
-    );
+    // Look for RuleCard elements with background color classes
+    const cards = document.querySelectorAll('[role="button"]');
     expect(cards.length).toBeGreaterThan(0);
+
+    // Verify that cards have background color classes
+    cards.forEach((card) => {
+      expect(card.className).toMatch(
+        /bg-\[var\(--color-surface-default-brand-/
+      );
+    });
   });
 
   test("renders with proper button styling", () => {
