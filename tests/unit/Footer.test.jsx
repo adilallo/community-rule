@@ -242,12 +242,37 @@ describe("Footer", () => {
   test("has proper focus management for accessibility", () => {
     render(<Footer />);
 
-    const links = screen.getAllByRole("link");
+    // Get specific links that should have focus management
+    const emailLink = screen.getByRole("link", { name: "medlab@colorado.edu" });
+    const blueskyLink = screen.getByRole("link", {
+      name: "Follow us on Bluesky",
+    });
+    const gitlabLink = screen.getByRole("link", {
+      name: "Follow us on GitLab",
+    });
 
-    links.forEach((link) => {
+    // Check email link
+    expect(emailLink).toHaveClass("focus:outline-none");
+    expect(emailLink).toHaveClass("focus:ring-2");
+    expect(emailLink).toHaveClass("focus:ring-offset-2");
+    expect(emailLink).toHaveClass(
+      "focus:ring-[var(--color-content-default-primary)]"
+    );
+    expect(emailLink).toHaveClass(
+      "focus:ring-offset-[var(--color-surface-default-primary)]"
+    );
+
+    // Check social media links
+    [blueskyLink, gitlabLink].forEach((link) => {
       expect(link).toHaveClass("focus:outline-none");
       expect(link).toHaveClass("focus:ring-2");
       expect(link).toHaveClass("focus:ring-offset-2");
+      expect(link).toHaveClass(
+        "focus:ring-[var(--color-content-default-primary)]"
+      );
+      expect(link).toHaveClass(
+        "focus:ring-offset-[var(--color-surface-default-primary)]"
+      );
     });
   });
 });
