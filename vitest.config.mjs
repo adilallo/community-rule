@@ -1,29 +1,22 @@
-const { defineConfig } = require("vitest/config");
-const react = require("@vitejs/plugin-react");
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
 
-module.exports = defineConfig({
-  plugins: [
-    // Enables React transform
-    react({ jsxRuntime: "automatic" }),
-  ],
-
-  // Key part: make .js be parsed as JSX *before* import-analysis
+export default defineConfig({
+  plugins: [react({ jsxRuntime: "automatic" })],
   esbuild: {
     jsx: "automatic",
-    loader: "jsx", // default loader
-    include: /(?:^|\/)(app|components|pages|src|tests)\/.*\.[jt]sx?$/, // match your folders
+    loader: "jsx",
+    include: /\.[jt]sx?$/,
     exclude: [/node_modules/],
   },
-
   test: {
     environment: "jsdom",
-    setupFiles: ["./vitest.setup.ts"], // match your actual filename
+    setupFiles: ["./vitest.setup.ts"],
     include: [
       "tests/unit/**/*.test.{js,jsx,ts,tsx}",
       "tests/integration/**/*.test.{js,jsx,ts,tsx}",
     ],
     css: true,
-    transformMode: { web: [/\.[jt]sx?$/] }, // ensure web transform for JSX
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],

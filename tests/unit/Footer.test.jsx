@@ -243,7 +243,9 @@ describe("Footer", () => {
     render(<Footer />);
 
     // Get specific links that should have focus management
-    const emailLink = screen.getByRole("link", { name: "medlab@colorado.edu" });
+    const emailLinks = screen.getAllByRole("link", {
+      name: "medlab@colorado.edu",
+    });
     const blueskyLink = screen.getByRole("link", {
       name: "Follow us on Bluesky",
     });
@@ -251,16 +253,18 @@ describe("Footer", () => {
       name: "Follow us on GitLab",
     });
 
-    // Check email link
-    expect(emailLink).toHaveClass("focus:outline-none");
-    expect(emailLink).toHaveClass("focus:ring-2");
-    expect(emailLink).toHaveClass("focus:ring-offset-2");
-    expect(emailLink).toHaveClass(
-      "focus:ring-[var(--color-content-default-primary)]"
-    );
-    expect(emailLink).toHaveClass(
-      "focus:ring-offset-[var(--color-surface-default-primary)]"
-    );
+    // Check email links (multiple due to responsive design)
+    emailLinks.forEach((emailLink) => {
+      expect(emailLink).toHaveClass("focus:outline-none");
+      expect(emailLink).toHaveClass("focus:ring-2");
+      expect(emailLink).toHaveClass("focus:ring-offset-2");
+      expect(emailLink).toHaveClass(
+        "focus:ring-[var(--color-content-default-primary)]"
+      );
+      expect(emailLink).toHaveClass(
+        "focus:ring-offset-[var(--color-surface-default-primary)]"
+      );
+    });
 
     // Check social media links
     [blueskyLink, gitlabLink].forEach((link) => {
