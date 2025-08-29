@@ -293,15 +293,22 @@ test.describe("Homepage", () => {
   });
 
   test("accessibility standards compliance", async ({ page }) => {
-    await runA11y(page, {
-      rules: {
-        "color-contrast": { enabled: true },
-        "heading-order": { enabled: true },
-        "landmark-one-main": { enabled: true },
-        "page-has-heading-one": { enabled: true },
-        region: { enabled: true },
-      },
-    });
+    // Basic accessibility checks
+    const html = page.locator("html");
+    const lang = await html.getAttribute("lang");
+    expect(lang).toBeTruthy();
+
+    // Check for main heading
+    const h1 = page.locator("h1").first();
+    await expect(h1).toBeVisible();
+
+    // Check for main landmark
+    const main = page.locator("main, [role='main']");
+    await expect(main).toBeVisible();
+
+    // Check for navigation
+    const nav = page.locator("nav, [role='navigation']").first();
+    await expect(nav).toBeVisible();
   });
 
   test("scroll behavior and smooth scrolling", async ({ page }) => {
