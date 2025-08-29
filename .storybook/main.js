@@ -5,12 +5,10 @@ const config = {
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    "@chromatic-com/storybook",
-    "@storybook/addon-docs",
-    "@storybook/addon-onboarding",
+    "@storybook/addon-actions",
     "@storybook/addon-a11y",
     "@storybook/addon-interactions",
-    "@storybook/addon-vitest",
+    "@chromatic-com/storybook",
   ],
   framework: {
     name: "@storybook/nextjs-vite",
