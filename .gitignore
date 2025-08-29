@@ -16,7 +16,10 @@
 # Playwright
 /test-results/
 /playwright-report/
-/tests/e2e/*.spec.ts-snapshots/
+# Visual regression snapshots (allow these)
+!tests/e2e/visual-regression.spec.ts-snapshots/
+!tests/e2e/visual-regression.spec.ts-snapshots/*.png
+# Ignore other image files
 *.png
 *.jpg
 *.jpeg
