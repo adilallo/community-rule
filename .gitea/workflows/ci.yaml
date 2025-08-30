@@ -10,7 +10,7 @@ on:
 
 jobs:
   canary:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - run: |
           uname -a
@@ -18,7 +18,7 @@ jobs:
           echo "Runner labels OK ✅"
 
   test:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     strategy:
       matrix: { node-version: [18, 20] }
     env:
@@ -47,7 +47,7 @@ jobs:
       #     bash codecov.sh -t "${{ secrets.CODECOV_TOKEN }}" -f coverage/lcov.info -F unittests
 
   e2e:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     strategy:
       matrix: { browser: [chromium, firefox, webkit] }
     steps:
@@ -80,7 +80,7 @@ jobs:
           retention-days: 30
 
   visual-regression:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -117,36 +117,36 @@ jobs:
           retention-days: 30
 
   performance:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      
+
       - name: Install LHCI
         run: npm i -D @lhci/cli
-      
+
       # Ensure a Chrome binary is available (works on Linux/macOS runners)
       - name: Install Chrome via Puppeteer (portable)
         run: |
           npx @puppeteer/browsers install chrome@stable -P .cache/puppeteer
           echo "CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable -P .cache/puppeteer)" >> $GITHUB_ENV
-      
+
       - name: Build application
         run: npm run build
-      
+
       - name: Start application
         run: npm run preview &
         env: { CI: true }
-      
+
       - name: Wait for application
         run: npx wait-on http://localhost:3000
-      
+
       - name: Run Lighthouse CI
         run: npx lhci autorun --chrome-path="$CHROME_PATH"
         env: { CI: true }
-      
+
       - name: Upload LHCI results
         if: always()
         uses: actions/upload-artifact@v3
@@ -155,7 +155,7 @@ jobs:
           path: lhci-results
 
   storybook:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -166,7 +166,7 @@ jobs:
         env: { CI: true }
 
   lint:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -176,7 +176,7 @@ jobs:
       - run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
 
   build:
-    runs-on: [self-hosted, macos-latest]
+    runs-on: ["self-hosted:host", "macos-latest:host"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
