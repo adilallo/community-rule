@@ -9,8 +9,8 @@ runner:
   fetch_timeout: 5s
   fetch_interval: 2s
   labels:
-    - "macos-latest:host"
-    - "self-hosted:host"
+    - "self-hosted"
+    - "macos-latest"
 
 cache:
   enabled: true
