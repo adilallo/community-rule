@@ -61,7 +61,7 @@ jobs:
       - run: npm run build
 
       # start app, wait, run tests
-      - run: npm run preview &
+      - run: npm run start &
         env: { CI: true }
       - run: npx wait-on http://localhost:3000
       - run: npx playwright test --project=${{ matrix.browser }}
@@ -90,7 +90,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps
       - run: npm run build
-      - run: npm run preview &
+      - run: npm run start &
         env: { CI: true }
       - run: npx wait-on http://localhost:3000
 
@@ -139,7 +139,7 @@ jobs:
         run: npm run build
 
       - name: Start application
-        run: npm run preview &
+        run: npm run start &
         env: { CI: true }
 
       - name: Wait for application
