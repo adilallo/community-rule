@@ -19,15 +19,15 @@ cache:
   port: 0
   external_server: ""
 
-container:
-  network: ""
-  privileged: false
-  options:
-  workdir_parent:
-  valid_volumes: []
-  docker_host: ""
-  force_pull: false
-  mode: "host"
+# container:
+#   network: ""
+#   privileged: false
+#   options:
+#   workdir_parent:
+#   valid_volumes: []
+#   docker_host: ""
+#   force_pull: false
+#   mode: "host"
 
 host:
   workdir_parent: ""
