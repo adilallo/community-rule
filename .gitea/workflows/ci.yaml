@@ -10,15 +10,6 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  canary:
-    runs-on: [self-hosted, macos-latest]
-    steps:
-      - run: |
-          echo "PATH=$PATH"
-          which node && node -v
-          uname -a
-          echo "Runner labels OK ✅"
-
   test:
     runs-on: [self-hosted, macos-latest]
     strategy:
