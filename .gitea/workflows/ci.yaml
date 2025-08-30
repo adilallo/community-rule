@@ -4,9 +4,10 @@ run-name: ${{ gitea.actor }} triggered CI pipeline
 on:
   workflow_dispatch: {}
   push:
-    branches: [main, develop, "fix-runner-trigger"]
+    branches: [main, develop] # only direct pushes/merges to protected branches
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop] # PRs into main/develop
+    types: [opened, reopened, synchronize]
 
 jobs:
   canary:
