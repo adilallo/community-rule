@@ -2,14 +2,15 @@ name: CI Pipeline
 run-name: ${{ gitea.actor }} triggered CI pipeline
 
 on:
+  workflow_dispatch: {}
   push:
-    branches: [main, develop]
+    branches: [main, develop, "fix-runner-trigger"]
   pull_request:
     branches: [main, develop]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     strategy:
       matrix: { node-version: [18, 20] }
     env:
@@ -38,7 +39,7 @@ jobs:
       #     bash codecov.sh -t "${{ secrets.CODECOV_TOKEN }}" -f coverage/lcov.info -F unittests
 
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     strategy:
       matrix: { browser: [chromium, firefox, webkit] }
     steps:
@@ -71,7 +72,7 @@ jobs:
           retention-days: 30
 
   visual-regression:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -107,8 +108,8 @@ jobs:
           path: visual-regression.tgz
           retention-days: 30
 
-           performance:
-           runs-on: ubuntu-latest
+  performance:
+    runs-on: [self-hosted, macos-latest]
            steps:
              - uses: actions/checkout@v4
              - uses: actions/setup-node@v4
@@ -146,7 +147,7 @@ jobs:
                  path: lhci-results
 
   storybook:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -157,7 +158,7 @@ jobs:
         env: { CI: true }
 
   lint:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -167,7 +168,7 @@ jobs:
       - run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
