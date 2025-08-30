@@ -246,12 +246,16 @@ describe("Footer", () => {
     const emailLinks = screen.getAllByRole("link", {
       name: "medlab@colorado.edu",
     });
-    const blueskyLink = screen.getByRole("link", {
+    const blueskyLinks = screen.getAllByRole("link", {
       name: "Follow us on Bluesky",
     });
-    const gitlabLink = screen.getByRole("link", {
+    const gitlabLinks = screen.getAllByRole("link", {
       name: "Follow us on GitLab",
     });
+
+    // Use the first instance of each social media link
+    const blueskyLink = blueskyLinks[0];
+    const gitlabLink = gitlabLinks[0];
 
     // Check email links (multiple due to responsive design)
     emailLinks.forEach((emailLink) => {
