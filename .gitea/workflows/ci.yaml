@@ -60,16 +60,64 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
 
-      # start app, wait, run tests
-      - name: Start Next.js
-        run: npm run start -- -p 3000 -H 0.0.0.0 &
-        env:
-          CI: true
-      - name: Verify server is up
+      # 1) Sanity check that the build exists
+      - name: Verify Next build output
         run: |
-          sleep 5
-          curl -v http://127.0.0.1:3000 || exit 1
-      - run: npx wait-on http://127.0.0.1:3000
+          set -euxo pipefail
+          ls -la .next || true
+          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
+
+      # 2) Start the right kind of server and capture logs
+      - name: Start app (auto-detect start vs export)
+        run: |
+          set -euxo pipefail
+
+          # prefer production server if Next build exists
+          if [ -f .next/BUILD_ID ]; then
+            # run Next in the foreground for 3s to flush any crash to logs, then background it
+            (NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 \
+             node --trace-uncaught node_modules/next/dist/bin/next start -p 3000 -H 127.0.0.1 \
+            ) > server.log 2>&1 &
+
+          # fall back to static export (if your project uses output: 'export')
+          elif [ -d out ]; then
+            npx --yes http-server out -p 3000 --silent > server.log 2>&1 &
+          else
+            echo "Neither .next nor out/ present – nothing to serve"; cat server.log || true; exit 1
+          fi
+
+          echo $! > server.pid
+          sleep 2
+          echo "----- first server log lines -----"
+          head -n 200 server.log || true
+          echo "----------------------------------"
+
+      # 3) Fail fast if the process died
+      - name: Check server process
+        run: |
+          set -e
+          PID=$(cat server.pid)
+          if ! ps -p "$PID" > /dev/null; then
+            echo "Server crashed during startup:"
+            cat server.log || true
+            exit 1
+          fi
+
+      # 4) Wait for readiness with helpful diagnostics
+      - name: Wait for http://127.0.0.1:3000
+        run: |
+          set -euxo pipefail
+          for i in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:3000 >/dev/null; then
+              echo "App is up ✅"; exit 0
+            fi
+            if [ $i -eq 1 ] || [ $((i%10)) -eq 0 ]; then
+              echo "Still waiting… attempt $i"
+              tail -n 50 server.log || true
+            fi
+            sleep 2
+          done
+          echo "Timed out waiting for app"; tail -n +1 server.log || true; exit 1
       - run: npx playwright test --project=${{ matrix.browser }}
         env: { CI: true }
 
@@ -96,16 +144,64 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps
       - run: npm run build
-      - name: Start Next.js
-        run: npm run start -- -p 3000 -H 0.0.0.0 &
-        env:
-          CI: true
-      - name: Verify server is up
+      # 1) Sanity check that the build exists
+      - name: Verify Next build output
         run: |
-          sleep 5
-          curl -v http://127.0.0.1:3000 || exit 1
-      - run: npx wait-on http://127.0.0.1:3000
+          set -euxo pipefail
+          ls -la .next || true
+          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
+      # 2) Start the right kind of server and capture logs
+      - name: Start app (auto-detect start vs export)
+        run: |
+          set -euxo pipefail
+
+          # prefer production server if Next build exists
+          if [ -f .next/BUILD_ID ]; then
+            # run Next in the foreground for 3s to flush any crash to logs, then background it
+            (NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 \
+             node --trace-uncaught node_modules/next/dist/bin/next start -p 3000 -H 127.0.0.1 \
+            ) > server.log 2>&1 &
+
+          # fall back to static export (if your project uses output: 'export')
+          elif [ -d out ]; then
+            npx --yes http-server out -p 3000 --silent > server.log 2>&1 &
+          else
+            echo "Neither .next nor out/ present – nothing to serve"; cat server.log || true; exit 1
+          fi
+
+          echo $! > server.pid
+          sleep 2
+          echo "----- first server log lines -----"
+          head -n 200 server.log || true
+          echo "----------------------------------"
+
+      # 3) Fail fast if the process died
+      - name: Check server process
+        run: |
+          set -e
+          PID=$(cat server.pid)
+          if ! ps -p "$PID" > /dev/null; then
+            echo "Server crashed during startup:"
+            cat server.log || true
+            exit 1
+          fi
+
+      # 4) Wait for readiness with helpful diagnostics
+      - name: Wait for http://127.0.0.1:3000
+        run: |
+          set -euxo pipefail
+          for i in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:3000 >/dev/null; then
+              echo "App is up ✅"; exit 0
+            fi
+            if [ $i -eq 1 ] || [ $((i%10)) -eq 0 ]; then
+              echo "Still waiting… attempt $i"
+              tail -n 50 server.log || true
+            fi
+            sleep 2
+          done
+          echo "Timed out waiting for app"; tail -n +1 server.log || true; exit 1
       # Seed snapshots on main branch only (one-time setup)
       - name: Seed snapshots (main only)
         if: github.ref == 'refs/heads/main'
@@ -150,16 +246,64 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Start Next.js
-        run: npm run start -- -p 3000 -H 0.0.0.0 &
-        env:
-          CI: true
-      - name: Verify server is up
+      # 1) Sanity check that the build exists
+      - name: Verify Next build output
         run: |
-          sleep 5
-          curl -v http://127.0.0.1:3000 || exit 1
-      - name: Wait for application
-        run: npx wait-on http://127.0.0.1:3000
+          set -euxo pipefail
+          ls -la .next || true
+          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
+
+      # 2) Start the right kind of server and capture logs
+      - name: Start app (auto-detect start vs export)
+        run: |
+          set -euxo pipefail
+
+          # prefer production server if Next build exists
+          if [ -f .next/BUILD_ID ]; then
+            # run Next in the foreground for 3s to flush any crash to logs, then background it
+            (NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 \
+             node --trace-uncaught node_modules/next/dist/bin/next start -p 3000 -H 127.0.0.1 \
+            ) > server.log 2>&1 &
+
+          # fall back to static export (if your project uses output: 'export')
+          elif [ -d out ]; then
+            npx --yes http-server out -p 3000 --silent > server.log 2>&1 &
+          else
+            echo "Neither .next nor out/ present – nothing to serve"; cat server.log || true; exit 1
+          fi
+
+          echo $! > server.pid
+          sleep 2
+          echo "----- first server log lines -----"
+          head -n 200 server.log || true
+          echo "----------------------------------"
+
+      # 3) Fail fast if the process died
+      - name: Check server process
+        run: |
+          set -e
+          PID=$(cat server.pid)
+          if ! ps -p "$PID" > /dev/null; then
+            echo "Server crashed during startup:"
+            cat server.log || true
+            exit 1
+          fi
+
+      # 4) Wait for readiness with helpful diagnostics
+      - name: Wait for http://127.0.0.1:3000
+        run: |
+          set -euxo pipefail
+          for i in $(seq 1 60); do
+            if curl -sf http://127.0.0.1:3000 >/dev/null; then
+              echo "App is up ✅"; exit 0
+            fi
+            if [ $i -eq 1 ] || [ $((i%10)) -eq 0 ]; then
+              echo "Still waiting… attempt $i"
+              tail -n 50 server.log || true
+            fi
+            sleep 2
+          done
+          echo "Timed out waiting for app"; tail -n +1 server.log || true; exit 1
 
       - name: Run Lighthouse CI
         run: npx lhci autorun --chrome-path="$CHROME_PATH"
