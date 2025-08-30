@@ -184,3 +184,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 # Test trigger
 >>>>>>> bead0c737303fb7e83b3be0c5dbd121b00351b90
 # Test new runner
+# Test host mode
