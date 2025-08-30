@@ -35,7 +35,7 @@ describe("Button Component", () => {
     const { rerender } = render(<Button variant="default">Default</Button>);
     let button = screen.getByRole("button", { name: "Default" });
     expect(button.className).toContain(
-      "bg-[var(--color-surface-inverse-primary)]"
+      "bg-[var(--color-surface-inverse-primary)]",
     );
 
     rerender(<Button variant="secondary">Secondary</Button>);
@@ -79,10 +79,10 @@ describe("Button Component", () => {
 
     // Check that design tokens are applied
     expect(button.className).toContain(
-      "rounded-[var(--radius-measures-radius-full)]"
+      "rounded-[var(--radius-measures-radius-full)]",
     );
     expect(button.className).toContain(
-      "bg-[var(--color-surface-inverse-primary)]"
+      "bg-[var(--color-surface-inverse-primary)]",
     );
   });
 
@@ -103,7 +103,7 @@ describe("Button Component", () => {
     render(
       <Button href="/test" disabled>
         Disabled Link
-      </Button>
+      </Button>,
     );
     const button = screen.getByRole("button", { name: "Disabled Link" });
     expect(button).toBeInTheDocument();

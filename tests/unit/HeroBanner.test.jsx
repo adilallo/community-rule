@@ -16,17 +16,17 @@ describe("HeroBanner Component", () => {
         description="Create and manage community rules with ease"
         ctaText="Get Started"
         ctaHref="/signup"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Welcome to CommunityRule" })
+      screen.getByRole("heading", { name: "Welcome to CommunityRule" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Build better communities" })
+      screen.getByRole("heading", { name: "Build better communities" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Create and manage community rules with ease")
+      screen.getByText("Create and manage community rules with ease"),
     ).toBeInTheDocument();
     // Button component renders multiple versions for different screen sizes
     // Use getAllByRole to handle multiple buttons with same text
@@ -38,10 +38,10 @@ describe("HeroBanner Component", () => {
     render(<HeroBanner title="Minimal" />);
 
     expect(
-      screen.getByRole("heading", { name: "Minimal" })
+      screen.getByRole("heading", { name: "Minimal" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("img", { name: "Hero illustration" })
+      screen.getByRole("img", { name: "Hero illustration" }),
     ).toBeInTheDocument();
   });
 
@@ -72,15 +72,15 @@ describe("HeroBanner Component", () => {
         description="Test Description"
         ctaText="Test CTA"
         ctaHref="/test"
-      />
+      />,
     );
 
     // Check that ContentLockup receives the props correctly
     expect(
-      screen.getByRole("heading", { name: "Test Title" })
+      screen.getByRole("heading", { name: "Test Title" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Test Subtitle" })
+      screen.getByRole("heading", { name: "Test Subtitle" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Test Description")).toBeInTheDocument();
     // Button component renders multiple versions for different screen sizes
@@ -93,7 +93,7 @@ describe("HeroBanner Component", () => {
 
     // HeroDecor should be present (it's a decorative component)
     const heroDecor = document.querySelector(
-      '[class*="pointer-events-none absolute z-0"]'
+      '[class*="pointer-events-none absolute z-0"]',
     );
     expect(heroDecor).toBeInTheDocument();
   });
@@ -123,7 +123,7 @@ describe("HeroBanner Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "px-[var(--spacing-scale-008)]",
-      "sm:px-[var(--spacing-scale-010)]"
+      "sm:px-[var(--spacing-scale-010)]",
     );
   });
 
@@ -135,7 +135,7 @@ describe("HeroBanner Component", () => {
 
     // Check for design token usage in the component structure
     const container = section.querySelector(
-      '[class*="bg-[var(--color-surface-inverse-brand-primary)]"]'
+      '[class*="bg-[var(--color-surface-inverse-brand-primary)]"]',
     );
     expect(container).toBeInTheDocument();
   });

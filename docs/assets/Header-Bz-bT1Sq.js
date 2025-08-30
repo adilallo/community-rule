@@ -1,1 +1,191 @@
-import{j as e}from"./jsx-runtime-C_nHp4yK.js";import{L as v}from"./Logo-DM7O8ATg.js";import{M as t}from"./MenuBar-anMCqtJv.js";import{M as d}from"./MenuBarItem-Dp8NM2fx.js";import{B as j}from"./Button-Z4hbXct5.js";import{A as b}from"./AvatarContainer-Bt0G0TWZ.js";import{A as f}from"./Avatar-C4Vb3oYl.js";function N({onToggle:c}){const m={"@context":"https://schema.org","@type":"WebSite",name:"CommunityRule",url:"https://communityrule.com",potentialAction:{"@type":"SearchAction",target:"https://communityrule.com/search?q={search_term_string}","query-input":"required name=search_term_string"}},o=[{href:"#",text:"Use cases",extraPadding:!0},{href:"#",text:"Learn"},{href:"#",text:"About"}],x=[{src:"/assets/Avatar_1.png",alt:"Avatar 1"},{src:"/assets/Avatar_2.png",alt:"Avatar 2"},{src:"/assets/Avatar_3.png",alt:"Avatar 3"}],h=[{breakpoint:"block sm:hidden",size:"header",showText:!1},{breakpoint:"hidden sm:block md:hidden",size:"header",showText:!0},{breakpoint:"hidden md:block lg:hidden",size:"headerMd",showText:!0},{breakpoint:"hidden lg:block xl:hidden",size:"headerLg",showText:!0},{breakpoint:"hidden xl:block",size:"headerXl",showText:!0}],i=a=>o.map((s,r)=>e.jsx(d,{href:s.href,size:s.extraPadding&&a==="xsmall"?"xsmallUseCases":a,onClick:c,ariaLabel:`Navigate to ${s.text} page`,children:s.text},r)),g=(a,s)=>e.jsx(b,{size:a,children:x.map((r,u)=>e.jsx(f,{src:r.src,alt:r.alt,size:s},u))}),l=a=>e.jsx(d,{href:"#",size:a,ariaLabel:"Log in to your account",children:"Log in"}),n=(a,s,r)=>e.jsxs(j,{size:a,ariaLabel:"Create a new rule with avatar decoration",children:[g(s,r),e.jsx("span",{children:"Create rule"})]}),p=(a,s)=>e.jsx(v,{size:a,showText:s});return e.jsxs(e.Fragment,{children:[e.jsx("script",{type:"application/ld+json",dangerouslySetInnerHTML:{__html:JSON.stringify(m)}}),e.jsx("header",{className:"bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]",role:"banner","aria-label":"Main navigation header",children:e.jsxs("nav",{className:"flex items-center justify-between mx-auto h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]",role:"navigation","aria-label":"Main navigation",children:[e.jsx("div",{className:"flex items-center",children:h.map((a,s)=>e.jsx("div",{className:a.breakpoint,children:p(a.size,a.showText)},s))}),e.jsxs("div",{className:"flex items-center",children:[e.jsx("div",{className:"block sm:hidden"}),e.jsx("div",{className:"hidden sm:block md:hidden",children:e.jsxs(t,{size:"default",children:[i("xsmall"),l("xsmall")]})}),e.jsx("div",{className:"hidden md:block lg:hidden",children:e.jsx(t,{size:"default",children:i("xsmall")})}),e.jsx("div",{className:"hidden lg:block xl:hidden",children:e.jsx(t,{size:"large",children:i("large")})}),e.jsx("div",{className:"hidden xl:block",children:e.jsx(t,{size:"large",children:i("xlarge")})})]}),e.jsxs("div",{className:"flex items-center",children:[e.jsx("div",{className:"block sm:hidden",children:e.jsxs("div",{className:"flex items-center gap-[var(--spacing-scale-001)]",children:[i("xsmall"),l("xsmall"),n("xsmall","small","small")]})}),e.jsx("div",{className:"hidden sm:block md:hidden",children:e.jsx("div",{className:"flex items-center gap-[var(--spacing-scale-004)]",children:n("xsmall","small","small")})}),e.jsx("div",{className:"hidden md:block lg:hidden",children:e.jsxs("div",{className:"flex items-center gap-[var(--spacing-measures-spacing-010)]",children:[l("xsmall"),n("xsmall","medium","medium")]})}),e.jsx("div",{className:"hidden lg:block xl:hidden",children:e.jsxs("div",{className:"flex items-center gap-[var(--spacing-measures-spacing-004)]",children:[l("large"),n("large","xlarge","xlarge")]})}),e.jsx("div",{className:"hidden xl:block",children:e.jsxs("div",{className:"flex items-center gap-[var(--spacing-measures-spacing-004)]",children:[l("xlarge"),n("xlarge","xlarge","xlarge")]})})]})]})})]})}N.__docgenInfo={description:"",methods:[],displayName:"Header"};export{N as H};
+import { j as e } from "./jsx-runtime-C_nHp4yK.js";
+import { L as v } from "./Logo-DM7O8ATg.js";
+import { M as t } from "./MenuBar-anMCqtJv.js";
+import { M as d } from "./MenuBarItem-Dp8NM2fx.js";
+import { B as j } from "./Button-Z4hbXct5.js";
+import { A as b } from "./AvatarContainer-Bt0G0TWZ.js";
+import { A as f } from "./Avatar-C4Vb3oYl.js";
+function N({ onToggle: c }) {
+  const m = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "CommunityRule",
+      url: "https://communityrule.com",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: "https://communityrule.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string",
+      },
+    },
+    o = [
+      { href: "#", text: "Use cases", extraPadding: !0 },
+      { href: "#", text: "Learn" },
+      { href: "#", text: "About" },
+    ],
+    x = [
+      { src: "/assets/Avatar_1.png", alt: "Avatar 1" },
+      { src: "/assets/Avatar_2.png", alt: "Avatar 2" },
+      { src: "/assets/Avatar_3.png", alt: "Avatar 3" },
+    ],
+    h = [
+      { breakpoint: "block sm:hidden", size: "header", showText: !1 },
+      { breakpoint: "hidden sm:block md:hidden", size: "header", showText: !0 },
+      {
+        breakpoint: "hidden md:block lg:hidden",
+        size: "headerMd",
+        showText: !0,
+      },
+      {
+        breakpoint: "hidden lg:block xl:hidden",
+        size: "headerLg",
+        showText: !0,
+      },
+      { breakpoint: "hidden xl:block", size: "headerXl", showText: !0 },
+    ],
+    i = (a) =>
+      o.map((s, r) =>
+        e.jsx(
+          d,
+          {
+            href: s.href,
+            size: s.extraPadding && a === "xsmall" ? "xsmallUseCases" : a,
+            onClick: c,
+            ariaLabel: `Navigate to ${s.text} page`,
+            children: s.text,
+          },
+          r,
+        ),
+      ),
+    g = (a, s) =>
+      e.jsx(b, {
+        size: a,
+        children: x.map((r, u) =>
+          e.jsx(f, { src: r.src, alt: r.alt, size: s }, u),
+        ),
+      }),
+    l = (a) =>
+      e.jsx(d, {
+        href: "#",
+        size: a,
+        ariaLabel: "Log in to your account",
+        children: "Log in",
+      }),
+    n = (a, s, r) =>
+      e.jsxs(j, {
+        size: a,
+        ariaLabel: "Create a new rule with avatar decoration",
+        children: [g(s, r), e.jsx("span", { children: "Create rule" })],
+      }),
+    p = (a, s) => e.jsx(v, { size: a, showText: s });
+  return e.jsxs(e.Fragment, {
+    children: [
+      e.jsx("script", {
+        type: "application/ld+json",
+        dangerouslySetInnerHTML: { __html: JSON.stringify(m) },
+      }),
+      e.jsx("header", {
+        className:
+          "bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]",
+        role: "banner",
+        "aria-label": "Main navigation header",
+        children: e.jsxs("nav", {
+          className:
+            "flex items-center justify-between mx-auto h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]",
+          role: "navigation",
+          "aria-label": "Main navigation",
+          children: [
+            e.jsx("div", {
+              className: "flex items-center",
+              children: h.map((a, s) =>
+                e.jsx(
+                  "div",
+                  { className: a.breakpoint, children: p(a.size, a.showText) },
+                  s,
+                ),
+              ),
+            }),
+            e.jsxs("div", {
+              className: "flex items-center",
+              children: [
+                e.jsx("div", { className: "block sm:hidden" }),
+                e.jsx("div", {
+                  className: "hidden sm:block md:hidden",
+                  children: e.jsxs(t, {
+                    size: "default",
+                    children: [i("xsmall"), l("xsmall")],
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden md:block lg:hidden",
+                  children: e.jsx(t, {
+                    size: "default",
+                    children: i("xsmall"),
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden lg:block xl:hidden",
+                  children: e.jsx(t, { size: "large", children: i("large") }),
+                }),
+                e.jsx("div", {
+                  className: "hidden xl:block",
+                  children: e.jsx(t, { size: "large", children: i("xlarge") }),
+                }),
+              ],
+            }),
+            e.jsxs("div", {
+              className: "flex items-center",
+              children: [
+                e.jsx("div", {
+                  className: "block sm:hidden",
+                  children: e.jsxs("div", {
+                    className:
+                      "flex items-center gap-[var(--spacing-scale-001)]",
+                    children: [
+                      i("xsmall"),
+                      l("xsmall"),
+                      n("xsmall", "small", "small"),
+                    ],
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden sm:block md:hidden",
+                  children: e.jsx("div", {
+                    className:
+                      "flex items-center gap-[var(--spacing-scale-004)]",
+                    children: n("xsmall", "small", "small"),
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden md:block lg:hidden",
+                  children: e.jsxs("div", {
+                    className:
+                      "flex items-center gap-[var(--spacing-measures-spacing-010)]",
+                    children: [l("xsmall"), n("xsmall", "medium", "medium")],
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden lg:block xl:hidden",
+                  children: e.jsxs("div", {
+                    className:
+                      "flex items-center gap-[var(--spacing-measures-spacing-004)]",
+                    children: [l("large"), n("large", "xlarge", "xlarge")],
+                  }),
+                }),
+                e.jsx("div", {
+                  className: "hidden xl:block",
+                  children: e.jsxs("div", {
+                    className:
+                      "flex items-center gap-[var(--spacing-measures-spacing-004)]",
+                    children: [l("xlarge"), n("xlarge", "xlarge", "xlarge")],
+                  }),
+                }),
+              ],
+            }),
+          ],
+        }),
+      }),
+    ],
+  });
+}
+N.__docgenInfo = { description: "", methods: [], displayName: "Header" };
+export { N as H };

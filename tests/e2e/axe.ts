@@ -8,7 +8,7 @@ export async function runA11y(page, options = {}) {
   if (results.violations.length > 0) {
     console.log("Accessibility violations found:", results.violations);
     throw new Error(
-      `Found ${results.violations.length} accessibility violations`
+      `Found ${results.violations.length} accessibility violations`,
     );
   }
 }

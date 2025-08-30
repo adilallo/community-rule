@@ -33,7 +33,7 @@ for (const bp of breakpoints) {
     test(`navigation items visibility at ${bp.name}`, async ({ page }) => {
       // All breakpoints should have navigation items
       await expect(
-        page.getByRole("link", { name: /use cases/i })
+        page.getByRole("link", { name: /use cases/i }),
       ).toBeVisible();
       await expect(page.getByRole("link", { name: /learn/i })).toBeVisible();
       await expect(page.getByRole("link", { name: /about/i })).toBeVisible();
@@ -44,14 +44,14 @@ for (const bp of breakpoints) {
     }) => {
       // All breakpoints should have login button
       await expect(
-        page.getByRole("link", { name: /log in to your account/i })
+        page.getByRole("link", { name: /log in to your account/i }),
       ).toBeVisible();
 
       // All breakpoints should have create rule button
       await expect(
         page.getByRole("button", {
           name: /create a new rule with avatar decoration/i,
-        })
+        }),
       ).toBeVisible();
     });
 
@@ -149,7 +149,7 @@ test.describe("Header visual regression", () => {
 
       // Take a screenshot for visual regression testing
       await expect(page.locator("header").first()).toHaveScreenshot(
-        `header-${bp.name}.png`
+        `header-${bp.name}.png`,
       );
     }
   });
@@ -171,7 +171,7 @@ test.describe("Header visual regression", () => {
       await useCasesLink.hover();
       await page.waitForTimeout(200);
       await expect(page.locator("header").first()).toHaveScreenshot(
-        `header-${bp.name}-hover-nav.png`
+        `header-${bp.name}-hover-nav.png`,
       );
 
       // Test hover on create rule button
@@ -181,7 +181,7 @@ test.describe("Header visual regression", () => {
       await createRuleButton.hover();
       await page.waitForTimeout(200);
       await expect(page.locator("header").first()).toHaveScreenshot(
-        `header-${bp.name}-hover-button.png`
+        `header-${bp.name}-hover-button.png`,
       );
     }
   });
@@ -203,7 +203,7 @@ test.describe("Header visual regression", () => {
       await useCasesLink.focus();
       await page.waitForTimeout(200);
       await expect(page.locator("header").first()).toHaveScreenshot(
-        `header-${bp.name}-focus-nav.png`
+        `header-${bp.name}-focus-nav.png`,
       );
 
       // Test focus on create rule button
@@ -213,7 +213,7 @@ test.describe("Header visual regression", () => {
       await createRuleButton.focus();
       await page.waitForTimeout(200);
       await expect(page.locator("header").first()).toHaveScreenshot(
-        `header-${bp.name}-focus-button.png`
+        `header-${bp.name}-focus-button.png`,
       );
     }
   });

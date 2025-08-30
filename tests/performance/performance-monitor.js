@@ -61,7 +61,7 @@ class PerformanceMonitor {
 
     if (value > threshold) {
       console.warn(
-        `⚠️  Performance threshold exceeded: ${name} = ${value}ms (threshold: ${threshold}ms)`
+        `⚠️  Performance threshold exceeded: ${name} = ${value}ms (threshold: ${threshold}ms)`,
       );
       return false;
     }
@@ -78,7 +78,7 @@ class PerformanceMonitor {
     const regressionThreshold = baseline * 1.2; // 20% regression threshold
     if (value > regressionThreshold) {
       console.error(
-        `🚨 Performance regression detected: ${name} = ${value}ms (baseline: ${baseline}ms)`
+        `🚨 Performance regression detected: ${name} = ${value}ms (baseline: ${baseline}ms)`,
       );
       return false;
     }

@@ -32,25 +32,25 @@ describe("NumberedCards Component", () => {
         title="How CommunityRule helps"
         subtitle="Build better communities step by step"
         cards={mockCards}
-      />
+      />,
     );
 
     // Check for the heading (it contains both mobile and desktop versions)
     expect(screen.getByRole("heading")).toBeInTheDocument();
     // Check for the subtitle text
     expect(
-      screen.getByText("Build better communities step by step")
+      screen.getByText("Build better communities step by step"),
     ).toBeInTheDocument();
 
     // Check for card content
     expect(
-      screen.getByText("Define your community values")
+      screen.getByText("Define your community values"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Create decision-making processes")
+      screen.getByText("Create decision-making processes"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Establish communication channels")
+      screen.getByText("Establish communication channels"),
     ).toBeInTheDocument();
   });
 
@@ -60,7 +60,7 @@ describe("NumberedCards Component", () => {
         title="Test Title"
         subtitle="Test Subtitle"
         cards={mockCards}
-      />
+      />,
     );
 
     // Check for the heading (it contains both mobile and desktop versions)
@@ -82,10 +82,10 @@ describe("NumberedCards Component", () => {
     render(<NumberedCards title="Test" subtitle="Test" cards={mockCards} />);
 
     expect(
-      screen.getByRole("button", { name: "Create CommunityRule" })
+      screen.getByRole("button", { name: "Create CommunityRule" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "See how it works" })
+      screen.getByRole("button", { name: "See how it works" }),
     ).toBeInTheDocument();
   });
 
@@ -109,7 +109,7 @@ describe("NumberedCards Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "bg-transparent",
-      "py-[var(--spacing-scale-032)]"
+      "py-[var(--spacing-scale-032)]",
     );
   });
 
@@ -117,7 +117,7 @@ describe("NumberedCards Component", () => {
     render(<NumberedCards title="Test" subtitle="Test" cards={mockCards} />);
 
     const cardsContainer = document.querySelector(
-      '[class*="grid grid-cols-1"]'
+      '[class*="grid grid-cols-1"]',
     );
     expect(cardsContainer).toBeInTheDocument();
   });
@@ -128,7 +128,7 @@ describe("NumberedCards Component", () => {
         title="Test Title"
         subtitle="Test Description"
         cards={mockCards}
-      />
+      />,
     );
 
     const script = document.querySelector('script[type="application/ld+json"]');
@@ -161,7 +161,7 @@ describe("NumberedCards Component", () => {
 
     // Should render buttons even without cards
     expect(
-      screen.getByRole("button", { name: "Create CommunityRule" })
+      screen.getByRole("button", { name: "Create CommunityRule" }),
     ).toBeInTheDocument();
   });
 
@@ -180,7 +180,7 @@ describe("NumberedCards Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-032)]",
-      "sm:py-[var(--spacing-scale-048)]"
+      "sm:py-[var(--spacing-scale-048)]",
     );
   });
 
@@ -188,7 +188,7 @@ describe("NumberedCards Component", () => {
     render(<NumberedCards title="Test" subtitle="Test" cards={mockCards} />);
 
     const container = document.querySelector(
-      '[class*="max-w-[var(--spacing-measures-max-width-lg)]"]'
+      '[class*="max-w-[var(--spacing-measures-max-width-lg)]"]',
     );
     expect(container).toBeInTheDocument();
   });

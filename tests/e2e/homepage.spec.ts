@@ -12,19 +12,19 @@ test.describe("Homepage", () => {
 
     // Check main sections are present
     await expect(
-      page.locator("h1, h2").filter({ hasText: "Collaborate" })
+      page.locator("h1, h2").filter({ hasText: "Collaborate" }),
     ).toBeVisible();
     await expect(
-      page.locator("h2").filter({ hasText: "How CommunityRule works" })
+      page.locator("h2").filter({ hasText: "How CommunityRule works" }),
     ).toBeVisible();
     await expect(
-      page.locator("h1").filter({ hasText: "We've got your back" })
+      page.locator("h1").filter({ hasText: "We've got your back" }),
     ).toBeVisible();
 
     // Check key components are rendered
     await expect(page.locator('img[alt="Hero illustration"]')).toBeVisible();
     await expect(
-      page.locator("text=Trusted by leading cooperators")
+      page.locator("text=Trusted by leading cooperators"),
     ).toBeVisible();
     await expect(page.locator("text=Jo Freeman")).toBeVisible();
   });
@@ -34,12 +34,12 @@ test.describe("Homepage", () => {
     await expect(page.locator("text=Collaborate")).toBeVisible();
     await expect(page.locator("text=with clarity")).toBeVisible();
     await expect(
-      page.locator("text=Help your community make important decisions")
+      page.locator("text=Help your community make important decisions"),
     ).toBeVisible();
 
     // Check CTA button
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -54,7 +54,7 @@ test.describe("Homepage", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -64,14 +64,14 @@ test.describe("Homepage", () => {
     await visibleButton.click();
     // Should scroll to the numbered cards section
     await expect(
-      page.locator('h2:has-text("How CommunityRule works")')
+      page.locator('h2:has-text("How CommunityRule works")'),
     ).toBeVisible();
   });
 
   test("logo wall section displays correctly", async ({ page }) => {
     // Check section label
     await expect(
-      page.locator("text=Trusted by leading cooperators")
+      page.locator("text=Trusted by leading cooperators"),
     ).toBeVisible();
 
     // Check logos are present
@@ -95,23 +95,23 @@ test.describe("Homepage", () => {
   test("numbered cards section functionality", async ({ page }) => {
     // Check section header
     await expect(
-      page.locator('h2:has-text("How CommunityRule works")')
+      page.locator('h2:has-text("How CommunityRule works")'),
     ).toBeVisible();
     await expect(
-      page.locator("text=Here's a quick overview of the process")
+      page.locator("text=Here's a quick overview of the process"),
     ).toBeVisible();
 
     // Check all three cards are present
     await expect(
-      page.locator("text=Document how your community makes decisions")
+      page.locator("text=Document how your community makes decisions"),
     ).toBeVisible();
     await expect(
-      page.locator("text=Build an operating manual for a successful community")
+      page.locator("text=Build an operating manual for a successful community"),
     ).toBeVisible();
     await expect(
       page.locator(
-        "text=Get a link to your manual for your group to review and evolve"
-      )
+        "text=Get a link to your manual for your group to review and evolve",
+      ),
     ).toBeVisible();
 
     // Check numbered indicators
@@ -121,7 +121,7 @@ test.describe("Homepage", () => {
 
     // Check CTA buttons
     const createButtons = page.locator(
-      'button:has-text("Create CommunityRule")'
+      'button:has-text("Create CommunityRule")',
     );
     const createButtonCount = await createButtons.count();
     let visibleCreateButton = null;
@@ -139,7 +139,7 @@ test.describe("Homepage", () => {
     }
 
     await expect(
-      page.locator('button:has-text("See how it works")')
+      page.locator('button:has-text("See how it works")'),
     ).toBeVisible();
   });
 
@@ -152,16 +152,16 @@ test.describe("Homepage", () => {
 
     // Check rule descriptions
     await expect(
-      page.locator("text=Units called Circles have the ability to decide")
+      page.locator("text=Units called Circles have the ability to decide"),
     ).toBeVisible();
     await expect(
-      page.locator("text=Decisions that affect the group collectively")
+      page.locator("text=Decisions that affect the group collectively"),
     ).toBeVisible();
     await expect(
-      page.locator("text=An elected board determines policies")
+      page.locator("text=An elected board determines policies"),
     ).toBeVisible();
     await expect(
-      page.locator("text=All participants can propose and vote")
+      page.locator("text=All participants can propose and vote"),
     ).toBeVisible();
 
     // Test card interactions
@@ -171,19 +171,19 @@ test.describe("Homepage", () => {
 
     // Check "See all templates" button
     await expect(
-      page.locator('button:has-text("See all templates")')
+      page.locator('button:has-text("See all templates")'),
     ).toBeVisible();
   });
 
   test("feature grid section functionality", async ({ page }) => {
     // Check section header
     await expect(
-      page.locator('h1:has-text("We\'ve got your back")')
+      page.locator('h1:has-text("We\'ve got your back")'),
     ).toBeVisible();
     await expect(
       page.locator(
-        "text=Use our toolkit to improve, document, and evolve your organization"
-      )
+        "text=Use our toolkit to improve, document, and evolve your organization",
+      ),
     ).toBeVisible();
 
     // Check all four feature cards - use more specific selectors to avoid conflicts
@@ -205,23 +205,23 @@ test.describe("Homepage", () => {
   test("quote block section displays correctly", async ({ page }) => {
     // Check quote content
     await expect(
-      page.locator("text=The rules of decision-making must be open")
+      page.locator("text=The rules of decision-making must be open"),
     ).toBeVisible();
 
     // Check author and source
     await expect(page.locator("text=Jo Freeman")).toBeVisible();
     await expect(
-      page.locator("text=The Tyranny of Structurelessness")
+      page.locator("text=The Tyranny of Structurelessness"),
     ).toBeVisible();
 
     // Check avatar
     await expect(
-      page.locator('img[alt="Portrait of Jo Freeman"]')
+      page.locator('img[alt="Portrait of Jo Freeman"]'),
     ).toBeVisible();
 
     // Check decorative elements
     await expect(
-      page.locator('[class*="pointer-events-none absolute z-0"]').first()
+      page.locator('[class*="pointer-events-none absolute z-0"]').first(),
     ).toBeVisible();
   });
 
@@ -229,7 +229,7 @@ test.describe("Homepage", () => {
     // Check section content
     await expect(page.locator("text=Still have questions?")).toBeVisible();
     await expect(
-      page.locator("text=Get answers from an experienced organizer")
+      page.locator("text=Get answers from an experienced organizer"),
     ).toBeVisible();
 
     // Check CTA button (it's actually a link)
@@ -286,19 +286,19 @@ test.describe("Homepage", () => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await expect(
-      page.locator("h1, h2").filter({ hasText: "Collaborate" })
+      page.locator("h1, h2").filter({ hasText: "Collaborate" }),
     ).toBeVisible();
 
     // Test tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
     await expect(
-      page.locator("h1, h2").filter({ hasText: "Collaborate" })
+      page.locator("h1, h2").filter({ hasText: "Collaborate" }),
     ).toBeVisible();
 
     // Test desktop viewport
     await page.setViewportSize({ width: 1440, height: 900 });
     await expect(
-      page.locator("h1, h2").filter({ hasText: "Collaborate" })
+      page.locator("h1, h2").filter({ hasText: "Collaborate" }),
     ).toBeVisible();
   });
 
@@ -362,7 +362,7 @@ test.describe("Homepage", () => {
   test("scroll behavior and smooth scrolling", async ({ page }) => {
     // Test smooth scrolling to sections
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -377,7 +377,7 @@ test.describe("Homepage", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -388,7 +388,7 @@ test.describe("Homepage", () => {
 
     // Check we're at the numbered cards section
     await expect(
-      page.locator('h2:has-text("How CommunityRule works")')
+      page.locator('h2:has-text("How CommunityRule works")'),
     ).toBeVisible();
   });
 
@@ -405,7 +405,7 @@ test.describe("Homepage", () => {
     const brokenImages = await page.evaluate(() => {
       const imgs = document.querySelectorAll("img");
       return Array.from(imgs).filter(
-        (img) => !img.complete || img.naturalWidth === 0
+        (img) => !img.complete || img.naturalWidth === 0,
       );
     });
 

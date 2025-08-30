@@ -81,17 +81,14 @@ Visual regression tests run automatically in the CI pipeline:
 ### Common Issues
 
 1. **"Snapshot doesn't exist" errors**
-
    - **Cause**: Baseline snapshots haven't been generated
    - **Solution**: Run snapshot seeding (see above)
 
 2. **Platform-specific failures**
-
    - **Cause**: Snapshots generated on different OS (macOS vs Linux)
    - **Solution**: Use Docker container for local snapshot generation
 
 3. **Minor pixel differences**
-
    - **Cause**: Font rendering differences, anti-aliasing, etc.
    - **Solution**: Check tolerance settings in `playwright.config.ts`
 

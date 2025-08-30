@@ -12,11 +12,11 @@ describe("QuoteBlock Component", () => {
     render(<QuoteBlock />);
 
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
     expect(screen.getByText("Jo Freeman")).toBeInTheDocument();
     expect(
-      screen.getByText("The Tyranny of Structurelessness")
+      screen.getByText("The Tyranny of Structurelessness"),
     ).toBeInTheDocument();
     expect(screen.getByAltText("Portrait of Jo Freeman")).toBeInTheDocument();
   });
@@ -27,7 +27,7 @@ describe("QuoteBlock Component", () => {
         quote="Custom quote text"
         author="Custom Author"
         source="Custom Source"
-      />
+      />,
     );
 
     expect(screen.getByText("Custom quote text")).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe("QuoteBlock Component", () => {
         quote="Test quote"
         author="Test Author"
         className="custom-class"
-      />
+      />,
     );
 
     const section = document.querySelector("section");
@@ -50,24 +50,24 @@ describe("QuoteBlock Component", () => {
 
   test("renders different variants", () => {
     const { rerender } = render(
-      <QuoteBlock quote="Test quote" author="Test Author" variant="compact" />
+      <QuoteBlock quote="Test quote" author="Test Author" variant="compact" />,
     );
 
     // Compact variant should have different styling
     const section = screen.getByRole("region");
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-032)]",
-      "px-[var(--spacing-scale-016)]"
+      "px-[var(--spacing-scale-016)]",
     );
 
     rerender(
-      <QuoteBlock quote="Test quote" author="Test Author" variant="extended" />
+      <QuoteBlock quote="Test quote" author="Test Author" variant="extended" />,
     );
 
     // Extended variant should have different styling
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-048)]",
-      "px-[var(--spacing-scale-024)]"
+      "px-[var(--spacing-scale-024)]",
     );
   });
 
@@ -77,7 +77,7 @@ describe("QuoteBlock Component", () => {
         quote="Test quote"
         author="Test Author"
         id="custom-quote-id"
-      />
+      />,
     );
 
     const quoteElement = screen.getByText("Test quote");
@@ -95,7 +95,7 @@ describe("QuoteBlock Component", () => {
   test("calls onError callback when image fails", () => {
     const onError = vi.fn();
     render(
-      <QuoteBlock quote="Test quote" author="Test Author" onError={onError} />
+      <QuoteBlock quote="Test quote" author="Test Author" onError={onError} />,
     );
 
     // Should render without errors
@@ -112,24 +112,24 @@ describe("QuoteBlock Component", () => {
 
   test("renders decorative elements for standard variant", () => {
     render(
-      <QuoteBlock quote="Test quote" author="Test Author" variant="standard" />
+      <QuoteBlock quote="Test quote" author="Test Author" variant="standard" />,
     );
 
     // Should render QuoteDecor for standard variant
     const decor = document.querySelector(
-      '[class*="pointer-events-none absolute z-0"]'
+      '[class*="pointer-events-none absolute z-0"]',
     );
     expect(decor).toBeInTheDocument();
   });
 
   test("does not render decorative elements for compact variant", () => {
     render(
-      <QuoteBlock quote="Test quote" author="Test Author" variant="compact" />
+      <QuoteBlock quote="Test quote" author="Test Author" variant="compact" />,
     );
 
     // Should not render QuoteDecor for compact variant
     const decor = document.querySelector(
-      '[class*="pointer-events-none absolute z-0"]'
+      '[class*="pointer-events-none absolute z-0"]',
     );
     expect(decor).not.toBeInTheDocument();
   });
@@ -149,7 +149,7 @@ describe("QuoteBlock Component", () => {
 
   test("applies correct accessibility attributes", () => {
     render(
-      <QuoteBlock quote="Test quote" author="Test Author" id="test-quote" />
+      <QuoteBlock quote="Test quote" author="Test Author" id="test-quote" />,
     );
 
     const section = document.querySelector("section");
@@ -166,7 +166,7 @@ describe("QuoteBlock Component", () => {
     expect(section).toHaveClass("md:py-[var(--spacing-scale-032)]");
 
     const card = section.querySelector(
-      '[class*="bg-[var(--color-surface-default-brand-darker-accent)]"]'
+      '[class*="bg-[var(--color-surface-default-brand-darker-accent)]"]',
     );
     expect(card).toBeInTheDocument();
   });
@@ -177,7 +177,7 @@ describe("QuoteBlock Component", () => {
     render(<QuoteBlock quote="" author="" />);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      "QuoteBlock: Missing required props (quote or author)"
+      "QuoteBlock: Missing required props (quote or author)",
     );
 
     consoleSpy.mockRestore();
@@ -199,14 +199,14 @@ describe("QuoteBlock Component", () => {
 
   test("applies responsive text sizing", () => {
     render(
-      <QuoteBlock quote="Test quote" author="Test Author" variant="standard" />
+      <QuoteBlock quote="Test quote" author="Test Author" variant="standard" />,
     );
 
     const quoteElement = screen.getByText("Test quote");
     expect(quoteElement).toHaveClass(
       "text-[18px]",
       "md:text-[36px]",
-      "lg:text-[52px]"
+      "lg:text-[52px]",
     );
   });
 
@@ -216,7 +216,7 @@ describe("QuoteBlock Component", () => {
     expect(screen.getByText("Test quote")).toBeInTheDocument();
     expect(screen.getByText("Test Author")).toBeInTheDocument();
     expect(
-      screen.queryByText("The Tyranny of Structurelessness")
+      screen.queryByText("The Tyranny of Structurelessness"),
     ).not.toBeInTheDocument();
   });
 });

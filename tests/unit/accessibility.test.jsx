@@ -155,7 +155,7 @@ describe("Accessibility - Component Level", () => {
     }
 
     const headingLevels = headings.map((heading) =>
-      parseInt(heading.tagName.charAt(1))
+      parseInt(heading.tagName.charAt(1)),
     );
 
     // Check that heading levels are sequential (no skipping levels)

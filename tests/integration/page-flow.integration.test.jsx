@@ -13,15 +13,15 @@ describe("Page Flow Integration", () => {
 
     // Hero Banner section
     expect(
-      screen.getByRole("heading", { name: "Collaborate" })
+      screen.getByRole("heading", { name: "Collaborate" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "with clarity" })
+      screen.getByRole("heading", { name: "with clarity" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Help your community make important decisions in a way that reflects its unique values."
-      )
+        "Help your community make important decisions in a way that reflects its unique values.",
+      ),
     ).toBeInTheDocument();
     // Check that CTA button exists (multiple sizes for responsive design)
     const ctaButtons = screen.getAllByRole("button", {
@@ -39,65 +39,65 @@ describe("Page Flow Integration", () => {
 
     // Numbered Cards section
     expect(
-      screen.getByRole("heading", { name: /How CommunityRule works/ })
+      screen.getByRole("heading", { name: /How CommunityRule works/ }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Here's a quick overview of the process, from start to finish."
-      )
+        "Here's a quick overview of the process, from start to finish.",
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Document how your community makes decisions")
+      screen.getByText("Document how your community makes decisions"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Build an operating manual for a successful community")
+      screen.getByText("Build an operating manual for a successful community"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Get a link to your manual for your group to review and evolve"
-      )
+        "Get a link to your manual for your group to review and evolve",
+      ),
     ).toBeInTheDocument();
 
     // Rule Stack section
     expect(
-      screen.getByRole("heading", { name: "Consensus clusters" })
+      screen.getByRole("heading", { name: "Consensus clusters" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Elected Board" })
+      screen.getByRole("heading", { name: "Elected Board" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Consensus" })
+      screen.getByRole("heading", { name: "Consensus" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Petition" })
+      screen.getByRole("heading", { name: "Petition" }),
     ).toBeInTheDocument();
 
     // Feature Grid section
     expect(
       screen.getByRole("heading", {
         name: "We've got your back, every step of the way",
-      })
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Use our toolkit to improve, document, and evolve your organization."
-      )
+        "Use our toolkit to improve, document, and evolve your organization.",
+      ),
     ).toBeInTheDocument();
 
     // Quote Block section
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
     // Ask Organizer section
     expect(
-      screen.getByRole("heading", { name: "Still have questions?" })
+      screen.getByRole("heading", { name: "Still have questions?" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Get answers from an experienced organizer")
+      screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Ask an organizer/i })
+      screen.getByRole("link", { name: /Ask an organizer/i }),
     ).toBeInTheDocument();
   });
 
@@ -125,7 +125,7 @@ describe("Page Flow Integration", () => {
 
     // Check that all three cards are rendered
     const cards = screen.getAllByText(
-      /Document how your community|Build an operating manual|Get a link to your manual/
+      /Document how your community|Build an operating manual|Get a link to your manual/,
     );
     expect(cards).toHaveLength(3);
 
@@ -167,7 +167,7 @@ describe("Page Flow Integration", () => {
 
     // Check that main content is properly structured
     const mainContent = screen.getByText(
-      /Help your community make important decisions/
+      /Help your community make important decisions/,
     );
     expect(mainContent).toBeInTheDocument();
   });
@@ -194,7 +194,7 @@ describe("Page Flow Integration", () => {
     // Verify the logical flow of information
     // 1. Hero introduces the concept
     expect(
-      screen.getByText(/Help your community make important decisions/)
+      screen.getByText(/Help your community make important decisions/),
     ).toBeInTheDocument();
 
     // 2. How it works section explains the process
@@ -205,12 +205,12 @@ describe("Page Flow Integration", () => {
 
     // 4. Features highlight benefits
     expect(
-      screen.getByText("We've got your back, every step of the way")
+      screen.getByText("We've got your back, every step of the way"),
     ).toBeInTheDocument();
 
     // 5. Quote provides social proof
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
     // 6. Call to action for help

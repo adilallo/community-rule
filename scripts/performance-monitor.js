@@ -87,7 +87,7 @@ class PerformanceMonitorScript {
         } else {
           console.error("❌ Lighthouse CI tests failed");
           reject(
-            new Error(`Lighthouse CI failed with code ${code}: ${errorOutput}`)
+            new Error(`Lighthouse CI failed with code ${code}: ${errorOutput}`),
           );
         }
       });
@@ -112,7 +112,7 @@ class PerformanceMonitorScript {
         {
           stdio: "pipe",
           shell: true,
-        }
+        },
       );
 
       let output = "";
@@ -135,8 +135,8 @@ class PerformanceMonitorScript {
           console.error("❌ Playwright performance tests failed");
           reject(
             new Error(
-              `Playwright tests failed with code ${code}: ${errorOutput}`
-            )
+              `Playwright tests failed with code ${code}: ${errorOutput}`,
+            ),
           );
         }
       });
@@ -162,7 +162,7 @@ class PerformanceMonitorScript {
 
           if (score < 90) {
             this.warnings.push(
-              `Performance score below threshold: ${score}/100`
+              `Performance score below threshold: ${score}/100`,
             );
           }
         }
@@ -176,7 +176,7 @@ class PerformanceMonitorScript {
 
           if (time > PERFORMANCE_BUDGETS.first_contentful_paint) {
             this.warnings.push(
-              `First Contentful Paint exceeded budget: ${time}ms`
+              `First Contentful Paint exceeded budget: ${time}ms`,
             );
           }
         }
@@ -190,7 +190,7 @@ class PerformanceMonitorScript {
 
           if (time > PERFORMANCE_BUDGETS.largest_contentful_paint) {
             this.warnings.push(
-              `Largest Contentful Paint exceeded budget: ${time}ms`
+              `Largest Contentful Paint exceeded budget: ${time}ms`,
             );
           }
         }
@@ -204,7 +204,7 @@ class PerformanceMonitorScript {
 
           if (time > 300) {
             this.warnings.push(
-              `Total Blocking Time exceeded budget: ${time}ms`
+              `Total Blocking Time exceeded budget: ${time}ms`,
             );
           }
         }
@@ -218,7 +218,7 @@ class PerformanceMonitorScript {
 
           if (shift > 0.1) {
             this.warnings.push(
-              `Cumulative Layout Shift exceeded budget: ${shift}`
+              `Cumulative Layout Shift exceeded budget: ${shift}`,
             );
           }
         }
@@ -283,7 +283,7 @@ class PerformanceMonitorScript {
     console.log("📊 Summary:");
     console.log(`- Total metrics recorded: ${this.metrics.size}`);
     console.log(
-      `- Performance regressions detected: ${this.regressions.length}`
+      `- Performance regressions detected: ${this.regressions.length}`,
     );
     console.log(`- Warnings: ${this.warnings.length}\n`);
 
@@ -292,7 +292,7 @@ class PerformanceMonitorScript {
       console.log("🚨 Performance Regressions:");
       for (const regression of this.regressions) {
         console.log(
-          `  - ${regression.metric}: ${regression.current} (baseline: ${regression.baseline}, regression: ${regression.regression})`
+          `  - ${regression.metric}: ${regression.current} (baseline: ${regression.baseline}, regression: ${regression.regression})`,
         );
       }
       console.log("");

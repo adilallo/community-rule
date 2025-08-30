@@ -60,7 +60,7 @@ test.describe("Accessibility Testing", () => {
       focusedElements.push(
         `${elementInfo.tagName}${
           elementInfo.role ? `[role="${elementInfo.role}"]` : ""
-        }: ${elementInfo.accessibleName}`
+        }: ${elementInfo.accessibleName}`,
       );
 
       await page.keyboard.press("Tab");
@@ -190,7 +190,7 @@ test.describe("Accessibility Testing", () => {
   test("focus indicators - visible focus", async ({ page }) => {
     // Test that focus indicators are visible
     const focusableElements = page.locator(
-      "button, a, input, textarea, select, [tabindex]"
+      "button, a, input, textarea, select, [tabindex]",
     );
     const elementCount = await focusableElements.count();
 

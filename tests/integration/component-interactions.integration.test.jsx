@@ -49,26 +49,26 @@ describe("Component Interactions Integration", () => {
       <div>
         <HeroBanner {...heroData} />
         <NumberedCards {...numberedCardsData} />
-      </div>
+      </div>,
     );
 
     // Hero introduces the concept
     expect(
-      screen.getByText(/Help your community make important decisions/)
+      screen.getByText(/Help your community make important decisions/),
     ).toBeInTheDocument();
 
     // Numbered cards explain the process
     expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
     expect(
-      screen.getByText("Document how your community makes decisions")
+      screen.getByText("Document how your community makes decisions"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Build an operating manual for a successful community")
+      screen.getByText("Build an operating manual for a successful community"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Get a link to your manual for your group to review and evolve"
-      )
+        "Get a link to your manual for your group to review and evolve",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -83,7 +83,7 @@ describe("Component Interactions Integration", () => {
       <div>
         <RuleStack />
         <FeatureGrid {...featureGridData} />
-      </div>
+      </div>,
     );
 
     // Rule stack shows governance options
@@ -94,12 +94,12 @@ describe("Component Interactions Integration", () => {
 
     // Feature grid provides support context
     expect(
-      screen.getByText("We've got your back, every step of the way")
+      screen.getByText("We've got your back, every step of the way"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Use our toolkit to improve, document, and evolve your organization."
-      )
+        "Use our toolkit to improve, document, and evolve your organization.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -108,13 +108,13 @@ describe("Component Interactions Integration", () => {
 
     // Quote provides credibility and social proof
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
     // Should have proper attribution
     expect(screen.getByText("Jo Freeman")).toBeInTheDocument();
     expect(
-      screen.getByText("The Tyranny of Structurelessness")
+      screen.getByText("The Tyranny of Structurelessness"),
     ).toBeInTheDocument();
   });
 
@@ -131,10 +131,10 @@ describe("Component Interactions Integration", () => {
     // Provides help for users who need assistance
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
     expect(
-      screen.getByText("Get answers from an experienced organizer")
+      screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Ask an organizer/i })
+      screen.getByRole("link", { name: /Ask an organizer/i }),
     ).toBeInTheDocument();
   });
 
@@ -160,7 +160,7 @@ describe("Component Interactions Integration", () => {
           subtitle="Test help subtitle"
           buttonText="Test Help Button"
         />
-      </div>
+      </div>,
     );
 
     // All components should render without errors
@@ -169,7 +169,7 @@ describe("Component Interactions Integration", () => {
     expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
     expect(screen.getByText("Test Features")).toBeInTheDocument();
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
     expect(screen.getByText("Test Help")).toBeInTheDocument();
   });
@@ -209,7 +209,7 @@ describe("Component Interactions Integration", () => {
         <NumberedCards {...testData.cards} />
         <FeatureGrid {...testData.features} />
         <AskOrganizer {...testData.help} />
-      </div>
+      </div>,
     );
 
     // Verify all data is passed correctly
@@ -217,7 +217,7 @@ describe("Component Interactions Integration", () => {
     expect(screen.getByText("Test Subtitle")).toBeInTheDocument();
     expect(screen.getByText("Test description")).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: "Test CTA" }).length
+      screen.getAllByRole("button", { name: "Test CTA" }).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText("Test Cards")).toBeInTheDocument();
     expect(screen.getByText("Card 1")).toBeInTheDocument();
@@ -225,7 +225,7 @@ describe("Component Interactions Integration", () => {
     expect(screen.getByText("Test Features")).toBeInTheDocument();
     expect(screen.getByText("Test Help")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Test Help Button/i })
+      screen.getByRole("link", { name: /Test Help Button/i }),
     ).toBeInTheDocument();
   });
 
@@ -258,7 +258,7 @@ describe("Component Interactions Integration", () => {
           buttonText="Contact us"
           buttonHref="#contact"
         />
-      </div>
+      </div>,
     );
 
     // Test interaction flow
@@ -281,7 +281,7 @@ describe("Component Interactions Integration", () => {
     expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
     expect(screen.getByText("Features")).toBeInTheDocument();
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
     expect(screen.getByText("Need help?")).toBeInTheDocument();
   });
@@ -294,7 +294,7 @@ describe("Component Interactions Integration", () => {
         <NumberedCards title="Minimal Cards" cards={[]} />
         <FeatureGrid title="Minimal Features" />
         <AskOrganizer title="Minimal Help" />
-      </div>
+      </div>,
     );
 
     // Components should render without crashing
@@ -331,7 +331,7 @@ describe("Component Interactions Integration", () => {
           subtitle="Accessible help subtitle"
           buttonText="Accessible Help Button"
         />
-      </div>
+      </div>,
     );
 
     // Check for proper heading hierarchy

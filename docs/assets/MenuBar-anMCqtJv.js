@@ -1,1 +1,21 @@
-import{j as p}from"./jsx-runtime-C_nHp4yK.js";function r({children:a,className:e="",size:s="default",...l}){const c=`flex items-center ${{xsmall:"px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)] rounded-[4px]",default:"px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)]",medium:"px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-004)]",large:"px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-012)]"}[s]} ${e}`;return p.jsx("nav",{className:c,role:"menubar","aria-label":"Main navigation menu",...l,children:a})}r.__docgenInfo={description:"",methods:[],displayName:"MenuBar",props:{className:{defaultValue:{value:'""',computed:!1},required:!1},size:{defaultValue:{value:'"default"',computed:!1},required:!1}}};export{r as M};
+import { j as p } from "./jsx-runtime-C_nHp4yK.js";
+function r({ children: a, className: e = "", size: s = "default", ...l }) {
+  const c = `flex items-center ${{ xsmall: "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)] rounded-[4px]", default: "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)]", medium: "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-004)]", large: "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-012)]" }[s]} ${e}`;
+  return p.jsx("nav", {
+    className: c,
+    role: "menubar",
+    "aria-label": "Main navigation menu",
+    ...l,
+    children: a,
+  });
+}
+r.__docgenInfo = {
+  description: "",
+  methods: [],
+  displayName: "MenuBar",
+  props: {
+    className: { defaultValue: { value: '""', computed: !1 }, required: !1 },
+    size: { defaultValue: { value: '"default"', computed: !1 }, required: !1 },
+  },
+};
+export { r as M };

@@ -13,22 +13,22 @@ describe("FeatureGrid Component", () => {
       <FeatureGrid
         title="Feature Tools"
         subtitle="Everything you need to build better communities"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Feature Tools" })
+      screen.getByRole("heading", { name: "Feature Tools" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         name: "Everything you need to build better communities",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
   test("renders with custom className", () => {
     render(
-      <FeatureGrid title="Test" subtitle="Test" className="custom-class" />
+      <FeatureGrid title="Test" subtitle="Test" className="custom-class" />,
     );
 
     const section = document.querySelector("section");
@@ -40,16 +40,16 @@ describe("FeatureGrid Component", () => {
 
     // Check for all four MiniCard components
     expect(
-      screen.getByRole("link", { name: "Decision-making support tools" })
+      screen.getByRole("link", { name: "Decision-making support tools" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Values alignment exercises" })
+      screen.getByRole("link", { name: "Values alignment exercises" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Membership guidance resources" })
+      screen.getByRole("link", { name: "Membership guidance resources" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Conflict resolution tools" })
+      screen.getByRole("link", { name: "Conflict resolution tools" }),
     ).toBeInTheDocument();
   });
 
@@ -57,13 +57,13 @@ describe("FeatureGrid Component", () => {
     render(<FeatureGrid title="Feature Title" subtitle="Feature Subtitle" />);
 
     expect(
-      screen.getByRole("heading", { name: "Feature Title" })
+      screen.getByRole("heading", { name: "Feature Title" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Feature Subtitle" })
+      screen.getByRole("heading", { name: "Feature Subtitle" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Learn more" })
+      screen.getByRole("link", { name: "Learn more" }),
     ).toBeInTheDocument();
   });
 
@@ -130,7 +130,7 @@ describe("FeatureGrid Component", () => {
 
     // Should render default MiniCards
     expect(
-      screen.getByRole("link", { name: "Decision-making support tools" })
+      screen.getByRole("link", { name: "Decision-making support tools" }),
     ).toBeInTheDocument();
   });
 

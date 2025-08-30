@@ -14,7 +14,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Check that CommunityRule branding appears in both header and footer
@@ -30,19 +30,21 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Header navigation items
     expect(
       screen.getAllByRole("menuitem", { name: "Navigate to Use cases page" })
-        .length
+        .length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole("menuitem", { name: "Navigate to Learn page" }).length
+      screen.getAllByRole("menuitem", { name: "Navigate to Learn page" })
+        .length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole("menuitem", { name: "Navigate to About page" }).length
+      screen.getAllByRole("menuitem", { name: "Navigate to About page" })
+        .length,
     ).toBeGreaterThan(0);
 
     // Footer navigation items (should be present in footer as well)
@@ -92,23 +94,23 @@ describe("Layout Integration", () => {
     // Contact information
     expect(screen.getByText("medlab@colorado.edu")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "medlab@colorado.edu" })
+      screen.getByRole("link", { name: "medlab@colorado.edu" }),
     ).toHaveAttribute("href", "mailto:medlab@colorado.edu");
 
     // Social media links
     expect(
-      screen.getByRole("link", { name: "Follow us on Bluesky" })
+      screen.getByRole("link", { name: "Follow us on Bluesky" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Follow us on GitLab" })
+      screen.getByRole("link", { name: "Follow us on GitLab" }),
     ).toBeInTheDocument();
 
     // Legal links
     expect(
-      screen.getByRole("link", { name: "Privacy Policy" })
+      screen.getByRole("link", { name: "Privacy Policy" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Terms of Service" })
+      screen.getByRole("link", { name: "Terms of Service" }),
     ).toBeInTheDocument();
   });
 
@@ -134,7 +136,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Header should have banner role
@@ -155,7 +157,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Header should have responsive navigation elements
@@ -172,7 +174,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Get all interactive elements
@@ -195,7 +197,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Header provides main navigation
@@ -215,7 +217,7 @@ describe("Layout Integration", () => {
       <div>
         <Header />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Main navigation in header
@@ -228,13 +230,13 @@ describe("Layout Integration", () => {
       (link) =>
         link.textContent?.includes("Use cases") ||
         link.textContent?.includes("Learn") ||
-        link.textContent?.includes("About")
+        link.textContent?.includes("About"),
     );
     expect(navigationLinks.length).toBeGreaterThan(0);
 
     // Contact information in footer
     expect(
-      screen.getByRole("link", { name: "medlab@colorado.edu" })
+      screen.getByRole("link", { name: "medlab@colorado.edu" }),
     ).toBeInTheDocument();
   });
 });

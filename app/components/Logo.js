@@ -91,26 +91,26 @@ export default function Logo({ size = "default", showText = true }) {
     size === "homeHeaderXsmall"
       ? sizes.homeHeaderXsmall
       : size === "homeHeaderSm"
-      ? sizes.homeHeaderSm
-      : size === "homeHeaderMd"
-      ? sizes.homeHeaderMd
-      : size === "homeHeaderLg"
-      ? sizes.homeHeaderLg
-      : size === "homeHeaderXl"
-      ? sizes.homeHeaderXl
-      : size === "header"
-      ? sizes.header
-      : size === "headerMd"
-      ? sizes.headerMd
-      : size === "headerLg"
-      ? sizes.headerLg
-      : size === "headerXl"
-      ? sizes.headerXl
-      : size === "footer"
-      ? sizes.footer
-      : size === "footerLg"
-      ? sizes.footerLg
-      : sizes.default;
+        ? sizes.homeHeaderSm
+        : size === "homeHeaderMd"
+          ? sizes.homeHeaderMd
+          : size === "homeHeaderLg"
+            ? sizes.homeHeaderLg
+            : size === "homeHeaderXl"
+              ? sizes.homeHeaderXl
+              : size === "header"
+                ? sizes.header
+                : size === "headerMd"
+                  ? sizes.headerMd
+                  : size === "headerLg"
+                    ? sizes.headerLg
+                    : size === "headerXl"
+                      ? sizes.headerXl
+                      : size === "footer"
+                        ? sizes.footer
+                        : size === "footerLg"
+                          ? sizes.footerLg
+                          : sizes.default;
 
   return (
     <div

@@ -17,12 +17,12 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // User sees the main value proposition
     expect(
-      screen.getByText(/Help your community make important decisions/)
+      screen.getByText(/Help your community make important decisions/),
     ).toBeInTheDocument();
 
     // User clicks the main CTA to learn more
@@ -64,7 +64,7 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // User clicks on navigation links in header (check that they exist and are clickable)
@@ -73,7 +73,7 @@ describe("User Journey Integration", () => {
       (link) =>
         link.textContent?.includes("Use Cases") ||
         link.textContent?.includes("Learn") ||
-        link.textContent?.includes("About")
+        link.textContent?.includes("About"),
     );
 
     // Test that navigation links are present and clickable
@@ -90,7 +90,7 @@ describe("User Journey Integration", () => {
     // User scrolls to the bottom and sees the help section
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
     expect(
-      screen.getByText("Get answers from an experienced organizer")
+      screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
 
     // User clicks the ask organizer button (it's actually a link, not a button)
@@ -105,15 +105,15 @@ describe("User Journey Integration", () => {
 
     // User reads through the process steps
     expect(
-      screen.getByText("Document how your community makes decisions")
+      screen.getByText("Document how your community makes decisions"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Build an operating manual for a successful community")
+      screen.getByText("Build an operating manual for a successful community"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Get a link to your manual for your group to review and evolve"
-      )
+        "Get a link to your manual for your group to review and evolve",
+      ),
     ).toBeInTheDocument();
 
     // User sees the step numbers
@@ -128,7 +128,7 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // User finds contact email in footer
@@ -153,17 +153,17 @@ describe("User Journey Integration", () => {
 
     // User sees the features section
     expect(
-      screen.getByText("We've got your back, every step of the way")
+      screen.getByText("We've got your back, every step of the way"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Use our toolkit to improve, document, and evolve your organization."
-      )
+        "Use our toolkit to improve, document, and evolve your organization.",
+      ),
     ).toBeInTheDocument();
 
     // User sees the testimonial/quote (check for the actual quote content)
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
   });
 
@@ -173,7 +173,7 @@ describe("User Journey Integration", () => {
       <div>
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // User sees the logo wall with partner logos (check for any logo images)
@@ -185,7 +185,7 @@ describe("User Journey Integration", () => {
         img.alt?.includes("Metagov") ||
         img.alt?.includes("Open Civics") ||
         img.alt?.includes("Mutual Aid CO") ||
-        img.alt?.includes("CU Boulder")
+        img.alt?.includes("CU Boulder"),
     );
     expect(partnerLogos.length).toBeGreaterThan(0);
 
@@ -203,7 +203,7 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // 1. User discovers the application
@@ -218,12 +218,12 @@ describe("User Journey Integration", () => {
 
     // 4. User sees features and benefits
     expect(
-      screen.getByText("We've got your back, every step of the way")
+      screen.getByText("We've got your back, every step of the way"),
     ).toBeInTheDocument();
 
     // 5. User sees social proof
     expect(
-      screen.getByText(/The rules of decision-making must be open/)
+      screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
     // 6. User can take action
@@ -243,7 +243,7 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Header navigation
@@ -256,7 +256,7 @@ describe("User Journey Integration", () => {
       (link) =>
         link.textContent?.includes("Use cases") ||
         link.textContent?.includes("Learn") ||
-        link.textContent?.includes("About")
+        link.textContent?.includes("About"),
     );
     expect(navigationLinks.length).toBeGreaterThan(0);
 
@@ -273,7 +273,7 @@ describe("User Journey Integration", () => {
         <Header />
         <Page />
         <Footer />
-      </div>
+      </div>,
     );
 
     // Test all interactive elements

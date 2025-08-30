@@ -33,7 +33,7 @@ for (const bp of breakpoints) {
     }) => {
       // All breakpoints should have navigation items
       await expect(
-        page.getByRole("link", { name: /use cases/i })
+        page.getByRole("link", { name: /use cases/i }),
       ).toBeVisible();
       await expect(page.getByRole("link", { name: /learn/i })).toBeVisible();
       await expect(page.getByRole("link", { name: /about/i })).toBeVisible();
@@ -42,20 +42,20 @@ for (const bp of breakpoints) {
     test(`footer legal links visibility at ${bp.name}`, async ({ page }) => {
       // All breakpoints should have legal links
       await expect(
-        page.getByRole("link", { name: /privacy policy/i })
+        page.getByRole("link", { name: /privacy policy/i }),
       ).toBeVisible();
       await expect(
-        page.getByRole("link", { name: /terms of service/i })
+        page.getByRole("link", { name: /terms of service/i }),
       ).toBeVisible();
     });
 
     test(`footer social links visibility at ${bp.name}`, async ({ page }) => {
       // All breakpoints should have social links
       await expect(
-        page.getByRole("link", { name: /follow us on bluesky/i })
+        page.getByRole("link", { name: /follow us on bluesky/i }),
       ).toBeVisible();
       await expect(
-        page.getByRole("link", { name: /follow us on gitlab/i })
+        page.getByRole("link", { name: /follow us on gitlab/i }),
       ).toBeVisible();
     });
 
@@ -110,7 +110,7 @@ test.describe("Footer visual regression", () => {
 
       // Take a screenshot for visual regression testing
       await expect(page.locator("footer").first()).toHaveScreenshot(
-        `footer-${bp.name}.png`
+        `footer-${bp.name}.png`,
       );
     }
   });
@@ -136,7 +136,7 @@ test.describe("Footer visual regression", () => {
       await useCasesLink.hover();
       await page.waitForTimeout(200);
       await expect(page.locator("footer").first()).toHaveScreenshot(
-        `footer-${bp.name}-hover-nav.png`
+        `footer-${bp.name}-hover-nav.png`,
       );
 
       // Test hover on social links
@@ -146,7 +146,7 @@ test.describe("Footer visual regression", () => {
       await blueskyLink.hover();
       await page.waitForTimeout(200);
       await expect(page.locator("footer").first()).toHaveScreenshot(
-        `footer-${bp.name}-hover-social.png`
+        `footer-${bp.name}-hover-social.png`,
       );
     }
   });
@@ -172,7 +172,7 @@ test.describe("Footer visual regression", () => {
       await useCasesLink.focus();
       await page.waitForTimeout(200);
       await expect(page.locator("footer").first()).toHaveScreenshot(
-        `footer-${bp.name}-focus-nav.png`
+        `footer-${bp.name}-focus-nav.png`,
       );
 
       // Test focus on social links
@@ -182,7 +182,7 @@ test.describe("Footer visual regression", () => {
       await blueskyLink.focus();
       await page.waitForTimeout(200);
       await expect(page.locator("footer").first()).toHaveScreenshot(
-        `footer-${bp.name}-focus-social.png`
+        `footer-${bp.name}-focus-social.png`,
       );
     }
   });

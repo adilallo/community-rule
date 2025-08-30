@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 
 export async function findVisibleButton(
   page: Page,
-  text: string
+  text: string,
 ): Promise<Locator> {
   const buttons = page.locator(`button:has-text("${text}")`);
   const buttonCount = await buttons.count();
@@ -19,7 +19,7 @@ export async function findVisibleButton(
 
 export async function findVisibleElement(
   page: Page,
-  selector: string
+  selector: string,
 ): Promise<Locator> {
   const elements = page.locator(selector);
   const elementCount = await elements.count();

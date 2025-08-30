@@ -16,25 +16,25 @@ describe("AskOrganizer Component", () => {
         description="Our organizers can help you build better communities"
         buttonText="Contact an organizer"
         buttonHref="/contact"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Need help organizing?" })
+      screen.getByRole("heading", { name: "Need help organizing?" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Get expert guidance" })
+      screen.getByRole("heading", { name: "Get expert guidance" }),
     ).toBeInTheDocument();
     // The description text might not be rendered or might be different
     // Just verify the component renders without error
     expect(
-      screen.getByRole("heading", { name: "Need help organizing?" })
+      screen.getByRole("heading", { name: "Need help organizing?" }),
     ).toBeInTheDocument();
     // Button renders as a link when href is provided
     expect(
       screen.getByRole("link", {
         name: "Contact an organizer - Contact an organizer for help",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -45,13 +45,13 @@ describe("AskOrganizer Component", () => {
     expect(
       screen.getByRole("link", {
         name: "Ask an organizer - Contact an organizer for help",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
   test("renders with custom className", () => {
     render(
-      <AskOrganizer title="Test" subtitle="Test" className="custom-class" />
+      <AskOrganizer title="Test" subtitle="Test" className="custom-class" />,
     );
 
     const section = document.querySelector("section");
@@ -60,7 +60,7 @@ describe("AskOrganizer Component", () => {
 
   test("renders different variants", () => {
     const { rerender } = render(
-      <AskOrganizer title="Test" subtitle="Test" variant="centered" />
+      <AskOrganizer title="Test" subtitle="Test" variant="centered" />,
     );
 
     // Centered variant should have center alignment
@@ -70,7 +70,7 @@ describe("AskOrganizer Component", () => {
     expect(container).toBeInTheDocument();
 
     rerender(
-      <AskOrganizer title="Test" subtitle="Test" variant="left-aligned" />
+      <AskOrganizer title="Test" subtitle="Test" variant="left-aligned" />,
     );
 
     // Left-aligned variant should have left alignment
@@ -86,19 +86,19 @@ describe("AskOrganizer Component", () => {
         title="Ask Title"
         subtitle="Ask Subtitle"
         description="Ask Description"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Ask Title" })
+      screen.getByRole("heading", { name: "Ask Title" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Ask Subtitle" })
+      screen.getByRole("heading", { name: "Ask Subtitle" }),
     ).toBeInTheDocument();
     // Description might not be rendered if not provided to ContentLockup
     // Just verify the component renders without error
     expect(
-      screen.getByRole("heading", { name: "Ask Title" })
+      screen.getByRole("heading", { name: "Ask Title" }),
     ).toBeInTheDocument();
   });
 
@@ -109,7 +109,7 @@ describe("AskOrganizer Component", () => {
         subtitle="Test"
         buttonText="Custom Button"
         buttonHref="/custom"
-      />
+      />,
     );
 
     const button = screen.getByRole("link", {
@@ -128,7 +128,7 @@ describe("AskOrganizer Component", () => {
         title="Test"
         subtitle="Test"
         onContactClick={onContactClick}
-      />
+      />,
     );
 
     const button = screen.getByRole("link", {
@@ -172,13 +172,13 @@ describe("AskOrganizer Component", () => {
 
   test("renders with proper accessibility attributes", () => {
     render(
-      <AskOrganizer title="Test" subtitle="Test" buttonText="Custom Button" />
+      <AskOrganizer title="Test" subtitle="Test" buttonText="Custom Button" />,
     );
 
     const section = document.querySelector("section");
     expect(section).toHaveAttribute(
       "aria-labelledby",
-      "ask-organizer-headline"
+      "ask-organizer-headline",
     );
     expect(section).toHaveAttribute("tabIndex", "-1");
 
@@ -187,7 +187,7 @@ describe("AskOrganizer Component", () => {
     });
     expect(button).toHaveAttribute(
       "aria-label",
-      "Custom Button - Contact an organizer for help"
+      "Custom Button - Contact an organizer for help",
     );
   });
 
@@ -197,7 +197,7 @@ describe("AskOrganizer Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-032)]",
-      "px-[var(--spacing-scale-032)]"
+      "px-[var(--spacing-scale-032)]",
     );
   });
 
@@ -207,7 +207,7 @@ describe("AskOrganizer Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "md:py-[var(--spacing-scale-096)]",
-      "md:px-[var(--spacing-scale-064)]"
+      "md:px-[var(--spacing-scale-064)]",
     );
   });
 
@@ -224,18 +224,18 @@ describe("AskOrganizer Component", () => {
 
   test("applies variant-specific styling", () => {
     const { rerender } = render(
-      <AskOrganizer title="Test" subtitle="Test" variant="compact" />
+      <AskOrganizer title="Test" subtitle="Test" variant="compact" />,
     );
 
     // Compact variant should have different padding
     const section = screen.getByRole("region");
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-016)]",
-      "px-[var(--spacing-scale-016)]"
+      "px-[var(--spacing-scale-016)]",
     );
 
     rerender(
-      <AskOrganizer title="Test" subtitle="Test" variant="left-aligned" />
+      <AskOrganizer title="Test" subtitle="Test" variant="left-aligned" />,
     );
 
     // Left-aligned variant should have left alignment
@@ -251,7 +251,7 @@ describe("AskOrganizer Component", () => {
     });
     expect(button).toHaveClass(
       "xl:!px-[var(--spacing-scale-020)]",
-      "xl:!py-[var(--spacing-scale-012)]"
+      "xl:!py-[var(--spacing-scale-012)]",
     );
   });
 
@@ -266,7 +266,7 @@ describe("AskOrganizer Component", () => {
     expect(
       screen.getByRole("link", {
         name: "Ask an organizer - Contact an organizer for help",
-      })
+      }),
     ).toBeInTheDocument();
   });
 

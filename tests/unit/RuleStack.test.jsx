@@ -28,16 +28,16 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     expect(
-      screen.getByText(/Units called Circles have the ability to decide/)
+      screen.getByText(/Units called Circles have the ability to decide/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Decisions that affect the group collectively/)
+      screen.getByText(/Decisions that affect the group collectively/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/An elected board determines policies/)
+      screen.getByText(/An elected board determines policies/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/All participants can propose and vote/)
+      screen.getByText(/All participants can propose and vote/),
     ).toBeInTheDocument();
   });
 
@@ -54,7 +54,7 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     expect(
-      screen.getByRole("button", { name: "See all templates" })
+      screen.getByRole("button", { name: "See all templates" }),
     ).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("RuleStack Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-032)]",
-      "px-[var(--spacing-scale-020)]"
+      "px-[var(--spacing-scale-020)]",
     );
   });
 
@@ -128,7 +128,7 @@ describe("RuleStack Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "md:py-[var(--spacing-scale-048)]",
-      "lg:py-[var(--spacing-scale-064)]"
+      "lg:py-[var(--spacing-scale-064)]",
     );
   });
 
@@ -141,7 +141,7 @@ describe("RuleStack Component", () => {
       "md:w-[56px]",
       "md:h-[56px]",
       "lg:w-[90px]",
-      "lg:h-[90px]"
+      "lg:h-[90px]",
     );
   });
 
@@ -155,7 +155,7 @@ describe("RuleStack Component", () => {
     // Verify that cards have background color classes
     cards.forEach((card) => {
       expect(card.className).toMatch(
-        /bg-\[var\(--color-surface-default-brand-/
+        /bg-\[var\(--color-surface-default-brand-/,
       );
     });
   });

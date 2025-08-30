@@ -29,7 +29,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should function normally
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -44,7 +44,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -103,7 +103,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
   test("handles browser back/forward navigation", async ({ page }) => {
     // Navigate to a section
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -118,7 +118,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -136,7 +136,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
   test("handles page refresh during interactions", async ({ page }) => {
     // Start an interaction
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -151,7 +151,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -175,7 +175,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     // Interact with each tab - find the first visible button
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -190,7 +190,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -219,7 +219,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     // All tabs should work independently
     await expect(
-      page.locator('h2:has-text("How CommunityRule works")')
+      page.locator('h2:has-text("How CommunityRule works")'),
     ).toBeVisible();
     await expect(page1.locator("text=Consensus clusters")).toBeVisible();
     await expect(page2.locator("text=Still have questions?")).toBeVisible();
@@ -249,7 +249,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should continue to function
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -264,7 +264,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -283,7 +283,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should still function without images
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -298,7 +298,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -317,7 +317,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should still function without styles
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -332,7 +332,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -351,7 +351,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should still function with fallback fonts
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -366,7 +366,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -386,7 +386,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
       // Clean up
       setTimeout(() => {
         const testElements = document.querySelectorAll(
-          'div[textContent*="Test element"]'
+          'div[textContent*="Test element"]',
         );
         testElements.forEach((el) => el.remove());
       }, 100);
@@ -395,7 +395,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should remain functional
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -410,7 +410,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -481,7 +481,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     // Find visible button for right-click
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -578,7 +578,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Content should remain readable
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -593,7 +593,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 
@@ -610,14 +610,14 @@ test.describe("Edge Cases and Error Scenarios", () => {
     await page.evaluate(() => {
       document.documentElement.style.setProperty(
         "--prefers-reduced-motion",
-        "reduce"
+        "reduce",
       );
     });
 
     // Page should respect reduced motion
     await expect(page.locator("text=Collaborate")).toBeVisible();
     const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")'
+      'button:has-text("Learn how CommunityRule works")',
     );
     const buttonCount = await learnButtons.count();
     let visibleButton = null;
@@ -632,7 +632,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
 
     if (!visibleButton) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found'
+        'No visible "Learn how CommunityRule works" button found',
       );
     }
 

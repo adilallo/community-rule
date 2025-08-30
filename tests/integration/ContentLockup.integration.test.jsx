@@ -16,18 +16,18 @@ describe("ContentLockup Integration", () => {
         subtitle="Get Started"
         description="This is a description"
         ctaText="Get Started"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Welcome" })
+      screen.getByRole("heading", { name: "Welcome" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Get Started" })
+      screen.getByRole("heading", { name: "Get Started" }),
     ).toBeInTheDocument();
     expect(screen.getByText("This is a description")).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Get Started" })).toHaveLength(
-      3
+      3,
     );
   });
 
@@ -40,18 +40,18 @@ describe("ContentLockup Integration", () => {
         description="Feature description"
         linkText="Learn More"
         linkHref="/learn"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Feature Title" })
+      screen.getByRole("heading", { name: "Feature Title" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Learn More" })
+      screen.getByRole("link", { name: "Learn More" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Learn More" })).toHaveAttribute(
       "href",
-      "/learn"
+      "/learn",
     );
   });
 
@@ -61,14 +61,14 @@ describe("ContentLockup Integration", () => {
         variant="ask"
         title="Ask Question"
         subtitle="Ask subtitle"
-      />
+      />,
     );
 
     expect(
-      screen.getByRole("heading", { name: "Ask Question" })
+      screen.getByRole("heading", { name: "Ask Question" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Ask subtitle" })
+      screen.getByRole("heading", { name: "Ask subtitle" }),
     ).toBeInTheDocument();
     // Ask variant should not have description or CTA
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
@@ -81,7 +81,7 @@ describe("ContentLockup Integration", () => {
         title="Left Aligned"
         subtitle="Subtitle"
         alignment="left"
-      />
+      />,
     );
 
     const container = screen
@@ -92,7 +92,7 @@ describe("ContentLockup Integration", () => {
 
   test("renders responsive buttons correctly", () => {
     render(
-      <ContentLockup variant="hero" title="Responsive" ctaText="Click Me" />
+      <ContentLockup variant="hero" title="Responsive" ctaText="Click Me" />,
     );
 
     // Should render all three button variants for different breakpoints
@@ -107,7 +107,7 @@ describe("ContentLockup Integration", () => {
         title="Custom Button"
         ctaText="Custom"
         buttonClassName="custom-button-class"
-      />
+      />,
     );
 
     const buttons = screen.getAllByRole("button", { name: "Custom" });
@@ -119,7 +119,7 @@ describe("ContentLockup Integration", () => {
     render(<ContentLockup variant="hero" title="Minimal" />);
 
     expect(
-      screen.getByRole("heading", { name: "Minimal" })
+      screen.getByRole("heading", { name: "Minimal" }),
     ).toBeInTheDocument();
     // Should not crash without subtitle, description, or CTA
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
@@ -146,7 +146,7 @@ describe("ContentLockup Integration", () => {
         title="Accessible"
         linkText="Accessible Link"
         linkHref="/accessible"
-      />
+      />,
     );
 
     const link = screen.getByRole("link", { name: "Accessible Link" });

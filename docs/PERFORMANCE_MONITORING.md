@@ -9,26 +9,22 @@ The Community Rule platform includes a comprehensive performance monitoring syst
 ### Core Components
 
 1. **Performance Monitor Module** (`tests/performance/performance-monitor.js`)
-
    - Base `PerformanceMonitor` class for metric collection and analysis
    - `WebPerformanceMonitor` for browser-based performance monitoring
    - `PlaywrightPerformanceMonitor` for E2E performance testing
 
 2. **Performance Tests** (`tests/e2e/performance.spec.ts`)
-
    - Comprehensive E2E performance tests using Playwright
    - Core Web Vitals monitoring
    - Component render performance testing
    - Interaction performance testing
 
 3. **Lighthouse CI Integration** (`lighthouserc.json`)
-
    - Automated performance audits
    - Performance budget enforcement
    - Core Web Vitals validation
 
 4. **Performance Budgets** (`performance-budgets.json`)
-
    - Resource size limits
    - Timing budgets
    - Resource count limits
@@ -109,13 +105,11 @@ node scripts/performance-monitor.js
 ### Core Web Vitals
 
 1. **Largest Contentful Paint (LCP)**
-
    - Measures loading performance
    - Target: < 2.5 seconds
    - Baseline: < 2.0 seconds
 
 2. **First Input Delay (FID)**
-
    - Measures interactivity
    - Target: < 100ms
    - Baseline: < 50ms
@@ -256,13 +250,11 @@ The performance monitoring system automatically detects regressions by:
 ### Common Issues
 
 1. **Test Timeouts**
-
    - Increase timeout values for slow operations
    - Add proper wait conditions
    - Check for network issues
 
 2. **False Positives**
-
    - Adjust baseline values
    - Review test environment
    - Check for external dependencies
@@ -290,19 +282,16 @@ npm run performance:monitor -- --verbose
 ### Planned Features
 
 1. **Real User Monitoring (RUM)**
-
    - Collect performance data from real users
    - User-centric performance metrics
    - Geographic performance analysis
 
 2. **Advanced Analytics**
-
    - Machine learning-based regression detection
    - Predictive performance modeling
    - Automated performance optimization suggestions
 
 3. **Performance Dashboard**
-
    - Web-based performance monitoring dashboard
    - Real-time performance metrics visualization
    - Historical performance trends

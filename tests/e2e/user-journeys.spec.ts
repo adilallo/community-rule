@@ -11,7 +11,7 @@ test.describe("User Journeys", () => {
 
     // 2. User reads hero section
     await expect(
-      page.locator("text=Help your community make important decisions")
+      page.locator("text=Help your community make important decisions"),
     ).toBeVisible();
 
     // 3. User clicks CTA to learn more
@@ -24,20 +24,20 @@ test.describe("User Journeys", () => {
 
     // 4. User scrolls to numbered cards section
     await expect(
-      page.locator('h2:has-text("How CommunityRule works")')
+      page.locator('h2:has-text("How CommunityRule works")'),
     ).toBeVisible();
 
     // 5. User reads the process steps
     await expect(
-      page.locator("text=Document how your community makes decisions")
+      page.locator("text=Document how your community makes decisions"),
     ).toBeVisible();
     await expect(
-      page.locator("text=Build an operating manual for a successful community")
+      page.locator("text=Build an operating manual for a successful community"),
     ).toBeVisible();
     await expect(
       page.locator(
-        "text=Get a link to your manual for your group to review and evolve"
-      )
+        "text=Get a link to your manual for your group to review and evolve",
+      ),
     ).toBeVisible();
 
     // 6. User explores rule templates
@@ -78,7 +78,7 @@ test.describe("User Journeys", () => {
 
     // 10. User creates CommunityRule
     const createButton = page.locator(
-      'button:has-text("Create CommunityRule")'
+      'button:has-text("Create CommunityRule")',
     );
     if (
       (await createButton.count()) > 0 &&
@@ -139,7 +139,7 @@ test.describe("User Journeys", () => {
 
     // Read the section
     await expect(
-      page.locator("text=Get answers from an experienced organizer")
+      page.locator("text=Get answers from an experienced organizer"),
     ).toBeVisible();
 
     // Click contact button - check if it exists and is visible first
@@ -158,7 +158,7 @@ test.describe("User Journeys", () => {
   test("user journey: create CommunityRule", async ({ page }) => {
     // Simplified approach - just check if the button exists and is visible
     const createButton = page.locator(
-      'button:has-text("Create CommunityRule")'
+      'button:has-text("Create CommunityRule")',
     );
 
     if (

@@ -23,7 +23,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const html = document.querySelector("html");
@@ -36,7 +36,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const body = document.querySelector("body");
@@ -50,7 +50,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const mainContainer = document.querySelector(".min-h-screen.flex.flex-col");
@@ -61,7 +61,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     // The HomeHeader component should be rendered
@@ -74,7 +74,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const main = document.querySelector("main");
@@ -87,7 +87,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     // The Footer component should be rendered
@@ -100,7 +100,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>{testContent}</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     expect(screen.getByText(testContent)).toBeInTheDocument();
@@ -110,7 +110,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const mainContainer = document.querySelector(".min-h-screen.flex.flex-col");
@@ -124,7 +124,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     const main = document.querySelector("main");
@@ -135,7 +135,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     // Check for all major structural elements
@@ -150,7 +150,7 @@ describe("RootLayout", () => {
     render(
       <RootLayout>
         <div>Test content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     // Check that the document has proper structure
@@ -173,7 +173,7 @@ describe("RootLayout", () => {
         <div>First child</div>
         <div>Second child</div>
         <div>Third child</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     expect(screen.getByText("First child")).toBeInTheDocument();
