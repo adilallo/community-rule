@@ -108,7 +108,7 @@ jobs:
           name: playwright-results-${{ matrix.browser }}
           path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
-
+      
       - name: Stop app
         if: always()
         run: |
@@ -160,14 +160,14 @@ jobs:
       - name: Seed snapshots (main only)
         if: gitea.ref == 'refs/heads/main'
         run: PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
-        env:
+        env: 
           CI: true
           BASE_URL: http://127.0.0.1:3011
 
       # Run visual regression tests
       - name: Run visual regression tests
         run: npx playwright test tests/e2e/visual-regression.spec.ts
-        env:
+        env: 
           CI: true
           BASE_URL: http://127.0.0.1:3011
 
@@ -183,7 +183,7 @@ jobs:
           name: visual-regression-results
           path: visual-regression.tgz
           retention-days: 30
-
+      
       - name: Stop app
         if: always()
         run: |
@@ -257,7 +257,7 @@ jobs:
           name: lhci-results
           path: .lighthouseci/
           retention-days: 30
-
+      
       - name: Stop app
         if: always()
         run: |
