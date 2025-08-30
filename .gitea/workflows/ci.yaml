@@ -60,66 +60,40 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
 
-      # 1) Sanity check that the build exists
-      - name: Verify Next build output
+      - name: Start app (background) + healthcheck
         run: |
           set -euxo pipefail
-          ls -la .next || true
-          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
+          # pick a port that's unlikely to be busy
+          export PORT="${PORT:-3010}"
+          export HOST="127.0.0.1"
 
-      # 2) Start the right kind of server and capture logs
-      - name: Start app (auto-detect start vs export)
+          # ensure build exists
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          # start and detach with logs
+          mkdir -p .next
+          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          echo $! > .next/runner.pid
+          echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
+
+          # wait for TCP, then HTTP
+          npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+
+          echo "✅ App is responding"
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: production
+      - name: Show last 200 lines of server log on failure
+        if: failure()
         run: |
-          set -euxo pipefail
-
-          # prefer production server if Next build exists
-          if [ -f .next/BUILD_ID ]; then
-            # run Next in the foreground for 3s to flush any crash to logs, then background it
-            (NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 \
-             node --trace-uncaught node_modules/next/dist/bin/next start -p 3000 -H 127.0.0.1 \
-            ) > server.log 2>&1 &
-
-          # fall back to static export (if your project uses output: 'export')
-          elif [ -d out ]; then
-            npx --yes http-server out -p 3000 --silent > server.log 2>&1 &
-          else
-            echo "Neither .next nor out/ present – nothing to serve"; cat server.log || true; exit 1
-          fi
-
-          echo $! > server.pid
-          sleep 2
-          echo "----- first server log lines -----"
-          head -n 200 server.log || true
-          echo "----------------------------------"
-
-      # 3) Fail fast if the process died
-      - name: Check server process
-        run: |
-          set -e
-          PID=$(cat server.pid)
-          if ! ps -p "$PID" > /dev/null; then
-            echo "Server crashed during startup:"
-            cat server.log || true
-            exit 1
-          fi
-
-      # 4) Wait for readiness with helpful diagnostics
-      - name: Wait for http://127.0.0.1:3000
-        run: |
-          set -euxo pipefail
-          for i in $(seq 1 60); do
-            if curl -sf http://127.0.0.1:3000 >/dev/null; then
-              echo "App is up ✅"; exit 0
-            fi
-            if [ $i -eq 1 ] || [ $((i%10)) -eq 0 ]; then
-              echo "Still waiting… attempt $i"
-              tail -n 50 server.log || true
-            fi
-            sleep 2
-          done
-          echo "Timed out waiting for app"; tail -n +1 server.log || true; exit 1
-      - run: npx playwright test --project=${{ matrix.browser }}
-        env: { CI: true }
+          echo "––– .next/runner.log (tail) –––"
+          tail -n 200 .next/runner.log || true
+      - name: Run E2E tests
+        run: npx playwright test --project=${{ matrix.browser }}
+        env:
+          CI: true
+          BASE_URL: http://127.0.0.1:3010
 
       # package artifacts (keeps file count small)
       - name: Package E2E artifacts
@@ -134,6 +108,13 @@ jobs:
           name: playwright-results-${{ matrix.browser }}
           path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
+      
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f .next/runner.pid ]; then
+            kill $(cat .next/runner.pid) 2>/dev/null || true
+          fi
 
   visual-regression:
     runs-on: [self-hosted, macos-latest]
