@@ -197,18 +197,18 @@ export const Interactive = {
     const canvas = within(canvasElement);
 
     await step("Click navigation items", async () => {
-      const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
+      const useCasesLink = canvas.getByRole("menuitem", { name: /Use cases/i });
       await userEvent.click(useCasesLink);
 
-      const learnLink = canvas.getByRole("link", { name: /learn/i });
+      const learnLink = canvas.getByRole("menuitem", { name: /Learn/i });
       await userEvent.click(learnLink);
 
-      const aboutLink = canvas.getByRole("link", { name: /about/i });
+      const aboutLink = canvas.getByRole("menuitem", { name: /About/i });
       await userEvent.click(aboutLink);
     });
 
     await step("Click authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
+      const loginLink = canvas.getByRole("menuitem", {
         name: /log in to your account/i,
       });
       await userEvent.click(loginLink);
@@ -238,22 +238,22 @@ export const HoverStates = {
     const canvas = within(canvasElement);
 
     await step("Hover over navigation items", async () => {
-      const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
+      const useCasesLink = canvas.getByRole("menuitem", { name: /Use cases/i });
       await userEvent.hover(useCasesLink);
       // Wait for hover state to be visible
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const learnLink = canvas.getByRole("link", { name: /learn/i });
+      const learnLink = canvas.getByRole("menuitem", { name: /Learn/i });
       await userEvent.hover(learnLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const aboutLink = canvas.getByRole("link", { name: /about/i });
+      const aboutLink = canvas.getByRole("menuitem", { name: /About/i });
       await userEvent.hover(aboutLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     await step("Hover over authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
+      const loginLink = canvas.getByRole("menuitem", {
         name: /log in to your account/i,
       });
       await userEvent.hover(loginLink);
@@ -285,21 +285,21 @@ export const FocusStates = {
     const canvas = within(canvasElement);
 
     await step("Focus on navigation items", async () => {
-      const useCasesLink = canvas.getByRole("link", { name: /use cases/i });
+      const useCasesLink = canvas.getByRole("menuitem", { name: /Use cases/i });
       useCasesLink.focus();
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const learnLink = canvas.getByRole("link", { name: /learn/i });
+      const learnLink = canvas.getByRole("menuitem", { name: /Learn/i });
       learnLink.focus();
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const aboutLink = canvas.getByRole("link", { name: /about/i });
+      const aboutLink = canvas.getByRole("menuitem", { name: /About/i });
       aboutLink.focus();
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     await step("Focus on authentication elements", async () => {
-      const loginLink = canvas.getByRole("link", {
+      const loginLink = canvas.getByRole("menuitem", {
         name: /log in to your account/i,
       });
       loginLink.focus();
