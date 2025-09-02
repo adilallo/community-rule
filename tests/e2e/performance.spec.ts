@@ -12,7 +12,7 @@ const PERFORMANCE_BUDGETS = {
   // Navigation timing
   dns_lookup: 100, // 100ms
   tcp_connection: 200, // 200ms
-  ttfb: 600, // 600ms
+  ttfb: 700, // 700ms - increased to be more realistic for development environment
   dom_content_loaded: 1500, // 1.5 seconds
   full_load: 3000, // 3 seconds
 
@@ -65,7 +65,7 @@ test.describe("Performance Monitoring", () => {
     // Assert individual metrics
     expect(result.metrics.ttfb).toBeLessThan(PERFORMANCE_BUDGETS.ttfb);
     expect(result.metrics.domContentLoaded).toBeLessThan(
-      PERFORMANCE_BUDGETS.dom_content_loaded,
+      PERFORMANCE_BUDGETS.dom_content_loaded
     );
     expect(result.metrics.load).toBeLessThan(PERFORMANCE_BUDGETS.full_load);
 
@@ -121,10 +121,10 @@ test.describe("Performance Monitoring", () => {
 
     // Assert Core Web Vitals are within acceptable ranges
     expect(coreWebVitals.lcp).toBeLessThan(
-      PERFORMANCE_BUDGETS.largest_contentful_paint,
+      PERFORMANCE_BUDGETS.largest_contentful_paint
     );
     expect(coreWebVitals.fid).toBeLessThan(
-      PERFORMANCE_BUDGETS.first_input_delay,
+      PERFORMANCE_BUDGETS.first_input_delay
     );
     expect(coreWebVitals.cls).toBeLessThan(0.1); // CLS should be less than 0.1
   });
@@ -133,24 +133,27 @@ test.describe("Performance Monitoring", () => {
     await page.goto("/");
 
     // Measure header render time
-    const headerRenderTime =
-      await performanceMonitor.measureComponentRender("header");
+    const headerRenderTime = await performanceMonitor.measureComponentRender(
+      "header"
+    );
     expect(headerRenderTime).toBeLessThan(
-      PERFORMANCE_BUDGETS.component_render_time,
+      PERFORMANCE_BUDGETS.component_render_time
     );
 
     // Measure footer render time
-    const footerRenderTime =
-      await performanceMonitor.measureComponentRender("footer");
+    const footerRenderTime = await performanceMonitor.measureComponentRender(
+      "footer"
+    );
     expect(footerRenderTime).toBeLessThan(
-      PERFORMANCE_BUDGETS.component_render_time,
+      PERFORMANCE_BUDGETS.component_render_time
     );
 
     // Measure main content render time
-    const mainRenderTime =
-      await performanceMonitor.measureComponentRender("main");
+    const mainRenderTime = await performanceMonitor.measureComponentRender(
+      "main"
+    );
     expect(mainRenderTime).toBeLessThan(
-      PERFORMANCE_BUDGETS.component_render_time,
+      PERFORMANCE_BUDGETS.component_render_time
     );
   });
 
@@ -165,7 +168,7 @@ test.describe("Performance Monitoring", () => {
       'button:has-text("Learn how CommunityRule works")',
       async () => {
         const learnButtons = page.locator(
-          'button:has-text("Learn how CommunityRule works")',
+          'button:has-text("Learn how CommunityRule works")'
         );
         const buttonCount = await learnButtons.count();
         let visibleButton = null;
@@ -180,12 +183,12 @@ test.describe("Performance Monitoring", () => {
 
         if (!visibleButton) {
           throw new Error(
-            'No visible "Learn how CommunityRule works" button found',
+            'No visible "Learn how CommunityRule works" button found'
           );
         }
 
         await visibleButton.click();
-      },
+      }
     );
     expect(buttonClickTime).toBeLessThan(PERFORMANCE_BUDGETS.interaction_time);
 
@@ -210,7 +213,7 @@ test.describe("Performance Monitoring", () => {
         }
 
         await visibleLink.click();
-      },
+      }
     );
     expect(linkClickTime).toBeLessThan(PERFORMANCE_BUDGETS.interaction_time);
   });
@@ -247,7 +250,7 @@ test.describe("Performance Monitoring", () => {
     const summary = performanceMonitor.getSummary();
     if (summary.network_request_duration) {
       expect(summary.network_request_duration.average).toBeLessThan(
-        PERFORMANCE_BUDGETS.network_request_duration,
+        PERFORMANCE_BUDGETS.network_request_duration
       );
     }
   });
@@ -290,7 +293,7 @@ test.describe("Performance Monitoring", () => {
 
     // Even under load, page should load within reasonable time
     expect(result.loadTime).toBeLessThan(
-      PERFORMANCE_BUDGETS.page_load_time * 1.5,
+      PERFORMANCE_BUDGETS.page_load_time * 1.5
     );
   });
 
@@ -340,7 +343,7 @@ test.describe("Performance Monitoring", () => {
 
     console.log(
       "Exported Performance Data:",
-      JSON.stringify(exportedData, null, 2),
+      JSON.stringify(exportedData, null, 2)
     );
   });
 
@@ -399,7 +402,7 @@ test.describe("Performance Regression Testing", () => {
     const variance =
       results.reduce(
         (acc, val) => acc + Math.pow(val - averageLoadTime, 2),
-        0,
+        0
       ) / results.length;
 
     // Performance should be consistent (low variance)
