@@ -51,7 +51,7 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
 
-            - name: E2E (start + test + teardown)
+      - name: E2E (start + test + teardown)
         run: |
           set -euxo pipefail
 
