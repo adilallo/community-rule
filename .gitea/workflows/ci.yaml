@@ -194,12 +194,6 @@ jobs:
       - name: Install LHCI
         run: npm i -D @lhci/cli
 
-      # Ensure a Chrome binary is available (works on Linux/macOS runners)
-      - name: Install Chrome via Puppeteer (portable)
-        run: |
-          npx @puppeteer/browsers install chrome@stable -P .cache/puppeteer
-          echo "CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable -P .cache/puppeteer)" >> $GITHUB_ENV
-
       - name: Build application
         run: npm run build
 
@@ -210,53 +204,41 @@ jobs:
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
+      - name: Install portable Chrome (x64 to match Rosetta Node)
+        run: |
+          # Install x64 Chrome explicitly
+          npx @puppeteer/browsers install chrome@stable --platform mac_x64 -P .cache/puppeteer
+          # Compute the executable path for that platform
+          CHROME_PATH="$(npx @puppeteer/browsers executable-path chrome@stable --platform mac_x64 -P .cache/puppeteer)"
+          echo "Using Chrome at: $CHROME_PATH"
+          "$CHROME_PATH" --version
+          # Make it available to later steps *and* this shell
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          export CHROME_PATH
+
       - name: Performance (start + test + teardown)
         run: |
           set -euxo pipefail
 
           export PORT=3010 HOST=127.0.0.1
           mkdir -p .next
-
-          # ensure build exists
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
 
           echo "🚀 Starting Next.js server for performance testing..."
-
-          # Start Next directly with node so $! is the real node PID
           node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           SVPID=$!
-          echo "$SVPID" > .next/runner.pid
-          echo "🌐 Server PID: $SVPID"
-
-          # Wait for readiness
-          echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
           curl -fsS "http://$HOST:$PORT" >/dev/null
           echo "✅ App is responding at http://$HOST:$PORT"
 
-          # ---- fixes begin here ----
-          echo "node arch before: $(node -p "process.arch")"
-          if [ "$(node -p "process.arch")" != "arm64" ]; then
-            NODE_VER=20.17.0
-            curl -fsSLO https://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER-darwin-arm64.tar.xz
-            tar -xJf node-v$NODE_VER-darwin-arm64.tar.xz
-            echo "$PWD/node-v$NODE_VER-darwin-arm64/bin" >> "$GITHUB_PATH"
-            echo "PATH updated to prefer arm64 node"
-          fi
-          echo "node arch after: $(node -p "process.arch")"
+          echo "Node arch: $(node -p "process.arch")"
+          echo "Chrome: $CHROME_PATH"
+          "$CHROME_PATH" --version
 
-          echo "uname -m: $(uname -m)"
-          echo "node: $(node -v) arch=$(node -p "process.arch")"
-          "$CHROME_PATH" --version || true
-
-          # Run Lighthouse CI
-          echo "🚀 Starting Lighthouse CI performance testing..."
+          # Run LHCI against the x64 Chrome we installed
           npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
 
-          # Teardown
-          echo "🧹 Cleaning up server..."
           kill "$SVPID" 2>/dev/null || true
-          echo "✅ Server cleanup complete"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
