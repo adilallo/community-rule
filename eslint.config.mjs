@@ -12,9 +12,13 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("next/core-web-vitals"), {
-  files: ["**/*.js", "**/*.jsx", "**/*.mjs"],
-  ignores: ["**/*.ts", "**/*.tsx"],
-}, ...storybook.configs["flat/recommended"]];
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals"),
+  {
+    files: ["**/*.js", "**/*.jsx", "**/*.mjs"],
+    ignores: ["**/*.ts", "**/*.tsx"],
+  },
+  ...storybook.configs["flat/recommended"],
+];
 
 export default eslintConfig;
