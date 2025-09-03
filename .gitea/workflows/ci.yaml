@@ -204,17 +204,31 @@ jobs:
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
-      - name: Install portable Chrome (x64 to match Rosetta Node)
+      - name: Install Chrome via Puppeteer (mac_arm)
         run: |
-          # Install x64 Chrome explicitly
-          npx @puppeteer/browsers install chrome@stable --platform mac_x64 -P .cache/puppeteer
-          # Compute the executable path for that platform
-          CHROME_PATH="$(npx @puppeteer/browsers executable-path chrome@stable --platform mac_x64 -P .cache/puppeteer)"
-          echo "Using Chrome at: $CHROME_PATH"
-          "$CHROME_PATH" --version
-          # Make it available to later steps *and* this shell
-          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
-          export CHROME_PATH
+          set -euxo pipefail
+          mkdir -p .cache/puppeteer
+          npx @puppeteer/browsers install chrome@stable \
+            --platform=mac_arm \
+            --path .cache/puppeteer
+          echo "CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)" >> "$GITHUB_ENV"
+
+      - name: Ensure arm64 Node for Lighthouse
+        run: |
+          set -euxo pipefail
+          echo "node before: $(node -v) arch=$(node -p 'process.arch')"
+          if [ "$(node -p 'process.arch')" != "arm64" ]; then
+            NODE_VER=20.17.0
+            curl -fsSLO "https://nodejs.org/dist/v${NODE_VER}/node-v${NODE_VER}-darwin-arm64.tar.xz"
+            tar -xJf "node-v${NODE_VER}-darwin-arm64.tar.xz"
+            # Make arm64 node take effect in THIS step:
+            export PATH="$PWD/node-v${NODE_VER}-darwin-arm64/bin:$PATH"
+            # And persist for subsequent steps:
+            echo "$PWD/node-v${NODE_VER}-darwin-arm64/bin" >> "$GITHUB_PATH"
+          fi
+          echo "node after: $(node -v) arch=$(node -p 'process.arch')"
+          echo "uname -m: $(uname -m)"
+          "${CHROME_PATH}" --version || true
 
       - name: Performance (start + test + teardown)
         run: |
@@ -231,11 +245,12 @@ jobs:
           curl -fsS "http://$HOST:$PORT" >/dev/null
           echo "✅ App is responding at http://$HOST:$PORT"
 
+          # Ensure we're using arm64 Node for Lighthouse
           echo "Node arch: $(node -p "process.arch")"
           echo "Chrome: $CHROME_PATH"
           "$CHROME_PATH" --version
 
-          # Run LHCI against the x64 Chrome we installed
+          # Run LHCI with arm64 Node + arm64 Chrome
           npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
 
           kill "$SVPID" 2>/dev/null || true
