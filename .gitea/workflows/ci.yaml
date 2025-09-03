@@ -64,7 +64,16 @@ jobs:
           # start and detach with logs
           mkdir -p .next
           # Use production server with enhanced stability for CI
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Start server in background but keep it alive with proper signal handling
+          (
+            # Create a new process group to isolate from CI cleanup
+            setsid bash -c '
+              # Set up signal handlers to prevent premature termination
+              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
+              # Start the server
+              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
+            ' &
+          ) &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -212,7 +221,16 @@ jobs:
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
           # Use production server with enhanced stability for CI
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Start server in background but keep it alive with proper signal handling
+          (
+            # Create a new process group to isolate from CI cleanup
+            setsid bash -c '
+              # Set up signal handlers to prevent premature termination
+              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
+              # Start the server
+              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
+            ' &
+          ) &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -312,7 +330,16 @@ jobs:
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
           # Use production server with enhanced stability for CI
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Start server in background but keep it alive with proper signal handling
+          (
+            # Create a new process group to isolate from CI cleanup
+            setsid bash -c '
+              # Set up signal handlers to prevent premature termination
+              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
+              # Start the server
+              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
+            ' &
+          ) &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
