@@ -63,8 +63,8 @@ jobs:
 
           # start and detach with logs
           mkdir -p .next
-          # Use dev server instead of production server for better stability in CI
-          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use production server with enhanced stability for CI
+          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -86,7 +86,10 @@ jobs:
           echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: development
+          NODE_ENV: production
+          # Add stability measures for production server in CI
+          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
+          NEXT_SHARP_PATH: "false"
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
@@ -131,6 +134,13 @@ jobs:
             echo "  - PID file exists: $(cat .next/runner.pid)"
             echo "  - Process running: $(ps -p $(cat .next/runner.pid) | grep -v PID || echo 'Process not found')"
             echo "  - Port 3010 listeners: $(lsof -i :3010 2>/dev/null | grep LISTEN || echo 'No listeners on 3010')"
+            # If process is missing, show the server logs to understand why it crashed
+            if ! ps -p $(cat .next/runner.pid) >/dev/null 2>&1; then
+              echo "❌ Server process has crashed! Showing last 50 lines of server log:"
+              tail -n 50 .next/runner.log || echo "No server log found"
+              echo "🔍 Checking for common crash causes..."
+              grep -i "error\|crash\|killed\|memory\|port\|bind" .next/runner.log | tail -10 || echo "No obvious errors found in log"
+            fi
           else
             echo "  - No PID file found"
           fi
@@ -150,7 +160,7 @@ jobs:
             echo "📋 Last 50 lines of server log:"
             tail -n 50 .next/runner.log || echo "No server log found"
             echo "🔍 Checking if server is still running:"
-            ps aux | grep "npm run dev" | grep -v grep || echo "No npm run dev process found"
+            ps aux | grep "npm run start" | grep -v grep || echo "No npm run start process found"
             exit 1
           }
         env:
@@ -201,8 +211,8 @@ jobs:
           export HOST="127.0.0.1"
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          # Use dev server instead of production server for better stability in CI
-          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use production server with enhanced stability for CI
+          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -224,7 +234,10 @@ jobs:
           echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: development
+          NODE_ENV: production
+          # Add stability measures for production server in CI
+          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
+          NEXT_SHARP_PATH: "false"
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
@@ -298,8 +311,8 @@ jobs:
           export PORT=3010 HOST=127.0.0.1
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          # Use dev server instead of production server for better stability in CI
-          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use production server with enhanced stability for CI
+          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -321,7 +334,10 @@ jobs:
           echo "✅ App is fully ready for Lighthouse testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: development
+          NODE_ENV: production
+          # Add stability measures for production server in CI
+          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
+          NEXT_SHARP_PATH: "false"
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
