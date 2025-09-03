@@ -3,22 +3,22 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Testing Architecture](#testing-architecture)
 - [Quick Start](#quick-start)
-- [Test Structure](#test-structure)
+- [Test Types & Coverage](#test-types--coverage)
 - [Unit & Integration Testing](#unit--integration-testing)
 - [E2E Testing](#e2e-testing)
 - [Visual Regression Testing](#visual-regression-testing)
+- [Accessibility Testing](#accessibility-testing)
 - [Performance Testing](#performance-testing)
-- [Storybook Testing](#storybook-testing)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Development Workflow](#development-workflow)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
-- [Monitoring & Metrics](#monitoring--metrics)
 
 ## 🎯 Overview
 
-This project uses a comprehensive testing framework with multiple layers of testing to ensure code quality, functionality, and visual consistency across all browsers and devices.
+The CommunityRule platform uses a comprehensive testing framework with multiple layers to ensure code quality, functionality, visual consistency, and accessibility across all browsers and devices.
 
 ### Testing Stack
 
@@ -26,16 +26,32 @@ This project uses a comprehensive testing framework with multiple layers of test
 - **E2E**: Playwright (Chromium, Firefox, WebKit, Mobile)
 - **Visual Regression**: Playwright Screenshots
 - **Performance**: Lighthouse CI
-- **Accessibility**: Axe-core + Storybook
+- **Accessibility**: Axe-core + Playwright
 - **CI/CD**: Gitea Actions
 
-### Test Coverage
+### Current Status
 
-- ✅ **124 Unit Tests** (8 components + 1 integration)
-- ✅ **308 E2E Tests** (4 browsers × 77 tests)
-- ✅ **92 Visual Regression Screenshots**
-- ✅ **Performance Budgets**
-- ✅ **Accessibility Compliance**
+- ✅ **305 Unit Tests** (94.88% coverage - exceeds 85% target)
+- ✅ **92 E2E Tests** across 4 browsers
+- ✅ **23 Visual Regression Tests** per browser
+- ✅ **Performance Budgets** with Lighthouse CI
+- ✅ **WCAG 2.1 AA Compliance** with automated testing
+
+## 🏗 Testing Architecture
+
+### Test Pyramid
+
+- **Unit Tests**: Fast, focused, high coverage (94.88%)
+- **Integration Tests**: Component interactions, data flow
+- **E2E Tests**: Critical user journeys, cross-browser compatibility
+
+### Testing Philosophy
+
+**JSDOM Limitations**: Unit tests in JSDOM can't truly test responsive behavior since CSS media queries aren't evaluated. Therefore:
+
+- **Unit/Integration Tests**: Test component structure, accessibility, and configuration
+- **E2E Tests**: Test real responsive behavior at actual viewport widths
+- **Visual Tests**: Capture visual consistency across breakpoints
 
 ## 🚀 Quick Start
 
@@ -49,17 +65,17 @@ npm install
 npx playwright install
 ```
 
-### Running Tests
+### Essential Commands
 
 ```bash
-# All unit tests with coverage
+# Unit tests with coverage
 npm test
-
-# Unit tests in watch mode
-npm run test:watch
 
 # E2E tests
 npm run e2e
+
+# Visual regression tests
+npm run visual:test
 
 # Performance tests
 npm run lhci
@@ -68,40 +84,43 @@ npm run lhci
 npm run test:sb
 ```
 
-## 📁 Test Structure
+## 🧪 Test Types & Coverage
+
+### Test Structure
 
 ```
 tests/
 ├── unit/                          # Component unit tests
-│   ├── Button.test.jsx           # 113 lines
-│   ├── HeroBanner.test.jsx       # 143 lines
-│   ├── FeatureGrid.test.jsx      # 146 lines
-│   ├── LogoWall.test.jsx         # 170 lines
-│   ├── NumberedCards.test.jsx    # 196 lines
-│   ├── RuleStack.test.jsx        # 207 lines
-│   ├── QuoteBlock.test.jsx       # 223 lines
-│   └── AskOrganizer.test.jsx     # 294 lines
+│   ├── Button.test.jsx           # 12 tests
+│   ├── Logo.test.jsx             # 12 tests
+│   ├── RuleCard.test.jsx         # 18 tests
+│   ├── SectionHeader.test.jsx    # 17 tests
+│   ├── NumberedCard.test.jsx     # 18 tests
+│   └── accessibility.test.jsx    # 18 tests
 ├── integration/                   # Component integration tests
-│   └── ContentLockup.integration.test.jsx  # 157 lines
+│   ├── component-interactions.integration.test.jsx
+│   ├── page-flow.integration.test.jsx
+│   ├── user-journey.integration.test.jsx
+│   ├── layout.integration.test.jsx
+│   └── ContentLockup.integration.test.jsx
 └── e2e/                          # End-to-end tests
-    ├── homepage.spec.ts          # 18 tests per browser
-    ├── user-journeys.spec.ts     # 13 tests per browser
-    ├── edge-cases.spec.ts        # 18 tests per browser
-    └── visual-regression.spec.ts # 23 tests per browser
+    ├── homepage.spec.ts          # Homepage functionality
+    ├── user-journeys.spec.ts     # User workflows
+    ├── header.responsive.spec.js # Responsive header
+    ├── footer.responsive.spec.js # Responsive footer
+    ├── visual-regression.spec.ts # Visual consistency
+    ├── accessibility.spec.ts     # Accessibility compliance
+    └── performance.spec.ts       # Performance metrics
 ```
 
-## 🚀 Runner Management Scripts
+### Coverage Requirements
 
-```
-community-rule/
-├── start-runner.sh               # Start Gitea Actions runner
-├── stop-runner.sh                # Stop Gitea Actions runner
-├── status-runner.sh              # Check runner status
-├── config.yaml                   # Runner configuration
-└── act_runner                    # Gitea Actions runner binary
-```
+- **Statements**: >85% (Current: 94.88%) ✅
+- **Branches**: >80% (Current: 86.93%) ✅
+- **Functions**: >80% (Current: 88.67%) ✅
+- **Lines**: >85% (Current: 94.88%) ✅
 
-## 🧪 Unit & Integration Testing
+## 🧩 Unit & Integration Testing
 
 ### Framework
 
@@ -143,6 +162,42 @@ describe("Component", () => {
     render(<Component />);
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
+
+  test("handles user interactions", async () => {
+    const user = userEvent.setup();
+    render(<Component />);
+
+    const button = screen.getByRole("button");
+    await user.click(button);
+
+    expect(button).toHaveClass("clicked");
+  });
+});
+```
+
+### Testing Library Queries (Priority Order)
+
+1. **`getByRole`**: Most accessible, tests user experience
+2. **`getByLabelText`**: For form inputs
+3. **`getByText`**: For content
+4. **`getByTestId`**: Last resort, avoid when possible
+
+### Integration Testing
+
+```jsx
+test("components work together", () => {
+  render(
+    <div>
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  );
+
+  // Test that components complement each other
+  expect(screen.getByRole("banner")).toBeInTheDocument();
+  expect(screen.getByRole("main")).toBeInTheDocument();
+  expect(screen.getByRole("contentinfo")).toBeInTheDocument();
 });
 ```
 
@@ -172,44 +227,37 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
     { name: "firefox", use: { ...devices["Desktop Firefox"] } },
     { name: "webkit", use: { ...devices["Desktop Safari"] } },
-    { name: "mobile", use: { ...devices["iPhone 12"] } },
+    { name: "mobile", use: { ...devices["iPhone 13"] } },
   ],
+  use: {
+    timezoneId: "UTC",
+    locale: "en-US",
+    headless: true,
+  },
 });
 ```
 
 ### Test Categories
 
-#### 1. Homepage Tests (18 tests per browser)
+#### 1. Functional Tests
 
 - Page loading and sections
 - Component functionality
 - Navigation and interactions
-- Responsive design
-- Accessibility compliance
-- Performance metrics
+- User workflows
 
-#### 2. User Journey Tests (13 tests per browser)
+#### 2. Responsive Tests
 
-- Complete user workflows
-- Feature exploration
-- Contact flows
-- Learning paths
-- Navigation patterns
+- Layout changes between breakpoints
+- Component visibility at different viewports
+- Interactive behavior across screen sizes
 
-#### 3. Edge Cases Tests (18 tests per browser)
+#### 3. Accessibility Tests
 
-- Network conditions
-- Browser behavior
-- Error scenarios
-- Accessibility edge cases
-- Performance under stress
-
-#### 4. Visual Regression Tests (23 tests per browser)
-
-- Full page screenshots
-- Component screenshots
-- Responsive screenshots
-- Interactive states
+- WCAG 2.1 AA compliance
+- Screen reader compatibility
+- Keyboard navigation
+- Color contrast
 
 ### Writing E2E Tests
 
@@ -226,6 +274,16 @@ test.describe("Feature", () => {
     await expect(page).toHaveTitle(/CommunityRule/);
     await expect(page.locator("h1")).toBeVisible();
   });
+
+  test("responsive behavior", async ({ page }) => {
+    // Test mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await expect(page.getByTestId("mobile-nav")).toBeVisible();
+
+    // Test desktop viewport
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await expect(page.getByTestId("desktop-nav")).toBeVisible();
+  });
 });
 ```
 
@@ -241,7 +299,14 @@ npm run e2e:serve     # Start dev server and run tests
 
 ### Overview
 
-Visual regression testing ensures UI consistency across browsers and prevents unintended visual changes.
+Visual regression testing ensures UI consistency across browsers and prevents unintended visual changes by comparing screenshots against baseline images.
+
+### Configuration
+
+- **Snapshot Template**: `{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png`
+- **Deterministic Rendering**: Fixed timezone (UTC), locale (en-US), viewport
+- **Tolerance**: 2% pixel difference or 500 pixels maximum
+- **Animation Handling**: Disabled during capture
 
 ### Screenshots Generated
 
@@ -250,33 +315,74 @@ Visual regression testing ensures UI consistency across browsers and prevents un
 - **Interactive states** (hover, focus, loading, error)
 - **Special modes** (dark mode, high contrast, reduced motion)
 
-### Baseline Screenshots
+### Breakpoint Coverage
 
-```
-tests/e2e/visual-regression.spec.ts-snapshots/
-├── homepage-full-chromium-darwin.png
-├── homepage-mobile-chromium-darwin.png
-├── hero-banner-chromium-darwin.png
-├── logo-wall-chromium-darwin.png
-└── ... (92 total screenshots)
-```
+- **Mobile**: 375x667 (iPhone)
+- **Tablet**: 768x1024 (iPad)
+- **Desktop**: 1280x800 (Standard)
+- **Large Desktop**: 1920x1080 (Full HD)
 
 ### Managing Visual Changes
 
 ```bash
 # Update baselines after intentional changes
-npx playwright test tests/e2e/visual-regression.spec.ts --update-snapshots
+npm run visual:update
 
 # Run visual regression tests
-npx playwright test tests/e2e/visual-regression.spec.ts
+npm run visual:test
+
+# Run with UI for debugging
+npm run visual:ui
 ```
 
-### Cross-Browser Coverage
+### Snapshot Management
 
-- **Chromium** (Chrome/Edge)
-- **Firefox**
-- **WebKit** (Safari)
-- **Mobile** (Mobile Chrome)
+```bash
+# Update snapshots for all projects
+PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts
+
+# Update snapshots for specific project
+PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
+
+# View test results
+npx playwright show-report
+```
+
+## ♿ Accessibility Testing
+
+### Framework
+
+- **Unit Level**: jest-axe with Vitest
+- **E2E Level**: Playwright accessibility tests
+- **Standards**: WCAG 2.1 AA compliance
+
+### Automated Testing
+
+```jsx
+import { axe, toHaveNoViolations } from "jest-axe";
+
+test("component has no accessibility violations", async () => {
+  const { container } = render(<Component />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
+```
+
+### Manual Testing Checklist
+
+- [ ] Screen reader compatibility
+- [ ] Keyboard navigation
+- [ ] Color contrast (WCAG AA)
+- [ ] Focus management
+- [ ] ARIA attributes
+- [ ] Semantic HTML
+
+### WCAG 2.1 AA Requirements
+
+- **Perceivable**: Text alternatives, captions, adaptable content
+- **Operable**: Keyboard accessible, timing adjustable, navigation
+- **Understandable**: Readable, predictable, input assistance
+- **Robust**: Compatible with assistive technologies
 
 ## ⚡ Performance Testing
 
@@ -284,21 +390,27 @@ npx playwright test tests/e2e/visual-regression.spec.ts
 
 - **Lighthouse CI**: Automated performance testing
 - **Performance Budgets**: Defined thresholds
+- **Core Web Vitals**: LCP, FID, CLS monitoring
 
 ### Configuration
 
 ```json
-// lighthouserc.json
+// .lighthouserc.json
 {
   "ci": {
     "collect": {
-      "url": ["http://localhost:3000"],
-      "startServerCommand": "npm run preview"
+      "url": ["http://localhost:3010"],
+      "chromeFlags": [
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--headless"
+      ]
     },
     "assert": {
       "assertions": {
-        "categories:performance": ["warn", { "minScore": 0.9 }],
-        "categories:accessibility": ["error", { "minScore": 0.95 }]
+        "categories:performance": ["warn", { "minScore": 0.8 }],
+        "categories:accessibility": ["error", { "minScore": 0.8 }]
       }
     }
   }
@@ -307,57 +419,31 @@ npx playwright test tests/e2e/visual-regression.spec.ts
 
 ### Performance Metrics
 
-- **Core Web Vitals**: LCP, FID, CLS
-- **Performance Score**: Overall performance rating
-- **Accessibility Score**: WCAG compliance
-- **Best Practices**: Web development standards
-- **SEO Score**: Search engine optimization
+- **Core Web Vitals**: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- **Performance Score**: >80
+- **Accessibility Score**: >80
+- **Best Practices**: >90
+
+### Performance Budgets
+
+- **First Contentful Paint**: <3000ms
+- **Largest Contentful Paint**: <5000ms
+- **First Input Delay**: <100ms
+- **TTFB**: <700ms
 
 ### Available Scripts
 
 ```bash
 npm run lhci          # Run Lighthouse CI
-```
-
-## 📚 Storybook Testing
-
-### Framework
-
-- **Storybook**: Component development environment
-- **@storybook/test-runner**: Automated testing
-- **@storybook/test**: Testing utilities
-
-### Configuration
-
-```javascript
-// .storybook/preview.js
-export const parameters = {
-  a11y: { element: "#storybook-root", manual: false },
-  viewport: { defaultViewport: "responsive" },
-  chromatic: { viewports: [360, 768, 1024, 1440] },
-};
-```
-
-### Testing Features
-
-- **Accessibility Testing**: Automated WCAG compliance
-- **Visual Testing**: Component screenshots
-- **Interaction Testing**: User interactions
-- **Responsive Testing**: Multiple viewports
-
-### Available Scripts
-
-```bash
-npm run storybook     # Start Storybook dev server
-npm run test:sb       # Run Storybook tests
-npm run build-storybook # Build Storybook
+npm run lhci:mobile   # Run with mobile preset
+npm run lhci:desktop  # Run with desktop preset
 ```
 
 ## 🔄 CI/CD Pipeline
 
 ### Gitea Actions Workflow
 
-Location: `.gitea/workflows/ci.yml`
+Location: `.gitea/workflows/ci.yaml`
 
 ### Pipeline Jobs
 
@@ -376,8 +462,7 @@ Location: `.gitea/workflows/ci.yml`
 #### 3. Visual Regression Tests
 
 - **Screenshot comparison**: Baseline vs current
-- **Artifact upload**: Screenshot diffs
-- **Cross-browser validation**
+- **Cross-browser validation**: All 4 browser projects
 
 #### 4. Performance Tests
 
@@ -395,7 +480,6 @@ Location: `.gitea/workflows/ci.yml`
 
 - **ESLint**: Code quality
 - **Prettier**: Code formatting
-- **Type checking**: TypeScript validation
 
 #### 7. Build Verification
 
@@ -434,48 +518,6 @@ git add .
 git commit -m "feat: add new component with tests"
 ```
 
-### 2. Manual Runner Management
-
-The Gitea Actions runner is managed manually to save resources and provide control over when CI runs.
-
-#### Start Runner (Before Creating PR)
-
-```bash
-# Start the runner to execute CI jobs
-./start-runner.sh
-```
-
-#### Check Runner Status
-
-```bash
-# Check if runner is running and see recent logs
-./status-runner.sh
-```
-
-#### Stop Runner (After PR Complete)
-
-```bash
-# Stop the runner to free up resources
-./stop-runner.sh
-```
-
-#### Complete PR Workflow
-
-```bash
-# 1. Start runner
-./start-runner.sh
-
-# 2. Create Pull Request
-# Go to repository → New Pull Request
-
-# 3. Monitor CI progress
-./status-runner.sh
-# Or check Gitea Actions page
-
-# 4. Stop runner when done
-./stop-runner.sh
-```
-
 ### 2. Pull Request Process
 
 1. **Create PR** → CI pipeline starts automatically
@@ -489,11 +531,14 @@ The Gitea Actions runner is managed manually to save resources and provide contr
 ```bash
 # Make visual changes
 # Run visual regression tests
-npm run e2e:serve
-npx playwright test tests/e2e/visual-regression.spec.ts
+npm run visual:test
 
 # If changes are intentional, update baselines
-npx playwright test tests/e2e/visual-regression.spec.ts --update-snapshots
+npm run visual:update
+
+# Review and commit updated snapshots
+git add tests/e2e/visual-regression.spec.ts-snapshots/
+git commit -m "Update visual regression snapshots for [describe changes]"
 ```
 
 ### 4. Performance Monitoring
@@ -503,7 +548,7 @@ npx playwright test tests/e2e/visual-regression.spec.ts --update-snapshots
 npm run lhci
 
 # Review performance budgets
-# Update lighthouserc.json if needed
+# Update .lighthouserc.json if needed
 ```
 
 ## 📋 Best Practices
@@ -518,14 +563,14 @@ npm run lhci
 ### 2. Component Testing
 
 ```jsx
-// Good: Test behavior, not implementation
+// ✅ Good: Test behavior, not implementation
 test("shows error message when form is invalid", () => {
   render(<Form />);
   fireEvent.click(screen.getByRole("button"));
   expect(screen.getByText("Please fill all fields")).toBeInTheDocument();
 });
 
-// Avoid: Testing implementation details
+// ❌ Avoid: Testing implementation details
 test("calls onSubmit with form data", () => {
   const mockSubmit = vi.fn();
   render(<Form onSubmit={mockSubmit} />);
@@ -554,6 +599,21 @@ test("calls onSubmit with form data", () => {
 - Test on different network conditions
 - Regular performance audits
 
+### 6. Responsive Testing
+
+```javascript
+// ✅ Good: Test real viewport sizes
+await page.setViewportSize({ width: 640, height: 700 });
+
+// ✅ Good: Test visibility at breakpoints
+if (bp.name === "xs") {
+  await expect(page.getByTestId("auth-xs")).toBeVisible();
+}
+
+// ❌ Avoid: Testing responsive behavior in JSDOM
+// JSDOM doesn't evaluate CSS media queries
+```
+
 ## 🔧 Troubleshooting
 
 ### Common Issues
@@ -575,7 +635,6 @@ npm test
 
 ```bash
 # Run locally first
-npm run e2e:serve
 npm run e2e
 
 # Common issues:
@@ -589,10 +648,10 @@ npm run e2e
 
 ```bash
 # Check if changes are intentional
-npx playwright test tests/e2e/visual-regression.spec.ts
+npm run visual:test
 
 # Update baselines if needed
-npx playwright test tests/e2e/visual-regression.spec.ts --update-snapshots
+npm run visual:update
 
 # Review screenshot diffs in CI artifacts
 ```
@@ -603,7 +662,7 @@ npx playwright test tests/e2e/visual-regression.spec.ts --update-snapshots
 # Run locally
 npm run lhci
 
-# Check performance budgets in lighthouserc.json
+# Check performance budgets in .lighthouserc.json
 # Optimize slow components
 # Review bundle size
 ```
@@ -636,43 +695,6 @@ npx playwright test tests/e2e/homepage.spec.ts
 npx playwright test --headed
 ```
 
-## 📊 Monitoring & Metrics
-
-### 1. Test Coverage
-
-- **Target**: >85% line coverage
-- **Monitoring**: Codecov integration
-- **Trends**: Track coverage over time
-- **Reports**: Available in CI artifacts
-
-### 2. Performance Metrics
-
-- **Core Web Vitals**: LCP < 2.5s, FID < 100ms, CLS < 0.1
-- **Performance Score**: >90
-- **Accessibility Score**: >95
-- **Monitoring**: Lighthouse CI reports
-
-### 3. Visual Regression
-
-- **Baseline Screenshots**: 92 total
-- **Cross-browser Coverage**: 4 browsers
-- **Responsive Testing**: 4 viewports
-- **Monitoring**: Screenshot diffs in CI
-
-### 4. E2E Test Results
-
-- **Total Tests**: 308 across 4 browsers
-- **Success Rate**: Monitor test stability
-- **Execution Time**: Track performance
-- **Reports**: Available in CI artifacts
-
-### 5. CI Pipeline Health
-
-- **Job Success Rate**: Monitor pipeline stability
-- **Execution Time**: Track build performance
-- **Resource Usage**: Monitor CI costs
-- **Failure Analysis**: Identify common issues
-
 ## 📚 Additional Resources
 
 ### Documentation
@@ -698,4 +720,5 @@ npx playwright test --headed
 ---
 
 **Last Updated**: December 2024  
-**Framework Version**: Next.js 15 + React 19 + Tailwind 4 + Storybook 9
+**Framework Version**: Next.js 15 + React 19 + Tailwind 4 + Storybook 9  
+**Maintained by**: CommunityRule Development Team
