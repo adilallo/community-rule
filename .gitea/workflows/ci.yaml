@@ -48,25 +48,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      - name: Compute Playwright version
-        id: pw
-        run: echo "version=$(node -p \"require('@playwright/test/package.json').version\")" >> "$GITHUB_OUTPUT"
-
       - name: Cache Playwright browsers
-        id: pw-cache
         uses: actions/cache@v4
         with:
-          # macOS and Linux paths are included; missing paths are ignored.
-          path: |
-            ~/Library/Caches/ms-playwright
-            ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-
-            playwright-${{ runner.os }}-
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright (only if cache miss)
-        if: steps.pw-cache.outputs.cache-hit != 'true'
+      - name: Install Playwright
         run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
 
@@ -129,25 +117,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      - name: Compute Playwright version
-        id: pw
-        run: echo "version=$(node -p \"require('@playwright/test/package.json').version\")" >> "$GITHUB_OUTPUT"
-
       - name: Cache Playwright browsers
-        id: pw-cache
         uses: actions/cache@v4
         with:
-          # macOS and Linux paths are included; missing paths are ignored.
-          path: |
-            ~/Library/Caches/ms-playwright
-            ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-
-            playwright-${{ runner.os }}-
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright (only if cache miss)
-        if: steps.pw-cache.outputs.cache-hit != 'true'
+      - name: Install Playwright
         run: npx playwright install --with-deps
       - run: npm run build
       # 1) Sanity check that the build exists
@@ -312,8 +288,17 @@ jobs:
           # Ensure we're using arm64 Node for Lighthouse
           echo "Node arch: $(node -p "process.arch")"
 
-          # Get Chrome path directly in this step
-          CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
+          # Get Chrome path directly in this step (same logic as installation step)
+          INSTALL_OUT="$(npx @puppeteer/browsers install chrome@stable --platform=mac_arm --path .cache/puppeteer 2>/dev/null || true)"
+          BUILD_ID="$(printf '%s\n' "$INSTALL_OUT" | awk '{print $1}' | cut -d@ -f2)"
+          echo "Using Chrome build: $BUILD_ID"
+
+          # Try CLI first, then fallback to find
+          CHROME_PATH="$(npx @puppeteer/browsers executable-path chrome@"$BUILD_ID" --platform=mac_arm --path .cache/puppeteer 2>/dev/null || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            CHROME_PATH="$(/usr/bin/find ".cache/puppeteer/chrome" -type f -path "*/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" -print -quit 2>/dev/null || true)"
+          fi
+
           echo "Chrome path: $CHROME_PATH"
 
           # Verify Chrome path is not empty
@@ -355,25 +340,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      - name: Compute Playwright version
-        id: pw
-        run: echo "version=$(node -p \"require('@playwright/test/package.json').version\")" >> "$GITHUB_OUTPUT"
-
       - name: Cache Playwright browsers
-        id: pw-cache
         uses: actions/cache@v4
         with:
-          # macOS and Linux paths are included; missing paths are ignored.
-          path: |
-            ~/Library/Caches/ms-playwright
-            ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-
-            playwright-${{ runner.os }}-
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright (only if cache miss)
-        if: steps.pw-cache.outputs.cache-hit != 'true'
+      - name: Install Playwright
         run: npx playwright install --with-deps
       - run: npm run build
       - name: Start app + wait
