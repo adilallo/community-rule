@@ -58,18 +58,19 @@ jobs:
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
 
-          # ensure build exists
+          # ensure build exists (dev server can build on-the-fly, but we need the build for production)
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
 
           # start and detach with logs
           mkdir -p .next
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use dev server instead of production server for better stability in CI
+          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
           # Wait for TCP connection
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          
+
           # Wait for HTTP response with retries
           for i in {1..10}; do
             if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
@@ -79,13 +80,13 @@ jobs:
             echo "⏳ Waiting for app to be ready... attempt $i/10"
             sleep 5
           done
-          
+
           # Final health check
           curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
           echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: production
+          NODE_ENV: development
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
@@ -97,12 +98,61 @@ jobs:
           sleep 10
           echo "🚀 Starting E2E tests for ${{ matrix.browser }}..."
           echo "🔍 Testing against: http://127.0.0.1:3010"
-          
+
+          # Continuous server monitoring to catch if it dies
+          echo "📊 Monitoring server health for 30 seconds..."
+          for i in {1..6}; do
+            if curl -fsS "http://127.0.0.1:3010" >/dev/null 2>&1; then
+              echo "✅ Server healthy at check $i/6"
+            else
+              echo "❌ Server unhealthy at check $i/6"
+              break
+            fi
+            sleep 5
+          done
+
           # Test server connectivity before running tests
           curl -v "http://127.0.0.1:3010" | head -20 || echo "⚠️ Server connectivity check failed"
-          
-          # Run the tests
-          npx playwright test --project=${{ matrix.browser }}
+
+          # Debug: Check Playwright configuration
+          echo "🔧 Playwright config check:"
+          echo "  - CI env var: $CI"
+          echo "  - BASE_URL: $BASE_URL"
+          echo "  - Current working directory: $(pwd)"
+          echo "  - Playwright version: $(npx playwright --version)"
+
+          # Debug: Check if server is still responding
+          echo "🌐 Final server health check:"
+          curl -s "http://127.0.0.1:3010" | head -5 || echo "❌ Server not responding"
+
+          # Debug: Check server process status
+          echo "🔍 Server process status:"
+          if [ -f .next/runner.pid ]; then
+            echo "  - PID file exists: $(cat .next/runner.pid)"
+            echo "  - Process running: $(ps -p $(cat .next/runner.pid) | grep -v PID || echo 'Process not found')"
+            echo "  - Port 3010 listeners: $(lsof -i :3010 2>/dev/null | grep LISTEN || echo 'No listeners on 3010')"
+          else
+            echo "  - No PID file found"
+          fi
+
+          # Debug: Check Playwright config file
+          echo "📁 Playwright config file contents:"
+          cat playwright.config.ts | grep -E "(baseURL|webServer|CI)" || echo "No config found"
+
+          # Debug: Test a simple Playwright command
+          echo "🧪 Testing Playwright connectivity..."
+          npx playwright show-trace --help >/dev/null 2>&1 && echo "✅ Playwright tools working" || echo "❌ Playwright tools issue"
+
+          # Run the tests with verbose output
+          echo "🧪 Running Playwright tests..."
+          npx playwright test --project=${{ matrix.browser }} --reporter=list || {
+            echo "❌ Playwright tests failed"
+            echo "📋 Last 50 lines of server log:"
+            tail -n 50 .next/runner.log || echo "No server log found"
+            echo "🔍 Checking if server is still running:"
+            ps aux | grep "npm run dev" | grep -v grep || echo "No npm run dev process found"
+            exit 1
+          }
         env:
           CI: true
           BASE_URL: http://127.0.0.1:3010
@@ -151,13 +201,14 @@ jobs:
           export HOST="127.0.0.1"
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use dev server instead of production server for better stability in CI
+          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
-          
+
           # Wait for TCP connection
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          
+
           # Wait for HTTP response with retries
           for i in {1..10}; do
             if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
@@ -167,13 +218,13 @@ jobs:
             echo "⏳ Waiting for app to be ready... attempt $i/10"
             sleep 5
           done
-          
+
           # Final health check
           curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
           echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: production
+          NODE_ENV: development
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
@@ -247,7 +298,8 @@ jobs:
           export PORT=3010 HOST=127.0.0.1
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Use dev server instead of production server for better stability in CI
+          nohup npm run dev -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
@@ -269,7 +321,7 @@ jobs:
           echo "✅ App is fully ready for Lighthouse testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: production
+          NODE_ENV: development
       - name: Show last 200 lines of server log on failure
         if: failure()
         run: |
