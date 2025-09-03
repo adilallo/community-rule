@@ -29,21 +29,21 @@ describe("SectionHeader Component", () => {
 
   it("applies variant classes correctly", () => {
     const { rerender } = render(
-      <SectionHeader title="Default Header" variant="default" />
+      <SectionHeader title="Default Header" variant="default" />,
     );
     let titleContainer = screen
       .getByRole("heading", { level: 2 })
       .closest("div");
     expect(titleContainer).toHaveClass(
       "lg:w-[369px]",
-      "lg:h-[var(--spacing-scale-120)]"
+      "lg:h-[var(--spacing-scale-120)]",
     );
 
     rerender(<SectionHeader title="Multi-line Header" variant="multi-line" />);
     titleContainer = screen.getByRole("heading", { level: 2 }).closest("div");
     expect(titleContainer).toHaveClass(
       "lg:w-[50%]",
-      "lg:h-[var(--spacing-scale-120)]"
+      "lg:h-[var(--spacing-scale-120)]",
     );
   });
 
@@ -100,7 +100,7 @@ describe("SectionHeader Component", () => {
       "flex",
       "flex-col",
       "lg:flex-row",
-      "lg:justify-between"
+      "lg:justify-between",
     );
   });
 
@@ -139,7 +139,7 @@ describe("SectionHeader Component", () => {
       "text-[28px]",
       "sm:text-[32px]",
       "lg:text-[32px]",
-      "xl:text-[40px]"
+      "xl:text-[40px]",
     );
   });
 
@@ -151,7 +151,7 @@ describe("SectionHeader Component", () => {
       "leading-[36px]",
       "sm:leading-[40px]",
       "lg:leading-[40px]",
-      "xl:leading-[52px]"
+      "xl:leading-[52px]",
     );
   });
 
@@ -179,7 +179,7 @@ describe("SectionHeader Component", () => {
       "text-[18px]",
       "sm:text-[18px]",
       "lg:text-[24px]",
-      "xl:text-[32px]"
+      "xl:text-[32px]",
     );
   });
 
@@ -192,7 +192,7 @@ describe("SectionHeader Component", () => {
       "text-[#484848]",
       "sm:text-[var(--color-content-default-tertiary)]",
       "lg:text-[var(--color-content-default-tertiary)]",
-      "xl:text-[var(--color-content-default-tertiary)]"
+      "xl:text-[var(--color-content-default-tertiary)]",
     );
   });
 });

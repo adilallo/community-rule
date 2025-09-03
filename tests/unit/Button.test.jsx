@@ -81,7 +81,7 @@ describe("Button Component", () => {
     expect(button).toBeDisabled();
     expect(button).toHaveClass(
       "disabled:opacity-50",
-      "disabled:cursor-not-allowed"
+      "disabled:cursor-not-allowed",
     );
     expect(button).toHaveAttribute("aria-disabled", "true");
     expect(button).toHaveAttribute("tabIndex", "-1");
@@ -119,7 +119,7 @@ describe("Button Component", () => {
     render(
       <Button href="/test" target="_blank" rel="noopener">
         External Link
-      </Button>
+      </Button>,
     );
 
     const link = screen.getByRole("link");

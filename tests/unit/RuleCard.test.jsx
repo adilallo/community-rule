@@ -13,7 +13,7 @@ describe("RuleCard Component", () => {
 
     expect(screen.getByText("Test Rule")).toBeInTheDocument();
     expect(
-      screen.getByText("This is a test rule description")
+      screen.getByText("This is a test rule description"),
     ).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe("RuleCard Component", () => {
     expect(card).toHaveClass(
       "hover:shadow-xl",
       "hover:scale-[1.02]",
-      "transition-all"
+      "transition-all",
     );
   });
 
@@ -89,7 +89,7 @@ describe("RuleCard Component", () => {
     const card = screen.getByRole("button");
     expect(card).toHaveAttribute(
       "aria-label",
-      "Learn more about Test Rule governance pattern"
+      "Learn more about Test Rule governance pattern",
     );
     expect(card).toHaveAttribute("tabIndex", "0");
   });
@@ -99,7 +99,7 @@ describe("RuleCard Component", () => {
 
     expect(screen.getByText("Test Rule")).toBeInTheDocument();
     expect(
-      screen.queryByText("This is a test rule description")
+      screen.queryByText("This is a test rule description"),
     ).not.toBeInTheDocument();
   });
 

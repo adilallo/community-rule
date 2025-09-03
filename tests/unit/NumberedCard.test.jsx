@@ -25,7 +25,7 @@ describe("NumberedCard Component", () => {
 
   it("renders with different text content", () => {
     const { rerender } = render(
-      <NumberedCard {...defaultProps} text="Different Text" />
+      <NumberedCard {...defaultProps} text="Different Text" />,
     );
     expect(screen.getByText("Different Text")).toBeInTheDocument();
 
@@ -77,7 +77,7 @@ describe("NumberedCard Component", () => {
       .closest("div").parentElement;
     expect(card).toHaveClass(
       "bg-[var(--color-surface-inverse-primary)]",
-      "shadow-lg"
+      "shadow-lg",
     );
   });
 
@@ -103,7 +103,7 @@ describe("NumberedCard Component", () => {
       "inset-0",
       "flex",
       "items-center",
-      "justify-center"
+      "justify-center",
     );
   });
 
@@ -120,7 +120,7 @@ describe("NumberedCard Component", () => {
       "lg:absolute",
       "lg:bottom-8",
       "lg:left-8",
-      "lg:right-16"
+      "lg:right-16",
     );
   });
 
@@ -139,7 +139,7 @@ describe("NumberedCard Component", () => {
       "text-[24px]",
       "sm:text-[24px]",
       "lg:text-[24px]",
-      "xl:text-[32px]"
+      "xl:text-[32px]",
     );
   });
 
@@ -173,7 +173,7 @@ describe("NumberedCard Component", () => {
       "sm:flex-row",
       "sm:gap-8",
       "sm:p-8",
-      "sm:items-center"
+      "sm:items-center",
     );
 
     // Large breakpoint
@@ -182,7 +182,7 @@ describe("NumberedCard Component", () => {
       "lg:gap-0",
       "lg:p-8",
       "lg:items-stretch",
-      "lg:relative"
+      "lg:relative",
     );
   });
 

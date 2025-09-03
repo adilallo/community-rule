@@ -191,7 +191,7 @@ test("components work together", () => {
       <Header />
       <MainContent />
       <Footer />
-    </div>
+    </div>,
   );
 
   // Test that components complement each other

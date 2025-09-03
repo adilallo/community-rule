@@ -52,13 +52,13 @@ describe("Logo Component", () => {
     const { rerender } = render(<Logo size="homeHeaderMd" />);
     let textElement = screen.getByText("CommunityRule");
     expect(textElement).toHaveClass(
-      "text-[var(--color-content-inverse-primary)]"
+      "text-[var(--color-content-inverse-primary)]",
     );
 
     rerender(<Logo size="header" />);
     textElement = screen.getByText("CommunityRule");
     expect(textElement).toHaveClass(
-      "text-[var(--color-content-default-primary)]"
+      "text-[var(--color-content-default-primary)]",
     );
   });
 
