@@ -51,7 +51,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm ci
       - run: npx playwright install ${{ matrix.browser }}
         env:
@@ -120,7 +120,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm ci
       - run: npx playwright install
         env:
@@ -218,10 +218,31 @@ jobs:
         run: |
           set -euxo pipefail
           mkdir -p .cache/puppeteer
+          echo "Installing Chrome for mac_arm platform..."
           npx @puppeteer/browsers install chrome@stable \
             --platform=mac_arm \
             --path .cache/puppeteer
-          echo "CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)" >> "$GITHUB_ENV"
+
+          echo "Chrome installation complete. Getting executable path..."
+          CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
+          echo "Chrome executable path: $CHROME_PATH"
+
+          # Verify the path is not empty
+          if [ -z "$CHROME_PATH" ]; then
+            echo "❌ Chrome path is empty after installation"
+            ls -la .cache/puppeteer/ || true
+            exit 1
+          fi
+
+          # Verify the executable exists
+          if [ ! -f "$CHROME_PATH" ]; then
+            echo "❌ Chrome executable not found at: $CHROME_PATH"
+            ls -la .cache/puppeteer/ || true
+            exit 1
+          fi
+
+          echo "✅ Chrome installed successfully at: $CHROME_PATH"
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
 
       - name: Ensure arm64 Node for Lighthouse
         run: |
@@ -264,6 +285,20 @@ jobs:
           # Get Chrome path directly in this step
           CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
           echo "Chrome path: $CHROME_PATH"
+
+          # Verify Chrome path is not empty
+          if [ -z "$CHROME_PATH" ]; then
+            echo "❌ Chrome path is empty - Chrome installation may have failed"
+            exit 1
+          fi
+
+          # Verify Chrome executable exists and is executable
+          if [ ! -x "$CHROME_PATH" ]; then
+            echo "❌ Chrome executable not found or not executable: $CHROME_PATH"
+            ls -la .cache/puppeteer/ || true
+            exit 1
+          fi
+
           "$CHROME_PATH" --version
 
           # Run LHCI with arm64 Node + arm64 Chrome
@@ -293,7 +328,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm ci
       - run: npx playwright install
         env:
