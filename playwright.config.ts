@@ -22,7 +22,6 @@ export default defineConfig({
     // Deterministic rendering defaults to eliminate environment drift
     colorScheme: "light",
     viewport: { width: 1280, height: 800 },
-    deviceScaleFactor: 1, // Keep DPR=1 for stable anti-aliasing
     timezoneId: "UTC", // Freeze timezone
     locale: "en-US", // Freeze locale
     headless: true,
@@ -46,28 +45,36 @@ export default defineConfig({
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
-        deviceScaleFactor: 1, // Override device scale for consistency
+        // Let device preset own the DPR for stable anti-aliasing
+        launchOptions: {
+          args: [
+            "--force-color-profile=srgb",
+            "--disable-skia-runtime-opts",
+            "--font-render-hinting=none",
+            "--disable-lcd-text",
+          ],
+        },
       },
     },
     {
       name: "firefox",
       use: {
         ...devices["Desktop Firefox"],
-        deviceScaleFactor: 1, // Override device scale for consistency
+        // Let device preset own the DPR for stable anti-aliasing
       },
     },
     {
       name: "webkit",
       use: {
         ...devices["Desktop Safari"],
-        deviceScaleFactor: 1, // Override device scale for consistency
+        // Let device preset own the DPR for stable anti-aliasing
       },
     },
     {
       name: "mobile",
       use: {
         ...devices["iPhone 13"],
-        deviceScaleFactor: 1, // Override device scale for consistency
+        // Let device preset own the DPR for stable anti-aliasing
       },
     },
   ],

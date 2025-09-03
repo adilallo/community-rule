@@ -1,21 +1,67 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Visual Regression Tests", () => {
+  async function settle(page: any) {
+    await page.evaluate(() => {
+      window.scrollTo(0, window.scrollY); // ensure a frame boundary
+      void document.body.getBoundingClientRect();
+    });
+    await page.waitForTimeout(50);
+  }
   test.beforeEach(async ({ page }) => {
+    // Add deterministic CSS to normalize rendering
+    await page.addStyleTag({
+      content: `
+        /* stop caret and selection flicker */
+        * { caret-color: transparent !important; }
+        ::selection { background: transparent !important; }
+        /* hide scrollbars */
+        ::-webkit-scrollbar { display: none !important; }
+        html { scrollbar-width: none !important; }
+        /* stabilize font rasterization */
+        * {
+          text-rendering: geometricPrecision !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
+        }
+      `,
+    });
+
     await page.goto("/");
     // Wait for all content to load
     await page.waitForLoadState("networkidle");
+
+    // Make sure we've really got the webfonts before shots
+    await page.evaluate(async () => {
+      // @ts-ignore
+      if (document.fonts && document.fonts.status !== "loaded") {
+        // @ts-ignore
+        await document.fonts.ready;
+      }
+    });
   });
 
   test("homepage full page screenshot", async ({ page }) => {
+    // Stabilize layout before screenshot
+    await settle(page);
+
     // Take full page screenshot
     await expect(page).toHaveScreenshot("homepage-full.png", {
       fullPage: true,
       animations: "disabled",
+      scale: "css",
     });
   });
 
   test("homepage viewport screenshot", async ({ page }) => {
+    // Stabilize layout before screenshot
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+      // Force layout & a frame boundary
+      void document.body.getBoundingClientRect();
+    });
+    await page.waitForTimeout(50); // give the compositor one tick
+
     // Take viewport screenshot
     await expect(page).toHaveScreenshot("homepage-viewport.png", {
       animations: "disabled",
@@ -26,6 +72,13 @@ test.describe("Visual Regression Tests", () => {
     // Scroll to hero section and take screenshot
     await page.locator("text=Collaborate").scrollIntoViewIfNeeded();
     await page.waitForTimeout(500); // Wait for animations
+
+    // Stabilize layout before screenshot
+    await page.evaluate(() => {
+      // Force layout & a frame boundary
+      void document.body.getBoundingClientRect();
+    });
+    await page.waitForTimeout(50); // give the compositor one tick
 
     const heroSection = page.locator("section").first();
     await expect(heroSection).toHaveScreenshot("hero-banner.png", {
@@ -360,7 +413,7 @@ test.describe("Visual Regression Tests", () => {
     await page.evaluate(() => {
       document.documentElement.style.setProperty(
         "--prefers-reduced-motion",
-        "reduce",
+        "reduce"
       );
     });
 

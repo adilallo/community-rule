@@ -47,8 +47,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
+      - name: Cache Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - run: npm ci
-      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npx playwright install ${{ matrix.browser }}
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
       - run: npm run build
 
       - name: E2E (start + test + teardown)
@@ -80,13 +87,6 @@ jobs:
           echo "🧪 Running E2E tests for ${{ matrix.browser }}..."
           BASE_URL="http://$HOST:$PORT" npx playwright test --project=${{ matrix.browser }} --reporter=list || TEST_EXIT_CODE=$?
 
-          # Generate baseline snapshots only on main branch in CI environment
-          if [ "${{ gitea.ref }}" = "refs/heads/main" ]; then
-            echo "🌱 Generating baseline snapshots for ${{ matrix.browser }} in CI environment..."
-            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --project=${{ matrix.browser }}
-            echo "✅ Baseline snapshots generated for ${{ matrix.browser }} in CI"
-          fi
-
           # Teardown
           echo "🧹 Cleaning up server..."
           kill "$SVPID" 2>/dev/null || true
@@ -110,28 +110,21 @@ jobs:
           path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
 
-      - name: Commit baseline snapshots (if generated)
-        if: gitea.ref == 'refs/heads/main' && always()
-        run: |
-          if [ -n "$(git status --porcelain tests/e2e/visual-regression.spec.ts-snapshots/)" ]; then
-            echo "🔄 Committing baseline snapshots for ${{ matrix.browser }} generated in CI..."
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add tests/e2e/visual-regression.spec.ts-snapshots/
-            git commit -m "Generate baseline snapshots for ${{ matrix.browser }} in CI environment" || true
-            echo "✅ Baseline snapshots committed for ${{ matrix.browser }}"
-          else
-            echo "ℹ️ No new baseline snapshots to commit for ${{ matrix.browser }}"
-          fi
-
   visual-regression:
     runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
+      - name: Cache Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - run: npm ci
-      - run: npx playwright install --with-deps
+      - run: npx playwright install
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
       - run: npm run build
       # 1) Sanity check that the build exists
       - name: Verify Next build output
@@ -165,11 +158,7 @@ jobs:
           curl -fsS "http://$HOST:$PORT" >/dev/null
           echo "✅ App is responding at http://$HOST:$PORT"
 
-          # Seed snapshots on main branch only (one-time setup)
-          if [ "${{ gitea.ref }}" = "refs/heads/main" ]; then
-            echo "🌱 Seeding snapshots on main branch..."
-            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
-          fi
+
 
           # Run visual regression tests
           echo "🧪 Running visual regression tests..."
@@ -292,6 +281,43 @@ jobs:
         with:
           name: lhci-results
           path: lhci-results
+
+  seed-vr-snapshots:
+    if: gitea.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - name: Cache Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npm ci
+      - run: npx playwright install
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
+      - run: npm run build
+      - name: Start app + wait
+        run: |
+          node node_modules/next/dist/bin/next start -p 3010 -H 127.0.0.1 > .next/runner.log 2>&1 &
+          npx wait-on -t 120000 tcp:127.0.0.1:3010
+      - name: Generate snapshots for ALL projects
+        env:
+          {
+            PLAYWRIGHT_UPDATE_SNAPSHOTS: "1",
+            BASE_URL: "http://127.0.0.1:3010",
+          }
+        run: npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium --project=firefox --project=webkit --project=mobile
+      - name: Commit snapshots
+        run: |
+          if [ -n "$(git status --porcelain tests/e2e/visual-regression.spec.ts-snapshots/)" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add tests/e2e/visual-regression.spec.ts-snapshots/
+            git commit -m "Seed Playwright VR snapshots (CI, all projects)"
+          fi
 
   storybook:
     runs-on: [self-hosted, macos-latest]
