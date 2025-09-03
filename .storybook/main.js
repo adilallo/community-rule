@@ -5,19 +5,18 @@ const config = {
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    "@chromatic-com/storybook",
-    "@storybook/addon-docs",
-    "@storybook/addon-onboarding",
+    "@storybook/addon-essentials",
+    "@storybook/addon-interactions",
     "@storybook/addon-a11y",
-    "@storybook/addon-vitest",
   ],
   framework: {
     name: "@storybook/nextjs-vite",
     options: {},
   },
   staticDirs: ["../public"],
+
+  // Ensure esbuild treats .js as JSX during dep pre-bundling
   async viteFinal(cfg) {
-    // Ensure esbuild treats .js as JSX during dep pre-bundling
     cfg.optimizeDeps ??= {};
     cfg.optimizeDeps.esbuildOptions ??= {};
     cfg.optimizeDeps.esbuildOptions.loader = {
@@ -28,4 +27,5 @@ const config = {
     return cfg;
   },
 };
+
 export default config;

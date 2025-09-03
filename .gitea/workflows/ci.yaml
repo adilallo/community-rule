@@ -1,0 +1,411 @@
+name: CI Pipeline
+run-name: ${{ gitea.actor }} triggered CI pipeline
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main, develop] # only direct pushes/merges to protected branches
+  pull_request:
+    branches: [main, develop] # PRs into main/develop
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test:
+    runs-on: [self-hosted, macos-latest]
+    strategy:
+      matrix: { node-version: [18, 20] }
+    env:
+      NODE_OPTIONS: "--max_old_space_size=4096"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+      # If the Codecov Action fails on Gitea, replace this with the bash uploader below
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+
+      # Bash uploader alternative (uncomment if the action above has issues)
+      # - name: Upload coverage to Codecov (bash)
+      #   run: |
+      #     curl -s https://codecov.io/bash > codecov.sh
+      #     bash codecov.sh -t "${{ secrets.CODECOV_TOKEN }}" -f coverage/lcov.info -F unittests
+
+  e2e:
+    runs-on: [self-hosted, macos-latest]
+    strategy:
+      matrix: { browser: [chromium, firefox, webkit] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+
+      - name: E2E (start + test + teardown)
+        run: |
+          set -euxo pipefail
+
+          export PORT="${PORT:-3010}"
+          export HOST="127.0.0.1"
+          mkdir -p .next
+
+          # ensure build exists
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          echo "🚀 Starting Next.js server for E2E testing..."
+
+          # Start Next directly with node so $! is the real node PID
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          echo "$SVPID" > .next/runner.pid
+          echo "🌐 Server PID: $SVPID"
+
+          # Wait for readiness
+          echo "⏳ Waiting for server to be ready..."
+          npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
+
+          # Run tests
+          echo "🧪 Running E2E tests for ${{ matrix.browser }}..."
+          BASE_URL="http://$HOST:$PORT" npx playwright test --project=${{ matrix.browser }} --reporter=list || TEST_EXIT_CODE=$?
+
+          # Teardown
+          echo "🧹 Cleaning up server..."
+          kill "$SVPID" 2>/dev/null || true
+          echo "✅ Server cleanup complete"
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: production
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      # package artifacts (keeps file count small)
+      - name: Package E2E artifacts
+        if: always()
+        run: |
+          tar -czf playwright-${{ matrix.browser }}.tgz playwright-report test-results || true
+
+      - name: Upload E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-results-${{ matrix.browser }}
+          path: playwright-${{ matrix.browser }}.tgz
+          retention-days: 30
+
+  visual-regression:
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - run: npm run build
+      # 1) Sanity check that the build exists
+      - name: Verify Next build output
+        run: |
+          set -euxo pipefail
+          ls -la .next || true
+          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
+
+      - name: Visual Regression (start + test + teardown)
+        run: |
+          set -euxo pipefail
+
+          export PORT="${PORT:-3010}"
+          export HOST="127.0.0.1"
+          mkdir -p .next
+
+          # ensure build exists
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          echo "🚀 Starting Next.js server for visual regression testing..."
+
+          # Start Next directly with node so $! is the real node PID
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          echo "$SVPID" > .next/runner.pid
+          echo "🌐 Server PID: $SVPID"
+
+          # Wait for readiness
+          echo "⏳ Waiting for server to be ready..."
+          npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
+
+
+
+          # Run visual regression tests
+          echo "🧪 Running visual regression tests..."
+          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts
+
+          # Teardown
+          echo "🧹 Cleaning up server..."
+          kill "$SVPID" 2>/dev/null || true
+          echo "✅ Server cleanup complete"
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: production
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Package visual artifacts
+        if: always()
+        run: |
+          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots || true
+
+      - name: Upload visual artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-regression-results
+          path: visual-regression.tgz
+          retention-days: 30
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f .next/runner.pid ]; then
+            kill $(cat .next/runner.pid) 2>/dev/null || true
+          fi
+
+  performance:
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+
+      - name: Install LHCI
+        run: npm i -D @lhci/cli
+
+      - name: Build application
+        run:
+          npm run build
+
+          # 1) Sanity check that the build exists
+      - name: Verify Next build output
+        run: |
+          set -euxo pipefail
+          ls -la .next || true
+          test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
+
+      - name: Install Chrome via Puppeteer (mac_arm)
+        run: |
+          # Install Chrome (arm64) into a local cache
+          set -euxo pipefail
+          mkdir -p .cache/puppeteer
+
+          # 1) Install and capture the build id that was actually installed
+          INSTALL_OUT="$(npx @puppeteer/browsers install chrome@stable --platform=mac_arm --path .cache/puppeteer)"
+          echo "$INSTALL_OUT"
+
+          # INSTALL_OUT looks like: "chrome@140.0.7339.80 /abs/path/to/.../Google Chrome for Testing"
+          BUILD_ID="$(printf '%s\n' "$INSTALL_OUT" | awk '{print $1}' | cut -d@ -f2)"
+          echo "Detected Chrome build: $BUILD_ID"
+
+          # 2) Ask for the executable path using the explicit build id
+          CHROME_PATH="$(npx @puppeteer/browsers executable-path chrome@"$BUILD_ID" --platform=mac_arm --path .cache/puppeteer || true)"
+          echo "Chrome executable path (via CLI): ${CHROME_PATH:-<empty>}"
+
+          # 3) Fallback: resolve the binary directly from the cache if the CLI returned empty
+          if [ -z "$CHROME_PATH" ]; then
+            CHROME_PATH="$(/usr/bin/find ".cache/puppeteer/chrome" -type f -path "*/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" -print -quit || true)"
+            echo "Chrome executable path (via find): ${CHROME_PATH:-<empty>}"
+          fi
+
+          # 4) Hard fail if still empty
+          if [ -z "$CHROME_PATH" ] || [ ! -x "$CHROME_PATH" ]; then
+            echo "❌ Chrome path is empty or not executable"
+            ls -la .cache/puppeteer || true
+            exit 1
+          fi
+
+          # 5) Export for subsequent steps in this job and later ones
+          echo "CHROME_PATH=$CHROME_PATH" >> "$GITHUB_ENV"
+          "$CHROME_PATH" --version || true
+
+      - name: Ensure arm64 Node for Lighthouse
+        run: |
+          set -euxo pipefail
+          echo "node before: $(node -v) arch=$(node -p 'process.arch')"
+          if [ "$(node -p 'process.arch')" != "arm64" ]; then
+            NODE_VER=20.17.0
+            curl -fsSLO "https://nodejs.org/dist/v${NODE_VER}/node-v${NODE_VER}-darwin-arm64.tar.xz"
+            tar -xJf "node-v${NODE_VER}-darwin-arm64.tar.xz"
+            # Make arm64 node take effect in THIS step:
+            export PATH="$PWD/node-v${NODE_VER}-darwin-arm64/bin:$PATH"
+            # And persist for subsequent steps:
+            echo "$PWD/node-v${NODE_VER}-darwin-arm64/bin" >> "$GITHUB_PATH"
+          fi
+          echo "node after: $(node -v) arch=$(node -p 'process.arch')"
+          echo "uname -m: $(uname -m)"
+          # Get Chrome path for this step
+          CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
+          echo "Chrome path: $CHROME_PATH"
+          "$CHROME_PATH" --version || true
+
+      - name: Performance (start + test + teardown)
+        run: |
+          set -euxo pipefail
+
+          export PORT=3010 HOST=127.0.0.1
+          mkdir -p .next
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          echo "🚀 Starting Next.js server for performance testing..."
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
+
+          # Ensure we're using arm64 Node for Lighthouse
+          echo "Node arch: $(node -p "process.arch")"
+
+          # Get Chrome path directly in this step (same logic as installation step)
+          INSTALL_OUT="$(npx @puppeteer/browsers install chrome@stable --platform=mac_arm --path .cache/puppeteer 2>/dev/null || true)"
+          BUILD_ID="$(printf '%s\n' "$INSTALL_OUT" | awk '{print $1}' | cut -d@ -f2)"
+          echo "Using Chrome build: $BUILD_ID"
+
+          # Try CLI first, then fallback to find
+          CHROME_PATH="$(npx @puppeteer/browsers executable-path chrome@"$BUILD_ID" --platform=mac_arm --path .cache/puppeteer 2>/dev/null || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            CHROME_PATH="$(/usr/bin/find ".cache/puppeteer/chrome" -type f -path "*/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" -print -quit 2>/dev/null || true)"
+          fi
+
+          echo "Chrome path: $CHROME_PATH"
+
+          # Verify Chrome path is not empty
+          if [ -z "$CHROME_PATH" ]; then
+            echo "❌ Chrome path is empty - Chrome installation may have failed"
+            exit 1
+          fi
+
+          # Verify Chrome executable exists and is executable
+          if [ ! -x "$CHROME_PATH" ]; then
+            echo "❌ Chrome executable not found or not executable: $CHROME_PATH"
+            ls -la .cache/puppeteer/ || true
+            exit 1
+          fi
+
+          "$CHROME_PATH" --version
+
+          # Run LHCI with arm64 Node + arm64 Chrome
+          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
+
+          kill "$SVPID" 2>/dev/null || true
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: production
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Upload LHCI results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lhci-results
+          path: lhci-results
+
+  seed-vr-snapshots:
+    if: gitea.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+      - run: npm run build
+      - name: Start app + wait
+        run: |
+          node node_modules/next/dist/bin/next start -p 3010 -H 127.0.0.1 > .next/runner.log 2>&1 &
+          npx wait-on -t 120000 tcp:127.0.0.1:3010
+      - name: Generate snapshots for ALL projects
+        env:
+          {
+            PLAYWRIGHT_UPDATE_SNAPSHOTS: "1",
+            BASE_URL: "http://127.0.0.1:3010",
+          }
+        run: npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium --project=firefox --project=webkit --project=mobile
+      - name: Commit snapshots
+        run: |
+          if [ -n "$(git status --porcelain tests/e2e/visual-regression.spec.ts-snapshots/)" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add tests/e2e/visual-regression.spec.ts-snapshots/
+            git commit -m "Seed Playwright VR snapshots (CI, all projects)"
+          fi
+
+  storybook:
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run storybook:build:github
+      - run: npm run test:sb
+        env: { CI: true }
+
+  lint:
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run lint
+      - run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
+
+  build:
+    runs-on: [self-hosted, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' }}
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run build
+      - run: npm run storybook:build:github

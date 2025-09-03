@@ -5,6 +5,35 @@ import Button from "./Button";
 import AvatarContainer from "./AvatarContainer";
 import Avatar from "./Avatar";
 
+// Configuration data for testing
+export const navigationItems = [
+  { href: "#", text: "Use cases", extraPadding: true },
+  { href: "#", text: "Learn" },
+  { href: "#", text: "About" },
+];
+
+export const avatarImages = [
+  { src: "assets/Avatar_1.png", alt: "Avatar 1" },
+  { src: "assets/Avatar_2.png", alt: "Avatar 2" },
+  { src: "assets/Avatar_3.png", alt: "Avatar 3" },
+];
+
+export const logoConfig = [
+  { breakpoint: "block sm:hidden", size: "header", showText: false },
+  { breakpoint: "hidden sm:block md:hidden", size: "header", showText: true },
+  {
+    breakpoint: "hidden md:block lg:hidden",
+    size: "headerMd",
+    showText: true,
+  },
+  {
+    breakpoint: "hidden lg:block xl:hidden",
+    size: "headerLg",
+    showText: true,
+  },
+  { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
+];
+
 export default function Header({ onToggle }) {
   // Schema markup for site navigation
   const schemaData = {
@@ -18,33 +47,6 @@ export default function Header({ onToggle }) {
       "query-input": "required name=search_term_string",
     },
   };
-  const navigationItems = [
-    { href: "#", text: "Use cases", extraPadding: true },
-    { href: "#", text: "Learn" },
-    { href: "#", text: "About" },
-  ];
-
-  const avatarImages = [
-  { src: "assets/Avatar_1.png", alt: "Avatar 1" },
-  { src: "assets/Avatar_2.png", alt: "Avatar 2" },
-  { src: "assets/Avatar_3.png", alt: "Avatar 3" },
-];
-
-  const logoConfig = [
-    { breakpoint: "block sm:hidden", size: "header", showText: false },
-    { breakpoint: "hidden sm:block md:hidden", size: "header", showText: true },
-    {
-      breakpoint: "hidden md:block lg:hidden",
-      size: "headerMd",
-      showText: true,
-    },
-    {
-      breakpoint: "hidden lg:block xl:hidden",
-      size: "headerLg",
-      showText: true,
-    },
-    { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
-  ];
 
   const renderNavigationItems = (size) => {
     return navigationItems.map((item, index) => (
@@ -118,7 +120,11 @@ export default function Header({ onToggle }) {
           {/* Logo - Consistent left positioning across all breakpoints */}
           <div className="flex items-center">
             {logoConfig.map((config, index) => (
-              <div key={index} className={config.breakpoint}>
+              <div
+                key={index}
+                className={config.breakpoint}
+                data-testid="logo-wrapper"
+              >
                 {renderLogo(config.size, config.showText)}
               </div>
             ))}
@@ -127,29 +133,29 @@ export default function Header({ onToggle }) {
           {/* Navigation Links - Consistent center positioning */}
           <div className="flex items-center">
             {/* XSmall breakpoint - Navigation items moved to right section */}
-            <div className="block sm:hidden">
+            <div className="block sm:hidden" data-testid="nav-xs">
               {/* Empty for XSmall - navigation moved to right */}
             </div>
 
             {/* Small breakpoint - All items grouped together, centered */}
-            <div className="hidden sm:block md:hidden">
+            <div className="hidden sm:block md:hidden" data-testid="nav-sm">
               <MenuBar size="default">
                 {renderNavigationItems("xsmall")}
                 {renderLoginButton("xsmall")}
               </MenuBar>
             </div>
 
-            <div className="hidden md:block lg:hidden">
+            <div className="hidden md:block lg:hidden" data-testid="nav-md">
               <MenuBar size="default">
                 {renderNavigationItems("xsmall")}
               </MenuBar>
             </div>
 
-            <div className="hidden lg:block xl:hidden">
+            <div className="hidden lg:block xl:hidden" data-testid="nav-lg">
               <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
             </div>
 
-            <div className="hidden xl:block">
+            <div className="hidden xl:block" data-testid="nav-xl">
               <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
             </div>
           </div>
@@ -157,41 +163,43 @@ export default function Header({ onToggle }) {
           {/* Authentication Elements - Consistent right alignment across all breakpoints */}
           <div className="flex items-center">
             {/* XSmall breakpoint - All navigation items + Create Rule button */}
-            <div className="block sm:hidden">
+            <div className="block sm:hidden" data-testid="auth-xs">
               <div className="flex items-center gap-[var(--spacing-scale-001)]">
-                {renderNavigationItems("xsmall")}
-                {renderLoginButton("xsmall")}
+                <MenuBar size="default">
+                  {renderNavigationItems("xsmall")}
+                  {renderLoginButton("xsmall")}
+                </MenuBar>
                 {renderCreateRuleButton("xsmall", "small", "small")}
               </div>
             </div>
 
             {/* Small breakpoint - Only Create Rule button */}
-            <div className="hidden sm:block md:hidden">
+            <div className="hidden sm:block md:hidden" data-testid="auth-sm">
               <div className="flex items-center gap-[var(--spacing-scale-004)]">
                 {renderCreateRuleButton("xsmall", "small", "small")}
               </div>
             </div>
 
             {/* Medium breakpoint */}
-            <div className="hidden md:block lg:hidden">
+            <div className="hidden md:block lg:hidden" data-testid="auth-md">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-010)]">
-                {renderLoginButton("xsmall")}
+                <MenuBar size="default">{renderLoginButton("xsmall")}</MenuBar>
                 {renderCreateRuleButton("xsmall", "medium", "medium")}
               </div>
             </div>
 
             {/* Large breakpoint */}
-            <div className="hidden lg:block xl:hidden">
+            <div className="hidden lg:block xl:hidden" data-testid="auth-lg">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
-                {renderLoginButton("large")}
+                <MenuBar size="large">{renderLoginButton("large")}</MenuBar>
                 {renderCreateRuleButton("large", "xlarge", "xlarge")}
               </div>
             </div>
 
             {/* XLarge breakpoint */}
-            <div className="hidden xl:block">
+            <div className="hidden xl:block" data-testid="auth-xl">
               <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
-                {renderLoginButton("xlarge")}
+                <MenuBar size="large">{renderLoginButton("xlarge")}</MenuBar>
                 {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
               </div>
             </div>

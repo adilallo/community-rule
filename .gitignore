@@ -13,6 +13,24 @@
 # testing
 /coverage
 
+# Playwright
+/test-results/
+/playwright-report/
+# Visual regression snapshots (allow these)
+!tests/e2e/visual-regression.spec.ts-snapshots/
+!tests/e2e/visual-regression.spec.ts-snapshots/*.png
+
+# Ignore other image files (but not visual regression snapshots)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webm
+*.mp4
+*.mov
+*.avi
+*.mkv
+
 # next.js
 /.next/
 /out/

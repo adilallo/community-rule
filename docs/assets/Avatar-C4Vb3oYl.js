@@ -1,1 +1,15 @@
-import{j as u}from"./jsx-runtime-C_nHp4yK.js";function o({src:e,alt:s,size:a="small",className:l="",...r}){const t=`rounded-[var(--radius-measures-radius-full)] object-cover ${{small:"w-[16px] h-[16px]",medium:"w-[18px] h-[18px]",large:"w-[24px] h-[24px]",xlarge:"w-[32px] h-[32px]"}[a]} ${l}`;return u.jsx("img",{src:e,alt:s,className:t,...r})}o.__docgenInfo={description:"",methods:[],displayName:"Avatar",props:{size:{defaultValue:{value:'"small"',computed:!1},required:!1},className:{defaultValue:{value:'""',computed:!1},required:!1}}};export{o as A};
+import { j as u } from "./jsx-runtime-C_nHp4yK.js";
+function o({ src: e, alt: s, size: a = "small", className: l = "", ...r }) {
+  const t = `rounded-[var(--radius-measures-radius-full)] object-cover ${{ small: "w-[16px] h-[16px]", medium: "w-[18px] h-[18px]", large: "w-[24px] h-[24px]", xlarge: "w-[32px] h-[32px]" }[a]} ${l}`;
+  return u.jsx("img", { src: e, alt: s, className: t, ...r });
+}
+o.__docgenInfo = {
+  description: "",
+  methods: [],
+  displayName: "Avatar",
+  props: {
+    size: { defaultValue: { value: '"small"', computed: !1 }, required: !1 },
+    className: { defaultValue: { value: '""', computed: !1 }, required: !1 },
+  },
+};
+export { o as A };

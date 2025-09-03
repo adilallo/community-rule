@@ -1,0 +1,10 @@
+log:
+  level: info
+
+runner:
+  capacity: 2
+
+runners:
+  - name: community-rule-runner
+    labels:
+      - "ubuntu-latest:docker://mcr.microsoft.com/playwright:v1.54.2-jammy"
