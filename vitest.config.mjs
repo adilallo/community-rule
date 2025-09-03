@@ -15,6 +15,7 @@ export default defineConfig({
     include: [
       "tests/unit/**/*.test.{js,jsx,ts,tsx}",
       "tests/integration/**/*.test.{js,jsx,ts,tsx}",
+      "tests/accessibility/**/*.test.{js,jsx,ts,tsx}",
     ],
     css: true,
     coverage: {

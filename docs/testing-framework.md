@@ -352,13 +352,26 @@ npx playwright show-report
 
 ### Framework
 
-- **Unit Level**: jest-axe with Vitest
-- **E2E Level**: Playwright accessibility tests
+- **Unit Level**: jest-axe with Vitest (`tests/accessibility/unit/`)
+- **E2E Level**: Playwright accessibility tests (`tests/accessibility/e2e/`)
 - **Standards**: WCAG 2.1 AA compliance
 
-### Automated Testing
+### Test Organization
+
+Accessibility tests are organized in a dedicated `tests/accessibility/` folder:
+
+```
+tests/accessibility/
+├── unit/                          # Unit-level accessibility tests
+│   └── components.test.jsx        # Component accessibility (jest-axe)
+└── e2e/                          # E2E accessibility tests
+    └── wcag-compliance.spec.ts    # WCAG compliance (Playwright)
+```
+
+### Unit-Level Accessibility Testing
 
 ```jsx
+// tests/accessibility/unit/components.test.jsx
 import { axe, toHaveNoViolations } from "jest-axe";
 
 test("component has no accessibility violations", async () => {
@@ -366,6 +379,42 @@ test("component has no accessibility violations", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+```
+
+### E2E Accessibility Testing
+
+```typescript
+// tests/accessibility/e2e/wcag-compliance.spec.ts
+import { test, expect } from "@playwright/test";
+
+test("WCAG 2.1 AA compliance - homepage", async ({ page }) => {
+  await page.goto("/");
+
+  // Check for proper HTML structure
+  const html = page.locator("html");
+  const lang = await html.getAttribute("lang");
+  expect(lang).toBeTruthy();
+
+  // Check for main heading
+  const h1 = page.locator("h1").first();
+  await expect(h1).toBeVisible();
+});
+```
+
+### Running Accessibility Tests
+
+```bash
+# Run all accessibility tests
+npm test tests/accessibility/
+
+# Run unit accessibility tests only
+npm test tests/accessibility/unit/
+
+# Run E2E accessibility tests only
+npx playwright test tests/accessibility/e2e/
+
+# Run specific accessibility test
+npx playwright test tests/accessibility/e2e/wcag-compliance.spec.ts
 ```
 
 ### Manual Testing Checklist

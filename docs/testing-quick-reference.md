@@ -109,6 +109,22 @@ npm run lhci:desktop
 npm run performance:budget
 ```
 
+### Accessibility Testing
+
+```bash
+# Run all accessibility tests
+npm test tests/accessibility/
+
+# Run unit accessibility tests only
+npm test tests/accessibility/unit/
+
+# Run E2E accessibility tests only
+npx playwright test tests/accessibility/e2e/
+
+# Run specific accessibility test
+npx playwright test tests/accessibility/e2e/wcag-compliance.spec.ts
+```
+
 ## 📱 Browser Support
 
 | Browser     | Project Name | Status          |
@@ -257,20 +273,25 @@ tests/
 │   ├── RuleCard.test.jsx         # 18 tests
 │   ├── SectionHeader.test.jsx    # 17 tests
 │   ├── NumberedCard.test.jsx     # 18 tests
-│   └── accessibility.test.jsx    # 18 tests
+│   └── ...                       # Other component tests
 ├── integration/                   # Integration tests
 │   ├── component-interactions.integration.test.jsx
 │   ├── page-flow.integration.test.jsx
 │   ├── user-journey.integration.test.jsx
 │   ├── layout.integration.test.jsx
 │   └── ContentLockup.integration.test.jsx
-└── e2e/                          # E2E tests
+├── accessibility/                 # Accessibility-focused tests
+│   ├── unit/                     # Unit-level accessibility (jest-axe)
+│   │   └── components.test.jsx   # Component accessibility tests
+│   └── e2e/                      # E2E accessibility (Playwright + axe-core)
+│       └── wcag-compliance.spec.ts # WCAG compliance tests
+└── e2e/                          # General E2E tests
     ├── homepage.spec.ts          # Homepage functionality
     ├── user-journeys.spec.ts     # User workflows
     ├── header.responsive.spec.js # Responsive header
     ├── footer.responsive.spec.js # Responsive footer
     ├── visual-regression.spec.ts # Visual consistency
-    ├── accessibility.spec.ts     # Accessibility compliance
+    ├── accessibility.spec.ts     # General accessibility tests
     └── performance.spec.ts       # Performance metrics
 ```
 
