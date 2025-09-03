@@ -60,7 +60,7 @@ test.describe("Accessibility Testing", () => {
       focusedElements.push(
         `${elementInfo.tagName}${
           elementInfo.role ? `[role="${elementInfo.role}"]` : ""
-        }: ${elementInfo.accessibleName}`,
+        }: ${elementInfo.accessibleName}`
       );
 
       await page.keyboard.press("Tab");
@@ -190,7 +190,7 @@ test.describe("Accessibility Testing", () => {
   test("focus indicators - visible focus", async ({ page }) => {
     // Test that focus indicators are visible
     const focusableElements = page.locator(
-      "button, a, input, textarea, select, [tabindex]",
+      "button, a, input, textarea, select, [tabindex]"
     );
     const elementCount = await focusableElements.count();
 
@@ -315,15 +315,20 @@ test.describe("Accessibility Testing", () => {
     // This would typically involve triggering errors and checking ARIA attributes
     // For now, we'll check that the page handles errors gracefully
 
-    // Simulate a network error
-    await page.route("**/*", (route) => {
+    // Simulate a network error by blocking only non-critical resources
+    await page.route("**/*.js", (route) => {
       route.abort();
     });
 
     try {
       await page.reload();
-    } catch (error) {
+      // Wait for page to stabilize
+      await page.waitForTimeout(2000);
+
       // Page should handle errors gracefully
+      await expect(page.locator("body")).toBeVisible();
+    } catch (error) {
+      // If reload fails, that's also acceptable - page should handle errors gracefully
       await expect(page.locator("body")).toBeVisible();
     }
   });

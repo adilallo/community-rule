@@ -34,7 +34,7 @@ export default defineConfig({
           timeout: 120_000,
         },
       }),
-  // OS-agnostic snapshot path template (removes platform-specific suffixes)
+  // Browser-specific snapshot path template (includes projectName for cross-browser support)
   snapshotPathTemplate:
     "{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png",
   projects: [
