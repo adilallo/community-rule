@@ -43,7 +43,7 @@ export default defineConfig({
       }),
   // Browser-specific snapshot path template (includes projectName for cross-browser support)
   snapshotPathTemplate:
-    "{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png",
+    "tests/e2e/{testFileName}-snapshots/{arg}-{projectName}.png",
   projects: [
     {
       name: "chromium",
