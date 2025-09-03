@@ -37,7 +37,7 @@ for (const bp of breakpoints) {
       ).toBeVisible();
       // Look for the "Learn" link specifically in the footer (not in other components)
       await expect(
-        page.getByRole("contentinfo").getByRole("link", { name: /learn/i })
+        page.getByRole("contentinfo").getByRole("link", { name: /learn/i }),
       ).toBeVisible();
       await expect(page.getByRole("link", { name: /about/i })).toBeVisible();
     });
@@ -140,7 +140,9 @@ test.describe("Footer visual regression", () => {
       await page.waitForTimeout(500);
 
       // Test hover on navigation items
-      const useCasesLink = page.getByRole("contentinfo").getByRole("link", { name: /use cases/i });
+      const useCasesLink = page
+        .getByRole("contentinfo")
+        .getByRole("link", { name: /use cases/i });
       await useCasesLink.hover();
       await page.waitForTimeout(200);
       await expect(page.getByRole("contentinfo")).toHaveScreenshot(
@@ -176,7 +178,9 @@ test.describe("Footer visual regression", () => {
       await page.waitForTimeout(500);
 
       // Test focus on navigation items
-      const useCasesLink = page.getByRole("contentinfo").getByRole("link", { name: /use cases/i });
+      const useCasesLink = page
+        .getByRole("contentinfo")
+        .getByRole("link", { name: /use cases/i });
       await useCasesLink.focus();
       await page.waitForTimeout(200);
       await expect(page.getByRole("contentinfo")).toHaveScreenshot(
@@ -235,10 +239,18 @@ test.describe("Footer responsive behavior", () => {
         page.getByRole("contentinfo").getByRole("link", { name: /use cases/i }),
         page.getByRole("contentinfo").getByRole("link", { name: /learn/i }),
         page.getByRole("contentinfo").getByRole("link", { name: /about/i }),
-        page.getByRole("contentinfo").getByRole("link", { name: /privacy policy/i }),
-        page.getByRole("contentinfo").getByRole("link", { name: /terms of service/i }),
-        page.getByRole("contentinfo").getByRole("link", { name: /follow us on bluesky/i }),
-        page.getByRole("contentinfo").getByRole("link", { name: /follow us on gitlab/i }),
+        page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: /privacy policy/i }),
+        page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: /terms of service/i }),
+        page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: /follow us on bluesky/i }),
+        page
+          .getByRole("contentinfo")
+          .getByRole("link", { name: /follow us on gitlab/i }),
       ];
 
       for (const element of interactiveElements) {

@@ -54,7 +54,7 @@ jobs:
       - name: Start app (background) + healthcheck
         run: |
           set -euxo pipefail
-          # pick a port that's unlikely to be busy
+          # Use port 3010 to avoid conflicts with local dev on 3000
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
 
@@ -67,11 +67,22 @@ jobs:
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
-          # wait for TCP, then HTTP
+          # Wait for TCP connection
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          curl -fsS "http://$HOST:$PORT" >/dev/null
-
-          echo "✅ App is responding"
+          
+          # Wait for HTTP response with retries
+          for i in {1..10}; do
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+              echo "✅ App is responding on attempt $i"
+              break
+            fi
+            echo "⏳ Waiting for app to be ready... attempt $i/10"
+            sleep 5
+          done
+          
+          # Final health check
+          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
+          echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
@@ -81,7 +92,17 @@ jobs:
           echo "––– .next/runner.log (tail) –––"
           tail -n 200 .next/runner.log || true
       - name: Run E2E tests
-        run: npx playwright test --project=${{ matrix.browser }}
+        run: |
+          # Give the server a moment to stabilize
+          sleep 10
+          echo "🚀 Starting E2E tests for ${{ matrix.browser }}..."
+          echo "🔍 Testing against: http://127.0.0.1:3010"
+          
+          # Test server connectivity before running tests
+          curl -v "http://127.0.0.1:3010" | head -20 || echo "⚠️ Server connectivity check failed"
+          
+          # Run the tests
+          npx playwright test --project=${{ matrix.browser }}
         env:
           CI: true
           BASE_URL: http://127.0.0.1:3010
@@ -126,16 +147,30 @@ jobs:
       - name: Start app (background) + healthcheck
         run: |
           set -euxo pipefail
-          export PORT="${PORT:-3000}"
+          export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
           nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
+          
+          # Wait for TCP connection
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          curl -fsS "http://$HOST:$PORT" >/dev/null
-          echo "✅ App is responding"
+          
+          # Wait for HTTP response with retries
+          for i in {1..10}; do
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+              echo "✅ App is responding on attempt $i"
+              break
+            fi
+            echo "⏳ Waiting for app to be ready... attempt $i/10"
+            sleep 5
+          done
+          
+          # Final health check
+          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
+          echo "✅ App is fully ready for testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
@@ -152,7 +187,11 @@ jobs:
 
       # Run visual regression tests
       - name: Run visual regression tests
-        run: npx playwright test tests/e2e/visual-regression.spec.ts
+        run: |
+          # Give the server a moment to stabilize
+          sleep 10
+          echo "🚀 Starting visual regression tests..."
+          npx playwright test tests/e2e/visual-regression.spec.ts
         env: { CI: true }
 
       - name: Package visual artifacts
@@ -211,9 +250,23 @@ jobs:
           nohup npm run start -- -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           echo $! > .next/runner.pid
           echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
+
+          # Wait for TCP connection
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          curl -fsS "http://$HOST:$PORT" >/dev/null
-          echo "✅ App is responding"
+
+          # Wait for HTTP response with retries
+          for i in {1..10}; do
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+              echo "✅ App is responding on attempt $i"
+              break
+            fi
+            echo "⏳ Waiting for app to be ready... attempt $i/10"
+            sleep 5
+          done
+
+          # Final health check
+          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
+          echo "✅ App is fully ready for Lighthouse testing"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
@@ -243,7 +296,11 @@ jobs:
           "$CHROME_PATH" --version || true
 
       - name: Run Lighthouse CI
-        run: npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://127.0.0.1:3010/
+        run: |
+          # Give the server a moment to stabilize
+          sleep 10
+          echo "🚀 Starting Lighthouse CI performance testing..."
+          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://127.0.0.1:3010/
         env: { CI: true }
       # ---- fixes end here ----
 

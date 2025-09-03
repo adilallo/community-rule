@@ -15,7 +15,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:3000",
+    baseURL: process.env.BASE_URL || "http://localhost:3010",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -23,12 +23,17 @@ export default defineConfig({
     viewport: { width: 1280, height: 800 }, // Consistent viewport
     deviceScaleFactor: 1, // Consistent device scale
   },
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
+  // Only start webServer in non-CI environments
+  ...(process.env.CI
+    ? {}
+    : {
+        webServer: {
+          command: "npm run dev",
+          url: "http://localhost:3010",
+          reuseExistingServer: true,
+          timeout: 120_000,
+        },
+      }),
   // OS-agnostic snapshot path template (removes platform-specific suffixes)
   snapshotPathTemplate:
     "{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png",

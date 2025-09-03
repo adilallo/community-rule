@@ -35,8 +35,12 @@ for (const bp of breakpoints) {
       await expect(
         page.getByRole("menuitem", { name: /use cases/i }),
       ).toBeVisible();
-      await expect(page.getByRole("menuitem", { name: /learn/i })).toBeVisible();
-      await expect(page.getByRole("menuitem", { name: /about/i })).toBeVisible();
+      await expect(
+        page.getByRole("menuitem", { name: /learn/i }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("menuitem", { name: /about/i }),
+      ).toBeVisible();
     });
 
     test(`authentication elements visibility at ${bp.name}`, async ({
@@ -59,12 +63,14 @@ for (const bp of breakpoints) {
       // TODO: Fix logo visibility test - currently all logos are hidden at xs breakpoint
       // Logo should be visible at all breakpoints
       // Look for any visible logo text in the header navigation
-      const logos = page.getByRole("navigation", { name: /main navigation/i }).getByText("CommunityRule");
+      const logos = page
+        .getByRole("navigation", { name: /main navigation/i })
+        .getByText("CommunityRule");
       const logoCount = await logos.count();
-      
+
       // At least one logo should be visible
       expect(logoCount).toBeGreaterThan(0);
-      
+
       // Check that at least one logo is visible (not all are hidden)
       let hasVisibleLogo = false;
       for (let i = 0; i < logoCount; i++) {
