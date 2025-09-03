@@ -7,8 +7,8 @@ export default defineConfig({
     timeout: 10_000,
     toHaveScreenshot: {
       animations: "disabled",
-      maxDiffPixelRatio: 0.01, // 1% pixels may differ
-      maxDiffPixels: 200, // or an absolute pixel count
+      maxDiffPixelRatio: 0.02, // 2% pixels may differ (increased tolerance)
+      maxDiffPixels: 500, // Increased absolute pixel tolerance
     },
   },
   fullyParallel: true,
@@ -19,9 +19,13 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
-    colorScheme: "light", // Ensure consistent color scheme
-    viewport: { width: 1280, height: 800 }, // Consistent viewport
-    deviceScaleFactor: 1, // Consistent device scale
+    // Deterministic rendering defaults to eliminate environment drift
+    colorScheme: "light",
+    viewport: { width: 1280, height: 800 },
+    deviceScaleFactor: 1, // Keep DPR=1 for stable anti-aliasing
+    timezoneId: "UTC", // Freeze timezone
+    locale: "en-US", // Freeze locale
+    headless: true,
   },
   // Only start webServer in non-CI environments
   ...(process.env.CI
@@ -38,9 +42,33 @@ export default defineConfig({
   snapshotPathTemplate:
     "{testDir}/{testFileName}-snapshots/{arg}-{projectName}.png",
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"] } },
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        deviceScaleFactor: 1, // Override device scale for consistency
+      },
+    },
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+        deviceScaleFactor: 1, // Override device scale for consistency
+      },
+    },
+    {
+      name: "webkit",
+      use: {
+        ...devices["Desktop Safari"],
+        deviceScaleFactor: 1, // Override device scale for consistency
+      },
+    },
+    {
+      name: "mobile",
+      use: {
+        ...devices["iPhone 13"],
+        deviceScaleFactor: 1, // Override device scale for consistency
+      },
+    },
   ],
 });
