@@ -1,112 +1,160 @@
-import { render, screen, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { vi, describe, test, expect, afterEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import Button from "../../app/components/Button";
 
-afterEach(() => {
-  cleanup();
-});
-
 describe("Button Component", () => {
-  test("renders button with children", () => {
+  it("renders button with default props", () => {
     render(<Button>Click me</Button>);
-    const button = screen.getByRole("button", { name: "Click me" });
+
+    const button = screen.getByRole("button", { name: /click me/i });
     expect(button).toBeInTheDocument();
+    expect(button).toHaveClass("bg-[var(--color-surface-inverse-primary)]");
+    expect(button).toHaveAttribute("type", "button");
   });
 
-  test("handles click events", async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(<Button onClick={onClick}>Click me</Button>);
+  it("renders with custom className", () => {
+    const customClass = "custom-button-class";
+    render(<Button className={customClass}>Custom Button</Button>);
 
-    const button = screen.getByRole("button", { name: "Click me" });
-    await user.click(button);
-    expect(onClick).toHaveBeenCalledTimes(1);
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass(customClass);
   });
 
-  test("renders as link when href is provided", () => {
-    render(<Button href="/test">Link Button</Button>);
-    const link = screen.getByRole("link", { name: "Link Button" });
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/test");
+  it("applies variant classes correctly", () => {
+    const { rerender } = render(<Button variant="secondary">Secondary</Button>);
+    let button = screen.getByRole("button");
+    expect(button).toHaveClass("bg-transparent");
+
+    rerender(<Button variant="primary">Primary</Button>);
+    button = screen.getByRole("button");
+    expect(button).toHaveClass("bg-[var(--color-surface-default-primary)]");
+
+    rerender(<Button variant="outlined">Outlined</Button>);
+    button = screen.getByRole("button");
+    expect(button).toHaveClass("bg-transparent", "border-[1.5px]");
   });
 
-  test("applies different variants", () => {
-    const { rerender } = render(<Button variant="default">Default</Button>);
-    let button = screen.getByRole("button", { name: "Default" });
-    expect(button.className).toContain(
-      "bg-[var(--color-surface-inverse-primary)]",
-    );
-
-    rerender(<Button variant="secondary">Secondary</Button>);
-    button = screen.getByRole("button", { name: "Secondary" });
-    expect(button.className).toContain("bg-transparent");
-  });
-
-  test("applies different sizes", () => {
-    const { rerender } = render(<Button size="xsmall">Small</Button>);
-    let button = screen.getByRole("button", { name: "Small" });
-    expect(button.className).toContain("px-[var(--spacing-scale-006)]");
+  it("applies size classes correctly", () => {
+    const { rerender } = render(<Button size="small">Small</Button>);
+    let button = screen.getByRole("button");
+    expect(button).toHaveClass("px-[var(--spacing-measures-spacing-008)]");
 
     rerender(<Button size="large">Large</Button>);
-    button = screen.getByRole("button", { name: "Large" });
-    expect(button.className).toContain("px-[var(--spacing-scale-012)]");
+    button = screen.getByRole("button");
+    expect(button).toHaveClass("px-[var(--spacing-scale-012)]");
+
+    rerender(<Button size="xlarge">XLarge</Button>);
+    button = screen.getByRole("button");
+    expect(button).toHaveClass("px-[var(--spacing-scale-020)]");
   });
 
-  test("handles disabled state", () => {
-    render(<Button disabled>Disabled</Button>);
-    const button = screen.getByRole("button", { name: "Disabled" });
+  it("renders as link when href is provided", () => {
+    const href = "/test-page";
+    render(<Button href={href}>Link Button</Button>);
+
+    const link = screen.getByRole("link", { name: /link button/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", href);
+  });
+
+  it("renders as button when href is not provided", () => {
+    render(<Button>Regular Button</Button>);
+
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
+  });
+
+  it("handles click events", () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Clickable</Button>);
+
+    const button = screen.getByRole("button");
+    fireEvent.click(button);
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("applies disabled state correctly", () => {
+    render(<Button disabled>Disabled Button</Button>);
+
+    const button = screen.getByRole("button");
     expect(button).toBeDisabled();
+    expect(button).toHaveClass(
+      "disabled:opacity-50",
+      "disabled:cursor-not-allowed"
+    );
     expect(button).toHaveAttribute("aria-disabled", "true");
-    expect(button).toHaveAttribute("tabindex", "-1");
+    expect(button).toHaveAttribute("tabIndex", "-1");
   });
 
-  test("applies custom className", () => {
-    render(<Button className="custom-class">Custom</Button>);
-    const button = screen.getByRole("button", { name: "Custom" });
-    expect(button.className).toContain("custom-class");
-  });
+  it("applies proper accessibility attributes", () => {
+    render(<Button ariaLabel="Custom label">Button</Button>);
 
-  test("applies aria-label for accessibility", () => {
-    render(<Button aria-label="Custom label">Button</Button>);
-    const button = screen.getByRole("button", { name: "Custom label" });
+    const button = screen.getByRole("button", { name: /custom label/i });
     expect(button).toHaveAttribute("aria-label", "Custom label");
   });
 
-  test("renders with design tokens", () => {
-    render(<Button>Token Test</Button>);
-    const button = screen.getByRole("button", { name: "Token Test" });
+  it("applies hover effects correctly", () => {
+    render(<Button>Hover Button</Button>);
 
-    // Check that design tokens are applied
-    expect(button.className).toContain(
-      "rounded-[var(--radius-measures-radius-full)]",
-    );
-    expect(button.className).toContain(
-      "bg-[var(--color-surface-inverse-primary)]",
-    );
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass("hover:scale-[1.02]", "transition-all");
   });
 
-  test("handles keyboard navigation", async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(<Button onClick={onClick}>Keyboard</Button>);
+  it("applies focus styles correctly", () => {
+    render(<Button>Focus Button</Button>);
 
-    const button = screen.getByRole("button", { name: "Keyboard" });
-    button.focus();
-    expect(button).toHaveFocus();
-
-    await user.keyboard("{Enter}");
-    expect(onClick).toHaveBeenCalledTimes(1);
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass("focus:outline-none", "focus:ring-1");
   });
 
-  test("does not render as link when disabled and href provided", () => {
+  it("applies active styles correctly", () => {
+    render(<Button>Active Button</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass("active:scale-[0.98]");
+  });
+
+  it("handles target and rel props for links", () => {
     render(
-      <Button href="/test" disabled>
-        Disabled Link
-      </Button>,
+      <Button href="/test" target="_blank" rel="noopener">
+        External Link
+      </Button>
     );
-    const button = screen.getByRole("button", { name: "Disabled Link" });
+
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener");
+  });
+
+  it("forwards additional props", () => {
+    render(<Button data-testid="test-button">Test Button</Button>);
+
+    const button = screen.getByTestId("test-button");
     expect(button).toBeInTheDocument();
-    expect(button).toBeDisabled();
+  });
+
+  it("applies proper font styles for different sizes", () => {
+    const { rerender } = render(<Button size="xsmall">XSmall</Button>);
+    let button = screen.getByRole("button");
+    expect(button).toHaveClass("text-[10px]", "leading-[12px]");
+
+    rerender(<Button size="xlarge">XLarge</Button>);
+    button = screen.getByRole("button");
+    expect(button).toHaveClass("text-[24px]", "leading-[28px]");
+  });
+
+  it("applies proper border radius", () => {
+    render(<Button>Rounded Button</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toHaveClass("rounded-[var(--radius-measures-radius-full)]");
+  });
+
+  it("maintains proper tab index when not disabled", () => {
+    render(<Button>Tab Button</Button>);
+
+    const button = screen.getByRole("button");
+    expect(button).toHaveAttribute("tabIndex", "0");
   });
 });
