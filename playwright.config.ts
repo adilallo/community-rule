@@ -7,8 +7,8 @@ export default defineConfig({
     timeout: 10_000,
     toHaveScreenshot: {
       animations: "disabled",
-      maxDiffPixelRatio: 0.02, // 2% pixels may differ (increased tolerance)
-      maxDiffPixels: 500, // Increased absolute pixel tolerance
+      maxDiffPixelRatio: 0.02, // 2% pixels may differ (balanced tolerance)
+      maxDiffPixels: 500, // Balanced absolute pixel tolerance
     },
   },
   fullyParallel: true,
