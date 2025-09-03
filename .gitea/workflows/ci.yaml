@@ -103,13 +103,6 @@ jobs:
           path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
 
-      - name: Stop app
-        if: always()
-        run: |
-          if [ -f .next/runner.pid ]; then
-            kill $(cat .next/runner.pid) 2>/dev/null || true
-          fi
-
   visual-regression:
     runs-on: [self-hosted, macos-latest]
     steps:
@@ -126,7 +119,7 @@ jobs:
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
-            - name: Visual Regression (start + test + teardown)
+      - name: Visual Regression (start + test + teardown)
         run: |
           set -euxo pipefail
 
@@ -152,7 +145,7 @@ jobs:
           echo "✅ App is responding at http://$HOST:$PORT"
 
           # Seed snapshots on main branch only (one-time setup)
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [ "${{ gitea.ref }}" = "refs/heads/main" ]; then
             echo "🌱 Seeding snapshots on main branch..."
             PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
           fi
@@ -275,13 +268,6 @@ jobs:
         with:
           name: lhci-results
           path: lhci-results
-
-      - name: Stop app
-        if: always()
-        run: |
-          if [ -f .next/runner.pid ]; then
-            kill $(cat .next/runner.pid) 2>/dev/null || true
-          fi
 
   storybook:
     runs-on: [self-hosted, macos-latest]
