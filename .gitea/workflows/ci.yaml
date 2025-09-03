@@ -78,7 +78,14 @@ jobs:
 
           # Run tests
           echo "🧪 Running E2E tests for ${{ matrix.browser }}..."
-          BASE_URL="http://$HOST:$PORT" npx playwright test --project=${{ matrix.browser }} --reporter=list
+          BASE_URL="http://$HOST:$PORT" npx playwright test --project=${{ matrix.browser }} --reporter=list || TEST_EXIT_CODE=$?
+
+          # Generate baseline snapshots only on main branch in CI environment
+          if [ "${{ gitea.ref }}" = "refs/heads/main" ]; then
+            echo "🌱 Generating baseline snapshots for ${{ matrix.browser }} in CI environment..."
+            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --project=${{ matrix.browser }}
+            echo "✅ Baseline snapshots generated for ${{ matrix.browser }} in CI"
+          fi
 
           # Teardown
           echo "🧹 Cleaning up server..."
@@ -102,6 +109,20 @@ jobs:
           name: playwright-results-${{ matrix.browser }}
           path: playwright-${{ matrix.browser }}.tgz
           retention-days: 30
+
+      - name: Commit baseline snapshots (if generated)
+        if: gitea.ref == 'refs/heads/main' && always()
+        run: |
+          if [ -n "$(git status --porcelain tests/e2e/visual-regression.spec.ts-snapshots/)" ]; then
+            echo "🔄 Committing baseline snapshots for ${{ matrix.browser }} generated in CI..."
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add tests/e2e/visual-regression.spec.ts-snapshots/
+            git commit -m "Generate baseline snapshots for ${{ matrix.browser }} in CI environment" || true
+            echo "✅ Baseline snapshots committed for ${{ matrix.browser }}"
+          else
+            echo "ℹ️ No new baseline snapshots to commit for ${{ matrix.browser }}"
+          fi
 
   visual-regression:
     runs-on: [self-hosted, macos-latest]
