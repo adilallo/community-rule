@@ -51,130 +51,43 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
 
-      - name: Start app (background) + healthcheck
+            - name: E2E (start + test + teardown)
         run: |
           set -euxo pipefail
-          # Use port 3010 to avoid conflicts with local dev on 3000
+
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
+          mkdir -p .next
 
-          # ensure build exists (dev server can build on-the-fly, but we need the build for production)
+          # ensure build exists
           test -d .next || { echo "❌ Missing .next build output"; exit 1; }
 
-          # start and detach with logs
-          mkdir -p .next
-          # Use production server with enhanced stability for CI
-          # Start server in background but keep it alive with proper signal handling
-          (
-            # Create a new process group to isolate from CI cleanup
-            setsid bash -c '
-              # Set up signal handlers to prevent premature termination
-              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
-              # Start the server
-              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
-            ' &
-          ) &
-          echo $! > .next/runner.pid
-          echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
+          echo "🚀 Starting Next.js server for E2E testing..."
 
-          # Wait for TCP connection
+          # Start Next directly with node so $! is the real node PID
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          echo "$SVPID" > .next/runner.pid
+          echo "🌐 Server PID: $SVPID"
+
+          # Wait for readiness
+          echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
 
-          # Wait for HTTP response with retries
-          for i in {1..10}; do
-            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
-              echo "✅ App is responding on attempt $i"
-              break
-            fi
-            echo "⏳ Waiting for app to be ready... attempt $i/10"
-            sleep 5
-          done
+          # Run tests
+          echo "🧪 Running E2E tests for ${{ matrix.browser }}..."
+          BASE_URL="http://$HOST:$PORT" npx playwright test --project=${{ matrix.browser }} --reporter=list
 
-          # Final health check
-          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
-          echo "✅ App is fully ready for testing"
+          # Teardown
+          echo "🧹 Cleaning up server..."
+          kill "$SVPID" 2>/dev/null || true
+          echo "✅ Server cleanup complete"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          # Add stability measures for production server in CI
-          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
-          NEXT_SHARP_PATH: "false"
-      - name: Show last 200 lines of server log on failure
-        if: failure()
-        run: |
-          echo "––– .next/runner.log (tail) –––"
-          tail -n 200 .next/runner.log || true
-      - name: Run E2E tests
-        run: |
-          # Give the server a moment to stabilize
-          sleep 10
-          echo "🚀 Starting E2E tests for ${{ matrix.browser }}..."
-          echo "🔍 Testing against: http://127.0.0.1:3010"
-
-          # Continuous server monitoring to catch if it dies
-          echo "📊 Monitoring server health for 30 seconds..."
-          for i in {1..6}; do
-            if curl -fsS "http://127.0.0.1:3010" >/dev/null 2>&1; then
-              echo "✅ Server healthy at check $i/6"
-            else
-              echo "❌ Server unhealthy at check $i/6"
-              break
-            fi
-            sleep 5
-          done
-
-          # Test server connectivity before running tests
-          curl -v "http://127.0.0.1:3010" | head -20 || echo "⚠️ Server connectivity check failed"
-
-          # Debug: Check Playwright configuration
-          echo "🔧 Playwright config check:"
-          echo "  - CI env var: $CI"
-          echo "  - BASE_URL: $BASE_URL"
-          echo "  - Current working directory: $(pwd)"
-          echo "  - Playwright version: $(npx playwright --version)"
-
-          # Debug: Check if server is still responding
-          echo "🌐 Final server health check:"
-          curl -s "http://127.0.0.1:3010" | head -5 || echo "❌ Server not responding"
-
-          # Debug: Check server process status
-          echo "🔍 Server process status:"
-          if [ -f .next/runner.pid ]; then
-            echo "  - PID file exists: $(cat .next/runner.pid)"
-            echo "  - Process running: $(ps -p $(cat .next/runner.pid) | grep -v PID || echo 'Process not found')"
-            echo "  - Port 3010 listeners: $(lsof -i :3010 2>/dev/null | grep LISTEN || echo 'No listeners on 3010')"
-            # If process is missing, show the server logs to understand why it crashed
-            if ! ps -p $(cat .next/runner.pid) >/dev/null 2>&1; then
-              echo "❌ Server process has crashed! Showing last 50 lines of server log:"
-              tail -n 50 .next/runner.log || echo "No server log found"
-              echo "🔍 Checking for common crash causes..."
-              grep -i "error\|crash\|killed\|memory\|port\|bind" .next/runner.log | tail -10 || echo "No obvious errors found in log"
-            fi
-          else
-            echo "  - No PID file found"
-          fi
-
-          # Debug: Check Playwright config file
-          echo "📁 Playwright config file contents:"
-          cat playwright.config.ts | grep -E "(baseURL|webServer|CI)" || echo "No config found"
-
-          # Debug: Test a simple Playwright command
-          echo "🧪 Testing Playwright connectivity..."
-          npx playwright show-trace --help >/dev/null 2>&1 && echo "✅ Playwright tools working" || echo "❌ Playwright tools issue"
-
-          # Run the tests with verbose output
-          echo "🧪 Running Playwright tests..."
-          npx playwright test --project=${{ matrix.browser }} --reporter=list || {
-            echo "❌ Playwright tests failed"
-            echo "📋 Last 50 lines of server log:"
-            tail -n 50 .next/runner.log || echo "No server log found"
-            echo "🔍 Checking if server is still running:"
-            ps aux | grep "npm run start" | grep -v grep || echo "No npm run start process found"
-            exit 1
-          }
-        env:
-          CI: true
-          BASE_URL: http://127.0.0.1:3010
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       # package artifacts (keeps file count small)
       - name: Package E2E artifacts
@@ -213,68 +126,49 @@ jobs:
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
-      - name: Start app (background) + healthcheck
+            - name: Visual Regression (start + test + teardown)
         run: |
           set -euxo pipefail
+
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
-          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          # Use production server with enhanced stability for CI
-          # Start server in background but keep it alive with proper signal handling
-          (
-            # Create a new process group to isolate from CI cleanup
-            setsid bash -c '
-              # Set up signal handlers to prevent premature termination
-              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
-              # Start the server
-              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
-            ' &
-          ) &
-          echo $! > .next/runner.pid
-          echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
-          # Wait for TCP connection
+          # ensure build exists
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          echo "🚀 Starting Next.js server for visual regression testing..."
+
+          # Start Next directly with node so $! is the real node PID
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          echo "$SVPID" > .next/runner.pid
+          echo "🌐 Server PID: $SVPID"
+
+          # Wait for readiness
+          echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
 
-          # Wait for HTTP response with retries
-          for i in {1..10}; do
-            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
-              echo "✅ App is responding on attempt $i"
-              break
-            fi
-            echo "⏳ Waiting for app to be ready... attempt $i/10"
-            sleep 5
-          done
+          # Seed snapshots on main branch only (one-time setup)
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "🌱 Seeding snapshots on main branch..."
+            PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
+          fi
 
-          # Final health check
-          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
-          echo "✅ App is fully ready for testing"
+          # Run visual regression tests
+          echo "🧪 Running visual regression tests..."
+          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts
+
+          # Teardown
+          echo "🧹 Cleaning up server..."
+          kill "$SVPID" 2>/dev/null || true
+          echo "✅ Server cleanup complete"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          # Add stability measures for production server in CI
-          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
-          NEXT_SHARP_PATH: "false"
-      - name: Show last 200 lines of server log on failure
-        if: failure()
-        run: |
-          echo "––– .next/runner.log (tail) –––"
-          tail -n 200 .next/runner.log || true
-      # Seed snapshots on main branch only (one-time setup)
-      - name: Seed snapshots (main only)
-        if: github.ref == 'refs/heads/main'
-        run: PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
-        env: { CI: true }
-
-      # Run visual regression tests
-      - name: Run visual regression tests
-        run: |
-          # Give the server a moment to stabilize
-          sleep 10
-          echo "🚀 Starting visual regression tests..."
-          npx playwright test tests/e2e/visual-regression.spec.ts
-        env: { CI: true }
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Package visual artifacts
         if: always()
@@ -323,57 +217,31 @@ jobs:
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
-      - name: Start app (background) + healthcheck
+      - name: Performance (start + test + teardown)
         run: |
           set -euxo pipefail
+
           export PORT=3010 HOST=127.0.0.1
-          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
           mkdir -p .next
-          # Use production server with enhanced stability for CI
-          # Start server in background but keep it alive with proper signal handling
-          (
-            # Create a new process group to isolate from CI cleanup
-            setsid bash -c '
-              # Set up signal handlers to prevent premature termination
-              trap "echo \"🛑 Received signal, shutting down gracefully...\"; exit 0" TERM INT
-              # Start the server
-              npm run start -- -p "'$PORT'" -H "'$HOST'" 2>&1 | tee .next/runner.log
-            ' &
-          ) &
-          echo $! > .next/runner.pid
-          echo "🌐 PID $(cat .next/runner.pid) listening on http://$HOST:$PORT"
 
-          # Wait for TCP connection
+          # ensure build exists
+          test -d .next || { echo "❌ Missing .next build output"; exit 1; }
+
+          echo "🚀 Starting Next.js server for performance testing..."
+
+          # Start Next directly with node so $! is the real node PID
+          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          SVPID=$!
+          echo "$SVPID" > .next/runner.pid
+          echo "🌐 Server PID: $SVPID"
+
+          # Wait for readiness
+          echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
+          curl -fsS "http://$HOST:$PORT" >/dev/null
+          echo "✅ App is responding at http://$HOST:$PORT"
 
-          # Wait for HTTP response with retries
-          for i in {1..10}; do
-            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
-              echo "✅ App is responding on attempt $i"
-              break
-            fi
-            echo "⏳ Waiting for app to be ready... attempt $i/10"
-            sleep 5
-          done
-
-          # Final health check
-          curl -fsS "http://$HOST:$PORT" >/dev/null || { echo "❌ App failed final health check"; exit 1; }
-          echo "✅ App is fully ready for Lighthouse testing"
-        env:
-          NEXT_TELEMETRY_DISABLED: "1"
-          NODE_ENV: production
-          # Add stability measures for production server in CI
-          NODE_OPTIONS: "--max-old-space-size=4096 --max-semi-space-size=512"
-          NEXT_SHARP_PATH: "false"
-      - name: Show last 200 lines of server log on failure
-        if: failure()
-        run: |
-          echo "––– .next/runner.log (tail) –––"
-          tail -n 200 .next/runner.log || true
-
-      # ---- fixes begin here ----
-      - name: Ensure arm64 Node for LHCI
-        run: |
+          # ---- fixes begin here ----
           echo "node arch before: $(node -p "process.arch")"
           if [ "$(node -p "process.arch")" != "arm64" ]; then
             NODE_VER=20.17.0
@@ -384,20 +252,22 @@ jobs:
           fi
           echo "node arch after: $(node -p "process.arch")"
 
-      - name: Show arch & chrome info
-        run: |
           echo "uname -m: $(uname -m)"
           echo "node: $(node -v) arch=$(node -p "process.arch")"
           "$CHROME_PATH" --version || true
 
-      - name: Run Lighthouse CI
-        run: |
-          # Give the server a moment to stabilize
-          sleep 10
+          # Run Lighthouse CI
           echo "🚀 Starting Lighthouse CI performance testing..."
-          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://127.0.0.1:3010/
-        env: { CI: true }
-      # ---- fixes end here ----
+          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
+
+          # Teardown
+          echo "🧹 Cleaning up server..."
+          kill "$SVPID" 2>/dev/null || true
+          echo "✅ Server cleanup complete"
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: production
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload LHCI results
         if: always()
