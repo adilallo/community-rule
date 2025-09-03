@@ -28,42 +28,42 @@ test.describe("Footer responsive behavior", () => {
 
       // Test navigation links
       await expect(
-        page.getByRole("contentinfo").getByRole("link", { name: /use cases/i })
+        page.getByRole("contentinfo").getByRole("link", { name: /use cases/i }),
       ).toBeVisible();
       await expect(
-        page.getByRole("contentinfo").getByRole("link", { name: /learn/i })
+        page.getByRole("contentinfo").getByRole("link", { name: /learn/i }),
       ).toBeVisible();
       await expect(
-        page.getByRole("contentinfo").getByRole("link", { name: /about/i })
+        page.getByRole("contentinfo").getByRole("link", { name: /about/i }),
       ).toBeVisible();
 
       // Test legal links
       await expect(
         page
           .getByRole("contentinfo")
-          .getByRole("link", { name: /privacy policy/i })
+          .getByRole("link", { name: /privacy policy/i }),
       ).toBeVisible();
       await expect(
         page
           .getByRole("contentinfo")
-          .getByRole("link", { name: /terms of service/i })
+          .getByRole("link", { name: /terms of service/i }),
       ).toBeVisible();
       await expect(
         page
           .getByRole("contentinfo")
-          .getByRole("link", { name: /cookies settings/i })
+          .getByRole("link", { name: /cookies settings/i }),
       ).toBeVisible();
 
       // Test social links
       await expect(
         page
           .getByRole("contentinfo")
-          .getByRole("link", { name: /follow us on bluesky/i })
+          .getByRole("link", { name: /follow us on bluesky/i }),
       ).toBeVisible();
       await expect(
         page
           .getByRole("contentinfo")
-          .getByRole("link", { name: /follow us on gitlab/i })
+          .getByRole("link", { name: /follow us on gitlab/i }),
       ).toBeVisible();
     });
 
