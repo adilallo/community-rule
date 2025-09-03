@@ -249,7 +249,10 @@ jobs:
           fi
           echo "node after: $(node -v) arch=$(node -p 'process.arch')"
           echo "uname -m: $(uname -m)"
-          "${CHROME_PATH}" --version || true
+          # Get Chrome path for this step
+          CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
+          echo "Chrome path: $CHROME_PATH"
+          "$CHROME_PATH" --version || true
 
       - name: Performance (start + test + teardown)
         run: |
@@ -268,7 +271,10 @@ jobs:
 
           # Ensure we're using arm64 Node for Lighthouse
           echo "Node arch: $(node -p "process.arch")"
-          echo "Chrome: $CHROME_PATH"
+
+          # Get Chrome path directly in this step
+          CHROME_PATH=$(npx @puppeteer/browsers executable-path chrome@stable --platform=mac_arm --path .cache/puppeteer)
+          echo "Chrome path: $CHROME_PATH"
           "$CHROME_PATH" --version
 
           # Run LHCI with arm64 Node + arm64 Chrome
