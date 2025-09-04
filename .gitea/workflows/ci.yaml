@@ -3,8 +3,6 @@ run-name: ${{ gitea.actor }} triggered CI pipeline
 
 on:
   workflow_dispatch: {}
-  push:
-    branches: [main, develop] # only direct pushes/merges to protected branches
   pull_request:
     branches: [main, develop] # PRs into main/develop
     types: [opened, reopened, synchronize]
@@ -331,41 +329,6 @@ jobs:
         with:
           name: lhci-results
           path: lhci-results
-
-  seed-vr-snapshots:
-    if: gitea.ref == 'refs/heads/main'
-    runs-on: [self-hosted, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
-        with: { node-version: 20 }
-      - run: npm ci
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-      - run: npm run build
-      - name: Start app + wait
-        run: |
-          node node_modules/next/dist/bin/next start -p 3010 -H 127.0.0.1 > .next/runner.log 2>&1 &
-          npx wait-on -t 120000 tcp:127.0.0.1:3010
-      - name: Generate snapshots for ALL projects
-        env:
-          {
-            PLAYWRIGHT_UPDATE_SNAPSHOTS: "1",
-            BASE_URL: "http://127.0.0.1:3010",
-          }
-        run: npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium --project=firefox --project=webkit --project=mobile
-      - name: Commit snapshots
-        run: |
-          if [ -n "$(git status --porcelain tests/e2e/visual-regression.spec.ts-snapshots/)" ]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git add tests/e2e/visual-regression.spec.ts-snapshots/
-            git commit -m "Seed Playwright VR snapshots (CI, all projects)"
-          fi
 
   storybook:
     runs-on: [self-hosted, macos-latest]

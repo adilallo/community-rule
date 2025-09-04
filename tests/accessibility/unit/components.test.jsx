@@ -1,8 +1,8 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import Header from "../../app/components/Header.js";
-import Footer from "../../app/components/Footer.js";
+import Header from "../../../app/components/Header.js";
+import Footer from "../../../app/components/Footer.js";
 
 // Extend expect to include accessibility matchers
 expect.extend(toHaveNoViolations);
