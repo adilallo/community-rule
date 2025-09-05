@@ -2,7 +2,7 @@ import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
 
 // Mock blog post data for testing
 const mockPost1 = {
-  slug: "test-post-1",
+  slug: "resolving-active-conflicts",
   frontmatter: {
     title: "Resolving Active Conflicts",
     description:
@@ -13,7 +13,7 @@ const mockPost1 = {
 };
 
 const mockPost2 = {
-  slug: "test-post-2",
+  slug: "operational-security-mutual-aid",
   frontmatter: {
     title: "Operational Security for Mutual Aid",
     description:
@@ -24,7 +24,7 @@ const mockPost2 = {
 };
 
 const mockPost3 = {
-  slug: "test-post-3",
+  slug: "making-decisions-without-hierarchy",
   frontmatter: {
     title: "Making decisions without hierarchy",
     description:
