@@ -3,7 +3,6 @@ import {
   contentProcessor,
   getAllPosts,
   getBlogStats,
-  getAllTags,
 } from "../../lib/contentProcessor.js";
 
 describe("Content Processor", () => {
@@ -25,14 +24,6 @@ describe("Content Processor", () => {
     it("should extract blog statistics", () => {
       const stats = getBlogStats();
       expect(stats.totalPosts).toBeGreaterThan(0);
-      expect(stats.totalTags).toBeGreaterThan(0);
-      expect(stats.totalWords).toBeGreaterThan(0);
-    });
-
-    it("should extract tags from posts", () => {
-      const tags = getAllTags();
-      expect(Array.isArray(tags)).toBe(true);
-      expect(tags.length).toBeGreaterThan(0);
     });
   });
 
@@ -44,8 +35,6 @@ describe("Content Processor", () => {
       expect(firstPost).toHaveProperty("frontmatter");
       expect(firstPost).toHaveProperty("content");
       expect(firstPost).toHaveProperty("htmlContent");
-      expect(firstPost).toHaveProperty("wordCount");
-      expect(firstPost).toHaveProperty("readingTime");
       expect(firstPost).toHaveProperty("headings");
       expect(firstPost).toHaveProperty("tableOfContents");
     });
@@ -57,16 +46,6 @@ describe("Content Processor", () => {
       expect(firstPost.slug).toBeDefined();
       expect(typeof firstPost.slug).toBe("string");
       expect(firstPost.slug.length).toBeGreaterThan(0);
-    });
-
-    it("should calculate word count and reading time", () => {
-      const posts = getAllPosts();
-      const firstPost = posts[0];
-
-      expect(firstPost.wordCount).toBeGreaterThan(0);
-      expect(firstPost.readingTime).toBeGreaterThan(0);
-      expect(typeof firstPost.wordCount).toBe("number");
-      expect(typeof firstPost.readingTime).toBe("number");
     });
   });
 

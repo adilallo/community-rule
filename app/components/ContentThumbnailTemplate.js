@@ -10,9 +10,8 @@ import ContentContainer from "./ContentContainer";
  */
 const ContentThumbnailTemplate = ({
   post,
-  variant = "vertical",
   className = "",
-  showReadingTime = true,
+  variant = "vertical", // Internal prop for testing/development
 }) => {
   // Post-specific background selection - different SVG for each post
   const getBackgroundImage = (slug, variant) => {

@@ -28,17 +28,14 @@ const mockPost = {
       "This is a test description for the blog post that should be long enough to test truncation.",
     author: "Test Author",
     date: "2025-04-15",
-    tags: ["test", "blog", "example"],
     backgroundImages: ["/test-image-1.jpg", "/test-image-2.jpg"],
   },
-  wordCount: 500,
-  readingTime: 3,
 };
 
 describe("ContentThumbnailTemplate", () => {
   describe("Vertical Variant", () => {
     it("should render vertical variant with correct dimensions", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="vertical" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       const container = screen.getByRole("link");
       expect(container).toBeInTheDocument();
@@ -49,7 +46,7 @@ describe("ContentThumbnailTemplate", () => {
     });
 
     it("should display post title and description", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="vertical" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
@@ -58,57 +55,21 @@ describe("ContentThumbnailTemplate", () => {
     });
 
     it("should display tags when showTags is true", () => {
-      render(
-        <ContentThumbnailTemplate
-          post={mockPost}
-          variant="vertical"
-          showTags={true}
-        />
-      );
+      render(<ContentThumbnailTemplate post={mockPost} showTags={true} />);
 
       expect(screen.getByText("test")).toBeInTheDocument();
       expect(screen.getByText("blog")).toBeInTheDocument();
     });
 
     it("should hide tags when showTags is false", () => {
-      render(
-        <ContentThumbnailTemplate
-          post={mockPost}
-          variant="vertical"
-          showTags={false}
-        />
-      );
+      render(<ContentThumbnailTemplate post={mockPost} showTags={false} />);
 
       expect(screen.queryByText("test")).not.toBeInTheDocument();
       expect(screen.queryByText("blog")).not.toBeInTheDocument();
     });
 
-    it("should display reading time when showReadingTime is true", () => {
-      render(
-        <ContentThumbnailTemplate
-          post={mockPost}
-          variant="vertical"
-          showReadingTime={true}
-        />
-      );
-
-      expect(screen.getByText(/3 min read/)).toBeInTheDocument();
-    });
-
-    it("should hide reading time when showReadingTime is false", () => {
-      render(
-        <ContentThumbnailTemplate
-          post={mockPost}
-          variant="vertical"
-          showReadingTime={false}
-        />
-      );
-
-      expect(screen.queryByText(/min read/)).not.toBeInTheDocument();
-    });
-
     it("should display author and date", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="vertical" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       expect(screen.getByText("Test Author")).toBeInTheDocument();
       // Check for "Month Year" format (e.g., "April 2025")
@@ -118,7 +79,7 @@ describe("ContentThumbnailTemplate", () => {
 
   describe("Horizontal Variant", () => {
     it("should render horizontal variant", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="horizontal" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       const container = screen.getByRole("link");
       expect(container).toBeInTheDocument();
@@ -129,7 +90,7 @@ describe("ContentThumbnailTemplate", () => {
     });
 
     it("should display post information in horizontal layout", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="horizontal" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
@@ -142,11 +103,7 @@ describe("ContentThumbnailTemplate", () => {
   describe("Props and Customization", () => {
     it("should apply custom className", () => {
       render(
-        <ContentThumbnailTemplate
-          post={mockPost}
-          variant="vertical"
-          className="custom-class"
-        />
+        <ContentThumbnailTemplate post={mockPost} className="custom-class" />
       );
 
       const container = screen.getByRole("link");
@@ -154,7 +111,7 @@ describe("ContentThumbnailTemplate", () => {
     });
 
     it("should generate correct link href", () => {
-      render(<ContentThumbnailTemplate post={mockPost} variant="vertical" />);
+      render(<ContentThumbnailTemplate post={mockPost} />);
 
       const link = screen.getByRole("link");
       expect(link).toHaveAttribute("href", "/blog/test-post");
@@ -169,9 +126,7 @@ describe("ContentThumbnailTemplate", () => {
         },
       };
 
-      render(
-        <ContentThumbnailTemplate post={postWithoutTags} variant="vertical" />
-      );
+      render(<ContentThumbnailTemplate post={postWithoutTags} />);
 
       // Should still render without errors
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
@@ -186,9 +141,7 @@ describe("ContentThumbnailTemplate", () => {
         },
       };
 
-      render(
-        <ContentThumbnailTemplate post={postWithoutImages} variant="vertical" />
-      );
+      render(<ContentThumbnailTemplate post={postWithoutImages} />);
 
       // Should still render without errors
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
@@ -207,12 +160,6 @@ describe("ContentThumbnailTemplate", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
       expect(screen.getByText("test")).toBeInTheDocument();
-    });
-
-    it("should show reading time by default", () => {
-      render(<ContentThumbnailTemplate post={mockPost} />);
-
-      expect(screen.getByText(/min read/)).toBeInTheDocument();
     });
   });
 });

@@ -9,10 +9,7 @@ const mockPost1 = {
       "Practical steps for resolving conflicts while maintaining trust, cooperation, and shared goals",
     author: "Author name",
     date: "2025-04-15",
-    tags: ["conflict-resolution", "governance", "community"],
   },
-  wordCount: 467,
-  readingTime: 3,
 };
 
 const mockPost2 = {
@@ -23,10 +20,7 @@ const mockPost2 = {
       "Tactics to protect members, secure communication, and prevent Infiltration",
     author: "Author name",
     date: "2025-04-10",
-    tags: ["community-building", "sustainability", "structure"],
   },
-  wordCount: 523,
-  readingTime: 4,
 };
 
 const mockPost3 = {
@@ -37,10 +31,7 @@ const mockPost3 = {
       "A brief guide to collaborative nonhierarchical decision making",
     author: "Author name",
     date: "2025-04-05",
-    tags: ["communication", "remote-work", "collaboration"],
   },
-  wordCount: 389,
-  readingTime: 2,
 };
 
 export default function TestThumbnailPage() {
@@ -58,23 +49,9 @@ export default function TestThumbnailPage() {
               Vertical Variant
             </h2>
             <div className="flex flex-wrap gap-6">
-              <ContentThumbnailTemplate
-                post={mockPost1}
-                variant="vertical"
-                className="mb-4"
-              />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                variant="vertical"
-                className="mb-4"
-                showTags={false}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                variant="vertical"
-                className="mb-4"
-                showReadingTime={false}
-              />
+              <ContentThumbnailTemplate post={mockPost1} className="mb-4" />
+              <ContentThumbnailTemplate post={mockPost2} className="mb-4" />
+              <ContentThumbnailTemplate post={mockPost3} className="mb-4" />
             </div>
           </section>
 
@@ -85,16 +62,8 @@ export default function TestThumbnailPage() {
             </h2>
             <div className="space-y-4">
               <ContentThumbnailTemplate post={mockPost1} variant="horizontal" />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                variant="horizontal"
-                showTags={false}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                variant="horizontal"
-                showReadingTime={false}
-              />
+              <ContentThumbnailTemplate post={mockPost2} variant="horizontal" />
+              <ContentThumbnailTemplate post={mockPost3} variant="horizontal" />
             </div>
           </section>
 
@@ -120,17 +89,11 @@ export default function TestThumbnailPage() {
                 </h3>
                 <ul className="space-y-1 text-gray-600">
                   <li>
-                    <code>variant</code> - "vertical" (default) or "horizontal"
-                  </li>
-                  <li>
                     <code>className</code> - Additional CSS classes
                   </li>
                   <li>
-                    <code>showTags</code> - Show/hide tags (default: true)
-                  </li>
-                  <li>
-                    <code>showReadingTime</code> - Show/hide reading time
-                    (default: true)
+                    <code>variant</code> - "vertical" (default) or "horizontal"
+                    (for development/testing)
                   </li>
                 </ul>
               </div>

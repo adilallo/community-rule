@@ -14,7 +14,6 @@ describe("Blog Post Validation", () => {
           "This is a test description that meets the minimum length requirement",
         author: "Test Author",
         date: "2025-04-15",
-        tags: ["test", "blog"],
         related: ["post-1", "post-2"],
       };
 
@@ -27,7 +26,6 @@ describe("Blog Post Validation", () => {
       const invalidPost = {
         title: "Test Title",
         // Missing description, author, date
-        tags: ["test"],
       };
 
       const result = validateBlogPost(invalidPost);
@@ -64,41 +62,6 @@ describe("Blog Post Validation", () => {
       expect(result.isValid).toBe(false);
       expect(result.errors).toContain("Field date format is invalid");
     });
-
-    it("should validate tags array", () => {
-      const invalidTags = {
-        title: "Test Title",
-        description:
-          "This is a test description that meets the minimum length requirement",
-        author: "Test Author",
-        date: "2025-04-15",
-        tags: "not-an-array", // Should be array
-      };
-
-      const result = validateBlogPost(invalidTags);
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain("Field tags must be an array");
-    });
-
-    it("should validate tag item lengths", () => {
-      const invalidTagItems = {
-        title: "Test Title",
-        description:
-          "This is a test description that meets the minimum length requirement",
-        author: "Test Author",
-        date: "2025-04-15",
-        tags: ["", "very-long-tag-name-that-exceeds-maximum-length"],
-      };
-
-      const result = validateBlogPost(invalidTagItems);
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain(
-        "Item 0 in tags must be at least 1 characters"
-      );
-      expect(result.errors).toContain(
-        "Item 1 in tags must be no more than 20 characters"
-      );
-    });
   });
 
   describe("sanitizeBlogPost", () => {
@@ -108,7 +71,6 @@ describe("Blog Post Validation", () => {
         description: "Test description",
         author: "Test Author",
         date: "2025-04-15",
-        tags: ["test"],
         related: ["post-1"],
       };
 
@@ -122,11 +84,10 @@ describe("Blog Post Validation", () => {
         description: "Test description",
         author: "Test Author",
         date: "2025-04-15",
-        // Missing tags and related
+        // Missing related
       };
 
       const sanitized = sanitizeBlogPost(post);
-      expect(sanitized.tags).toEqual([]);
       expect(sanitized.related).toEqual([]);
     });
 
@@ -136,12 +97,10 @@ describe("Blog Post Validation", () => {
         description: "Test description",
         author: "Test Author",
         date: "2025-04-15",
-        tags: ["custom-tag"],
         related: ["custom-post"],
       };
 
       const sanitized = sanitizeBlogPost(post);
-      expect(sanitized.tags).toEqual(["custom-tag"]);
       expect(sanitized.related).toEqual(["custom-post"]);
     });
   });
@@ -152,7 +111,6 @@ describe("Blog Post Validation", () => {
       expect(BLOG_POST_SCHEMA).toHaveProperty("description");
       expect(BLOG_POST_SCHEMA).toHaveProperty("author");
       expect(BLOG_POST_SCHEMA).toHaveProperty("date");
-      expect(BLOG_POST_SCHEMA).toHaveProperty("tags");
       expect(BLOG_POST_SCHEMA).toHaveProperty("related");
     });
 
@@ -161,7 +119,6 @@ describe("Blog Post Validation", () => {
       expect(BLOG_POST_SCHEMA.description.required).toBe(true);
       expect(BLOG_POST_SCHEMA.author.required).toBe(true);
       expect(BLOG_POST_SCHEMA.date.required).toBe(true);
-      expect(BLOG_POST_SCHEMA.tags.required).toBe(false);
       expect(BLOG_POST_SCHEMA.related.required).toBe(false);
     });
   });
