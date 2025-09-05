@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ContentThumbnailTemplate from "../../components/ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../../app/components/ContentThumbnailTemplate";
 
 // Mock Next.js components
 vi.mock("next/link", () => {

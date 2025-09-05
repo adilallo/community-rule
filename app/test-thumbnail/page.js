@@ -1,4 +1,4 @@
-import ContentThumbnailTemplate from "../../components/ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
 
 // Mock blog post data for testing
 const mockPost1 = {
