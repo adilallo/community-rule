@@ -71,7 +71,7 @@ const ContentThumbnailTemplate = ({
           </div>
 
           {/* Content Section - positioned within the padding constraints */}
-          <ContentContainer post={post} width="200px" variant="vertical" />
+          <ContentContainer post={post} width="200px" size="xs" />
         </div>
       </Link>
     );
@@ -105,7 +105,7 @@ const ContentThumbnailTemplate = ({
         </div>
 
         {/* Content - positioned within the padding constraints */}
-        <ContentContainer post={post} width="230px" variant="horizontal" />
+        <ContentContainer post={post} width="230px" size="xs" />
       </div>
     </Link>
   );
