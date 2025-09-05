@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import ContentContainer from "./ContentContainer";
+import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
 /**
  * ContentThumbnailTemplate component for displaying blog post previews
@@ -16,15 +17,15 @@ const ContentThumbnailTemplate = ({
   // Post-specific background selection - different SVG for each post
   const getBackgroundImage = (slug, variant) => {
     const verticalImages = [
-      "/assets/Content_Thumbnail/Vertical_1.svg",
-      "/assets/Content_Thumbnail/Vertical_2.svg",
-      "/assets/Content_Thumbnail/Vertical_3.svg",
+      getAssetPath(ASSETS.VERTICAL_1),
+      getAssetPath(ASSETS.VERTICAL_2),
+      getAssetPath(ASSETS.VERTICAL_3),
     ];
 
     const horizontalImages = [
-      "/assets/Content_Thumbnail/Horizontal_1.svg",
-      "/assets/Content_Thumbnail/Horizontal_2.svg",
-      "/assets/Content_Thumbnail/Horizontal_3.svg",
+      getAssetPath(ASSETS.HORIZONTAL_1),
+      getAssetPath(ASSETS.HORIZONTAL_2),
+      getAssetPath(ASSETS.HORIZONTAL_3),
     ];
 
     const images = variant === "vertical" ? verticalImages : horizontalImages;
@@ -32,12 +33,15 @@ const ContentThumbnailTemplate = ({
     if (!slug) return images[0];
 
     // Use the slug to deterministically select an image
-    const hash = slug.split("").reduce((a, b) => {
-      a = (a << 5) - a + b.charCodeAt(0);
-      return a & a;
-    }, 0);
+    // More robust hash function using djb2 algorithm
+    let hash = 5381;
+    for (let i = 0; i < slug.length; i++) {
+      hash = (hash << 5) + hash + slug.charCodeAt(i);
+    }
 
-    return images[Math.abs(hash) % images.length];
+    // Ensure positive number and get index
+    const index = Math.abs(hash) % images.length;
+    return images[index];
   };
 
   const backgroundImage = getBackgroundImage(post.slug, variant);

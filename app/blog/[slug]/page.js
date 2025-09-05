@@ -24,7 +24,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }) {
   try {
-    const post = getBlogPostBySlug(params.slug);
+    const { slug } = await params;
+    const post = getBlogPostBySlug(slug);
 
     if (!post) {
       return {
@@ -57,9 +58,10 @@ export async function generateMetadata({ params }) {
 /**
  * Dynamic blog post page
  */
-export default function BlogPostPage({ params }) {
+export default async function BlogPostPage({ params }) {
   // Get the blog post data
-  const post = getBlogPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = getBlogPostBySlug(slug);
 
   // If post doesn't exist, show 404
   if (!post) {
@@ -71,7 +73,10 @@ export default function BlogPostPage({ params }) {
   const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3); // Show up to 3 related posts
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--color-content-default-primary)" }}
+    >
       {/* Main Content */}
       <article className="max-w-4xl mx-auto px-4 py-8">
         {/* Article Header */}

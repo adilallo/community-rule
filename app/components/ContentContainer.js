@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
+import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
 const ContentContainer = ({ post, width = "200px", size = "responsive" }) => {
   // Get the corresponding icon based on the same logic as background images
   const getIconImage = (slug) => {
     const icons = [
-      "/assets/Content_Thumbnail/Icon_1.svg",
-      "/assets/Content_Thumbnail/Icon_2.svg",
-      "/assets/Content_Thumbnail/Icon_3.svg",
+      getAssetPath(ASSETS.ICON_1),
+      getAssetPath(ASSETS.ICON_2),
+      getAssetPath(ASSETS.ICON_3),
     ];
 
     if (!slug) return icons[0];
