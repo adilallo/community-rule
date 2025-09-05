@@ -49,22 +49,14 @@ const ContentThumbnailTemplate = ({
         href={`/blog/${post.slug}`}
         className={`block group transition-transform duration-300 hover:scale-105 ${className}`}
       >
-        <div
-          className="relative w-[260px] h-[390px] overflow-hidden rounded-lg shadow-lg"
-          style={{
-            paddingTop: "18px",
-            paddingLeft: "18px",
-            paddingRight: "42px",
-            paddingBottom: "212px",
-          }}
-        >
+        <div className="relative w-[260px] h-[390px] overflow-hidden rounded-lg shadow-lg pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
           {/* Background SVG - sized to fit the 260x390 container exactly */}
           <div className="absolute inset-0 z-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={backgroundImage}
               alt={`Background for ${post.frontmatter.title}`}
               className="w-[260px] h-[390px] object-cover"
-              style={{ width: "260px", height: "390px" }}
             />
             {/* Gradient overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />
@@ -83,22 +75,14 @@ const ContentThumbnailTemplate = ({
       href={`/blog/${post.slug}`}
       className={`block group transition-transform duration-300 hover:scale-105 ${className}`}
     >
-      <div
-        className="relative w-[320px] h-[225.5px] overflow-hidden rounded-lg shadow-lg"
-        style={{
-          paddingTop: "13.75px",
-          paddingRight: "76px",
-          paddingBottom: "73.75px",
-          paddingLeft: "14px",
-        }}
-      >
+      <div className="relative w-[320px] h-[225.5px] overflow-hidden rounded-lg shadow-lg pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
         {/* Background SVG - sized to fit the 320x225.5 container exactly */}
         <div className="absolute inset-0 z-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={backgroundImage}
             alt={`Background for ${post.frontmatter.title}`}
             className="w-[320px] h-[225.5px] object-cover"
-            style={{ width: "320px", height: "225.5px" }}
           />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/70 z-10" />
