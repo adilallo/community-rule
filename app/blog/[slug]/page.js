@@ -105,18 +105,11 @@ export default async function BlogPostPage({ params }) {
               })}
             </time>
           </div>
-
-          <p className="text-xl text-gray-700 leading-relaxed">
-            {post.frontmatter.description}
-          </p>
         </header>
 
         {/* Article Content */}
-        <div className="prose prose-lg max-w-none">
-          <div
-            dangerouslySetInnerHTML={{ __html: post.htmlContent }}
-            className="text-gray-800 leading-relaxed"
-          />
+        <div className="post-body max-w-none text-gray-800 leading-relaxed text-lg">
+          <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
         </div>
       </article>
 
