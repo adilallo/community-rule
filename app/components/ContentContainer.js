@@ -34,7 +34,9 @@ const ContentContainer = ({ post, width = "200px", size = "responsive" }) => {
   return (
     <div
       className={`${containerClasses} ${
-        size === "responsive" ? "max-w-[298px] sm:max-w-[479px]" : ""
+        size === "responsive"
+          ? "max-w-[298px] sm:max-w-[479px] lg:max-w-[365px] xl:max-w-[623px]"
+          : ""
       }`}
       style={size === "responsive" ? {} : { width }}
     >
