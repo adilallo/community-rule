@@ -32,7 +32,12 @@ const ContentContainer = ({ post, width = "200px", size = "responsive" }) => {
       : "relative z-20 h-full flex flex-col gap-[var(--measures-spacing-012)] sm:gap-[var(--measures-spacing-016)] md:gap-[18px] lg:gap-[var(--measures-spacing-024)]";
 
   return (
-    <div className={containerClasses} style={{ width }}>
+    <div
+      className={`${containerClasses} ${
+        size === "responsive" ? "max-w-[298px] sm:max-w-[479px]" : ""
+      }`}
+      style={size === "responsive" ? {} : { width }}
+    >
       {/* Content Container - gap between icon and text */}
       <div
         className={

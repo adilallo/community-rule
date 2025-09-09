@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getBlogPostBySlug, getAllPosts } from "../../../lib/contentProcessor";
 import ContentThumbnailTemplate from "../../components/ContentThumbnailTemplate";
+import ContentBanner from "../../components/ContentBanner";
 
 /**
  * Generate static params for all blog posts
@@ -77,36 +78,11 @@ export default async function BlogPostPage({ params }) {
       className="min-h-screen"
       style={{ backgroundColor: "var(--color-content-default-primary)" }}
     >
+      {/* Content Banner */}
+      <ContentBanner post={post} />
+
       {/* Main Content */}
       <article className="max-w-4xl mx-auto px-4 py-8">
-        {/* Article Header */}
-        <header className="mb-8">
-          <div className="mb-4">
-            <Link
-              href="/"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              ← Back to Blog
-            </Link>
-          </div>
-
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {post.frontmatter.title}
-          </h1>
-
-          <div className="flex items-center gap-4 text-gray-600 mb-6">
-            <span className="font-medium">{post.frontmatter.author}</span>
-            <span>•</span>
-            <time dateTime={post.frontmatter.date}>
-              {new Date(post.frontmatter.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-          </div>
-        </header>
-
         {/* Article Content */}
         <div className="post-body max-w-none text-gray-800 leading-relaxed text-lg">
           <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />

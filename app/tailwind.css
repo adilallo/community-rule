@@ -10,6 +10,7 @@
   /* Custom breakpoints */
   --breakpoint-xsm: 429px;
   --breakpoint-sm: 430px;
+  --breakpoint-sm2: 440px;
   --breakpoint-md: 640px;
   --breakpoint-xmd: 768px;
   --breakpoint-lg: 1024px;
