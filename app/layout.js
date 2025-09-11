@@ -1,8 +1,9 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import HomeHeader from "./components/HomeHeader";
 import Header from "./components/Header";
+import HomeHeader from "./components/HomeHeader";
 import Footer from "./components/Footer";
+import ConditionalHeader from "./components/ConditionalHeader";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -87,7 +88,7 @@ export default function RootLayout({ children }) {
         className={`${inter.variable} ${bricolageGrotesque.variable} ${spaceGrotesk.variable}`}
       >
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <ConditionalHeader />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>

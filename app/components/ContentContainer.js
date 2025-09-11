@@ -82,7 +82,7 @@ const ContentContainer = ({ post, width = "200px", size = "responsive" }) => {
             className={
               size === "xs"
                 ? "font-inter font-normal text-[12px] leading-[16px] text-[var(--color-content-inverse-brand-royal)] max-w-md"
-                : "font-inter font-normal text-[12px] leading-[16px] sm:text-[14px] sm:leading-[20px] md:text-[14px] md:leading-[20px] lg:text-[18px] lg:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-inverse-brand-royal)] max-w-md"
+                : "font-inter font-normal text-[12px] leading-[16px] sm:text-[14px] sm:leading-[20px] md:text-[14px] md:leading-[20px] lg:text-[18px] lg:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-inverse-brand-royal)]"
             }
           >
             {post.frontmatter.description}

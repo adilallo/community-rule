@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getBlogPostBySlug, getAllPosts } from "../../../lib/contentProcessor";
 import ContentThumbnailTemplate from "../../components/ContentThumbnailTemplate";
 import ContentBanner from "../../components/ContentBanner";
+import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
 /**
  * Generate static params for all blog posts
@@ -74,17 +75,49 @@ export default async function BlogPostPage({ params }) {
   const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3); // Show up to 3 related posts
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: "var(--color-content-default-primary)" }}
-    >
+    <div className="min-h-screen bg-[#F4F3F1] relative overflow-hidden">
       {/* Content Banner */}
       <ContentBanner post={post} />
 
+      {/* Decorative Shapes */}
+      {/* Right Side Shape (3/4 up the page) */}
+      <div
+        className="hidden md:block absolute top-1/4 right-0 pointer-events-none z-10"
+        style={{ transform: "translateX(40%)" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getAssetPath(ASSETS.CONTENT_SHAPE_1)}
+          alt=""
+          className="w-auto h-auto max-w-none"
+          style={{
+            width: "clamp(120px, 15vw, 200px)",
+            height: "auto",
+          }}
+        />
+      </div>
+
+      {/* Left Side Shape (3/4 down the page) */}
+      <div
+        className="hidden md:block absolute top-1/2 left-0 pointer-events-none z-10"
+        style={{ transform: "translateX(-10%)" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={getAssetPath(ASSETS.CONTENT_SHAPE_2)}
+          alt=""
+          className="w-auto h-auto max-w-none"
+          style={{
+            width: "clamp(100px, 12vw, 180px)",
+            height: "auto",
+          }}
+        />
+      </div>
+
       {/* Main Content */}
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <article className="p-[var(--spacing-scale-024)] sm:py-[var(--spacing-scale-032)]">
         {/* Article Content */}
-        <div className="post-body max-w-none text-gray-800 leading-relaxed text-lg">
+        <div className="post-body -mt-[var(--spacing-scale-048)] text-[var(--color-content-inverse-primary)] text-[16px] leading-[24px] sm:text-[18px] sm:leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] sm:mx-auto sm:max-w-[390px] md:max-w-[472px] lg:max-w-[700px] xl:max-w-[904px]">
           <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
         </div>
       </article>

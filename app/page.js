@@ -5,7 +5,6 @@ import RuleStack from "./components/RuleStack";
 import QuoteBlock from "./components/QuoteBlock";
 import FeatureGrid from "./components/FeatureGrid";
 import AskOrganizer from "./components/AskOrganizer";
-import HomeHeader from "./components/HomeHeader";
 
 export default function Page() {
   const heroBannerData = {
@@ -54,7 +53,6 @@ export default function Page() {
 
   return (
     <div>
-      <HomeHeader />
       <HeroBanner {...heroBannerData} />
       <LogoWall />
       <NumberedCards {...numberedCardsData} />
