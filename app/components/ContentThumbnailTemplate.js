@@ -50,9 +50,9 @@ const ContentThumbnailTemplate = ({
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className={`block group transition-transform duration-300 hover:scale-105 ${className}`}
+        className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
       >
-        <div className="relative w-[260px] h-[390px] overflow-hidden rounded-lg shadow-lg pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
+        <div className="relative w-[260px] h-[390px] overflow-hidden pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
           {/* Background SVG - sized to fit the 260x390 container exactly */}
           <div className="absolute inset-0 z-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -76,9 +76,9 @@ const ContentThumbnailTemplate = ({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={`block group transition-transform duration-300 hover:scale-105 ${className}`}
+      className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
     >
-      <div className="relative w-[320px] h-[225.5px] overflow-hidden rounded-lg shadow-lg pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
+      <div className="relative w-[320px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
         {/* Background SVG - sized to fit the 320x225.5 container exactly */}
         <div className="absolute inset-0 z-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -6,6 +6,15 @@
 @source "../.storybook/**/*";
 @source "./**/*";
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 @theme inline {
   /* Custom breakpoints */
   --breakpoint-xsm: 429px;

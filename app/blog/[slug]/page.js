@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getBlogPostBySlug, getAllPosts } from "../../../lib/contentProcessor";
 import ContentBanner from "../../components/ContentBanner";
 import RelatedArticles from "../../components/RelatedArticles";
+import AskOrganizer from "../../components/AskOrganizer";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
 /**
@@ -126,6 +127,16 @@ export default async function BlogPostPage({ params }) {
       <RelatedArticles
         relatedPosts={relatedArticles}
         currentPostSlug={post.slug}
+      />
+
+      {/* Ask Organizer Section */}
+      <AskOrganizer
+        title="Have questions about this topic?"
+        subtitle="Get help from experienced organizers"
+        description="Our community organizers are here to help you implement these strategies in your own community. Reach out for personalized guidance and support."
+        buttonText="Ask an organizer"
+        buttonHref="/contact"
+        variant="centered"
       />
     </div>
   );
