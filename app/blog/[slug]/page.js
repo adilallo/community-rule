@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getBlogPostBySlug, getAllPosts } from "../../../lib/contentProcessor";
-import ContentThumbnailTemplate from "../../components/ContentThumbnailTemplate";
 import ContentBanner from "../../components/ContentBanner";
+import RelatedArticles from "../../components/RelatedArticles";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
 /**
@@ -70,9 +70,9 @@ export default async function BlogPostPage({ params }) {
     notFound();
   }
 
-  // Get related posts (for now, just get other posts)
+  // Get related articles (for now, just get other posts)
   const allPosts = getAllPosts();
-  const relatedPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 3); // Show up to 3 related posts
+  const relatedArticles = allPosts; // Pass all posts to RelatedArticles component for filtering
 
   return (
     <div className="min-h-screen bg-[#F4F3F1] relative overflow-hidden">
@@ -122,26 +122,11 @@ export default async function BlogPostPage({ params }) {
         </div>
       </article>
 
-      {/* Related Posts Section */}
-      {relatedPosts.length > 0 && (
-        <section className="bg-white border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-4 py-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-              Related Articles
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {relatedPosts.map((relatedPost) => (
-                <ContentThumbnailTemplate
-                  key={relatedPost.slug}
-                  post={relatedPost}
-                  variant="vertical"
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Related Articles Section */}
+      <RelatedArticles
+        relatedPosts={relatedArticles}
+        currentPostSlug={post.slug}
+      />
     </div>
   );
 }

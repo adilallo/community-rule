@@ -32,16 +32,16 @@ const ContentThumbnailTemplate = ({
 
     if (!slug) return images[0];
 
-    // Use the slug to deterministically select an image
-    // More robust hash function using djb2 algorithm
-    let hash = 5381;
-    for (let i = 0; i < slug.length; i++) {
-      hash = (hash << 5) + hash + slug.charCodeAt(i);
-    }
-
-    // Ensure positive number and get index
-    const index = Math.abs(hash) % images.length;
-    return images[index];
+    // Simple cycling approach to ensure different styles
+    const slugOrder = [
+      "building-community-trust",
+      "operational-security-mutual-aid",
+      "making-decisions-without-hierarchy",
+      "resolving-active-conflicts",
+    ];
+    const index = slugOrder.indexOf(slug);
+    const finalIndex = index >= 0 ? index % images.length : 0;
+    return images[finalIndex];
   };
 
   const backgroundImage = getBackgroundImage(post.slug, variant);

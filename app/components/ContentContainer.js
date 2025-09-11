@@ -14,13 +14,16 @@ const ContentContainer = ({ post, width = "200px", size = "responsive" }) => {
 
     if (!slug) return icons[0];
 
-    // Use the same hash logic as background images to ensure matching
-    const hash = slug.split("").reduce((a, b) => {
-      a = (a << 5) - a + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-
-    return icons[Math.abs(hash) % icons.length];
+    // Use the same cycling logic as background images to ensure matching
+    const slugOrder = [
+      "building-community-trust",
+      "operational-security-mutual-aid",
+      "making-decisions-without-hierarchy",
+      "resolving-active-conflicts",
+    ];
+    const index = slugOrder.indexOf(slug);
+    const finalIndex = index >= 0 ? index % icons.length : 0;
+    return icons[finalIndex];
   };
 
   const iconImage = getIconImage(post.slug);
