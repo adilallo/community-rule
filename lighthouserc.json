@@ -1,7 +1,11 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://127.0.0.1:3010/", "http://127.0.0.1:3010/blog", "http://127.0.0.1:3010/blog/resolving-active-conflicts"],
+      "url": [
+        "http://127.0.0.1:3010/",
+        "http://127.0.0.1:3010/blog",
+        "http://127.0.0.1:3010/blog/resolving-active-conflicts"
+      ],
       "numberOfRuns": 3,
       "settings": {
         "preset": "desktop",

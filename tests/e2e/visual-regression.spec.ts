@@ -435,7 +435,7 @@ test.describe("Visual Regression Tests", () => {
     await page.evaluate(() => {
       document.documentElement.style.setProperty(
         "--prefers-reduced-motion",
-        "reduce"
+        "reduce",
       );
     });
 
