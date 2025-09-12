@@ -48,7 +48,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - name: Install Playwright
@@ -115,7 +115,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - name: Install Playwright
@@ -196,7 +196,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
 
@@ -340,7 +340,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run storybook:build:github
@@ -355,7 +355,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run lint
@@ -369,7 +369,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run build
