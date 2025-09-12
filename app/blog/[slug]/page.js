@@ -6,6 +6,14 @@ import RelatedArticles from "../../components/RelatedArticles";
 import AskOrganizer from "../../components/AskOrganizer";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
+// AskOrganizer data - same as index page
+const askOrganizerData = {
+  title: "Still have questions?",
+  subtitle: "Get answers from an experienced organizer",
+  buttonText: "Ask an organizer",
+  buttonHref: "#contact",
+};
+
 /**
  * Generate static params for all blog posts
  * This enables static generation for all blog posts at build time
@@ -130,14 +138,7 @@ export default async function BlogPostPage({ params }) {
       />
 
       {/* Ask Organizer Section */}
-      <AskOrganizer
-        title="Have questions about this topic?"
-        subtitle="Get help from experienced organizers"
-        description="Our community organizers are here to help you implement these strategies in your own community. Reach out for personalized guidance and support."
-        buttonText="Ask an organizer"
-        buttonHref="/contact"
-        variant="centered"
-      />
+      <AskOrganizer {...askOrganizerData} variant="inverse" />
     </div>
   );
 }
