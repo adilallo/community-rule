@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getBlogPostBySlug, getAllPosts } from "../../../lib/contentProcessor";
+import {
+  getBlogPostBySlug,
+  getAllBlogPosts as getAllPosts,
+} from "../../../lib/content";
 import ContentBanner from "../../components/ContentBanner";
 import RelatedArticles from "../../components/RelatedArticles";
 import AskOrganizer from "../../components/AskOrganizer";

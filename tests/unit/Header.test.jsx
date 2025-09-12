@@ -22,14 +22,14 @@ describe("Header", () => {
 
       // Check main header structure - use container to scope the search
       const header = container.querySelector(
-        '[role="banner"][aria-label="Main navigation header"]',
+        '[role="banner"][aria-label="Main navigation header"]'
       );
       expect(header).toBeInTheDocument();
       expect(header).toHaveAttribute("aria-label", "Main navigation header");
 
       // Check navigation - use container to scope the search
       const nav = container.querySelector(
-        '[role="navigation"][aria-label="Main navigation"]',
+        '[role="navigation"][aria-label="Main navigation"]'
       );
       expect(nav).toBeInTheDocument();
       expect(nav).toHaveAttribute("aria-label", "Main navigation");
@@ -41,15 +41,15 @@ describe("Header", () => {
       // Check all navigation items have proper aria-labels - use menuitem role since they're in a menubar
       expect(
         screen.getAllByRole("menuitem", { name: "Navigate to Use cases page" })
-          .length,
+          .length
       ).toBeGreaterThan(0);
       expect(
         screen.getAllByRole("menuitem", { name: "Navigate to Learn page" })
-          .length,
+          .length
       ).toBeGreaterThan(0);
       expect(
         screen.getAllByRole("menuitem", { name: "Navigate to About page" })
-          .length,
+          .length
       ).toBeGreaterThan(0);
     });
   });
@@ -59,7 +59,7 @@ describe("Header", () => {
       render(<Header onToggle={mockOnToggle} />);
 
       const script = document.querySelector(
-        'script[type="application/ld+json"]',
+        'script[type="application/ld+json"]'
       );
       expect(script).toBeInTheDocument();
 
@@ -92,15 +92,15 @@ describe("Header", () => {
     test("avatarImages has correct structure and count", () => {
       expect(avatarImages).toHaveLength(3);
       expect(avatarImages[0]).toEqual({
-        src: "assets/Avatar_1.png",
+        src: "/assets/Avatar_1.png",
         alt: "Avatar 1",
       });
       expect(avatarImages[1]).toEqual({
-        src: "assets/Avatar_2.png",
+        src: "/assets/Avatar_2.png",
         alt: "Avatar 2",
       });
       expect(avatarImages[2]).toEqual({
-        src: "assets/Avatar_3.png",
+        src: "/assets/Avatar_3.png",
         alt: "Avatar 3",
       });
     });
@@ -296,7 +296,7 @@ describe("Header", () => {
         (img) =>
           img.alt === "Avatar 1" ||
           img.alt === "Avatar 2" ||
-          img.alt === "Avatar 3",
+          img.alt === "Avatar 3"
       );
       expect(avatarImages.length).toBeGreaterThan(0);
     });
@@ -324,17 +324,17 @@ describe("Header", () => {
       const { container } = render(<Header onToggle={mockOnToggle} />);
 
       const header = container.querySelector(
-        '[role="banner"][aria-label="Main navigation header"]',
+        '[role="banner"][aria-label="Main navigation header"]'
       );
       expect(header).toHaveClass("bg-[var(--color-surface-default-primary)]");
       expect(header).toHaveClass("w-full");
       expect(header).toHaveClass("border-b");
       expect(header).toHaveClass(
-        "border-[var(--border-color-default-tertiary)]",
+        "border-[var(--border-color-default-tertiary)]"
       );
 
       const nav = container.querySelector(
-        '[role="navigation"][aria-label="Main navigation"]',
+        '[role="navigation"][aria-label="Main navigation"]'
       );
       expect(nav).toHaveClass("flex");
       expect(nav).toHaveClass("items-center");

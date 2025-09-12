@@ -116,13 +116,11 @@ export default function Logo({ size = "default", showText = true }) {
       : sizes.default;
 
   return (
-    <Link href="/" className="block">
+    <Link href="/" className="block" aria-label="CommunityRule Logo">
       <div
         className={`flex items-center ${config.containerHeight} ${
           showText ? config.gap : ""
         } transition-all duration-200 ease-in-out hover:scale-[1.02] cursor-pointer`}
-        role="link"
-        aria-label="CommunityRule Logo"
       >
         {/* Logo Text - only show if showText is true */}
         {showText && (

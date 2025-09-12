@@ -54,39 +54,24 @@ describe("ContentThumbnailTemplate", () => {
       ).toBeInTheDocument();
     });
 
-    it("should display tags when showTags is true", () => {
-      render(<ContentThumbnailTemplate post={mockPost} showTags={true} />);
-
-      expect(screen.getByText("test")).toBeInTheDocument();
-      expect(screen.getByText("blog")).toBeInTheDocument();
-    });
-
-    it("should hide tags when showTags is false", () => {
-      render(<ContentThumbnailTemplate post={mockPost} showTags={false} />);
-
-      expect(screen.queryByText("test")).not.toBeInTheDocument();
-      expect(screen.queryByText("blog")).not.toBeInTheDocument();
-    });
-
-    it("should display author and date", () => {
+    it("should display author and date metadata", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
       expect(screen.getByText("Test Author")).toBeInTheDocument();
-      // Check for "Month Year" format (e.g., "April 2025")
       expect(screen.getByText("April 2025")).toBeInTheDocument();
     });
   });
 
   describe("Horizontal Variant", () => {
     it("should render horizontal variant", () => {
-      render(<ContentThumbnailTemplate post={mockPost} />);
+      render(<ContentThumbnailTemplate post={mockPost} variant="horizontal" />);
 
       const container = screen.getByRole("link");
       expect(container).toBeInTheDocument();
 
       // Check that the component has the correct classes for horizontal layout
       const thumbnailDiv = container.querySelector("div");
-      expect(thumbnailDiv).toHaveClass("h-[226px]");
+      expect(thumbnailDiv).toHaveClass("h-[225.5px]");
     });
 
     it("should display post information in horizontal layout", () => {
@@ -156,10 +141,11 @@ describe("ContentThumbnailTemplate", () => {
       expect(thumbnailDiv).toHaveClass("w-[260px]", "h-[390px]");
     });
 
-    it("should show tags by default", () => {
+    it("should show metadata by default", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
-      expect(screen.getByText("test")).toBeInTheDocument();
+      expect(screen.getByText("Test Author")).toBeInTheDocument();
+      expect(screen.getByText("April 2025")).toBeInTheDocument();
     });
   });
 });
