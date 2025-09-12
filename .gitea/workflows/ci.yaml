@@ -13,8 +13,10 @@ jobs:
     strategy:
       matrix: { node-version: [18, 20] }
     env:
-      NODE_OPTIONS: "--max_old_space_size=4096"
+      NODE_OPTIONS: "--max_old_space_size=8192 --max_semi_space_size=128"
       CI: true
+      VITEST_MAX_CONCURRENCY: 1
+      VITEST_MAX_THREADS: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -316,8 +318,8 @@ jobs:
           "$CHROME_PATH" --version
 
           # Run LHCI with arm64 Node + arm64 Chrome
-          # Test homepage and blog pages
-          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/ --collect.url=http://$HOST:$PORT/blog --collect.url=http://$HOST:$PORT/blog/resolving-active-conflicts
+          # Test homepage and blog pages using config file
+          npx lhci autorun --chrome-path="$CHROME_PATH"
 
           kill "$SVPID" 2>/dev/null || true
         env:
