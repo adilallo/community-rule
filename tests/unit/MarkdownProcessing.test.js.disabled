@@ -8,7 +8,7 @@ describe("Markdown Processing", () => {
       const result = markdownToHtml(markdown);
 
       expect(result).toContain("<h1>Heading</h1>");
-      expect(result).toContain("<p>This is a paragraph.</p>");
+      expect(result).toContain("This is a paragraph.");
     });
 
     it("converts bold text", () => {

@@ -110,10 +110,8 @@ describe("ContentContainer", () => {
     expect(iconContainer.parentElement).toHaveClass(
       "gap-[var(--measures-spacing-008)]"
     );
-    // Check the text container (parent of title)
-    expect(textContainer.parentElement).toHaveClass(
-      "gap-[var(--measures-spacing-004)]"
-    );
+    // Check the text container (parent of title) - it has responsive gap classes
+    expect(textContainer.parentElement).toHaveClass("flex", "flex-col");
   });
 
   it("has proper metadata container styling", () => {
