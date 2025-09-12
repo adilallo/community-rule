@@ -316,7 +316,8 @@ jobs:
           "$CHROME_PATH" --version
 
           # Run LHCI with arm64 Node + arm64 Chrome
-          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
+          # Test homepage and blog pages
+          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/ --collect.url=http://$HOST:$PORT/blog --collect.url=http://$HOST:$PORT/blog/resolving-active-conflicts
 
           kill "$SVPID" 2>/dev/null || true
         env:
