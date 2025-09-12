@@ -66,7 +66,7 @@ describe("Content Page Rendering E2E", () => {
       // Verify banner content
       expect(screen.getByText("Test Article Title")).toBeInTheDocument();
       expect(
-        screen.getByText("This is a test article description")
+        screen.getByText("This is a test article description"),
       ).toBeInTheDocument();
       expect(screen.getByText("Test Author")).toBeInTheDocument();
       expect(screen.getByText("April 2025")).toBeInTheDocument();
@@ -112,16 +112,16 @@ describe("Content Page Rendering E2E", () => {
           title="Still have questions?"
           subtitle="Get help from our community organizers"
           description="We're here to help you with any questions or concerns."
-        />
+        />,
       );
 
       // Verify ask organizer content
       expect(screen.getByText("Still have questions?")).toBeInTheDocument();
       expect(
-        screen.getByText("Get help from our community organizers")
+        screen.getByText("Get help from our community organizers"),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("link", { name: /ask an organizer/i })
+        screen.getByRole("link", { name: /ask an organizer/i }),
       ).toBeInTheDocument();
     });
 
@@ -131,16 +131,16 @@ describe("Content Page Rendering E2E", () => {
           variant="inverse"
           title="Still have questions?"
           subtitle="Get help from our community organizers"
-        />
+        />,
       );
 
       // Verify ask organizer content is still present
       expect(screen.getByText("Still have questions?")).toBeInTheDocument();
       expect(
-        screen.getByText("Get help from our community organizers")
+        screen.getByText("Get help from our community organizers"),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("link", { name: /ask an organizer/i })
+        screen.getByRole("link", { name: /ask an organizer/i }),
       ).toBeInTheDocument();
     });
 
@@ -163,7 +163,7 @@ describe("Content Page Rendering E2E", () => {
             title="Still have questions?"
             subtitle="Get help from our community organizers"
           />
-        </div>
+        </div>,
       );
 
       // Verify both components are rendered
@@ -179,7 +179,7 @@ describe("Content Page Rendering E2E", () => {
             title="Still have questions?"
             subtitle="Get help from our community organizers"
           />
-        </main>
+        </main>,
       );
 
       // Verify semantic structure

@@ -75,23 +75,23 @@ describe("Related Articles Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     // Current post should not be displayed
     expect(
-      screen.queryByTestId("thumbnail-resolving-active-conflicts")
+      screen.queryByTestId("thumbnail-resolving-active-conflicts"),
     ).not.toBeInTheDocument();
 
     // Other posts should be displayed
     expect(
-      screen.getByTestId("thumbnail-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-operational-security-mutual-aid"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-making-decisions-without-hierarchy"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-building-community-trust")
+      screen.getByTestId("thumbnail-building-community-trust"),
     ).toBeInTheDocument();
   });
 
@@ -100,16 +100,16 @@ describe("Related Articles Integration", () => {
 
     // All posts should be displayed
     expect(
-      screen.getByTestId("thumbnail-resolving-active-conflicts")
+      screen.getByTestId("thumbnail-resolving-active-conflicts"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-operational-security-mutual-aid"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-making-decisions-without-hierarchy"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-building-community-trust")
+      screen.getByTestId("thumbnail-building-community-trust"),
     ).toBeInTheDocument();
   });
 
@@ -118,24 +118,24 @@ describe("Related Articles Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     // Verify links are created correctly
     expect(
-      screen.getByTestId("thumbnail-link-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-link-operational-security-mutual-aid"),
     ).toHaveAttribute("href", "/blog/operational-security-mutual-aid");
     expect(
-      screen.getByTestId("thumbnail-link-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-link-making-decisions-without-hierarchy"),
     ).toHaveAttribute("href", "/blog/making-decisions-without-hierarchy");
     expect(
-      screen.getByTestId("thumbnail-link-building-community-trust")
+      screen.getByTestId("thumbnail-link-building-community-trust"),
     ).toHaveAttribute("href", "/blog/building-community-trust");
   });
 
   it("should handle empty related posts array", () => {
     const { container } = render(
-      <RelatedArticles relatedPosts={[]} currentPostSlug="test-post" />
+      <RelatedArticles relatedPosts={[]} currentPostSlug="test-post" />,
     );
 
     expect(container.firstChild).toBeNull();
@@ -148,14 +148,14 @@ describe("Related Articles Integration", () => {
       <RelatedArticles
         relatedPosts={singlePost}
         currentPostSlug="different-post"
-      />
+      />,
     );
 
     expect(
-      screen.getByTestId("thumbnail-resolving-active-conflicts")
+      screen.getByTestId("thumbnail-resolving-active-conflicts"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByTestId("thumbnail-operational-security-mutual-aid")
+      screen.queryByTestId("thumbnail-operational-security-mutual-aid"),
     ).not.toBeInTheDocument();
   });
 
@@ -166,7 +166,7 @@ describe("Related Articles Integration", () => {
       <RelatedArticles
         relatedPosts={currentPostOnly}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     expect(container.firstChild).toBeNull();
@@ -177,11 +177,11 @@ describe("Related Articles Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Related Articles"
+      "Related Articles",
     );
   });
 
@@ -197,12 +197,12 @@ describe("Related Articles Integration", () => {
         <RelatedArticles
           relatedPosts={mockRelatedPosts}
           currentPostSlug={slug}
-        />
+        />,
       );
 
       // Verify consistent structure
       expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-        "Related Articles"
+        "Related Articles",
       );
       // Check that we have some thumbnails (the exact ones depend on the current post)
       const thumbnails = screen.getAllByTestId(/thumbnail-/);

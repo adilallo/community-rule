@@ -63,25 +63,25 @@ describe("Blog Core Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     // Verify the section exists
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Related Articles"
+      "Related Articles",
     );
 
     // Verify thumbnails are rendered
     expect(
-      screen.getByTestId("thumbnail-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-operational-security-mutual-aid"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-making-decisions-without-hierarchy"),
     ).toBeInTheDocument();
 
     // Current post should not be displayed
     expect(
-      screen.queryByTestId("thumbnail-resolving-active-conflicts")
+      screen.queryByTestId("thumbnail-resolving-active-conflicts"),
     ).not.toBeInTheDocument();
   });
 
@@ -90,20 +90,20 @@ describe("Blog Core Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     // Current post should not be displayed
     expect(
-      screen.queryByTestId("thumbnail-resolving-active-conflicts")
+      screen.queryByTestId("thumbnail-resolving-active-conflicts"),
     ).not.toBeInTheDocument();
 
     // Other posts should be displayed
     expect(
-      screen.getByTestId("thumbnail-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-operational-security-mutual-aid"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-making-decisions-without-hierarchy"),
     ).toBeInTheDocument();
   });
 
@@ -112,19 +112,19 @@ describe("Blog Core Integration", () => {
 
     // All posts should be displayed
     expect(
-      screen.getByTestId("thumbnail-resolving-active-conflicts")
+      screen.getByTestId("thumbnail-resolving-active-conflicts"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-operational-security-mutual-aid")
+      screen.getByTestId("thumbnail-operational-security-mutual-aid"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-making-decisions-without-hierarchy")
+      screen.getByTestId("thumbnail-making-decisions-without-hierarchy"),
     ).toBeInTheDocument();
   });
 
   it("should handle empty related posts array", () => {
     const { container } = render(
-      <RelatedArticles relatedPosts={[]} currentPostSlug="test-post" />
+      <RelatedArticles relatedPosts={[]} currentPostSlug="test-post" />,
     );
 
     expect(container.firstChild).toBeNull();
@@ -135,7 +135,7 @@ describe("Blog Core Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     // Verify links are created correctly
@@ -148,11 +148,11 @@ describe("Blog Core Integration", () => {
 
     expect(operationalLink).toHaveAttribute(
       "href",
-      "/blog/operational-security-mutual-aid"
+      "/blog/operational-security-mutual-aid",
     );
     expect(hierarchyLink).toHaveAttribute(
       "href",
-      "/blog/making-decisions-without-hierarchy"
+      "/blog/making-decisions-without-hierarchy",
     );
   });
 
@@ -161,11 +161,11 @@ describe("Blog Core Integration", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="resolving-active-conflicts"
-      />
+      />,
     );
 
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Related Articles"
+      "Related Articles",
     );
   });
 });

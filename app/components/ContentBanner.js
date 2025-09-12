@@ -20,7 +20,7 @@ export default function ContentBanner({ post }) {
         className="absolute inset-0 w-full h-full bg-cover bg-no-repeat aspect-[640/224] md:block hidden"
         style={{
           backgroundImage: `url(${getAssetPath(
-            "assets/Content_Banner_2.svg"
+            "assets/Content_Banner_2.svg",
           )})`,
           backgroundPosition: "center bottom",
         }}

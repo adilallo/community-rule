@@ -36,7 +36,7 @@ describe("ContentContainer", () => {
       "z-20",
       "h-full",
       "flex",
-      "flex-col"
+      "flex-col",
     );
   });
 
@@ -59,7 +59,7 @@ describe("ContentContainer", () => {
       "font-medium",
       "text-[18px]",
       "leading-[120%]",
-      "text-[var(--color-content-inverse-brand-royal)]"
+      "text-[var(--color-content-inverse-brand-royal)]",
     );
   });
 
@@ -73,7 +73,7 @@ describe("ContentContainer", () => {
       "font-normal",
       "text-[12px]",
       "leading-[16px]",
-      "text-[var(--color-content-inverse-brand-royal)]"
+      "text-[var(--color-content-inverse-brand-royal)]",
     );
   });
 
@@ -108,7 +108,7 @@ describe("ContentContainer", () => {
 
     // Check the content container (parent of icon)
     expect(iconContainer.parentElement).toHaveClass(
-      "gap-[var(--measures-spacing-008)]"
+      "gap-[var(--measures-spacing-008)]",
     );
     // Check the text container (parent of title) - it has responsive gap classes
     expect(textContainer.parentElement).toHaveClass("flex", "flex-col");
@@ -121,7 +121,7 @@ describe("ContentContainer", () => {
     expect(metadataContainer).toHaveClass(
       "flex",
       "items-center",
-      "gap-[var(--measures-spacing-008)]"
+      "gap-[var(--measures-spacing-008)]",
     );
   });
 
@@ -134,7 +134,7 @@ describe("ContentContainer", () => {
       "font-normal",
       "text-[10px]",
       "leading-[14px]",
-      "text-[var(--color-content-inverse-brand-royal)]"
+      "text-[var(--color-content-inverse-brand-royal)]",
     );
 
     const date = screen.getByText("April 2025");
@@ -143,7 +143,7 @@ describe("ContentContainer", () => {
       "font-normal",
       "text-[10px]",
       "leading-[14px]",
-      "text-[var(--color-content-inverse-brand-royal)]"
+      "text-[var(--color-content-inverse-brand-royal)]",
     );
   });
 
@@ -229,7 +229,7 @@ describe("ContentContainer", () => {
     render(<ContentContainer post={longTitlePost} />);
 
     expect(
-      screen.getByText(/This is a very long article title/)
+      screen.getByText(/This is a very long article title/),
     ).toBeInTheDocument();
   });
 
@@ -246,7 +246,7 @@ describe("ContentContainer", () => {
     render(<ContentContainer post={longDescPost} />);
 
     expect(
-      screen.getByText(/This is a very long article description/)
+      screen.getByText(/This is a very long article description/),
     ).toBeInTheDocument();
   });
 });

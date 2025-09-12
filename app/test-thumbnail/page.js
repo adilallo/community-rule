@@ -92,8 +92,8 @@ export default function TestThumbnailPage() {
                     <code>className</code> - Additional CSS classes
                   </li>
                   <li>
-                    <code>variant</code> - "vertical" (default) or "horizontal"
-                    (for development/testing)
+                    <code>variant</code> - &quot;vertical&quot; (default) or
+                    &quot;horizontal&quot; (for development/testing)
                   </li>
                 </ul>
               </div>

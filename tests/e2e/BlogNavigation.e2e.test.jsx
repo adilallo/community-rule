@@ -87,7 +87,7 @@ describe("Blog Navigation E2E", () => {
       expect(thumbnailLink).toBeInTheDocument();
       expect(thumbnailLink).toHaveAttribute(
         "href",
-        "/blog/resolving-active-conflicts"
+        "/blog/resolving-active-conflicts",
       );
 
       // Click the thumbnail
@@ -102,12 +102,12 @@ describe("Blog Navigation E2E", () => {
 
       // Verify post content is displayed
       expect(
-        screen.getByText("Resolving Active Conflicts")
+        screen.getByText("Resolving Active Conflicts"),
       ).toBeInTheDocument();
       expect(
         screen.getByText(
-          "Practical steps for resolving conflicts while maintaining trust"
-        )
+          "Practical steps for resolving conflicts while maintaining trust",
+        ),
       ).toBeInTheDocument();
       expect(screen.getByText("Test Author")).toBeInTheDocument();
       expect(screen.getByText("April 2025")).toBeInTheDocument();
@@ -128,10 +128,10 @@ describe("Blog Navigation E2E", () => {
 
       // Verify related articles are displayed
       expect(
-        screen.getByText("Operational Security for Mutual Aid")
+        screen.getByText("Operational Security for Mutual Aid"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("Making Decisions Without Hierarchy")
+        screen.getByText("Making Decisions Without Hierarchy"),
       ).toBeInTheDocument();
 
       // Verify links are present
@@ -139,11 +139,11 @@ describe("Blog Navigation E2E", () => {
       expect(relatedLinks).toHaveLength(2);
       expect(relatedLinks[0]).toHaveAttribute(
         "href",
-        "/blog/operational-security-mutual-aid"
+        "/blog/operational-security-mutual-aid",
       );
       expect(relatedLinks[1]).toHaveAttribute(
         "href",
-        "/blog/making-decisions-without-hierarchy"
+        "/blog/making-decisions-without-hierarchy",
       );
     });
 
@@ -160,7 +160,7 @@ describe("Blog Navigation E2E", () => {
 
       // Verify navigation was called
       expect(mockPush).toHaveBeenCalledWith(
-        "/blog/operational-security-mutual-aid"
+        "/blog/operational-security-mutual-aid",
       );
     });
 
@@ -176,7 +176,7 @@ describe("Blog Navigation E2E", () => {
     it("should complete navigation flow: thumbnail → related article", () => {
       // Render thumbnail
       const { rerender } = render(
-        <ContentThumbnailTemplate post={mockBlogPost} />
+        <ContentThumbnailTemplate post={mockBlogPost} />,
       );
 
       // Click thumbnail
@@ -194,7 +194,7 @@ describe("Blog Navigation E2E", () => {
         .closest("a");
       fireEvent.click(relatedLink);
       expect(mockPush).toHaveBeenCalledWith(
-        "/blog/operational-security-mutual-aid"
+        "/blog/operational-security-mutual-aid",
       );
     });
   });

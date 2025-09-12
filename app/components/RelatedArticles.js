@@ -6,7 +6,7 @@ import ContentThumbnailTemplate from "./ContentThumbnailTemplate";
 export default function RelatedArticles({ relatedPosts, currentPostSlug }) {
   // Filter out the current post from related posts
   const filteredPosts = relatedPosts.filter(
-    (post) => post.slug !== currentPostSlug
+    (post) => post.slug !== currentPostSlug,
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -93,7 +93,7 @@ export default function RelatedArticles({ relatedPosts, currentPostSlug }) {
                     const handleMouseUp = () => {
                       document.removeEventListener(
                         "mousemove",
-                        handleMouseMove
+                        handleMouseMove,
                       );
                       document.removeEventListener("mouseup", handleMouseUp);
                     };
@@ -133,8 +133,8 @@ export default function RelatedArticles({ relatedPosts, currentPostSlug }) {
                       index === currentIndex
                         ? `${progress}%`
                         : index < currentIndex
-                        ? "100%"
-                        : "0%",
+                          ? "100%"
+                          : "0%",
                   }}
                 />
               </div>

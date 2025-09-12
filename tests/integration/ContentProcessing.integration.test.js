@@ -22,7 +22,7 @@ describe("Content Processing Integration", () => {
       const result = getBlogPostFiles();
 
       expect(fs.readdirSync).toHaveBeenCalledWith(
-        path.join(process.cwd(), "content/blog")
+        path.join(process.cwd(), "content/blog"),
       );
       expect(result).toEqual(["post1.md", "post2.md", "post3.md"]);
     });
@@ -89,7 +89,7 @@ Content with **bold** and *italic* text.`;
       const result = markdownToHtml(markdown);
 
       expect(result).toContain(
-        "<h1>Title with Special Characters: & < > \" '</h1>"
+        "<h1>Title with Special Characters: & < > \" '</h1>",
       );
       expect(result).toContain("<strong>bold</strong>");
       expect(result).toContain("<em>italic</em>");

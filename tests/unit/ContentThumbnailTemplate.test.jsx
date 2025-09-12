@@ -50,7 +50,7 @@ describe("ContentThumbnailTemplate", () => {
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
-        screen.getByText(/This is a test description/)
+        screen.getByText(/This is a test description/),
       ).toBeInTheDocument();
     });
 
@@ -79,7 +79,7 @@ describe("ContentThumbnailTemplate", () => {
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
-        screen.getByText(/This is a test description/)
+        screen.getByText(/This is a test description/),
       ).toBeInTheDocument();
       expect(screen.getByText("Test Author")).toBeInTheDocument();
     });
@@ -88,7 +88,7 @@ describe("ContentThumbnailTemplate", () => {
   describe("Props and Customization", () => {
     it("should apply custom className", () => {
       render(
-        <ContentThumbnailTemplate post={mockPost} className="custom-class" />
+        <ContentThumbnailTemplate post={mockPost} className="custom-class" />,
       );
 
       const container = screen.getByRole("link");

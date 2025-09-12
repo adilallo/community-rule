@@ -73,14 +73,14 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const section = document.querySelector("section");
     expect(section).toBeInTheDocument();
     expect(section).toHaveClass(
       "py-[var(--spacing-scale-032)]",
-      "lg:py-[var(--spacing-scale-064)]"
+      "lg:py-[var(--spacing-scale-064)]",
     );
   });
 
@@ -89,7 +89,7 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const heading = screen.getByRole("heading", { level: 2 });
@@ -101,7 +101,7 @@ describe("RelatedArticles", () => {
       "leading-[110%]",
       "font-medium",
       "text-[var(--color-content-inverse-primary)]",
-      "text-center"
+      "text-center",
     );
   });
 
@@ -110,17 +110,17 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     expect(
-      screen.getByTestId("thumbnail-related-article-1")
+      screen.getByTestId("thumbnail-related-article-1"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-2")
+      screen.getByTestId("thumbnail-related-article-2"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-3")
+      screen.getByTestId("thumbnail-related-article-3"),
     ).toBeInTheDocument();
   });
 
@@ -142,29 +142,29 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={postsWithCurrent}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     // Should not render the current article
     expect(
-      screen.queryByTestId("thumbnail-current-article")
+      screen.queryByTestId("thumbnail-current-article"),
     ).not.toBeInTheDocument();
 
     // Should still render the other related articles
     expect(
-      screen.getByTestId("thumbnail-related-article-1")
+      screen.getByTestId("thumbnail-related-article-1"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-2")
+      screen.getByTestId("thumbnail-related-article-2"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-3")
+      screen.getByTestId("thumbnail-related-article-3"),
     ).toBeInTheDocument();
   });
 
   it("renders nothing when no related posts", () => {
     const { container } = render(
-      <RelatedArticles relatedPosts={[]} currentPostSlug="current-article" />
+      <RelatedArticles relatedPosts={[]} currentPostSlug="current-article" />,
     );
 
     expect(container.firstChild).toBeNull();
@@ -187,7 +187,7 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={currentPostOnly}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     expect(container.firstChild).toBeNull();
@@ -198,7 +198,7 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const container = document.querySelector("section > div");
@@ -206,7 +206,7 @@ describe("RelatedArticles", () => {
       "flex",
       "flex-col",
       "gap-[var(--spacing-scale-032)]",
-      "lg:gap-[51px]"
+      "lg:gap-[51px]",
     );
   });
 
@@ -215,14 +215,14 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const articlesContainer = document.querySelector("section > div > div");
     expect(articlesContainer).toHaveClass(
       "flex",
       "justify-center",
-      "overflow-hidden"
+      "overflow-hidden",
     );
   });
 
@@ -238,17 +238,17 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const carouselContainer = document.querySelector(
-      "section > div > div > div"
+      "section > div > div > div",
     );
     expect(carouselContainer).toHaveClass(
       "overflow-x-auto",
       "scrollbar-hide",
       "cursor-grab",
-      "active:cursor-grabbing"
+      "active:cursor-grabbing",
     );
   });
 
@@ -264,16 +264,16 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const carouselContainer = document.querySelector(
-      "section > div > div > div"
+      "section > div > div > div",
     );
     expect(carouselContainer).toHaveClass(
       "transition-transform",
       "duration-500",
-      "ease-in-out"
+      "ease-in-out",
     );
   });
 
@@ -284,17 +284,17 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={singlePost}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     expect(
-      screen.getByTestId("thumbnail-related-article-1")
+      screen.getByTestId("thumbnail-related-article-1"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByTestId("thumbnail-related-article-2")
+      screen.queryByTestId("thumbnail-related-article-2"),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByTestId("thumbnail-related-article-3")
+      screen.queryByTestId("thumbnail-related-article-3"),
     ).not.toBeInTheDocument();
   });
 
@@ -305,17 +305,17 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={twoPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     expect(
-      screen.getByTestId("thumbnail-related-article-1")
+      screen.getByTestId("thumbnail-related-article-1"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-2")
+      screen.getByTestId("thumbnail-related-article-2"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByTestId("thumbnail-related-article-3")
+      screen.queryByTestId("thumbnail-related-article-3"),
     ).not.toBeInTheDocument();
   });
 
@@ -324,7 +324,7 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const section = document.querySelector("section");
@@ -336,11 +336,11 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={mockRelatedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     const carouselContainer = document.querySelector(
-      "section > div > div > div"
+      "section > div > div > div",
     );
     expect(carouselContainer).toHaveClass("gap-0");
   });
@@ -350,13 +350,13 @@ describe("RelatedArticles", () => {
 
     // Should still render all articles
     expect(
-      screen.getByTestId("thumbnail-related-article-1")
+      screen.getByTestId("thumbnail-related-article-1"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-2")
+      screen.getByTestId("thumbnail-related-article-2"),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId("thumbnail-related-article-3")
+      screen.getByTestId("thumbnail-related-article-3"),
     ).toBeInTheDocument();
   });
 
@@ -386,7 +386,7 @@ describe("RelatedArticles", () => {
       <RelatedArticles
         relatedPosts={malformedPosts}
         currentPostSlug="current-article"
-      />
+      />,
     );
 
     expect(screen.getByTestId("thumbnail-malformed-1")).toBeInTheDocument();
