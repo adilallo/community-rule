@@ -24,6 +24,12 @@ const config = {
       ".js": "jsx",
       ".ts": "tsx",
     };
+
+    // Configure base path for GitHub Pages
+    if (process.env.STORYBOOK_BASE_PATH) {
+      cfg.base = "/communityrulestorybook/";
+    }
+
     return cfg;
   },
 };
