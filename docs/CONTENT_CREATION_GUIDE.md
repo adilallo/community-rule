@@ -1,0 +1,66 @@
+# Content Creation Guide
+
+A simple guide for creating blog content for Community Rule.
+
+## Quick Start
+
+1. **Copy the template**: Use `content/blog/_template.md` as your starting point
+2. **Create your file**: Use a descriptive filename with hyphens (e.g., `my-article-title.md`)
+3. **Fill in the frontmatter**: Complete the required fields
+4. **Write your content**: Follow the formatting guidelines
+5. **Test locally**: Run `npm run dev` to preview your article
+6. **Submit for review**: Get feedback before publishing
+
+## Required Frontmatter
+
+```yaml
+---
+title: "Your Article Title Here"
+description: "A brief, compelling description of what this article covers"
+author: "Author Name"
+date: "2025-01-15"
+related: ["slug-of-related-article-1", "slug-of-related-article-2"]
+---
+```
+
+### Field Guidelines
+
+- **title**: Clear, descriptive title (50-60 characters for SEO)
+- **description**: Compelling summary (150-160 characters for SEO)
+- **author**: Author name or organization
+- **date**: Publication date in YYYY-MM-DD format
+- **related**: Array of article slugs (use filename without .md)
+
+### Related Articles
+
+The slug is different from the title - it's lowercase with hyphens instead of spaces:
+
+- Title: "Resolving Active Conflicts" → Slug: `resolving-active-conflicts`
+- Title: "Operational Security for Mutual Aid" → Slug: `operational-security-mutual-aid`
+- Title: "Making Decisions Without Hierarchy" → Slug: `making-decisions-without-hierarchy`
+
+## Content Formatting
+
+- Write in paragraph form, separated by blank lines
+- Use **bold** for emphasis on important points
+- Use _italics_ for subtle emphasis
+- Use ## headings to break up sections within your content
+- Keep paragraphs focused and readable
+- Write in a conversational, accessible tone
+
+## File Naming
+
+Use descriptive, URL-friendly filenames:
+
+- ✅ `getting-started-with-organizing.md`
+- ✅ `digital-security-best-practices.md`
+- ❌ `My Article Title.md`
+- ❌ `article1.md`
+
+## Getting Help
+
+- Check the template file for examples
+- Ask questions in community channels
+- Contact the content team for support
+
+---

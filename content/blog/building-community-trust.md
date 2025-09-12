@@ -1,5 +1,5 @@
 ---
-title: "Building Community Trust"
+title: "Sample: Building Community Trust"
 description: "Strategies for fostering trust, transparency, and accountability in community organizations"
 author: "Author name"
 date: "2025-04-20"
