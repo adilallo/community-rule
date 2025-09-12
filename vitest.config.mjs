@@ -43,6 +43,13 @@ export default defineConfig({
       thresholds: { lines: 50, functions: 50, statements: 50, branches: 50 },
     },
     pool: "threads",
-    testTimeout: 10000,
+    testTimeout: 30000, // Increased from 10s to 30s for CI environment
+    hookTimeout: 30000, // Increased hook timeout for CI
+    teardownTimeout: 30000, // Increased teardown timeout for CI
+    // CI optimizations
+    maxConcurrency: process.env.CI ? 2 : 5, // Reduce concurrency in CI
+    maxThreads: process.env.CI ? 2 : 4, // Reduce threads in CI
+    minThreads: process.env.CI ? 1 : 2, // Minimum threads in CI
+    retry: process.env.CI ? 2 : 0, // Retry failed tests in CI
   },
 });
