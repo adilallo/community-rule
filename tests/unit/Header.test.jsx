@@ -80,7 +80,7 @@ describe("Header", () => {
         extraPadding: true,
       });
       expect(navigationItems[1]).toEqual({
-        href: "#",
+        href: "/learn",
         text: "Learn",
       });
       expect(navigationItems[2]).toEqual({

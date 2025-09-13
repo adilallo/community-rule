@@ -11,6 +11,8 @@ const mockPost = {
   },
 };
 
+const mockSlugOrder = ["sample-article", "another-article", "third-article"];
+
 export default {
   title: "Components/ContentThumbnailTemplate",
   component: ContentThumbnailTemplate,
@@ -28,9 +30,8 @@ export default {
       description: "Blog post object with frontmatter",
     },
     slugOrder: {
-      control: "number",
-      description:
-        "Order index for cycling through different background and icon styles",
+      control: "object",
+      description: "Array of slugs for consistent background cycling",
     },
     variant: {
       control: { type: "select" },
@@ -43,7 +44,7 @@ export default {
 export const Vertical = {
   args: {
     post: mockPost,
-    slugOrder: 0,
+    slugOrder: mockSlugOrder,
     variant: "vertical",
   },
 };
@@ -51,23 +52,23 @@ export const Vertical = {
 export const Horizontal = {
   args: {
     post: mockPost,
-    slugOrder: 0,
+    slugOrder: mockSlugOrder,
     variant: "horizontal",
   },
 };
 
 export const SecondStyle = {
   args: {
-    post: mockPost,
-    slugOrder: 1,
+    post: { ...mockPost, slug: "another-article" },
+    slugOrder: mockSlugOrder,
     variant: "vertical",
   },
 };
 
 export const ThirdStyle = {
   args: {
-    post: mockPost,
-    slugOrder: 2,
+    post: { ...mockPost, slug: "third-article" },
+    slugOrder: mockSlugOrder,
     variant: "vertical",
   },
 };
@@ -83,7 +84,7 @@ export const LongContent = {
           "This is a longer description that tests how the component handles extended text content and ensures proper wrapping and display within the thumbnail.",
       },
     },
-    slugOrder: 0,
+    slugOrder: mockSlugOrder,
     variant: "vertical",
   },
 };

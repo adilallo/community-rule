@@ -380,6 +380,15 @@ test.describe("Visual Regression Tests", () => {
     // Navigate to blog listing page
     await page.goto("/blog");
     await page.waitForLoadState("networkidle");
+
+    // Wait for blog content to be fully rendered
+    await page.waitForSelector(
+      ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3",
+      { timeout: 10000 },
+    );
+
+    // Additional wait for any dynamic content to render
+    await page.waitForTimeout(1000);
     await settle(page);
 
     // Take full page screenshot of blog listing
@@ -393,6 +402,12 @@ test.describe("Visual Regression Tests", () => {
     // Navigate to a specific blog post
     await page.goto("/blog/resolving-active-conflicts");
     await page.waitForLoadState("networkidle");
+
+    // Wait for blog post content to be fully rendered
+    await page.waitForSelector("main", { timeout: 10000 });
+
+    // Additional wait for any dynamic content to render
+    await page.waitForTimeout(1000);
     await settle(page);
 
     // Take full page screenshot of blog post
