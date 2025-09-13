@@ -13,9 +13,10 @@ const ContentThumbnailTemplate = ({
   post,
   className = "",
   variant = "vertical", // Internal prop for testing/development
+  slugOrder = [], // Array of slugs for consistent icon cycling
 }) => {
   // Post-specific background selection - different SVG for each post
-  const getBackgroundImage = (slug, variant) => {
+  const getBackgroundImage = (slug, variant, slugOrder) => {
     const verticalImages = [
       getAssetPath(ASSETS.VERTICAL_1),
       getAssetPath(ASSETS.VERTICAL_2),
@@ -28,23 +29,20 @@ const ContentThumbnailTemplate = ({
       getAssetPath(ASSETS.HORIZONTAL_3),
     ];
 
-    const images = variant === "vertical" ? verticalImages : horizontalImages;
+    if (!slug)
+      return variant === "vertical" ? verticalImages[0] : horizontalImages[0];
 
-    if (!slug) return images[0];
-
-    // Simple cycling approach to ensure different styles
-    const slugOrder = [
-      "building-community-trust",
-      "operational-security-mutual-aid",
-      "making-decisions-without-hierarchy",
-      "resolving-active-conflicts",
-    ];
+    // Use the passed slugOrder for consistent cycling through background variants
     const index = slugOrder.indexOf(slug);
-    const finalIndex = index >= 0 ? index % images.length : 0;
-    return images[finalIndex];
+    const backgroundIndex = index >= 0 ? index % 3 : 0; // Cycle through 3 background variants
+
+    // Return the same background index for both vertical and horizontal variants
+    return variant === "vertical"
+      ? verticalImages[backgroundIndex]
+      : horizontalImages[backgroundIndex];
   };
 
-  const backgroundImage = getBackgroundImage(post.slug, variant);
+  const backgroundImage = getBackgroundImage(post.slug, variant, slugOrder);
 
   if (variant === "vertical") {
     return (

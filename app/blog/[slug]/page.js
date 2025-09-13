@@ -93,6 +93,9 @@ export default async function BlogPostPage({ params }) {
   // Get related articles with improved algorithm
   const allPosts = getAllPosts();
 
+  // Create slug order for consistent background cycling
+  const slugOrder = allPosts.map((post) => post.slug);
+
   // Simple related articles algorithm based on content similarity
   const getRelatedArticles = (currentPost, allPosts, limit = 3) => {
     const otherPosts = allPosts.filter((p) => p.slug !== currentPost.slug);
@@ -265,6 +268,7 @@ export default async function BlogPostPage({ params }) {
         <RelatedArticles
           relatedPosts={relatedArticles}
           currentPostSlug={post.slug}
+          slugOrder={slugOrder}
         />
 
         {/* Ask Organizer Section */}

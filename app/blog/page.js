@@ -1,5 +1,4 @@
 import { getAllBlogPosts } from "../../lib/content";
-import Header from "../components/Header";
 import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
 import ContentContainer from "../components/ContentContainer";
 
@@ -31,7 +30,6 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#F4F3F1]">
-      <Header />
       <main className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">

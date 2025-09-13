@@ -2,6 +2,31 @@
 
 A simple guide for creating blog content for Community Rule.
 
+## How to Upload an Article
+
+Here's how to contribute a new article:
+
+1. **Fork the repository** (if you haven't already)
+2. **Create a new branch** for your article: `git checkout -b add-my-article-title`
+3. **Create your article file** in the `content/blog/` directory
+4. **Test locally** (optional but recommended):
+   - Run `npm install` to install dependencies
+   - Run `npm run dev` to start the development server
+   - Visit `http://localhost:3000/blog/your-article-slug` to preview
+5. **Commit your changes**:
+   ```bash
+   git add content/blog/your-article.md
+   git commit -m "Add article: Your Article Title"
+   ```
+6. **Push to your fork**:
+   ```bash
+   git push origin add-my-article-title
+   ```
+7. **Create a pull request** in Gitea with:
+   - Clear title describing your article
+   - Brief description of what the article covers
+   - Any relevant context or notes for reviewers
+
 ## Quick Start
 
 1. **Copy the template**: Use `content/blog/_template.md` as your starting point
