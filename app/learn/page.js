@@ -104,8 +104,8 @@ export default function LearnPage() {
               More Content Coming Soon
             </h2>
             <p className="text-[var(--color-content-default-secondary)]">
-              We're working on adding more educational content to help you build
-              better communities. Check back soon for new articles and
+              We&apos;re working on adding more educational content to help you
+              build better communities. Check back soon for new articles and
               resources.
             </p>
           </section>

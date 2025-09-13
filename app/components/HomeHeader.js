@@ -79,10 +79,10 @@ export default function HomeHeader() {
             ? size === "home" || size === "homeMd"
               ? "homeMd"
               : size === "large"
-              ? "large"
-              : size === "homeXlarge"
-              ? "homeXlarge"
-              : "xsmallUseCases"
+                ? "large"
+                : size === "homeXlarge"
+                  ? "homeXlarge"
+                  : "xsmallUseCases"
             : size
         }
         variant={
