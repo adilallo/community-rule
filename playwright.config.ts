@@ -15,9 +15,10 @@ export default defineConfig({
       maxDiffPixels: 50000, // Increased to handle WebKit height variations (1-2px height diff × width)
     },
   },
-  fullyParallel: true,
+  fullyParallel: !process.env.CI, // Disable parallel execution in CI to reduce server load
   retries: process.env.CI ? 2 : 0,
   reporter: [["list"], ["html", { open: "never" }]],
+  workers: process.env.CI ? 2 : undefined, // Reduce workers in CI to prevent server overload
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:3010",
     trace: "on-first-retry",
@@ -30,12 +31,12 @@ export default defineConfig({
     locale: "en-US", // Freeze locale
     headless: true,
   },
-  // Only start webServer in non-CI environments
+  // Only start webServer in non-CI environments (CI starts its own server)
   ...(process.env.CI
     ? {}
     : {
         webServer: {
-          command: "npm run dev",
+          command: "npm run dev -- --port 3010",
           url: "http://localhost:3010",
           reuseExistingServer: true,
           timeout: 120_000,
