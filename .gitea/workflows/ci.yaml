@@ -93,7 +93,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       # package artifacts (keeps file count small)
       - name: Package E2E artifacts
@@ -149,31 +149,84 @@ jobs:
           echo "$SVPID" > .next/runner.pid
           echo "🌐 Server PID: $SVPID"
 
-          # Wait for readiness
+          # Wait for readiness with better error handling
           echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          curl -fsS "http://$HOST:$PORT" >/dev/null
-          echo "✅ App is responding at http://$HOST:$PORT"
 
+          # Verify server is actually responding
+          for i in {1..10}; do
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+              echo "✅ App is responding at http://$HOST:$PORT"
+              break
+            else
+              echo "⏳ Attempt $i/10: Server not ready yet, waiting..."
+              sleep 5
+              if [ $i -eq 10 ]; then
+                echo "❌ Server failed to respond after 10 attempts"
+                echo "📋 Server logs:"
+                cat .next/runner.log || true
+                exit 1
+              fi
+            fi
+          done
 
-
-          # Run visual regression tests
+          # Run visual regression tests with server monitoring
           echo "🧪 Running visual regression tests..."
-          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts
 
-          # Teardown
+          # Start server health monitoring in background
+          (
+            while true; do
+              if ! curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+                echo "⚠️  Server health check failed - server may have crashed"
+                echo "📋 Current server logs:"
+                tail -20 .next/runner.log || true
+                break
+              fi
+              sleep 10
+            done
+          ) &
+          HEALTH_PID=$!
+
+          # Run tests with increased timeout for CI stability
+          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --timeout=120000
+
+          # Stop health monitoring
+          kill $HEALTH_PID 2>/dev/null || true
+
+          # Teardown with better error handling
           echo "🧹 Cleaning up server..."
           kill "$SVPID" 2>/dev/null || true
+
+          # Wait for server to actually stop
+          for i in {1..10}; do
+            if ! kill -0 "$SVPID" 2>/dev/null; then
+              echo "✅ Server process stopped"
+              break
+            else
+              echo "⏳ Waiting for server to stop... ($i/10)"
+              sleep 2
+              if [ $i -eq 10 ]; then
+                echo "⚠️  Force killing server process"
+                kill -9 "$SVPID" 2>/dev/null || true
+              fi
+            fi
+          done
+
           echo "✅ Server cleanup complete"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Package visual artifacts
         if: always()
         run: |
-          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots || true
+          # Include server logs for debugging
+          echo "📋 Server logs for debugging:"
+          cat .next/runner.log || echo "No server logs found"
+
+          # Package test results and logs
+          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots .next/runner.log || true
 
       - name: Upload visual artifacts
         if: always()
@@ -325,7 +378,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Upload LHCI results
         if: always()
