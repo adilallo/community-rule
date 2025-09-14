@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "./Button";
+import { getAssetPath } from "../../lib/assetUtils";
 
 const ContentLockup = ({
   title,
@@ -103,7 +104,7 @@ const ContentLockup = ({
               <h1 className={styles.title}>{title}</h1>
               {variant === "hero" && (
                 <img
-                  src="assets/Shapes_1.svg"
+                  src={getAssetPath("assets/Shapes_1.svg")}
                   alt=""
                   className={styles.shape}
                   role="presentation"

@@ -2,6 +2,7 @@
 
 import ContentLockup from "./ContentLockup";
 import HeroDecor from "./HeroDecor";
+import { getAssetPath } from "../../lib/assetUtils";
 
 const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
   return (
@@ -32,7 +33,7 @@ const HeroBanner = ({ title, subtitle, description, ctaText, ctaHref }) => {
           {/* Hero Image Container */}
           <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
             <img
-              src="assets/HeroImage.png"
+              src={getAssetPath("assets/HeroImage.png")}
               alt="Hero illustration"
               className="w-full h-auto"
             />

@@ -50,7 +50,7 @@ describe("HeroBanner Component", () => {
 
     const heroImage = screen.getByRole("img", { name: "Hero illustration" });
     expect(heroImage).toBeInTheDocument();
-    expect(heroImage).toHaveAttribute("src", "assets/HeroImage.png");
+    expect(heroImage).toHaveAttribute("src", "/assets/HeroImage.png");
   });
 
   test("applies correct CSS classes", () => {

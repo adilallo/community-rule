@@ -147,9 +147,26 @@ test.describe("Homepage", () => {
       await expect(visibleCreateButton).toBeVisible();
     }
 
-    await expect(
-      page.locator('button:has-text("See how it works")'),
-    ).toBeVisible();
+    // Check for responsive button visibility
+    const seeHowItWorksButton = page.locator(
+      'button:has-text("See how it works")',
+    );
+    const createCommunityRuleButton = page.locator(
+      'button:has-text("Create CommunityRule")',
+    );
+
+    // On mobile, "Create CommunityRule" should be visible, "See how it works" should be hidden
+    // On desktop, "See how it works" should be visible, "Create CommunityRule" should be hidden
+    const viewport = page.viewportSize();
+    if (viewport && viewport.width < 1024) {
+      // Mobile viewport
+      await expect(createCommunityRuleButton).toBeVisible();
+      await expect(seeHowItWorksButton).toBeHidden();
+    } else {
+      // Desktop viewport
+      await expect(seeHowItWorksButton).toBeVisible();
+      await expect(createCommunityRuleButton).toBeHidden();
+    }
   });
 
   test("rule stack section interactions", async ({ page }) => {
@@ -272,10 +289,26 @@ test.describe("Homepage", () => {
     // Check navigation elements
     await expect(page.locator("nav").first()).toBeVisible();
 
-    // Test logo/header click
-    const header = page.locator("header");
-    await header.click();
-    // Should stay on homepage
+    // Test logo click specifically (not the entire header)
+    // The logo has different visibility classes for different breakpoints
+    // Find any visible logo link
+    const logoLinks = page.locator('a[aria-label="CommunityRule Logo"]');
+    const logoCount = await logoLinks.count();
+    expect(logoCount).toBeGreaterThan(0);
+
+    // Find the first visible logo link
+    let visibleLogo = null;
+    for (let i = 0; i < logoCount; i++) {
+      const logo = logoLinks.nth(i);
+      if (await logo.isVisible()) {
+        visibleLogo = logo;
+        break;
+      }
+    }
+
+    expect(visibleLogo).not.toBeNull();
+    await visibleLogo.click();
+    // Should navigate to homepage
     await expect(page).toHaveURL(/\/#?$/);
   });
 

@@ -136,7 +136,10 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     const sociocracyIcon = screen.getByAltText("Sociocracy");
-    expect(sociocracyIcon).toHaveAttribute("src", "assets/Icon_Sociocracy.svg");
+    expect(sociocracyIcon).toHaveAttribute(
+      "src",
+      "/assets/Icon_Sociocracy.svg",
+    );
     expect(sociocracyIcon).toHaveClass(
       "md:w-[56px]",
       "md:h-[56px]",

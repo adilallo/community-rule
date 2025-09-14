@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import RuleCard from "./RuleCard";
 import Button from "./Button";
+import { getAssetPath } from "../../lib/assetUtils";
 
 const RuleStack = ({ className = "" }) => {
   const handleTemplateClick = (templateName) => {
@@ -33,7 +34,7 @@ const RuleStack = ({ className = "" }) => {
           description="Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council."
           icon={
             <Image
-              src="assets/Icon_Sociocracy.svg"
+              src={getAssetPath("assets/Icon_Sociocracy.svg")}
               alt="Sociocracy"
               width={40}
               height={40}
@@ -48,7 +49,7 @@ const RuleStack = ({ className = "" }) => {
           description="Decisions that affect the group collectively should involve participation of all participants."
           icon={
             <Image
-              src="assets/Icon_Consensus.svg"
+              src={getAssetPath("assets/Icon_Consensus.svg")}
               alt="Consensus"
               width={40}
               height={40}
@@ -63,7 +64,7 @@ const RuleStack = ({ className = "" }) => {
           description="An elected board determines policies and organizes their implementation."
           icon={
             <Image
-              src="assets/Icon_ElectedBoard.svg"
+              src={getAssetPath("assets/Icon_ElectedBoard.svg")}
               alt="Elected Board"
               width={40}
               height={40}
@@ -78,7 +79,7 @@ const RuleStack = ({ className = "" }) => {
           description="All participants can propose and vote on proposals for the group."
           icon={
             <Image
-              src="assets/Icon_Petition.svg"
+              src={getAssetPath("assets/Icon_Petition.svg")}
               alt="Petition"
               width={40}
               height={40}
