@@ -384,7 +384,7 @@ test.describe("Visual Regression Tests", () => {
     // Wait for blog content to be fully rendered
     await page.waitForSelector(
       ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3",
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     // Additional wait for any dynamic content to render
@@ -450,7 +450,7 @@ test.describe("Visual Regression Tests", () => {
     await page.evaluate(() => {
       document.documentElement.style.setProperty(
         "--prefers-reduced-motion",
-        "reduce"
+        "reduce",
       );
     });
 
