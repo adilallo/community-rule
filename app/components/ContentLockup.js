@@ -104,8 +104,9 @@ const ContentLockup = ({
               {variant === "hero" && (
                 <img
                   src="assets/Shapes_1.svg"
-                  alt="Decorative shapes"
+                  alt=""
                   className={styles.shape}
+                  role="presentation"
                 />
               )}
             </div>
