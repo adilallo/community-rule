@@ -175,8 +175,9 @@ jobs:
           # Start Next with explicit memory settings for CI stability
           echo "🚀 Starting Next.js server on $HOST:$PORT..."
 
-          # Use nohup to ensure the process survives and redirect output properly
-          nohup NODE_OPTIONS="--max-old-space-size=4096" node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Set environment variable and start server
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          nohup node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           SVPID=$!
           echo "$SVPID" > .next/runner.pid
           echo "🌐 Server PID: $SVPID"
