@@ -164,11 +164,34 @@ jobs:
 
           echo "🚀 Starting Next.js server for visual regression testing..."
 
-          # Start Next directly with node so $! is the real node PID
-          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Ensure port is free before starting
+          echo "🔍 Checking if port $PORT is available..."
+          if lsof -ti:$PORT >/dev/null 2>&1; then
+            echo "⚠️  Port $PORT is in use, killing existing processes..."
+            lsof -ti:$PORT | xargs kill -9 2>/dev/null || true
+            sleep 2
+          fi
+
+          # Start Next with explicit memory settings for CI stability
+          echo "🚀 Starting Next.js server on $HOST:$PORT..."
+
+          # Use nohup to ensure the process survives and redirect output properly
+          nohup NODE_OPTIONS="--max-old-space-size=4096" node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           SVPID=$!
           echo "$SVPID" > .next/runner.pid
           echo "🌐 Server PID: $SVPID"
+
+          # Give the server a moment to start
+          sleep 5
+
+          # Check if the server process is still running
+          if ! kill -0 "$SVPID" 2>/dev/null; then
+            echo "❌ Server process died immediately after starting"
+            echo "📋 Server logs:"
+            cat .next/runner.log || true
+            exit 1
+          fi
+          echo "✅ Server process is running (PID: $SVPID)"
 
           # Wait for readiness with better error handling
           echo "⏳ Waiting for server to be ready..."
@@ -201,27 +224,46 @@ jobs:
 
           # Give server a moment to fully settle after all routes are ready
           echo "⏳ Allowing server to fully settle..."
-          sleep 5
+          sleep 10
+
+          # Final verification that server is still responding
+          echo "🔍 Final server health check..."
+          if ! curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+            echo "❌ Server health check failed after settlement period"
+            echo "📋 Server logs:"
+            cat .next/runner.log || true
+            exit 1
+          fi
+          echo "✅ Server is healthy and ready for tests"
 
           # Run visual regression tests with server monitoring
           echo "🧪 Running visual regression tests..."
 
-          # Start server health monitoring in background
+          # Start comprehensive server monitoring in background
           (
             while true; do
+              # Check if server process is still running
+              if ! kill -0 "$SVPID" 2>/dev/null; then
+                echo "❌ Server process died during test execution"
+                echo "📋 Server logs:"
+                cat .next/runner.log || true
+                break
+              fi
+              
+              # Check if server is responding
               if ! curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
                 echo "⚠️  Server health check failed - server may have crashed"
                 echo "📋 Current server logs:"
                 tail -20 .next/runner.log || true
                 break
               fi
-              sleep 10
+              sleep 5
             done
           ) &
           HEALTH_PID=$!
 
-          # Run tests with increased timeout for CI stability
-          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --timeout=120000
+          # Run tests with increased timeout and conservative settings for CI stability
+          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --timeout=120000 --workers=1 --retries=1
 
           # Stop health monitoring
           kill $HEALTH_PID 2>/dev/null || true
