@@ -384,7 +384,7 @@ test.describe("Visual Regression Tests", () => {
     // Wait for blog content to be fully rendered
     await page.waitForSelector(
       ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3",
-      { timeout: 10000 },
+      { timeout: 10000 }
     );
 
     // Additional wait for any dynamic content to render
@@ -450,7 +450,7 @@ test.describe("Visual Regression Tests", () => {
     await page.evaluate(() => {
       document.documentElement.style.setProperty(
         "--prefers-reduced-motion",
-        "reduce",
+        "reduce"
       );
     });
 
@@ -460,6 +460,11 @@ test.describe("Visual Regression Tests", () => {
   });
 
   test("dark mode simulation", async ({ page }) => {
+    // Navigate to homepage first
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await settle(page);
+
     // Simulate dark mode (if supported)
     await page.evaluate(() => {
       document.documentElement.classList.add("dark");
