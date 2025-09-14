@@ -17,6 +17,11 @@ jobs:
       CI: true
       VITEST_MAX_CONCURRENCY: 1
       VITEST_MAX_THREADS: 1
+      VITEST_MIN_THREADS: 1
+      VITEST_POOL: "threads"
+      VITEST_POOL_OPTIONS: '{"threads":{"singleThread":true}}'
+      VITEST_LOG_LEVEL: "info"
+      DEBUG: "vitest:*"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,8 +29,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
-      - run: npm test
-
+      - name: Show system info
+        run: |
+          echo "Node.js version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "Available memory: $(free -h || vm_stat | head -10)"
+          echo "CPU info: $(sysctl -n machdep.cpu.brand_string || uname -m)"
+      - run: timeout 600 npm test -- --reporter=verbose
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3

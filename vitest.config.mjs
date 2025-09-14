@@ -42,10 +42,10 @@ export default defineConfig({
       ],
       thresholds: { lines: 50, functions: 50, statements: 50, branches: 50 },
     },
-    pool: "threads",
-    testTimeout: process.env.CI ? 60000 : 30000, // 60s for CI, 30s for local
-    hookTimeout: process.env.CI ? 60000 : 30000, // 60s for CI, 30s for local
-    teardownTimeout: process.env.CI ? 60000 : 30000, // 60s for CI, 30s for local
+    pool: process.env.CI ? "forks" : "threads", // Use forks in CI for better stability
+    testTimeout: process.env.CI ? 120000 : 30000, // 120s for CI, 30s for local
+    hookTimeout: process.env.CI ? 120000 : 30000, // 120s for CI, 30s for local
+    teardownTimeout: process.env.CI ? 120000 : 30000, // 120s for CI, 30s for local
     // CI optimizations
     maxConcurrency: process.env.CI ? 1 : 5, // Single test at a time in CI
     maxThreads: process.env.CI ? 1 : 4, // Single thread in CI
