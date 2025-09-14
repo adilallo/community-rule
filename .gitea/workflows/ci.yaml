@@ -174,22 +174,34 @@ jobs:
           echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
 
-          # Verify server is actually responding
-          for i in {1..10}; do
-            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
-              echo "✅ App is responding at http://$HOST:$PORT"
+          # Verify server is actually responding to all test routes
+          echo "🔍 Verifying server readiness for all test routes..."
+          for i in {1..15}; do
+            # Check all routes that will be tested in visual regression
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1 && \
+               curl -fsS "http://$HOST:$PORT/blog" >/dev/null 2>&1 && \
+               curl -fsS "http://$HOST:$PORT/blog/resolving-active-conflicts" >/dev/null 2>&1; then
+              echo "✅ App is responding to all test routes at http://$HOST:$PORT"
               break
             else
-              echo "⏳ Attempt $i/10: Server not ready yet, waiting..."
-              sleep 5
-              if [ $i -eq 10 ]; then
-                echo "❌ Server failed to respond after 10 attempts"
+              echo "⏳ Attempt $i/15: Server not ready for all routes yet, waiting..."
+              sleep 3
+              if [ $i -eq 15 ]; then
+                echo "❌ Server failed to respond to all routes after 15 attempts"
                 echo "📋 Server logs:"
                 cat .next/runner.log || true
+                echo "🔍 Testing individual routes:"
+                curl -I "http://$HOST:$PORT" || echo "❌ Homepage failed"
+                curl -I "http://$HOST:$PORT/blog" || echo "❌ Blog failed"
+                curl -I "http://$HOST:$PORT/blog/resolving-active-conflicts" || echo "❌ Blog post failed"
                 exit 1
               fi
             fi
           done
+
+          # Give server a moment to fully settle after all routes are ready
+          echo "⏳ Allowing server to fully settle..."
+          sleep 5
 
           # Run visual regression tests with server monitoring
           echo "🧪 Running visual regression tests..."
