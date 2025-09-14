@@ -44,24 +44,24 @@ export default defineConfig({
       // Disable coverage collection in CI to prevent test failures
       enabled: !process.env.CI,
     },
-    pool: process.env.CI ? "vmThreads" : "threads", // Use vmThreads in CI for better isolation
-    testTimeout: process.env.CI ? 180000 : 30000, // 180s for CI, 30s for local
-    hookTimeout: process.env.CI ? 180000 : 30000, // 180s for CI, 30s for local
-    teardownTimeout: process.env.CI ? 180000 : 30000, // 180s for CI, 30s for local
-    // CI optimizations
-    maxConcurrency: process.env.CI ? 1 : 5, // Single test at a time in CI
-    maxThreads: process.env.CI ? 1 : 4, // Single thread in CI
-    minThreads: process.env.CI ? 1 : 2, // Minimum threads in CI
-    retry: process.env.CI ? 3 : 0, // More retries in CI
-    // Additional stability measures
-    isolate: process.env.CI ? true : false, // Better isolation in CI
+    pool: "threads", // Use threads for better performance
+    testTimeout: 60000, // 60s timeout for all tests
+    hookTimeout: 60000, // 60s timeout for hooks
+    teardownTimeout: 60000, // 60s timeout for teardown
+    // Conservative settings for stability
+    maxConcurrency: 1, // Single test at a time to avoid resource contention
+    maxThreads: 1, // Single thread to avoid resource contention
+    minThreads: 1, // Minimum threads
+    retry: 0, // No retries to avoid masking issues
+    // Stability measures
+    isolate: true, // Enable isolation for better test stability
     passWithNoTests: true, // Don't fail if no tests found
-    // Additional CI timeout settings
-    workerTimeout: process.env.CI ? 300000 : 60000, // 5min for CI, 1min for local
-    poolTimeout: process.env.CI ? 300000 : 60000, // 5min for CI, 1min for local
-    // Disable problematic features in CI
+    // Timeout settings
+    workerTimeout: 120000, // 2min for worker timeout
+    poolTimeout: 120000, // 2min for pool timeout
+    // Optimize dependencies
     deps: {
-      inline: process.env.CI ? [] : undefined, // Don't inline dependencies in CI
+      inline: ["@testing-library/jest-dom"], // Inline testing library
     },
   },
 });

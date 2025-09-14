@@ -40,13 +40,13 @@ jobs:
           echo "CPU info: $(sysctl -n machdep.cpu.brand_string || uname -m)"
       - run: |
           echo "Running tests with CI optimizations..."
-          # Run tests in smaller batches to reduce memory pressure
+          # Run tests in smaller batches to avoid resource contention
           echo "Running unit tests..."
-          npm test -- tests/unit/ --reporter=verbose --run --bail=1
+          npm test -- tests/unit/ --run --reporter=verbose --no-coverage --maxConcurrency=1
           echo "Running integration tests..."
-          npm test -- tests/integration/ --reporter=verbose --run --bail=1
+          npm test -- tests/integration/ --run --reporter=verbose --no-coverage --maxConcurrency=1
           echo "Running accessibility tests..."
-          npm test -- tests/accessibility/ --reporter=verbose --run --bail=1
+          npm test -- tests/accessibility/ --run --reporter=verbose --no-coverage --maxConcurrency=1
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
