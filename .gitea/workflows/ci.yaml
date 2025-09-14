@@ -18,8 +18,8 @@ jobs:
       VITEST_MAX_CONCURRENCY: 1
       VITEST_MAX_THREADS: 1
       VITEST_MIN_THREADS: 1
-      VITEST_POOL: "threads"
-      VITEST_POOL_OPTIONS: '{"threads":{"singleThread":true}}'
+      VITEST_POOL: "vmThreads"
+      VITEST_POOL_OPTIONS: '{"vmThreads":{"singleThread":true}}'
       VITEST_LOG_LEVEL: "info"
       DEBUG: "vitest:*"
       VITEST_WORKER_TIMEOUT: "300000"
@@ -40,7 +40,13 @@ jobs:
           echo "CPU info: $(sysctl -n machdep.cpu.brand_string || uname -m)"
       - run: |
           echo "Running tests with CI optimizations..."
-          npm test -- --reporter=verbose --no-coverage --run
+          # Run tests in smaller batches to reduce memory pressure
+          echo "Running unit tests..."
+          npm test -- tests/unit/ --reporter=verbose --run --bail=1
+          echo "Running integration tests..."
+          npm test -- tests/integration/ --reporter=verbose --run --bail=1
+          echo "Running accessibility tests..."
+          npm test -- tests/accessibility/ --reporter=verbose --run --bail=1
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
