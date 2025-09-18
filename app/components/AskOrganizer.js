@@ -52,6 +52,10 @@ const AskOrganizer = ({
       container: "text-center",
       buttonContainer: "flex justify-center",
     },
+    inverse: {
+      container: "text-center",
+      buttonContainer: "flex justify-center",
+    },
   };
 
   const styles = variantStyles[variant] || variantStyles.centered;
@@ -81,7 +85,7 @@ const AskOrganizer = ({
           title={title}
           subtitle={subtitle}
           description={description}
-          variant="ask"
+          variant={variant === "inverse" ? "ask-inverse" : "ask"}
           alignment={variant === "left-aligned" ? "left" : "center"}
         />
 
@@ -90,7 +94,7 @@ const AskOrganizer = ({
           <Button
             href={buttonHref}
             size="large"
-            variant="default"
+            variant={variant === "inverse" ? "primary" : "default"}
             className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
             onClick={handleContactClick}
             aria-label={`${buttonText} - Contact an organizer for help`}

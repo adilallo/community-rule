@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "./Button";
+import { getAssetPath } from "../../lib/assetUtils";
 
 const ContentLockup = ({
   title,
@@ -59,13 +60,25 @@ const ContentLockup = ({
       shape:
         "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
     },
+    "ask-inverse": {
+      container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10",
+      textContainer: "flex flex-col gap-[var(--spacing-scale-008)]",
+      titleGroup: "flex flex-col gap-[var(--spacing-scale-008)]",
+      titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
+      title:
+        "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] md:text-[44px] md:leading-[110%] xl:text-[52px] xl:leading-[110%] text-[var(--color-content-inverse-primary)]",
+      subtitle:
+        "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-inverse-primary)]",
+      shape:
+        "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
+    },
   };
 
   const styles = variantStyles[variant] || variantStyles.hero;
 
   return (
     <div className={styles.container}>
-      {variant === "ask" ? (
+      {variant === "ask" || variant === "ask-inverse" ? (
         /* Simplified structure for ask variant */
         <div
           className={`${styles.titleGroup} ${
@@ -91,9 +104,10 @@ const ContentLockup = ({
               <h1 className={styles.title}>{title}</h1>
               {variant === "hero" && (
                 <img
-                  src="assets/Shapes_1.svg"
-                  alt="Decorative shapes"
+                  src={getAssetPath("assets/Shapes_1.svg")}
+                  alt=""
                   className={styles.shape}
+                  role="presentation"
                 />
               )}
             </div>

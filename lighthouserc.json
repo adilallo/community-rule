@@ -1,8 +1,11 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npm run preview",
-      "url": ["http://localhost:3000/"],
+      "url": [
+        "http://127.0.0.1:3010/",
+        "http://127.0.0.1:3010/blog",
+        "http://127.0.0.1:3010/blog/resolving-active-conflicts"
+      ],
       "numberOfRuns": 3,
       "settings": {
         "preset": "desktop",
@@ -13,7 +16,21 @@
           "requestLatencyMs": 0,
           "downloadThroughputKbps": 0,
           "uploadThroughputKbps": 0
-        }
+        },
+        "chromeFlags": [
+          "--disable-web-security",
+          "--disable-features=VizDisplayCompositor",
+          "--ignore-certificate-errors",
+          "--ignore-ssl-errors",
+          "--ignore-certificate-errors-spki-list",
+          "--allow-running-insecure-content",
+          "--disable-extensions",
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+          "--headless"
+        ]
       }
     },
     "assert": {

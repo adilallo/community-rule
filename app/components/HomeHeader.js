@@ -29,7 +29,7 @@ export default function HomeHeader() {
 
   const navigationItems = [
     { href: "#", text: "Use cases", extraPadding: true },
-    { href: "#", text: "Learn" },
+    { href: "/learn", text: "Learn" },
     { href: "#", text: "About" },
   ];
 

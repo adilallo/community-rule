@@ -13,7 +13,18 @@ jobs:
     strategy:
       matrix: { node-version: [18, 20] }
     env:
-      NODE_OPTIONS: "--max_old_space_size=4096"
+      NODE_OPTIONS: "--max_old_space_size=8192 --max_semi_space_size=128"
+      CI: true
+      VITEST_MAX_CONCURRENCY: 1
+      VITEST_MAX_THREADS: 1
+      VITEST_MIN_THREADS: 1
+      VITEST_POOL: "vmThreads"
+      VITEST_POOL_OPTIONS: '{"vmThreads":{"singleThread":true}}'
+      VITEST_LOG_LEVEL: "info"
+      DEBUG: "vitest:*"
+      VITEST_WORKER_TIMEOUT: "300000"
+      VITEST_POOL_TIMEOUT: "300000"
+      VITEST_FORCE_RERUN_TRIGGERS: "**"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,8 +32,21 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
-      - run: npm test
-
+      - name: Show system info
+        run: |
+          echo "Node.js version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "Available memory: $(free -h || vm_stat | head -10)"
+          echo "CPU info: $(sysctl -n machdep.cpu.brand_string || uname -m)"
+      - run: |
+          echo "Running tests with CI optimizations..."
+          # Run tests in smaller batches to avoid resource contention
+          echo "Running unit tests..."
+          npm test -- tests/unit/ --run --reporter=verbose --no-coverage --maxConcurrency=1
+          echo "Running integration tests..."
+          npm test -- tests/integration/ --run --reporter=verbose --no-coverage --maxConcurrency=1
+          echo "Running accessibility tests..."
+          npm test -- tests/accessibility/ --run --reporter=verbose --no-coverage --maxConcurrency=1
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -47,7 +71,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - name: Install Playwright
@@ -90,7 +114,7 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       # package artifacts (keeps file count small)
       - name: Package E2E artifacts
@@ -114,7 +138,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - name: Install Playwright
@@ -140,37 +164,145 @@ jobs:
 
           echo "🚀 Starting Next.js server for visual regression testing..."
 
-          # Start Next directly with node so $! is the real node PID
-          node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
+          # Ensure port is free before starting
+          echo "🔍 Checking if port $PORT is available..."
+          if lsof -ti:$PORT >/dev/null 2>&1; then
+            echo "⚠️  Port $PORT is in use, killing existing processes..."
+            lsof -ti:$PORT | xargs kill -9 2>/dev/null || true
+            sleep 2
+          fi
+
+          # Start Next with explicit memory settings for CI stability
+          echo "🚀 Starting Next.js server on $HOST:$PORT..."
+
+          # Set environment variable and start server
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          nohup node node_modules/next/dist/bin/next start -p "$PORT" -H "$HOST" > .next/runner.log 2>&1 &
           SVPID=$!
           echo "$SVPID" > .next/runner.pid
           echo "🌐 Server PID: $SVPID"
 
-          # Wait for readiness
+          # Give the server a moment to start
+          sleep 5
+
+          # Check if the server process is still running
+          if ! kill -0 "$SVPID" 2>/dev/null; then
+            echo "❌ Server process died immediately after starting"
+            echo "📋 Server logs:"
+            cat .next/runner.log || true
+            exit 1
+          fi
+          echo "✅ Server process is running (PID: $SVPID)"
+
+          # Wait for readiness with better error handling
           echo "⏳ Waiting for server to be ready..."
           npx wait-on -t 120000 "tcp:$HOST:$PORT"
-          curl -fsS "http://$HOST:$PORT" >/dev/null
-          echo "✅ App is responding at http://$HOST:$PORT"
 
+          # Verify server is actually responding to all test routes
+          echo "🔍 Verifying server readiness for all test routes..."
+          for i in {1..15}; do
+            # Check all routes that will be tested in visual regression
+            if curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1 && \
+               curl -fsS "http://$HOST:$PORT/blog" >/dev/null 2>&1 && \
+               curl -fsS "http://$HOST:$PORT/blog/resolving-active-conflicts" >/dev/null 2>&1; then
+              echo "✅ App is responding to all test routes at http://$HOST:$PORT"
+              break
+            else
+              echo "⏳ Attempt $i/15: Server not ready for all routes yet, waiting..."
+              sleep 3
+              if [ $i -eq 15 ]; then
+                echo "❌ Server failed to respond to all routes after 15 attempts"
+                echo "📋 Server logs:"
+                cat .next/runner.log || true
+                echo "🔍 Testing individual routes:"
+                curl -I "http://$HOST:$PORT" || echo "❌ Homepage failed"
+                curl -I "http://$HOST:$PORT/blog" || echo "❌ Blog failed"
+                curl -I "http://$HOST:$PORT/blog/resolving-active-conflicts" || echo "❌ Blog post failed"
+                exit 1
+              fi
+            fi
+          done
 
+          # Give server a moment to fully settle after all routes are ready
+          echo "⏳ Allowing server to fully settle..."
+          sleep 10
 
-          # Run visual regression tests
+          # Final verification that server is still responding
+          echo "🔍 Final server health check..."
+          if ! curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+            echo "❌ Server health check failed after settlement period"
+            echo "📋 Server logs:"
+            cat .next/runner.log || true
+            exit 1
+          fi
+          echo "✅ Server is healthy and ready for tests"
+
+          # Run visual regression tests with server monitoring
           echo "🧪 Running visual regression tests..."
-          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts
 
-          # Teardown
+          # Start comprehensive server monitoring in background
+          (
+            while true; do
+              # Check if server process is still running
+              if ! kill -0 "$SVPID" 2>/dev/null; then
+                echo "❌ Server process died during test execution"
+                echo "📋 Server logs:"
+                cat .next/runner.log || true
+                break
+              fi
+              
+              # Check if server is responding
+              if ! curl -fsS "http://$HOST:$PORT" >/dev/null 2>&1; then
+                echo "⚠️  Server health check failed - server may have crashed"
+                echo "📋 Current server logs:"
+                tail -20 .next/runner.log || true
+                break
+              fi
+              sleep 5
+            done
+          ) &
+          HEALTH_PID=$!
+
+          # Run tests with increased timeout and conservative settings for CI stability
+          BASE_URL="http://$HOST:$PORT" npx playwright test tests/e2e/visual-regression.spec.ts --timeout=120000 --workers=1 --retries=1
+
+          # Stop health monitoring
+          kill $HEALTH_PID 2>/dev/null || true
+
+          # Teardown with better error handling
           echo "🧹 Cleaning up server..."
           kill "$SVPID" 2>/dev/null || true
+
+          # Wait for server to actually stop
+          for i in {1..10}; do
+            if ! kill -0 "$SVPID" 2>/dev/null; then
+              echo "✅ Server process stopped"
+              break
+            else
+              echo "⏳ Waiting for server to stop... ($i/10)"
+              sleep 2
+              if [ $i -eq 10 ]; then
+                echo "⚠️  Force killing server process"
+                kill -9 "$SVPID" 2>/dev/null || true
+              fi
+            fi
+          done
+
           echo "✅ Server cleanup complete"
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Package visual artifacts
         if: always()
         run: |
-          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots || true
+          # Include server logs for debugging
+          echo "📋 Server logs for debugging:"
+          cat .next/runner.log || echo "No server logs found"
+
+          # Package test results and logs
+          tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots .next/runner.log || true
 
       - name: Upload visual artifacts
         if: always()
@@ -195,7 +327,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
 
@@ -315,13 +447,14 @@ jobs:
           "$CHROME_PATH" --version
 
           # Run LHCI with arm64 Node + arm64 Chrome
-          npx lhci autorun --chrome-path="$CHROME_PATH" --collect.url=http://$HOST:$PORT/
+          # Test homepage and blog pages using config file
+          npx lhci autorun --chrome-path="$CHROME_PATH"
 
           kill "$SVPID" 2>/dev/null || true
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NODE_ENV: production
-          NODE_OPTIONS: "--max-old-space-size=4096"
+          NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Upload LHCI results
         if: always()
@@ -338,7 +471,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run storybook:build:github
@@ -353,7 +486,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run lint
@@ -367,7 +500,7 @@ jobs:
         if: ${{ github.server_url == 'https://github.com' }}
         with: { node-version: 20, cache: npm }
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' }}
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run build

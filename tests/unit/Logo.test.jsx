@@ -14,16 +14,16 @@ describe("Logo Component", () => {
 
   it("renders with custom size variant", () => {
     const { rerender } = render(<Logo size="header" />);
-    let logo = screen.getByRole("link");
-    expect(logo).toHaveClass("h-[20.85px]");
+    let logoDiv = screen.getByRole("link").querySelector("div");
+    expect(logoDiv).toHaveClass("h-[20.85px]");
 
     rerender(<Logo size="headerLg" />);
-    logo = screen.getByRole("link");
-    expect(logo).toHaveClass("h-[28px]");
+    logoDiv = screen.getByRole("link").querySelector("div");
+    expect(logoDiv).toHaveClass("h-[28px]");
 
     rerender(<Logo size="footer" />);
-    logo = screen.getByRole("link");
-    expect(logo).toHaveClass("h-[calc(40px*1.37)]");
+    logoDiv = screen.getByRole("link").querySelector("div");
+    expect(logoDiv).toHaveClass("h-[calc(40px*1.37)]");
   });
 
   it("renders without text when showText is false", () => {
@@ -36,8 +36,8 @@ describe("Logo Component", () => {
   it("applies proper hover effects", () => {
     render(<Logo />);
 
-    const logo = screen.getByRole("link");
-    expect(logo).toHaveClass("hover:scale-[1.02]", "transition-all");
+    const logoDiv = screen.getByRole("link").querySelector("div");
+    expect(logoDiv).toHaveClass("hover:scale-[1.02]", "transition-all");
   });
 
   it("applies proper accessibility attributes", () => {
@@ -45,7 +45,7 @@ describe("Logo Component", () => {
 
     const logo = screen.getByRole("link");
     expect(logo).toHaveAttribute("aria-label", "CommunityRule Logo");
-    expect(logo).toHaveAttribute("role", "link");
+    expect(logo).toHaveAttribute("href", "/");
   });
 
   it("applies proper text styling for different sizes", () => {
@@ -98,7 +98,7 @@ describe("Logo Component", () => {
     render(<Logo />);
 
     const icon = screen.getByAltText("CommunityRule Logo Icon");
-    expect(icon).toHaveAttribute("src", "assets/Logo.svg");
+    expect(icon).toHaveAttribute("src", "/assets/Logo.svg");
     expect(icon).toHaveAttribute("aria-hidden", "true");
   });
 

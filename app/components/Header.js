@@ -4,18 +4,19 @@ import MenuBarItem from "./MenuBarItem";
 import Button from "./Button";
 import AvatarContainer from "./AvatarContainer";
 import Avatar from "./Avatar";
+import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
 // Configuration data for testing
 export const navigationItems = [
   { href: "#", text: "Use cases", extraPadding: true },
-  { href: "#", text: "Learn" },
+  { href: "/learn", text: "Learn" },
   { href: "#", text: "About" },
 ];
 
 export const avatarImages = [
-  { src: "assets/Avatar_1.png", alt: "Avatar 1" },
-  { src: "assets/Avatar_2.png", alt: "Avatar 2" },
-  { src: "assets/Avatar_3.png", alt: "Avatar 3" },
+  { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
+  { src: getAssetPath(ASSETS.AVATAR_2), alt: "Avatar 2" },
+  { src: getAssetPath(ASSETS.AVATAR_3), alt: "Avatar 3" },
 ];
 
 export const logoConfig = [

@@ -34,7 +34,7 @@ export default {
     },
     variant: {
       control: { type: "select" },
-      options: ["centered", "left-aligned", "compact"],
+      options: ["centered", "left-aligned", "compact", "inverse"],
       description: "Layout variant for the component",
     },
     onContactClick: {
@@ -73,6 +73,17 @@ export const Compact = {
     buttonText: "Ask an organizer",
     buttonHref: "#contact",
     variant: "compact",
+    onContactClick: (data) => console.log("Contact clicked:", data),
+  },
+};
+
+export const Inverse = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an organizer",
+    buttonHref: "#contact",
+    variant: "inverse",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
 };

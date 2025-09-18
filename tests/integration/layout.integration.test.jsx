@@ -77,7 +77,7 @@ describe("Layout Integration", () => {
     const aboutLink = aboutLinks[0];
 
     expect(useCasesLink).toHaveAttribute("href", "#");
-    expect(learnLink).toHaveAttribute("href", "#");
+    expect(learnLink).toHaveAttribute("href", "/learn");
     expect(aboutLink).toHaveAttribute("href", "#");
 
     // Test button interactions

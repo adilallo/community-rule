@@ -73,13 +73,13 @@ describe("Footer", () => {
     expect(blueskyImages.length).toBeGreaterThan(0);
     const blueskyImage = blueskyImages[0];
     expect(blueskyImage).toBeInTheDocument();
-    expect(blueskyImage).toHaveAttribute("src", "assets/Bluesky_Logo.svg");
+    expect(blueskyImage).toHaveAttribute("src", "/assets/Bluesky_Logo.svg");
 
     const gitlabImages = screen.getAllByAltText("GitLab");
     expect(gitlabImages.length).toBeGreaterThan(0);
     const gitlabImage = gitlabImages[0];
     expect(gitlabImage).toBeInTheDocument();
-    expect(gitlabImage).toHaveAttribute("src", "assets/GitLab_Icon.png");
+    expect(gitlabImage).toHaveAttribute("src", "/assets/GitLab_Icon.png");
   });
 
   test("renders navigation links", () => {

@@ -128,15 +128,16 @@ describe("ContentLockup Integration", () => {
   test("renders decorative shape for hero variant", () => {
     render(<ContentLockup variant="hero" title="Hero with Shape" />);
 
-    const shape = screen.getByAltText("Decorative shapes");
+    const shape = screen.getByRole("presentation");
     expect(shape).toBeInTheDocument();
-    expect(shape).toHaveAttribute("src", "assets/Shapes_1.svg");
+    expect(shape).toHaveAttribute("src", "/assets/Shapes_1.svg");
+    expect(shape).toHaveAttribute("alt", "");
   });
 
   test("does not render shape for non-hero variants", () => {
     render(<ContentLockup variant="feature" title="Feature without Shape" />);
 
-    expect(screen.queryByAltText("Decorative shapes")).not.toBeInTheDocument();
+    expect(screen.queryByRole("presentation")).not.toBeInTheDocument();
   });
 
   test("link has proper accessibility attributes", () => {

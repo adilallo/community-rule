@@ -376,18 +376,55 @@ test.describe("Visual Regression Tests", () => {
     });
   });
 
-  test("error states", async ({ page }) => {
-    // Test error states by simulating a more controlled error condition
-    // Instead of blocking resources, we'll simulate a network error state
+  test("blog listing page", async ({ page }) => {
+    // Navigate to blog listing page
+    await page.goto("/blog");
+    await page.waitForLoadState("networkidle");
 
-    // Navigate to a non-existent route to trigger a 404-like state
+    // Wait for blog content to be fully rendered
+    await page.waitForSelector(
+      ".grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3",
+      { timeout: 10000 },
+    );
+
+    // Additional wait for any dynamic content to render
+    await page.waitForTimeout(1000);
+    await settle(page);
+
+    // Take full page screenshot of blog listing
+    await expect(page).toHaveScreenshot("blog-listing.png", {
+      fullPage: true,
+      animations: "disabled",
+    });
+  });
+
+  test("blog post page", async ({ page }) => {
+    // Navigate to a specific blog post
+    await page.goto("/blog/resolving-active-conflicts");
+    await page.waitForLoadState("networkidle");
+
+    // Wait for blog post content to be fully rendered
+    await page.waitForSelector("main", { timeout: 10000 });
+
+    // Additional wait for any dynamic content to render
+    await page.waitForTimeout(1000);
+    await settle(page);
+
+    // Take full page screenshot of blog post
+    await expect(page).toHaveScreenshot("blog-post.png", {
+      fullPage: true,
+      animations: "disabled",
+    });
+  });
+
+  test("404 error page", async ({ page }) => {
+    // Navigate to a non-existent route to trigger 404
     await page.goto("/non-existent-page");
+    await page.waitForLoadState("networkidle");
+    await settle(page);
 
-    // Wait for page to stabilize
-    await page.waitForTimeout(2000);
-
-    // Take screenshot of error state
-    await expect(page).toHaveScreenshot("homepage-error.png", {
+    // Take screenshot of 404 page
+    await expect(page).toHaveScreenshot("404-error.png", {
       animations: "disabled",
     });
   });
@@ -423,6 +460,11 @@ test.describe("Visual Regression Tests", () => {
   });
 
   test("dark mode simulation", async ({ page }) => {
+    // Navigate to homepage first
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await settle(page);
+
     // Simulate dark mode (if supported)
     await page.evaluate(() => {
       document.documentElement.classList.add("dark");

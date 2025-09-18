@@ -80,7 +80,7 @@ describe("Header", () => {
         extraPadding: true,
       });
       expect(navigationItems[1]).toEqual({
-        href: "#",
+        href: "/learn",
         text: "Learn",
       });
       expect(navigationItems[2]).toEqual({
@@ -92,15 +92,15 @@ describe("Header", () => {
     test("avatarImages has correct structure and count", () => {
       expect(avatarImages).toHaveLength(3);
       expect(avatarImages[0]).toEqual({
-        src: "assets/Avatar_1.png",
+        src: "/assets/Avatar_1.png",
         alt: "Avatar 1",
       });
       expect(avatarImages[1]).toEqual({
-        src: "assets/Avatar_2.png",
+        src: "/assets/Avatar_2.png",
         alt: "Avatar 2",
       });
       expect(avatarImages[2]).toEqual({
-        src: "assets/Avatar_3.png",
+        src: "/assets/Avatar_3.png",
         alt: "Avatar 3",
       });
     });

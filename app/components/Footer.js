@@ -1,5 +1,6 @@
 import Logo from "./Logo";
 import Separator from "./Separator";
+import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
 export default function Footer() {
   // Schema markup for organization information
@@ -70,7 +71,7 @@ export default function Footer() {
                   aria-label="Follow us on Bluesky"
                 >
                   <img
-                    src="assets/Bluesky_Logo.svg"
+                    src={getAssetPath(ASSETS.BLUESKY_LOGO)}
                     alt="Bluesky"
                     width={24}
                     height={22}
@@ -86,7 +87,7 @@ export default function Footer() {
                   aria-label="Follow us on GitLab"
                 >
                   <img
-                    src="assets/GitLab_Icon.png"
+                    src={getAssetPath(ASSETS.GITLAB_ICON)}
                     alt="GitLab"
                     width={22}
                     height={22}

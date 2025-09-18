@@ -6,10 +6,20 @@
 @source "../.storybook/**/*";
 @source "./**/*";
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 @theme inline {
   /* Custom breakpoints */
   --breakpoint-xsm: 429px;
   --breakpoint-sm: 430px;
+  --breakpoint-sm2: 440px;
   --breakpoint-md: 640px;
   --breakpoint-xmd: 768px;
   --breakpoint-lg: 1024px;
@@ -370,6 +380,7 @@
   --color-content-inverse-brand-accent: var(--color-yellow-yellow700);
   --color-content-inverse-brand-primary: var(--color-yellow-yellow900);
   --color-content-inverse-brand-secondary: var(--color-rust-rust800);
+  --color-content-inverse-brand-royal: var(--color-royal-blue-royal-blue1000);
   --color-content-inverse-primary: var(--color-gray-1000);
   --color-content-inverse-secondary: var(--color-gray-800);
   --color-content-inverse-tertiary: var(--color-gray-700);
@@ -1069,5 +1080,44 @@
     text-transform: none;
     text-indent: 0px;
     margin-bottom: 0px;
+  }
+
+  /* Blog post body styling with semantic spacing */
+  .post-body p {
+    /* Scales with font size - uses logical properties for better writing mode support */
+    margin-block: 1em;
+  }
+
+  /* Extra blank lines from markdown -> visible gaps that scale with font size */
+  .post-body .md-gap {
+    /* Each "extra blank line" is one em; scales with font size */
+    block-size: calc(1em * var(--gap, 1));
+    margin: 0; /* no extra margins around the gap */
+    line-height: 1; /* prevent tall line-height from compounding */
+  }
+
+  /* Heading rhythm for better typography */
+  .post-body h1 {
+    margin-block: 1.5em 0.6em;
+  }
+  .post-body h2 {
+    margin-block: 1.4em 0.6em;
+  }
+  .post-body h3 {
+    margin-block: 1.2em 0.5em;
+  }
+  .post-body h4 {
+    margin-block: 1.1em 0.5em;
+  }
+  .post-body h5 {
+    margin-block: 1em 0.4em;
+  }
+  .post-body h6 {
+    margin-block: 1em 0.4em;
+  }
+
+  /* Ensure line breaks are visible */
+  .post-body br {
+    display: block;
   }
 }
