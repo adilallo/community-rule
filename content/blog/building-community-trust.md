@@ -9,6 +9,9 @@ related:
     "operational-security-mutual-aid",
     "making-decisions-without-hierarchy",
   ]
+thumbnail:
+  vertical: "building-community-trust-vertical.svg"
+  horizontal: "building-community-trust-horizontal.svg"
 ---
 
 Trust is the foundation of any successful community organization. Without it, even the best structures and processes will struggle to function effectively. Building and maintaining trust requires intentional effort, clear communication, and consistent follow-through on commitments.

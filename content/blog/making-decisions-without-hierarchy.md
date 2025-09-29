@@ -4,6 +4,9 @@ description: "A brief guide to collaborative nonhierarchical decision making"
 author: "Author name"
 date: "2025-04-05"
 related: ["resolving-active-conflicts", "operational-security-mutual-aid"]
+thumbnail:
+  vertical: "making-decisions-without-hierarchy-vertical.svg"
+  horizontal: "making-decisions-without-hierarchy-horizontal.svg"
 ---
 
 Traditional organizations rely on hierarchical structures where decisions flow from top to bottom. But what if you want to create a more collaborative, egalitarian approach? This guide explores practical methods for making decisions without traditional power structures.

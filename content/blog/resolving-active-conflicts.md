@@ -5,6 +5,9 @@ author: "Author name"
 date: "2025-04-15"
 related:
   ["operational-security-mutual-aid", "making-decisions-without-hierarchy"]
+thumbnail:
+  vertical: "resolving-active-conflicts-vertical.svg"
+  horizontal: "resolving-active-conflicts-horizontal.svg"
 ---
 
 Many groups strive to work without bosses, managers, or traditional leadership structures. But when no one's in charge, how do decisions get made? Non-hierarchical groups often rely on collective processes that prioritize trust, transparency, and shared responsibility. These approaches can take more time upfront, but they help build stronger, more equitable communities in the long run.

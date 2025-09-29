@@ -45,6 +45,9 @@ description: "A brief, compelling description of what this article covers"
 author: "Author Name"
 date: "2025-01-15"
 related: ["slug-of-related-article-1", "slug-of-related-article-2"]
+thumbnail:
+  vertical: "your-article-slug-vertical.svg"
+  horizontal: "your-article-slug-horizontal.svg"
 ---
 ```
 
@@ -55,6 +58,7 @@ related: ["slug-of-related-article-1", "slug-of-related-article-2"]
 - **author**: Author name or organization
 - **date**: Publication date in YYYY-MM-DD format
 - **related**: Array of article slugs (use filename without .md)
+- **thumbnail**: Custom images for article thumbnails (optional)
 
 ### Related Articles
 
@@ -72,6 +76,30 @@ The slug is different from the title - it's lowercase with hyphens instead of sp
 - Use ## headings to break up sections within your content
 - Keep paragraphs focused and readable
 - Write in a conversational, accessible tone
+
+## Thumbnail Images
+
+Add custom thumbnail images to make your article stand out:
+
+1. **Create your images**:
+
+   - Vertical: 260px × 390px
+   - Horizontal: 320px × 225.5px (minimum width)
+   - Format: SVG preferred, PNG also works
+
+2. **Save in content/blog/**:
+
+   - `your-article-slug-vertical.svg`
+   - `your-article-slug-horizontal.svg`
+
+3. **Add to frontmatter**:
+   ```yaml
+   thumbnail:
+     vertical: "your-article-slug-vertical.svg"
+     horizontal: "your-article-slug-horizontal.svg"
+   ```
+
+If no thumbnails are provided, default images will be used.
 
 ## File Naming
 

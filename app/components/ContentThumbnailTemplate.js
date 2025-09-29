@@ -13,36 +13,32 @@ const ContentThumbnailTemplate = ({
   post,
   className = "",
   variant = "vertical", // Internal prop for testing/development
-  slugOrder = [], // Array of slugs for consistent icon cycling
 }) => {
-  // Post-specific background selection - different SVG for each post
-  const getBackgroundImage = (slug, variant, slugOrder) => {
-    const verticalImages = [
-      getAssetPath(ASSETS.VERTICAL_1),
-      getAssetPath(ASSETS.VERTICAL_2),
-      getAssetPath(ASSETS.VERTICAL_3),
-    ];
+  // Get article-specific background image from frontmatter
+  const getBackgroundImage = (post, variant) => {
+    // Check if post has thumbnail images defined in frontmatter
+    if (post.frontmatter?.thumbnail) {
+      const imageName =
+        variant === "vertical"
+          ? post.frontmatter.thumbnail.vertical
+          : post.frontmatter.thumbnail.horizontal;
 
-    const horizontalImages = [
-      getAssetPath(ASSETS.HORIZONTAL_1),
-      getAssetPath(ASSETS.HORIZONTAL_2),
-      getAssetPath(ASSETS.HORIZONTAL_3),
-    ];
+      if (imageName) {
+        // Return path to image in content/blog directory
+        return `/content/blog/${imageName}`;
+      }
+    }
 
-    if (!slug)
-      return variant === "vertical" ? verticalImages[0] : horizontalImages[0];
+    // Fallback to default images if no thumbnail specified
+    const fallbackImages = {
+      vertical: getAssetPath(ASSETS.VERTICAL_1),
+      horizontal: getAssetPath(ASSETS.HORIZONTAL_1),
+    };
 
-    // Use the passed slugOrder for consistent cycling through background variants
-    const index = slugOrder.indexOf(slug);
-    const backgroundIndex = index >= 0 ? index % 3 : 0; // Cycle through 3 background variants
-
-    // Return the same background index for both vertical and horizontal variants
-    return variant === "vertical"
-      ? verticalImages[backgroundIndex]
-      : horizontalImages[backgroundIndex];
+    return fallbackImages[variant] || fallbackImages.vertical;
   };
 
-  const backgroundImage = getBackgroundImage(post.slug, variant, slugOrder);
+  const backgroundImage = getBackgroundImage(post, variant);
 
   if (variant === "vertical") {
     return (
