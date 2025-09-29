@@ -1,109 +1,52 @@
 import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
-
-// Mock blog post data for testing
-const mockPost1 = {
-  slug: "resolving-active-conflicts",
-  frontmatter: {
-    title: "Resolving Active Conflicts",
-    description:
-      "Practical steps for resolving conflicts while maintaining trust, cooperation, and shared goals",
-    author: "Author name",
-    date: "2025-04-15",
-  },
-};
-
-const mockPost2 = {
-  slug: "operational-security-mutual-aid",
-  frontmatter: {
-    title: "Operational Security for Mutual Aid",
-    description:
-      "Tactics to protect members, secure communication, and prevent Infiltration",
-    author: "Author name",
-    date: "2025-04-10",
-  },
-};
-
-const mockPost3 = {
-  slug: "making-decisions-without-hierarchy",
-  frontmatter: {
-    title: "Making decisions without hierarchy",
-    description:
-      "A brief guide to collaborative nonhierarchical decision making",
-    author: "Author name",
-    date: "2025-04-05",
-  },
-};
+import ContentLockup from "../components/ContentLockup";
+import { getAllBlogPosts, getRecentBlogPosts } from "../../lib/content";
 
 export default function LearnPage() {
-  // Mock slug order for consistent background cycling
-  const mockSlugOrder = [
-    "resolving-active-conflicts",
-    "operational-security-mutual-aid",
-    "making-decisions-without-hierarchy",
-  ];
+  // Get real blog posts from the content system
+  const allPosts = getAllBlogPosts();
+  const recentPosts = getRecentBlogPosts(3);
+
+  // Create slug order for consistent background cycling
+  const slugOrder = allPosts.map((post) => post.slug);
 
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
-      <div className="max-w-6xl mx-auto p-8 pt-24">
-        <h1 className="text-3xl font-bold text-[var(--color-content-default-primary)] mb-8">
-          Learn
-        </h1>
+    <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
+      {/* Content Lockup Header */}
+      <div className="pt-[var(--spacing-scale-016)] pb-[var(--spacing-scale-016)] px-[var(--spacing-scale-020)] gap-[var(--spacing-scale-016)]">
+        <ContentLockup
+          title="Organizing is hard"
+          subtitle="Find answers to your questions and see how other groups have solved similar challenges."
+          variant="learn"
+          alignment="left"
+        />
+      </div>
 
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-12">
-          {/* Featured Articles */}
-          <section>
-            <h2 className="text-2xl font-semibold text-[var(--color-content-default-primary)] mb-6">
-              Featured Articles
-            </h2>
-            <div className="flex flex-wrap gap-6">
-              <ContentThumbnailTemplate
-                post={mockPost1}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-            </div>
-          </section>
-
           {/* More Articles */}
           <section>
-            <h2 className="text-2xl font-semibold text-[var(--color-content-default-primary)] mb-6">
+            <h2 className="text-2xl font-semibold text-[var(--color-content-inverse-primary)] mb-6">
               More Articles
             </h2>
             <div className="space-y-4">
-              <ContentThumbnailTemplate
-                post={mockPost1}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
+              {allPosts.slice(0, 3).map((post, index) => (
+                <ContentThumbnailTemplate
+                  key={post.slug}
+                  post={post}
+                  variant="horizontal"
+                  slugOrder={slugOrder}
+                />
+              ))}
             </div>
           </section>
 
           {/* Coming Soon */}
-          <section className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-[var(--color-content-default-primary)] mb-4">
+          <section className="bg-[var(--color-surface-default-secondary)] p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold text-[var(--color-content-inverse-primary)] mb-4">
               More Content Coming Soon
             </h2>
-            <p className="text-[var(--color-content-default-secondary)]">
+            <p className="text-[var(--color-content-inverse-secondary)]">
               We&apos;re working on adding more educational content to help you
               build better communities. Check back soon for new articles and
               resources.

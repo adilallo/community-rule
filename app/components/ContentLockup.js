@@ -48,6 +48,20 @@ const ContentLockup = ({
       shape:
         "w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]",
     },
+    learn: {
+      container: "flex flex-col gap-[var(--spacing-scale-012)] relative z-10",
+      textContainer: "flex flex-col gap-[var(--spacing-scale-012)]",
+      titleGroup: "flex flex-col gap-[var(--spacing-scale-012)]",
+      titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
+      title:
+        "font-bricolage-grotesque font-medium text-[28px] leading-[36px] tracking-[0] text-[var(--color-content-default-primary)]",
+      subtitle:
+        "font-space-grotesk font-normal text-[16px] leading-[24px] tracking-[0] text-[var(--color-content-default-primary)]",
+      description:
+        "font-inter font-normal text-[16px] leading-[140%] lg:text-[18px] lg:leading-[150%] xl:text-[20px] xl:leading-[160%] text-[var(--color-content-secondary)]",
+      shape:
+        "w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]",
+    },
     ask: {
       container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10",
       textContainer: "flex flex-col gap-[var(--spacing-scale-008)]",
