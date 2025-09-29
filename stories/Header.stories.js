@@ -8,13 +8,11 @@ export default {
     docs: {
       description: {
         component:
-          "The main navigation header with responsive behavior across different breakpoints.",
+          "The main navigation header with responsive behavior across different breakpoints. Features sticky positioning and active state highlighting for current page navigation.",
       },
     },
   },
-  argTypes: {
-    onToggle: { action: "toggled" },
-  },
+  argTypes: {},
   tags: ["autodocs"],
 };
 

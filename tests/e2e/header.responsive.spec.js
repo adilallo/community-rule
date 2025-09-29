@@ -20,13 +20,13 @@ test.describe("Header responsive behavior", () => {
 
       // All breakpoints should have navigation items
       await expect(
-        page.getByRole("menuitem", { name: /use cases/i }),
+        page.getByRole("menuitem", { name: /use cases/i })
       ).toBeVisible();
       await expect(
-        page.getByRole("menuitem", { name: /learn/i }),
+        page.getByRole("menuitem", { name: /learn/i })
       ).toBeVisible();
       await expect(
-        page.getByRole("menuitem", { name: /about/i }),
+        page.getByRole("menuitem", { name: /about/i })
       ).toBeVisible();
     });
 
@@ -38,14 +38,14 @@ test.describe("Header responsive behavior", () => {
 
       // All breakpoints should have login button
       await expect(
-        page.getByRole("menuitem", { name: /log in to your account/i }),
+        page.getByRole("menuitem", { name: /log in to your account/i })
       ).toBeVisible();
 
       // All breakpoints should have create rule button
       await expect(
         page.getByRole("button", {
           name: /create a new rule with avatar decoration/i,
-        }),
+        })
       ).toBeVisible();
     });
 
@@ -100,6 +100,96 @@ test.describe("Header responsive behavior", () => {
       });
       await createRuleButton.focus();
       await page.waitForTimeout(200);
+    });
+  });
+
+  test.describe("Header sticky behavior", () => {
+    test("regular header is sticky on non-home pages", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/learn");
+
+      const header = page.locator("header").first();
+
+      // Check that header has sticky positioning
+      const headerStyles = await header.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          position: computed.position,
+          top: computed.top,
+          zIndex: computed.zIndex,
+        };
+      });
+
+      expect(headerStyles.position).toBe("sticky");
+      expect(headerStyles.top).toBe("0px");
+      expect(headerStyles.zIndex).toBe("50");
+    });
+
+    test("home header is not sticky on home page", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
+
+      const header = page.locator("header").first();
+
+      // Check that header does not have sticky positioning
+      const headerStyles = await header.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          position: computed.position,
+          top: computed.top,
+          zIndex: computed.zIndex,
+        };
+      });
+
+      expect(headerStyles.position).not.toBe("sticky");
+    });
+  });
+
+  test.describe("Active navigation state", () => {
+    test("learn page shows active state for learn navigation", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/learn");
+
+      const learnLink = page.getByRole("menuitem", { name: /learn/i });
+
+      // Check that learn link has active styling
+      const linkStyles = await learnLink.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          outline: computed.outline,
+          outlineColor: computed.outlineColor,
+          color: computed.color,
+        };
+      });
+
+      // Should have outline and brand color
+      expect(linkStyles.outline).not.toBe("none");
+      expect(linkStyles.outlineColor).toContain(
+        "var(--color-content-default-brand-primary)"
+      );
+    });
+
+    test("home page does not show active state for learn navigation", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
+
+      const learnLink = page.getByRole("menuitem", { name: /learn/i });
+
+      // Check that learn link does not have active styling
+      const linkStyles = await learnLink.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          outline: computed.outline,
+          outlineColor: computed.outlineColor,
+        };
+      });
+
+      // Should not have active outline
+      expect(linkStyles.outline).toBe("none");
     });
   });
 });
