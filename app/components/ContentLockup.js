@@ -49,7 +49,8 @@ const ContentLockup = ({
         "w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]",
     },
     learn: {
-      container: "flex flex-col gap-[var(--spacing-scale-012)] relative z-10",
+      container:
+        "flex flex-col gap-[var(--spacing-scale-012)] relative z-10 pt-[var(--spacing-scale-016)] pb-[var(--spacing-scale-016)] px-[var(--spacing-scale-020)]",
       textContainer: "flex flex-col gap-[var(--spacing-scale-012)]",
       titleGroup: "flex flex-col gap-[var(--spacing-scale-012)]",
       titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
