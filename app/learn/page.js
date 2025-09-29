@@ -30,10 +30,12 @@ export default function LearnPage() {
     <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
       <ContentLockup {...contentLockupData} />
 
-      <div className="space-y-[var(--spacing-scale-002)]">
+      <div className="pt-[var(--spacing-scale-024)] pb-[var(--spacing-scale-024)] px-[var(--spacing-scale-020)] space-y-[var(--spacing-scale-002)]">
         {allPosts.slice(0, 3).map((post, index) => (
           <ContentThumbnailTemplate
-            key={post.slug}
+            key={`${post.slug}-${index}-${
+              post.frontmatter.thumbnail?.horizontal || "default"
+            }`}
             post={post}
             variant="horizontal"
           />

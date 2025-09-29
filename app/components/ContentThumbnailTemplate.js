@@ -24,7 +24,7 @@ const ContentThumbnailTemplate = ({
           : post.frontmatter.thumbnail.horizontal;
 
       if (imageName) {
-        // Return path to image in content/blog directory
+        // Return path to image in public/content/blog directory
         return `/content/blog/${imageName}`;
       }
     }

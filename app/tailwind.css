@@ -20,6 +20,7 @@
   --breakpoint-xsm: 429px;
   --breakpoint-sm: 430px;
   --breakpoint-sm2: 440px;
+  --breakpoint-smd: 540px;
   --breakpoint-md: 640px;
   --breakpoint-xmd: 768px;
   --breakpoint-lg: 1024px;
@@ -29,15 +30,12 @@
   --color-*: initial;
 
   /* Font families */
-  --font-sans:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display:
-    var(--font-bricolage-grotesque), ui-sans-serif, system-ui, -apple-system,
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono:
-    var(--font-space-grotesk), ui-monospace, SFMono-Regular, "SF Mono",
-    Consolas, "Liberation Mono", Menlo, monospace;
+  --font-display: var(--font-bricolage-grotesque), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-space-grotesk), ui-monospace, SFMono-Regular,
+    "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* Dimension */
   --spacing-scale-000: 0px;
