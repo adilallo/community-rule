@@ -15,6 +15,16 @@ describe("Blog Post Validation", () => {
         author: "Test Author",
         date: "2025-04-15",
         related: ["post-1", "post-2"],
+        thumbnail: {
+          vertical: "test-vertical.svg",
+          horizontal: "test-horizontal.svg",
+        },
+        banner: {
+          horizontal: "test-banner.svg",
+        },
+        background: {
+          color: "#F4F3F1",
+        },
       };
 
       const result = validateBlogPost(validPost);
@@ -84,11 +94,14 @@ describe("Blog Post Validation", () => {
         description: "Test description",
         author: "Test Author",
         date: "2025-04-15",
-        // Missing related
+        // Missing related, thumbnail, banner, background
       };
 
       const sanitized = sanitizeBlogPost(post);
       expect(sanitized.related).toEqual([]);
+      expect(sanitized.thumbnail).toBeNull();
+      expect(sanitized.banner).toBeNull();
+      expect(sanitized.background).toBeNull();
     });
 
     it("should preserve existing optional fields", () => {
@@ -98,10 +111,30 @@ describe("Blog Post Validation", () => {
         author: "Test Author",
         date: "2025-04-15",
         related: ["custom-post"],
+        thumbnail: {
+          vertical: "custom-vertical.svg",
+          horizontal: "custom-horizontal.svg",
+        },
+        banner: {
+          horizontal: "custom-banner.svg",
+        },
+        background: {
+          color: "#E2EFFF",
+        },
       };
 
       const sanitized = sanitizeBlogPost(post);
       expect(sanitized.related).toEqual(["custom-post"]);
+      expect(sanitized.thumbnail).toEqual({
+        vertical: "custom-vertical.svg",
+        horizontal: "custom-horizontal.svg",
+      });
+      expect(sanitized.banner).toEqual({
+        horizontal: "custom-banner.svg",
+      });
+      expect(sanitized.background).toEqual({
+        color: "#E2EFFF",
+      });
     });
   });
 
@@ -112,6 +145,9 @@ describe("Blog Post Validation", () => {
       expect(BLOG_POST_SCHEMA).toHaveProperty("author");
       expect(BLOG_POST_SCHEMA).toHaveProperty("date");
       expect(BLOG_POST_SCHEMA).toHaveProperty("related");
+      expect(BLOG_POST_SCHEMA).toHaveProperty("thumbnail");
+      expect(BLOG_POST_SCHEMA).toHaveProperty("banner");
+      expect(BLOG_POST_SCHEMA).toHaveProperty("background");
     });
 
     it("should have correct required field configuration", () => {
@@ -120,6 +156,9 @@ describe("Blog Post Validation", () => {
       expect(BLOG_POST_SCHEMA.author.required).toBe(true);
       expect(BLOG_POST_SCHEMA.date.required).toBe(true);
       expect(BLOG_POST_SCHEMA.related.required).toBe(false);
+      expect(BLOG_POST_SCHEMA.thumbnail.required).toBe(false);
+      expect(BLOG_POST_SCHEMA.banner.required).toBe(false);
+      expect(BLOG_POST_SCHEMA.background.required).toBe(false);
     });
   });
 });

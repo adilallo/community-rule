@@ -30,6 +30,12 @@ const mockPost = {
     description: "This is a test article description",
     author: "Test Author",
     date: "2025-04-15",
+    thumbnail: {
+      horizontal: "test-article-horizontal.svg",
+    },
+    banner: {
+      horizontal: "test-article-banner.svg",
+    },
   },
 };
 
@@ -39,7 +45,7 @@ describe("ContentBanner", () => {
 
     // Check that the banner container exists - it's the first div with the specific classes
     const banner = document.querySelector(
-      "div[class*='pt-[var(--measures-spacing-016)]']",
+      "div[class*='pt-[var(--measures-spacing-016)]']"
     );
     expect(banner).toBeInTheDocument();
     expect(banner).toHaveClass(
@@ -54,7 +60,7 @@ describe("ContentBanner", () => {
       "xl:h-[504px]",
       "relative",
       "w-full",
-      "sm:overflow-hidden",
+      "sm:overflow-hidden"
     );
   });
 
@@ -63,7 +69,7 @@ describe("ContentBanner", () => {
 
     // Check for background div with correct styling
     const backgroundDiv = document.querySelector(
-      "div[style*='background-image']",
+      "div[style*='background-image']"
     );
     expect(backgroundDiv).toBeInTheDocument();
     expect(backgroundDiv).toHaveClass(
@@ -73,16 +79,16 @@ describe("ContentBanner", () => {
       "h-full",
       "bg-cover",
       "bg-no-repeat",
-      "aspect-[320/225.5]",
+      "aspect-[320/225.5]"
     );
   });
 
-  it("shows different background image at md breakpoint and above", () => {
+  it("shows banner image at md breakpoint and above", () => {
     render(<ContentBanner post={mockPost} />);
 
-    // Check for the md+ background div
+    // Check for the md+ background div with banner image
     const mdBackgroundDiv = document.querySelector(
-      "div[style*='Content_Banner_2.svg']",
+      "div[style*='test-article-banner.svg']"
     );
     expect(mdBackgroundDiv).toBeInTheDocument();
     expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
@@ -98,7 +104,7 @@ describe("ContentBanner", () => {
     render(<ContentBanner post={mockPost} />);
 
     expect(
-      screen.getByText("This is a test article description"),
+      screen.getByText("This is a test article description")
     ).toBeInTheDocument();
   });
 
@@ -114,7 +120,7 @@ describe("ContentBanner", () => {
 
     // Check the content container div
     const contentContainer = document.querySelector(
-      "div[class*='relative z-10']",
+      "div[class*='relative z-10']"
     );
     expect(contentContainer).toBeInTheDocument();
     expect(contentContainer).toHaveClass(
@@ -122,7 +128,7 @@ describe("ContentBanner", () => {
       "z-10",
       "h-full",
       "flex",
-      "flex-col",
+      "flex-col"
     );
   });
 
@@ -135,7 +141,7 @@ describe("ContentBanner", () => {
       "font-medium",
       "text-[18px]",
       "leading-[120%]",
-      "text-[var(--color-content-inverse-brand-royal)]",
+      "text-[var(--color-content-inverse-brand-royal)]"
     );
 
     const description = screen.getByText("This is a test article description");
@@ -144,7 +150,7 @@ describe("ContentBanner", () => {
       "font-normal",
       "text-[12px]",
       "leading-[16px]",
-      "text-[var(--color-content-inverse-brand-royal)]",
+      "text-[var(--color-content-inverse-brand-royal)]"
     );
   });
 
@@ -157,7 +163,7 @@ describe("ContentBanner", () => {
       "font-normal",
       "text-[10px]",
       "leading-[14px]",
-      "text-[var(--color-content-inverse-brand-royal)]",
+      "text-[var(--color-content-inverse-brand-royal)]"
     );
 
     const date = screen.getByText("April 2025");
@@ -166,7 +172,7 @@ describe("ContentBanner", () => {
       "font-normal",
       "text-[10px]",
       "leading-[14px]",
-      "text-[var(--color-content-inverse-brand-royal)]",
+      "text-[var(--color-content-inverse-brand-royal)]"
     );
   });
 
@@ -175,7 +181,7 @@ describe("ContentBanner", () => {
 
     // Check the ContentContainer spacing
     const contentContainer = document.querySelector(
-      "div[class*='relative z-20']",
+      "div[class*='relative z-20']"
     );
     expect(contentContainer).toHaveClass("gap-[var(--measures-spacing-012)]");
   });
@@ -184,13 +190,13 @@ describe("ContentBanner", () => {
     render(<ContentBanner post={mockPost} />);
 
     const outerContainer = document.querySelector(
-      "div[class*='pt-[var(--measures-spacing-016)]']",
+      "div[class*='pt-[var(--measures-spacing-016)]']"
     );
     expect(outerContainer).toHaveClass(
       "pt-[var(--measures-spacing-016)]",
       "md:pt-[var(--measures-spacing-008)]",
       "lg:pt-[50px]",
-      "xl:pt-[112px]",
+      "xl:pt-[112px]"
     );
   });
 
@@ -208,6 +214,45 @@ describe("ContentBanner", () => {
     expect(screen.getByText("Incomplete Post")).toBeInTheDocument();
   });
 
+  it("falls back to thumbnail.horizontal when banner.horizontal is missing", () => {
+    const postWithoutBanner = {
+      ...mockPost,
+      frontmatter: {
+        ...mockPost.frontmatter,
+        banner: undefined,
+      },
+    };
+
+    render(<ContentBanner post={postWithoutBanner} />);
+
+    // Should use thumbnail.horizontal for md+ breakpoint
+    const mdBackgroundDiv = document.querySelector(
+      "div[style*='test-article-horizontal.svg']"
+    );
+    expect(mdBackgroundDiv).toBeInTheDocument();
+    expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
+  });
+
+  it("falls back to default banner when no images are provided", () => {
+    const postWithoutImages = {
+      ...mockPost,
+      frontmatter: {
+        ...mockPost.frontmatter,
+        thumbnail: undefined,
+        banner: undefined,
+      },
+    };
+
+    render(<ContentBanner post={postWithoutImages} />);
+
+    // Should use default banner for md+ breakpoint
+    const mdBackgroundDiv = document.querySelector(
+      "div[style*='Content_Banner_2.svg']"
+    );
+    expect(mdBackgroundDiv).toBeInTheDocument();
+    expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
+  });
+
   it("applies responsive text sizing", () => {
     render(<ContentBanner post={mockPost} />);
 
@@ -216,7 +261,7 @@ describe("ContentBanner", () => {
       "sm:text-[24px]",
       "md:text-[32px]",
       "lg:text-[44px]",
-      "xl:text-[64px]",
+      "xl:text-[64px]"
     );
 
     const description = screen.getByText("This is a test article description");
@@ -224,7 +269,7 @@ describe("ContentBanner", () => {
       "sm:text-[14px]",
       "md:text-[14px]",
       "lg:text-[18px]",
-      "xl:text-[24px]",
+      "xl:text-[24px]"
     );
   });
 

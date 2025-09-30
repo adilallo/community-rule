@@ -8,6 +8,8 @@ related:
 thumbnail:
   vertical: "resolving-active-conflicts-vertical.svg"
   horizontal: "resolving-active-conflicts-horizontal.svg"
+banner:
+  horizontal: "resolving-active-conflicts-banner.svg"
 background:
   color: "#E2EFFF"
 ---

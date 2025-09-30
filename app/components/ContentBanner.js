@@ -14,9 +14,13 @@ export default function ContentBanner({ post }) {
   };
 
   const getBannerImageMd = (post) => {
-    // Use banner.horizontal when provided; fallback to default banner asset
+    // Use banner.horizontal when provided; fallback to horizontal thumbnail
     if (post.frontmatter?.banner?.horizontal) {
       return `/content/blog/${post.frontmatter.banner.horizontal}`;
+    }
+    // Fallback to horizontal thumbnail, then default banner
+    if (post.frontmatter?.thumbnail?.horizontal) {
+      return `/content/blog/${post.frontmatter.thumbnail.horizontal}`;
     }
     return getAssetPath("assets/Content_Banner_2.svg");
   };
