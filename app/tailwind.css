@@ -24,6 +24,7 @@
   --breakpoint-md: 640px;
   --breakpoint-xmd: 768px;
   --breakpoint-lg: 1024px;
+  --breakpoint-lg2: 1150px;
   --breakpoint-xl: 1440px;
 
   /* Reset Tailwind color defaults to avoid collisions */
