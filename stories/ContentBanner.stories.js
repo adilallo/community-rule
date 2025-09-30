@@ -20,7 +20,7 @@ export default {
     docs: {
       description: {
         component:
-          "The ContentBanner component displays the header information for blog articles, including title, description, author, and date.",
+          "The ContentBanner component displays the header information for blog articles, including title, description, author, and date. Note: page background colors are applied at the blog page level using a hex color from frontmatter (background.color), not inside this component. Thumbnail images should be uploaded via the content pipeline to public/content/blog/ and referenced in frontmatter (thumbnail.horizontal / thumbnail.vertical).",
       },
     },
   },

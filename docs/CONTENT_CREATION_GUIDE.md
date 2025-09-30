@@ -48,6 +48,8 @@ related: ["slug-of-related-article-1", "slug-of-related-article-2"]
 thumbnail:
   vertical: "your-article-slug-vertical.svg"
   horizontal: "your-article-slug-horizontal.svg"
+background:
+  color: "#F4F3F1" # Page background color (hex)
 ---
 ```
 
@@ -59,6 +61,7 @@ thumbnail:
 - **date**: Publication date in YYYY-MM-DD format
 - **related**: Array of article slugs (use filename without .md)
 - **thumbnail**: Custom images for article thumbnails (optional)
+- **background.color**: Page background color as a hex code (e.g., `#F4F3F1`)
 
 ### Related Articles
 
@@ -100,6 +103,15 @@ Add custom thumbnail images to make your article stand out:
    ```
 
 If no thumbnails are provided, default images will be used.
+
+## Background Color
+
+Set the content page background using a hex color in frontmatter:
+
+```yaml
+background:
+  color: "#F4F3F1" # Use any valid hex code
+```
 
 ## File Naming
 
