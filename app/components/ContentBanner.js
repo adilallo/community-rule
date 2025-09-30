@@ -4,7 +4,7 @@ import { getAssetPath } from "../../lib/assetUtils";
 import ContentContainer from "./ContentContainer";
 
 export default function ContentBanner({ post }) {
-  // Get article-specific background image
+  // Get article-specific horizontal thumbnail (small) and banner (md+)
   const getBackgroundImage = (post) => {
     if (post.frontmatter?.thumbnail?.horizontal) {
       return `/content/blog/${post.frontmatter.thumbnail.horizontal}`;
@@ -13,7 +13,16 @@ export default function ContentBanner({ post }) {
     return getAssetPath("assets/Content_Banner.svg");
   };
 
+  const getBannerImageMd = (post) => {
+    // Use banner.horizontal when provided; fallback to default banner asset
+    if (post.frontmatter?.banner?.horizontal) {
+      return `/content/blog/${post.frontmatter.banner.horizontal}`;
+    }
+    return getAssetPath("assets/Content_Banner_2.svg");
+  };
+
   const backgroundImage = getBackgroundImage(post);
+  const bannerImageMd = getBannerImageMd(post);
 
   return (
     <div className="pt-[var(--measures-spacing-016)] md:pt-[var(--measures-spacing-008)] lg:pt-[50px] xl:pt-[112px] h-[275px] sm:h-[326px] md:h-[224px] lg:h-[358.4px] xl:h-[504px] relative w-full sm:overflow-hidden">
@@ -26,11 +35,11 @@ export default function ContentBanner({ post }) {
         }}
       />
 
-      {/* Background SVG - md breakpoint and above */}
+      {/* Background SVG - md breakpoint and above (article banner image) */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-no-repeat aspect-[640/224] md:block hidden"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url(${bannerImageMd})`,
           backgroundPosition: "center bottom",
         }}
       />

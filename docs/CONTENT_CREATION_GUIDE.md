@@ -48,6 +48,8 @@ related: ["slug-of-related-article-1", "slug-of-related-article-2"]
 thumbnail:
   vertical: "your-article-slug-vertical.svg"
   horizontal: "your-article-slug-horizontal.svg"
+banner:
+  horizontal: "your-article-slug-banner.svg" # md+ breakpoint banner image
 background:
   color: "#F4F3F1" # Page background color (hex)
 ---
@@ -61,6 +63,7 @@ background:
 - **date**: Publication date in YYYY-MM-DD format
 - **related**: Array of article slugs (use filename without .md)
 - **thumbnail**: Custom images for article thumbnails (optional)
+- **banner.horizontal**: Banner image for md+ breakpoints (optional)
 - **background.color**: Page background color as a hex code (e.g., `#F4F3F1`)
 
 ### Related Articles
@@ -90,16 +93,19 @@ Add custom thumbnail images to make your article stand out:
    - Horizontal: 320px × 225.5px (minimum width)
    - Format: SVG preferred, PNG also works
 
-2. **Save in content/blog/**:
+2. **Save in public/content/blog/**:
 
    - `your-article-slug-vertical.svg`
    - `your-article-slug-horizontal.svg`
+   - `your-article-slug-banner.svg` (optional, for md+ breakpoints)
 
 3. **Add to frontmatter**:
    ```yaml
    thumbnail:
      vertical: "your-article-slug-vertical.svg"
      horizontal: "your-article-slug-horizontal.svg"
+   banner:
+     horizontal: "your-article-slug-banner.svg"
    ```
 
 If no thumbnails are provided, default images will be used.

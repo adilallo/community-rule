@@ -7,6 +7,8 @@ related: ["resolving-active-conflicts", "making-decisions-without-hierarchy"]
 thumbnail:
   vertical: "operational-security-mutual-aid-vertical.svg"
   horizontal: "operational-security-mutual-aid-horizontal.svg"
+banner:
+  horizontal: "operational-security-mutual-aid-banner.svg"
 background:
   color: "#F4F3F1"
 ---
