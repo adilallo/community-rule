@@ -130,7 +130,7 @@ describe("BlogPostPage", () => {
     expect(mainContainer).toHaveClass(
       "min-h-screen",
       "relative",
-      "overflow-hidden"
+      "overflow-hidden",
     );
     // Background color is applied via inline style from frontmatter hex
     expect(mainContainer).toHaveStyle({ backgroundColor: expect.any(String) });
@@ -145,7 +145,7 @@ describe("BlogPostPage", () => {
     expect(screen.getByTestId("content-banner")).toBeInTheDocument();
     expect(screen.getByText("Test Article Title")).toBeInTheDocument();
     expect(
-      screen.getByText("This is a test article description")
+      screen.getByText("This is a test article description"),
     ).toBeInTheDocument();
   });
 
@@ -159,7 +159,7 @@ describe("BlogPostPage", () => {
     expect(article).toBeInTheDocument();
     expect(article).toHaveClass(
       "p-[var(--spacing-scale-024)]",
-      "sm:py-[var(--spacing-scale-032)]"
+      "sm:py-[var(--spacing-scale-032)]",
     );
 
     // Check content is rendered
@@ -189,7 +189,7 @@ describe("BlogPostPage", () => {
     expect(screen.getByTestId("ask-organizer")).toBeInTheDocument();
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
     expect(
-      screen.getByText("Get answers from an experienced organizer")
+      screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
     expect(screen.getByText("Ask an organizer")).toBeInTheDocument();
   });
@@ -221,7 +221,7 @@ describe("BlogPostPage", () => {
     expect(contentDiv).toHaveClass("post-body");
     expect(contentDiv).toHaveClass("-mt-[var(--spacing-scale-048)]");
     expect(contentDiv).toHaveClass(
-      "text-[var(--color-content-inverse-primary)]"
+      "text-[var(--color-content-inverse-primary)]",
     );
     expect(contentDiv).toHaveClass("text-[16px]");
     expect(contentDiv).toHaveClass("leading-[24px]");
@@ -268,7 +268,7 @@ describe("BlogPostPage", () => {
 
     // Check for script elements using querySelector since RTL ignores them
     const scripts = document.querySelectorAll(
-      'script[type="application/ld+json"]'
+      'script[type="application/ld+json"]',
     );
     expect(scripts).toHaveLength(2);
 
@@ -286,7 +286,7 @@ describe("BlogPostPage", () => {
     // The component should throw an error when post is null
     // This happens because notFound() is called
     await expect(
-      BlogPostPage({ params: { slug: "non-existent" } })
+      BlogPostPage({ params: { slug: "non-existent" } }),
     ).rejects.toThrow();
   });
 
@@ -298,7 +298,7 @@ describe("BlogPostPage", () => {
 
     // Current post should not appear in related articles
     expect(
-      screen.queryByTestId("related-test-article")
+      screen.queryByTestId("related-test-article"),
     ).not.toBeInTheDocument();
 
     // Other related posts should appear
@@ -323,7 +323,7 @@ describe("BlogPostPage", () => {
       "top-1/4",
       "right-0",
       "pointer-events-none",
-      "z-10"
+      "z-10",
     );
 
     // Second shape (left side)
@@ -335,7 +335,7 @@ describe("BlogPostPage", () => {
       "top-1/2",
       "left-0",
       "pointer-events-none",
-      "z-10"
+      "z-10",
     );
   });
 

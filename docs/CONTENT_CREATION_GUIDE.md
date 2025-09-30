@@ -88,13 +88,11 @@ The slug is different from the title - it's lowercase with hyphens instead of sp
 Add custom thumbnail images to make your article stand out:
 
 1. **Create your images**:
-
    - Vertical: 260px × 390px
    - Horizontal: 320px × 225.5px (minimum width)
    - Format: SVG preferred, PNG also works
 
 2. **Save in public/content/blog/**:
-
    - `your-article-slug-vertical.svg`
    - `your-article-slug-horizontal.svg`
    - `your-article-slug-banner.svg` (optional, for md+ breakpoints)

@@ -53,7 +53,7 @@ describe("ContentThumbnailTemplate", () => {
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
-        screen.getByText(/This is a test description/)
+        screen.getByText(/This is a test description/),
       ).toBeInTheDocument();
     });
 
@@ -77,7 +77,7 @@ describe("ContentThumbnailTemplate", () => {
       expect(thumbnailDiv).toHaveClass(
         "min-w-[320px]",
         "max-w-[800px]",
-        "h-[225.5px]"
+        "h-[225.5px]",
       );
     });
 
@@ -86,7 +86,7 @@ describe("ContentThumbnailTemplate", () => {
 
       expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
       expect(
-        screen.getByText(/This is a test description/)
+        screen.getByText(/This is a test description/),
       ).toBeInTheDocument();
       expect(screen.getByText("Test Author")).toBeInTheDocument();
     });
@@ -95,7 +95,7 @@ describe("ContentThumbnailTemplate", () => {
   describe("Props and Customization", () => {
     it("should apply custom className", () => {
       render(
-        <ContentThumbnailTemplate post={mockPost} className="custom-class" />
+        <ContentThumbnailTemplate post={mockPost} className="custom-class" />,
       );
 
       const container = screen.getByRole("link");
@@ -144,7 +144,7 @@ describe("ContentThumbnailTemplate", () => {
 
       // Check that the background image uses the article-specific thumbnail
       const backgroundImg = document.querySelector(
-        "img[alt*='Background for']"
+        "img[alt*='Background for']",
       );
       expect(backgroundImg).toBeInTheDocument();
       expect(backgroundImg.src).toContain("test-post-vertical.svg");
@@ -155,7 +155,7 @@ describe("ContentThumbnailTemplate", () => {
 
       // Check that the background image uses the article-specific horizontal thumbnail
       const backgroundImg = document.querySelector(
-        "img[alt*='Background for']"
+        "img[alt*='Background for']",
       );
       expect(backgroundImg).toBeInTheDocument();
       expect(backgroundImg.src).toContain("test-post-horizontal.svg");
