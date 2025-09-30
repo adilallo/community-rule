@@ -227,7 +227,7 @@ describe("ContentBanner", () => {
 
     // Should use thumbnail.horizontal for md+ breakpoint
     const mdBackgroundDiv = document.querySelector(
-      "div[style*='test-article-horizontal.svg']"
+      "div[style*='test-article-horizontal.svg'][class*='md:block']"
     );
     expect(mdBackgroundDiv).toBeInTheDocument();
     expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");

@@ -166,9 +166,7 @@ test.describe("Header responsive behavior", () => {
 
       // Should have outline and brand color
       expect(linkStyles.outline).not.toBe("none");
-      expect(linkStyles.outlineColor).toContain(
-        "var(--color-content-default-brand-primary)"
-      );
+      expect(linkStyles.outlineColor).toContain("254, 252, 201"); // RGB value of #fefcc9
     });
 
     test("home page does not show active state for learn navigation", async ({
@@ -188,8 +186,8 @@ test.describe("Header responsive behavior", () => {
         };
       });
 
-      // Should not have active outline
-      expect(linkStyles.outline).toBe("none");
+      // Should not have active outline (may have default browser outline)
+      expect(linkStyles.outline).toMatch(/^(none|0px|rgb\(0, 0, 0\) none 0px|rgb\(0, 0, 0\) 0px)$/);
     });
   });
 });

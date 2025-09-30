@@ -85,7 +85,13 @@ describe("Blog Post Validation", () => {
       };
 
       const sanitized = sanitizeBlogPost(post);
-      expect(sanitized).toEqual(post);
+      // The sanitized version will have null values for optional fields that weren't provided
+      expect(sanitized).toEqual({
+        ...post,
+        thumbnail: null,
+        banner: null,
+        background: null,
+      });
     });
 
     it("should add default values for missing optional fields", () => {
