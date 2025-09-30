@@ -1,28 +1,12 @@
 [
   {
-    "name": "minScore",
-    "expected": 0.8,
-    "actual": 0.74,
-    "values": [
-      0.72,
-      0.74,
-      0.67
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditProperty": "performance",
-    "auditId": "categories",
-    "level": "warn",
-    "url": "http://127.0.0.1:3010/"
-  },
-  {
     "name": "maxNumericValue",
     "expected": 5000,
-    "actual": 6335.710300000001,
+    "actual": 6316.213500000003,
     "values": [
-      6443.5928,
-      6335.710300000001,
-      6894.002000000002
+      6352.161499999999,
+      6316.213500000003,
+      6810.3611
     ],
     "operator": "<=",
     "passed": false,
