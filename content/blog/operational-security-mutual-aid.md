@@ -7,6 +7,8 @@ related: ["resolving-active-conflicts", "making-decisions-without-hierarchy"]
 thumbnail:
   vertical: "operational-security-mutual-aid-vertical.svg"
   horizontal: "operational-security-mutual-aid-horizontal.svg"
+background:
+  color: "#F4F3F1"
 ---
 
 Mutual aid organizations face unique security challenges. Unlike traditional nonprofits, they often operate in politically sensitive environments and may be targets of surveillance, infiltration, or repression. This guide provides practical strategies for protecting your organization and its members.

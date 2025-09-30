@@ -4,13 +4,24 @@ import { getAssetPath } from "../../lib/assetUtils";
 import ContentContainer from "./ContentContainer";
 
 export default function ContentBanner({ post }) {
+  // Get article-specific background image
+  const getBackgroundImage = (post) => {
+    if (post.frontmatter?.thumbnail?.horizontal) {
+      return `/content/blog/${post.frontmatter.thumbnail.horizontal}`;
+    }
+    // Fallback to default image
+    return getAssetPath("assets/Content_Banner.svg");
+  };
+
+  const backgroundImage = getBackgroundImage(post);
+
   return (
     <div className="pt-[var(--measures-spacing-016)] md:pt-[var(--measures-spacing-008)] lg:pt-[50px] xl:pt-[112px] h-[275px] sm:h-[326px] md:h-[224px] lg:h-[358.4px] xl:h-[504px] relative w-full sm:overflow-hidden">
       {/* Background SVG - Default to sm breakpoint */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-no-repeat aspect-[320/225.5]"
         style={{
-          backgroundImage: `url(${getAssetPath("assets/Content_Banner.svg")})`,
+          backgroundImage: `url(${backgroundImage})`,
           backgroundPosition: "center bottom",
         }}
       />
@@ -19,9 +30,7 @@ export default function ContentBanner({ post }) {
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-no-repeat aspect-[640/224] md:block hidden"
         style={{
-          backgroundImage: `url(${getAssetPath(
-            "assets/Content_Banner_2.svg",
-          )})`,
+          backgroundImage: `url(${backgroundImage})`,
           backgroundPosition: "center bottom",
         }}
       />

@@ -72,14 +72,14 @@ const ContentThumbnailTemplate = ({
       href={`/blog/${post.slug}`}
       className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
     >
-      <div className="relative min-w-[320px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
+      <div className="relative min-w-[320px] max-w-[800px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
         {/* Background SVG - sized to fit the 320x225.5 container exactly */}
         <div className="absolute inset-0 z-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={backgroundImage}
             alt={`Background for ${post.frontmatter.title}`}
-            className="w-full h-[225.5px] object-cover object-bottom"
+            className="w-full h-[225.5px] object-cover"
           />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/70 z-10" />
