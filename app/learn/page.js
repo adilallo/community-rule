@@ -44,7 +44,7 @@ export default function LearnPage() {
       </div>
 
       {/* smd and up: 2x3 grid of vertical thumbnails, repeat posts as needed */}
-      <div className="hidden smd:grid smd:grid-cols-2 smd:gap-x-[var(--spacing-scale-008)] smd:gap-y-[var(--spacing-scale-008)] smd:pt-[var(--spacing-scale-024)] smd:pb-[var(--spacing-scale-024)] smd:px-[var(--spacing-scale-020)]">
+      <div className="hidden smd:grid smd:grid-cols-2 smd:gap-[var(--spacing-scale-008)] md:gap-[var(--spacing-scale-016)] smd:pt-[var(--spacing-scale-024)] smd:pb-[var(--spacing-scale-024)] smd:px-[var(--spacing-scale-020)] md:px-[var(--spacing-scale-032)]">
         {Array.from({ length: 6 }).map((_, i) => {
           const post = allPosts[i % allPosts.length];
           return (
