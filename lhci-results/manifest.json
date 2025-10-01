@@ -1,0 +1,38 @@
+[
+  {
+    "url": "http://127.0.0.1:3010/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_00_46.report.html",
+    "jsonPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_00_46.report.json",
+    "summary": {
+      "performance": 0.8,
+      "accessibility": 0.87,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://127.0.0.1:3010/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_01_01.report.html",
+    "jsonPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_01_01.report.json",
+    "summary": {
+      "performance": 0.79,
+      "accessibility": 0.87,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://127.0.0.1:3010/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_00_30.report.html",
+    "jsonPath": "/Users/Vinod/Documents/GitHub/community-rule/lhci-results/127_0_0_1--2025_09_30_23_00_30.report.json",
+    "summary": {
+      "performance": 0.74,
+      "accessibility": 0.87,
+      "best-practices": 1,
+      "seo": 1
+    }
+  }
+]

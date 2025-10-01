@@ -129,10 +129,11 @@ describe("BlogPostPage", () => {
     expect(mainContainer).toBeInTheDocument();
     expect(mainContainer).toHaveClass(
       "min-h-screen",
-      "bg-[#F4F3F1]",
       "relative",
       "overflow-hidden",
     );
+    // Background color is applied via inline style from frontmatter hex
+    expect(mainContainer).toHaveStyle({ backgroundColor: expect.any(String) });
   });
 
   it("renders the content banner", async () => {

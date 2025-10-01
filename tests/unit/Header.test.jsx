@@ -8,17 +8,14 @@ import Header, {
 } from "../../app/components/Header.js";
 
 describe("Header", () => {
-  const mockOnToggle = vi.fn();
-
   beforeEach(() => {
-    mockOnToggle.mockClear();
     // Clear any existing rendered content
     document.body.innerHTML = "";
   });
 
   describe("Accessibility and Landmarks", () => {
     test("renders header with correct structure and accessibility attributes", () => {
-      const { container } = render(<Header onToggle={mockOnToggle} />);
+      const { container } = render(<Header />);
 
       // Check main header structure - use container to scope the search
       const header = container.querySelector(
@@ -36,7 +33,7 @@ describe("Header", () => {
     });
 
     test("renders all navigation items with proper accessibility", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // Check all navigation items have proper aria-labels - use menuitem role since they're in a menubar
       expect(
@@ -56,7 +53,7 @@ describe("Header", () => {
 
   describe("Schema Markup", () => {
     test("renders schema markup for site navigation", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const script = document.querySelector(
         'script[type="application/ld+json"]',
@@ -126,14 +123,14 @@ describe("Header", () => {
 
   describe("Logo Configuration", () => {
     test("renders correct number of logo variants", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const logoWrappers = screen.getAllByTestId("logo-wrapper");
       expect(logoWrappers).toHaveLength(logoConfig.length);
     });
 
     test("logo wrappers include expected breakpoint classes", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const logoWrappers = screen.getAllByTestId("logo-wrapper");
 
@@ -156,7 +153,7 @@ describe("Header", () => {
 
   describe("Navigation Structure", () => {
     test("renders all breakpoint-specific navigation containers", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       expect(screen.getByTestId("nav-xs")).toBeInTheDocument();
       expect(screen.getByTestId("nav-sm")).toBeInTheDocument();
@@ -166,7 +163,7 @@ describe("Header", () => {
     });
 
     test("navigation containers use expected breakpoint classes", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // XSmall navigation
       const navXs = screen.getByTestId("nav-xs");
@@ -190,7 +187,7 @@ describe("Header", () => {
     });
 
     test("renders navigation items with correct text and links", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // Check navigation items
       expect(screen.getAllByText("Use cases").length).toBeGreaterThan(0);
@@ -199,7 +196,7 @@ describe("Header", () => {
     });
 
     test("renders multiple instances of navigation items for responsive design", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // Should have multiple instances of navigation items for different breakpoints
       const useCasesLinks = screen.getAllByText("Use cases");
@@ -214,7 +211,7 @@ describe("Header", () => {
 
   describe("Authentication Structure", () => {
     test("renders all breakpoint-specific auth containers", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       expect(screen.getByTestId("auth-xs")).toBeInTheDocument();
       expect(screen.getByTestId("auth-sm")).toBeInTheDocument();
@@ -224,7 +221,7 @@ describe("Header", () => {
     });
 
     test("auth containers use expected breakpoint classes", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // XSmall auth
       const authXs = screen.getByTestId("auth-xs");
@@ -248,7 +245,7 @@ describe("Header", () => {
     });
 
     test("renders login button with correct accessibility", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const loginLinks = screen.getAllByRole("menuitem", {
         name: "Log in to your account",
@@ -258,7 +255,7 @@ describe("Header", () => {
     });
 
     test("renders multiple login buttons for responsive design", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // Should have multiple login buttons for different breakpoints
       const loginButtons = screen.getAllByText("Log in");
@@ -266,7 +263,7 @@ describe("Header", () => {
     });
 
     test("renders create rule button with avatar decoration", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const createRuleButtons = screen.getAllByRole("button", {
         name: "Create a new rule with avatar decoration",
@@ -276,7 +273,7 @@ describe("Header", () => {
     });
 
     test("renders multiple create rule buttons for responsive design", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       // Should have multiple create rule buttons for different breakpoints
       const createRuleButtons = screen.getAllByText("Create rule");
@@ -286,7 +283,7 @@ describe("Header", () => {
 
   describe("Avatar Images", () => {
     test("renders avatar images with correct attributes", () => {
-      render(<Header onToggle={mockOnToggle} />);
+      render(<Header />);
 
       const avatars = screen.getAllByRole("img");
       expect(avatars.length).toBeGreaterThan(0);
@@ -302,26 +299,20 @@ describe("Header", () => {
     });
   });
 
-  describe("User Interactions", () => {
-    test("calls onToggle when navigation items are clicked", async () => {
-      const user = userEvent.setup();
-      render(<Header onToggle={mockOnToggle} />);
+  describe("Sticky Header Behavior", () => {
+    test("applies sticky positioning classes", () => {
+      const { container } = render(<Header />);
 
-      // Find and click a navigation item - use menuitem role since they're in a menubar
-      const useCasesLinks = screen.getAllByRole("menuitem", {
-        name: "Navigate to Use cases page",
-      });
-      expect(useCasesLinks.length).toBeGreaterThan(0);
-      const useCasesLink = useCasesLinks[0];
-      await user.click(useCasesLink);
-
-      expect(mockOnToggle).toHaveBeenCalledTimes(1);
+      const header = container.querySelector(
+        '[role="banner"][aria-label="Main navigation header"]',
+      );
+      expect(header).toHaveClass("sticky", "top-0", "z-50");
     });
   });
 
   describe("CSS Classes and Styling", () => {
     test("has correct CSS classes for styling", () => {
-      const { container } = render(<Header onToggle={mockOnToggle} />);
+      const { container } = render(<Header />);
 
       const header = container.querySelector(
         '[role="banner"][aria-label="Main navigation header"]',

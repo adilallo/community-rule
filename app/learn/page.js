@@ -1,116 +1,68 @@
 import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
-
-// Mock blog post data for testing
-const mockPost1 = {
-  slug: "resolving-active-conflicts",
-  frontmatter: {
-    title: "Resolving Active Conflicts",
-    description:
-      "Practical steps for resolving conflicts while maintaining trust, cooperation, and shared goals",
-    author: "Author name",
-    date: "2025-04-15",
-  },
-};
-
-const mockPost2 = {
-  slug: "operational-security-mutual-aid",
-  frontmatter: {
-    title: "Operational Security for Mutual Aid",
-    description:
-      "Tactics to protect members, secure communication, and prevent Infiltration",
-    author: "Author name",
-    date: "2025-04-10",
-  },
-};
-
-const mockPost3 = {
-  slug: "making-decisions-without-hierarchy",
-  frontmatter: {
-    title: "Making decisions without hierarchy",
-    description:
-      "A brief guide to collaborative nonhierarchical decision making",
-    author: "Author name",
-    date: "2025-04-05",
-  },
-};
+import ContentLockup from "../components/ContentLockup";
+import AskOrganizer from "../components/AskOrganizer";
+import { getAllBlogPosts, getRecentBlogPosts } from "../../lib/content";
 
 export default function LearnPage() {
-  // Mock slug order for consistent background cycling
-  const mockSlugOrder = [
-    "resolving-active-conflicts",
-    "operational-security-mutual-aid",
-    "making-decisions-without-hierarchy",
-  ];
+  // Get real blog posts from the content system
+  const allPosts = getAllBlogPosts();
+  const recentPosts = getRecentBlogPosts(3);
+
+  const contentLockupData = {
+    title: "Organizing is hard",
+    subtitle:
+      "Find answers to your questions and see how other groups have solved similar challenges.",
+    variant: "learn",
+    alignment: "left",
+  };
+
+  const askOrganizerData = {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    description:
+      "Our community of organizers is here to help you navigate the challenges of building and maintaining effective community organizations.",
+    buttonText: "Ask an organizer",
+    buttonHref: "/contact",
+    variant: "centered",
+  };
 
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
-      <div className="max-w-6xl mx-auto p-8 pt-24">
-        <h1 className="text-3xl font-bold text-[var(--color-content-default-primary)] mb-8">
-          Learn
-        </h1>
+    <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
+      <ContentLockup {...contentLockupData} />
 
-        <div className="space-y-12">
-          {/* Featured Articles */}
-          <section>
-            <h2 className="text-2xl font-semibold text-[var(--color-content-default-primary)] mb-6">
-              Featured Articles
-            </h2>
-            <div className="flex flex-wrap gap-6">
-              <ContentThumbnailTemplate
-                post={mockPost1}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                className="mb-4"
-                slugOrder={mockSlugOrder}
-              />
-            </div>
-          </section>
-
-          {/* More Articles */}
-          <section>
-            <h2 className="text-2xl font-semibold text-[var(--color-content-default-primary)] mb-6">
-              More Articles
-            </h2>
-            <div className="space-y-4">
-              <ContentThumbnailTemplate
-                post={mockPost1}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost2}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
-              <ContentThumbnailTemplate
-                post={mockPost3}
-                variant="horizontal"
-                slugOrder={mockSlugOrder}
-              />
-            </div>
-          </section>
-
-          {/* Coming Soon */}
-          <section className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-[var(--color-content-default-primary)] mb-4">
-              More Content Coming Soon
-            </h2>
-            <p className="text-[var(--color-content-default-secondary)]">
-              We&apos;re working on adding more educational content to help you
-              build better communities. Check back soon for new articles and
-              resources.
-            </p>
-          </section>
-        </div>
+      {/* Horizontal list (below smd) */}
+      <div className="smd:hidden sm:pt-[var(--spacing-scale-024)] sm:pb-[var(--spacing-scale-024)] sm:px-[var(--spacing-scale-020)] space-y-[var(--spacing-scale-002)] sm:space-y-[var(--spacing-scale-008)]">
+        {allPosts.slice(0, 3).map((post, index) => (
+          <ContentThumbnailTemplate
+            key={`${post.slug}-${index}-${
+              post.frontmatter.thumbnail?.horizontal || "default"
+            }`}
+            post={post}
+            variant="horizontal"
+          />
+        ))}
       </div>
+
+      {/* smd and up: 2x3 grid of vertical thumbnails, repeat posts as needed */}
+      <div className="hidden smd:grid smd:grid-cols-2 xmd:grid-cols-3 lg:grid-cols-3 lg2:grid-cols-4 xl:grid-cols-5 smd:gap-[var(--spacing-scale-008)] md:gap-[var(--spacing-scale-016)] xmd:gap-[var(--spacing-scale-012)] lg:gap-[var(--spacing-scale-016)] lg2:gap-x-[var(--spacing-scale-016)] lg2:gap-y-[var(--spacing-scale-024)] xl:gap-x-[var(--spacing-scale-016)] xl:gap-y-[var(--spacing-scale-016)] smd:pt-[var(--spacing-scale-024)] smd:pb-[var(--spacing-scale-024)] smd:px-[var(--spacing-scale-020)] md:px-[var(--spacing-scale-032)] lg:pt-[var(--spacing-scale-032)] lg:pb-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)]">
+        {Array.from({ length: 16 }).map((_, i) => {
+          const post = allPosts[i % allPosts.length];
+          return (
+            <ContentThumbnailTemplate
+              key={`grid-${post.slug}-${i}-${
+                post.frontmatter.thumbnail?.vertical || "default"
+              }`}
+              post={post}
+              variant="vertical"
+              className={`${i >= 6 ? "hidden lg2:block" : ""} ${
+                i >= 10 ? "xl:hidden" : ""
+              }`}
+            />
+          );
+        })}
+      </div>
+
+      <AskOrganizer {...askOrganizerData} />
     </div>
   );
 }

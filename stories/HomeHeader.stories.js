@@ -8,7 +8,7 @@ export default {
     docs: {
       description: {
         component:
-          "The home page header with transparent background, HeaderTab wrapper, and responsive behavior. Features a toggle to switch between home header and regular header.",
+          "The home page header with transparent background, HeaderTab wrapper, and responsive behavior. Features active state highlighting for current page navigation.",
       },
     },
   },

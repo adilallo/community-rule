@@ -5,6 +5,7 @@ export default function MenuBarItem({
   size = "default",
   className = "",
   disabled = false,
+  isActive = false,
   ariaLabel,
   ...props
 }) {
@@ -54,6 +55,27 @@ export default function MenuBarItem({
       "active:outline-[2px] active:outline-[var(--color-content-default-primary)] focus:outline-[2px] focus:outline-[var(--color-content-default-primary)]",
     xlarge:
       "active:outline-2 active:outline-[var(--color-content-default-primary)] focus:outline-2 focus:outline-[var(--color-content-default-primary)]",
+  };
+
+  const activeStateStyles = {
+    xsmall:
+      "!outline-1 !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-1 focus:!outline-[var(--color-content-default-brand-primary)]",
+    xsmallUseCases:
+      "!outline-1 !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-1 focus:!outline-[var(--color-content-default-brand-primary)]",
+    default:
+      "!outline-[1.5px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[1.5px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    homeMd:
+      "!outline-[1.5px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[1.5px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    homeUseCases:
+      "!outline-[1.5px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[1.5px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    large:
+      "!outline-[1.75px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[1.75px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    largeUseCases:
+      "!outline-[1.75px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[1.75px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    homeXlarge:
+      "!outline-[2px] !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-[2px] focus:!outline-[var(--color-content-default-brand-primary)]",
+    xlarge:
+      "!outline-2 !outline-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)] focus:!outline-2 focus:!outline-[var(--color-content-default-brand-primary)]",
   };
 
   const sizeStyles = {
@@ -110,7 +132,7 @@ export default function MenuBarItem({
     finalVariant === "home"
       ? homeOutlineStyles[size]
       : activeOutlineStyles[size]
-  } ${className}`;
+  } ${isActive ? activeStateStyles[size] : ""} ${className}`;
 
   const accessibilityProps = {
     ...(ariaLabel && { "aria-label": ariaLabel }),

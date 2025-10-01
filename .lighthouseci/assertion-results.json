@@ -1,0 +1,15 @@
+[
+  {
+    "name": "maxNumericValue",
+    "expected": 5000,
+    "actual": 6316.213500000003,
+    "values": [6352.161499999999, 6316.213500000003, 6810.3611],
+    "operator": "<=",
+    "passed": false,
+    "auditId": "interactive",
+    "level": "warn",
+    "url": "http://127.0.0.1:3010/",
+    "auditTitle": "Time to Interactive",
+    "auditDocumentationLink": "https://developer.chrome.com/docs/lighthouse/performance/interactive/"
+  }
+]

@@ -102,4 +102,94 @@ test.describe("Header responsive behavior", () => {
       await page.waitForTimeout(200);
     });
   });
+
+  test.describe("Header sticky behavior", () => {
+    test("regular header is sticky on non-home pages", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/learn");
+
+      const header = page.locator("header").first();
+
+      // Check that header has sticky positioning
+      const headerStyles = await header.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          position: computed.position,
+          top: computed.top,
+          zIndex: computed.zIndex,
+        };
+      });
+
+      expect(headerStyles.position).toBe("sticky");
+      expect(headerStyles.top).toBe("0px");
+      expect(headerStyles.zIndex).toBe("50");
+    });
+
+    test("home header is not sticky on home page", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
+
+      const header = page.locator("header").first();
+
+      // Check that header does not have sticky positioning
+      const headerStyles = await header.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          position: computed.position,
+          top: computed.top,
+          zIndex: computed.zIndex,
+        };
+      });
+
+      expect(headerStyles.position).not.toBe("sticky");
+    });
+  });
+
+  test.describe("Active navigation state", () => {
+    test("learn page shows active state for learn navigation", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/learn");
+
+      const learnLink = page.getByRole("menuitem", { name: /learn/i });
+
+      // Check that learn link has active styling
+      const linkStyles = await learnLink.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          outline: computed.outline,
+          outlineColor: computed.outlineColor,
+          color: computed.color,
+        };
+      });
+
+      // Should have outline and brand color
+      expect(linkStyles.outline).not.toBe("none");
+      expect(linkStyles.outlineColor).toContain("254, 252, 201"); // RGB value of #fefcc9
+    });
+
+    test("home page does not show active state for learn navigation", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
+
+      const learnLink = page.getByRole("menuitem", { name: /learn/i });
+
+      // Check that learn link does not have active styling
+      const linkStyles = await learnLink.evaluate((el) => {
+        const computed = window.getComputedStyle(el);
+        return {
+          outline: computed.outline,
+          outlineColor: computed.outlineColor,
+        };
+      });
+
+      // Should not have active outline (may have default browser outline)
+      expect(linkStyles.outline).toMatch(
+        /^(none|0px|rgb\(0, 0, 0\) none 0px|rgb\(0, 0, 0\) 0px)$/,
+      );
+    });
+  });
 });

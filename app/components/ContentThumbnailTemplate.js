@@ -13,36 +13,32 @@ const ContentThumbnailTemplate = ({
   post,
   className = "",
   variant = "vertical", // Internal prop for testing/development
-  slugOrder = [], // Array of slugs for consistent icon cycling
 }) => {
-  // Post-specific background selection - different SVG for each post
-  const getBackgroundImage = (slug, variant, slugOrder) => {
-    const verticalImages = [
-      getAssetPath(ASSETS.VERTICAL_1),
-      getAssetPath(ASSETS.VERTICAL_2),
-      getAssetPath(ASSETS.VERTICAL_3),
-    ];
+  // Get article-specific background image from frontmatter
+  const getBackgroundImage = (post, variant) => {
+    // Check if post has thumbnail images defined in frontmatter
+    if (post.frontmatter?.thumbnail) {
+      const imageName =
+        variant === "vertical"
+          ? post.frontmatter.thumbnail.vertical
+          : post.frontmatter.thumbnail.horizontal;
 
-    const horizontalImages = [
-      getAssetPath(ASSETS.HORIZONTAL_1),
-      getAssetPath(ASSETS.HORIZONTAL_2),
-      getAssetPath(ASSETS.HORIZONTAL_3),
-    ];
+      if (imageName) {
+        // Return path to image in public/content/blog directory
+        return `/content/blog/${imageName}`;
+      }
+    }
 
-    if (!slug)
-      return variant === "vertical" ? verticalImages[0] : horizontalImages[0];
+    // Fallback to default images if no thumbnail specified
+    const fallbackImages = {
+      vertical: getAssetPath(ASSETS.VERTICAL_1),
+      horizontal: getAssetPath(ASSETS.HORIZONTAL_1),
+    };
 
-    // Use the passed slugOrder for consistent cycling through background variants
-    const index = slugOrder.indexOf(slug);
-    const backgroundIndex = index >= 0 ? index % 3 : 0; // Cycle through 3 background variants
-
-    // Return the same background index for both vertical and horizontal variants
-    return variant === "vertical"
-      ? verticalImages[backgroundIndex]
-      : horizontalImages[backgroundIndex];
+    return fallbackImages[variant] || fallbackImages.vertical;
   };
 
-  const backgroundImage = getBackgroundImage(post.slug, variant, slugOrder);
+  const backgroundImage = getBackgroundImage(post, variant);
 
   if (variant === "vertical") {
     return (
@@ -50,14 +46,14 @@ const ContentThumbnailTemplate = ({
         href={`/blog/${post.slug}`}
         className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
       >
-        <div className="relative w-[260px] h-[390px] overflow-hidden pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
-          {/* Background SVG - sized to fit the 260x390 container exactly */}
+        <div className="relative w-full aspect-[2/3] overflow-hidden pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
+          {/* Background SVG - fills container with maintained aspect */}
           <div className="absolute inset-0 z-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={backgroundImage}
               alt={`Background for ${post.frontmatter.title}`}
-              className="w-[260px] h-[390px] object-cover"
+              className="w-full h-full object-cover"
             />
             {/* Gradient overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />
@@ -76,14 +72,14 @@ const ContentThumbnailTemplate = ({
       href={`/blog/${post.slug}`}
       className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
     >
-      <div className="relative w-[320px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
+      <div className="relative min-w-[320px] max-w-[800px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
         {/* Background SVG - sized to fit the 320x225.5 container exactly */}
         <div className="absolute inset-0 z-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={backgroundImage}
             alt={`Background for ${post.frontmatter.title}`}
-            className="w-[320px] h-[225.5px] object-cover"
+            className="w-full h-[225.5px] object-cover"
           />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/70 z-10" />

@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import MenuBar from "./MenuBar";
 import MenuBarItem from "./MenuBarItem";
@@ -35,7 +38,9 @@ export const logoConfig = [
   { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
 ];
 
-export default function Header({ onToggle }) {
+export default function Header() {
+  const pathname = usePathname();
+
   // Schema markup for site navigation
   const schemaData = {
     "@context": "https://schema.org",
@@ -55,7 +60,7 @@ export default function Header({ onToggle }) {
         key={index}
         href={item.href}
         size={item.extraPadding && size === "xsmall" ? "xsmallUseCases" : size}
-        onClick={onToggle}
+        isActive={pathname === item.href}
         ariaLabel={`Navigate to ${item.text} page`}
       >
         {item.text}
@@ -109,7 +114,7 @@ export default function Header({ onToggle }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <header
-        className="bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
+        className="sticky top-0 z-50 bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
         role="banner"
         aria-label="Main navigation header"
       >

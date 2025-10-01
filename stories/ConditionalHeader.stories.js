@@ -7,7 +7,7 @@ export default {
     docs: {
       description: {
         component:
-          "The ConditionalHeader component conditionally renders either HomeHeader or Header based on the current pathname.",
+          "The ConditionalHeader component conditionally renders either HomeHeader (for home page) or Header (for other pages) based on the current pathname. HomeHeader is not sticky, while Header has sticky positioning.",
       },
     },
   },

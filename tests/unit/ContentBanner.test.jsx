@@ -30,6 +30,12 @@ const mockPost = {
     description: "This is a test article description",
     author: "Test Author",
     date: "2025-04-15",
+    thumbnail: {
+      horizontal: "test-article-horizontal.svg",
+    },
+    banner: {
+      horizontal: "test-article-banner.svg",
+    },
   },
 };
 
@@ -77,12 +83,12 @@ describe("ContentBanner", () => {
     );
   });
 
-  it("shows different background image at md breakpoint and above", () => {
+  it("shows banner image at md breakpoint and above", () => {
     render(<ContentBanner post={mockPost} />);
 
-    // Check for the md+ background div
+    // Check for the md+ background div with banner image
     const mdBackgroundDiv = document.querySelector(
-      "div[style*='Content_Banner_2.svg']",
+      "div[style*='test-article-banner.svg']",
     );
     expect(mdBackgroundDiv).toBeInTheDocument();
     expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
@@ -206,6 +212,45 @@ describe("ContentBanner", () => {
     render(<ContentBanner post={incompletePost} />);
 
     expect(screen.getByText("Incomplete Post")).toBeInTheDocument();
+  });
+
+  it("falls back to thumbnail.horizontal when banner.horizontal is missing", () => {
+    const postWithoutBanner = {
+      ...mockPost,
+      frontmatter: {
+        ...mockPost.frontmatter,
+        banner: undefined,
+      },
+    };
+
+    render(<ContentBanner post={postWithoutBanner} />);
+
+    // Should use thumbnail.horizontal for md+ breakpoint
+    const mdBackgroundDiv = document.querySelector(
+      "div[style*='test-article-horizontal.svg'][class*='md:block']",
+    );
+    expect(mdBackgroundDiv).toBeInTheDocument();
+    expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
+  });
+
+  it("falls back to default banner when no images are provided", () => {
+    const postWithoutImages = {
+      ...mockPost,
+      frontmatter: {
+        ...mockPost.frontmatter,
+        thumbnail: undefined,
+        banner: undefined,
+      },
+    };
+
+    render(<ContentBanner post={postWithoutImages} />);
+
+    // Should use default banner for md+ breakpoint
+    const mdBackgroundDiv = document.querySelector(
+      "div[style*='Content_Banner_2.svg']",
+    );
+    expect(mdBackgroundDiv).toBeInTheDocument();
+    expect(mdBackgroundDiv).toHaveClass("hidden", "md:block");
   });
 
   it("applies responsive text sizing", () => {

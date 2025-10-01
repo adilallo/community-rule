@@ -201,6 +201,16 @@ export default async function BlogPostPage({ params }) {
     ],
   };
 
+  // Get article-specific background color from frontmatter
+  const getBackgroundColor = (post) => {
+    if (post.frontmatter?.background?.color) {
+      return post.frontmatter.background.color;
+    }
+    return "#1F2937"; // Default fallback (dark gray)
+  };
+
+  const backgroundColor = getBackgroundColor(post);
+
   return (
     <>
       {/* Structured Data */}
@@ -217,7 +227,10 @@ export default async function BlogPostPage({ params }) {
         }}
       />
 
-      <div className="min-h-screen bg-[#F4F3F1] relative overflow-hidden">
+      <div
+        className="min-h-screen relative overflow-hidden"
+        style={{ backgroundColor }}
+      >
         {/* Content Banner */}
         <ContentBanner post={post} />
 
