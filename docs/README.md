@@ -44,6 +44,19 @@ This directory contains comprehensive testing documentation for the CommunityRul
 
 **Use this for**: Visual regression testing, snapshot management, visual test troubleshooting
 
+### 4. [performance-optimization-guide.md](./performance-optimization-guide.md) - **Performance Guide**
+
+**Comprehensive performance optimization documentation**:
+
+- Performance targets and metrics
+- Frontend optimizations (React.memo, code splitting, image optimization)
+- Performance monitoring and bundle analysis
+- Web Vitals tracking and dashboard
+- Performance testing and troubleshooting
+- Best practices and optimization strategies
+
+**Use this for**: Performance optimization, monitoring, bundle analysis, Web Vitals tracking
+
 ## 🎯 How to Use These Documents
 
 ### For New Team Members
@@ -51,18 +64,21 @@ This directory contains comprehensive testing documentation for the CommunityRul
 1. Start with **testing-framework.md** to understand the complete testing strategy
 2. Use **testing-quick-reference.md** for daily development
 3. Reference **visual-regression-guide.md** when working with visual tests
+4. Review **performance-optimization-guide.md** for performance optimization
 
 ### For Daily Development
 
 1. Use **testing-quick-reference.md** for commands and troubleshooting
 2. Reference **testing-framework.md** for detailed explanations
 3. Use **visual-regression-guide.md** for visual test workflows
+4. Use **performance-optimization-guide.md** for performance monitoring
 
 ### For Troubleshooting
 
 1. Check **testing-quick-reference.md** for common solutions
 2. Use **testing-framework.md** for detailed troubleshooting
 3. Reference **visual-regression-guide.md** for visual test issues
+4. Use **performance-optimization-guide.md** for performance issues
 
 ## 📊 Current Testing Status
 
@@ -72,6 +88,9 @@ This directory contains comprehensive testing documentation for the CommunityRul
 - **Visual Regression**: 23 tests per browser
 - **Accessibility**: WCAG 2.1 AA compliance
 - **Performance**: Lighthouse CI with budgets
+- **Bundle Analysis**: Real-time monitoring with budgets
+- **Web Vitals Tracking**: Core Web Vitals collection
+- **Performance Optimization**: React.memo + code splitting
 
 ## 🔄 Documentation Updates
 

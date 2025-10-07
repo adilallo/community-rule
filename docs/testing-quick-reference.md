@@ -20,6 +20,12 @@ npm run visual:test
 # Performance check
 npm run lhci
 
+# Performance monitoring
+npm run test:performance    # Comprehensive performance testing
+npm run bundle:analyze      # Bundle size analysis
+npm run web-vitals:track   # Web Vitals tracking
+npm run monitor:all         # All monitoring tools
+
 # Storybook tests
 npm run test:sb
 ```
@@ -48,6 +54,9 @@ npx playwright test --headed
 - **Visual Regression**: 23 tests per browser ✅
 - **Accessibility Tests**: WCAG 2.1 AA compliance ✅
 - **Performance Tests**: Lighthouse CI with budgets ✅
+- **Bundle Analysis**: Real-time monitoring with budgets ✅
+- **Web Vitals Tracking**: Core Web Vitals collection ✅
+- **Performance Optimization**: React.memo + code splitting ✅
 
 ## 🔧 Common Test Commands
 

@@ -31,11 +31,14 @@ The CommunityRule platform uses a comprehensive testing framework with multiple 
 
 ### Current Status
 
-- ✅ **305 Unit Tests** (94.88% coverage - exceeds 85% target)
+- ✅ **428 Unit Tests** (94.88% coverage - exceeds 85% target)
 - ✅ **92 E2E Tests** across 4 browsers
 - ✅ **23 Visual Regression Tests** per browser
 - ✅ **Performance Budgets** with Lighthouse CI
 - ✅ **WCAG 2.1 AA Compliance** with automated testing
+- ✅ **Bundle Analysis** with automated monitoring
+- ✅ **Web Vitals Tracking** with real-time metrics
+- ✅ **Performance Optimization** with React.memo and code splitting
 
 ## 🏗 Testing Architecture
 
@@ -191,7 +194,7 @@ test("components work together", () => {
       <Header />
       <MainContent />
       <Footer />
-    </div>,
+    </div>
   );
 
   // Test that components complement each other
@@ -438,8 +441,10 @@ npx playwright test tests/accessibility/e2e/wcag-compliance.spec.ts
 ### Framework
 
 - **Lighthouse CI**: Automated performance testing
-- **Performance Budgets**: Defined thresholds
-- **Core Web Vitals**: LCP, FID, CLS monitoring
+- **Bundle Analysis**: Real-time bundle size monitoring
+- **Web Vitals Tracking**: Core Web Vitals collection and reporting
+- **Performance Monitoring**: Comprehensive performance metrics
+- **Performance Budgets**: Defined thresholds with automated enforcement
 
 ### Configuration
 
@@ -472,6 +477,7 @@ npx playwright test tests/accessibility/e2e/wcag-compliance.spec.ts
 - **Performance Score**: >80
 - **Accessibility Score**: >80
 - **Best Practices**: >90
+- **Bundle Size**: <250KB gzipped (currently 101KB)
 
 ### Performance Budgets
 
@@ -479,14 +485,45 @@ npx playwright test tests/accessibility/e2e/wcag-compliance.spec.ts
 - **Largest Contentful Paint**: <5000ms
 - **First Input Delay**: <100ms
 - **TTFB**: <700ms
+- **Bundle Size**: <250KB gzipped
+- **Total Bundle Size**: <2MB
+
+### Performance Optimizations
+
+- **✅ Code Splitting**: Dynamic imports for non-critical components
+- **✅ React.memo**: Applied to all 30+ components
+- **✅ Image Optimization**: Enhanced `next/image` with lazy loading
+- **✅ Font Optimization**: Preloading and fallbacks
+- **✅ Bundle Analysis**: Real-time monitoring with budgets
+- **✅ Error Boundaries**: Comprehensive error handling
 
 ### Available Scripts
 
 ```bash
-npm run lhci          # Run Lighthouse CI
-npm run lhci:mobile   # Run with mobile preset
-npm run lhci:desktop  # Run with desktop preset
+# Individual monitoring tools
+npm run bundle:analyze      # Analyze bundle sizes and budgets
+npm run performance:monitor # Performance metrics and Lighthouse CI
+npm run web-vitals:track   # Core Web Vitals tracking
+
+# Comprehensive testing
+npm run test:performance    # All performance tests
+npm run monitor:all         # All monitoring tools
+
+# Traditional Lighthouse CI
+npm run lhci                # Run Lighthouse CI
+npm run lhci:mobile         # Run with mobile preset
+npm run lhci:desktop        # Run with desktop preset
 ```
+
+### Performance Monitoring Dashboard
+
+Access the performance monitoring dashboard at `/monitor` to view:
+
+- Real-time Web Vitals metrics
+- Historical performance data
+- Bundle analysis results
+- Performance budget status
+- Optimization recommendations
 
 ## 🔄 CI/CD Pipeline
 
