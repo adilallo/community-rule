@@ -58,6 +58,25 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    // Bundle analysis - only in production builds
+    if (process.env.ANALYZE === "true" && !dev) {
+      try {
+        const BundleAnalyzerPlugin =
+          require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+        config.plugins.push(
+          new BundleAnalyzerPlugin({
+            analyzerMode: "static",
+            openAnalyzer: false,
+            reportFilename: isServer
+              ? "../analyze/server.html"
+              : "../analyze/client.html",
+          })
+        );
+      } catch (error) {
+        console.warn("Bundle analyzer not available:", error.message);
+      }
+    }
+
     // Production optimizations
     if (!dev && !isServer) {
       // Tree shaking optimization
