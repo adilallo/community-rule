@@ -1,23 +1,27 @@
 "use client";
 
+import React, { memo, useMemo } from "react";
 import NumberedCard from "./NumberedCard";
 import SectionHeader from "./SectionHeader";
 import Button from "./Button";
 
-const NumberedCards = ({ title, subtitle, cards }) => {
-  // Schema markup for SEO
-  const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: title,
-    description: subtitle,
-    step: cards.map((card, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: card.text,
-      text: card.text,
-    })),
-  };
+const NumberedCards = memo(({ title, subtitle, cards }) => {
+  // Memoize schema data to prevent unnecessary re-computations
+  const schemaData = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: title,
+      description: subtitle,
+      step: cards.map((card, index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        name: card.text,
+        text: card.text,
+      })),
+    }),
+    [title, subtitle, cards]
+  );
 
   return (
     <>
@@ -70,6 +74,8 @@ const NumberedCards = ({ title, subtitle, cards }) => {
       </section>
     </>
   );
-};
+});
+
+NumberedCards.displayName = "NumberedCards";
 
 export default NumberedCards;

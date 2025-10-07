@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import MenuBar from "./MenuBar";
@@ -9,7 +10,7 @@ import AvatarContainer from "./AvatarContainer";
 import Avatar from "./Avatar";
 import HeaderTab from "./HeaderTab";
 
-export default function HomeHeader() {
+const HomeHeader = memo(() => {
   const pathname = usePathname();
 
   // Schema markup for site navigation (home page specific)
@@ -33,9 +34,9 @@ export default function HomeHeader() {
   ];
 
   const avatarImages = [
-    { src: "assets/Avatar_1.png", alt: "Avatar 1" },
-    { src: "assets/Avatar_2.png", alt: "Avatar 2" },
-    { src: "assets/Avatar_3.png", alt: "Avatar 3" },
+    { src: "/assets/Avatar_1.png", alt: "Avatar 1" },
+    { src: "/assets/Avatar_2.png", alt: "Avatar 2" },
+    { src: "/assets/Avatar_3.png", alt: "Avatar 3" },
   ];
 
   const logoConfig = [
@@ -78,10 +79,10 @@ export default function HomeHeader() {
             ? size === "home" || size === "homeMd"
               ? "homeMd"
               : size === "large"
-                ? "large"
-                : size === "homeXlarge"
-                  ? "homeXlarge"
-                  : "xsmallUseCases"
+              ? "large"
+              : size === "homeXlarge"
+              ? "homeXlarge"
+              : "xsmallUseCases"
             : size
         }
         variant={
@@ -241,4 +242,8 @@ export default function HomeHeader() {
       </header>
     </>
   );
-}
+});
+
+HomeHeader.displayName = "HomeHeader";
+
+export default HomeHeader;

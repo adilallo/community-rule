@@ -1,7 +1,8 @@
+import React, { memo } from "react";
 import Link from "next/link";
 import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
-export default function Logo({ size = "default", showText = true }) {
+const Logo = memo(({ size = "default", showText = true }) => {
   // Size configurations
   const sizes = {
     default: {
@@ -94,26 +95,26 @@ export default function Logo({ size = "default", showText = true }) {
     size === "homeHeaderXsmall"
       ? sizes.homeHeaderXsmall
       : size === "homeHeaderSm"
-        ? sizes.homeHeaderSm
-        : size === "homeHeaderMd"
-          ? sizes.homeHeaderMd
-          : size === "homeHeaderLg"
-            ? sizes.homeHeaderLg
-            : size === "homeHeaderXl"
-              ? sizes.homeHeaderXl
-              : size === "header"
-                ? sizes.header
-                : size === "headerMd"
-                  ? sizes.headerMd
-                  : size === "headerLg"
-                    ? sizes.headerLg
-                    : size === "headerXl"
-                      ? sizes.headerXl
-                      : size === "footer"
-                        ? sizes.footer
-                        : size === "footerLg"
-                          ? sizes.footerLg
-                          : sizes.default;
+      ? sizes.homeHeaderSm
+      : size === "homeHeaderMd"
+      ? sizes.homeHeaderMd
+      : size === "homeHeaderLg"
+      ? sizes.homeHeaderLg
+      : size === "homeHeaderXl"
+      ? sizes.homeHeaderXl
+      : size === "header"
+      ? sizes.header
+      : size === "headerMd"
+      ? sizes.headerMd
+      : size === "headerLg"
+      ? sizes.headerLg
+      : size === "headerXl"
+      ? sizes.headerXl
+      : size === "footer"
+      ? sizes.footer
+      : size === "footerLg"
+      ? sizes.footerLg
+      : sizes.default;
 
   return (
     <Link href="/" className="block" aria-label="CommunityRule Logo">
@@ -165,4 +166,8 @@ export default function Logo({ size = "default", showText = true }) {
       </div>
     </Link>
   );
-}
+});
+
+Logo.displayName = "Logo";
+
+export default Logo;

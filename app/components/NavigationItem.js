@@ -1,4 +1,6 @@
-export default function NavigationItem({
+import React, { memo } from "react";
+
+const NavigationItem = memo(({
   href = "#",
   children,
   variant = "default",
@@ -50,4 +52,8 @@ export default function NavigationItem({
       {children}
     </a>
   );
-}
+});
+
+NavigationItem.displayName = "NavigationItem";
+
+export default NavigationItem;

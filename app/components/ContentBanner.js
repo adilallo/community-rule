@@ -1,9 +1,10 @@
 "use client";
 
+import React, { memo } from "react";
 import { getAssetPath } from "../../lib/assetUtils";
 import ContentContainer from "./ContentContainer";
 
-export default function ContentBanner({ post }) {
+const ContentBanner = memo(({ post }) => {
   // Get article-specific horizontal thumbnail (small) and banner (md+)
   const getBackgroundImage = (post) => {
     if (post.frontmatter?.thumbnail?.horizontal) {
@@ -71,4 +72,8 @@ export default function ContentBanner({ post }) {
       </div>
     </div>
   );
-}
+});
+
+ContentBanner.displayName = "ContentBanner";
+
+export default ContentBanner;

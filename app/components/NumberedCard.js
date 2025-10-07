@@ -1,8 +1,9 @@
 "use client";
 
+import React, { memo } from "react";
 import SectionNumber from "./SectionNumber";
 
-const NumberedCard = ({ number, text, iconShape, iconColor }) => {
+const NumberedCard = memo(({ number, text, iconShape, iconColor }) => {
   return (
     <div className="bg-[var(--color-surface-inverse-primary)] rounded-[12px] p-5 shadow-lg flex flex-col gap-4 sm:p-8 sm:gap-8 sm:flex-row sm:items-center lg:p-8 lg:gap-0 lg:flex-row lg:items-stretch lg:relative lg:h-[238px]">
       {/* Section Number - Top right (lg breakpoint) */}
@@ -18,6 +19,8 @@ const NumberedCard = ({ number, text, iconShape, iconColor }) => {
       </div>
     </div>
   );
-};
+});
+
+NumberedCard.displayName = "NumberedCard";
 
 export default NumberedCard;

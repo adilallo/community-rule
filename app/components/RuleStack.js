@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import RuleCard from "./RuleCard";
 import Button from "./Button";
 import { getAssetPath } from "../../lib/assetUtils";
 
-const RuleStack = ({ className = "" }) => {
+const RuleStack = memo(({ className = "" }) => {
   const handleTemplateClick = (templateName) => {
     // Basic analytics tracking
     if (typeof window !== "undefined") {
@@ -99,6 +99,8 @@ const RuleStack = ({ className = "" }) => {
       </div>
     </section>
   );
-};
+});
+
+RuleStack.displayName = "RuleStack";
 
 export default RuleStack;

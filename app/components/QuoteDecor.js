@@ -1,6 +1,8 @@
 "use client";
 
-const QuoteDecor = ({ className = "" }) => {
+import React, { memo } from "react";
+
+const QuoteDecor = memo(({ className = "" }) => {
   return (
     <svg
       className={`text-[var(--color-surface-inverse-brand-primary)] opacity-100 w-full h-full md:max-w-[640px] lg:max-w-[850px] xl:max-w-[1100px] ${className}`}
@@ -68,6 +70,8 @@ const QuoteDecor = ({ className = "" }) => {
       </g>
     </svg>
   );
-};
+});
+
+QuoteDecor.displayName = "QuoteDecor";
 
 export default QuoteDecor;
