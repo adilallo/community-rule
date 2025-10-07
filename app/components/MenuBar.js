@@ -25,7 +25,7 @@ const MenuBar = memo(
         {children}
       </nav>
     );
-  }
+  },
 );
 
 MenuBar.displayName = "MenuBar";

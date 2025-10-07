@@ -46,7 +46,7 @@ export async function POST(request) {
 
     // Log for monitoring
     console.log(
-      `Web Vital received: ${metric} = ${data.value}ms (${data.rating})`
+      `Web Vital received: ${metric} = ${data.value}ms (${data.rating})`,
     );
 
     return NextResponse.json({ success: true });
@@ -54,7 +54,7 @@ export async function POST(request) {
     console.error("Error processing web vital:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -70,7 +70,7 @@ export async function GET() {
         if (file.endsWith(".json")) {
           const metric = file.replace(".json", "");
           const data = JSON.parse(
-            fs.readFileSync(path.join(WEB_VITALS_DIR, file), "utf8")
+            fs.readFileSync(path.join(WEB_VITALS_DIR, file), "utf8"),
           );
 
           if (data.length > 0) {
@@ -86,14 +86,14 @@ export async function GET() {
               average:
                 values.length > 0
                   ? Math.round(
-                      values.reduce((a, b) => a + b, 0) / values.length
+                      values.reduce((a, b) => a + b, 0) / values.length,
                     )
                   : 0,
               min: values.length > 0 ? Math.min(...values) : 0,
               max: values.length > 0 ? Math.max(...values) : 0,
               goodCount: ratings.filter((r) => r === "good").length,
               needsImprovementCount: ratings.filter(
-                (r) => r === "needs-improvement"
+                (r) => r === "needs-improvement",
               ).length,
               poorCount: ratings.filter((r) => r === "poor").length,
               lastUpdated: data[data.length - 1]?.receivedAt,
@@ -108,7 +108,7 @@ export async function GET() {
     console.error("Error fetching web vitals:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

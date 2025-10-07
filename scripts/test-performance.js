@@ -90,11 +90,11 @@ class PerformanceTester {
         "..",
         ".next",
         "analyze",
-        "bundle-analysis.json"
+        "bundle-analysis.json",
       );
       if (fs.existsSync(bundleReportPath)) {
         const bundleData = JSON.parse(
-          fs.readFileSync(bundleReportPath, "utf8")
+          fs.readFileSync(bundleReportPath, "utf8"),
         );
         this.results.bundleAnalysis = bundleData;
 
@@ -105,7 +105,7 @@ class PerformanceTester {
         ) {
           this.results.summary.failed += bundleData.budgetViolations.length;
           console.log(
-            `⚠️ Found ${bundleData.budgetViolations.length} budget violations`
+            `⚠️ Found ${bundleData.budgetViolations.length} budget violations`,
           );
         } else {
           this.results.summary.passed += 1;
@@ -134,7 +134,7 @@ class PerformanceTester {
         "..",
         ".next",
         "monitoring",
-        "performance-report.json"
+        "performance-report.json",
       );
       if (fs.existsSync(perfReportPath)) {
         const perfData = JSON.parse(fs.readFileSync(perfReportPath, "utf8"));
@@ -144,7 +144,7 @@ class PerformanceTester {
         if (perfData.budgetViolations && perfData.budgetViolations.length > 0) {
           this.results.summary.failed += perfData.budgetViolations.length;
           console.log(
-            `⚠️ Found ${perfData.budgetViolations.length} performance violations`
+            `⚠️ Found ${perfData.budgetViolations.length} performance violations`,
           );
         } else {
           this.results.summary.passed += 1;
@@ -173,11 +173,11 @@ class PerformanceTester {
         "..",
         ".next",
         "web-vitals",
-        "report.json"
+        "report.json",
       );
       if (fs.existsSync(vitalsReportPath)) {
         const vitalsData = JSON.parse(
-          fs.readFileSync(vitalsReportPath, "utf8")
+          fs.readFileSync(vitalsReportPath, "utf8"),
         );
         this.results.webVitals = vitalsData;
         console.log("✅ Web Vitals tracking setup complete");
@@ -204,7 +204,7 @@ class PerformanceTester {
         });
       } catch (error) {
         console.warn(
-          "⚠️ Development server not running, skipping Lighthouse CI..."
+          "⚠️ Development server not running, skipping Lighthouse CI...",
         );
         this.results.summary.warnings += 1;
         this.results.summary.total += 1;
@@ -221,7 +221,7 @@ class PerformanceTester {
 
         if (resultFile) {
           const lhciData = JSON.parse(
-            fs.readFileSync(path.join(lhciResultsPath, resultFile), "utf8")
+            fs.readFileSync(path.join(lhciResultsPath, resultFile), "utf8"),
           );
           this.results.lighthouse = lhciData;
           console.log("✅ Lighthouse CI completed");
@@ -248,7 +248,7 @@ class PerformanceTester {
 
     const reportPath = path.join(
       TEST_RESULTS_DIR,
-      "performance-test-report.json"
+      "performance-test-report.json",
     );
     fs.writeFileSync(reportPath, JSON.stringify(this.results, null, 2));
 
@@ -262,7 +262,7 @@ class PerformanceTester {
   generateMarkdownReport() {
     const reportPath = path.join(
       TEST_RESULTS_DIR,
-      "performance-test-report.md"
+      "performance-test-report.md",
     );
 
     let report = `# Performance Test Report\n\n`;
@@ -310,7 +310,7 @@ class PerformanceTester {
             } (exceeds ${
               violation.budget
             }) - ${violation.severity.toUpperCase()}\n`;
-          }
+          },
         );
       } else {
         report += `✅ No performance budget violations found\n\n`;

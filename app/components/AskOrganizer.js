@@ -106,7 +106,7 @@ const AskOrganizer = memo(
         </div>
       </section>
     );
-  }
+  },
 );
 
 AskOrganizer.displayName = "AskOrganizer";

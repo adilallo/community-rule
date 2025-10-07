@@ -52,7 +52,7 @@ const SectionHeader = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 SectionHeader.displayName = "SectionHeader";

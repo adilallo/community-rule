@@ -33,7 +33,7 @@ const HeaderTab = memo(
         />
       </div>
     );
-  }
+  },
 );
 
 HeaderTab.displayName = "HeaderTab";

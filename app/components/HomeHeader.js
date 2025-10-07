@@ -79,10 +79,10 @@ const HomeHeader = memo(() => {
             ? size === "home" || size === "homeMd"
               ? "homeMd"
               : size === "large"
-              ? "large"
-              : size === "homeXlarge"
-              ? "homeXlarge"
-              : "xsmallUseCases"
+                ? "large"
+                : size === "homeXlarge"
+                  ? "homeXlarge"
+                  : "xsmallUseCases"
             : size
         }
         variant={

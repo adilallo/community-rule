@@ -116,7 +116,7 @@ const MiniCard = memo(
         {cardContent}
       </div>
     );
-  }
+  },
 );
 
 MiniCard.displayName = "MiniCard";

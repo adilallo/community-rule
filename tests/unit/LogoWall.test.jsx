@@ -47,7 +47,7 @@ describe("LogoWall Component", () => {
     render(<LogoWall />);
 
     expect(
-      screen.getByText("Trusted by leading cooperators")
+      screen.getByText("Trusted by leading cooperators"),
     ).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe("LogoWall Component", () => {
     const section = document.querySelector("section");
     expect(section).toHaveClass(
       "p-[var(--spacing-scale-032)]",
-      "md:px-[var(--spacing-scale-024)]"
+      "md:px-[var(--spacing-scale-024)]",
     );
   });
 
@@ -72,7 +72,7 @@ describe("LogoWall Component", () => {
     render(<LogoWall />);
 
     const grid = document.querySelector(
-      '[class*="grid grid-cols-2 grid-rows-3"]'
+      '[class*="grid grid-cols-2 grid-rows-3"]',
     );
     expect(grid).toBeInTheDocument();
     expect(grid).toHaveClass("sm:grid-cols-3", "sm:grid-rows-2", "md:flex");
@@ -84,7 +84,7 @@ describe("LogoWall Component", () => {
     const foodNotBombsLogo = screen.getByAltText("Food Not Bombs");
     expect(foodNotBombsLogo).toHaveAttribute(
       "src",
-      "/assets/Section/Logo_FoodNotBombs.png"
+      "/assets/Section/Logo_FoodNotBombs.png",
     );
     expect(foodNotBombsLogo).toHaveClass("h-11", "lg:h-14", "xl:h-[70px]");
   });
@@ -109,7 +109,7 @@ describe("LogoWall Component", () => {
     render(<LogoWall />);
 
     const logoContainers = document.querySelectorAll(
-      '[class*="hover:opacity-100"]'
+      '[class*="hover:opacity-100"]',
     );
     expect(logoContainers.length).toBeGreaterThan(0);
   });
@@ -129,7 +129,7 @@ describe("LogoWall Component", () => {
     render(<LogoWall />);
 
     const logoContainers = document.querySelectorAll(
-      '[class*="transition-opacity duration-500"]'
+      '[class*="transition-opacity duration-500"]',
     );
     expect(logoContainers.length).toBeGreaterThan(0);
   });

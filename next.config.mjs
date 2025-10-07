@@ -70,7 +70,7 @@ const nextConfig = {
             reportFilename: isServer
               ? "../analyze/server.html"
               : "../analyze/client.html",
-          })
+          }),
         );
       } catch (error) {
         console.warn("Bundle analyzer not available:", error.message);

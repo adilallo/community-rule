@@ -20,7 +20,7 @@ const NumberedCards = memo(({ title, subtitle, cards }) => {
         text: card.text,
       })),
     }),
-    [title, subtitle, cards]
+    [title, subtitle, cards],
   );
 
   return (

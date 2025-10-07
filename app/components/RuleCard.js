@@ -71,7 +71,7 @@ const RuleCard = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 RuleCard.displayName = "RuleCard";

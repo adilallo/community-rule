@@ -42,7 +42,7 @@ const FeatureGrid = memo(({ title, subtitle, className = "" }) => {
         href: "#conflict-resolution",
       },
     ],
-    []
+    [],
   );
   return (
     <section

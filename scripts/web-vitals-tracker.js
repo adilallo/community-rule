@@ -289,7 +289,7 @@ export default WebVitalsDashboard;
       if (file.endsWith(".json")) {
         const metric = file.replace(".json", "");
         const data = JSON.parse(
-          fs.readFileSync(path.join(WEB_VITALS_DIR, file), "utf8")
+          fs.readFileSync(path.join(WEB_VITALS_DIR, file), "utf8"),
         );
 
         if (data.length > 0) {
@@ -310,7 +310,7 @@ export default WebVitalsDashboard;
             max: values.length > 0 ? Math.max(...values) : 0,
             goodCount: ratings.filter((r) => r === "good").length,
             needsImprovementCount: ratings.filter(
-              (r) => r === "needs-improvement"
+              (r) => r === "needs-improvement",
             ).length,
             poorCount: ratings.filter((r) => r === "poor").length,
           };

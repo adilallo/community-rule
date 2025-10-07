@@ -46,7 +46,7 @@ const HeroBanner = memo(
         </div>
       </section>
     );
-  }
+  },
 );
 
 HeroBanner.displayName = "HeroBanner";

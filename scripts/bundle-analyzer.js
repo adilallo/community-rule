@@ -114,7 +114,7 @@ class BundleAnalyzer {
 
     Object.entries(this.results.bundles).forEach(([filename, bundle]) => {
       const budget = budgets.find(
-        (b) => filename.includes(b.name) || b.name === "all"
+        (b) => filename.includes(b.name) || b.name === "all",
       );
 
       if (budget) {
@@ -175,7 +175,7 @@ class BundleAnalyzer {
     // General recommendations
     const totalSize = Object.values(this.results.bundles).reduce(
       (sum, bundle) => sum + bundle.sizeKB,
-      0
+      0,
     );
 
     if (totalSize > 2000) {

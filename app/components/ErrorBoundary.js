@@ -28,7 +28,7 @@ class ErrorBoundary extends Component {
               Something went wrong
             </h2>
             <p className="text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-016)]">
-              We're sorry, but something unexpected happened.
+              We&apos;re sorry, but something unexpected happened.
             </p>
             <button
               onClick={() => this.setState({ hasError: false, error: null })}
@@ -46,4 +46,3 @@ class ErrorBoundary extends Component {
 }
 
 export default ErrorBoundary;
-

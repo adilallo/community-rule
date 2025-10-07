@@ -91,7 +91,7 @@ const ContentThumbnailTemplate = memo(
         </div>
       </Link>
     );
-  }
+  },
 );
 
 ContentThumbnailTemplate.displayName = "ContentThumbnailTemplate";

@@ -158,7 +158,7 @@ const MenuBarItem = memo(
         {children}
       </a>
     );
-  }
+  },
 );
 
 MenuBarItem.displayName = "MenuBarItem";

@@ -179,7 +179,7 @@ const ContentLockup = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 ContentLockup.displayName = "ContentLockup";

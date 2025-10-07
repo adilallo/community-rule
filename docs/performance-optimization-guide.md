@@ -97,7 +97,7 @@ const OptimizedComponent = memo(({ data, onAction }) => {
     (id) => {
       onAction(id);
     },
-    [onAction]
+    [onAction],
   );
 
   return <div onClick={handleClick}>{/* Component content */}</div>;

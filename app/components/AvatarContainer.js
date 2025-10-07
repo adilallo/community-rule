@@ -16,7 +16,7 @@ const AvatarContainer = memo(
         {children}
       </div>
     );
-  }
+  },
 );
 
 AvatarContainer.displayName = "AvatarContainer";

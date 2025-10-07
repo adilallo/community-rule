@@ -33,7 +33,7 @@ const ImagePlaceholder = memo(
         {text}
       </div>
     );
-  }
+  },
 );
 
 ImagePlaceholder.displayName = "ImagePlaceholder";

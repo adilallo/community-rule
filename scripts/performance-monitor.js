@@ -69,7 +69,7 @@ class PerformanceMonitor {
         });
       } catch (error) {
         console.warn(
-          "⚠️ Development server not running, skipping Lighthouse CI..."
+          "⚠️ Development server not running, skipping Lighthouse CI...",
         );
         return;
       }
@@ -99,23 +99,23 @@ class PerformanceMonitor {
 
       if (resultFile) {
         const results = JSON.parse(
-          fs.readFileSync(path.join(lhciResultsPath, resultFile), "utf8")
+          fs.readFileSync(path.join(lhciResultsPath, resultFile), "utf8"),
         );
 
         if (results.lhr && results.lhr.audits) {
           this.metrics.coreWebVitals = {
             lcp: this.getAuditScore(
               results.lhr.audits,
-              "largest-contentful-paint"
+              "largest-contentful-paint",
             ),
             fid: this.getAuditScore(results.lhr.audits, "max-potential-fid"),
             cls: this.getAuditScore(
               results.lhr.audits,
-              "cumulative-layout-shift"
+              "cumulative-layout-shift",
             ),
             fcp: this.getAuditScore(
               results.lhr.audits,
-              "first-contentful-paint"
+              "first-contentful-paint",
             ),
             tti: this.getAuditScore(results.lhr.audits, "interactive"),
             performance: results.lhr.categories.performance?.score * 100 || 0,
@@ -150,7 +150,7 @@ class PerformanceMonitor {
       "..",
       ".next",
       "static",
-      "chunks"
+      "chunks",
     );
 
     if (fs.existsSync(bundleStatsPath)) {
