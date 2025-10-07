@@ -39,7 +39,9 @@
     "analyze:browser": "BUNDLE_ANALYZE=true npm run build",
     "bundle:analyze": "node scripts/bundle-analyzer.js",
     "web-vitals:track": "node scripts/web-vitals-tracker.js",
-    "monitor:all": "npm run bundle:analyze && npm run performance:monitor && npm run web-vitals:track"
+    "monitor:all": "npm run bundle:analyze && npm run performance:monitor && npm run web-vitals:track",
+    "test:performance": "node scripts/test-performance.js",
+    "test:performance:ci": "npm run test:performance"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

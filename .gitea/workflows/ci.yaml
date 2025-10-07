@@ -335,8 +335,13 @@ jobs:
         run: npm i -D @lhci/cli
 
       - name: Build application
-        run:
-          npm run build
+        run: npm run build
+
+      - name: Comprehensive Performance Testing
+        run: |
+          echo "🧪 Running comprehensive performance testing..."
+          npm run test:performance:ci
+          echo "✅ Performance testing complete"
 
           # 1) Sanity check that the build exists
       - name: Verify Next build output
@@ -456,12 +461,18 @@ jobs:
           NODE_ENV: production
           NODE_OPTIONS: "--max-old-space-size=8192"
 
-      - name: Upload LHCI results
+      - name: Upload Performance Artifacts
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: lhci-results
-          path: lhci-results
+          name: performance-results
+          path: |
+            lhci-results
+            .next/analyze
+            .next/monitoring
+            .next/web-vitals
+            .next/test-results
+          retention-days: 30
 
   storybook:
     runs-on: [self-hosted, macos-latest]
