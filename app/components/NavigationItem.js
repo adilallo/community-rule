@@ -54,7 +54,7 @@ const NavigationItem = memo(
         {children}
       </a>
     );
-  }
+  },
 );
 
 NavigationItem.displayName = "NavigationItem";
