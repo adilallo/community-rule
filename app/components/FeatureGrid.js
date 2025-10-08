@@ -1,11 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { memo, useMemo } from "react";
 import ContentLockup from "./ContentLockup";
 import MiniCard from "./MiniCard";
 import Image from "next/image";
 
-const FeatureGrid = ({ title, subtitle, className = "" }) => {
+const FeatureGrid = memo(({ title, subtitle, className = "" }) => {
+  // Memoize the feature data to prevent unnecessary re-renders
+  const features = useMemo(
+    () => [
+      {
+        backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
+        labelLine1: "Decision-making",
+        labelLine2: "support",
+        panelContent: "/assets/Feature_Support.png",
+        ariaLabel: "Decision-making support tools",
+        href: "#decision-making",
+      },
+      {
+        backgroundColor: "bg-[#D1FFE2]",
+        labelLine1: "Values alignment",
+        labelLine2: "exercises",
+        panelContent: "/assets/Feature_Exercises.png",
+        ariaLabel: "Values alignment exercises",
+        href: "#values-alignment",
+      },
+      {
+        backgroundColor: "bg-[#F4CAFF]",
+        labelLine1: "Membership",
+        labelLine2: "guidance",
+        panelContent: "/assets/Feature_Guidance.png",
+        ariaLabel: "Membership guidance resources",
+        href: "#membership-guidance",
+      },
+      {
+        backgroundColor: "bg-[#CBDDFF]",
+        labelLine1: "Conflict resolution",
+        labelLine2: "tools",
+        panelContent: "/assets/Feature_Tools.png",
+        ariaLabel: "Conflict resolution tools",
+        href: "#conflict-resolution",
+      },
+    ],
+    [],
+  );
   return (
     <section
       className={`p-0 lg:p-[var(--spacing-scale-064)] ${className}`}
@@ -32,43 +70,24 @@ const FeatureGrid = ({ title, subtitle, className = "" }) => {
             role="grid"
             aria-label="Feature tools and services"
           >
-            <MiniCard
-              backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
-              labelLine1="Decision-making"
-              labelLine2="support"
-              panelContent="assets/Feature_Support.png"
-              ariaLabel="Decision-making support tools"
-              href="#decision-making"
-            />
-            <MiniCard
-              backgroundColor="bg-[#D1FFE2]"
-              labelLine1="Values alignment"
-              labelLine2="exercises"
-              panelContent="assets/Feature_Exercises.png"
-              ariaLabel="Values alignment exercises"
-              href="#values-alignment"
-            />
-            <MiniCard
-              backgroundColor="bg-[#F4CAFF]"
-              labelLine1="Membership"
-              labelLine2="guidance"
-              panelContent="assets/Feature_Guidance.png"
-              ariaLabel="Membership guidance resources"
-              href="#membership-guidance"
-            />
-            <MiniCard
-              backgroundColor="bg-[#CBDDFF]"
-              labelLine1="Conflict resolution"
-              labelLine2="tools"
-              panelContent="assets/Feature_Tools.png"
-              ariaLabel="Conflict resolution tools"
-              href="#conflict-resolution"
-            />
+            {features.map((feature, index) => (
+              <MiniCard
+                key={index}
+                backgroundColor={feature.backgroundColor}
+                labelLine1={feature.labelLine1}
+                labelLine2={feature.labelLine2}
+                panelContent={feature.panelContent}
+                ariaLabel={feature.ariaLabel}
+                href={feature.href}
+              />
+            ))}
           </div>
         </div>
       </div>
     </section>
   );
-};
+});
+
+FeatureGrid.displayName = "FeatureGrid";
 
 export default FeatureGrid;

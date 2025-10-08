@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import MenuBar from "./MenuBar";
@@ -38,7 +39,7 @@ export const logoConfig = [
   { breakpoint: "hidden xl:block", size: "headerXl", showText: true },
 ];
 
-export default function Header() {
+const Header = memo(() => {
   const pathname = usePathname();
 
   // Schema markup for site navigation
@@ -214,4 +215,8 @@ export default function Header() {
       </header>
     </>
   );
-}
+});
+
+Header.displayName = "Header";
+
+export default Header;

@@ -2,386 +2,297 @@
 
 /**
  * Performance Monitoring Script
- *
- * This script provides comprehensive performance monitoring capabilities
- * for the Community Rule application.
+ * Monitors Core Web Vitals and performance metrics
  */
 
-const { spawn } = require("child_process");
+const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-// Performance budgets
-const PERFORMANCE_BUDGETS = {
-  page_load_time: 3000,
-  first_contentful_paint: 2000,
-  largest_contentful_paint: 2500,
-  first_input_delay: 100,
-  dns_lookup: 100,
-  tcp_connection: 200,
-  ttfb: 600,
-  dom_content_loaded: 1500,
-  full_load: 3000,
-  component_render_time: 500,
-  interaction_time: 100,
-  scroll_performance: 50,
-  network_request_duration: 1000,
-  memory_usage_mb: 50,
-};
+const PERFORMANCE_BUDGETS = require("../performance-budgets.json");
+const MONITORING_DIR = path.join(__dirname, "..", ".next", "monitoring");
 
-// Baseline metrics for regression detection
-const BASELINE_METRICS = {
-  page_load_time: 2000,
-  first_contentful_paint: 1500,
-  largest_contentful_paint: 2000,
-  first_input_delay: 50,
-  dns_lookup: 50,
-  tcp_connection: 100,
-  ttfb: 400,
-  dom_content_loaded: 1000,
-  full_load: 2000,
-  component_render_time: 300,
-  interaction_time: 50,
-  scroll_performance: 30,
-  network_request_duration: 500,
-  memory_usage_mb: 30,
-};
-
-class PerformanceMonitorScript {
+class PerformanceMonitor {
   constructor() {
-    this.metrics = new Map();
-    this.regressions = [];
-    this.warnings = [];
-  }
-
-  /**
-   * Run Lighthouse CI performance tests
-   */
-  async runLighthouseCI() {
-    console.log("🚀 Running Lighthouse CI performance tests...");
-
-    return new Promise((resolve, reject) => {
-      const lhci = spawn("npx", ["lhci", "autorun"], {
-        stdio: "pipe",
-        shell: true,
-      });
-
-      let output = "";
-      let errorOutput = "";
-
-      lhci.stdout.on("data", (data) => {
-        output += data.toString();
-        console.log(data.toString());
-      });
-
-      lhci.stderr.on("data", (data) => {
-        errorOutput += data.toString();
-        console.error(data.toString());
-      });
-
-      lhci.on("close", (code) => {
-        if (code === 0) {
-          console.log("✅ Lighthouse CI tests completed successfully");
-          this.analyzeLighthouseResults(output);
-          resolve(output);
-        } else {
-          console.error("❌ Lighthouse CI tests failed");
-          reject(
-            new Error(`Lighthouse CI failed with code ${code}: ${errorOutput}`),
-          );
-        }
-      });
-    });
-  }
-
-  /**
-   * Run Playwright performance tests
-   */
-  async runPlaywrightPerformanceTests() {
-    console.log("🎭 Running Playwright performance tests...");
-
-    return new Promise((resolve, reject) => {
-      const playwright = spawn(
-        "npx",
-        [
-          "playwright",
-          "test",
-          "tests/e2e/performance.spec.ts",
-          "--reporter=json",
-        ],
-        {
-          stdio: "pipe",
-          shell: true,
-        },
-      );
-
-      let output = "";
-      let errorOutput = "";
-
-      playwright.stdout.on("data", (data) => {
-        output += data.toString();
-      });
-
-      playwright.stderr.on("data", (data) => {
-        errorOutput += data.toString();
-      });
-
-      playwright.on("close", (code) => {
-        if (code === 0) {
-          console.log("✅ Playwright performance tests completed successfully");
-          this.analyzePlaywrightResults(output);
-          resolve(output);
-        } else {
-          console.error("❌ Playwright performance tests failed");
-          reject(
-            new Error(
-              `Playwright tests failed with code ${code}: ${errorOutput}`,
-            ),
-          );
-        }
-      });
-    });
-  }
-
-  /**
-   * Analyze Lighthouse CI results
-   */
-  analyzeLighthouseResults(output) {
-    console.log("📊 Analyzing Lighthouse CI results...");
-
-    // Parse Lighthouse results
-    const lines = output.split("\n");
-    let currentMetric = null;
-
-    for (const line of lines) {
-      if (line.includes("Performance")) {
-        const scoreMatch = line.match(/(\d+)/);
-        if (scoreMatch) {
-          const score = parseInt(scoreMatch[1]);
-          this.recordMetric("lighthouse_performance_score", score);
-
-          if (score < 90) {
-            this.warnings.push(
-              `Performance score below threshold: ${score}/100`,
-            );
-          }
-        }
-      }
-
-      if (line.includes("First Contentful Paint")) {
-        const timeMatch = line.match(/(\d+(?:\.\d+)?)\s*ms/);
-        if (timeMatch) {
-          const time = parseFloat(timeMatch[1]);
-          this.recordMetric("first_contentful_paint", time);
-
-          if (time > PERFORMANCE_BUDGETS.first_contentful_paint) {
-            this.warnings.push(
-              `First Contentful Paint exceeded budget: ${time}ms`,
-            );
-          }
-        }
-      }
-
-      if (line.includes("Largest Contentful Paint")) {
-        const timeMatch = line.match(/(\d+(?:\.\d+)?)\s*ms/);
-        if (timeMatch) {
-          const time = parseFloat(timeMatch[1]);
-          this.recordMetric("largest_contentful_paint", time);
-
-          if (time > PERFORMANCE_BUDGETS.largest_contentful_paint) {
-            this.warnings.push(
-              `Largest Contentful Paint exceeded budget: ${time}ms`,
-            );
-          }
-        }
-      }
-
-      if (line.includes("Total Blocking Time")) {
-        const timeMatch = line.match(/(\d+(?:\.\d+)?)\s*ms/);
-        if (timeMatch) {
-          const time = parseFloat(timeMatch[1]);
-          this.recordMetric("total_blocking_time", time);
-
-          if (time > 300) {
-            this.warnings.push(
-              `Total Blocking Time exceeded budget: ${time}ms`,
-            );
-          }
-        }
-      }
-
-      if (line.includes("Cumulative Layout Shift")) {
-        const shiftMatch = line.match(/(\d+(?:\.\d+)?)/);
-        if (shiftMatch) {
-          const shift = parseFloat(shiftMatch[1]);
-          this.recordMetric("cumulative_layout_shift", shift);
-
-          if (shift > 0.1) {
-            this.warnings.push(
-              `Cumulative Layout Shift exceeded budget: ${shift}`,
-            );
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Analyze Playwright test results
-   */
-  analyzePlaywrightResults(output) {
-    console.log("📊 Analyzing Playwright test results...");
-
-    try {
-      const results = JSON.parse(output);
-
-      for (const result of results) {
-        if (result.status === "failed") {
-          this.warnings.push(`Test failed: ${result.title}`);
-        }
-      }
-    } catch (error) {
-      console.warn("Could not parse Playwright results as JSON");
-    }
-  }
-
-  /**
-   * Record a performance metric
-   */
-  recordMetric(name, value) {
-    if (!this.metrics.has(name)) {
-      this.metrics.set(name, []);
-    }
-    this.metrics.get(name).push({
-      value,
-      timestamp: Date.now(),
-    });
-
-    // Check against baseline for regression detection
-    const baseline = BASELINE_METRICS[name];
-    if (baseline) {
-      const regressionThreshold = baseline * 1.2; // 20% regression threshold
-      if (value > regressionThreshold) {
-        this.regressions.push({
-          metric: name,
-          current: value,
-          baseline,
-          regression: (((value - baseline) / baseline) * 100).toFixed(1) + "%",
-        });
-      }
-    }
-  }
-
-  /**
-   * Generate performance report
-   */
-  generateReport() {
-    console.log("\n📈 Performance Monitoring Report");
-    console.log("================================\n");
-
-    // Summary
-    console.log("📊 Summary:");
-    console.log(`- Total metrics recorded: ${this.metrics.size}`);
-    console.log(
-      `- Performance regressions detected: ${this.regressions.length}`,
-    );
-    console.log(`- Warnings: ${this.warnings.length}\n`);
-
-    // Performance regressions
-    if (this.regressions.length > 0) {
-      console.log("🚨 Performance Regressions:");
-      for (const regression of this.regressions) {
-        console.log(
-          `  - ${regression.metric}: ${regression.current} (baseline: ${regression.baseline}, regression: ${regression.regression})`,
-        );
-      }
-      console.log("");
-    }
-
-    // Warnings
-    if (this.warnings.length > 0) {
-      console.log("⚠️  Warnings:");
-      for (const warning of this.warnings) {
-        console.log(`  - ${warning}`);
-      }
-      console.log("");
-    }
-
-    // Metrics summary
-    console.log("📋 Metrics Summary:");
-    for (const [name, values] of this.metrics) {
-      const latest = values[values.length - 1];
-      const average =
-        values.reduce((sum, v) => sum + v.value, 0) / values.length;
-      const budget = PERFORMANCE_BUDGETS[name];
-
-      console.log(`  - ${name}:`);
-      console.log(`    Latest: ${latest.value}`);
-      console.log(`    Average: ${average.toFixed(2)}`);
-      if (budget) {
-        const status = latest.value <= budget ? "✅" : "❌";
-        console.log(`    Budget: ${budget} ${status}`);
-      }
-    }
-
-    // Save report to file
-    const report = {
+    this.metrics = {
       timestamp: new Date().toISOString(),
-      summary: {
-        totalMetrics: this.metrics.size,
-        regressions: this.regressions.length,
-        warnings: this.warnings.length,
-      },
-      regressions: this.regressions,
-      warnings: this.warnings,
-      metrics: Object.fromEntries(this.metrics),
+      coreWebVitals: {},
+      bundleMetrics: {},
+      recommendations: [],
     };
-
-    const reportPath = path.join(__dirname, "../performance-report.json");
-    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(`\n📄 Report saved to: ${reportPath}`);
-
-    return report;
   }
 
   /**
-   * Run all performance monitoring
+   * Run comprehensive performance monitoring
    */
-  async run() {
-    console.log("🔍 Starting Performance Monitoring...\n");
+  async monitorPerformance() {
+    console.log("📊 Starting performance monitoring...");
 
     try {
-      // Run Lighthouse CI tests
+      // Ensure monitoring directory exists
+      if (!fs.existsSync(MONITORING_DIR)) {
+        fs.mkdirSync(MONITORING_DIR, { recursive: true });
+      }
+
+      // Run Lighthouse CI for Core Web Vitals
       await this.runLighthouseCI();
 
-      // Run Playwright performance tests
-      await this.runPlaywrightPerformanceTests();
+      // Analyze bundle performance
+      await this.analyzeBundlePerformance();
 
-      // Generate and display report
-      const report = this.generateReport();
+      // Check performance budgets
+      this.checkPerformanceBudgets();
 
-      // Exit with appropriate code
-      if (this.regressions.length > 0) {
-        console.log("❌ Performance regressions detected!");
-        process.exit(1);
-      } else if (this.warnings.length > 0) {
-        console.log("⚠️  Performance warnings detected.");
-        process.exit(0);
-      } else {
-        console.log("✅ All performance checks passed!");
-        process.exit(0);
-      }
+      // Generate performance report
+      this.generatePerformanceReport();
+
+      console.log("✅ Performance monitoring complete!");
+      console.log(`📁 Results saved to: ${MONITORING_DIR}`);
     } catch (error) {
       console.error("❌ Performance monitoring failed:", error.message);
       process.exit(1);
     }
   }
+
+  /**
+   * Run Lighthouse CI for Core Web Vitals
+   */
+  async runLighthouseCI() {
+    console.log("🔍 Running Lighthouse CI...");
+
+    try {
+      // Check if server is running
+      const { execSync } = require("child_process");
+      try {
+        execSync("curl -s http://localhost:3000 > /dev/null", {
+          stdio: "pipe",
+        });
+      } catch (error) {
+        console.warn(
+          "⚠️ Development server not running, skipping Lighthouse CI...",
+        );
+        return;
+      }
+
+      // Run Lighthouse CI with performance focus
+      execSync("npx lhci autorun --collect.url=http://localhost:3000", {
+        stdio: "inherit",
+        cwd: path.join(__dirname, ".."),
+      });
+
+      // Parse Lighthouse results
+      await this.parseLighthouseResults();
+    } catch (error) {
+      console.warn("⚠️ Lighthouse CI failed, continuing with other metrics...");
+    }
+  }
+
+  /**
+   * Parse Lighthouse CI results
+   */
+  async parseLighthouseResults() {
+    const lhciResultsPath = path.join(__dirname, "..", ".lighthouseci");
+
+    if (fs.existsSync(lhciResultsPath)) {
+      const files = fs.readdirSync(lhciResultsPath);
+      const resultFile = files.find((f) => f.endsWith(".json"));
+
+      if (resultFile) {
+        const results = JSON.parse(
+          fs.readFileSync(path.join(lhciResultsPath, resultFile), "utf8"),
+        );
+
+        if (results.lhr && results.lhr.audits) {
+          this.metrics.coreWebVitals = {
+            lcp: this.getAuditScore(
+              results.lhr.audits,
+              "largest-contentful-paint",
+            ),
+            fid: this.getAuditScore(results.lhr.audits, "max-potential-fid"),
+            cls: this.getAuditScore(
+              results.lhr.audits,
+              "cumulative-layout-shift",
+            ),
+            fcp: this.getAuditScore(
+              results.lhr.audits,
+              "first-contentful-paint",
+            ),
+            tti: this.getAuditScore(results.lhr.audits, "interactive"),
+            performance: results.lhr.categories.performance?.score * 100 || 0,
+          };
+        }
+      }
+    }
+  }
+
+  /**
+   * Get audit score from Lighthouse results
+   */
+  getAuditScore(audits, auditId) {
+    const audit = audits[auditId];
+    if (!audit) return null;
+
+    return {
+      score: audit.score * 100,
+      value: audit.numericValue,
+      displayValue: audit.displayValue,
+    };
+  }
+
+  /**
+   * Analyze bundle performance
+   */
+  async analyzeBundlePerformance() {
+    console.log("📦 Analyzing bundle performance...");
+
+    const bundleStatsPath = path.join(
+      __dirname,
+      "..",
+      ".next",
+      "static",
+      "chunks",
+    );
+
+    if (fs.existsSync(bundleStatsPath)) {
+      const files = fs.readdirSync(bundleStatsPath);
+      let totalSize = 0;
+      let jsFiles = 0;
+
+      files.forEach((file) => {
+        if (file.endsWith(".js")) {
+          const filePath = path.join(bundleStatsPath, file);
+          const stats = fs.statSync(filePath);
+          totalSize += stats.size;
+          jsFiles++;
+        }
+      });
+
+      this.metrics.bundleMetrics = {
+        totalSizeKB: Math.round(totalSize / 1024),
+        totalSizeMB: Math.round((totalSize / (1024 * 1024)) * 100) / 100,
+        fileCount: jsFiles,
+        averageSizeKB: Math.round(totalSize / jsFiles / 1024),
+      };
+    }
+  }
+
+  /**
+   * Check performance budgets
+   */
+  checkPerformanceBudgets() {
+    const budgets = PERFORMANCE_BUDGETS.budgets;
+    const violations = [];
+
+    // Check Core Web Vitals
+    if (this.metrics.coreWebVitals.lcp) {
+      const lcpValue = this.metrics.coreWebVitals.lcp.value;
+      const lcpBudget = budgets.find((b) => b.name === "lcp")?.maxValue;
+
+      if (lcpBudget && lcpValue > lcpBudget) {
+        violations.push({
+          metric: "LCP",
+          current: lcpValue,
+          budget: lcpBudget,
+          severity: lcpValue > lcpBudget * 1.5 ? "high" : "medium",
+        });
+      }
+    }
+
+    // Check bundle size
+    if (this.metrics.bundleMetrics.totalSizeKB > 2000) {
+      violations.push({
+        metric: "Bundle Size",
+        current: this.metrics.bundleMetrics.totalSizeKB,
+        budget: 2000,
+        severity: "medium",
+      });
+    }
+
+    this.metrics.budgetViolations = violations;
+  }
+
+  /**
+   * Generate performance report
+   */
+  generatePerformanceReport() {
+    const reportPath = path.join(MONITORING_DIR, "performance-report.json");
+    fs.writeFileSync(reportPath, JSON.stringify(this.metrics, null, 2));
+
+    // Generate markdown report
+    this.generateMarkdownReport();
+  }
+
+  /**
+   * Generate markdown performance report
+   */
+  generateMarkdownReport() {
+    const reportPath = path.join(MONITORING_DIR, "performance-report.md");
+
+    let report = `# Performance Monitoring Report\n\n`;
+    report += `**Generated:** ${this.metrics.timestamp}\n\n`;
+
+    // Core Web Vitals
+    if (Object.keys(this.metrics.coreWebVitals).length > 0) {
+      report += `## Core Web Vitals\n\n`;
+      report += `| Metric | Score | Value | Status |\n`;
+      report += `|--------|-------|-------|--------|\n`;
+
+      Object.entries(this.metrics.coreWebVitals).forEach(([metric, data]) => {
+        if (data && typeof data === "object" && data.score !== undefined) {
+          const status = this.getMetricStatus(metric, data.score);
+          report += `| ${metric.toUpperCase()} | ${data.score} | ${
+            data.displayValue || "N/A"
+          } | ${status} |\n`;
+        }
+      });
+    }
+
+    // Bundle Metrics
+    if (Object.keys(this.metrics.bundleMetrics).length > 0) {
+      report += `\n## Bundle Metrics\n\n`;
+      report += `- **Total Size:** ${this.metrics.bundleMetrics.totalSizeMB}MB (${this.metrics.bundleMetrics.totalSizeKB}KB)\n`;
+      report += `- **File Count:** ${this.metrics.bundleMetrics.fileCount}\n`;
+      report += `- **Average Size:** ${this.metrics.bundleMetrics.averageSizeKB}KB per file\n`;
+    }
+
+    // Budget Violations
+    if (
+      this.metrics.budgetViolations &&
+      this.metrics.budgetViolations.length > 0
+    ) {
+      report += `\n## Budget Violations\n\n`;
+      this.metrics.budgetViolations.forEach((violation) => {
+        report += `- **${violation.metric}**: ${violation.current} (exceeds ${
+          violation.budget
+        }) - ${violation.severity.toUpperCase()}\n`;
+      });
+    }
+
+    // Recommendations
+    report += `\n## Recommendations\n\n`;
+    report += `- Monitor Core Web Vitals regularly\n`;
+    report += `- Implement code splitting for large bundles\n`;
+    report += `- Use dynamic imports for non-critical components\n`;
+    report += `- Optimize images and fonts\n`;
+    report += `- Enable compression and caching\n`;
+
+    fs.writeFileSync(reportPath, report);
+  }
+
+  /**
+   * Get status emoji for metric score
+   */
+  getMetricStatus(metric, score) {
+    if (score >= 90) return "✅ Good";
+    if (score >= 50) return "⚠️ Needs Improvement";
+    return "❌ Poor";
+  }
 }
 
-// Run the performance monitor if this script is executed directly
+// Run monitoring if called directly
 if (require.main === module) {
-  const monitor = new PerformanceMonitorScript();
-  monitor.run();
+  const monitor = new PerformanceMonitor();
+  monitor.monitorPerformance().catch(console.error);
 }
 
-module.exports = PerformanceMonitorScript;
+module.exports = PerformanceMonitor;

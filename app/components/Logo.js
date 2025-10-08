@@ -1,7 +1,8 @@
+import React, { memo } from "react";
 import Link from "next/link";
 import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
-export default function Logo({ size = "default", showText = true }) {
+const Logo = memo(({ size = "default", showText = true }) => {
   // Size configurations
   const sizes = {
     default: {
@@ -165,4 +166,8 @@ export default function Logo({ size = "default", showText = true }) {
       </div>
     </Link>
   );
-}
+});
+
+Logo.displayName = "Logo";
+
+export default Logo;

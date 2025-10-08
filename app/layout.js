@@ -10,6 +10,8 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -17,6 +19,8 @@ const bricolageGrotesque = Bricolage_Grotesque({
   weight: ["400", "500", "700", "800"],
   variable: "--font-bricolage-grotesque",
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,6 +28,8 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "700"],
   variable: "--font-space-grotesk",
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 export const metadata = {

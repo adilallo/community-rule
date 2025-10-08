@@ -1,4 +1,41 @@
 {
+  "budgets": [
+    {
+      "name": "lcp",
+      "maxValue": 2500,
+      "description": "Largest Contentful Paint should be under 2.5s"
+    },
+    {
+      "name": "fid",
+      "maxValue": 100,
+      "description": "First Input Delay should be under 100ms"
+    },
+    {
+      "name": "cls",
+      "maxValue": 0.1,
+      "description": "Cumulative Layout Shift should be under 0.1"
+    },
+    {
+      "name": "fcp",
+      "maxValue": 1800,
+      "description": "First Contentful Paint should be under 1.8s"
+    },
+    {
+      "name": "ttfb",
+      "maxValue": 800,
+      "description": "Time to First Byte should be under 800ms"
+    },
+    {
+      "name": "bundle-size",
+      "maxSizeKB": 500,
+      "description": "Individual bundle size should be under 500KB"
+    },
+    {
+      "name": "total-size",
+      "maxSizeKB": 2000,
+      "description": "Total bundle size should be under 2MB"
+    }
+  ],
   "performance": {
     "budgets": [
       {

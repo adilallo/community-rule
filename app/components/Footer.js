@@ -1,8 +1,9 @@
+import React, { memo } from "react";
 import Logo from "./Logo";
 import Separator from "./Separator";
 import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 
-export default function Footer() {
+const Footer = memo(() => {
   // Schema markup for organization information
   const schemaData = {
     "@context": "https://schema.org",
@@ -155,4 +156,8 @@ export default function Footer() {
       </footer>
     </>
   );
-}
+});
+
+Footer.displayName = "Footer";
+
+export default Footer;

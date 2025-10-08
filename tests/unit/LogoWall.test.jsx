@@ -84,7 +84,7 @@ describe("LogoWall Component", () => {
     const foodNotBombsLogo = screen.getByAltText("Food Not Bombs");
     expect(foodNotBombsLogo).toHaveAttribute(
       "src",
-      "assets/Section/Logo_FoodNotBombs.png",
+      "/assets/Section/Logo_FoodNotBombs.png",
     );
     expect(foodNotBombsLogo).toHaveClass("h-11", "lg:h-14", "xl:h-[70px]");
   });

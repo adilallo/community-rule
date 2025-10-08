@@ -1,6 +1,8 @@
 "use client";
 
-const HeroDecor = ({ className = "" }) => {
+import React, { memo } from "react";
+
+const HeroDecor = memo(({ className = "" }) => {
   return (
     <svg
       className={`text-[var(--color-surface-default-brand-lighter-accent)] opacity-50 ${className}`}
@@ -65,6 +67,8 @@ const HeroDecor = ({ className = "" }) => {
       </g>
     </svg>
   );
-};
+});
+
+HeroDecor.displayName = "HeroDecor";
 
 export default HeroDecor;
