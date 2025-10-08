@@ -10,7 +10,7 @@ const config = {
     "@storybook/addon-a11y",
   ],
   framework: {
-    name: "@storybook/nextjs-vite",
+    name: "@storybook/nextjs",
     options: {},
   },
   staticDirs: ["../public"],
