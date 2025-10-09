@@ -2,28 +2,22 @@
 
 import React, { useState } from "react";
 import Checkbox from "../components/Checkbox";
+import RadioButton from "../components/RadioButton";
+import RadioGroup from "../components/RadioGroup";
 
 export default function FormsPlayground() {
   const [standardChecked, setStandardChecked] = useState(false);
   const [inverseChecked, setInverseChecked] = useState(true);
-
-  const variations = [
-    { title: "Standard / Default", mode: "standard", state: "default" },
-    { title: "Standard / Hover", mode: "standard", state: "hover" },
-    { title: "Standard / Focus", mode: "standard", state: "focus" },
-    { title: "Inverse / Default", mode: "inverse", state: "default" },
-    { title: "Inverse / Hover", mode: "inverse", state: "hover" },
-    { title: "Inverse / Focus", mode: "inverse", state: "focus" },
-  ];
+  const [radioValue, setRadioValue] = useState("option1");
+  const [standardRadioValue, setStandardRadioValue] = useState("option1");
+  const [inverseRadioValue, setInverseRadioValue] = useState("option2");
 
   return (
     <div className="p-[24px] space-y-[24px]">
-      <h1 className="font-bricolage text-[24px]">
-        Forms Playground — Checkbox
-      </h1>
+      <h1 className="font-bricolage text-[24px]">Forms Playground</h1>
 
       <section className="space-y-[12px]">
-        <h2 className="font-space text-[18px]">Interactive examples</h2>
+        <h2 className="font-space text-[18px]">Checkbox Examples</h2>
         <div className="flex flex-col gap-[12px] max-w-[520px]">
           <Checkbox
             label="Standard (controlled)"
@@ -43,34 +37,61 @@ export default function FormsPlayground() {
       </section>
 
       <section className="space-y-[12px]">
-        <h2 className="font-space text-[18px]">Static states</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[16px]">
-          {variations.map((v) => (
-            <div
-              key={`${v.mode}-${v.state}`}
-              className="border border-[color:var(--border-color-default-tertiary)] rounded-[8px] p-[12px]"
-            >
-              <div className="text-[12px] mb-[8px] opacity-70">{v.title}</div>
-              <div>
-                <div className="flex items-center gap-[12px]">
-                  <Checkbox
-                    checked={false}
-                    mode={v.mode}
-                    state={v.state}
-                    label="Unchecked"
-                    onChange={() => {}}
-                  />
-                  <Checkbox
-                    checked
-                    mode={v.mode}
-                    state={v.state}
-                    label="Checked"
-                    onChange={() => {}}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
+        <h2 className="font-space text-[18px]">Radio Button Examples</h2>
+        <div className="flex flex-col gap-[12px] max-w-[520px]">
+          <RadioButton
+            label="Standard (controlled)"
+            checked={radioValue === "option1"}
+            mode="standard"
+            state="default"
+            value="option1"
+            onChange={({ checked }) => checked && setRadioValue("option1")}
+          />
+          <RadioButton
+            label="Inverse (controlled)"
+            checked={radioValue === "option2"}
+            mode="inverse"
+            state="default"
+            value="option2"
+            onChange={({ checked }) => checked && setRadioValue("option2")}
+          />
+        </div>
+      </section>
+
+      <section className="space-y-[12px]">
+        <h2 className="font-space text-[18px]">Radio Group</h2>
+        <div className="max-w-[520px] space-y-[16px]">
+          <div>
+            <h3 className="font-space text-[14px] mb-[8px]">Standard Mode</h3>
+            <RadioGroup
+              name="standard-radio"
+              value={standardRadioValue}
+              mode="standard"
+              state="default"
+              onChange={({ value }) => setStandardRadioValue(value)}
+              options={[
+                { value: "option1", label: "Option 1" },
+                { value: "option2", label: "Option 2" },
+                { value: "option3", label: "Option 3" },
+              ]}
+            />
+          </div>
+
+          <div>
+            <h3 className="font-space text-[14px] mb-[8px]">Inverse Mode</h3>
+            <RadioGroup
+              name="inverse-radio"
+              value={inverseRadioValue}
+              mode="inverse"
+              state="default"
+              onChange={({ value }) => setInverseRadioValue(value)}
+              options={[
+                { value: "option1", label: "Option 1" },
+                { value: "option2", label: "Option 2" },
+                { value: "option3", label: "Option 3" },
+              ]}
+            />
+          </div>
         </div>
       </section>
     </div>

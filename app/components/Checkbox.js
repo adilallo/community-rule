@@ -69,9 +69,9 @@ const Checkbox = memo(
     const conditionalHoverOutlineClass =
       "hover:outline hover:outline-1 hover:outline-[var(--color-border-default-brand-primary)]";
 
-    // Focus state for standard/unchecked with utility info color and specific blur/spread
+    // Focus state for standard/unchecked with brand primary color and specific blur/spread
     const conditionalFocusClass =
-      "focus:outline focus:outline-1 focus:outline-[var(--color-border-default-utility-info)] focus:shadow-[0_0_10px_1px_var(--color-border-default-utility-info)]";
+      "focus:outline focus:outline-1 focus:outline-[var(--color-border-default-utility-info)] focus:shadow-[0_0_10px_1px_var(--color-surface-inverse-brand-primary)]";
 
     const handleToggle = (e) => {
       if (disabled) return;
