@@ -2,7 +2,7 @@
 
 import React, { memo, useCallback, forwardRef, useId } from "react";
 
-const Input = forwardRef(
+const TextArea = forwardRef(
   (
     {
       size = "medium",
@@ -18,38 +18,41 @@ const Input = forwardRef(
       onBlur,
       id,
       name,
-      type = "text",
       className = "",
+      rows,
       ...props
     },
     ref
   ) => {
     // Generate unique ID for accessibility if not provided
     const generatedId = useId();
-    const inputId = id || `input-${generatedId}`;
+    const textareaId = id || `textarea-${generatedId}`;
 
-    // Size variants
+    // Size variants with specific heights and radius for TextArea
     const sizeStyles = {
       small: {
-        input:
+        textarea:
           labelVariant === "horizontal"
-            ? "h-[30px] px-[12px] py-[8px] text-[10px]"
-            : "h-[32px] px-[12px] py-[8px] text-[10px]",
+            ? "h-[60px] px-[12px] py-[8px] text-[10px]"
+            : "h-[60px] px-[12px] py-[8px] text-[10px]",
         label: "text-[12px] leading-[14px] font-medium",
         container: "gap-[4px]",
-        radius: "var(--measures-radius-small)",
+        radius: "var(--measures-radius-xsmall)",
       },
       medium: {
-        input: "h-[36px] px-[12px] py-[8px] text-[14px] leading-[20px]",
+        textarea:
+          labelVariant === "horizontal"
+            ? "h-[110px] px-[12px] py-[8px] text-[14px] leading-[20px]"
+            : "h-[100px] px-[12px] py-[8px] text-[14px] leading-[20px]",
         label: "text-[14px] leading-[16px] font-medium",
         container: "gap-[8px]",
-        radius: "var(--measures-radius-medium)",
+        radius: "var(--measures-radius-xsmall)",
       },
       large: {
-        input: "h-[40px] px-[12px] py-[8px] text-[16px] leading-[24px]",
+        textarea: "h-[150px] px-[12px] py-[8px] text-[16px] leading-[24px]",
         label: "text-[16px] leading-[20px] font-medium",
         container: "gap-[12px]",
-        radius: "var(--measures-radius-large)",
+        radius: "var(--measures-radius-small)",
       },
     };
 
@@ -57,7 +60,7 @@ const Input = forwardRef(
     const getStateStyles = () => {
       if (disabled) {
         return {
-          input:
+          textarea:
             "bg-[var(--color-content-default-secondary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] cursor-not-allowed",
           label: "text-[var(--color-content-default-secondary)]",
         };
@@ -65,7 +68,7 @@ const Input = forwardRef(
 
       if (error) {
         return {
-          input:
+          textarea:
             "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-utility-negative)]",
           label: "text-[var(--color-content-default-secondary)]",
         };
@@ -74,25 +77,25 @@ const Input = forwardRef(
       switch (state) {
         case "active":
           return {
-            input:
+            textarea:
               "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)]",
             label: "text-[var(--color-content-default-secondary)]",
           };
         case "hover":
           return {
-            input:
+            textarea:
               "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
             label: "text-[var(--color-content-default-secondary)]",
           };
         case "focus":
           return {
-            input:
+            textarea:
               "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-utility-info)] shadow-[0_0_5px_3px_#3281F8]",
             label: "text-[var(--color-content-default-secondary)]",
           };
         default:
           return {
-            input:
+            textarea:
               "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
             label: "text-[var(--color-content-default-secondary)]",
           };
@@ -113,11 +116,11 @@ const Input = forwardRef(
         ? `${currentSize.label} font-inter min-w-fit`
         : `${currentSize.label} font-inter`;
 
-    const inputClasses = `
+    const textareaClasses = `
        w-full border transition-all duration-200 ease-in-out
-       focus:outline-none focus:ring-0
-       ${currentSize.input}
-       ${stateStyles.input}
+       focus:outline-none focus:ring-0 resize-none
+       ${currentSize.textarea}
+       ${stateStyles.textarea}
        ${className}
      `.trim();
 
@@ -152,26 +155,28 @@ const Input = forwardRef(
       <div className={containerClasses}>
         {label && (
           <label
-            htmlFor={inputId}
+            htmlFor={textareaId}
             className={`${labelClasses} font-inter font-medium text-[var(--color-content-default-secondary)]`}
           >
             {label}
           </label>
         )}
         <div className={disabled ? "opacity-40" : ""}>
-          <input
+          <textarea
             ref={ref}
-            id={inputId}
+            id={textareaId}
             name={name}
-            type={type}
             value={value}
             placeholder={placeholder}
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
             disabled={disabled}
-            className={inputClasses}
+            rows={rows}
+            className={textareaClasses}
             style={{ borderRadius: currentSize.radius }}
+            aria-disabled={disabled}
+            aria-invalid={error}
             {...props}
           />
         </div>
@@ -180,6 +185,6 @@ const Input = forwardRef(
   }
 );
 
-Input.displayName = "Input";
+TextArea.displayName = "TextArea";
 
-export default memo(Input);
+export default memo(TextArea);

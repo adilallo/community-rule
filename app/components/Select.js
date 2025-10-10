@@ -133,14 +133,14 @@ const Select = forwardRef(
         return {
           select:
             "bg-[var(--color-content-default-secondary)] border-[var(--color-border-default-tertiary)] cursor-not-allowed opacity-40",
-          label: "text-[var(--color-content-default-primary)]",
+          label: "text-[var(--color-content-default-secondary)]",
         };
       }
 
       if (error) {
         return {
           select: "border-[var(--color-border-default-utility-negative)]",
-          label: "text-[var(--color-content-default-primary)]",
+          label: "text-[var(--color-content-default-secondary)]",
         };
       }
 
@@ -149,18 +149,18 @@ const Select = forwardRef(
           return {
             select:
               "border-[var(--color-border-default-tertiary)] shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
-            label: "text-[var(--color-content-default-primary)]",
+            label: "text-[var(--color-content-default-secondary)]",
           };
         case "focus":
           return {
             select:
               "border-[var(--color-border-default-utility-info)] shadow-[0_0_5px_3px_#3281F8]",
-            label: "text-[var(--color-content-default-primary)]",
+            label: "text-[var(--color-content-default-secondary)]",
           };
         default:
           return {
             select: "border-[var(--color-border-default-tertiary)]",
-            label: "text-[var(--color-content-default-primary)]",
+            label: "text-[var(--color-content-default-secondary)]",
           };
       }
     };
@@ -244,7 +244,11 @@ const Select = forwardRef(
     return (
       <div className={containerClasses}>
         {label && (
-          <label id={labelId} htmlFor={selectId} className={labelClasses}>
+          <label
+            id={labelId}
+            htmlFor={selectId}
+            className={`${labelClasses} text-[var(--color-content-default-secondary)]`}
+          >
             {label}
           </label>
         )}
