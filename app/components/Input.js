@@ -31,19 +31,22 @@ const Input = forwardRef(
     // Size variants
     const sizeStyles = {
       small: {
-        input: "h-[30px] px-[12px] text-[10px]",
+        input:
+          labelVariant === "horizontal"
+            ? "h-[30px] px-[12px] py-[8px] text-[10px]"
+            : "h-[32px] px-[12px] py-[8px] text-[10px]",
         label: "text-[12px] leading-[14px] font-medium",
         container: "gap-[4px]",
         radius: "var(--measures-radius-small)",
       },
       medium: {
-        input: "h-[36px] px-[16px] text-[14px] leading-[20px]",
+        input: "h-[36px] px-[12px] py-[8px] text-[14px] leading-[20px]",
         label: "text-[14px] leading-[16px] font-medium",
         container: "gap-[8px]",
         radius: "var(--measures-radius-medium)",
       },
       large: {
-        input: "h-[40px] px-[20px] text-[16px] leading-[24px]",
+        input: "h-[40px] px-[12px] py-[8px] text-[16px] leading-[24px]",
         label: "text-[16px] leading-[20px] font-medium",
         container: "gap-[12px]",
         radius: "var(--measures-radius-large)",
@@ -78,7 +81,7 @@ const Input = forwardRef(
         case "hover":
           return {
             input:
-              "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border-2 border-[var(--color-border-default-brand-primary)]",
+              "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
             label: "text-[var(--color-content-default-primary)]",
           };
         case "focus":
@@ -90,7 +93,7 @@ const Input = forwardRef(
         default:
           return {
             input:
-              "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] hover:outline hover:outline-2 hover:outline-[var(--color-border-default-tertiary)]",
+              "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border border-[var(--color-border-default-tertiary)] hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
             label: "text-[var(--color-content-default-primary)]",
           };
       }

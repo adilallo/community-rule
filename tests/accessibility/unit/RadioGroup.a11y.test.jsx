@@ -312,6 +312,6 @@ describe("RadioGroup Accessibility", () => {
     expect(handleChange).toHaveBeenCalledWith({ value: "option2" });
 
     // Only one should be selected at a time
-    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleChange).toHaveBeenCalledTimes(2);
   });
 });

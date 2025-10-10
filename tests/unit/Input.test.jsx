@@ -98,7 +98,7 @@ describe("Input Component", () => {
   test("applies correct size classes", () => {
     const { rerender } = render(<Input size="small" />);
     let input = screen.getByRole("textbox");
-    expect(input).toHaveClass("h-[30px]");
+    expect(input).toHaveClass("h-[32px]");
 
     rerender(<Input size="medium" />);
     input = screen.getByRole("textbox");
@@ -146,9 +146,9 @@ describe("Input Component", () => {
   test("applies hover state classes", () => {
     render(<Input state="hover" />);
     const input = screen.getByRole("textbox");
-    expect(input).toHaveClass("border-2");
+    expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-brand-primary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
     );
   });
 
@@ -162,7 +162,9 @@ describe("Input Component", () => {
     render(<Input state="default" />);
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
-    expect(input).toHaveClass("hover:outline");
+    expect(input).toHaveClass(
+      "hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+    );
   });
 
   test("applies custom className", () => {

@@ -285,9 +285,9 @@ describe("Input Component Integration", () => {
 
     // Set hover state
     fireEvent.click(hoverButton);
-    expect(input).toHaveClass("border-2");
+    expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-brand-primary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
     );
 
     // Set active state
