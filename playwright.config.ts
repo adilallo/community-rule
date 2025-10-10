@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "tests",
   testMatch: [
     "tests/e2e/**/*.spec.{js,ts}",
+    "tests/e2e/**/*.test.{js,ts}",
     "tests/accessibility/**/*.spec.{js,ts}",
   ],
   timeout: 60_000,

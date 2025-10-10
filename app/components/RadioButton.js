@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useId } from "react";
 
 const RadioButton = ({
   checked = false,
@@ -71,7 +71,7 @@ const RadioButton = ({
     "focus:outline focus:outline-1 focus:outline-[var(--color-border-default-utility-info)] focus:shadow-[0_0_10px_1px_var(--color-surface-inverse-brand-primary)]";
 
   // Generate unique ID for accessibility if not provided
-  const radioId = id || `radio-${Math.random().toString(36).substr(2, 9)}`;
+  const radioId = id || `radio-${useId()}`;
 
   const handleToggle = useCallback(
     (e) => {

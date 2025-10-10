@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useId } from "react";
 
 /**
  * Checkbox
@@ -83,8 +83,7 @@ const Checkbox = memo(
     };
 
     // Generate unique ID for accessibility if not provided
-    const checkboxId =
-      id || `checkbox-${Math.random().toString(36).substr(2, 9)}`;
+    const checkboxId = id || `checkbox-${useId()}`;
 
     const accessibilityProps = {
       role: "checkbox",

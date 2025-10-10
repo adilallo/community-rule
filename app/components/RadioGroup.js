@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useId } from "react";
 import RadioButton from "./RadioButton";
 
 const RadioGroup = ({
@@ -15,8 +15,7 @@ const RadioGroup = ({
   ...props
 }) => {
   // Generate unique ID for accessibility if not provided
-  const groupId =
-    name || `radio-group-${Math.random().toString(36).substr(2, 9)}`;
+  const groupId = name || `radio-group-${useId()}`;
 
   const handleChange = useCallback(
     (optionValue) => {
