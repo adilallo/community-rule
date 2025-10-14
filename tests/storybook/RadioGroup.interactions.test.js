@@ -173,7 +173,7 @@ export const FormIntegration = {
 
     // All should have the same name
     const names = await Promise.all(
-      hiddenInputs.map((input) => input.getAttribute("name"))
+      hiddenInputs.map((input) => input.getAttribute("name")),
     );
     expect(names.every((name) => name === names[0])).toBe(true);
 

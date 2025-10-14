@@ -131,13 +131,13 @@ describe("RadioButton Integration", () => {
 
     // Initially standard mode
     expect(radioButton).toHaveClass(
-      "outline-[var(--color-border-default-tertiary)]"
+      "outline-[var(--color-border-default-tertiary)]",
     );
 
     // Switch to inverse mode
     await user.click(toggleButton);
     expect(radioButton).toHaveClass(
-      "outline-[var(--color-border-inverse-primary)]"
+      "outline-[var(--color-border-inverse-primary)]",
     );
   });
 
@@ -231,13 +231,13 @@ describe("RadioButton Integration", () => {
     await user.click(group1OptionB);
     await user.click(group2OptionY);
 
-    const group1Inputs = screen.getAllByDisplayValue("option2").filter(
-      input => input.getAttribute("name") === "group1"
-    );
-    const group2Inputs = screen.getAllByDisplayValue("option2").filter(
-      input => input.getAttribute("name") === "group2"
-    );
-    
+    const group1Inputs = screen
+      .getAllByDisplayValue("option2")
+      .filter((input) => input.getAttribute("name") === "group1");
+    const group2Inputs = screen
+      .getAllByDisplayValue("option2")
+      .filter((input) => input.getAttribute("name") === "group2");
+
     expect(group1Inputs[0]).toBeChecked();
     expect(group2Inputs[0]).toBeChecked();
   });
@@ -309,13 +309,13 @@ describe("RadioButton Integration", () => {
     await user.click(controlledOption2);
     await user.click(uncontrolledOption2);
 
-    const controlledInputs = screen.getAllByDisplayValue("option2").filter(
-      input => input.getAttribute("name") === "controlled"
-    );
-    const uncontrolledInputs = screen.getAllByDisplayValue("option2").filter(
-      input => input.getAttribute("name") === "uncontrolled"
-    );
-    
+    const controlledInputs = screen
+      .getAllByDisplayValue("option2")
+      .filter((input) => input.getAttribute("name") === "controlled");
+    const uncontrolledInputs = screen
+      .getAllByDisplayValue("option2")
+      .filter((input) => input.getAttribute("name") === "uncontrolled");
+
     expect(controlledInputs[0]).toBeChecked();
     expect(uncontrolledInputs[0]).toBeChecked();
   });

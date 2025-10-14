@@ -27,7 +27,7 @@ describe("Input Component Accessibility", () => {
 
   test("has no accessibility violations with horizontal label", async () => {
     const { container } = render(
-      <Input label="Test input" labelVariant="horizontal" />
+      <Input label="Test input" labelVariant="horizontal" />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -98,7 +98,7 @@ describe("Input Component Accessibility", () => {
       <div>
         <Input label="First input" />
         <Input label="Second input" />
-      </div>
+      </div>,
     );
 
     const firstInput = screen.getByLabelText("First input");
@@ -119,7 +119,7 @@ describe("Input Component Accessibility", () => {
       <div>
         <Input label="First input" />
         <Input label="Second input" />
-      </div>
+      </div>,
     );
 
     const firstInput = screen.getByLabelText("First input");
@@ -184,7 +184,7 @@ describe("Input Component Accessibility", () => {
     const handleBlur = vi.fn();
 
     render(
-      <Input label="Test input" onFocus={handleFocus} onBlur={handleBlur} />
+      <Input label="Test input" onFocus={handleFocus} onBlur={handleBlur} />,
     );
 
     const input = screen.getByRole("textbox");
@@ -206,7 +206,7 @@ describe("Input Component Accessibility", () => {
     render(
       <form>
         <Input name="test-field" label="Test input" />
-      </form>
+      </form>,
     );
 
     const input = screen.getByRole("textbox");
@@ -219,7 +219,7 @@ describe("Input Component Accessibility", () => {
         label="Test input"
         aria-describedby="help-text"
         aria-required="true"
-      />
+      />,
     );
 
     const input = screen.getByRole("textbox");
@@ -239,7 +239,7 @@ describe("Input Component Accessibility", () => {
         <Input label="First input" />
         <Input label="Second input" />
         <Input label="Third input" />
-      </div>
+      </div>,
     );
 
     const firstInput = screen.getByLabelText("First input");

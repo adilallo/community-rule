@@ -16,7 +16,7 @@ describe("RadioButton Accessibility", () => {
 
   it("updates aria-checked when checked state changes", () => {
     const { rerender } = render(
-      <RadioButton checked={false} label="Test Radio" />
+      <RadioButton checked={false} label="Test Radio" />,
     );
 
     let radioButton = screen.getByRole("radio");
@@ -117,7 +117,7 @@ describe("RadioButton Accessibility", () => {
         <RadioButton label="First Radio" />
         <RadioButton label="Second Radio" />
         <RadioButton label="Third Radio" />
-      </div>
+      </div>,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -132,7 +132,7 @@ describe("RadioButton Accessibility", () => {
         <RadioButton label="Radio 1" />
         <RadioButton label="Radio 2" />
         <RadioButton label="Radio 3" />
-      </div>
+      </div>,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -176,7 +176,7 @@ describe("RadioButton Accessibility", () => {
         checked={false}
         onChange={handleChange}
         label="Focus Radio"
-      />
+      />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -185,7 +185,11 @@ describe("RadioButton Accessibility", () => {
 
     // Change checked state
     rerender(
-      <RadioButton checked={true} onChange={handleChange} label="Focus Radio" />
+      <RadioButton
+        checked={true}
+        onChange={handleChange}
+        label="Focus Radio"
+      />,
     );
 
     // Should still be focusable
@@ -206,7 +210,7 @@ describe("RadioButton Accessibility", () => {
         <RadioButton label="First Option" />
         <RadioButton label="Second Option" />
         <RadioButton label="Third Option" />
-      </div>
+      </div>,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -220,7 +224,7 @@ describe("RadioButton Accessibility", () => {
 
   it("has proper form association", () => {
     render(
-      <RadioButton name="test-radio" value="test-value" label="Form Radio" />
+      <RadioButton name="test-radio" value="test-value" label="Form Radio" />,
     );
 
     const hiddenInput = screen.getByDisplayValue("test-value");

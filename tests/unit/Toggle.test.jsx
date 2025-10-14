@@ -21,7 +21,7 @@ describe("Toggle Component", () => {
         checked={true}
         disabled={true}
         className="custom-class"
-      />
+      />,
     );
 
     const toggle = screen.getByRole("switch");
@@ -82,7 +82,7 @@ describe("Toggle Component", () => {
         showText={true}
         icon="I"
         text="Toggle"
-      />
+      />,
     );
 
     const toggle = screen.getByRole("switch");
@@ -103,7 +103,7 @@ describe("Toggle Component", () => {
   test("does not call onChange when disabled", () => {
     const handleChange = vi.fn();
     render(
-      <Toggle label="Test Toggle" disabled={true} onChange={handleChange} />
+      <Toggle label="Test Toggle" disabled={true} onChange={handleChange} />,
     );
 
     const toggle = screen.getByRole("switch");
@@ -132,7 +132,7 @@ describe("Toggle Component", () => {
 
     const toggle = screen.getByRole("switch");
     expect(toggle).toHaveClass(
-      "hover:!bg-[var(--color-surface-default-secondary)]"
+      "hover:!bg-[var(--color-surface-default-secondary)]",
     );
   });
 
@@ -141,7 +141,7 @@ describe("Toggle Component", () => {
 
     const toggle = screen.getByRole("switch");
     expect(toggle).not.toHaveClass(
-      "hover:!bg-[var(--color-surface-default-secondary)]"
+      "hover:!bg-[var(--color-surface-default-secondary)]",
     );
   });
 

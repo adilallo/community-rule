@@ -20,7 +20,7 @@ describe("RadioGroup Accessibility", () => {
 
   it("has proper ARIA attributes on radiogroup", () => {
     render(
-      <RadioGroup options={defaultOptions} aria-label="Test Radio Group" />
+      <RadioGroup options={defaultOptions} aria-label="Test Radio Group" />,
     );
 
     const radioGroup = screen.getByRole("radiogroup");
@@ -50,7 +50,7 @@ describe("RadioGroup Accessibility", () => {
 
   it("updates selection state correctly", () => {
     const { rerender } = render(
-      <RadioGroup options={defaultOptions} value="option1" />
+      <RadioGroup options={defaultOptions} value="option1" />,
     );
 
     let radioButtons = screen.getAllByRole("radio");
@@ -98,7 +98,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -125,7 +125,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -144,7 +144,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -163,7 +163,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -190,7 +190,7 @@ describe("RadioGroup Accessibility", () => {
       <div>
         <RadioGroup options={defaultOptions} />
         <RadioGroup options={defaultOptions} />
-      </div>
+      </div>,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -212,7 +212,7 @@ describe("RadioGroup Accessibility", () => {
 
   it("has proper form association", () => {
     render(
-      <RadioGroup options={defaultOptions} name="test-group" value="option2" />
+      <RadioGroup options={defaultOptions} name="test-group" value="option2" />,
     );
 
     const hiddenInputs = screen.getAllByDisplayValue("option1");
@@ -235,7 +235,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -248,7 +248,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option2"
         onChange={handleChange}
-      />
+      />,
     );
 
     // Should still be focusable
@@ -301,7 +301,7 @@ describe("RadioGroup Accessibility", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");

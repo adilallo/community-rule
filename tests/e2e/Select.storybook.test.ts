@@ -71,7 +71,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("shows different sizes correctly", async ({ page }) => {
     // Navigate to All Sizes story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--all-sizes"
+      "http://localhost:6006/?path=/story/forms-select--all-sizes",
     );
 
     const selectButtons = page.getByRole("button");
@@ -89,7 +89,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("shows different states correctly", async ({ page }) => {
     // Navigate to All States story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--all-states"
+      "http://localhost:6006/?path=/story/forms-select--all-states",
     );
 
     const selectButtons = page.getByRole("button");
@@ -160,7 +160,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("disabled state prevents interaction", async ({ page }) => {
     // Navigate to Disabled story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--disabled"
+      "http://localhost:6006/?path=/story/forms-select--disabled",
     );
 
     const selectButton = page.getByRole("button");
@@ -177,7 +177,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("interactive story allows selection", async ({ page }) => {
     // Navigate to Interactive story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--interactive"
+      "http://localhost:6006/?path=/story/forms-select--interactive",
     );
 
     const selectButton = page.getByRole("button");
@@ -195,7 +195,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("horizontal label variant displays correctly", async ({ page }) => {
     // Navigate to Horizontal Label story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--horizontal-label"
+      "http://localhost:6006/?path=/story/forms-select--horizontal-label",
     );
 
     const selectButton = page.getByRole("button");
@@ -259,7 +259,7 @@ test.describe("Select Component Storybook Tests", () => {
   test("focus behavior works correctly", async ({ page }) => {
     // Navigate to Interactive story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-select--interactive"
+      "http://localhost:6006/?path=/story/forms-select--interactive",
     );
 
     const selectButton = page.getByRole("button");

@@ -22,7 +22,7 @@ const TextArea = forwardRef(
       rows,
       ...props
     },
-    ref
+    ref,
   ) => {
     // Generate unique ID for accessibility if not provided
     const generatedId = useId();
@@ -130,7 +130,7 @@ const TextArea = forwardRef(
           onChange(e);
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     const handleFocus = useCallback(
@@ -139,7 +139,7 @@ const TextArea = forwardRef(
           onFocus(e);
         }
       },
-      [disabled, onFocus]
+      [disabled, onFocus],
     );
 
     const handleBlur = useCallback(
@@ -148,7 +148,7 @@ const TextArea = forwardRef(
           onBlur(e);
         }
       },
-      [disabled, onBlur]
+      [disabled, onBlur],
     );
 
     return (
@@ -182,7 +182,7 @@ const TextArea = forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );
 
 TextArea.displayName = "TextArea";

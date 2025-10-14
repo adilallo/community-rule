@@ -71,7 +71,8 @@ const RadioButton = ({
     "focus:outline focus:outline-1 focus:outline-[var(--color-border-default-utility-info)] focus:shadow-[0_0_10px_1px_var(--color-surface-inverse-brand-primary)]";
 
   // Generate unique ID for accessibility if not provided
-  const radioId = id || `radio-${useId()}`;
+  const generatedId = useId();
+  const radioId = id || `radio-${generatedId}`;
 
   const handleToggle = useCallback(
     (e) => {

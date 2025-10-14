@@ -19,7 +19,7 @@ describe("Switch Component", () => {
         onChange={handleChange}
         label="Test Switch"
         state="focus"
-      />
+      />,
     );
 
     const switchButton = screen.getByRole("switch");
@@ -140,7 +140,7 @@ describe("Switch Component", () => {
       "transition-all",
       "duration-200",
       "focus:outline-none",
-      "focus-visible:shadow-[0_0_5px_3px_#3281F8]"
+      "focus-visible:shadow-[0_0_5px_3px_#3281F8]",
     );
   });
 
@@ -178,7 +178,7 @@ describe("Switch Component", () => {
       "font-normal",
       "text-[14px]",
       "leading-[20px]",
-      "text-[var(--color-content-default-primary)]"
+      "text-[var(--color-content-default-primary)]",
     );
   });
 });

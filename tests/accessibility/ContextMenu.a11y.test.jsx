@@ -17,7 +17,7 @@ describe("ContextMenu Components Accessibility", () => {
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           <ContextMenuItem onClick={vi.fn()}>Item 2</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -28,7 +28,7 @@ describe("ContextMenu Components Accessibility", () => {
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           <ContextMenuItem onClick={vi.fn()}>Item 2</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const menu = screen.getByRole("menu");
@@ -44,7 +44,7 @@ describe("ContextMenu Components Accessibility", () => {
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           <ContextMenuItem onClick={vi.fn()}>Item 2</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const firstItem = screen.getByRole("menuitem", { name: "Item 1" });
@@ -58,7 +58,7 @@ describe("ContextMenu Components Accessibility", () => {
       const { container } = render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -68,7 +68,7 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -81,7 +81,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuItem onClick={vi.fn()} selected={true}>
             Test Item
           </ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -94,7 +94,7 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuItem onClick={onClick}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -110,7 +110,7 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuItem onClick={onClick}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -124,12 +124,12 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
       expect(item).toHaveClass(
-        "hover:!bg-[var(--color-surface-default-secondary)]"
+        "hover:!bg-[var(--color-surface-default-secondary)]",
       );
     });
 
@@ -139,7 +139,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuItem onClick={vi.fn()} selected={true}>
             Test Item
           </ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -154,7 +154,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuSection title="Test Section">
             <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           </ContextMenuSection>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -166,7 +166,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuSection title="Test Section">
             <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           </ContextMenuSection>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const title = screen.getByText("Test Section");
@@ -179,7 +179,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuSection title="Test Section">
             <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
           </ContextMenuSection>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const title = screen.getByText("Test Section");
@@ -206,7 +206,7 @@ describe("ContextMenu Components Accessibility", () => {
 
       const divider = screen.getByRole("separator");
       expect(divider).toHaveClass(
-        "border-[var(--color-border-default-tertiary)]"
+        "border-[var(--color-border-default-tertiary)]",
       );
     });
   });
@@ -268,7 +268,7 @@ describe("ContextMenu Components Accessibility", () => {
         <ContextMenu>
           <ContextMenuItem onClick={onClick}>Item 1</ContextMenuItem>
           <ContextMenuItem onClick={vi.fn()}>Item 2</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const items = screen.getAllByRole("menuitem");
@@ -284,12 +284,12 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Test Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByRole("menuitem");
       expect(item).toHaveClass(
-        "text-[var(--color-content-default-brand-primary)]"
+        "text-[var(--color-content-default-brand-primary)]",
       );
     });
 
@@ -297,7 +297,7 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuSection title="Test Section" />
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const title = screen.getByText("Test Section");
@@ -308,12 +308,12 @@ describe("ContextMenu Components Accessibility", () => {
       render(
         <ContextMenu>
           <ContextMenuDivider />
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const divider = screen.getByRole("separator");
       expect(divider).toHaveClass(
-        "border-[var(--color-border-default-tertiary)]"
+        "border-[var(--color-border-default-tertiary)]",
       );
     });
   });
@@ -328,7 +328,7 @@ describe("ContextMenu Components Accessibility", () => {
               Item 2
             </ContextMenuItem>
           </ContextMenuSection>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const menu = screen.getByRole("menu");
@@ -344,7 +344,7 @@ describe("ContextMenu Components Accessibility", () => {
       const { rerender } = render(
         <ContextMenuItem onClick={vi.fn()} selected={false}>
           Test Item
-        </ContextMenuItem>
+        </ContextMenuItem>,
       );
 
       const item = screen.getByRole("menuitem");
@@ -353,7 +353,7 @@ describe("ContextMenu Components Accessibility", () => {
       rerender(
         <ContextMenuItem onClick={vi.fn()} selected={true}>
           Test Item
-        </ContextMenuItem>
+        </ContextMenuItem>,
       );
 
       expect(item).toHaveAttribute("aria-current", "true");
@@ -372,7 +372,7 @@ describe("ContextMenu Components Accessibility", () => {
           </ContextMenuSection>
           <ContextMenuDivider />
           <ContextMenuItem onClick={vi.fn()}>Item 3</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -390,7 +390,7 @@ describe("ContextMenu Components Accessibility", () => {
           <ContextMenuItem onClick={vi.fn()} disabled={true}>
             Disabled Item
           </ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();

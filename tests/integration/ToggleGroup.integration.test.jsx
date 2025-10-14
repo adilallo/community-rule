@@ -62,7 +62,7 @@ describe("ToggleGroup Integration", () => {
           </ToggleGroup>
         </div>
         <button type="submit">Submit</button>
-      </form>
+      </form>,
     );
 
     const submitButton = screen.getByRole("button", { name: "Submit" });
@@ -85,18 +85,22 @@ describe("ToggleGroup Integration", () => {
 
   it("handles dynamic prop changes", () => {
     const { rerender } = render(
-      <DynamicToggleGroup position="left" state="default" showText={true} />
+      <DynamicToggleGroup position="left" state="default" showText={true} />,
     );
 
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "rounded-l-[var(--measures-radius-medium)]",
-      "rounded-r-none"
+      "rounded-r-none",
     );
     expect(toggleGroup).toHaveTextContent("Dynamic Content");
 
     rerender(
-      <DynamicToggleGroup position="middle" state="selected" showText={false} />
+      <DynamicToggleGroup
+        position="middle"
+        state="selected"
+        showText={false}
+      />,
     );
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass("rounded-none");
@@ -126,14 +130,14 @@ describe("ToggleGroup Integration", () => {
     fireEvent.click(toggleGroups[1]);
     await waitFor(() => {
       expect(toggleGroups[1]).toHaveClass(
-        "bg-[var(--color-magenta-magenta100)]"
+        "bg-[var(--color-magenta-magenta100)]",
       );
     });
   });
 
   it("handles content changes", () => {
     const { rerender } = render(
-      <ToggleGroup showText={true}>Initial Content</ToggleGroup>
+      <ToggleGroup showText={true}>Initial Content</ToggleGroup>,
     );
 
     let toggleGroup = screen.getByRole("button");
@@ -186,7 +190,7 @@ describe("ToggleGroup Integration", () => {
       fireEvent.click(toggleGroups[i % 3]);
       await waitFor(() => {
         expect(toggleGroups[i % 3]).toHaveClass(
-          "bg-[var(--color-magenta-magenta100)]"
+          "bg-[var(--color-magenta-magenta100)]",
         );
       });
     }
@@ -204,7 +208,7 @@ describe("ToggleGroup Integration", () => {
         <ToggleGroup position="right" showText={true}>
           Text Only
         </ToggleGroup>
-      </div>
+      </div>,
     );
 
     const toggleGroups = screen.getAllByRole("button");

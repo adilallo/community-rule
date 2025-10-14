@@ -46,7 +46,7 @@ describe("ToggleGroup Accessibility", () => {
     const toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass("bg-[var(--color-magenta-magenta100)]");
     expect(toggleGroup).toHaveClass(
-      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]"
+      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]",
     );
   });
 
@@ -58,7 +58,7 @@ describe("ToggleGroup Accessibility", () => {
 
   it("has no accessibility violations when focused", async () => {
     const { container } = render(
-      <ToggleGroup state="focus">Focused Toggle</ToggleGroup>
+      <ToggleGroup state="focus">Focused Toggle</ToggleGroup>,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -66,7 +66,7 @@ describe("ToggleGroup Accessibility", () => {
 
   it("has no accessibility violations when selected", async () => {
     const { container } = render(
-      <ToggleGroup state="selected">Selected Toggle</ToggleGroup>
+      <ToggleGroup state="selected">Selected Toggle</ToggleGroup>,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -74,7 +74,7 @@ describe("ToggleGroup Accessibility", () => {
 
   it("has no accessibility violations with text", async () => {
     const { container } = render(
-      <ToggleGroup showText={true}>Text Toggle</ToggleGroup>
+      <ToggleGroup showText={true}>Text Toggle</ToggleGroup>,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -84,7 +84,7 @@ describe("ToggleGroup Accessibility", () => {
     const { container } = render(
       <ToggleGroup showText={false} ariaLabel="Icon Toggle">
         Icon Toggle
-      </ToggleGroup>
+      </ToggleGroup>,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();

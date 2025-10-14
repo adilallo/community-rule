@@ -56,7 +56,7 @@ describe("Toggle Accessibility", () => {
   test("handles disabled state accessibility", () => {
     const handleChange = vi.fn();
     render(
-      <Toggle label="Test Toggle" disabled={true} onChange={handleChange} />
+      <Toggle label="Test Toggle" disabled={true} onChange={handleChange} />,
     );
 
     const toggle = screen.getByRole("switch");
@@ -88,7 +88,7 @@ describe("Toggle Accessibility", () => {
 
   test("has no accessibility violations when disabled", async () => {
     const { container } = render(
-      <Toggle label="Test Toggle" disabled={true} />
+      <Toggle label="Test Toggle" disabled={true} />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -96,7 +96,7 @@ describe("Toggle Accessibility", () => {
 
   test("has no accessibility violations with icon", async () => {
     const { container } = render(
-      <Toggle label="Test Toggle" showIcon={true} icon="I" />
+      <Toggle label="Test Toggle" showIcon={true} icon="I" />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -104,7 +104,7 @@ describe("Toggle Accessibility", () => {
 
   test("has no accessibility violations with text", async () => {
     const { container } = render(
-      <Toggle label="Test Toggle" showText={true} text="Toggle" />
+      <Toggle label="Test Toggle" showText={true} text="Toggle" />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();

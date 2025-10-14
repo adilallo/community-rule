@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("RadioGroup Storybook Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiogroup--default"
+      "http://localhost:6006/iframe.html?id=forms-radiogroup--default",
     );
   });
 
@@ -17,7 +17,7 @@ test.describe("RadioGroup Storybook Tests", () => {
 
   test("renders standard story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiogroup--standard"
+      "http://localhost:6006/iframe.html?id=forms-radiogroup--standard",
     );
 
     const radioGroup = page.locator('[role="radiogroup"]');
@@ -32,7 +32,7 @@ test.describe("RadioGroup Storybook Tests", () => {
 
   test("renders inverse story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiogroup--inverse"
+      "http://localhost:6006/iframe.html?id=forms-radiogroup--inverse",
     );
 
     const radioGroup = page.locator('[role="radiogroup"]');
@@ -47,7 +47,7 @@ test.describe("RadioGroup Storybook Tests", () => {
 
   test("renders interactive story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiogroup--interactive"
+      "http://localhost:6006/iframe.html?id=forms-radiogroup--interactive",
     );
 
     const radioGroup = page.locator('[role="radiogroup"]');
@@ -69,14 +69,14 @@ test.describe("RadioGroup Storybook Tests", () => {
     // All radio buttons should have inverse styling
     for (let i = 0; i < (await radioButtons.count()); i++) {
       await expect(radioButtons.nth(i)).toHaveClass(
-        /outline-\[var\(--color-border-inverse-primary\)\]/
+        /outline-\[var\(--color-border-inverse-primary\)\]/,
       );
     }
 
     await page.selectOption('[data-testid="mode-control"]', "standard");
     for (let i = 0; i < (await radioButtons.count()); i++) {
       await expect(radioButtons.nth(i)).toHaveClass(
-        /outline-\[var\(--color-border-default-tertiary\)\]/
+        /outline-\[var\(--color-border-default-tertiary\)\]/,
       );
     }
   });
@@ -180,7 +180,7 @@ test.describe("RadioGroup Storybook Tests", () => {
 
     // All should have the same name
     const names = await hiddenInputs.evaluateAll((inputs) =>
-      inputs.map((input) => input.getAttribute("name"))
+      inputs.map((input) => input.getAttribute("name")),
     );
     expect(names.every((name) => name === names[0])).toBe(true);
   });
@@ -193,7 +193,7 @@ test.describe("RadioGroup Storybook Tests", () => {
     await expect(firstDot).toHaveClass(
       /w-\[16px\]/,
       /h-\[16px\]/,
-      /rounded-full/
+      /rounded-full/,
     );
 
     // Click second option
@@ -204,13 +204,13 @@ test.describe("RadioGroup Storybook Tests", () => {
     await expect(secondDot).toHaveClass(
       /w-\[16px\]/,
       /h-\[16px\]/,
-      /rounded-full/
+      /rounded-full/,
     );
   });
 
   test("handles interactive story state changes", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiogroup--interactive"
+      "http://localhost:6006/iframe.html?id=forms-radiogroup--interactive",
     );
 
     // Should show initial state

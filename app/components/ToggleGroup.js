@@ -55,7 +55,7 @@ const ToggleGroup = memo(
           onChange(e);
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const handleFocus = useCallback(
@@ -64,7 +64,7 @@ const ToggleGroup = memo(
           onFocus(e);
         }
       },
-      [onFocus]
+      [onFocus],
     );
 
     const handleBlur = useCallback(
@@ -73,7 +73,7 @@ const ToggleGroup = memo(
           onBlur(e);
         }
       },
-      [onBlur]
+      [onBlur],
     );
 
     const handleKeyDown = useCallback(
@@ -85,7 +85,7 @@ const ToggleGroup = memo(
           }
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const toggleClasses = `
@@ -129,7 +129,7 @@ const ToggleGroup = memo(
         {showText ? children : children || "☰"}
       </button>
     );
-  })
+  }),
 );
 
 ToggleGroup.displayName = "ToggleGroup";

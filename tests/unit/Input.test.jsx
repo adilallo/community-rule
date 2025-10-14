@@ -229,7 +229,7 @@ describe("Input Component", () => {
     expect(label).toHaveClass("text-[12px]");
     expect(label).toHaveClass("leading-[14px]");
     expect(label).toHaveClass("font-medium");
-    expect(label).toHaveStyle("color: var(--color-content-default-secondary)");
+    expect(label).toHaveClass("text-[var(--color-content-default-secondary)]");
   });
 
   test("applies correct input text styling for different sizes", () => {

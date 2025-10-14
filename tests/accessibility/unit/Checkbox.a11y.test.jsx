@@ -15,7 +15,7 @@ describe("Checkbox Accessibility", () => {
 
   test("should not have accessibility violations when checked", async () => {
     const { container } = render(
-      <Checkbox label="Test checkbox" checked={true} />
+      <Checkbox label="Test checkbox" checked={true} />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -23,7 +23,7 @@ describe("Checkbox Accessibility", () => {
 
   test("should not have accessibility violations when disabled", async () => {
     const { container } = render(
-      <Checkbox label="Test checkbox" disabled={true} />
+      <Checkbox label="Test checkbox" disabled={true} />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -31,7 +31,7 @@ describe("Checkbox Accessibility", () => {
 
   test("should not have accessibility violations in inverse mode", async () => {
     const { container } = render(
-      <Checkbox label="Test checkbox" mode="inverse" />
+      <Checkbox label="Test checkbox" mode="inverse" />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -80,7 +80,7 @@ describe("Checkbox Accessibility", () => {
 
     expect(checkbox).toHaveAttribute(
       "aria-label",
-      "Custom accessibility label"
+      "Custom accessibility label",
     );
   });
 
@@ -92,9 +92,7 @@ describe("Checkbox Accessibility", () => {
     expect(checkbox).toHaveAttribute("tabIndex", "0");
 
     // Should not be focusable when disabled
-    rerender(
-      <Checkbox label="Test checkbox disabled" disabled={true} />
-    );
+    rerender(<Checkbox label="Test checkbox disabled" disabled={true} />);
     const disabledCheckbox = screen.getByRole("checkbox");
     expect(disabledCheckbox).toHaveAttribute("tabIndex", "-1");
   });
@@ -131,7 +129,7 @@ describe("Checkbox Accessibility", () => {
 
     // Check for color contrast violations
     const contrastViolations = results.violations.filter(
-      (violation) => violation.id === "color-contrast"
+      (violation) => violation.id === "color-contrast",
     );
     expect(contrastViolations).toHaveLength(0);
   });
@@ -142,7 +140,7 @@ describe("Checkbox Accessibility", () => {
 
     // Check for focus indicator violations
     const focusViolations = results.violations.filter(
-      (violation) => violation.id === "focus-order-semantics"
+      (violation) => violation.id === "focus-order-semantics",
     );
     expect(focusViolations).toHaveLength(0);
   });

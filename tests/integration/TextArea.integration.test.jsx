@@ -110,20 +110,20 @@ describe("TextArea Integration Tests", () => {
     const { rerender } = render(<DynamicTextArea state="default" />);
     let textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "border-[var(--color-border-default-tertiary)]"
+      "border-[var(--color-border-default-tertiary)]",
     );
 
     rerender(<DynamicTextArea state="hover" />);
     textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
     );
 
     rerender(<DynamicTextArea state="focus" />);
     textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
       "border-[var(--color-border-default-utility-info)]",
-      "shadow-[0_0_5px_3px_#3281F8]"
+      "shadow-[0_0_5px_3px_#3281F8]",
     );
   });
 
@@ -141,13 +141,13 @@ describe("TextArea Integration Tests", () => {
     const { rerender } = render(<DynamicTextArea error={false} />);
     let textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "border-[var(--color-border-default-tertiary)]"
+      "border-[var(--color-border-default-tertiary)]",
     );
 
     rerender(<DynamicTextArea error={true} />);
     textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
   });
 
@@ -181,7 +181,7 @@ describe("TextArea Integration Tests", () => {
         label="Test TextArea"
         onFocus={handleFocus}
         onBlur={handleBlur}
-      />
+      />,
     );
 
     const textarea = screen.getByRole("textbox");
@@ -212,17 +212,17 @@ describe("TextArea Integration Tests", () => {
           label="Large TextArea"
           placeholder="Large placeholder"
         />
-      </div>
+      </div>,
     );
 
     expect(
-      screen.getByPlaceholderText("Small placeholder")
+      screen.getByPlaceholderText("Small placeholder"),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText("Medium placeholder")
+      screen.getByPlaceholderText("Medium placeholder"),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText("Large placeholder")
+      screen.getByPlaceholderText("Large placeholder"),
     ).toBeInTheDocument();
   });
 
@@ -236,7 +236,7 @@ describe("TextArea Integration Tests", () => {
           placeholder="Disabled input"
           disabled
         />
-      </div>
+      </div>,
     );
 
     const validTextarea = screen.getByPlaceholderText("Valid input");
@@ -244,10 +244,10 @@ describe("TextArea Integration Tests", () => {
     const disabledTextarea = screen.getByPlaceholderText("Disabled input");
 
     expect(validTextarea).toHaveClass(
-      "border-[var(--color-border-default-tertiary)]"
+      "border-[var(--color-border-default-tertiary)]",
     );
     expect(invalidTextarea).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
     expect(disabledTextarea).toBeDisabled();
   });

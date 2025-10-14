@@ -71,7 +71,7 @@ describe("Select Component Integration", () => {
       await user.click(submitButton);
 
       expect(screen.getByTestId("error")).toHaveTextContent(
-        "Please select an option"
+        "Please select an option",
       );
     });
 
@@ -298,17 +298,17 @@ describe("Select Component Integration", () => {
         name: /Dynamic Select/,
       });
       expect(selectButton).not.toHaveClass(
-        "border-[var(--color-border-default-utility-negative)]"
+        "border-[var(--color-border-default-utility-negative)]",
       );
 
       rerender(<DynamicSelect error={true} />);
       expect(selectButton).toHaveClass(
-        "border-[var(--color-border-default-utility-negative)]"
+        "border-[var(--color-border-default-utility-negative)]",
       );
 
       rerender(<DynamicSelect error={false} />);
       expect(selectButton).not.toHaveClass(
-        "border-[var(--color-border-default-utility-negative)]"
+        "border-[var(--color-border-default-utility-negative)]",
       );
     });
 
@@ -339,7 +339,7 @@ describe("Select Component Integration", () => {
       expect(selectButton).toHaveFocus();
       // Should have focus state styling, not active state
       expect(selectButton).toHaveClass(
-        "focus-visible:border-[var(--color-border-default-utility-info)]"
+        "focus-visible:border-[var(--color-border-default-utility-info)]",
       );
     });
 
@@ -354,7 +354,7 @@ describe("Select Component Integration", () => {
       // Click should not trigger focus-visible styles (class is always present but only active on keyboard focus)
       // The focus-visible class is always in the component but only applies on keyboard focus
       expect(selectButton).toHaveClass(
-        "focus-visible:border-[var(--color-border-default-utility-info)]"
+        "focus-visible:border-[var(--color-border-default-utility-info)]",
       );
     });
   });
@@ -392,7 +392,7 @@ describe("Select Component Integration", () => {
           label="Large Select"
           placeholder="Select an option"
           options={largeOptions}
-        />
+        />,
       );
 
       const selectButton = screen.getByRole("button", { name: /Large Select/ });

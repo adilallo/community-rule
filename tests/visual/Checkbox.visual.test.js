@@ -4,7 +4,7 @@ test.describe("Checkbox Visual Regression Tests", () => {
   test("Standard mode - unchecked", async ({ page }) => {
     await page.goto("/forms");
     await expect(
-      page.locator('[data-testid="standard-unchecked"]')
+      page.locator('[data-testid="standard-unchecked"]'),
     ).toBeVisible();
     await expect(page).toHaveScreenshot("checkbox-standard-unchecked.png");
   });
@@ -12,7 +12,7 @@ test.describe("Checkbox Visual Regression Tests", () => {
   test("Standard mode - checked", async ({ page }) => {
     await page.goto("/forms");
     await expect(
-      page.locator('[data-testid="standard-checked"]')
+      page.locator('[data-testid="standard-checked"]'),
     ).toBeVisible();
     await expect(page).toHaveScreenshot("checkbox-standard-checked.png");
   });
@@ -20,7 +20,7 @@ test.describe("Checkbox Visual Regression Tests", () => {
   test("Inverse mode - unchecked", async ({ page }) => {
     await page.goto("/forms");
     await expect(
-      page.locator('[data-testid="inverse-unchecked"]')
+      page.locator('[data-testid="inverse-unchecked"]'),
     ).toBeVisible();
     await expect(page).toHaveScreenshot("checkbox-inverse-unchecked.png");
   });
@@ -62,7 +62,7 @@ test.describe("Checkbox Visual Regression Tests", () => {
   test("Disabled state - standard", async ({ page }) => {
     await page.goto("/forms");
     await expect(
-      page.locator('[data-testid="standard-disabled"]')
+      page.locator('[data-testid="standard-disabled"]'),
     ).toBeVisible();
     await expect(page).toHaveScreenshot("checkbox-standard-disabled.png");
   });
@@ -70,7 +70,7 @@ test.describe("Checkbox Visual Regression Tests", () => {
   test("Disabled state - inverse", async ({ page }) => {
     await page.goto("/forms");
     await expect(
-      page.locator('[data-testid="inverse-disabled"]')
+      page.locator('[data-testid="inverse-disabled"]'),
     ).toBeVisible();
     await expect(page).toHaveScreenshot("checkbox-inverse-disabled.png");
   });

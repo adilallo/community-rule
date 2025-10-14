@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("ContextMenu Components Storybook Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--default"
+      "http://localhost:6006/?path=/story/forms-contextmenu--default",
     );
   });
 
@@ -38,7 +38,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("shows selected state correctly", async ({ page }) => {
     // Navigate to MenuItem story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item"
+      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item",
     );
 
     const menuItems = page.getByRole("option");
@@ -60,7 +60,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("shows submenu indicators", async ({ page }) => {
     // Navigate to MenuItem story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item"
+      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item",
     );
 
     const submenuArrows = page.getByTestId("submenu-arrow");
@@ -74,7 +74,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("shows checkmarks for selected items", async ({ page }) => {
     // Navigate to MenuItem story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item"
+      "http://localhost:6006/?path=/story/forms-contextmenu--menu-item",
     );
 
     const checkmarks = page.getByTestId("checkmark");
@@ -88,7 +88,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("renders menu sections correctly", async ({ page }) => {
     // Navigate to MenuSection story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--menu-section"
+      "http://localhost:6006/?path=/story/forms-contextmenu--menu-section",
     );
 
     const sectionTitles = page.getByText(/Section/);
@@ -104,7 +104,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("renders menu dividers correctly", async ({ page }) => {
     // Navigate to MenuDivider story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--menu-divider"
+      "http://localhost:6006/?path=/story/forms-contextmenu--menu-divider",
     );
 
     const dividers = page.getByTestId("context-menu-divider");
@@ -120,7 +120,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("shows all variants correctly", async ({ page }) => {
     // Navigate to All Variants story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants"
+      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants",
     );
 
     const menu = page.getByRole("listbox");
@@ -195,7 +195,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("has correct styling for different sizes", async ({ page }) => {
     // Navigate to All Variants story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants"
+      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants",
     );
 
     const menuItems = page.getByRole("option");
@@ -232,7 +232,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("handles disabled items correctly", async ({ page }) => {
     // Navigate to All Variants story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants"
+      "http://localhost:6006/?path=/story/forms-contextmenu--all-variants",
     );
 
     const menuItems = page.getByRole("option");
@@ -268,7 +268,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("renders with custom styling", async ({ page }) => {
     // Navigate to With Custom Styling story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--with-custom-styling"
+      "http://localhost:6006/?path=/story/forms-contextmenu--with-custom-styling",
     );
 
     const menu = page.getByRole("listbox");
@@ -282,7 +282,7 @@ test.describe("ContextMenu Components Storybook Tests", () => {
   test("handles interactive story correctly", async ({ page }) => {
     // Navigate to Interactive story
     await page.goto(
-      "http://localhost:6006/?path=/story/forms-contextmenu--interactive"
+      "http://localhost:6006/?path=/story/forms-contextmenu--interactive",
     );
 
     const menuItems = page.getByRole("option");

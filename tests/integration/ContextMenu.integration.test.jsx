@@ -59,7 +59,7 @@ describe("ContextMenu Components Integration", () => {
 
       const action1 = screen.getByRole("menuitem", { name: "Action 1" });
       expect(action1).toHaveClass(
-        "bg-[var(--color-surface-default-secondary)]"
+        "bg-[var(--color-surface-default-secondary)]",
       );
     });
 
@@ -97,10 +97,10 @@ describe("ContextMenu Components Integration", () => {
       const enabledItems = items.filter(
         (item) =>
           !item.hasAttribute("aria-disabled") ||
-          item.getAttribute("aria-disabled") !== "true"
+          item.getAttribute("aria-disabled") !== "true",
       );
       const disabledItems = items.filter(
-        (item) => item.getAttribute("aria-disabled") === "true"
+        (item) => item.getAttribute("aria-disabled") === "true",
       );
 
       enabledItems.forEach((item) => {
@@ -177,7 +177,7 @@ describe("ContextMenu Components Integration", () => {
           ]}
           selectedValue=""
           onItemClick={onItemClick}
-        />
+        />,
       );
 
       const item1 = screen.getByText("Item 1");
@@ -194,12 +194,12 @@ describe("ContextMenu Components Integration", () => {
           ]}
           selectedValue="1"
           onItemClick={onItemClick}
-        />
+        />,
       );
 
       expect(screen.getByText("Item 3")).toBeInTheDocument();
       expect(screen.getByRole("menuitem", { name: "Item 1" })).toHaveClass(
-        "bg-[var(--color-surface-default-secondary)]"
+        "bg-[var(--color-surface-default-secondary)]",
       );
     });
 
@@ -213,7 +213,7 @@ describe("ContextMenu Components Integration", () => {
           ]}
           selectedValue="2"
           onItemClick={vi.fn()}
-        />
+        />,
       );
 
       expect(screen.getByText("Item 2")).toBeInTheDocument();
@@ -226,7 +226,7 @@ describe("ContextMenu Components Integration", () => {
           ]}
           selectedValue=""
           onItemClick={vi.fn()}
-        />
+        />,
       );
 
       expect(screen.queryByText("Item 2")).not.toBeInTheDocument();
@@ -278,7 +278,7 @@ describe("ContextMenu Components Integration", () => {
 
       expect(screen.getByText("Option 1")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Close Menu" })
+        screen.getByRole("button", { name: "Close Menu" }),
       ).toBeInTheDocument();
     });
 
@@ -294,7 +294,7 @@ describe("ContextMenu Components Integration", () => {
 
       expect(screen.queryByText("Option 1")).not.toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Open Menu" })
+        screen.getByRole("button", { name: "Open Menu" }),
       ).toBeInTheDocument();
     });
   });
@@ -338,7 +338,7 @@ describe("ContextMenu Components Integration", () => {
           <ContextMenuItem onClick={vi.fn()} selected={false}>
             Item 2
           </ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       // Rapidly change selection state
@@ -351,7 +351,7 @@ describe("ContextMenu Components Integration", () => {
             <ContextMenuItem onClick={vi.fn()} selected={i % 2 === 1}>
               Item 2
             </ContextMenuItem>
-          </ContextMenu>
+          </ContextMenu>,
         );
       }
 
@@ -366,7 +366,7 @@ describe("ContextMenu Components Integration", () => {
       render(
         <ContextMenu>
           <ContextMenuItem>Item without onClick</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByText("Item without onClick");
@@ -379,7 +379,7 @@ describe("ContextMenu Components Integration", () => {
           <ContextMenuItem onClick={vi.fn()} selected={null}>
             Item with invalid selected
           </ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
 
       const item = screen.getByText("Item with invalid selected");

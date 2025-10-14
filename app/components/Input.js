@@ -22,7 +22,7 @@ const Input = forwardRef(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     // Generate unique ID for accessibility if not provided
     const generatedId = useId();
@@ -127,7 +127,7 @@ const Input = forwardRef(
           onChange(e);
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     const handleFocus = useCallback(
@@ -136,7 +136,7 @@ const Input = forwardRef(
           onFocus(e);
         }
       },
-      [disabled, onFocus]
+      [disabled, onFocus],
     );
 
     const handleBlur = useCallback(
@@ -145,7 +145,7 @@ const Input = forwardRef(
           onBlur(e);
         }
       },
-      [disabled, onBlur]
+      [disabled, onBlur],
     );
 
     return (
@@ -177,7 +177,7 @@ const Input = forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

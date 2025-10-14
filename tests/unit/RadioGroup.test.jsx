@@ -47,7 +47,7 @@ describe("RadioGroup", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const option2 = screen.getByText("Option 2").closest("label");
@@ -65,7 +65,7 @@ describe("RadioGroup", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     // Click option 3
@@ -84,7 +84,7 @@ describe("RadioGroup", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -103,7 +103,7 @@ describe("RadioGroup", () => {
         options={defaultOptions}
         value="option1"
         onChange={handleChange}
-      />
+      />,
     );
 
     const radioButtons = screen.getAllByRole("radio");
@@ -119,7 +119,7 @@ describe("RadioGroup", () => {
     const radioButtons = screen.getAllByRole("radio");
     radioButtons.forEach((button) => {
       expect(button).toHaveClass(
-        "outline-[var(--color-border-default-tertiary)]"
+        "outline-[var(--color-border-default-tertiary)]",
       );
     });
   });
@@ -130,7 +130,7 @@ describe("RadioGroup", () => {
     const radioButtons = screen.getAllByRole("radio");
     radioButtons.forEach((button) => {
       expect(button).toHaveClass(
-        "outline-[var(--color-border-inverse-primary)]"
+        "outline-[var(--color-border-inverse-primary)]",
       );
     });
   });
@@ -174,7 +174,7 @@ describe("RadioGroup", () => {
 
   it("passes aria-label to radiogroup", () => {
     render(
-      <RadioGroup options={defaultOptions} aria-label="Test Radio Group" />
+      <RadioGroup options={defaultOptions} aria-label="Test Radio Group" />,
     );
 
     const radioGroup = screen.getByRole("radiogroup");
@@ -206,7 +206,7 @@ describe("RadioGroup", () => {
 
   it("maintains selection state correctly", () => {
     const { rerender } = render(
-      <RadioGroup options={defaultOptions} value="option1" />
+      <RadioGroup options={defaultOptions} value="option1" />,
     );
 
     let radioButtons = screen.getAllByRole("radio");
@@ -228,7 +228,7 @@ describe("RadioGroup", () => {
         options={defaultOptions}
         value="option2"
         onChange={handleChange}
-      />
+      />,
     );
 
     const option2 = screen.getByText("Option 2").closest("label");

@@ -31,7 +31,11 @@ describe("RadioButton", () => {
     const handleChange = vi.fn();
 
     render(
-      <RadioButton checked={false} onChange={handleChange} label="Test Radio" />
+      <RadioButton
+        checked={false}
+        onChange={handleChange}
+        label="Test Radio"
+      />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -53,7 +57,7 @@ describe("RadioButton", () => {
         value="test-value"
         onChange={handleChange}
         label="Test Radio"
-      />
+      />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -70,7 +74,7 @@ describe("RadioButton", () => {
     const handleChange = vi.fn();
 
     render(
-      <RadioButton checked={true} onChange={handleChange} label="Test Radio" />
+      <RadioButton checked={true} onChange={handleChange} label="Test Radio" />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -85,7 +89,11 @@ describe("RadioButton", () => {
     const handleChange = vi.fn();
 
     render(
-      <RadioButton checked={false} onChange={handleChange} label="Test Radio" />
+      <RadioButton
+        checked={false}
+        onChange={handleChange}
+        label="Test Radio"
+      />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -103,7 +111,11 @@ describe("RadioButton", () => {
     const handleChange = vi.fn();
 
     render(
-      <RadioButton checked={false} onChange={handleChange} label="Test Radio" />
+      <RadioButton
+        checked={false}
+        onChange={handleChange}
+        label="Test Radio"
+      />,
     );
 
     const radioButton = screen.getByRole("radio");
@@ -121,7 +133,7 @@ describe("RadioButton", () => {
 
     const radioButton = screen.getByRole("radio");
     expect(radioButton).toHaveClass(
-      "outline-[var(--color-border-default-tertiary)]"
+      "outline-[var(--color-border-default-tertiary)]",
     );
   });
 
@@ -130,7 +142,7 @@ describe("RadioButton", () => {
 
     const radioButton = screen.getByRole("radio");
     expect(radioButton).toHaveClass(
-      "outline-[var(--color-border-inverse-primary)]"
+      "outline-[var(--color-border-inverse-primary)]",
     );
   });
 
@@ -155,7 +167,7 @@ describe("RadioButton", () => {
         value="test-value"
         checked={true}
         label="Test Radio"
-      />
+      />,
     );
 
     const hiddenInput = screen.getByDisplayValue("test-value");
@@ -209,7 +221,7 @@ describe("RadioButton", () => {
 
   it("shows dot indicator when checked", () => {
     render(
-      <RadioButton checked={true} mode="standard" label="Checked Radio" />
+      <RadioButton checked={true} mode="standard" label="Checked Radio" />,
     );
 
     const dot = screen.getByRole("radio").querySelector("div");
@@ -218,7 +230,7 @@ describe("RadioButton", () => {
 
   it("hides dot indicator when unchecked", () => {
     render(
-      <RadioButton checked={false} mode="standard" label="Unchecked Radio" />
+      <RadioButton checked={false} mode="standard" label="Unchecked Radio" />,
     );
 
     const dot = screen.getByRole("radio").querySelector("div");
@@ -230,7 +242,7 @@ describe("RadioButton", () => {
     expect(
       backgroundColor === "transparent" ||
         backgroundColor === "rgba(0, 0, 0, 0)" ||
-        backgroundColor === ""
+        backgroundColor === "",
     ).toBe(true);
   });
 });

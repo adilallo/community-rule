@@ -22,7 +22,7 @@ const ContextMenuSection = forwardRef(
         {children}
       </div>
     );
-  }
+  },
 );
 
 ContextMenuSection.displayName = "ContextMenuSection";

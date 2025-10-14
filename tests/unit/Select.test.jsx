@@ -28,7 +28,10 @@ describe("Select Component", () => {
 
     it("renders without label when not provided", () => {
       render(
-        <Select placeholder="Select an option" options={defaultProps.options} />
+        <Select
+          placeholder="Select an option"
+          options={defaultProps.options}
+        />,
       );
 
       expect(screen.queryByText("Test Select")).not.toBeInTheDocument();
@@ -74,7 +77,7 @@ describe("Select Component", () => {
 
     it("applies correct height for small horizontal label", () => {
       render(
-        <Select {...defaultProps} size="small" labelVariant="horizontal" />
+        <Select {...defaultProps} size="small" labelVariant="horizontal" />,
       );
 
       const selectButton = screen.getByRole("button");
@@ -95,7 +98,7 @@ describe("Select Component", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "border-[var(--color-border-default-tertiary)]"
+        "border-[var(--color-border-default-tertiary)]",
       );
     });
 
@@ -104,7 +107,7 @@ describe("Select Component", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+        "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
       );
     });
 
@@ -113,7 +116,7 @@ describe("Select Component", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "border-[var(--color-border-default-utility-info)]"
+        "border-[var(--color-border-default-utility-info)]",
       );
       expect(selectButton).toHaveClass("shadow-[0_0_5px_3px_#3281F8]");
     });
@@ -123,7 +126,7 @@ describe("Select Component", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "border-[var(--color-border-default-utility-negative)]"
+        "border-[var(--color-border-default-utility-negative)]",
       );
     });
 
@@ -285,7 +288,7 @@ describe("Select Component", () => {
         <div>
           <Select {...defaultProps} />
           <div data-testid="outside">Outside element</div>
-        </div>
+        </div>,
       );
 
       const selectButton = screen.getByRole("button");
@@ -381,7 +384,7 @@ describe("Select Component", () => {
 
       expect(selectButton).toHaveFocus();
       expect(selectButton).toHaveClass(
-        "focus-visible:border-[var(--color-border-default-utility-info)]"
+        "focus-visible:border-[var(--color-border-default-utility-info)]",
       );
     });
 

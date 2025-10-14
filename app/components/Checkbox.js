@@ -83,7 +83,8 @@ const Checkbox = memo(
     };
 
     // Generate unique ID for accessibility if not provided
-    const checkboxId = id || `checkbox-${useId()}`;
+    const generatedId = useId();
+    const checkboxId = id || `checkbox-${generatedId}`;
 
     const accessibilityProps = {
       role: "checkbox",

@@ -160,7 +160,7 @@ describe("Input Component Integration", () => {
     fireEvent.change(input, { target: { value: "ab" } });
     expect(screen.getByTestId("error-message")).toBeInTheDocument();
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
 
     // Type longer value - should hide error
@@ -175,7 +175,7 @@ describe("Input Component Integration", () => {
         <Input label="Email Input" type="email" />
         <Input label="Password Input" type="password" />
         <Input label="Number Input" type="number" />
-      </div>
+      </div>,
     );
 
     const textInput = screen.getByLabelText("Text Input");
@@ -210,7 +210,7 @@ describe("Input Component Integration", () => {
           size="large"
           labelVariant="horizontal"
         />
-      </div>
+      </div>,
     );
 
     // All inputs should be present
@@ -231,7 +231,7 @@ describe("Input Component Integration", () => {
         onChange={handleChange}
         onFocus={vi.fn()}
         onBlur={vi.fn()}
-      />
+      />,
     );
 
     const input = screen.getByLabelText("Disabled Input");
@@ -252,7 +252,7 @@ describe("Input Component Integration", () => {
     const input = screen.getByLabelText("Error Input");
 
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
     expect(input).not.toBeDisabled();
   });
@@ -287,7 +287,7 @@ describe("Input Component Integration", () => {
     fireEvent.click(hoverButton);
     expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
     expect(input).toHaveClass(
-      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
     );
 
     // Set active state
@@ -297,7 +297,7 @@ describe("Input Component Integration", () => {
     // Focus state
     fireEvent.focus(input);
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-info)]"
+      "border-[var(--color-border-default-utility-info)]",
     );
     expect(input).toHaveClass("shadow-[0_0_5px_3px_#3281F8]");
   });
@@ -308,7 +308,7 @@ describe("Input Component Integration", () => {
         <Input label="First Input" />
         <Input label="Second Input" />
         <Input label="Third Input" />
-      </div>
+      </div>,
     );
 
     const firstInput = screen.getByLabelText("First Input");
@@ -345,7 +345,7 @@ describe("Input Component Integration", () => {
       <form onSubmit={handleSubmit}>
         <Input label="Test Input" name="testField" />
         <button type="submit">Submit</button>
-      </form>
+      </form>,
     );
 
     const input = screen.getByLabelText("Test Input");
@@ -408,7 +408,7 @@ describe("Input Component Integration", () => {
     // Initial state
     expect(input).not.toBeDisabled();
     expect(input).not.toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
 
     // Toggle disabled
@@ -420,7 +420,7 @@ describe("Input Component Integration", () => {
     fireEvent.click(toggleErrorButton); // Turn on error
     // The error state applies the border color through the stateStyles.input class
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
   });
 });

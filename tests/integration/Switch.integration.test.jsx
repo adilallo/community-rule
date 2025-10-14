@@ -74,7 +74,7 @@ describe("Switch Integration", () => {
         <Switch label="First Switch" />
         <Switch label="Second Switch" />
         <Switch label="Third Switch" />
-      </div>
+      </div>,
     );
 
     const switches = screen.getAllByRole("switch");
@@ -238,7 +238,7 @@ describe("Switch Integration", () => {
       await waitFor(() => {
         expect(switchButton).toHaveAttribute(
           "aria-checked",
-          i % 2 === 0 ? "true" : "false"
+          i % 2 === 0 ? "true" : "false",
         );
       });
     }
@@ -251,7 +251,7 @@ describe("Switch Integration", () => {
         <Switch label="Another Text Switch" />
         <Switch />
         <Switch label="Final Switch" />
-      </div>
+      </div>,
     );
 
     const switches = screen.getAllByRole("switch");

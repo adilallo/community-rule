@@ -17,7 +17,7 @@ const Toggle = forwardRef(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     const toggleId = useId();
     const labelId = useId();
@@ -120,7 +120,7 @@ const Toggle = forwardRef(
           onChange(e);
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     const handleFocus = useCallback(
@@ -129,7 +129,7 @@ const Toggle = forwardRef(
           onFocus(e);
         }
       },
-      [disabled, onFocus]
+      [disabled, onFocus],
     );
 
     const handleBlur = useCallback(
@@ -138,7 +138,7 @@ const Toggle = forwardRef(
           onBlur(e);
         }
       },
-      [disabled, onBlur]
+      [disabled, onBlur],
     );
 
     const handleKeyDown = useCallback(
@@ -150,7 +150,7 @@ const Toggle = forwardRef(
           }
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     return (
@@ -186,7 +186,7 @@ const Toggle = forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Toggle.displayName = "Toggle";

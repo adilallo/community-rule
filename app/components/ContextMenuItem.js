@@ -14,7 +14,7 @@ const ContextMenuItem = forwardRef(
       size = "medium",
       ...props
     },
-    ref
+    ref,
   ) => {
     const getTextSize = () => {
       switch (size) {
@@ -57,7 +57,7 @@ const ContextMenuItem = forwardRef(
           onClick(e);
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     const handleKeyDown = useCallback(
@@ -69,7 +69,7 @@ const ContextMenuItem = forwardRef(
           }
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     return (
@@ -119,7 +119,7 @@ const ContextMenuItem = forwardRef(
         )}
       </div>
     );
-  }
+  },
 );
 
 ContextMenuItem.displayName = "ContextMenuItem";

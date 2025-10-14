@@ -81,7 +81,7 @@ test.describe("Checkbox Storybook Tests", () => {
     await expect(page.locator('[data-testid="control-mode"]')).toBeVisible();
     await expect(page.locator('[data-testid="control-state"]')).toBeVisible();
     await expect(
-      page.locator('[data-testid="control-disabled"]')
+      page.locator('[data-testid="control-disabled"]'),
     ).toBeVisible();
     await expect(page.locator('[data-testid="control-label"]')).toBeVisible();
   });

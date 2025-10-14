@@ -15,7 +15,8 @@ const RadioGroup = ({
   ...props
 }) => {
   // Generate unique ID for accessibility if not provided
-  const groupId = name || `radio-group-${useId()}`;
+  const generatedId = useId();
+  const groupId = name || `radio-group-${generatedId}`;
 
   const handleChange = useCallback(
     (optionValue) => {

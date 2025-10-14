@@ -15,7 +15,7 @@ describe("ToggleGroup Component", () => {
     render(
       <ToggleGroup position="middle" state="selected" showText={true}>
         Custom Content
-      </ToggleGroup>
+      </ToggleGroup>,
     );
     const toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toBeInTheDocument();
@@ -24,12 +24,12 @@ describe("ToggleGroup Component", () => {
 
   it("handles position prop correctly", () => {
     const { rerender } = render(
-      <ToggleGroup position="left">Left</ToggleGroup>
+      <ToggleGroup position="left">Left</ToggleGroup>,
     );
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "rounded-l-[var(--measures-radius-medium)]",
-      "rounded-r-none"
+      "rounded-r-none",
     );
 
     rerender(<ToggleGroup position="middle">Middle</ToggleGroup>);
@@ -40,17 +40,17 @@ describe("ToggleGroup Component", () => {
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "rounded-r-[var(--measures-radius-medium)]",
-      "rounded-l-none"
+      "rounded-l-none",
     );
   });
 
   it("handles state prop correctly", () => {
     const { rerender } = render(
-      <ToggleGroup state="default">Default</ToggleGroup>
+      <ToggleGroup state="default">Default</ToggleGroup>,
     );
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
-      "bg-[var(--color-surface-default-primary)]"
+      "bg-[var(--color-surface-default-primary)]",
     );
 
     rerender(<ToggleGroup state="hover">Hover</ToggleGroup>);
@@ -61,20 +61,20 @@ describe("ToggleGroup Component", () => {
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "bg-[var(--color-surface-default-primary)]",
-      "shadow-[0_0_5px_1px_#3281F8]"
+      "shadow-[0_0_5px_1px_#3281F8]",
     );
 
     rerender(<ToggleGroup state="selected">Selected</ToggleGroup>);
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "bg-[var(--color-magenta-magenta100)]",
-      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]"
+      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]",
     );
   });
 
   it("handles showText prop correctly", () => {
     const { rerender } = render(
-      <ToggleGroup showText={true}>Visible Text</ToggleGroup>
+      <ToggleGroup showText={true}>Visible Text</ToggleGroup>,
     );
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveTextContent("Visible Text");
@@ -131,11 +131,11 @@ describe("ToggleGroup Component", () => {
 
   it("applies correct classes for different states", () => {
     const { rerender } = render(
-      <ToggleGroup state="default">Default</ToggleGroup>
+      <ToggleGroup state="default">Default</ToggleGroup>,
     );
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
-      "bg-[var(--color-surface-default-primary)]"
+      "bg-[var(--color-surface-default-primary)]",
     );
 
     rerender(<ToggleGroup state="hover">Hover</ToggleGroup>);
@@ -150,18 +150,18 @@ describe("ToggleGroup Component", () => {
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "bg-[var(--color-magenta-magenta100)]",
-      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]"
+      "shadow-[inset_0_0_0_1px_var(--color-border-default-secondary)]",
     );
   });
 
   it("applies correct position classes", () => {
     const { rerender } = render(
-      <ToggleGroup position="left">Left</ToggleGroup>
+      <ToggleGroup position="left">Left</ToggleGroup>,
     );
     let toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "rounded-l-[var(--measures-radius-medium)]",
-      "rounded-r-none"
+      "rounded-r-none",
     );
 
     rerender(<ToggleGroup position="middle">Middle</ToggleGroup>);
@@ -172,7 +172,7 @@ describe("ToggleGroup Component", () => {
     toggleGroup = screen.getByRole("button");
     expect(toggleGroup).toHaveClass(
       "rounded-r-[var(--measures-radius-medium)]",
-      "rounded-l-none"
+      "rounded-l-none",
     );
   });
 
@@ -195,7 +195,7 @@ describe("ToggleGroup Component", () => {
       "hover:bg-[var(--color-magenta-magenta100)]",
       "flex",
       "items-center",
-      "justify-center"
+      "justify-center",
     );
   });
 

@@ -38,7 +38,7 @@ describe("ContextMenu Component", () => {
         "border",
         "rounded-[var(--measures-radius-medium)]",
         "shadow-lg",
-        "p-[4px]"
+        "p-[4px]",
       );
     });
 
@@ -55,7 +55,7 @@ describe("ContextMenu Component", () => {
       const { container } = render(
         <ContextMenu {...defaultProps}>
           <ContextMenuItem onClick={vi.fn()}>Menu Item</ContextMenuItem>
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -93,7 +93,7 @@ describe("ContextMenuItem Component", () => {
       const item = screen.getByRole("menuitem");
       expect(item).toHaveClass(
         "bg-[var(--color-surface-default-secondary)]",
-        "rounded-[var(--measures-radius-small)]"
+        "rounded-[var(--measures-radius-small)]",
       );
     });
 
@@ -163,7 +163,7 @@ describe("ContextMenuItem Component", () => {
 
       const item = screen.getByRole("menuitem");
       expect(item).toHaveClass(
-        "hover:!bg-[var(--color-surface-default-secondary)]"
+        "hover:!bg-[var(--color-surface-default-secondary)]",
       );
     });
   });
@@ -173,7 +173,7 @@ describe("ContextMenuItem Component", () => {
       const { container } = render(
         <ContextMenu>
           <ContextMenuItem {...defaultProps} />
-        </ContextMenu>
+        </ContextMenu>,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -193,7 +193,7 @@ describe("ContextMenuItem Component", () => {
 
       const item = screen.getByRole("menuitem");
       expect(item).toHaveClass(
-        "text-[var(--color-content-default-brand-primary)]"
+        "text-[var(--color-content-default-brand-primary)]",
       );
     });
 
@@ -240,7 +240,7 @@ describe("ContextMenuSection Component", () => {
       const title = screen.getByText("Section Title");
       expect(title).toHaveClass(
         "text-[var(--color-content-default-primary)]",
-        "font-medium"
+        "font-medium",
       );
     });
   });
@@ -270,7 +270,7 @@ describe("ContextMenuDivider Component", () => {
       expect(divider).toHaveClass(
         "border-t",
         "border-[var(--color-border-default-tertiary)]",
-        "my-1"
+        "my-1",
       );
     });
   });

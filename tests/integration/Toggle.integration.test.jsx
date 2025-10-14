@@ -12,7 +12,7 @@ describe("Toggle Integration", () => {
       <form onSubmit={handleSubmit}>
         <Toggle label="Test Toggle" name="toggle" />
         <button type="submit">Submit</button>
-      </form>
+      </form>,
     );
 
     const toggle = screen.getByRole("switch", { name: "Test Toggle" });
@@ -32,7 +32,7 @@ describe("Toggle Integration", () => {
         <Toggle label="First Toggle" />
         <Toggle label="Second Toggle" />
         <Toggle label="Third Toggle" />
-      </div>
+      </div>,
     );
 
     const firstToggle = screen.getByRole("switch", { name: "First Toggle" });
@@ -72,7 +72,7 @@ describe("Toggle Integration", () => {
       <div>
         <Toggle label="First Toggle" onChange={handleChange1} />
         <Toggle label="Second Toggle" onChange={handleChange2} />
-      </div>
+      </div>,
     );
 
     const firstToggle = screen.getByRole("switch", { name: "First Toggle" });
@@ -120,7 +120,7 @@ describe("Toggle Integration", () => {
         showText={true}
         icon="I"
         text="Toggle"
-      />
+      />,
     );
     toggle = screen.getByRole("switch");
     expect(toggle).toHaveTextContent("I");
@@ -167,7 +167,7 @@ describe("Toggle Integration", () => {
           text="Toggle"
         />
         <Toggle label="Empty Toggle" />
-      </div>
+      </div>,
     );
 
     const iconToggle = screen.getByRole("switch", { name: "Icon Toggle" });

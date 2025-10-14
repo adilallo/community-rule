@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("RadioButton Storybook Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiobutton--default"
+      "http://localhost:6006/iframe.html?id=forms-radiobutton--default",
     );
   });
 
@@ -15,7 +15,7 @@ test.describe("RadioButton Storybook Tests", () => {
 
   test("renders checked story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiobutton--checked"
+      "http://localhost:6006/iframe.html?id=forms-radiobutton--checked",
     );
 
     const radioButton = page.locator('[role="radio"]');
@@ -25,7 +25,7 @@ test.describe("RadioButton Storybook Tests", () => {
 
   test("renders standard story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiobutton--standard"
+      "http://localhost:6006/iframe.html?id=forms-radiobutton--standard",
     );
 
     const radioButtons = page.locator('[role="radio"]');
@@ -39,7 +39,7 @@ test.describe("RadioButton Storybook Tests", () => {
 
   test("renders inverse story", async ({ page }) => {
     await page.goto(
-      "http://localhost:6006/iframe.html?id=forms-radiobutton--inverse"
+      "http://localhost:6006/iframe.html?id=forms-radiobutton--inverse",
     );
 
     const radioButtons = page.locator('[role="radio"]');
@@ -66,12 +66,12 @@ test.describe("RadioButton Storybook Tests", () => {
     await page.selectOption('[data-testid="mode-control"]', "inverse");
     const radioButton = page.locator('[role="radio"]');
     await expect(radioButton).toHaveClass(
-      /outline-\[var\(--color-border-inverse-primary\)\]/
+      /outline-\[var\(--color-border-inverse-primary\)\]/,
     );
 
     await page.selectOption('[data-testid="mode-control"]', "standard");
     await expect(radioButton).toHaveClass(
-      /outline-\[var\(--color-border-default-tertiary\)\]/
+      /outline-\[var\(--color-border-default-tertiary\)\]/,
     );
   });
 
@@ -156,13 +156,13 @@ test.describe("RadioButton Storybook Tests", () => {
     await page.selectOption('[data-testid="mode-control"]', "standard");
     const radioButton = page.locator('[role="radio"]');
     await expect(radioButton).toHaveClass(
-      /outline-\[var\(--color-border-default-tertiary\)\]/
+      /outline-\[var\(--color-border-default-tertiary\)\]/,
     );
 
     // Test inverse mode
     await page.selectOption('[data-testid="mode-control"]', "inverse");
     await expect(radioButton).toHaveClass(
-      /outline-\[var\(--color-border-inverse-primary\)\]/
+      /outline-\[var\(--color-border-inverse-primary\)\]/,
     );
   });
 

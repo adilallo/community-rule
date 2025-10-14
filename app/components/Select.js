@@ -33,7 +33,8 @@ const Select = forwardRef(
     },
     ref
   ) => {
-    const selectId = id || `select-${useId()}`;
+    const generatedId = useId();
+    const selectId = id || `select-${generatedId}`;
     const labelId = `${selectId}-label`;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value || "");

@@ -63,7 +63,7 @@ describe("TextArea", () => {
     render(<TextArea error />);
     const textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
   });
 
@@ -71,20 +71,20 @@ describe("TextArea", () => {
     const { rerender } = render(<TextArea state="active" />);
     let textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "border-[var(--color-border-default-tertiary)]"
+      "border-[var(--color-border-default-tertiary)]",
     );
 
     rerender(<TextArea state="hover" />);
     textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
-      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
     );
 
     rerender(<TextArea state="focus" />);
     textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass(
       "border-[var(--color-border-default-utility-info)]",
-      "shadow-[0_0_5px_3px_#3281F8]"
+      "shadow-[0_0_5px_3px_#3281F8]",
     );
   });
 
@@ -151,7 +151,7 @@ describe("TextArea", () => {
         size="small"
         labelVariant="horizontal"
         label="Small Horizontal"
-      />
+      />,
     );
     const textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass("h-[60px]");
@@ -163,7 +163,7 @@ describe("TextArea", () => {
         size="medium"
         labelVariant="horizontal"
         label="Medium Horizontal"
-      />
+      />,
     );
     const textarea = screen.getByRole("textbox");
     expect(textarea).toHaveClass("h-[110px]");

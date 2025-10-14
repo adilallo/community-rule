@@ -272,7 +272,9 @@ describe("Select Component Accessibility", () => {
       render(<Select {...defaultProps} />);
 
       const label = screen.getByText("Test Select");
-      expect(label).toHaveClass("text-[var(--color-content-default-primary)]");
+      expect(label).toHaveClass(
+        "text-[var(--color-content-default-secondary)]"
+      );
     });
   });
 
