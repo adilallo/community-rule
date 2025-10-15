@@ -160,7 +160,7 @@ const Checkbox = memo(
         />
       </label>
     );
-  }
+  },
 );
 
 Checkbox.displayName = "Checkbox";

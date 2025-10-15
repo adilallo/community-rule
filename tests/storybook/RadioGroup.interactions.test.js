@@ -71,18 +71,18 @@ export const InteractiveInteraction = {
     const radioButtons = canvas.getAllByRole("radio");
 
     // Should have radiogroup role
-    expect(radioGroup).toBeInTheDocument();
+    await expect(radioGroup).toBeInTheDocument();
 
     // Should show initial state
-    expect(canvas.getByText("Selected: option1")).toBeVisible();
+    await expect(canvas.getByText("Selected: option1")).toBeVisible();
 
     // Click second option
-    userEvent.click(radioButtons[1]);
-    expect(canvas.getByText("Selected: option2")).toBeVisible();
+    await userEvent.click(radioButtons[1]);
+    await expect(canvas.getByText("Selected: option2")).toBeVisible();
 
     // Click third option
-    userEvent.click(radioButtons[2]);
-    expect(canvas.getByText("Selected: option3")).toBeVisible();
+    await userEvent.click(radioButtons[2]);
+    await expect(canvas.getByText("Selected: option3")).toBeVisible();
   },
 };
 

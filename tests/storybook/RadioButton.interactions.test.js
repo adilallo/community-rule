@@ -13,9 +13,10 @@ export const DefaultInteraction = {
     await userEvent.click(radioButton);
     await expect(radioButton).toHaveAttribute("aria-checked", "true");
 
-    // Click to uncheck
+    // Radio buttons can't be unchecked by clicking them again
+    // They stay checked until another radio button in the same group is selected
     await userEvent.click(radioButton);
-    await expect(radioButton).toHaveAttribute("aria-checked", "false");
+    await expect(radioButton).toHaveAttribute("aria-checked", "true");
   },
 };
 
@@ -27,11 +28,8 @@ export const CheckedInteraction = {
     // Should be checked initially
     await expect(radioButton).toHaveAttribute("aria-checked", "true");
 
-    // Click to uncheck
-    await userEvent.click(radioButton);
-    await expect(radioButton).toHaveAttribute("aria-checked", "false");
-
-    // Click to check again
+    // Radio buttons can't be unchecked by clicking them again
+    // They stay checked until another radio button in the same group is selected
     await userEvent.click(radioButton);
     await expect(radioButton).toHaveAttribute("aria-checked", "true");
   },

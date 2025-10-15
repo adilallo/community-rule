@@ -9,10 +9,8 @@ import React, {
   useCallback,
   memo,
 } from "react";
-import ContextMenu from "./ContextMenu";
-import ContextMenuItem from "./ContextMenuItem";
-import ContextMenuSection from "./ContextMenuSection";
-import ContextMenuDivider from "./ContextMenuDivider";
+import SelectDropdown from "./SelectDropdown";
+import SelectOption from "./SelectOption";
 
 const Select = forwardRef(
   (
@@ -31,7 +29,7 @@ const Select = forwardRef(
       onChange,
       ...props
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId();
     const selectId = id || `select-${generatedId}`;
@@ -74,7 +72,7 @@ const Select = forwardRef(
           selectRef.current.focus();
         }
       },
-      [onChange]
+      [onChange],
     );
 
     // Handle select button click
@@ -96,7 +94,7 @@ const Select = forwardRef(
           setIsOpen(false);
         }
       },
-      [disabled, isOpen]
+      [disabled, isOpen],
     );
 
     const getSizeStyles = () => {
@@ -230,14 +228,14 @@ const Select = forwardRef(
       // Handle options prop
       if (props.options && Array.isArray(props.options)) {
         const selectedOption = props.options.find(
-          (option) => option.value === selectedValue
+          (option) => option.value === selectedValue,
         );
         return selectedOption ? selectedOption.label : placeholder;
       }
 
       // Handle children (option elements)
       const selectedOption = React.Children.toArray(children).find(
-        (child) => child.props.value === selectedValue
+        (child) => child.props.value === selectedValue,
       );
       return selectedOption ? selectedOption.props.children : placeholder;
     };
@@ -294,10 +292,10 @@ const Select = forwardRef(
               ref={menuRef}
               className="absolute top-full left-0 right-0 z-50 mt-1"
             >
-              <ContextMenu>
+              <SelectDropdown>
                 {props.options && Array.isArray(props.options)
                   ? props.options.map((option) => (
-                      <ContextMenuItem
+                      <SelectOption
                         key={option.value}
                         selected={option.value === selectedValue}
                         size={size}
@@ -306,35 +304,35 @@ const Select = forwardRef(
                         }
                       >
                         {option.label}
-                      </ContextMenuItem>
+                      </SelectOption>
                     ))
                   : React.Children.map(children, (child) => {
                       if (child.type === "option") {
                         return (
-                          <ContextMenuItem
+                          <SelectOption
                             key={child.props.value}
                             selected={child.props.value === selectedValue}
                             size={size}
                             onClick={() =>
                               handleOptionSelect(
                                 child.props.value,
-                                child.props.children
+                                child.props.children,
                               )
                             }
                           >
                             {child.props.children}
-                          </ContextMenuItem>
+                          </SelectOption>
                         );
                       }
                       return child;
                     })}
-              </ContextMenu>
+              </SelectDropdown>
             </div>
           )}
         </div>
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

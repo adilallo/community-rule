@@ -1,3 +1,4 @@
+import React from "react";
 import RadioButton from "../app/components/RadioButton";
 import {
   DefaultInteraction,
@@ -50,6 +51,16 @@ export const Default = {
     label: "Default radio button",
   },
   play: DefaultInteraction.play,
+  render: (args) => {
+    const [checked, setChecked] = React.useState(args.checked);
+    return (
+      <RadioButton
+        {...args}
+        checked={checked}
+        onChange={({ checked: newChecked }) => setChecked(newChecked)}
+      />
+    );
+  },
 };
 
 export const Checked = {
@@ -60,34 +71,88 @@ export const Checked = {
     label: "Checked radio button",
   },
   play: CheckedInteraction.play,
+  render: (args) => {
+    const [checked, setChecked] = React.useState(args.checked);
+    return (
+      <RadioButton
+        {...args}
+        checked={checked}
+        onChange={({ checked: newChecked }) => setChecked(newChecked)}
+      />
+    );
+  },
 };
 
 export const Standard = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Standard Mode</h3>
-        <div className="flex flex-col gap-2">
-          <RadioButton label="Unchecked" checked={false} mode="standard" />
-          <RadioButton label="Checked" checked={true} mode="standard" />
+  render: () => {
+    const [selectedValue, setSelectedValue] = React.useState("checked");
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Standard Mode</h3>
+          <div className="flex flex-col gap-2">
+            <RadioButton
+              label="Unchecked"
+              checked={selectedValue === "unchecked"}
+              name="standard-example"
+              value="unchecked"
+              mode="standard"
+              onChange={({ checked }) => {
+                if (checked) setSelectedValue("unchecked");
+              }}
+            />
+            <RadioButton
+              label="Checked"
+              checked={selectedValue === "checked"}
+              name="standard-example"
+              value="checked"
+              mode="standard"
+              onChange={({ checked }) => {
+                if (checked) setSelectedValue("checked");
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: StandardInteraction.play,
 };
 
 export const Inverse = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Inverse Mode</h3>
-        <div className="flex flex-col gap-2">
-          <RadioButton label="Unchecked" checked={false} mode="inverse" />
-          <RadioButton label="Checked" checked={true} mode="inverse" />
+  render: () => {
+    const [selectedValue, setSelectedValue] = React.useState("checked");
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Inverse Mode</h3>
+          <div className="flex flex-col gap-2">
+            <RadioButton
+              label="Unchecked"
+              checked={selectedValue === "unchecked"}
+              name="inverse-example"
+              value="unchecked"
+              mode="inverse"
+              onChange={({ checked }) => {
+                if (checked) setSelectedValue("unchecked");
+              }}
+            />
+            <RadioButton
+              label="Checked"
+              checked={selectedValue === "checked"}
+              name="inverse-example"
+              value="checked"
+              mode="inverse"
+              onChange={({ checked }) => {
+                if (checked) setSelectedValue("checked");
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: InverseInteraction.play,
 };

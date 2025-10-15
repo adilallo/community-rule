@@ -35,11 +35,16 @@ export default {
 const Template = (args) => {
   const [value, setValue] = useState("");
   return (
-    <Select {...args} value={value} onChange={(e) => setValue(e.target.value)}>
-      <option value="item1">Context Menu Item 1</option>
-      <option value="item2">Context Menu Item 2</option>
-      <option value="item3">Context Menu Item 3</option>
-    </Select>
+    <Select
+      {...args}
+      value={value}
+      onChange={setValue}
+      options={[
+        { value: "option1", label: "Option 1" },
+        { value: "option2", label: "Option 2" },
+        { value: "option3", label: "Option 3" },
+      ]}
+    />
   );
 };
 

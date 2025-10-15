@@ -47,8 +47,8 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        const menu = screen.getByRole("menu");
-        expect(menu).toBeInTheDocument();
+        const listbox = screen.getByRole("listbox");
+        expect(listbox).toBeInTheDocument();
       });
     });
 
@@ -60,7 +60,7 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        const options = screen.getAllByRole("menuitem");
+        const options = screen.getAllByRole("option");
         expect(options).toHaveLength(3);
         expect(options[0]).toHaveTextContent("Option 1");
         expect(options[1]).toHaveTextContent("Option 2");
@@ -79,7 +79,7 @@ describe("Select Component Accessibility", () => {
       await user.keyboard("{Enter}");
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
     });
 
@@ -92,7 +92,7 @@ describe("Select Component Accessibility", () => {
       await user.keyboard(" ");
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
     });
 
@@ -104,7 +104,7 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
 
       await user.keyboard("{Escape}");
@@ -123,7 +123,7 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
 
       await user.click(screen.getByText("Option 1"));
@@ -179,7 +179,7 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
 
       await user.click(screen.getByText("Option 1"));
@@ -216,7 +216,7 @@ describe("Select Component Accessibility", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "border-[var(--color-border-default-utility-negative)]"
+        "border-[var(--color-border-default-utility-negative)]",
       );
     });
   });
@@ -230,7 +230,7 @@ describe("Select Component Accessibility", () => {
 
     it("meets WCAG standards in disabled state", async () => {
       const { container } = render(
-        <Select {...defaultProps} disabled={true} />
+        <Select {...defaultProps} disabled={true} />,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -250,7 +250,7 @@ describe("Select Component Accessibility", () => {
       await user.click(selectButton);
 
       await waitFor(() => {
-        expect(screen.getByRole("menu")).toBeInTheDocument();
+        expect(screen.getByRole("listbox")).toBeInTheDocument();
       });
 
       const results = await axe(container);
@@ -264,7 +264,7 @@ describe("Select Component Accessibility", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "text-[var(--color-content-default-primary)]"
+        "text-[var(--color-content-default-primary)]",
       );
     });
 
@@ -273,7 +273,7 @@ describe("Select Component Accessibility", () => {
 
       const label = screen.getByText("Test Select");
       expect(label).toHaveClass(
-        "text-[var(--color-content-default-secondary)]"
+        "text-[var(--color-content-default-secondary)]",
       );
     });
   });
@@ -284,10 +284,10 @@ describe("Select Component Accessibility", () => {
 
       const selectButton = screen.getByRole("button");
       expect(selectButton).toHaveClass(
-        "focus-visible:border-[var(--color-border-default-utility-info)]"
+        "focus-visible:border-[var(--color-border-default-utility-info)]",
       );
       expect(selectButton).toHaveClass(
-        "focus-visible:shadow-[0_0_5px_3px_#3281F8]"
+        "focus-visible:shadow-[0_0_5px_3px_#3281F8]",
       );
     });
 
@@ -297,10 +297,10 @@ describe("Select Component Accessibility", () => {
       const selectButton = screen.getByRole("button");
       // Focus state should be different from hover state
       expect(selectButton).toHaveClass(
-        "focus-visible:border-[var(--color-border-default-utility-info)]"
+        "focus-visible:border-[var(--color-border-default-utility-info)]",
       );
       expect(selectButton).toHaveClass(
-        "hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+        "hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
       );
     });
   });

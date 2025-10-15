@@ -80,7 +80,7 @@ const RadioButton = ({
         onChange({ checked: true, value });
       }
     },
-    [disabled, onChange, checked, value]
+    [disabled, onChange, checked, value],
   );
 
   return (

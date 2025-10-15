@@ -123,7 +123,7 @@ describe("Input Component", () => {
     render(<Input error={true} />);
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-negative)]"
+      "border-[var(--color-border-default-utility-negative)]",
     );
   });
 
@@ -138,7 +138,7 @@ describe("Input Component", () => {
     render(<Input state="focus" />);
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass(
-      "border-[var(--color-border-default-utility-info)]"
+      "border-[var(--color-border-default-utility-info)]",
     );
     expect(input).toHaveClass("shadow-[0_0_5px_3px_#3281F8]");
   });
@@ -148,7 +148,7 @@ describe("Input Component", () => {
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
     expect(input).toHaveClass(
-      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+      "shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
     );
   });
 
@@ -163,7 +163,7 @@ describe("Input Component", () => {
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass("border-[var(--color-border-default-tertiary)]");
     expect(input).toHaveClass(
-      "hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]"
+      "hover:shadow-[0_0_0_2px_var(--color-border-default-tertiary)]",
     );
   });
 

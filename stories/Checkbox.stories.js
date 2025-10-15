@@ -1,3 +1,4 @@
+import React from "react";
 import Checkbox from "../app/components/Checkbox";
 import {
   DefaultInteraction,
@@ -57,6 +58,16 @@ export const Default = {
     label: "Default checkbox",
   },
   play: DefaultInteraction.play,
+  render: (args) => {
+    const [checked, setChecked] = React.useState(args.checked);
+    return (
+      <Checkbox
+        {...args}
+        checked={checked}
+        onChange={({ checked: newChecked }) => setChecked(newChecked)}
+      />
+    );
+  },
 };
 
 export const Checked = {
@@ -68,34 +79,74 @@ export const Checked = {
     label: "Checked checkbox",
   },
   play: CheckedInteraction.play,
+  render: (args) => {
+    const [checked, setChecked] = React.useState(args.checked);
+    return (
+      <Checkbox
+        {...args}
+        checked={checked}
+        onChange={({ checked: newChecked }) => setChecked(newChecked)}
+      />
+    );
+  },
 };
 
 export const Standard = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Standard Mode</h3>
-        <div className="flex flex-col gap-2">
-          <Checkbox label="Unchecked" checked={false} mode="standard" />
-          <Checkbox label="Checked" checked={true} mode="standard" />
+  render: () => {
+    const [unchecked, setUnchecked] = React.useState(false);
+    const [checked, setChecked] = React.useState(true);
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Standard Mode</h3>
+          <div className="flex flex-col gap-2">
+            <Checkbox
+              label="Unchecked"
+              checked={unchecked}
+              mode="standard"
+              onChange={({ checked: newChecked }) => setUnchecked(newChecked)}
+            />
+            <Checkbox
+              label="Checked"
+              checked={checked}
+              mode="standard"
+              onChange={({ checked: newChecked }) => setChecked(newChecked)}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: StandardInteraction.play,
 };
 
 export const Inverse = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Inverse Mode</h3>
-        <div className="flex flex-col gap-2">
-          <Checkbox label="Unchecked" checked={false} mode="inverse" />
-          <Checkbox label="Checked" checked={true} mode="inverse" />
+  render: () => {
+    const [unchecked, setUnchecked] = React.useState(false);
+    const [checked, setChecked] = React.useState(true);
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Inverse Mode</h3>
+          <div className="flex flex-col gap-2">
+            <Checkbox
+              label="Unchecked"
+              checked={unchecked}
+              mode="inverse"
+              onChange={({ checked: newChecked }) => setUnchecked(newChecked)}
+            />
+            <Checkbox
+              label="Checked"
+              checked={checked}
+              mode="inverse"
+              onChange={({ checked: newChecked }) => setChecked(newChecked)}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: InverseInteraction.play,
 };

@@ -24,7 +24,7 @@ const RadioGroup = ({
         onChange({ value: optionValue });
       }
     },
-    [disabled, onChange]
+    [disabled, onChange],
   );
 
   return (

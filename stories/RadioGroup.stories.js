@@ -59,49 +59,67 @@ export const Default = {
     ],
   },
   play: DefaultInteraction.play,
+  render: (args) => {
+    const [value, setValue] = React.useState(args.value);
+    return (
+      <RadioGroup
+        {...args}
+        value={value}
+        onChange={({ value: newValue }) => setValue(newValue)}
+      />
+    );
+  },
 };
 
 export const Standard = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Standard Mode</h3>
-        <RadioGroup
-          name="standard-example"
-          value="option2"
-          mode="standard"
-          options={[
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-            { value: "option3", label: "Option 3" },
-          ]}
-          onChange={() => {}}
-        />
+  render: () => {
+    const [value, setValue] = React.useState("option2");
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Standard Mode</h3>
+          <RadioGroup
+            name="standard-example"
+            value={value}
+            mode="standard"
+            options={[
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+              { value: "option3", label: "Option 3" },
+            ]}
+            onChange={({ value: newValue }) => setValue(newValue)}
+          />
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: StandardInteraction.play,
 };
 
 export const Inverse = {
-  render: () => (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <h3 className="text-white font-medium">Inverse Mode</h3>
-        <RadioGroup
-          name="inverse-example"
-          value="option1"
-          mode="inverse"
-          options={[
-            { value: "option1", label: "Option 1" },
-            { value: "option2", label: "Option 2" },
-            { value: "option3", label: "Option 3" },
-          ]}
-          onChange={() => {}}
-        />
+  render: () => {
+    const [value, setValue] = React.useState("option1");
+
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-white font-medium">Inverse Mode</h3>
+          <RadioGroup
+            name="inverse-example"
+            value={value}
+            mode="inverse"
+            options={[
+              { value: "option1", label: "Option 1" },
+              { value: "option2", label: "Option 2" },
+              { value: "option3", label: "Option 3" },
+            ]}
+            onChange={({ value: newValue }) => setValue(newValue)}
+          />
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
   play: InverseInteraction.play,
 };
 
