@@ -1,4 +1,5 @@
 import "../app/globals.css";
+import "./fonts.css";
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -12,7 +13,7 @@ const preview = {
   },
   decorators: [
     (Story) => (
-      <div className="font-sans">
+      <div className="font-inter">
         <Story />
       </div>
     ),

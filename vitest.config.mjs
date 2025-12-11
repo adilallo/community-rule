@@ -16,7 +16,11 @@ export default defineConfig({
       "tests/unit/**/*.test.{js,jsx,ts,tsx}",
       "tests/integration/**/*.test.{js,jsx,ts,tsx}",
       "tests/accessibility/**/*.test.{js,jsx,ts,tsx}",
-      "tests/e2e/**/*.test.{js,jsx,ts,tsx}",
+      "tests/e2e/**/*.e2e.test.{js,jsx,ts,tsx}",
+    ],
+    exclude: [
+      "tests/e2e/**/*.storybook.test.{js,jsx,ts,tsx}",
+      "tests/e2e/**/*.spec.{js,jsx,ts,tsx}",
     ],
     css: true,
     coverage: {
