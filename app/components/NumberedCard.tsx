@@ -27,7 +27,7 @@ const NumberedCard = memo<NumberedCardProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 NumberedCard.displayName = "NumberedCard";

@@ -32,7 +32,7 @@ const NumberedCards = memo<NumberedCardsProps>(({ title, subtitle, cards }) => {
         text: card.text,
       })),
     }),
-    [title, subtitle, cards]
+    [title, subtitle, cards],
   );
 
   return (

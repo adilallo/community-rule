@@ -130,7 +130,7 @@ const ContentContainer = memo<ContentContainerProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 ContentContainer.displayName = "ContentContainer";

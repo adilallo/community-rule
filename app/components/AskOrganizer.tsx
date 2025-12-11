@@ -27,7 +27,7 @@ declare global {
     gtag?: (
       command: string,
       eventName: string,
-      params?: Record<string, unknown>
+      params?: Record<string, unknown>,
     ) => void;
   }
 }
@@ -45,7 +45,7 @@ const AskOrganizer = memo<AskOrganizerProps>(
   }) => {
     // Analytics tracking for contact button clicks
     const handleContactClick = (
-      event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+      event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
     ) => {
       // Track contact button interaction
       if (onContactClick) {
@@ -139,7 +139,7 @@ const AskOrganizer = memo<AskOrganizerProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 AskOrganizer.displayName = "AskOrganizer";

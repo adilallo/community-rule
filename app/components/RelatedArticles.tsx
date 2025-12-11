@@ -15,7 +15,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
     // Memoize filtered posts to prevent unnecessary re-computations
     const filteredPosts = useMemo(
       () => relatedPosts.filter((post) => post.slug !== currentPostSlug),
-      [relatedPosts, currentPostSlug]
+      [relatedPosts, currentPostSlug],
     );
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,7 +43,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
         document.addEventListener("mousemove", handleMouseMove);
         document.addEventListener("mouseup", handleMouseUp);
       },
-      []
+      [],
     );
 
     // Memoize transform style to prevent unnecessary recalculations
@@ -54,7 +54,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
           : "none",
         scrollBehavior: !isMobile ? "smooth" : "auto",
       }),
-      [isMobile, currentIndex]
+      [isMobile, currentIndex],
     );
 
     // Memoize progress bar style calculation
@@ -64,10 +64,10 @@ const RelatedArticles = memo<RelatedArticlesProps>(
           index === currentIndex
             ? `${progress}%`
             : index < currentIndex
-            ? "100%"
-            : "0%",
+              ? "100%"
+              : "0%",
       }),
-      [currentIndex, progress]
+      [currentIndex, progress],
     );
 
     // Check if we're on mobile (below lg breakpoint)
@@ -165,7 +165,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 RelatedArticles.displayName = "RelatedArticles";

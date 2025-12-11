@@ -16,7 +16,7 @@ declare global {
     gtag?: (
       command: string,
       eventName: string,
-      params?: Record<string, unknown>
+      params?: Record<string, unknown>,
     ) => void;
     analytics?: {
       track: (eventName: string, params?: Record<string, unknown>) => void;
@@ -93,7 +93,7 @@ const RuleCard = memo<RuleCardProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 RuleCard.displayName = "RuleCard";

@@ -1,11 +1,8 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import {
-  validateBlogPost,
-  sanitizeBlogPost,
-  type BlogPostFrontmatter,
-} from "./validation";
+import { validateBlogPost, sanitizeBlogPost } from "./validation";
+import type { BlogPostFrontmatter } from "./validation";
 
 /**
  * Content processing utilities for blog posts

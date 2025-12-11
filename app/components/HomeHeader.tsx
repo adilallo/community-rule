@@ -83,10 +83,10 @@ const HomeHeader = memo(() => {
             ? size === "home" || size === "homeMd"
               ? "homeMd"
               : size === "large"
-              ? "large"
-              : size === "homeXlarge"
-              ? "homeXlarge"
-              : "xsmallUseCases"
+                ? "large"
+                : size === "homeXlarge"
+                  ? "homeXlarge"
+                  : "xsmallUseCases"
             : size
         }
         variant={
@@ -109,7 +109,7 @@ const HomeHeader = memo(() => {
 
   const renderAvatarGroup = (
     containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge"
+    avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
       <AvatarContainer size={containerSize}>
@@ -141,7 +141,7 @@ const HomeHeader = memo(() => {
   const renderCreateRuleButton = (
     buttonSize: string,
     containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge"
+    avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
       <Button
@@ -169,7 +169,7 @@ const HomeHeader = memo(() => {
       | "headerXl"
       | "footer"
       | "footerLg",
-    showText: boolean
+    showText: boolean,
   ) => {
     return <Logo size={size} showText={showText} />;
   };

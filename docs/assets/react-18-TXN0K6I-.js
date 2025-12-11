@@ -123,7 +123,6 @@ function zd() {
                     for (
                       Ua(g), Tl = K(Jl);
                       Tl !== null && !(Tl.expirationTime > g && ye());
-
                     ) {
                       var p = Tl.callback;
                       if (typeof p == "function") {
@@ -1059,7 +1058,6 @@ function Ad() {
         for (
           e = t = 0;
           t < i.length && !i[t].includes("DetermineComponentFrameRoot");
-
         )
           t++;
         for (; e < d.length && !d[e].includes("DetermineComponentFrameRoot"); )
@@ -1068,7 +1066,6 @@ function Ad() {
           for (
             t = i.length - 1, e = d.length - 1;
             1 <= t && 0 <= e && i[t] !== d[e];
-
           )
             e--;
         for (; 1 <= t && 0 <= e; t--, e--)
@@ -5220,7 +5217,6 @@ Error generating stack: ` +
       for (
         l = a.child, u = Ca(l, l.pendingProps), a.child = u, u.return = a;
         l.sibling !== null;
-
       )
         ((l = l.sibling),
           (u = u.sibling = Ca(l, l.pendingProps)),
@@ -5368,7 +5364,6 @@ Error generating stack: ` +
                   u = k0(a, null, t, u),
                   a.child = u;
                 u;
-
               )
                 ((u.flags = (u.flags & -3) | 4096), (u = u.sibling));
             }
@@ -5696,7 +5691,6 @@ Error generating stack: ` +
       for (
         l.sibling.return = l.return, l = l.sibling;
         l.tag !== 5 && l.tag !== 6 && l.tag !== 18;
-
       ) {
         if (
           (l.tag === 27 && wa(l.type)) ||
@@ -5799,7 +5793,6 @@ Error generating stack: ` +
                   T !== n || (t !== 0 && T.nodeType !== 3) || (i = f + t),
                   T.nodeType === 3 && (f += T.nodeValue.length),
                   (m = T.firstChild) !== null;
-
               )
                 ((s = T), (T = m));
               for (;;) {
@@ -5822,7 +5815,6 @@ Error generating stack: ` +
     for (
       qc = { focusedElem: l, selectionRange: u }, on = !1, yl = a;
       yl !== null;
-
     )
       if (
         ((a = yl), (l = a.child), (a.subtreeFlags & 1024) !== 0 && l !== null)
@@ -7545,7 +7537,6 @@ Error generating stack: ` +
                       l = u,
                       u = a.child;
                     u !== null;
-
                   )
                     (X1(u, l), (u = u.sibling));
                   return (Z(nl, (nl.current & 1) | 2), a.child);
@@ -8650,7 +8641,6 @@ Error generating stack: ` +
         e = l.expirationTimes,
         n = l.pendingLanes & -62914561;
       0 < n;
-
     ) {
       var f = 31 - Nl(n),
         c = 1 << f,

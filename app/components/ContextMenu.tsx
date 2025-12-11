@@ -33,7 +33,7 @@ const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 ContextMenu.displayName = "ContextMenu";

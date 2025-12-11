@@ -34,7 +34,7 @@ const SelectDropdown = forwardRef<HTMLDivElement, SelectDropdownProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 SelectDropdown.displayName = "SelectDropdown";

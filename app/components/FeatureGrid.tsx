@@ -48,7 +48,7 @@ const FeatureGrid = memo<FeatureGridProps>(
           href: "#conflict-resolution",
         },
       ],
-      []
+      [],
     );
     return (
       <section
@@ -92,7 +92,7 @@ const FeatureGrid = memo<FeatureGridProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 FeatureGrid.displayName = "FeatureGrid";

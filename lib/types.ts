@@ -3,15 +3,9 @@
  */
 
 // Re-export types from other modules for convenience
-export type {
-  BlogPost,
-  BlogStats,
-} from "./content";
+export type { BlogPost, BlogStats } from "./content";
 
-export type {
-  BlogPostFrontmatter,
-  ValidationResult,
-} from "./validation";
+export type { BlogPostFrontmatter, ValidationResult } from "./validation";
 
 export type {
   Heading,
@@ -21,9 +15,7 @@ export type {
   ProcessedFrontmatter,
 } from "./mdx";
 
-export type {
-  CacheStats,
-} from "./cache";
+export type { CacheStats } from "./cache";
 
 // Additional shared types
 export interface ComponentProps {

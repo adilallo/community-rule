@@ -1332,7 +1332,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                           I = R.next(),
                           b = 0;
                         !I.done;
-
                       )
                         ((S = h ? d.call(h, v, I.value, b) : I.value),
                           g ? ((f.value = S), p(w, b, f)) : (w[b] = S),
@@ -1772,7 +1771,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                         for (
                           s = c[1][d], c[0].splice(d, 1), c[1].splice(d, 1);
                           !c[0].length && m.length;
-
                         )
                           ((d = m.pop()),
                             (c = m.pop()),
@@ -1853,7 +1851,6 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                         for (
                           l = d[1][f], d[0].splice(f, 1), d[1].splice(f, 1);
                           !d[0].length && p.length;
-
                         )
                           ((f = p.pop()),
                             (d = p.pop()),
@@ -2705,7 +2702,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
 ` ||
                       c === "\r" ||
                       c === "\f";
-
                     )
                       ((b = !0), n++, (c = a.charAt(n)));
                     return b;
@@ -2750,7 +2746,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                       p(),
                       (c = a.charAt(n)),
                       !(n >= l || c === "," || c === ")"));
-
                     )
                       if (u[c]) {
                         var _ = c;
@@ -3728,7 +3723,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                       xe = be.join(""),
                       Me = [];
                     xe.length;
-
                   )
                     (Me.push(parseInt(xe.substring(0, 8), 2)),
                       (xe = xe.substring(8)));
@@ -5058,7 +5052,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                           _ = [],
                           F;
                         D > w;
-
                       )
                         ((F = g[w++]),
                           (!r || (b ? F in v : l(v, F))) &&
@@ -5275,7 +5268,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                         for (
                           var c = i(l), d = o(l), f = d.length, p = 0, m;
                           f > p;
-
                         )
                           a.f(s, (m = d[p++]), c[m]);
                         return s;
@@ -6666,7 +6658,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                   i = "",
                   o = t.charCodeAt(0);
                 ++a < r;
-
               ) {
                 if (((n = t.charCodeAt(a)), n == 0)) {
                   i += "�";
@@ -6956,12 +6947,10 @@ Consider to rely on 'then' or 'done' mode instead.`);
                       o.children.length &&
                       (a.push(r), (r = o.children.slice()));
                       !r.length && a.length;
-
                     )
                       r = a.pop();
                   };
                 r.length;
-
               )
                 n();
               return t;
@@ -7546,7 +7535,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
               for (
                 var n = Array.isArray(t), i = n ? t[r] : t, o = ul(e, i);
                 !o && a && e.parent;
-
               )
                 ((e = e.parent), (o = ul(e, i)));
               if (r > 0) {
@@ -7677,7 +7665,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                     n < 16 && (t[a + n++] = pl[i]);
                   });
                 n < 16;
-
               )
                 t[a + n++] = 0;
               return t;
@@ -9119,7 +9106,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                   ),
                   u = r ? o.nextNode() : o.currentNode;
                 u;
-
               ) {
                 var s = le(u);
                 (s && s.parent
@@ -9534,7 +9520,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                 a.shadowId === r.shadowId &&
                 !i &&
                 (n.push(a), a.props.nodeName !== "legend");
-
               ) {
                 if (a._inDisabledFieldset !== void 0) {
                   i = a._inDisabledFieldset;
@@ -9648,7 +9633,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                   !o.find(function (v) {
                     return v.root === i.getRootNode();
                   });
-
                 )
                   i = i.getRootNode().host;
                 if (
@@ -15010,7 +14994,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                       h = p,
                       v = bt(d, c);
                     v - h > m;
-
                   ) {
                     var g = Ta(d);
                     g = ir(g, { space: i, method: "clip" });
@@ -16253,7 +16236,6 @@ Consider to rely on 'then' or 'done' mode instead.`);
                     return Math.max(I, N);
                   }, 0);
                   b > o;
-
                 ) {
                   b = 0;
                   for (var D = 1; D < v.length && v.length < d; D++) {
@@ -19034,7 +19016,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                   for (
                     L.head.appendChild(a);
                     (o = L.elementFromPoint(n, i)) && l.indexOf(o) === -1;
-
                   )
                     (l.push(o),
                       c.push({
@@ -19048,7 +19029,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                       l.push(L.documentElement)),
                       u = c.length;
                     (s = c[--u]);
-
                   )
                     l[u].style.setProperty(
                       t,
@@ -19088,7 +19068,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                   o = q1(i, t, null, e[0].shadowId, a.pop()),
                   u = [];
                 o.vNodesIndex < o.vNodes.length;
-
               ) {
                 for (
                   var s,
@@ -19151,7 +19130,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                   c.children.length &&
                   (n.push(o), (o = q1(c.children, f, d, c.shadowId, a.pop())));
                   o.vNodesIndex === o.vNodes.length && n.length;
-
                 )
                   (a.push(o), (o = n.pop()));
               }
@@ -32224,7 +32202,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                     r.parent &&
                     !r.parent._hasRegionDescendant &&
                     r.parent.actualNode !== L.body;
-
                   )
                     r = r.parent;
                   return r;
@@ -32327,7 +32304,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
               for (
                 var t = e, r = e.textContent.trim(), a = r;
                 a === r && t !== void 0;
-
               ) {
                 var n = -1;
                 if (((e = t), e.children.length === 0)) return e;
@@ -34252,7 +34228,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                   return !er(u);
                 }));
                 r;
-
               )
                 (r.nodeName.toUpperCase() === "LABEL" &&
                   n.indexOf(r) === -1 &&
@@ -35367,7 +35342,6 @@ See: https://github.com/dequelabs/axe-core/blob/master/doc/context.md`,
                     }
                   };
                 (r = n.shift());
-
               )
                 i();
               return a;

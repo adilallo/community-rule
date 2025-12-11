@@ -111,7 +111,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
     const handleImageError = (error: unknown) => {
       console.warn(
         `QuoteBlock: Failed to load avatar image for ${author}:`,
-        error
+        error,
       );
       setImageError(true);
       setImageLoading(false);
@@ -275,7 +275,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
         </div>
       </section>
     );
-  }
+  },
 );
 
 QuoteBlock.displayName = "QuoteBlock";

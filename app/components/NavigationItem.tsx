@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 
-interface NavigationItemProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface NavigationItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
   children?: React.ReactNode;
   variant?: "default";
@@ -64,7 +63,7 @@ const NavigationItem = memo<NavigationItemProps>(
         {children}
       </a>
     );
-  }
+  },
 );
 
 NavigationItem.displayName = "NavigationItem";

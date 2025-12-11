@@ -1,7 +1,9 @@
 import React, { memo, useCallback, useId, forwardRef } from "react";
 
-interface ToggleGroupProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+interface ToggleGroupProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onChange"
+> {
   children?: React.ReactNode;
   className?: string;
   position?: "left" | "middle" | "right";
@@ -11,7 +13,7 @@ interface ToggleGroupProps
   onChange?: (
     e:
       | React.MouseEvent<HTMLButtonElement>
-      | React.KeyboardEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
@@ -72,7 +74,7 @@ const ToggleGroup = memo(
           onChange(e);
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const handleFocus = useCallback(
@@ -81,7 +83,7 @@ const ToggleGroup = memo(
           onFocus(e);
         }
       },
-      [onFocus]
+      [onFocus],
     );
 
     const handleBlur = useCallback(
@@ -90,7 +92,7 @@ const ToggleGroup = memo(
           onBlur(e);
         }
       },
-      [onBlur]
+      [onBlur],
     );
 
     const handleKeyDown = useCallback(
@@ -102,7 +104,7 @@ const ToggleGroup = memo(
           }
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const toggleClasses = `
@@ -146,7 +148,7 @@ const ToggleGroup = memo(
         {showText ? children : children || "☰"}
       </button>
     );
-  })
+  }),
 );
 
 ToggleGroup.displayName = "ToggleGroup";

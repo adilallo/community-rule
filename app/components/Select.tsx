@@ -51,7 +51,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
       options,
       ...props
     },
-    ref
+    ref,
   ) => {
     const generatedId = useId();
     const selectId = id || `select-${generatedId}`;
@@ -94,7 +94,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
           selectRef.current.focus();
         }
       },
-      [onChange]
+      [onChange],
     );
 
     // Handle select button click
@@ -116,7 +116,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
           setIsOpen(false);
         }
       },
-      [disabled, isOpen]
+      [disabled, isOpen],
     );
 
     const getSizeStyles = (): string => {
@@ -253,7 +253,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
       // Handle options prop
       if (options && Array.isArray(options)) {
         const selectedOption = options.find(
-          (option) => option.value === selectedValue
+          (option) => option.value === selectedValue,
         );
         return selectedOption ? selectedOption.label : placeholder;
       }
@@ -261,7 +261,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
       // Handle children (option elements)
       const selectedOption = React.Children.toArray(children).find(
         (child) =>
-          React.isValidElement(child) && child.props.value === selectedValue
+          React.isValidElement(child) && child.props.value === selectedValue,
       ) as
         | React.ReactElement<{ value: string; children: React.ReactNode }>
         | undefined;
@@ -353,7 +353,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
                             onClick={() =>
                               handleOptionSelect(
                                 optionProps.value,
-                                String(optionProps.children)
+                                String(optionProps.children),
                               )
                             }
                           >
@@ -369,7 +369,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

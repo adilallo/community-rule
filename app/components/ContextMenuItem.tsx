@@ -9,7 +9,7 @@ interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   className?: string;
   onClick?: (
-    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => void;
   size?: "small" | "medium" | "large";
 }
@@ -26,7 +26,7 @@ const ContextMenuItem = forwardRef<HTMLDivElement, ContextMenuItemProps>(
       size = "medium",
       ...props
     },
-    ref
+    ref,
   ) => {
     const getTextSize = (): string => {
       switch (size) {
@@ -69,7 +69,7 @@ const ContextMenuItem = forwardRef<HTMLDivElement, ContextMenuItemProps>(
           onClick(e);
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     const handleKeyDown = useCallback(
@@ -81,7 +81,7 @@ const ContextMenuItem = forwardRef<HTMLDivElement, ContextMenuItemProps>(
           }
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     return (
@@ -131,7 +131,7 @@ const ContextMenuItem = forwardRef<HTMLDivElement, ContextMenuItemProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 ContextMenuItem.displayName = "ContextMenuItem";

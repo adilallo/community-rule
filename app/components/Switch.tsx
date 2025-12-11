@@ -1,12 +1,14 @@
 import React, { memo, useCallback, useId, forwardRef } from "react";
 
-interface SwitchProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+interface SwitchProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onChange"
+> {
   checked?: boolean;
   onChange?: (
     e:
       | React.MouseEvent<HTMLButtonElement>
-      | React.KeyboardEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
@@ -36,7 +38,7 @@ const Switch = memo(
           onChange(e);
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const handleKeyDown = useCallback(
@@ -48,7 +50,7 @@ const Switch = memo(
           }
         }
       },
-      [onChange]
+      [onChange],
     );
 
     const handleFocus = useCallback(
@@ -57,7 +59,7 @@ const Switch = memo(
           onFocus(e);
         }
       },
-      [onFocus]
+      [onFocus],
     );
 
     const handleBlur = useCallback(
@@ -66,7 +68,7 @@ const Switch = memo(
           onBlur(e);
         }
       },
-      [onBlur]
+      [onBlur],
     );
 
     // Switch track styles based on checked state
@@ -170,7 +172,7 @@ const Switch = memo(
         {label && <span className={labelClasses}>{label}</span>}
       </div>
     );
-  })
+  }),
 );
 
 Switch.displayName = "Switch";

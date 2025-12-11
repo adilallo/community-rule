@@ -203,7 +203,7 @@ const ContentLockup = memo<ContentLockupProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 ContentLockup.displayName = "ContentLockup";

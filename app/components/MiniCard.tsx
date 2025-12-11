@@ -129,7 +129,7 @@ const MiniCard = memo<MiniCardProps>(
         {cardContent}
       </div>
     );
-  }
+  },
 );
 
 MiniCard.displayName = "MiniCard";

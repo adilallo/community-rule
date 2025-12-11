@@ -31,7 +31,7 @@ const MenuBar = memo<MenuBarProps>(
         {children}
       </nav>
     );
-  }
+  },
 );
 
 MenuBar.displayName = "MenuBar";

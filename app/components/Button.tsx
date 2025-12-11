@@ -2,12 +2,20 @@ import React, { memo } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: "default" | "secondary" | "primary" | "outlined" | "dark" | "inverse";
+  variant?:
+    | "default"
+    | "secondary"
+    | "primary"
+    | "outlined"
+    | "dark"
+    | "inverse";
   size?: "xsmall" | "small" | "medium" | "large" | "xlarge";
   className?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
-  onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
+  ) => void;
   href?: string;
   target?: string;
   rel?: string;

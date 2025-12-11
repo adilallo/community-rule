@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 
-interface MenuBarItemProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
   children?: React.ReactNode;
   variant?: "default" | "home";
@@ -180,7 +179,7 @@ const MenuBarItem = memo<MenuBarItemProps>(
         {children}
       </a>
     );
-  }
+  },
 );
 
 MenuBarItem.displayName = "MenuBarItem";

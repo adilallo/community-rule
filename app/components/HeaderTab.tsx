@@ -39,7 +39,7 @@ const HeaderTab = memo<HeaderTabProps>(
         />
       </div>
     );
-  }
+  },
 );
 
 HeaderTab.displayName = "HeaderTab";

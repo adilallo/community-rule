@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import Link from "next/link";
 import Logo from "./Logo";
 import Separator from "./Separator";
 import { getAssetPath, ASSETS } from "../../lib/assetUtils";
@@ -103,27 +104,54 @@ const Footer = memo(() => {
 
             {/* Links Section */}
             <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-016,16px)] order-1 sm:order-2">
-              <a
+              <Link
+                href="#"
+                className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+              >
+                Use cases
+              </Link>
+              <Link
                 href="/learn"
                 className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
                 Learn
-              </a>
-              <a
-                href="/blog"
+              </Link>
+              <Link
+                href="#"
                 className="text-[var(--color-content-default-primary)] font-inter text-base leading-5 font-medium tracking-[0%] lg:text-2xl lg:leading-7 lg:font-normal hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
               >
-                Blog
-              </a>
+                About
+              </Link>
             </div>
           </div>
 
           <Separator />
 
+          {/* Legal Links */}
+          <div className="flex flex-col items-start gap-[var(--spacing-measures-spacing-016,16px)] sm:flex-row sm:gap-[var(--spacing-measures-spacing-024,24px)]">
+            <Link
+              href="#"
+              className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-normal tracking-[0%] lg:text-base lg:leading-6 hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="#"
+              className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-normal tracking-[0%] lg:text-base lg:leading-6 hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="#"
+              className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-normal tracking-[0%] lg:text-base lg:leading-6 hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer"
+            >
+              Cookies Settings
+            </Link>
+          </div>
+
           {/* Copyright */}
           <div className="text-[var(--color-content-default-secondary)] font-inter text-sm leading-5 font-normal tracking-[0%] lg:text-base lg:leading-6">
-            © {new Date().getFullYear()} Media Economies Design Lab. All rights
-            reserved.
+            © All right reserved
           </div>
         </div>
       </footer>

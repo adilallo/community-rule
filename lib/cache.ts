@@ -206,7 +206,10 @@ export function getCacheStats(): CacheStats {
     tagCacheSize: tagCache.size,
     authorCacheSize: authorCache.size,
     totalCacheSize:
-      blogPostCache.size + blogListCache.size + tagCache.size + authorCache.size,
+      blogPostCache.size +
+      blogListCache.size +
+      tagCache.size +
+      authorCache.size,
     maxCacheSize: MAX_CACHE_SIZE,
     cacheTTL: CACHE_TTL,
   };

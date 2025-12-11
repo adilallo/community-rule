@@ -19,7 +19,7 @@ const ContextMenuDivider = forwardRef<HTMLDivElement, ContextMenuDividerProps>(
     return (
       <div ref={ref} className={dividerClasses} role="separator" {...props} />
     );
-  }
+  },
 );
 
 ContextMenuDivider.displayName = "ContextMenuDivider";

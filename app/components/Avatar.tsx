@@ -19,7 +19,7 @@ const Avatar = memo<AvatarProps>(
     const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover ${sizeStyles[size]} ${className}`;
 
     return <img src={src} alt={alt} className={baseStyles} {...props} />;
-  }
+  },
 );
 
 Avatar.displayName = "Avatar";

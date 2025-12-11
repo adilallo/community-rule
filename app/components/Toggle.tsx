@@ -1,13 +1,15 @@
 import React, { memo, useCallback, useId, forwardRef } from "react";
 
-interface ToggleProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+interface ToggleProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onChange"
+> {
   label?: string;
   checked?: boolean;
   onChange?: (
     e:
       | React.MouseEvent<HTMLButtonElement>
-      | React.KeyboardEvent<HTMLButtonElement>
+      | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
   onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
@@ -37,7 +39,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
       className = "",
       ...props
     },
-    ref
+    ref,
   ) => {
     const toggleId = useId();
     const labelId = useId();
@@ -141,13 +143,13 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
       (
         e:
           | React.MouseEvent<HTMLButtonElement>
-          | React.KeyboardEvent<HTMLButtonElement>
+          | React.KeyboardEvent<HTMLButtonElement>,
       ) => {
         if (!disabled && onChange) {
           onChange(e);
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     const handleFocus = useCallback(
@@ -156,7 +158,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           onFocus(e);
         }
       },
-      [disabled, onFocus]
+      [disabled, onFocus],
     );
 
     const handleBlur = useCallback(
@@ -165,7 +167,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           onBlur(e);
         }
       },
-      [disabled, onBlur]
+      [disabled, onBlur],
     );
 
     const handleKeyDown = useCallback(
@@ -177,7 +179,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
           }
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     return (
@@ -213,7 +215,7 @@ const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Toggle.displayName = "Toggle";

@@ -1,11 +1,27 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  plugins: [react({ jsxRuntime: "automatic" })],
+  plugins: [
+    react({ jsxRuntime: "automatic" }),
+    // Transform CSS imports to empty modules to avoid jsdom parsing errors
+    {
+      name: "css-mock",
+      load(id) {
+        if (id.endsWith(".css")) {
+          return "export default {};";
+        }
+      },
+    },
+  ],
   esbuild: {
+    target: "node18",
     jsx: "automatic",
-    loader: "jsx",
+    loader: "tsx",
     include: /\.[jt]sx?$/,
     exclude: [/node_modules/],
   },
@@ -22,7 +38,9 @@ export default defineConfig({
       "tests/e2e/**/*.storybook.test.{js,jsx,ts,tsx}",
       "tests/e2e/**/*.spec.{js,jsx,ts,tsx}",
     ],
-    css: true,
+    // Disable CSS processing in tests to avoid jsdom parsing errors with Tailwind v4
+    // Tailwind classes are still available via JIT compilation
+    css: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],

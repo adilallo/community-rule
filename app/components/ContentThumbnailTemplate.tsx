@@ -22,7 +22,7 @@ const ContentThumbnailTemplate = memo<ContentThumbnailTemplateProps>(
     // Get article-specific background image from frontmatter
     const getBackgroundImage = (
       post: BlogPost,
-      variant: "vertical" | "horizontal"
+      variant: "vertical" | "horizontal",
     ): string => {
       // Check if post has thumbnail images defined in frontmatter
       if (post.frontmatter?.thumbnail) {
@@ -98,7 +98,7 @@ const ContentThumbnailTemplate = memo<ContentThumbnailTemplateProps>(
         </div>
       </Link>
     );
-  }
+  },
 );
 
 ContentThumbnailTemplate.displayName = "ContentThumbnailTemplate";

@@ -2,11 +2,10 @@
 
 import React, { memo, useCallback, forwardRef, useId } from "react";
 
-interface TextAreaProps
-  extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    "size" | "onChange" | "onFocus" | "onBlur"
-  > {
+interface TextAreaProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "size" | "onChange" | "onFocus" | "onBlur"
+> {
   size?: "small" | "medium" | "large";
   labelVariant?: "default" | "horizontal";
   state?: "default" | "active" | "hover" | "focus";
@@ -42,7 +41,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       rows,
       ...props
     },
-    ref
+    ref,
   ) => {
     // Generate unique ID for accessibility if not provided
     const generatedId = useId();
@@ -161,7 +160,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange(e);
         }
       },
-      [disabled, onChange]
+      [disabled, onChange],
     );
 
     const handleFocus = useCallback(
@@ -170,7 +169,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onFocus(e);
         }
       },
-      [disabled, onFocus]
+      [disabled, onFocus],
     );
 
     const handleBlur = useCallback(
@@ -179,7 +178,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onBlur(e);
         }
       },
-      [disabled, onBlur]
+      [disabled, onBlur],
     );
 
     return (
@@ -213,7 +212,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 TextArea.displayName = "TextArea";

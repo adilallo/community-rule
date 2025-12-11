@@ -75,7 +75,7 @@ const Header = memo(() => {
 
   const renderAvatarGroup = (
     containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge"
+    avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
       <AvatarContainer size={containerSize}>
@@ -102,7 +102,7 @@ const Header = memo(() => {
   const renderCreateRuleButton = (
     buttonSize: string,
     containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge"
+    avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
       <Button
@@ -129,7 +129,7 @@ const Header = memo(() => {
       | "headerXl"
       | "footer"
       | "footerLg",
-    showText: boolean
+    showText: boolean,
   ) => {
     return <Logo size={size} showText={showText} />;
   };

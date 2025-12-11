@@ -8,7 +8,7 @@ interface SelectOptionProps {
   disabled?: boolean;
   className?: string;
   onClick?: (
-    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>
+    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => void;
   size?: "small" | "medium" | "large";
 }
@@ -24,7 +24,7 @@ const SelectOption = forwardRef<HTMLDivElement, SelectOptionProps>(
       size = "medium",
       ...props
     },
-    ref
+    ref,
   ) => {
     const getTextSize = (): string => {
       switch (size) {
@@ -67,7 +67,7 @@ const SelectOption = forwardRef<HTMLDivElement, SelectOptionProps>(
           onClick(e);
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     const handleKeyDown = useCallback(
@@ -79,7 +79,7 @@ const SelectOption = forwardRef<HTMLDivElement, SelectOptionProps>(
           }
         }
       },
-      [disabled, onClick]
+      [disabled, onClick],
     );
 
     return (
@@ -114,7 +114,7 @@ const SelectOption = forwardRef<HTMLDivElement, SelectOptionProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 SelectOption.displayName = "SelectOption";
