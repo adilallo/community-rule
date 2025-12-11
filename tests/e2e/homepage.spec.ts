@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { runA11y } from "./axe";
 
 test.describe("Homepage", () => {
   test.beforeEach(async ({ page }) => {

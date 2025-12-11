@@ -160,7 +160,7 @@ const MenuBarItem = memo<MenuBarItemProps>(
 
     const accessibilityProps = {
       ...(ariaLabel && { "aria-label": ariaLabel }),
-      ...(disabled && { "aria-disabled": "true" }),
+      ...(disabled && { "aria-disabled": true }),
       role: "menuitem" as const,
       tabIndex: disabled ? -1 : 0,
       ...props,

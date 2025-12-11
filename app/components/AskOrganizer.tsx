@@ -45,7 +45,7 @@ const AskOrganizer = memo<AskOrganizerProps>(
   }) => {
     // Analytics tracking for contact button clicks
     const handleContactClick = (
-      event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
+      _event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
     ) => {
       // Track contact button interaction
       if (onContactClick) {

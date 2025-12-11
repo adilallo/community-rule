@@ -67,7 +67,19 @@ const HomeHeader = memo(() => {
     },
   ];
 
-  const renderNavigationItems = (size: string) => {
+  type NavSize =
+    | "default"
+    | "xsmall"
+    | "xsmallUseCases"
+    | "home"
+    | "homeMd"
+    | "homeUseCases"
+    | "large"
+    | "largeUseCases"
+    | "homeXlarge"
+    | "xlarge";
+
+  const renderNavigationItems = (size: NavSize) => {
     return navigationItems.map((item, index) => (
       <MenuBarItem
         key={index}
@@ -125,7 +137,7 @@ const HomeHeader = memo(() => {
     );
   };
 
-  const renderLoginButton = (size: string) => {
+  const renderLoginButton = (size: NavSize) => {
     return (
       <MenuBarItem
         href="#"
@@ -139,7 +151,7 @@ const HomeHeader = memo(() => {
   };
 
   const renderCreateRuleButton = (
-    buttonSize: string,
+    buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",
     containerSize: "small" | "medium" | "large" | "xlarge",
     avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {

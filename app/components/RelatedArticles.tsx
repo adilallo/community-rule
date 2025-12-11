@@ -52,7 +52,9 @@ const RelatedArticles = memo<RelatedArticlesProps>(
         transform: isMobile
           ? `translateX(calc(50% - 130px - ${currentIndex * 260}px))`
           : "none",
-        scrollBehavior: !isMobile ? "smooth" : "auto",
+        scrollBehavior: (!isMobile
+          ? "smooth"
+          : "auto") as React.CSSProperties["scrollBehavior"],
       }),
       [isMobile, currentIndex],
     );

@@ -11,7 +11,7 @@ interface NumberedCardProps {
 }
 
 const NumberedCard = memo<NumberedCardProps>(
-  ({ number, text, iconShape, iconColor }) => {
+  ({ number, text, iconShape: _iconShape, iconColor: _iconColor }) => {
     return (
       <div className="bg-[var(--color-surface-inverse-primary)] rounded-[12px] p-5 shadow-lg flex flex-col gap-4 sm:p-8 sm:gap-8 sm:flex-row sm:items-center lg:p-8 lg:gap-0 lg:flex-row lg:items-stretch lg:relative lg:h-[238px]">
         {/* Section Number - Top right (lg breakpoint) */}

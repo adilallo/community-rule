@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useCallback,
   memo,
+  useImperativeHandle,
 } from "react";
 import SelectDropdown from "./SelectDropdown";
 import SelectOption from "./SelectOption";
@@ -60,6 +61,11 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
     const [selectedValue, setSelectedValue] = useState(value || "");
     const selectRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    useImperativeHandle(
+      ref,
+      () => selectRef.current as HTMLButtonElement | null,
+    );
 
     // Handle click outside to close menu
     useEffect(() => {
@@ -260,11 +266,20 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
 
       // Handle children (option elements)
       const selectedOption = React.Children.toArray(children).find(
-        (child) =>
-          React.isValidElement(child) && child.props.value === selectedValue,
-      ) as
-        | React.ReactElement<{ value: string; children: React.ReactNode }>
-        | undefined;
+        (
+          child,
+        ): child is React.ReactElement<{
+          value: string;
+          children: React.ReactNode;
+        }> => {
+          if (!React.isValidElement(child)) return false;
+          const props = child.props as {
+            value?: string;
+            children?: React.ReactNode;
+          };
+          return props.value === selectedValue;
+        },
+      );
       return selectedOption
         ? String(selectedOption.props.children)
         : placeholder;

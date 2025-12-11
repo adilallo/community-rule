@@ -43,15 +43,9 @@ const Checkbox = memo<CheckboxProps>(
     const isInverse = mode === "inverse";
 
     // Base tokens (rough placeholders leveraging existing CSS variables)
-    const colorSurface = isInverse
-      ? "var(--color-surface-inverse-primary)"
-      : "var(--color-surface-default-primary)";
     const colorContent = isInverse
       ? "var(--color-content-inverse-primary)"
       : "var(--color-content-default-primary)";
-    const colorBrand = isInverse
-      ? "var(--color-content-inverse-brand-primary)"
-      : "var(--color-content-default-brand-primary)";
 
     // Visual container depending on state
     const baseBox = `flex items-center justify-center shrink-0 w-[var(--measures-sizing-024)] h-[var(--measures-sizing-024)] rounded-[var(--measures-radius-medium)] transition-all duration-200 ease-in-out`;
@@ -106,8 +100,8 @@ const Checkbox = memo<CheckboxProps>(
 
     const accessibilityProps = {
       role: "checkbox" as const,
-      "aria-checked": checked ? "true" : "false",
-      ...(disabled && { "aria-disabled": "true", tabIndex: -1 }),
+      "aria-checked": checked,
+      ...(disabled && { "aria-disabled": true, tabIndex: -1 }),
       ...(!disabled && { tabIndex: 0 }),
       ...(ariaLabel && { "aria-label": ariaLabel }),
       ...(label && !ariaLabel && { "aria-labelledby": `${checkboxId}-label` }),

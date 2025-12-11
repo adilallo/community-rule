@@ -180,7 +180,6 @@ function markdownToHtml(markdown: string): string {
   if (!markdown) return "";
 
   // Normalize line endings
-  const GAP_TOKEN = "<GAP/>";
   const src = String(markdown).replace(/\r\n?/g, "\n");
 
   // For 3+ consecutive newlines, keep 2 for the paragraph break and
@@ -195,33 +194,33 @@ function markdownToHtml(markdown: string): string {
       // Headers with IDs
       .replace(
         /^###### (.*$)/gim,
-        (m, t) => `<h6 id="${generateHeadingId(t)}">${t}</h6>`,
+        (_match, t) => `<h6 id="${generateHeadingId(t)}">${t}</h6>`,
       )
       .replace(
         /^##### (.*$)/gim,
-        (m, t) => `<h5 id="${generateHeadingId(t)}">${t}</h5>`,
+        (_match, t) => `<h5 id="${generateHeadingId(t)}">${t}</h5>`,
       )
       .replace(
         /^#### (.*$)/gim,
-        (m, t) => `<h4 id="${generateHeadingId(t)}">${t}</h4>`,
+        (_match, t) => `<h4 id="${generateHeadingId(t)}">${t}</h4>`,
       )
       .replace(
         /^### (.*$)/gim,
-        (m, t) => `<h3 id="${generateHeadingId(t)}">${t}</h3>`,
+        (_match, t) => `<h3 id="${generateHeadingId(t)}">${t}</h3>`,
       )
       .replace(
         /^## (.*$)/gim,
-        (m, t) => `<h2 id="${generateHeadingId(t)}">${t}</h2>`,
+        (_match, t) => `<h2 id="${generateHeadingId(t)}">${t}</h2>`,
       )
       .replace(
         /^# (.*$)/gim,
-        (m, t) => `<h1 id="${generateHeadingId(t)}">${t}</h1>`,
+        (_match, t) => `<h1 id="${generateHeadingId(t)}">${t}</h1>`,
       )
 
       // Code fences (block) and inline code
       .replace(
         /```(\w+)?\n([\s\S]*?)\n```/g,
-        (m, lang = "", code) =>
+        (_match, lang = "", code) =>
           `<pre><code class="language-${lang}">${code}</code></pre>`,
       )
       .replace(/`([^`]+)`/g, "<code>$1</code>")
@@ -233,12 +232,12 @@ function markdownToHtml(markdown: string): string {
       // Links and images
       .replace(
         /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
-        (m, alt, src, title = "") =>
+        (_match, alt, src, title = "") =>
           `<img alt="${alt}" src="${src}"${title ? ` title="${title}"` : ""}>`,
       )
       .replace(
         /\[([^\]]+)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
-        (m, text, href, title = "") =>
+        (_match, text, href, title = "") =>
           `<a href="${href}"${title ? ` title="${title}"` : ""}>${text}</a>`,
       )
 
@@ -292,7 +291,7 @@ function markdownToHtml(markdown: string): string {
       // Turn counted GAP tokens into explicit, styleable gap elements
       .replace(
         /<GAP:(\d+)\/>/g,
-        (m, n) =>
+        (_match, n) =>
           `<div class="md-gap" style="--gap:${Number(
             n,
           )}" aria-hidden="true"></div>`,

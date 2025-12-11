@@ -18,7 +18,7 @@ interface ContentThumbnailTemplateProps {
 }
 
 const ContentThumbnailTemplate = memo<ContentThumbnailTemplateProps>(
-  ({ post, className = "", variant = "vertical", slugOrder }) => {
+  ({ post, className = "", variant = "vertical" }) => {
     // Get article-specific background image from frontmatter
     const getBackgroundImage = (
       post: BlogPost,

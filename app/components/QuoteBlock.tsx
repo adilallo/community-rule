@@ -141,7 +141,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
           type: "missing_props",
           message: "QuoteBlock requires quote and author props",
           quote: !!quote,
-          author: !!author,
+          author,
         });
       }
       return null; // Don't render if missing required props
@@ -184,7 +184,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
               <div className="relative">
                 {!imageError ? (
                   <Image
-                    src={avatarSrc}
+                    src={currentAvatarSrc}
                     alt={`Portrait of ${author}`}
                     width={64}
                     height={64}

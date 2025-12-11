@@ -33,15 +33,9 @@ const RadioButton = ({
   const isInverse = mode === "inverse";
 
   // Base tokens (using same design tokens as Checkbox)
-  const colorSurface = isInverse
-    ? "var(--color-surface-inverse-primary)"
-    : "var(--color-surface-default-primary)";
   const colorContent = isInverse
     ? "var(--color-content-inverse-primary)"
     : "var(--color-content-default-primary)";
-  const colorBrand = isInverse
-    ? "var(--color-content-inverse-brand-primary)"
-    : "var(--color-content-default-brand-primary)";
 
   // Visual container depending on state
   const baseBox = `flex items-center justify-center shrink-0 w-[var(--measures-sizing-024)] h-[var(--measures-sizing-024)] rounded-[var(--measures-radius-medium)] transition-all duration-200 ease-in-out`;
@@ -89,7 +83,7 @@ const RadioButton = ({
   const radioId = id || `radio-${generatedId}`;
 
   const handleToggle = useCallback(
-    (e: React.MouseEvent | React.KeyboardEvent) => {
+    (_e: React.MouseEvent | React.KeyboardEvent) => {
       if (!disabled && onChange && !checked) {
         onChange({ checked: true, value });
       }
@@ -118,8 +112,8 @@ const RadioButton = ({
         }}
         tabIndex={0}
         role="radio"
-        aria-checked={checked ? "true" : "false"}
-        {...(disabled && { "aria-disabled": "true" })}
+        aria-checked={checked}
+        {...(disabled && { "aria-disabled": true })}
         {...(ariaLabel && { "aria-label": ariaLabel })}
         {...(label && !ariaLabel && { "aria-labelledby": `${radioId}-label` })}
         id={radioId}

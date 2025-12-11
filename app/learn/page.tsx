@@ -1,19 +1,18 @@
 import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
 import ContentLockup from "../components/ContentLockup";
 import AskOrganizer from "../components/AskOrganizer";
-import { getAllBlogPosts, getRecentBlogPosts } from "../../lib/content";
+import { getAllBlogPosts } from "../../lib/content";
 
 export default function LearnPage() {
   // Get real blog posts from the content system
   const allPosts = getAllBlogPosts();
-  const recentPosts = getRecentBlogPosts(3);
 
   const contentLockupData = {
     title: "Organizing is hard",
     subtitle:
       "Find answers to your questions and see how other groups have solved similar challenges.",
-    variant: "learn",
-    alignment: "left",
+    variant: "learn" as const,
+    alignment: "left" as const,
   };
 
   const askOrganizerData = {
@@ -23,7 +22,7 @@ export default function LearnPage() {
       "Our community of organizers is here to help you navigate the challenges of building and maintaining effective community organizations.",
     buttonText: "Ask an organizer",
     buttonHref: "/contact",
-    variant: "centered",
+    variant: "centered" as const,
   };
 
   return (

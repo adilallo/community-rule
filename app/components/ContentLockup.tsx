@@ -34,7 +34,6 @@ const ContentLockup = memo<ContentLockupProps>(
     subtitle,
     description,
     ctaText,
-    ctaHref,
     buttonClassName = "",
     variant = "hero",
     linkText,

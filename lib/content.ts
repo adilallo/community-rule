@@ -70,7 +70,7 @@ export function getBlogPostFiles(): string[] {
   try {
     const files = fs.readdirSync(contentDirectory);
     return files.filter(
-      (file) => file.endsWith(".md") || file.endsWith(".mdx")
+      (file) => file.endsWith(".md") || file.endsWith(".mdx"),
     );
   } catch (error) {
     console.error("Error reading blog content directory:", error);
@@ -94,7 +94,7 @@ export function parseBlogPost(filePath: string): BlogPost | null {
     if (!validationResult.isValid) {
       console.error(
         `Validation errors for ${filePath}:`,
-        validationResult.errors
+        validationResult.errors,
       );
       return null;
     }
@@ -128,7 +128,7 @@ export function getAllBlogPosts(): BlogPost[] {
     .sort(
       (a, b) =>
         new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
+        new Date(a.frontmatter.date).getTime(),
     ); // Sort by date descending
   return allPosts;
 }
@@ -153,11 +153,11 @@ export function getBlogPostBySlug(slug: string): BlogPost | null {
 export function getRelatedBlogPosts(
   currentPostSlug: string,
   relatedSlugs: string[] = [],
-  limit: number = 3
+  limit: number = 3,
 ): BlogPost[] {
   const allPosts = getAllBlogPosts();
   const filteredPosts = allPosts.filter(
-    (post) => post.slug !== currentPostSlug
+    (post) => post.slug !== currentPostSlug,
   );
 
   let related: BlogPost[] = [];
@@ -203,7 +203,7 @@ export function getAllTags(): string[] {
 export function getBlogPostsByTag(tag: string): BlogPost[] {
   const allPosts = getAllBlogPosts();
   return allPosts.filter(
-    (post) => post.frontmatter.tags && post.frontmatter.tags.includes(tag)
+    (post) => post.frontmatter.tags && post.frontmatter.tags.includes(tag),
   );
 }
 
@@ -228,7 +228,7 @@ export function searchBlogPosts(query: string, limit: number = 10): BlogPost[] {
       .includes(searchTerm);
     const contentMatch = post.content.toLowerCase().includes(searchTerm);
     const tagMatch = post.frontmatter.tags?.some((tag) =>
-      tag.toLowerCase().includes(searchTerm)
+      tag.toLowerCase().includes(searchTerm),
     );
 
     return titleMatch || descriptionMatch || contentMatch || tagMatch;
@@ -245,7 +245,7 @@ export function searchBlogPosts(query: string, limit: number = 10): BlogPost[] {
 export function getBlogPostsByAuthor(author: string): BlogPost[] {
   const allPosts = getAllBlogPosts();
   return allPosts.filter(
-    (post) => post.frontmatter.author.toLowerCase() === author.toLowerCase()
+    (post) => post.frontmatter.author.toLowerCase() === author.toLowerCase(),
   );
 }
 
@@ -297,11 +297,11 @@ export function getBlogStats(): BlogStats {
                 1,
                 (new Date(allPosts[0].frontmatter.date).getTime() -
                   new Date(
-                    allPosts[allPosts.length - 1].frontmatter.date
+                    allPosts[allPosts.length - 1].frontmatter.date,
                   ).getTime()) /
-                  (1000 * 60 * 60 * 24 * 30)
+                  (1000 * 60 * 60 * 24 * 30),
               )) *
-              10
+              10,
           ) / 10
         : 0,
   };

@@ -59,7 +59,19 @@ const Header = memo(() => {
     },
   };
 
-  const renderNavigationItems = (size: string) => {
+  type NavSize =
+    | "default"
+    | "xsmall"
+    | "xsmallUseCases"
+    | "home"
+    | "homeMd"
+    | "homeUseCases"
+    | "large"
+    | "largeUseCases"
+    | "homeXlarge"
+    | "xlarge";
+
+  const renderNavigationItems = (size: NavSize) => {
     return navigationItems.map((item, index) => (
       <MenuBarItem
         key={index}
@@ -91,7 +103,7 @@ const Header = memo(() => {
     );
   };
 
-  const renderLoginButton = (size: string) => {
+  const renderLoginButton = (size: NavSize) => {
     return (
       <MenuBarItem href="#" size={size} ariaLabel="Log in to your account">
         Log in
@@ -100,7 +112,7 @@ const Header = memo(() => {
   };
 
   const renderCreateRuleButton = (
-    buttonSize: string,
+    buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",
     containerSize: "small" | "medium" | "large" | "xlarge",
     avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {

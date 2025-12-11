@@ -89,47 +89,37 @@ const Button = memo<ButtonProps>(
         : hoverOutlineStyles[size];
 
     const baseStyles = `inline-flex items-center justify-start box-border ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-500 ease-in-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
-
-    let finalVariant = variant;
-    if (disabled) {
-      finalVariant = "default";
-    }
-
     const combinedStyles = `${baseStyles} ${className}`;
 
-    const accessibilityProps = {
+    const sharedA11y = {
       ...(ariaLabel && { "aria-label": ariaLabel }),
-      ...(disabled && { "aria-disabled": "true" }),
-      ...(target && { target }),
-      ...(rel && { rel }),
+      ...(disabled && { "aria-disabled": true }),
       tabIndex: disabled ? -1 : 0,
-      ...props,
     };
 
     if (href && !disabled) {
-      return (
-        <a
-          href={href}
-          className={combinedStyles}
-          onClick={onClick}
-          {...accessibilityProps}
-        >
-          {children}
-        </a>
-      );
+      const anchorProps: React.AnchorHTMLAttributes<HTMLAnchorElement> = {
+        href,
+        className: combinedStyles,
+        onClick,
+        ...sharedA11y,
+        ...(target && { target }),
+        ...(rel && { rel }),
+      };
+
+      return <a {...anchorProps}>{children}</a>;
     }
 
-    return (
-      <button
-        type={type}
-        className={combinedStyles}
-        disabled={disabled}
-        onClick={onClick}
-        {...accessibilityProps}
-      >
-        {children}
-      </button>
-    );
+    const buttonProps: React.ButtonHTMLAttributes<HTMLButtonElement> = {
+      type,
+      className: combinedStyles,
+      disabled,
+      onClick,
+      ...sharedA11y,
+      ...props,
+    };
+
+    return <button {...buttonProps}>{children}</button>;
   },
 );
 

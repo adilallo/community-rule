@@ -2,8 +2,6 @@ import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
-import Header from "./components/Header";
-import HomeHeader from "./components/HomeHeader";
 import Footer from "./components/Footer";
 import ConditionalHeader from "./components/ConditionalHeader";
 

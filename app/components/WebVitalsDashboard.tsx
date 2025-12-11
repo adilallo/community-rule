@@ -60,64 +60,63 @@ const WebVitalsDashboard = memo(() => {
 
     // Set up Web Vitals tracking
     if (typeof window !== "undefined") {
-      import("web-vitals").then(
-        ({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-          // Track Largest Contentful Paint
-          getLCP((metric) => {
-            setVitals((prev) => ({
-              ...prev,
-              lcp: {
-                value: Math.round(metric.value),
-                rating: metric.rating,
-              },
-            }));
-          });
+      import("web-vitals").then((webVitals) => {
+        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as any;
+        // Track Largest Contentful Paint
+        getLCP((metric) => {
+          setVitals((prev) => ({
+            ...prev,
+            lcp: {
+              value: Math.round(metric.value),
+              rating: metric.rating,
+            },
+          }));
+        });
 
-          // Track First Input Delay
-          getFID((metric) => {
-            setVitals((prev) => ({
-              ...prev,
-              fid: {
-                value: Math.round(metric.value),
-                rating: metric.rating,
-              },
-            }));
-          });
+        // Track First Input Delay
+        getFID((metric) => {
+          setVitals((prev) => ({
+            ...prev,
+            fid: {
+              value: Math.round(metric.value),
+              rating: metric.rating,
+            },
+          }));
+        });
 
-          // Track Cumulative Layout Shift
-          getCLS((metric) => {
-            setVitals((prev) => ({
-              ...prev,
-              cls: {
-                value: Math.round(metric.value * 1000) / 1000,
-                rating: metric.rating,
-              },
-            }));
-          });
+        // Track Cumulative Layout Shift
+        getCLS((metric) => {
+          setVitals((prev) => ({
+            ...prev,
+            cls: {
+              value: Math.round(metric.value * 1000) / 1000,
+              rating: metric.rating,
+            },
+          }));
+        });
 
-          // Track First Contentful Paint
-          getFCP((metric) => {
-            setVitals((prev) => ({
-              ...prev,
-              fcp: {
-                value: Math.round(metric.value),
-                rating: metric.rating,
-              },
-            }));
-          });
+        // Track First Contentful Paint
+        getFCP((metric) => {
+          setVitals((prev) => ({
+            ...prev,
+            fcp: {
+              value: Math.round(metric.value),
+              rating: metric.rating,
+            },
+          }));
+        });
 
-          // Track Time to First Byte
-          getTTFB((metric) => {
-            setVitals((prev) => ({
-              ...prev,
-              ttfb: {
-                value: Math.round(metric.value),
-                rating: metric.rating,
-              },
-            }));
-          });
-        },
-      );
+        // Track Time to First Byte
+        getTTFB((metric) => {
+          setVitals((prev) => ({
+            ...prev,
+            ttfb: {
+              value: Math.round(metric.value),
+              rating: metric.rating,
+            },
+          }));
+        });
+      });
     }
   }, []);
 
