@@ -111,9 +111,8 @@ describe("BlogPostPage", () => {
     vi.clearAllMocks();
 
     // Mock the content functions
-    const { getBlogPostBySlug, getAllBlogPosts } = await import(
-      "../../lib/content"
-    );
+    const { getBlogPostBySlug, getAllBlogPosts } =
+      await import("../../lib/content");
     vi.mocked(getBlogPostBySlug).mockReturnValue(mockPost);
     vi.mocked(getAllBlogPosts).mockReturnValue([mockPost, ...mockRelatedPosts]);
   });

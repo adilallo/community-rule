@@ -501,7 +501,7 @@ jobs:
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run lint
-      - run: npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,md}"
+      - run: npm exec prettier -- --check "**/*.{js,jsx,ts,tsx,json,css,md}"
 
   build:
     runs-on: [self-hosted, macos-latest]

@@ -1,4 +1,4 @@
-import Button from "../app/components/Button.js";
+import Button from "../app/components/Button";
 import { within, userEvent } from "@storybook/test";
 
 export default {

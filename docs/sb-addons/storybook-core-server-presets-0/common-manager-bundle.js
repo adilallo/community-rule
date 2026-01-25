@@ -1702,7 +1702,6 @@ This is deprecated and won't work in Storybook 8 anymore.
           for (
             var d = l.length, m = "", p = 0, f = 0, g = u, y = r;
             u > -1 && u < d;
-
           ) {
             var E = s(l[u + 1], 4),
               b = s(l[u + 2], 0),
@@ -4407,7 +4406,6 @@ This is deprecated and won't work in Storybook 8 anymore.
               var P = B;
               P < S.length - 1 &&
               S[P].charCodeAt(1) + 1 === S[P + 1].charCodeAt(1);
-
             )
               P += 1;
             var L = 1 + P - B;
@@ -21503,7 +21501,6 @@ ${S.description}`);
               var P = B;
               P < S.length - 1 &&
               S[P].charCodeAt(1) + 1 === S[P + 1].charCodeAt(1);
-
             )
               P += 1;
             var L = 1 + P - B;

@@ -1457,7 +1457,6 @@ try {
       for (
         var t = Xe(10) ? document.body : null, n = e.offsetParent || null;
         n === t && e.nextElementSibling;
-
       )
         n = (e = e.nextElementSibling).offsetParent;
       var r = n && n.nodeName;
@@ -2457,7 +2456,6 @@ try {
           r = new DataView(t.buffer),
           o = e.byteLength;
         o--;
-
       )
         if (n.getUint8(o) !== r.getUint8(o)) return !1;
       return !0;

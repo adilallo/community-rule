@@ -8691,7 +8691,6 @@ function $b(e, t) {
     --t &&
     Ze() &&
     !(De < 48 || De > 102 || (De > 57 && De < 65) || (De > 70 && De < 97));
-
   );
   return io(e, Lo() + (t < 6 && Dt() == 32 && Ze() == 32));
 }
@@ -8747,7 +8746,6 @@ function No(e, t, r, n, o, a, i, l, s) {
       A = n,
       S = w;
     x;
-
   )
     switch (((g = C), (C = Ze()))) {
       case 40:
@@ -8934,7 +8932,6 @@ var wD = P(function (e, t, r) {
     for (
       var n = 0, o = 0;
       (n = o), (o = Dt()), n === 38 && o === 12 && (t[r] = 1), !Un(o);
-
     )
       Ze();
     return io(e, Je);
@@ -8972,7 +8969,6 @@ var wD = P(function (e, t, r) {
           r = e.parent,
           n = e.column === r.column && e.line === r.line;
         r.type !== "rule";
-
       )
         if (((r = r.parent), !r)) return;
       if (
@@ -12469,7 +12465,6 @@ function H1(e, t, r, n, o, a, i, l, s) {
       f++;
     }, "_loop");
     f < d.length;
-
   )
     v();
   if (c !== d.length - 1) {
@@ -13261,7 +13256,6 @@ var q1,
       for (
         var i = o || "", l = a || "div", s = {}, u = 0, d, p, c;
         u < i.length;
-
       )
         ((r.lastIndex = u),
           (c = r.exec(i)),
@@ -13304,7 +13298,6 @@ var q1,
       for (
         var l = [], s = String(i || n), u = s.indexOf(t), d = 0, p = !1, c;
         !p;
-
       )
         (u === -1 && ((u = s.length), (p = !0)),
           (c = s.slice(d, u).trim()),
@@ -13760,7 +13753,6 @@ var q1,
           We--,
           be++;
         ++We < be;
-
       )
         if (
           (bt === f && (Ce = ke[pr] || 1), (bt = H.charCodeAt(We)), bt === x)
@@ -13794,7 +13786,6 @@ var q1,
               Ap = I[qt],
               Ie--;
             ++Ie < be && ((Ae = H.charCodeAt(Ie)), !!Ap(Ae));
-
           )
             ((Me += u(Ae)),
               qt === D && s.call(r, Me) && ((Ve = Me), (Pr = r[Me])));
@@ -14769,7 +14760,6 @@ var q1,
         for (
           L = _[I], L = typeof L == "string" ? [L] : L, j = L.length, B = -1;
           ++B < j;
-
         )
           k[L[B]] = k[I];
     }

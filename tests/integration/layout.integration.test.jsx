@@ -48,13 +48,17 @@ describe("Layout Integration", () => {
     ).toBeGreaterThan(0);
 
     // Footer navigation items (should be present in footer as well)
-    const useCasesLinks = screen.getAllByRole("link", { name: "Use cases" });
-    const learnLinks = screen.getAllByRole("link", { name: "Learn" });
-    const aboutLinks = screen.getAllByRole("link", { name: "About" });
+    // Footer has navigation links that match header
+    const footerUseCasesLinks = screen.getAllByRole("link", {
+      name: "Use cases",
+    });
+    const footerLearnLinks = screen.getAllByRole("link", { name: "Learn" });
+    const footerAboutLinks = screen.getAllByRole("link", { name: "About" });
 
-    expect(useCasesLinks.length).toBeGreaterThan(0);
-    expect(learnLinks.length).toBeGreaterThan(0);
-    expect(aboutLinks.length).toBeGreaterThan(0);
+    // Check that footer has these links (they may be in header too, so getAllByRole will find both)
+    expect(footerUseCasesLinks.length).toBeGreaterThan(0);
+    expect(footerLearnLinks.length).toBeGreaterThan(0);
+    expect(footerAboutLinks.length).toBeGreaterThan(0);
   });
 
   test("header navigation is interactive", async () => {

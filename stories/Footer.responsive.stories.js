@@ -1,4 +1,4 @@
-import Footer from "../app/components/Footer.js";
+import Footer from "../app/components/Footer";
 import { within, userEvent } from "@storybook/test";
 
 export default {

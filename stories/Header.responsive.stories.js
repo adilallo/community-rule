@@ -1,4 +1,4 @@
-import Header from "../app/components/Header.js";
+import Header from "../app/components/Header";
 
 export default {
   title: "Components/Header/Responsive",

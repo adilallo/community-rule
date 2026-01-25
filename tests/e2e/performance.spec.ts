@@ -58,7 +58,7 @@ test.describe("Performance Monitoring", () => {
     performanceMonitor.setBaselines(BASELINE_METRICS);
   });
 
-  test("homepage load performance", async ({ page }) => {
+  test("homepage load performance", async ({ page: _page }) => {
     const result = await performanceMonitor.measurePageLoad("/");
 
     // Assert page load time is within budget
@@ -83,43 +83,57 @@ test.describe("Performance Monitoring", () => {
     await page.waitForLoadState("networkidle");
 
     // Get Core Web Vitals with timeout
-    const coreWebVitals = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        const timeout = setTimeout(() => {
-          observer.disconnect();
-          resolve({ lcp: 0, fid: 0, cls: 0 }); // Default values if timeout
-        }, 10000); // 10 second timeout
-
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const metrics: any = {};
-
-          for (const entry of entries) {
-            if (entry.name === "LCP") {
-              metrics.lcp = entry.startTime;
-            } else if (entry.name === "FID") {
-              metrics.fid = entry.processingStart - entry.startTime;
-            } else if (entry.name === "CLS") {
-              metrics.cls = entry.value;
-            }
-          }
-
-          if (Object.keys(metrics).length === 3) {
-            clearTimeout(timeout);
+    const coreWebVitals = (await page.evaluate(() => {
+      return new Promise<{ lcp: number; fid: number; cls: number }>(
+        (resolve) => {
+          const timeout = setTimeout(() => {
             observer.disconnect();
-            resolve(metrics);
-          }
-        });
+            resolve({ lcp: 0, fid: 0, cls: 0 }); // Default values if timeout
+          }, 10000); // 10 second timeout
 
-        observer.observe({
-          entryTypes: [
-            "largest-contentful-paint",
-            "first-input",
-            "layout-shift",
-          ],
-        });
-      });
-    });
+          const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const metrics: { lcp?: number; fid?: number; cls?: number } = {};
+
+            for (const entry of entries) {
+              const e = entry as any;
+              if (
+                e.name === "LCP" ||
+                e.entryType === "largest-contentful-paint"
+              ) {
+                metrics.lcp = e.startTime ?? 0;
+              } else if (e.name === "FID" || e.entryType === "first-input") {
+                metrics.fid = (e.processingStart ?? 0) - (e.startTime ?? 0);
+              } else if (e.name === "CLS" || e.entryType === "layout-shift") {
+                metrics.cls = e.value ?? 0;
+              }
+            }
+
+            if (
+              metrics.lcp !== undefined &&
+              metrics.fid !== undefined &&
+              metrics.cls !== undefined
+            ) {
+              clearTimeout(timeout);
+              observer.disconnect();
+              resolve({
+                lcp: metrics.lcp,
+                fid: metrics.fid,
+                cls: metrics.cls,
+              });
+            }
+          });
+
+          observer.observe({
+            entryTypes: [
+              "largest-contentful-paint",
+              "first-input",
+              "layout-shift",
+            ],
+          });
+        },
+      );
+    })) as { lcp: number; fid: number; cls: number };
 
     // Assert Core Web Vitals are within acceptable ranges
     expect(coreWebVitals.lcp).toBeLessThan(
@@ -251,7 +265,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("network request performance", async ({ page }) => {
-    const requests = await performanceMonitor.monitorNetworkRequests();
+    await performanceMonitor.monitorNetworkRequests();
 
     await page.goto("/");
     await page.waitForLoadState("networkidle");
@@ -327,7 +341,7 @@ test.describe("Performance Monitoring", () => {
       });
     });
 
-    const result = await performanceMonitor.measurePageLoad("/");
+    await performanceMonitor.measurePageLoad("/");
 
     // This should trigger a performance regression warning
     const summary = performanceMonitor.getSummary();
