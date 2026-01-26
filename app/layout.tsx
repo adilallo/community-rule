@@ -1,9 +1,17 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import "./globals.css";
-import Footer from "./components/Footer";
 import ConditionalHeader from "./components/ConditionalHeader";
+
+// Code split Footer - below the fold, can be lazy loaded
+const Footer = dynamic(() => import("./components/Footer"), {
+  loading: () => (
+    <footer className="bg-[var(--color-surface-default-primary)] w-full min-h-[200px]" />
+  ),
+  ssr: true, // Keep SSR for SEO
+});
 
 const inter = Inter({
   subsets: ["latin"],

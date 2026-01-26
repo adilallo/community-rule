@@ -1,14 +1,25 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import {
   getBlogPostBySlug,
   getAllBlogPosts as getAllPosts,
   type BlogPost,
 } from "../../../lib/content";
 import ContentBanner from "../../components/ContentBanner";
-import RelatedArticles from "../../components/RelatedArticles";
 import AskOrganizer from "../../components/AskOrganizer";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+
+// Code split RelatedArticles - blog-specific, below the fold
+const RelatedArticles = dynamic(
+  () => import("../../components/RelatedArticles"),
+  {
+    loading: () => (
+      <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />
+    ),
+    ssr: true,
+  },
+);
 
 // AskOrganizer data - same as index page
 const askOrganizerData = {
