@@ -58,6 +58,8 @@ export default defineConfig({
             "--disable-skia-runtime-opts",
             "--font-render-hinting=none",
             "--disable-lcd-text",
+            "--disable-blink-features=AutomationControlled",
+            "--disable-infobars",
           ],
         },
       },

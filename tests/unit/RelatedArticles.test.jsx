@@ -227,11 +227,11 @@ describe("RelatedArticles", () => {
   });
 
   it("applies correct responsive behavior for desktop", () => {
-    // Set desktop width
+    // Set desktop width (must be > 1024px to be desktop, since lg breakpoint is 1024px)
     Object.defineProperty(window, "innerWidth", {
       writable: true,
       configurable: true,
-      value: 1024,
+      value: 1200,
     });
 
     render(

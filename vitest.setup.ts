@@ -42,6 +42,38 @@ vi.mock("next/dynamic", () => {
   };
 });
 
+// Mock window.matchMedia for media query tests
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => {
+    // Parse the media query to determine if it matches
+    const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
+    const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
+    
+    // Use window.innerWidth if set by tests, otherwise default to desktop (1200px)
+    // This allows tests to override viewport width by setting window.innerWidth
+    const viewportWidth = (typeof window !== "undefined" && window.innerWidth) || 1200;
+    let matches = true;
+    
+    if (minWidthMatch) {
+      matches = viewportWidth >= parseInt(minWidthMatch[1], 10);
+    } else if (maxWidthMatch) {
+      matches = viewportWidth <= parseInt(maxWidthMatch[1], 10);
+    }
+    
+    return {
+      matches,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(), // deprecated
+      removeListener: vi.fn(), // deprecated
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    };
+  }),
+});
+
 // MSW for API integration tests (mock fetch)
 beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
 afterEach(() => {
