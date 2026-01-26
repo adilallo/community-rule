@@ -1,5 +1,5 @@
 /** @type { import('@storybook/nextjs').StorybookConfig } */
-const config = {
+module.exports = {
   stories: [
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
@@ -33,5 +33,3 @@ const config = {
     return config;
   },
 };
-
-export default config;
