@@ -1,6 +1,9 @@
 "use client";
 
 import React, {
+  Children,
+  type ReactElement,
+  type ReactNode,
   forwardRef,
   useId,
   useState,
@@ -265,17 +268,17 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
       }
 
       // Handle children (option elements)
-      const selectedOption = React.Children.toArray(children).find(
+      const selectedOption = Children.toArray(children).find(
         (
           child,
-        ): child is React.ReactElement<{
+        ): child is ReactElement<{
           value: string;
-          children: React.ReactNode;
+          children: ReactNode;
         }> => {
           if (!React.isValidElement(child)) return false;
           const props = child.props as {
             value?: string;
-            children?: React.ReactNode;
+            children?: ReactNode;
           };
           return props.value === selectedValue;
         },
@@ -351,14 +354,14 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
                         {option.label}
                       </SelectOption>
                     ))
-                  : React.Children.map(children, (child) => {
+                  : Children.map(children, (child) => {
                       if (
                         React.isValidElement(child) &&
                         child.type === "option"
                       ) {
                         const optionProps = child.props as {
                           value: string;
-                          children: React.ReactNode;
+                          children: ReactNode;
                         };
                         return (
                           <SelectOption

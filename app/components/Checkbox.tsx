@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useId } from "react";
+import { memo, useId } from "react";
 
 interface CheckboxProps {
   checked?: boolean;

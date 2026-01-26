@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 interface AvatarProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;

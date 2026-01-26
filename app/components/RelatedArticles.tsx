@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import ContentThumbnailTemplate from "./ContentThumbnailTemplate";
 import type { BlogPost } from "../../lib/content";
 

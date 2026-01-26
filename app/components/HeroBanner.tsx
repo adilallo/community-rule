@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import ContentLockup from "./ContentLockup";
 import HeroDecor from "./HeroDecor";
 import { getAssetPath } from "../../lib/assetUtils";

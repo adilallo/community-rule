@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, memo, useCallback } from "react";
+import { forwardRef, memo, useCallback } from "react";
 
 interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;

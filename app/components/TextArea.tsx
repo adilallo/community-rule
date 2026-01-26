@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, forwardRef, useId } from "react";
+import { memo, useCallback, forwardRef, useId } from "react";
 
 interface TextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,

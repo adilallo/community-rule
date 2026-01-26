@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { getAssetPath } from "../../lib/assetUtils";
 import ContentContainer from "./ContentContainer";
 import type { BlogPost } from "../../lib/content";

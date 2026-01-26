@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;

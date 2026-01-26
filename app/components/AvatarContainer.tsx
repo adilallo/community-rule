@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 interface AvatarContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
