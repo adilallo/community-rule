@@ -9,7 +9,7 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const PERFORMANCE_BUDGETS = require("../config/performance-budgets.json");
+const PERFORMANCE_BUDGETS = require("../performance-budgets.json");
 const MONITORING_DIR = path.join(__dirname, "..", ".next", "monitoring");
 
 class PerformanceMonitor {

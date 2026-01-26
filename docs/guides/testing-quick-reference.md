@@ -228,7 +228,7 @@ await page.getByRole("button", { name: "Submit" }).click();
 ```bash
 # Check Chrome path on macOS
 # Ensure arm64 Chrome for Apple Silicon
-# Verify performance budgets in config/lighthouse.json
+# Verify performance budgets in .lighthouserc.json
 ```
 
 ### Unit Test Failures

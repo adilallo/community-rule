@@ -10,7 +10,7 @@ const fs = require("fs");
 const path = require("path");
 
 const BUNDLE_ANALYSIS_DIR = path.join(__dirname, "..", ".next", "analyze");
-const PERFORMANCE_BUDGETS = require("../config/performance-budgets.json");
+const PERFORMANCE_BUDGETS = require("../performance-budgets.json");
 
 class BundleAnalyzer {
   constructor() {

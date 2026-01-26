@@ -170,10 +170,9 @@ community-rule/
 │   ├── hooks/                   # Custom React hooks
 │   ├── layout.tsx              # Root layout
 │   └── page.tsx                # Homepage
-├── config/                       # Application configuration files
-│   ├── lighthouse.json         # Lighthouse CI configuration
-│   ├── performance-budgets.json # Performance budgets
-│   └── gitea-runner.yaml       # Gitea runner configuration
+├── config/                       # Project-specific configuration
+│   ├── gitea-runner.yaml       # Gitea runner configuration
+│   └── runner-config.yaml      # Runner configuration
 ├── docs/                         # Documentation
 │   ├── README.md               # Documentation index
 │   └── guides/                 # Comprehensive guides
