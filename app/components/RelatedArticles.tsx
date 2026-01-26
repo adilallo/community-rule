@@ -108,7 +108,10 @@ const RelatedArticles = memo<RelatedArticlesProps>(
     }
 
     return (
-      <section className="py-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)]">
+      <section 
+        className="py-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)]"
+        data-testid="related-articles"
+      >
         <div className="flex flex-col gap-[var(--spacing-scale-032)] lg:gap-[51px]">
           <h2 className="text-[32px] lg:text-[44px] leading-[110%] font-medium text-[var(--color-content-inverse-primary)] text-center">
             Related Articles
@@ -129,6 +132,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
                 <div
                   key={relatedPost.slug}
                   className="flex flex-col items-center flex-shrink-0"
+                  data-testid={`related-${relatedPost.slug}`}
                 >
                   <ContentThumbnailTemplate
                     post={relatedPost}
