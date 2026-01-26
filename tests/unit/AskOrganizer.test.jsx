@@ -163,11 +163,16 @@ describe("AskOrganizer Component", () => {
     });
     await user.click(button);
 
-    expect(gtagSpy).toHaveBeenCalledWith("event", "contact_button_click", {
-      event_category: "engagement",
-      event_label: "ask_organizer",
-      value: 1,
-    });
+    // Verify gtag was called with the expected event
+    expect(gtagSpy).toHaveBeenCalledWith(
+      "event",
+      "contact_button_click",
+      expect.objectContaining({
+        event_category: "engagement",
+        event_label: "ask_organizer",
+        value: 1,
+      }),
+    );
   });
 
   test("renders with proper accessibility attributes", () => {

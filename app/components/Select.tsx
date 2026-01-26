@@ -8,11 +8,11 @@ import React, {
   useId,
   useState,
   useRef,
-  useEffect,
   useCallback,
   memo,
   useImperativeHandle,
 } from "react";
+import { useClickOutside } from "../hooks";
 import SelectDropdown from "./SelectDropdown";
 import SelectOption from "./SelectOption";
 
@@ -71,24 +71,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
     );
 
     // Handle click outside to close menu
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          menuRef.current &&
-          !menuRef.current.contains(event.target as Node) &&
-          selectRef.current &&
-          !selectRef.current.contains(event.target as Node)
-        ) {
-          setIsOpen(false);
-        }
-      };
-
-      if (isOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () =>
-          document.removeEventListener("mousedown", handleClickOutside);
-      }
-    }, [isOpen]);
+    useClickOutside([menuRef, selectRef], () => setIsOpen(false), isOpen);
 
     // Handle option selection
     const handleOptionSelect = useCallback(

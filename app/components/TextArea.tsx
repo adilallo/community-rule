@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useCallback, forwardRef, useId } from "react";
+import { memo, forwardRef } from "react";
+import { useComponentId, useFormField } from "../hooks";
 
 interface TextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -44,8 +45,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     ref,
   ) => {
     // Generate unique ID for accessibility if not provided
-    const generatedId = useId();
-    const textareaId = id || `textarea-${generatedId}`;
+    const { id: textareaId, labelId } = useComponentId("textarea", id);
 
     // Size variants with specific heights and radius for TextArea
     const sizeStyles: Record<
@@ -154,37 +154,20 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
        ${className}
      `.trim();
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (!disabled && onChange) {
-          onChange(e);
-        }
-      },
-      [disabled, onChange],
-    );
-
-    const handleFocus = useCallback(
-      (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        if (!disabled && onFocus) {
-          onFocus(e);
-        }
-      },
-      [disabled, onFocus],
-    );
-
-    const handleBlur = useCallback(
-      (e: React.FocusEvent<HTMLTextAreaElement>) => {
-        if (!disabled && onBlur) {
-          onBlur(e);
-        }
-      },
-      [disabled, onBlur],
-    );
+    // Form field handlers with disabled state handling
+    const { handleChange, handleFocus, handleBlur } = useFormField<
+      HTMLTextAreaElement
+    >(disabled, {
+      onChange,
+      onFocus,
+      onBlur,
+    });
 
     return (
       <div className={containerClasses}>
         {label && (
           <label
+            id={labelId}
             htmlFor={textareaId}
             className={`${labelClasses} font-inter font-medium text-[var(--color-content-default-secondary)]`}
           >

@@ -3,6 +3,7 @@
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import ContentThumbnailTemplate from "./ContentThumbnailTemplate";
 import type { BlogPost } from "../../lib/content";
+import { useIsMobile } from "../hooks";
 
 interface RelatedArticlesProps {
   relatedPosts: BlogPost[];
@@ -20,7 +21,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [progress, setProgress] = useState(0);
-    const [isMobile, setIsMobile] = useState(true);
+    const isMobile = useIsMobile();
 
     // Memoize the mouse down handler to prevent unnecessary re-renders
     const handleMouseDown = useCallback(
@@ -72,16 +73,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
       [currentIndex, progress],
     );
 
-    // Check if we're on mobile (below lg breakpoint)
-    useEffect(() => {
-      const checkScreenSize = () => {
-        setIsMobile(window.innerWidth < 1024); // lg breakpoint is 1024px
-      };
-
-      checkScreenSize();
-      window.addEventListener("resize", checkScreenSize);
-      return () => window.removeEventListener("resize", checkScreenSize);
-    }, []);
+    // Mobile detection is now handled by useIsMobile hook
 
     // Auto-advance every 3 seconds (only on mobile)
     useEffect(() => {

@@ -3,6 +3,7 @@
 import { memo } from "react";
 import ContentLockup from "./ContentLockup";
 import Button from "./Button";
+import { useAnalytics } from "../hooks";
 
 interface AskOrganizerProps {
   title?: string;
@@ -22,16 +23,6 @@ interface AskOrganizerProps {
   }) => void;
 }
 
-declare global {
-  interface Window {
-    gtag?: (
-      command: string,
-      eventName: string,
-      params?: Record<string, unknown>,
-    ) => void;
-  }
-}
-
 const AskOrganizer = memo<AskOrganizerProps>(
   ({
     title,
@@ -43,30 +34,32 @@ const AskOrganizer = memo<AskOrganizerProps>(
     variant = "centered",
     onContactClick,
   }) => {
+    const { trackEvent, trackCustomEvent } = useAnalytics();
+
     // Analytics tracking for contact button clicks
     const handleContactClick = (
       _event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
     ) => {
-      // Track contact button interaction
-      if (onContactClick) {
-        onContactClick({
-          event: "contact_button_click",
+      // Track with standard analytics
+      trackEvent({
+        event: "contact_button_click",
+        category: "engagement",
+        label: "ask_organizer",
+        component: "AskOrganizer",
+        variant,
+      });
+
+      // Also call custom callback if provided
+      trackCustomEvent(
+        "contact_button_click",
+        {
           component: "AskOrganizer",
           variant,
           buttonText,
           buttonHref,
-          timestamp: new Date().toISOString(),
-        });
-      }
-
-      // Additional analytics tracking (can be expanded)
-      if (typeof window !== "undefined" && window.gtag) {
-        window.gtag("event", "contact_button_click", {
-          event_category: "engagement",
-          event_label: "ask_organizer",
-          value: 1,
-        });
-      }
+        },
+        onContactClick,
+      );
     };
 
     // Variant-specific styling
