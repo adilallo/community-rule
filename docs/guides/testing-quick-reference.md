@@ -228,7 +228,7 @@ await page.getByRole("button", { name: "Submit" }).click();
 ```bash
 # Check Chrome path on macOS
 # Ensure arm64 Chrome for Apple Silicon
-# Verify performance budgets in .lighthouserc.json
+# Verify performance budgets in config/lighthouse.json
 ```
 
 ### Unit Test Failures
@@ -345,7 +345,7 @@ git commit -m "Update visual regression snapshots for [describe changes]"
 
 ## 🔗 Useful Links
 
-- **Full Testing Documentation**: [docs/testing-framework.md](./testing-framework.md)
+- **Full Testing Documentation**: [docs/guides/testing-framework.md](./testing-framework.md)
 - **Vitest Docs**: https://vitest.dev/
 - **Playwright Docs**: https://playwright.dev/
 - **React Testing Library**: https://testing-library.com/docs/react-testing-library/intro/

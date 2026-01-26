@@ -379,10 +379,11 @@ Visual regression tests run automatically in the CI pipeline:
 
 ## 📚 Additional Resources
 
-- **Main Testing Documentation**: [testing-framework.md](./testing-framework.md)
+- **Main Testing Documentation**: [testing-framework.md](./testing-framework.md) | [testing.md](./testing.md)
 - **Playwright Visual Testing**: https://playwright.dev/docs/screenshots
 - **Visual Regression Best Practices**: https://storybook.js.org/docs/writing-tests/visual-testing
 - **CI/CD Integration**: [testing-quick-reference.md](./testing-quick-reference.md)
+- **Performance Guide**: [performance.md](./performance.md)
 
 ---
 

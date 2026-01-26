@@ -1,86 +1,42 @@
-# Testing Documentation
+# Documentation Index
 
-This directory contains comprehensive testing documentation for the CommunityRule platform.
+This directory contains all project documentation organized by topic.
 
 ## 📚 Documentation Structure
 
-### 1. [testing-framework.md](./testing-framework.md) - **Main Guide**
+### Guides (`guides/`)
 
-**Complete testing framework documentation** covering all aspects of testing:
+Comprehensive guides for different aspects of the project:
 
-- Testing architecture and philosophy
-- Unit, integration, and E2E testing
-- Visual regression testing
-- Accessibility testing
-- Performance testing
-- CI/CD pipeline
-- Development workflow
-- Best practices and troubleshooting
+#### Testing
+- **[testing.md](./guides/testing.md)** - Complete testing strategy and philosophy
+- **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing framework documentation
+- **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Quick reference for daily development
+- **[visual-regression.md](./guides/visual-regression.md)** - Visual regression testing guide
 
-**Use this for**: Learning the testing framework, understanding architecture, comprehensive reference
+#### Performance
+- **[performance.md](./guides/performance.md)** - Performance optimization and monitoring guide
 
-### 2. [testing-quick-reference.md](./testing-quick-reference.md) - **Quick Reference**
+#### Content
+- **[content-creation.md](./guides/content-creation.md)** - Content creation guidelines
 
-**Essential commands and quick troubleshooting** for daily development:
-
-- Essential test commands
-- Current test status and metrics
-- Common test patterns
-- Troubleshooting solutions
-- Performance budgets
-- CI/CD pipeline overview
-
-**Use this for**: Daily development, quick commands, troubleshooting, reference
-
-### 3. [visual-regression-guide.md](./visual-regression-guide.md) - **Visual Testing Guide**
-
-**Focused guide for visual regression testing**:
-
-- Visual regression workflow
-- Snapshot management
-- Configuration and best practices
-- Troubleshooting visual test issues
-- CI/CD integration for visual tests
-
-**Use this for**: Visual regression testing, snapshot management, visual test troubleshooting
-
-### 4. [performance-optimization-guide.md](./performance-optimization-guide.md) - **Performance Guide**
-
-**Comprehensive performance optimization documentation**:
-
-- Performance targets and metrics
-- Frontend optimizations (React.memo, code splitting, image optimization)
-- Performance monitoring and bundle analysis
-- Web Vitals tracking and dashboard
-- Performance testing and troubleshooting
-- Best practices and optimization strategies
-
-**Use this for**: Performance optimization, monitoring, bundle analysis, Web Vitals tracking
-
-## 🎯 How to Use These Documents
+## 🎯 Quick Navigation
 
 ### For New Team Members
-
-1. Start with **testing-framework.md** to understand the complete testing strategy
-2. Use **testing-quick-reference.md** for daily development
-3. Reference **visual-regression-guide.md** when working with visual tests
-4. Review **performance-optimization-guide.md** for performance optimization
+1. Start with **[testing.md](./guides/testing.md)** to understand the testing strategy
+2. Use **[testing-quick-reference.md](./guides/testing-quick-reference.md)** for daily development
+3. Reference **[performance.md](./guides/performance.md)** for performance optimization
 
 ### For Daily Development
+- **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Essential commands and troubleshooting
+- **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing explanations
 
-1. Use **testing-quick-reference.md** for commands and troubleshooting
-2. Reference **testing-framework.md** for detailed explanations
-3. Use **visual-regression-guide.md** for visual test workflows
-4. Use **performance-optimization-guide.md** for performance monitoring
+### For Specific Topics
+- **Visual Testing**: [visual-regression.md](./guides/visual-regression.md)
+- **Performance**: [performance.md](./guides/performance.md)
+- **Content**: [content-creation.md](./guides/content-creation.md)
 
-### For Troubleshooting
-
-1. Check **testing-quick-reference.md** for common solutions
-2. Use **testing-framework.md** for detailed troubleshooting
-3. Reference **visual-regression-guide.md** for visual test issues
-4. Use **performance-optimization-guide.md** for performance issues
-
-## 📊 Current Testing Status
+## 📊 Current Project Status
 
 - **Unit Tests**: 94.88% coverage (exceeds 85% target)
 - **Integration Tests**: 5 comprehensive test suites
@@ -90,17 +46,10 @@ This directory contains comprehensive testing documentation for the CommunityRul
 - **Performance**: Lighthouse CI with budgets
 - **Bundle Analysis**: Real-time monitoring with budgets
 - **Web Vitals Tracking**: Core Web Vitals collection
-- **Performance Optimization**: React.memo + code splitting
 
 ## 🔄 Documentation Updates
 
-This documentation is maintained by the CommunityRule development team and updated regularly to reflect:
-
-- Current testing framework status
-- Best practices and patterns
-- Troubleshooting solutions
-- CI/CD pipeline changes
-- New testing features
+This documentation is maintained by the CommunityRule development team and updated regularly.
 
 ## 📚 Additional Resources
 
@@ -108,8 +57,9 @@ This documentation is maintained by the CommunityRule development team and updat
 - **Playwright Documentation**: https://playwright.dev/
 - **React Testing Library**: https://testing-library.com/
 - **Lighthouse CI**: https://github.com/GoogleChrome/lighthouse-ci
+- **Next.js Documentation**: https://nextjs.org/docs
 
 ---
 
-**Last Updated**: December 2024  
+**Last Updated**: January 2025  
 **Maintained by**: CommunityRule Development Team

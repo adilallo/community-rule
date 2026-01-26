@@ -10,10 +10,10 @@ const path = require("path");
 
 console.log("🔍 Testing LHCI Configuration...\n");
 
-// Check if .lighthouserc.json exists
-const configPath = path.join(process.cwd(), ".lighthouserc.json");
+// Check if config/lighthouse.json exists
+const configPath = path.join(process.cwd(), "config/lighthouse.json");
 if (fs.existsSync(configPath)) {
-  console.log("✅ .lighthouserc.json found");
+  console.log("✅ config/lighthouse.json found");
 
   try {
     const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
@@ -30,7 +30,7 @@ if (fs.existsSync(configPath)) {
     console.log("❌ Configuration is not valid JSON:", error.message);
   }
 } else {
-  console.log("❌ .lighthouserc.json not found");
+  console.log("❌ config/lighthouse.json not found");
 }
 
 // Check if @lhci/cli is installed

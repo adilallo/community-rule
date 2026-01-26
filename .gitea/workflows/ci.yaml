@@ -453,7 +453,7 @@ jobs:
 
           # Run LHCI with arm64 Node + arm64 Chrome
           # Test homepage and blog pages using config file
-          npx lhci autorun --chrome-path="$CHROME_PATH"
+          npx lhci autorun --config=config/lighthouse.json --chrome-path="$CHROME_PATH"
 
           kill "$SVPID" 2>/dev/null || true
         env:

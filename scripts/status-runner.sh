@@ -15,11 +15,11 @@ if pgrep -f "act_runner daemon" > /dev/null; then
         echo "No log file found"
     fi
     echo ""
-    echo "To stop the runner: ./stop-runner.sh"
+    echo "To stop the runner: ./scripts/stop-runner.sh"
 else
     echo "❌ Runner is NOT RUNNING"
     echo ""
-    echo "To start the runner: ./start-runner.sh"
+    echo "To start the runner: ./scripts/start-runner.sh"
 fi
 
 echo ""

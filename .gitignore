@@ -17,6 +17,9 @@
 /test-results/
 /playwright-report/
 
+# Lighthouse CI results
+/lhci-results/
+
 # Ignore other image files (but not visual regression snapshots)
 *.png
 *.jpg
@@ -57,6 +60,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 next-env.d.ts
 
 *storybook.log
