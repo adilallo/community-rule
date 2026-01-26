@@ -9,7 +9,7 @@ export type ValidationRule<T = string> = (value: T) => string | null;
  * Validation rules for common patterns
  */
 export const validationRules = {
-  required: <T>(value: T): string | null => {
+  required: (value: unknown): string | null => {
     if (value === null || value === undefined || value === "") {
       return "This field is required";
     }
