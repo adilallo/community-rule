@@ -3,6 +3,7 @@
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import ContentThumbnailTemplate from "./ContentThumbnailTemplate";
 import type { BlogPost } from "../../lib/content";
+import { useIsMobile } from "../hooks";
 
 interface RelatedArticlesProps {
   relatedPosts: BlogPost[];
@@ -20,7 +21,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [progress, setProgress] = useState(0);
-    const [isMobile, setIsMobile] = useState(true);
+    const isMobile = useIsMobile();
 
     // Memoize the mouse down handler to prevent unnecessary re-renders
     const handleMouseDown = useCallback(
@@ -72,16 +73,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
       [currentIndex, progress],
     );
 
-    // Check if we're on mobile (below lg breakpoint)
-    useEffect(() => {
-      const checkScreenSize = () => {
-        setIsMobile(window.innerWidth < 1024); // lg breakpoint is 1024px
-      };
-
-      checkScreenSize();
-      window.addEventListener("resize", checkScreenSize);
-      return () => window.removeEventListener("resize", checkScreenSize);
-    }, []);
+    // Mobile detection is now handled by useIsMobile hook
 
     // Auto-advance every 3 seconds (only on mobile)
     useEffect(() => {
@@ -116,7 +108,10 @@ const RelatedArticles = memo<RelatedArticlesProps>(
     }
 
     return (
-      <section className="py-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)]">
+      <section 
+        className="py-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)]"
+        data-testid="related-articles"
+      >
         <div className="flex flex-col gap-[var(--spacing-scale-032)] lg:gap-[51px]">
           <h2 className="text-[32px] lg:text-[44px] leading-[110%] font-medium text-[var(--color-content-inverse-primary)] text-center">
             Related Articles
@@ -137,6 +132,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
                 <div
                   key={relatedPost.slug}
                   className="flex flex-col items-center flex-shrink-0"
+                  data-testid={`related-${relatedPost.slug}`}
                 >
                   <ContentThumbnailTemplate
                     post={relatedPost}

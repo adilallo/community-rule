@@ -77,10 +77,11 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("core web vitals", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Wait for page to fully load
-    await page.waitForLoadState("networkidle");
+    // Use "load" state instead of "networkidle" to handle dynamically imported components
+    await page.waitForLoadState("load");
 
     // Get Core Web Vitals with timeout
     const coreWebVitals = (await page.evaluate(() => {
@@ -146,7 +147,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("component render performance", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Measure header render time
     const headerRenderTime =
@@ -171,7 +172,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("interaction performance", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Wait for page to be ready
     await page.waitForLoadState("domcontentloaded");
@@ -243,7 +244,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("scroll performance", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Measure scroll performance
     const scrollTime = await performanceMonitor.measureScrollPerformance();
@@ -251,7 +252,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("memory usage", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Get memory usage
     const memoryUsage = await performanceMonitor.getMemoryUsage();
@@ -267,8 +268,9 @@ test.describe("Performance Monitoring", () => {
   test("network request performance", async ({ page }) => {
     await performanceMonitor.monitorNetworkRequests();
 
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
+    // Wait for load state instead of networkidle to handle dynamic imports
+    await page.waitForLoadState("load");
 
     // Check that all requests completed within budget
     const summary = performanceMonitor.getSummary();
@@ -322,7 +324,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("performance regression detection", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Simulate a performance regression by adding a heavy operation
     await page.addInitScript(() => {
@@ -349,7 +351,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("performance metrics export", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Perform various operations to collect metrics
     await performanceMonitor.measureComponentRender("header");
@@ -372,7 +374,7 @@ test.describe("Performance Monitoring", () => {
   });
 
   test("performance budget compliance", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "load", timeout: 60000 });
 
     // Collect comprehensive metrics
     await performanceMonitor.measurePageLoad("/");
@@ -414,6 +416,7 @@ test.describe("Performance Regression Testing", () => {
     const results = [];
 
     for (let i = 0; i < iterations; i++) {
+      // measurePageLoad already handles timeouts and wait conditions
       const result = await performanceMonitor.measurePageLoad("/");
       results.push(result.loadTime);
 

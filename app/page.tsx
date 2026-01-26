@@ -1,10 +1,42 @@
-import NumberedCards from "./components/NumberedCards";
+import dynamic from "next/dynamic";
 import HeroBanner from "./components/HeroBanner";
-import LogoWall from "./components/LogoWall";
-import RuleStack from "./components/RuleStack";
-import QuoteBlock from "./components/QuoteBlock";
-import FeatureGrid from "./components/FeatureGrid";
 import AskOrganizer from "./components/AskOrganizer";
+
+// Code split below-the-fold components to reduce initial bundle size
+const LogoWall = dynamic(() => import("./components/LogoWall"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[200px]" />
+  ),
+  ssr: true,
+});
+
+const NumberedCards = dynamic(() => import("./components/NumberedCards"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
+  ),
+  ssr: true,
+});
+
+const RuleStack = dynamic(() => import("./components/RuleStack"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />
+  ),
+  ssr: true,
+});
+
+const FeatureGrid = dynamic(() => import("./components/FeatureGrid"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[500px]" />
+  ),
+  ssr: true,
+});
+
+const QuoteBlock = dynamic(() => import("./components/QuoteBlock"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
+  ),
+  ssr: true,
+});
 
 export default function Page() {
   const heroBannerData = {

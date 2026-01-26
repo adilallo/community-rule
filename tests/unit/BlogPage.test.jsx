@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import React from "react";
 import BlogPostPage from "../../app/blog/[slug]/page";
 
 // Mock Next.js components
@@ -14,6 +15,28 @@ vi.mock("next/link", () => {
         {children}
       </a>
     ),
+  };
+});
+
+// Mock next/dynamic to return components synchronously in tests
+vi.mock("next/dynamic", () => {
+  return {
+    default: (importFn, options) => {
+      // In tests, resolve the dynamic import immediately and return the component
+      let Component = null;
+      importFn().then((mod) => {
+        Component = mod.default || mod;
+      });
+      // Return a synchronous wrapper that uses the mocked component
+      return (props) => {
+        // Use the mocked RelatedArticles component directly
+        if (Component) {
+          return <Component {...props} />;
+        }
+        // Fallback: return the loading placeholder if component not ready
+        return options?.loading ? options.loading() : null;
+      };
+    },
   };
 });
 
@@ -173,7 +196,11 @@ describe("BlogPostPage", () => {
     });
     render(BlogPostPageComponent);
 
-    expect(screen.getByTestId("related-articles")).toBeInTheDocument();
+    // Wait for dynamically imported RelatedArticles component to load
+    await waitFor(() => {
+      expect(screen.getByTestId("related-articles")).toBeInTheDocument();
+    });
+    
     expect(screen.getByText("Related Articles")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-1")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-2")).toBeInTheDocument();
@@ -294,6 +321,11 @@ describe("BlogPostPage", () => {
       params: { slug: "test-article" },
     });
     render(BlogPostPageComponent);
+
+    // Wait for dynamically imported RelatedArticles component to load
+    await waitFor(() => {
+      expect(screen.getByTestId("related-articles")).toBeInTheDocument();
+    });
 
     // Current post should not appear in related articles
     expect(

@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useId } from "react";
+import { memo } from "react";
+import { useComponentId } from "../hooks";
 
 interface CheckboxProps {
   checked?: boolean;
@@ -95,8 +96,7 @@ const Checkbox = memo<CheckboxProps>(
     };
 
     // Generate unique ID for accessibility if not provided
-    const generatedId = useId();
-    const checkboxId = id || `checkbox-${generatedId}`;
+    const { id: checkboxId, labelId } = useComponentId("checkbox", id);
 
     const accessibilityProps = {
       role: "checkbox" as const,
@@ -104,7 +104,7 @@ const Checkbox = memo<CheckboxProps>(
       ...(disabled && { "aria-disabled": true, tabIndex: -1 }),
       ...(!disabled && { tabIndex: 0 }),
       ...(ariaLabel && { "aria-label": ariaLabel }),
-      ...(label && !ariaLabel && { "aria-labelledby": `${checkboxId}-label` }),
+      ...(label && !ariaLabel && { "aria-labelledby": labelId }),
       id: checkboxId,
       ...props,
     };
@@ -151,7 +151,7 @@ const Checkbox = memo<CheckboxProps>(
         </span>
         {label && (
           <span
-            id={`${checkboxId}-label`}
+            id={labelId}
             className="font-inter text-[14px] leading-[18px]"
             style={{ color: labelColor }}
           >

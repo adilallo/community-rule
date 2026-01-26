@@ -1,9 +1,10 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import NumberedCard from "./NumberedCard";
 import SectionHeader from "./SectionHeader";
 import Button from "./Button";
+import { useSchemaData } from "../hooks";
 
 interface Card {
   text: string;
@@ -18,22 +19,16 @@ interface NumberedCardsProps {
 }
 
 const NumberedCards = memo<NumberedCardsProps>(({ title, subtitle, cards }) => {
-  // Memoize schema data to prevent unnecessary re-computations
-  const schemaData = useMemo(
-    () => ({
-      "@context": "https://schema.org",
-      "@type": "HowTo",
-      name: title,
-      description: subtitle,
-      step: cards.map((card, index) => ({
-        "@type": "HowToStep",
-        position: index + 1,
-        name: card.text,
-        text: card.text,
-      })),
-    }),
-    [title, subtitle, cards],
-  );
+  // Generate schema data using hook
+  const schemaData = useSchemaData({
+    type: "HowTo",
+    name: title,
+    description: subtitle,
+    steps: cards.map((card) => ({
+      name: card.text,
+      text: card.text,
+    })),
+  });
 
   return (
     <>

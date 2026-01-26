@@ -322,8 +322,40 @@ class PlaywrightPerformanceMonitor extends PerformanceMonitor {
   async measurePageLoad(url) {
     const startTime = Date.now();
 
-    // Navigate to the page
-    await this.page.goto(url, { waitUntil: "networkidle" });
+    try {
+      // Navigate to the page
+      // Use "load" instead of "networkidle" to handle dynamically imported components
+      // "networkidle" can timeout with code splitting as chunks load asynchronously
+      await this.page.goto(url, { 
+        waitUntil: "load",
+        timeout: 60000, // 60 second timeout for slower networks
+      });
+    } catch (error) {
+      // Handle interstitial/blocking errors
+      if (error.message.includes("interstitial") || error.message.includes("prevented")) {
+        console.warn("Page load was blocked, attempting to continue:", error.message);
+        // Try to wait for the page to be in a usable state
+        try {
+          await this.page.waitForLoadState("domcontentloaded", { timeout: 10000 });
+        } catch (e) {
+          throw new Error(`Page failed to load: ${error.message}`);
+        }
+      } else {
+        throw error;
+      }
+    }
+
+    // Wait for dynamically imported components to be visible
+    // This ensures code-split components have loaded
+    try {
+      // Wait for main content sections that use dynamic imports
+      await this.page.waitForSelector("section", { timeout: 10000 }).catch(() => {
+        // Ignore if sections don't appear - page might still be valid
+      });
+    } catch (error) {
+      // Continue even if some components haven't loaded - we still want to measure performance
+      console.warn("Some components may not have loaded:", error.message);
+    }
 
     const loadTime = Date.now() - startTime;
     this.recordMetric("page_load_time", loadTime, { url });

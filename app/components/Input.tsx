@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useCallback, forwardRef, useId } from "react";
+import { memo, forwardRef } from "react";
+import { useComponentId, useFormField } from "../hooks";
 
 interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -43,8 +44,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     // Generate unique ID for accessibility if not provided
-    const generatedId = useId();
-    const inputId = id || `input-${generatedId}`;
+    const { id: inputId, labelId } = useComponentId("input", id);
 
     // Size variants
     const sizeStyles: Record<
@@ -150,37 +150,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
        ${className}
      `.trim();
 
-    const handleChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!disabled && onChange) {
-          onChange(e);
-        }
-      },
-      [disabled, onChange],
-    );
-
-    const handleFocus = useCallback(
-      (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!disabled && onFocus) {
-          onFocus(e);
-        }
-      },
-      [disabled, onFocus],
-    );
-
-    const handleBlur = useCallback(
-      (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!disabled && onBlur) {
-          onBlur(e);
-        }
-      },
-      [disabled, onBlur],
-    );
+    // Form field handlers with disabled state handling
+    const { handleChange, handleFocus, handleBlur } = useFormField<
+      HTMLInputElement
+    >(disabled, {
+      onChange,
+      onFocus,
+      onBlur,
+    });
 
     return (
       <div className={containerClasses}>
         {label && (
           <label
+            id={labelId}
             htmlFor={inputId}
             className={`${labelClasses} font-inter font-medium text-[var(--color-content-default-secondary)]`}
           >

@@ -1,9 +1,9 @@
 import { describe, test, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Page from "../../app/page";
 
 describe("Page", () => {
-  test("renders all main sections", () => {
+  test("renders all main sections", async () => {
     render(<Page />);
 
     // Check that all main sections are rendered (using getAllByText since there are multiple instances)
@@ -15,10 +15,13 @@ describe("Page", () => {
       ).length,
     ).toBeGreaterThan(0);
 
+    // Wait for dynamically imported components to load
     // Check numbered cards section (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText("How CommunityRule works").length,
-    ).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("How CommunityRule works").length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText(
         "Here's a quick overview of the process, from start to finish.",
@@ -60,13 +63,15 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("renders numbered cards with correct data", () => {
+  test("renders numbered cards with correct data", async () => {
     render(<Page />);
 
-    // Check numbered cards content (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText("How CommunityRule works").length,
-    ).toBeGreaterThan(0);
+    // Wait for dynamically imported NumberedCards component to load
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("How CommunityRule works").length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText(
         "Here's a quick overview of the process, from start to finish.",
@@ -89,13 +94,15 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("renders feature grid with correct data", () => {
+  test("renders feature grid with correct data", async () => {
     render(<Page />);
 
-    // Check feature grid content (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText("We've got your back, every step of the way").length,
-    ).toBeGreaterThan(0);
+    // Wait for dynamically imported FeatureGrid component to load
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("We've got your back, every step of the way").length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText(
         "Use our toolkit to improve, document, and evolve your organization.",
@@ -116,24 +123,29 @@ describe("Page", () => {
     expect(screen.getAllByText("Ask an organizer").length).toBeGreaterThan(0);
   });
 
-  test("renders all component sections", () => {
+  test("renders all component sections", async () => {
     render(<Page />);
 
     // Check that all major components are present by looking for their content
     // HeroBanner
     expect(screen.getAllByText("Collaborate").length).toBeGreaterThan(0);
 
+    // Wait for dynamically imported components to load
     // LogoWall - should be present (even if just the component structure)
     // NumberedCards
-    expect(
-      screen.getAllByText("How CommunityRule works").length,
-    ).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("How CommunityRule works").length,
+      ).toBeGreaterThan(0);
+    });
 
     // RuleStack - should be present
     // FeatureGrid
-    expect(
-      screen.getAllByText("We've got your back, every step of the way").length,
-    ).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("We've got your back, every step of the way").length,
+      ).toBeGreaterThan(0);
+    });
 
     // QuoteBlock - should be present
     // AskOrganizer
@@ -161,7 +173,7 @@ describe("Page", () => {
     expect(screen.getAllByText("Ask an organizer").length).toBeGreaterThan(0);
   });
 
-  test("renders descriptive text content", () => {
+  test("renders descriptive text content", async () => {
     render(<Page />);
 
     // Check main description (using getAllByText since there are multiple instances)
@@ -171,19 +183,23 @@ describe("Page", () => {
       ).length,
     ).toBeGreaterThan(0);
 
-    // Check numbered cards description (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText(
-        "Here's a quick overview of the process, from start to finish.",
-      ).length,
-    ).toBeGreaterThan(0);
+    // Wait for dynamically imported NumberedCards component
+    await waitFor(() => {
+      expect(
+        screen.getAllByText(
+          "Here's a quick overview of the process, from start to finish.",
+        ).length,
+      ).toBeGreaterThan(0);
+    });
 
-    // Check feature grid description (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText(
-        "Use our toolkit to improve, document, and evolve your organization.",
-      ).length,
-    ).toBeGreaterThan(0);
+    // Wait for dynamically imported FeatureGrid component
+    await waitFor(() => {
+      expect(
+        screen.getAllByText(
+          "Use our toolkit to improve, document, and evolve your organization.",
+        ).length,
+      ).toBeGreaterThan(0);
+    });
 
     // Check ask organizer description (using getAllByText since there are multiple instances)
     expect(
@@ -191,29 +207,38 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("renders section titles correctly", () => {
+  test("renders section titles correctly", async () => {
     render(<Page />);
 
     // Check all section titles (using getAllByText since there are multiple instances)
     expect(screen.getAllByText("Collaborate").length).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText("How CommunityRule works").length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText("We've got your back, every step of the way").length,
-    ).toBeGreaterThan(0);
+    
+    // Wait for dynamically imported components
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("How CommunityRule works").length,
+      ).toBeGreaterThan(0);
+    });
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("We've got your back, every step of the way").length,
+      ).toBeGreaterThan(0);
+    });
     expect(screen.getAllByText("Still have questions?").length).toBeGreaterThan(
       0,
     );
   });
 
-  test("renders numbered card items with correct content", () => {
+  test("renders numbered card items with correct content", async () => {
     render(<Page />);
 
-    // Check all three numbered card items (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText("Document how your community makes decisions").length,
-    ).toBeGreaterThan(0);
+    // Wait for dynamically imported NumberedCards component
+    await waitFor(() => {
+      // Check all three numbered card items (using getAllByText since there are multiple instances)
+      expect(
+        screen.getAllByText("Document how your community makes decisions").length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText(
         "Build an operating manual for a successful community",
@@ -226,21 +251,27 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("renders subtitle content correctly", () => {
+  test("renders subtitle content correctly", async () => {
     render(<Page />);
 
     // Check subtitles (using getAllByText since there are multiple instances)
     expect(screen.getAllByText("with clarity").length).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText(
-        "Here's a quick overview of the process, from start to finish.",
-      ).length,
-    ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByText(
-        "Use our toolkit to improve, document, and evolve your organization.",
-      ).length,
-    ).toBeGreaterThan(0);
+    
+    // Wait for dynamically imported components
+    await waitFor(() => {
+      expect(
+        screen.getAllByText(
+          "Here's a quick overview of the process, from start to finish.",
+        ).length,
+      ).toBeGreaterThan(0);
+    });
+    await waitFor(() => {
+      expect(
+        screen.getAllByText(
+          "Use our toolkit to improve, document, and evolve your organization.",
+        ).length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText("Get answers from an experienced organizer").length,
     ).toBeGreaterThan(0);
