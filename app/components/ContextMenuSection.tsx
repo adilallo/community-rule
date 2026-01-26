@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, memo } from "react";
+import { forwardRef, memo } from "react";
 
 interface ContextMenuSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;

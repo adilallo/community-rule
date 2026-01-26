@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useId } from "react";
+import { memo, useCallback, useId } from "react";
 import RadioButton from "./RadioButton";
 
 interface RadioOption {

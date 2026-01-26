@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useCallback, useId } from "react";
+import { memo, useCallback, useId } from "react";
 
 interface RadioButtonProps {
   checked?: boolean;

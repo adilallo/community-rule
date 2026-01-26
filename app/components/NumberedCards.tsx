@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import NumberedCard from "./NumberedCard";
 import SectionHeader from "./SectionHeader";
 import Button from "./Button";

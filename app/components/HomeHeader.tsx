@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "./Logo";
 import MenuBar from "./MenuBar";

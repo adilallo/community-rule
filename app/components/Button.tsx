@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

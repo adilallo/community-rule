@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useId, forwardRef } from "react";
+import { memo, useCallback, useId, forwardRef } from "react";
 
 interface ToggleGroupProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,

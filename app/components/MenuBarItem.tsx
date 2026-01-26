@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;

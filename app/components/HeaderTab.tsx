@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { getAssetPath } from "../../lib/assetUtils";
 
 interface HeaderTabProps extends React.HTMLAttributes<HTMLDivElement> {
