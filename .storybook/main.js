@@ -1,13 +1,14 @@
-/** @type { import('@storybook/nextjs-vite').StorybookConfig } */
+/** @type { import('@storybook/nextjs').StorybookConfig } */
 const config = {
   stories: [
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
+    // Removed @storybook/addon-essentials due to version mismatch with Storybook 10.x
+    // Using individual addons instead
     "@storybook/addon-a11y",
+    "@storybook/addon-interactions",
   ],
   framework: {
     name: "@storybook/nextjs",
@@ -15,22 +16,21 @@ const config = {
   },
   staticDirs: ["../public"],
 
-  // Ensure esbuild treats .js as JSX during dep pre-bundling
-  async viteFinal(cfg) {
-    cfg.optimizeDeps ??= {};
-    cfg.optimizeDeps.esbuildOptions ??= {};
-    cfg.optimizeDeps.esbuildOptions.loader = {
-      ...(cfg.optimizeDeps.esbuildOptions.loader || {}),
-      ".js": "jsx",
-      ".ts": "tsx",
+  // Webpack configuration to resolve Next.js modules for Next.js 16 compatibility
+  async webpackFinal(config) {
+    // Ensure Next.js modules are resolved correctly
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
     };
 
-    // Configure base path for GitHub Pages
-    if (process.env.STORYBOOK_BASE_PATH) {
-      cfg.base = "/communityrulestorybook/";
-    }
+    // Ensure node_modules are resolved
+    config.resolve.modules = [
+      ...(config.resolve.modules || []),
+      "node_modules",
+    ];
 
-    return cfg;
+    return config;
   },
 };
 
