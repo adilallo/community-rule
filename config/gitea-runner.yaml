@@ -1,0 +1,33 @@
+log:
+  level: info
+
+runner:
+  file: .runner
+  capacity: 2
+  timeout: 3h
+  insecure: false
+  fetch_timeout: 5s
+  fetch_interval: 2s
+  labels:
+    - "self-hosted:host"
+    - "macos-latest:host"
+
+cache:
+  enabled: true
+  dir: ""
+  host: ""
+  port: 0
+  external_server: ""
+
+# container:
+#   network: ""
+#   privileged: false
+#   options:
+#   workdir_parent:
+#   valid_volumes: []
+#   docker_host: ""
+#   force_pull: false
+#   mode: "host"
+
+host:
+  workdir_parent: ""

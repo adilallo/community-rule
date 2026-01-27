@@ -10,12 +10,19 @@
 !.yarn/releases
 !.yarn/versions
 
+# npm cache (should never be committed)
+.npm-cache/
+npm-cache/
+
 # testing
 /coverage
 
 # Playwright
 /test-results/
 /playwright-report/
+
+# Lighthouse CI results
+/lhci-results/
 
 # Ignore other image files (but not visual regression snapshots)
 *.png
@@ -40,8 +47,14 @@
 /build
 
 # misc
-.DS_Store
 *.pem
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # debug
 npm-debug.log*
@@ -57,6 +70,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 next-env.d.ts
 
 *storybook.log
@@ -65,3 +79,12 @@ storybook-static
 # storybook config files (to avoid git changes when switching between local and production)
 .storybook/main.js
 .storybook/preview.js
+
+# Gitea runner runtime files
+.runner
+.runner.pid
+act_runner
+
+# OS files
+Thumbs.db
+.DS_Store

@@ -56,7 +56,7 @@ npm run monitor:all         # All monitoring tools
 - **Performance monitoring**
 - **Code coverage reporting**
 
-📖 **For detailed testing documentation, see [docs/TESTING.md](docs/TESTING.md)**
+📖 **For detailed testing documentation, see [docs/README.md](docs/README.md)**
 
 ## ⚡ Performance Optimizations
 
@@ -167,18 +167,34 @@ The Storybook configuration automatically detects the environment:
 community-rule/
 ├── app/                          # Next.js app directory
 │   ├── components/              # React components
-│   ├── layout.js               # Root layout
-│   └── page.js                 # Homepage
-├── tests/                       # Test files
-│   ├── unit/                   # Unit tests (8 components)
+│   ├── hooks/                   # Custom React hooks
+│   ├── layout.tsx              # Root layout
+│   └── page.tsx                # Homepage
+├── config/                       # Project-specific configuration
+│   ├── gitea-runner.yaml       # Gitea runner configuration
+│   └── runner-config.yaml      # Runner configuration
+├── docs/                         # Documentation
+│   ├── README.md               # Documentation index
+│   └── guides/                 # Comprehensive guides
+│       ├── testing.md         # Testing strategy
+│       ├── testing-framework.md # Testing framework details
+│       ├── testing-quick-reference.md # Quick reference
+│       ├── performance.md     # Performance optimization
+│       ├── visual-regression.md # Visual testing
+│       └── content-creation.md # Content guidelines
+├── scripts/                      # Utility scripts
+│   ├── start-runner.sh        # Start Gitea runner
+│   ├── status-runner.sh       # Check runner status
+│   └── stop-runner.sh         # Stop Gitea runner
+├── tests/                        # Test files
+│   ├── unit/                   # Unit tests
 │   ├── integration/            # Integration tests
-│   └── e2e/                    # E2E tests (4 test suites)
-├── docs/                        # Documentation
-│   └── TESTING.md              # Comprehensive testing guide
+│   ├── e2e/                    # E2E tests
+│   └── accessibility/          # Accessibility tests
 ├── .storybook/                  # Storybook configuration
 ├── .gitea/                      # Gitea Actions workflows
 │   └── workflows/
-│       └── ci.yml              # CI/CD pipeline
+│       └── ci.yaml            # CI/CD pipeline
 └── public/                      # Static assets
 ```
 
@@ -193,15 +209,17 @@ community-rule/
 
 ## 📖 Documentation
 
-- **[Testing Framework](docs/TESTING.md)** - Comprehensive testing guide
+- **[Documentation Index](docs/README.md)** - Complete documentation guide
+- **[Testing Guides](docs/guides/)** - Testing strategy, framework, and quick reference
+- **[Performance Guide](docs/guides/performance.md)** - Performance optimization guide
+- **[Visual Regression Guide](docs/guides/visual-regression.md)** - Visual testing guide
 - **[Storybook](http://localhost:6006)** - Component documentation (local)
-- **[GitHub Pages Storybook](https://your-username.github.io/communityrulestorybook/)** - Public component docs
 
 ## 🤝 Contributing
 
 1. **Fork the repository**
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Write tests first** (see [Testing Guide](docs/TESTING.md))
+3. **Write tests first** (see [Testing Guide](docs/guides/testing.md))
 4. **Make your changes**
 5. **Run tests**: `npm test && npm run e2e`
 6. **Commit changes**: `git commit -m "feat: add amazing feature"`
@@ -219,16 +237,3 @@ community-rule/
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-<<<<<<< HEAD
-
-# Test from working commit
-
-=======
-
-# Test trigger
-
-> > > > > > > bead0c737303fb7e83b3be0c5dbd121b00351b90
-
-# Test new runner
-
-# Test host mode
