@@ -77,9 +77,6 @@ next-env.d.ts
 *storybook.log
 storybook-static
 
-# Storybook build output (config files should be committed)
-storybook-static
-
 # Gitea runner runtime files
 .runner
 .runner.pid

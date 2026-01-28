@@ -1,63 +1,44 @@
-# Documentation Index
+# Documentation
 
-This directory contains all project documentation organized by topic.
+This directory contains project documentation organized by topic.
 
-## 📚 Documentation Structure
+## Documentation Structure
+
+### Core Documentation
+
+- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Complete testing guide covering component tests, E2E tests, accessibility, and testing philosophy
+- **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** - Documentation for all custom React hooks used in the project
 
 ### Guides (`guides/`)
 
-Comprehensive guides for different aspects of the project:
+- **[content-creation.md](./guides/content-creation.md)** - Guide for creating blog content
 
-#### Testing
+## Quick Navigation
 
-- **[testing.md](./guides/testing.md)** - Complete testing strategy and philosophy
-- **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing framework documentation
-- **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Quick reference for daily development
-- **[visual-regression.md](./guides/visual-regression.md)** - Visual regression testing guide
+### For Testing
 
-#### Performance
+Start with **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** for:
+- Testing philosophy and approach
+- Component testing with `componentTestSuite`
+- E2E testing with Playwright
+- Accessibility testing
+- How to add tests for new components
 
-- **[performance.md](./guides/performance.md)** - Performance optimization and monitoring guide
+### For Custom Hooks
 
-#### Content
+See **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** for:
+- Available custom hooks
+- Usage examples
+- API documentation
 
-- **[content-creation.md](./guides/content-creation.md)** - Content creation guidelines
+### For Content Creation
 
-## 🎯 Quick Navigation
+See **[content-creation.md](./guides/content-creation.md)** for:
+- How to create blog articles
+- Content guidelines
+- Contribution workflow
 
-### For New Team Members
-
-1. Start with **[testing.md](./guides/testing.md)** to understand the testing strategy
-2. Use **[testing-quick-reference.md](./guides/testing-quick-reference.md)** for daily development
-3. Reference **[performance.md](./guides/performance.md)** for performance optimization
-
-### For Daily Development
-
-- **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Essential commands and troubleshooting
-- **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing explanations
-
-### For Specific Topics
-
-- **Visual Testing**: [visual-regression.md](./guides/visual-regression.md)
-- **Performance**: [performance.md](./guides/performance.md)
-- **Content**: [content-creation.md](./guides/content-creation.md)
-
-## 📊 Current Project Status
-
-- **Unit Tests**: 94.88% coverage (exceeds 85% target)
-- **Integration Tests**: 5 comprehensive test suites
-- **E2E Tests**: 92 tests across 4 browsers
-- **Visual Regression**: 23 tests per browser
-- **Accessibility**: WCAG 2.1 AA compliance
-- **Performance**: Lighthouse CI with budgets
-- **Bundle Analysis**: Real-time monitoring with budgets
-- **Web Vitals Tracking**: Core Web Vitals collection
-
-## 🔄 Documentation Updates
-
-This documentation is maintained by the CommunityRule development team and updated regularly.
-
-## 📚 Additional Resources
+## Additional Resources
 
 - **Vitest Documentation**: https://vitest.dev/
 - **Playwright Documentation**: https://playwright.dev/

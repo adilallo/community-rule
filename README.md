@@ -170,13 +170,10 @@ community-rule/
 │   └── runner-config.yaml      # Runner configuration
 ├── docs/                         # Documentation
 │   ├── README.md               # Documentation index
-│   └── guides/                 # Comprehensive guides
-│       ├── testing.md         # Testing strategy
-│       ├── testing-framework.md # Testing framework details
-│       ├── testing-quick-reference.md # Quick reference
-│       ├── performance.md     # Performance optimization
-│       ├── visual-regression.md # Visual testing
-│       └── content-creation.md # Content guidelines
+│   ├── TESTING_GUIDE.md        # Testing guide
+│   ├── CUSTOM_HOOKS.md         # Custom hooks documentation
+│   └── guides/                 # Guides
+│       └── content-creation.md # Content creation guide
 ├── scripts/                      # Utility scripts
 │   ├── start-runner.sh        # Start Gitea runner
 │   ├── status-runner.sh       # Check runner status
@@ -207,16 +204,16 @@ community-rule/
 ## 📖 Documentation
 
 - **[Documentation Index](docs/README.md)** - Complete documentation guide
-- **[Testing Guides](docs/guides/)** - Testing strategy, framework, and quick reference
-- **[Performance Guide](docs/guides/performance.md)** - Performance optimization guide
-- **[Visual Regression Guide](docs/guides/visual-regression.md)** - Visual testing guide
+- **[Testing Guide](docs/TESTING_GUIDE.md)** - Testing strategy, component tests, E2E tests, and accessibility
+- **[Custom Hooks](docs/CUSTOM_HOOKS.md)** - Documentation for custom React hooks
+- **[Content Creation Guide](docs/guides/content-creation.md)** - Guide for creating blog content
 - **[Storybook](http://localhost:6006)** - Component documentation (local)
 
 ## 🤝 Contributing
 
 1. **Fork the repository**
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Write tests first** (see [Testing Guide](docs/guides/testing.md))
+3. **Write tests first** (see [Testing Guide](docs/TESTING_GUIDE.md))
 4. **Make your changes**
 5. **Run tests**: `npm test && npm run e2e`
 6. **Commit changes**: `git commit -m "feat: add amazing feature"`
