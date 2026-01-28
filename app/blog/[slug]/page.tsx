@@ -162,7 +162,11 @@ export default async function BlogPostPage({ params }: PageProps) {
     return scoredPosts
       .sort((a, b) => b.score - a.score)
       .slice(0, limit)
-      .map(({ score, ...post }) => post); // Remove score from final result
+      .map(({ score, ...post }) => {
+        // Score used for sorting, removed from final result
+        void score;
+        return post;
+      });
   };
 
   const relatedArticles = getRelatedArticles(post, allPosts);

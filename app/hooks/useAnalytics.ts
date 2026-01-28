@@ -28,20 +28,20 @@ interface AnalyticsEvent {
 }
 
 interface UseAnalyticsReturn {
-  trackEvent: (event: AnalyticsEvent) => void;
+  trackEvent: (_event: AnalyticsEvent) => void;
   trackCustomEvent: (
-    event: string,
-    data: Record<string, unknown>,
-    callback?: (data: Record<string, unknown>) => void,
+    _event: string,
+    _data: Record<string, unknown>,
+    _callback?: (_data: Record<string, unknown>) => void,
   ) => void;
 }
 
 declare global {
   interface Window {
     gtag?: (
-      command: string,
-      eventName: string,
-      params?: Record<string, unknown>,
+      _command: string,
+      _eventName: string,
+      _params?: Record<string, unknown>,
     ) => void;
   }
 }
@@ -64,7 +64,7 @@ export function useAnalytics(): UseAnalyticsReturn {
   const trackCustomEvent = (
     event: string,
     data: Record<string, unknown>,
-    callback?: (data: Record<string, unknown>) => void,
+    callback?: (_data: Record<string, unknown>) => void,
   ) => {
     // Execute custom callback if provided
     if (callback) {

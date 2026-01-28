@@ -6,12 +6,12 @@ interface SwitchProps extends Omit<
 > {
   checked?: boolean;
   onChange?: (
-    e:
+    _e:
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   state?: "default" | "hover" | "focus";
   label?: string;
   className?: string;

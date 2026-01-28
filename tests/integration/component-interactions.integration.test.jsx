@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi, describe, test, expect, afterEach } from "vitest";
+import { describe, test, expect, afterEach } from "vitest";
 import HeroBanner from "../../app/components/HeroBanner";
 import NumberedCards from "../../app/components/NumberedCards";
 import RuleStack from "../../app/components/RuleStack";

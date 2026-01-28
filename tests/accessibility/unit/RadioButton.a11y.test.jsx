@@ -168,7 +168,6 @@ describe("RadioButton Accessibility", () => {
   });
 
   it("maintains focus management", async () => {
-    const user = userEvent.setup();
     const handleChange = vi.fn();
 
     const { rerender } = render(

@@ -13,7 +13,7 @@ interface AskOrganizerProps {
   buttonHref?: string;
   className?: string;
   variant?: "centered" | "left-aligned" | "compact" | "inverse";
-  onContactClick?: (data: {
+  onContactClick?: (_data: {
     event: string;
     component: string;
     variant: string;

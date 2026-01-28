@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { axe, toHaveNoViolations } from "jest-axe";
 import Select from "../../app/components/Select";
 
@@ -136,7 +136,6 @@ describe("Select Component Accessibility", () => {
 
   describe("Screen Reader Support", () => {
     it("announces selected option", async () => {
-      const user = userEvent.setup();
       render(<Select {...defaultProps} value="option2" />);
 
       const selectButton = screen.getByRole("button");

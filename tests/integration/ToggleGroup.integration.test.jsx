@@ -120,7 +120,7 @@ describe("ToggleGroup Integration", () => {
   });
 
   it("handles state changes", async () => {
-    const { rerender } = render(<TestForm />);
+    render(<TestForm />);
     const toggleGroups = screen.getAllByRole("button");
 
     // Initially, left should be selected
@@ -182,7 +182,7 @@ describe("ToggleGroup Integration", () => {
   });
 
   it("handles rapid state changes", async () => {
-    const { rerender } = render(<TestForm />);
+    render(<TestForm />);
     const toggleGroups = screen.getAllByRole("button");
 
     // Rapidly change states

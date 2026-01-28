@@ -102,9 +102,9 @@ test.describe("Accessibility Testing", () => {
         // Test Enter key activation
         await page.keyboard.press("Enter");
         await page.waitForTimeout(100); // Brief pause to see if action occurs
-      } catch (error) {
+      } catch (_error) {
         // If focus fails, skip this button
-        console.log(`Could not focus button ${i}: ${error.message}`);
+        console.log(`Could not focus button ${i}: ${_error.message}`);
         continue;
       }
     }
@@ -332,7 +332,7 @@ test.describe("Accessibility Testing", () => {
 
       // Page should handle errors gracefully
       await expect(page.locator("body")).toBeVisible();
-    } catch (error) {
+    } catch (_error) {
       // If reload fails, that's also acceptable - page should handle errors gracefully
       await expect(page.locator("body")).toBeVisible();
     }

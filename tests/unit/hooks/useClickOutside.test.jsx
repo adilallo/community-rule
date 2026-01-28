@@ -4,7 +4,7 @@ import { useClickOutside } from "../../../app/hooks/useClickOutside";
 import { useRef } from "react";
 
 describe("useClickOutside", () => {
-  let handler: ReturnType<typeof vi.fn>;
+  let handler;
 
   beforeEach(() => {
     handler = vi.fn();
@@ -55,7 +55,7 @@ describe("useClickOutside", () => {
   });
 
   test("does not call handler when disabled", () => {
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const ref = useRef(null);
       useClickOutside([ref], handler, false);
       return ref;

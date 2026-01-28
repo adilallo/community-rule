@@ -5,9 +5,6 @@ import {
   CheckedInteraction,
   StandardInteraction,
   InverseInteraction,
-  KeyboardInteraction,
-  AccessibilityInteraction,
-  FormIntegration,
 } from "../tests/storybook/Checkbox.interactions.test";
 
 export default {

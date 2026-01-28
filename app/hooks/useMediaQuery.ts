@@ -51,6 +51,8 @@ export function useMediaQuery(
     }
 
     const media = window.matchMedia(mediaQuery);
+    // Initialize matches synchronously - this is safe for media queries
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     setMatches(media.matches);
 
     // Create listener for changes

@@ -57,7 +57,8 @@ export const Default = {
 };
 
 export const AllVariants = {
-  render: (args) => (
+  // eslint-disable-next-line no-unused-vars
+  render: (_args) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
       <RuleCard
         title="Consensus clusters"

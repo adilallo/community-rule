@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 9999",
     "postinstall": "npm rebuild lightningcss",
     "storybook": "storybook dev -p 6006",
     "storybook:local": "storybook dev -p 6006",

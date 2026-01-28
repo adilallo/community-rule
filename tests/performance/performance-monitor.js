@@ -288,7 +288,7 @@ class WebPerformanceMonitor extends PerformanceMonitor {
   /**
    * Measure page load performance
    */
-  async measurePageLoad(url) {
+  async measurePageLoad() {
     return this.measureFunction("page_load", async () => {
       const start = performance.now();
 
@@ -337,7 +337,7 @@ class PlaywrightPerformanceMonitor extends PerformanceMonitor {
         // Try to wait for the page to be in a usable state
         try {
           await this.page.waitForLoadState("domcontentloaded", { timeout: 10000 });
-        } catch (e) {
+        } catch {
           throw new Error(`Page failed to load: ${error.message}`);
         }
       } else {

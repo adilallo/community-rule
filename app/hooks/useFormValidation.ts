@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 /**
  * Validation rule function type
  */
-export type ValidationRule<T = string> = (value: T) => string | null;
+export type ValidationRule<T = string> = (_value: T) => string | null;
 
 /**
  * Validation rules for common patterns

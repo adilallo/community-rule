@@ -1,9 +1,5 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [
@@ -64,7 +60,7 @@ export default defineConfig({
       ],
       thresholds: { lines: 50, functions: 50, statements: 50, branches: 50 },
       // Disable coverage collection in CI to prevent test failures
-      enabled: !process.env.CI,
+      enabled: !(typeof process !== "undefined" && process.env.CI),
     },
     pool: "threads", // Use threads for better performance
     testTimeout: 60000, // 60s timeout for all tests

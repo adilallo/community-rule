@@ -13,7 +13,7 @@ interface QuoteBlockProps {
   avatarSrc?: string;
   id?: string;
   fallbackAvatarSrc?: string;
-  onError?: (error: {
+  onError?: (_error: {
     type: string;
     message: string;
     author?: string;

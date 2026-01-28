@@ -239,7 +239,7 @@ test.describe("Edge Cases and Error Scenarios", () => {
       // Trigger a harmless error
       try {
         throw new Error("Test error");
-      } catch (e) {
+      } catch (_e) {
         // Error handled
       }
 

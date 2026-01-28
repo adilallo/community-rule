@@ -33,27 +33,6 @@ const mockBlogPost = {
     "<p>This is the main content of the test article.</p><p>It has multiple paragraphs.</p>",
 };
 
-const mockRelatedPosts = [
-  {
-    slug: "related-article-1",
-    frontmatter: {
-      title: "Related Article 1",
-      description: "First related article",
-      author: "Test Author",
-      date: "2025-04-14",
-    },
-  },
-  {
-    slug: "related-article-2",
-    frontmatter: {
-      title: "Related Article 2",
-      description: "Second related article",
-      author: "Test Author",
-      date: "2025-04-13",
-    },
-  },
-];
-
 describe("Content Page Rendering E2E", () => {
   beforeEach(() => {
     vi.clearAllMocks();

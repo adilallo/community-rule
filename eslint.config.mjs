@@ -7,6 +7,8 @@ import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";
 import nextPlugin from "@next/eslint-plugin-next";
 import globals from "globals";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const eslintConfig = [
   // Base JavaScript recommended rules
@@ -38,12 +40,28 @@ const eslintConfig = [
         ...globals.node,
         ...globals.browser,
         ...globals.es2021,
+        React: "readonly",
       },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
+    },
+    plugins: {
+      react,
+      "react-hooks": reactHooks,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off", // React 19 doesn't require React import
+      "react/prop-types": "off", // Using TypeScript for prop validation
     },
   },
   // TypeScript files configuration
@@ -55,6 +73,8 @@ const eslintConfig = [
         ...globals.node,
         ...globals.browser,
         ...globals.es2021,
+        React: "readonly",
+        process: "readonly",
       },
       parserOptions: {
         ecmaVersion: "latest",
@@ -68,13 +88,33 @@ const eslintConfig = [
     plugins: {
       "@typescript-eslint": tseslint,
       "@next/next": nextPlugin,
+      react,
+      "react-hooks": reactHooks,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
     rules: {
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off", // React 19 doesn't require React import
+      "react/prop-types": "off", // Using TypeScript for prop validation
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
         },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
@@ -90,6 +130,31 @@ const eslintConfig = [
       // Basic rules
       "react/no-unescaped-entities": "off",
       "no-console": "warn",
+    },
+  },
+  // Config files - allow Node.js globals
+  {
+    files: ["*.config.{js,mjs,ts}", "scripts/**/*.{js,ts}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        process: "readonly",
+        require: "readonly",
+        console: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        module: "readonly",
+        exports: "readonly",
+      },
+    },
+  },
+  // Storybook files - disable React hooks rules (render functions are called by Storybook)
+  // This must come AFTER the general rules to override them
+  {
+    files: ["**/*.stories.{js,jsx,ts,tsx}"],
+    rules: {
+      "react-hooks/rules-of-hooks": "off",
+      "react-hooks/exhaustive-deps": "off",
     },
   },
 ];

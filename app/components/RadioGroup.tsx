@@ -12,7 +12,7 @@ interface RadioOption {
 interface RadioGroupProps {
   name?: string;
   value?: string;
-  onChange?: (data: { value: string }) => void;
+  onChange?: (_data: { value: string }) => void;
   mode?: "standard" | "inverse";
   state?: "default" | "hover" | "focus";
   disabled?: boolean;

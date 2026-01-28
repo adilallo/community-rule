@@ -14,12 +14,12 @@ interface RuleCardProps {
 declare global {
   interface Window {
     gtag?: (
-      command: string,
-      eventName: string,
-      params?: Record<string, unknown>,
+      _command: string,
+      _eventName: string,
+      _params?: Record<string, unknown>,
     ) => void;
     analytics?: {
-      track: (eventName: string, params?: Record<string, unknown>) => void;
+      track: (_eventName: string, _params?: Record<string, unknown>) => void;
     };
   }
 }

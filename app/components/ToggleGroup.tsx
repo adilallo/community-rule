@@ -11,12 +11,12 @@ interface ToggleGroupProps extends Omit<
   showText?: boolean;
   ariaLabel?: string;
   onChange?: (
-    e:
+    _e:
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
 }
 
 const ToggleGroup = memo(

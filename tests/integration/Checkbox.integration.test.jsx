@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { expect, test, describe, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import Checkbox from "../../app/components/Checkbox";

@@ -60,7 +60,7 @@ vi.mock("../../app/components/ContentBanner", () => {
 
 vi.mock("../../app/components/RelatedArticles", () => {
   return {
-    default: ({ relatedPosts, currentPostSlug }) => (
+    default: ({ relatedPosts }) => (
       <div data-testid="related-articles">
         <h2>Related Articles</h2>
         {relatedPosts.map((post) => (

@@ -15,9 +15,9 @@ interface TextAreaProps extends Omit<
   label?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onChange?: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onFocus?: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
   className?: string;
   rows?: number;
 }

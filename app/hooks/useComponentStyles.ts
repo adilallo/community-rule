@@ -24,7 +24,7 @@ export interface UseComponentStylesOptions {
   error?: boolean;
   sizeStyles: SizeStyleConfig;
   stateStyles: StateStyleConfig;
-  getStateStyles?: (params: {
+  getStateStyles?: (_params: {
     state?: string;
     disabled: boolean;
     error: boolean;

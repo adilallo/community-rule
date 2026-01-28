@@ -19,15 +19,15 @@ import { useCallback } from "react";
  * ```
  */
 interface FormFieldHandlers<T = HTMLElement> {
-  onChange?: (e: React.ChangeEvent<T>) => void;
-  onFocus?: (e: React.FocusEvent<T>) => void;
-  onBlur?: (e: React.FocusEvent<T>) => void;
+  onChange?: (_e: React.ChangeEvent<T>) => void;
+  onFocus?: (_e: React.FocusEvent<T>) => void;
+  onBlur?: (_e: React.FocusEvent<T>) => void;
 }
 
 interface UseFormFieldReturn<T = HTMLElement> {
-  handleChange: (e: React.ChangeEvent<T>) => void;
-  handleFocus: (e: React.FocusEvent<T>) => void;
-  handleBlur: (e: React.FocusEvent<T>) => void;
+  handleChange: (_e: React.ChangeEvent<T>) => void;
+  handleFocus: (_e: React.FocusEvent<T>) => void;
+  handleBlur: (_e: React.FocusEvent<T>) => void;
 }
 
 export function useFormField<T extends HTMLElement = HTMLElement>(

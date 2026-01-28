@@ -19,7 +19,7 @@ import { useEffect, RefObject } from "react";
  */
 export function useClickOutside(
   refs: Array<RefObject<HTMLElement>>,
-  handler: (event: MouseEvent | TouchEvent) => void,
+  handler: (_event: MouseEvent | TouchEvent) => void,
   enabled: boolean = true,
 ): void {
   useEffect(() => {
