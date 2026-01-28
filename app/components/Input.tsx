@@ -151,13 +151,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
      `.trim();
 
     // Form field handlers with disabled state handling
-    const { handleChange, handleFocus, handleBlur } = useFormField<
-      HTMLInputElement
-    >(disabled, {
-      onChange,
-      onFocus,
-      onBlur,
-    });
+    const { handleChange, handleFocus, handleBlur } =
+      useFormField<HTMLInputElement>(disabled, {
+        onChange,
+        onFocus,
+        onBlur,
+      });
 
     return (
       <div className={containerClasses}>

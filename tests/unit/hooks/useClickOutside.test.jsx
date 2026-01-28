@@ -26,7 +26,9 @@ describe("useClickOutside", () => {
     result.current.current = div;
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).toHaveBeenCalledTimes(1);
@@ -62,7 +64,9 @@ describe("useClickOutside", () => {
     });
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).not.toHaveBeenCalled();
@@ -84,7 +88,9 @@ describe("useClickOutside", () => {
     result.current.ref2.current = div2;
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).toHaveBeenCalledTimes(1);

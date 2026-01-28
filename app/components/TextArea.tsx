@@ -155,13 +155,12 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
      `.trim();
 
     // Form field handlers with disabled state handling
-    const { handleChange, handleFocus, handleBlur } = useFormField<
-      HTMLTextAreaElement
-    >(disabled, {
-      onChange,
-      onFocus,
-      onBlur,
-    });
+    const { handleChange, handleFocus, handleBlur } =
+      useFormField<HTMLTextAreaElement>(disabled, {
+        onChange,
+        onFocus,
+        onBlur,
+      });
 
     return (
       <div className={containerClasses}>

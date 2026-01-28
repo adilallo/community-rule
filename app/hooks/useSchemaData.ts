@@ -144,7 +144,12 @@ export function useSchemaData(
         type: "BreadcrumbList";
         items: Array<{ name: string; url: string }>;
       },
-): SchemaOrganization | SchemaWebSite | SchemaHowTo | SchemaArticle | SchemaBreadcrumbList {
+):
+  | SchemaOrganization
+  | SchemaWebSite
+  | SchemaHowTo
+  | SchemaArticle
+  | SchemaBreadcrumbList {
   return useMemo(() => {
     switch (config.type) {
       case "Organization":
@@ -216,7 +221,9 @@ export function useSchemaData(
               "@id": config.mainEntityOfPage,
             },
           }),
-          ...(config.articleSection && { articleSection: config.articleSection }),
+          ...(config.articleSection && {
+            articleSection: config.articleSection,
+          }),
           ...(config.keywords && { keywords: config.keywords }),
         } as SchemaArticle;
 

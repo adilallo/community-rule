@@ -22,24 +22,30 @@ export const validationRules = {
     return emailRegex.test(value) ? null : "Please enter a valid email address";
   },
 
-  minLength: (min: number) => (value: string): string | null => {
-    if (!value) return null;
-    return value.length >= min
-      ? null
-      : `Must be at least ${min} characters long`;
-  },
+  minLength:
+    (min: number) =>
+    (value: string): string | null => {
+      if (!value) return null;
+      return value.length >= min
+        ? null
+        : `Must be at least ${min} characters long`;
+    },
 
-  maxLength: (max: number) => (value: string): string | null => {
-    if (!value) return null;
-    return value.length <= max
-      ? null
-      : `Must be no more than ${max} characters long`;
-  },
+  maxLength:
+    (max: number) =>
+    (value: string): string | null => {
+      if (!value) return null;
+      return value.length <= max
+        ? null
+        : `Must be no more than ${max} characters long`;
+    },
 
-  pattern: (regex: RegExp, message: string) => (value: string): string | null => {
-    if (!value) return null;
-    return regex.test(value) ? null : message;
-  },
+  pattern:
+    (regex: RegExp, message: string) =>
+    (value: string): string | null => {
+      if (!value) return null;
+      return regex.test(value) ? null : message;
+    },
 };
 
 /**
@@ -182,13 +188,16 @@ export function useFormValidation(options: UseFormValidationOptions) {
   }, [initialValues]);
 
   // Set field value programmatically
-  const setValue = useCallback((name: string, value: string) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
-    if (validateOnChange) {
-      const error = validateField(name, value);
-      setErrors((prev) => ({ ...prev, [name]: error }));
-    }
-  }, [validateOnChange, validateField]);
+  const setValue = useCallback(
+    (name: string, value: string) => {
+      setValues((prev) => ({ ...prev, [name]: value }));
+      if (validateOnChange) {
+        const error = validateField(name, value);
+        setErrors((prev) => ({ ...prev, [name]: error }));
+      }
+    },
+    [validateOnChange, validateField],
+  );
 
   return {
     values,

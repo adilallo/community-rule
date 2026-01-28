@@ -200,7 +200,7 @@ describe("BlogPostPage", () => {
     await waitFor(() => {
       expect(screen.getByTestId("related-articles")).toBeInTheDocument();
     });
-    
+
     expect(screen.getByText("Related Articles")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-1")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-2")).toBeInTheDocument();

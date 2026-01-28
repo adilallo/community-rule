@@ -15,6 +15,7 @@ Detects clicks outside of specified elements. Useful for closing dropdowns, moda
 **Location:** `app/hooks/useClickOutside.ts`
 
 **Usage:**
+
 ```tsx
 import { useClickOutside } from "../hooks";
 
@@ -26,6 +27,7 @@ useClickOutside([menuRef, buttonRef], () => setIsOpen(false), isOpen);
 ```
 
 **Parameters:**
+
 - `refs`: Array of refs to elements that should not trigger the callback
 - `handler`: Callback function to execute when clicking outside
 - `enabled`: Whether the hook is enabled (default: true)
@@ -41,6 +43,7 @@ Centralized analytics tracking for component interactions. Supports both Google 
 **Location:** `app/hooks/useAnalytics.ts`
 
 **Usage:**
+
 ```tsx
 import { useAnalytics } from "../hooks";
 
@@ -66,6 +69,7 @@ trackCustomEvent(
 ```
 
 **Returns:**
+
 - `trackEvent`: Function to track standard analytics events
 - `trackCustomEvent`: Function to track custom events with optional callback
 
@@ -80,6 +84,7 @@ Generates unique component IDs for accessibility. Provides consistent ID generat
 **Location:** `app/hooks/useComponentId.ts`
 
 **Usage:**
+
 ```tsx
 import { useComponentId } from "../hooks";
 
@@ -89,10 +94,12 @@ const { id, labelId } = useComponentId("input", props.id);
 ```
 
 **Parameters:**
+
 - `prefix`: Prefix for the generated ID (e.g., "input", "select")
 - `providedId`: Optional ID provided via props (takes precedence)
 
 **Returns:**
+
 - `id`: Component ID
 - `labelId`: Associated label ID for accessibility
 
@@ -107,6 +114,7 @@ Manages form field event handlers with disabled state handling. Ensures handlers
 **Location:** `app/hooks/useFormField.ts`
 
 **Usage:**
+
 ```tsx
 import { useFormField } from "../hooks";
 
@@ -117,18 +125,16 @@ const { handleChange, handleFocus, handleBlur } = useFormField(disabled, {
 });
 
 // Use in component
-<input
-  onChange={handleChange}
-  onFocus={handleFocus}
-  onBlur={handleBlur}
-/>
+<input onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur} />;
 ```
 
 **Parameters:**
+
 - `disabled`: Whether the field is disabled
 - `handlers`: Object containing onChange, onFocus, onBlur handlers
 
 **Returns:**
+
 - `handleChange`: Wrapped onChange handler
 - `handleFocus`: Wrapped onFocus handler
 - `handleBlur`: Wrapped onBlur handler
@@ -144,6 +150,7 @@ Manages component size and state styles. Provides a consistent pattern for styli
 **Location:** `app/hooks/useComponentStyles.ts`
 
 **Usage:**
+
 ```tsx
 import { useComponentStyles } from "../hooks";
 
@@ -178,6 +185,7 @@ Generates Schema.org structured data (JSON-LD) for SEO and search engines.
 **Location:** `app/hooks/useSchemaData.ts`
 
 **Usage:**
+
 ```tsx
 import { useSchemaData } from "../hooks";
 
@@ -205,10 +213,11 @@ const orgSchema = useSchemaData({
 <script
   type="application/ld+json"
   dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
-/>
+/>;
 ```
 
 **Supported Types:**
+
 - `Organization` - Organization information
 - `WebSite` - Website navigation and search
 - `HowTo` - Step-by-step instructions
@@ -226,6 +235,7 @@ Responsive breakpoint detection using window.matchMedia.
 **Location:** `app/hooks/useMediaQuery.ts`
 
 **Usage:**
+
 ```tsx
 import { useMediaQuery, useIsMobile, useIsDesktop } from "../hooks";
 
@@ -242,6 +252,7 @@ const isDesktop = useIsDesktop(); // lg breakpoint and above
 ```
 
 **Available Breakpoints:**
+
 - `sm`: 640px
 - `md`: 768px
 - `lg`: 1024px
@@ -259,6 +270,7 @@ Form validation with field-level error handling.
 **Location:** `app/hooks/useFormValidation.ts`
 
 **Usage:**
+
 ```tsx
 import { useFormValidation, validationRules } from "../hooks";
 
@@ -275,10 +287,7 @@ const {
   initialValues: { email: "", password: "" },
   validationRules: {
     email: [validationRules.required, validationRules.email],
-    password: [
-      validationRules.required,
-      validationRules.minLength(8),
-    ],
+    password: [validationRules.required, validationRules.minLength(8)],
   },
   validateOnChange: true,
   validateOnBlur: true,
@@ -290,11 +299,14 @@ const {
   value={values.email}
   onChange={handleChange}
   onBlur={handleBlur}
-/>
-{errors.email && touched.email && <span>{errors.email}</span>}
+/>;
+{
+  errors.email && touched.email && <span>{errors.email}</span>;
+}
 ```
 
 **Available Validation Rules:**
+
 - `validationRules.required` - Field is required
 - `validationRules.email` - Valid email format
 - `validationRules.minLength(n)` - Minimum length
@@ -302,6 +314,7 @@ const {
 - `validationRules.pattern(regex, message)` - Custom regex pattern
 
 **Returns:**
+
 - `values` - Current form values
 - `errors` - Field error messages
 - `touched` - Fields that have been interacted with
@@ -317,6 +330,7 @@ const {
 ## Best Practices
 
 1. **Import from index:** Always import hooks from `app/hooks` index file:
+
    ```tsx
    import { useAnalytics, useComponentId } from "../hooks";
    ```

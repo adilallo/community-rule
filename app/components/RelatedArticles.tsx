@@ -108,7 +108,7 @@ const RelatedArticles = memo<RelatedArticlesProps>(
     }
 
     return (
-      <section 
+      <section
         className="py-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)]"
         data-testid="related-articles"
       >
