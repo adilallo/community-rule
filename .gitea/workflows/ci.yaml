@@ -10,8 +10,6 @@ on:
 jobs:
   test:
     runs-on: [self-hosted, macos-latest]
-    strategy:
-      matrix: { node-version: [18, 20] }
     env:
       NODE_OPTIONS: "--max_old_space_size=8192 --max_semi_space_size=128"
       CI: true
@@ -28,9 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
+        if: ${{ github.server_url == 'https://github.com' }}
+        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v4
+        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
+        with: { node-version: 20 }
       - run: npm ci
       - name: Show system info
         run: |

@@ -2,6 +2,11 @@
 
 A Next.js application for community decision-making and governance documentation.
 
+## 📋 Requirements
+
+- **Node.js**: 20.0.0 or higher (LTS recommended)
+- **npm**: 10.0.0 or higher
+
 ## 🚀 Getting Started
 
 Run the development server:
@@ -194,10 +199,11 @@ community-rule/
 
 ## 🔧 Technology Stack
 
-- **Framework**: Next.js 15 + React 19
+- **Framework**: Next.js 16 + React 19
+- **Runtime**: Node.js 20+ (LTS)
 - **Styling**: Tailwind CSS 4
 - **Testing**: Vitest + Playwright + Lighthouse CI
-- **Documentation**: Storybook 9
+- **Documentation**: Storybook 10
 - **CI/CD**: Gitea Actions
 - **Hosting**: Gitea (Git hosting)
 
