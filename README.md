@@ -14,28 +14,22 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🧪 Testing Framework
 
-This project includes a comprehensive testing framework with multiple layers of testing:
+This project uses a simplified, component‑first testing model:
+
+- **Component tests (Vitest + RTL)** live in `tests/components/` with a single file per component.
+- **E2E tests (Playwright)** cover critical user journeys and visual regression.
 
 ### Quick Test Commands
 
 ```bash
-# Unit tests with coverage
+# All component tests with coverage
 npm test
 
-# E2E tests
-npm run e2e
+# Component tests only (new structure)
+npm run test:component
 
-# Performance tests
-npm run lhci
-
-# Storybook tests
-npm run test:sb
-
-# Performance monitoring
-npm run test:performance    # Comprehensive performance testing
-npm run bundle:analyze      # Bundle size analysis
-npm run web-vitals:track   # Web Vitals tracking
-npm run monitor:all         # All monitoring tools
+# E2E tests only
+npm run test:e2e
 ```
 
 ### Test Coverage
@@ -56,7 +50,7 @@ npm run monitor:all         # All monitoring tools
 - **Performance monitoring**
 - **Code coverage reporting**
 
-📖 **For detailed testing documentation, see [docs/README.md](docs/README.md)**
+📖 **For detailed testing documentation, see `docs/TESTING_GUIDE.md` and [docs/README.md](docs/README.md)**
 
 ## ⚡ Performance Optimizations
 
@@ -144,10 +138,12 @@ The Storybook configuration automatically detects the environment:
 
 ### Testing
 
-- `npm test` - Run unit tests with coverage
+- `npm test` - Run all component tests with coverage
+- `npm run test:component` - Run tests in `tests/components/` only
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:ui` - Run tests with UI
-- `npm run e2e` - Run E2E tests
+- `npm run test:e2e` - Run E2E tests only
+- `npm run e2e` - Alias for Playwright E2E tests
 - `npm run e2e:ui` - Run E2E tests with UI
 - `npm run e2e:serve` - Start dev server and run E2E tests
 - `npm run lhci` - Run performance tests
@@ -187,10 +183,12 @@ community-rule/
 │   ├── status-runner.sh       # Check runner status
 │   └── stop-runner.sh         # Stop Gitea runner
 ├── tests/                        # Test files
-│   ├── unit/                   # Unit tests
-│   ├── integration/            # Integration tests
-│   ├── e2e/                    # E2E tests
-│   └── accessibility/          # Accessibility tests
+│   ├── components/             # Component tests (Vitest + RTL)
+│   ├── pages/                 # Page-level tests
+│   ├── e2e/                   # E2E tests (Playwright)
+│   ├── utils/                 # Test utilities (componentTestSuite, etc.)
+│   ├── msw/                   # MSW server setup
+│   └── accessibility/         # E2E accessibility checks
 ├── .storybook/                  # Storybook configuration
 ├── .gitea/                      # Gitea Actions workflows
 │   └── workflows/

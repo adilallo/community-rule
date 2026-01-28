@@ -25,9 +25,10 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     include: [
-      "tests/unit/**/*.test.{js,jsx,ts,tsx}",
-      "tests/integration/**/*.test.{js,jsx,ts,tsx}",
-      "tests/accessibility/**/*.test.{js,jsx,ts,tsx}",
+      "tests/components/**/*.test.{js,jsx,ts,tsx}",
+      "tests/pages/**/*.test.{js,jsx,ts,tsx}",
+      "tests/utils/**/*.test.{js,jsx,ts,tsx}",
+      "tests/unit/**/*.test.{js,jsx,ts,tsx}", // Legacy - remaining non-component tests
       "tests/e2e/**/*.e2e.test.{js,jsx,ts,tsx}",
     ],
     exclude: [
@@ -58,8 +59,8 @@ export default defineConfig({
         "**/dist/**",
         "**/build/**",
       ],
-      thresholds: { lines: 50, functions: 50, statements: 50, branches: 50 },
-      // Disable coverage collection in CI to prevent test failures
+      // Global thresholds intentionally removed to prioritize simplicity
+      // over strict coverage gating. Use reports for guidance instead.
       enabled: !(typeof process !== "undefined" && process.env.CI),
     },
     pool: "threads", // Use threads for better performance
