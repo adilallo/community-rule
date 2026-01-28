@@ -1,5 +1,5 @@
 import React from "react";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, test, describe, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Toggle from "../../app/components/Toggle";

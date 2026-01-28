@@ -16,7 +16,7 @@ vi.mock("next/dynamic", () => {
       return function DynamicComponent(props: any) {
         const [Component, setComponent] = React.useState(null);
         const [loading, setLoading] = React.useState(true);
-        
+
         React.useEffect(() => {
           importFn()
             .then((mod: any) => {
@@ -27,15 +27,15 @@ vi.mock("next/dynamic", () => {
               setLoading(false);
             });
         }, []);
-        
+
         if (loading && options?.loading) {
           return options.loading();
         }
-        
+
         if (Component) {
           return React.createElement(Component, props);
         }
-        
+
         return null;
       };
     },
@@ -49,18 +49,19 @@ Object.defineProperty(window, "matchMedia", {
     // Parse the media query to determine if it matches
     const minWidthMatch = query.match(/min-width:\s*(\d+)px/);
     const maxWidthMatch = query.match(/max-width:\s*(\d+)px/);
-    
+
     // Use window.innerWidth if set by tests, otherwise default to desktop (1200px)
     // This allows tests to override viewport width by setting window.innerWidth
-    const viewportWidth = (typeof window !== "undefined" && window.innerWidth) || 1200;
+    const viewportWidth =
+      (typeof window !== "undefined" && window.innerWidth) || 1200;
     let matches = true;
-    
+
     if (minWidthMatch) {
       matches = viewportWidth >= parseInt(minWidthMatch[1], 10);
     } else if (maxWidthMatch) {
       matches = viewportWidth <= parseInt(maxWidthMatch[1], 10);
     }
-    
+
     return {
       matches,
       media: query,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import ContextMenu from "../../app/components/ContextMenu";
 import ContextMenuItem from "../../app/components/ContextMenuItem";
 import ContextMenuSection from "../../app/components/ContextMenuSection";
@@ -77,7 +77,6 @@ describe("ContextMenu Components Integration", () => {
     it("shows submenu indicators correctly", () => {
       render(<TestMenu onItemClick={vi.fn()} selectedValue="" />);
 
-      const setting1 = screen.getByText("Setting 1");
       const arrow = screen
         .getByRole("menuitem", { name: "Setting 1" })
         .querySelector("svg");
@@ -87,7 +86,6 @@ describe("ContextMenu Components Integration", () => {
 
   describe("Keyboard Navigation", () => {
     it("navigates through menu items with arrow keys", async () => {
-      const user = userEvent.setup();
       render(<TestMenu onItemClick={vi.fn()} selectedValue="" />);
 
       const items = screen.getAllByRole("menuitem");
@@ -137,7 +135,6 @@ describe("ContextMenu Components Integration", () => {
     });
 
     it("skips disabled items during navigation", async () => {
-      const user = userEvent.setup();
       render(<TestMenu onItemClick={vi.fn()} selectedValue="" />);
 
       const items = screen.getAllByRole("menuitem");
@@ -153,7 +150,7 @@ describe("ContextMenu Components Integration", () => {
   describe("Dynamic Menu Updates", () => {
     const DynamicMenu = ({ items, selectedValue, onItemClick }) => (
       <ContextMenu>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <ContextMenuItem
             key={item.id}
             onClick={() => onItemClick(item.id)}
@@ -301,7 +298,6 @@ describe("ContextMenu Components Integration", () => {
 
   describe("Performance", () => {
     it("handles large menu lists efficiently", async () => {
-      const user = userEvent.setup();
       const largeItems = Array.from({ length: 100 }, (_, i) => ({
         id: `item${i}`,
         label: `Item ${i}`,
@@ -329,7 +325,6 @@ describe("ContextMenu Components Integration", () => {
     });
 
     it("handles rapid state changes", async () => {
-      const user = userEvent.setup();
       const { rerender } = render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()} selected={false}>

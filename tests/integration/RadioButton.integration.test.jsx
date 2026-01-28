@@ -35,7 +35,6 @@ describe("RadioButton Integration", () => {
 
     render(<TestForm />);
 
-    const option1 = screen.getByText("Option 1").closest("label");
     const option2 = screen.getByText("Option 2").closest("label");
     const submitButton = screen.getByRole("button");
 
@@ -55,7 +54,6 @@ describe("RadioButton Integration", () => {
 
   it("handles keyboard navigation", async () => {
     const user = userEvent.setup();
-    const handleChange = vi.fn();
 
     function KeyboardForm() {
       const [value, setValue] = useState("option1");

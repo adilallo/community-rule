@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, memo } from "react";
+import { logger } from "../../lib/logger";
 
 interface VitalData {
   value: number;
@@ -50,7 +51,7 @@ const WebVitalsDashboard = memo(() => {
         const data = (await response.json()) as { metrics?: Metrics };
         setMetrics(data.metrics || {});
       } catch (error) {
-        console.error("Error fetching web vitals:", error);
+        logger.error("Error fetching web vitals:", error);
       } finally {
         setLoading(false);
       }

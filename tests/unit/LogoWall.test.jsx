@@ -1,6 +1,5 @@
 import { render, screen, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { vi, describe, test, expect, afterEach } from "vitest";
+import { describe, test, expect, afterEach } from "vitest";
 import LogoWall from "../../app/components/LogoWall";
 
 afterEach(() => {

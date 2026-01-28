@@ -10,7 +10,7 @@ interface CheckboxProps {
   disabled?: boolean;
   label?: string;
   className?: string;
-  onChange?: (data: {
+  onChange?: (_data: {
     checked: boolean;
     value?: string;
     event: React.MouseEvent | React.KeyboardEvent;

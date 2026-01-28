@@ -5,6 +5,7 @@ import Image from "next/image";
 import RuleCard from "./RuleCard";
 import Button from "./Button";
 import { getAssetPath } from "../../lib/assetUtils";
+import { logger } from "../../lib/logger";
 
 interface RuleStackProps {
   className?: string;
@@ -13,12 +14,12 @@ interface RuleStackProps {
 declare global {
   interface Window {
     gtag?: (
-      command: string,
-      eventName: string,
-      params?: Record<string, unknown>,
+      _command: string,
+      _eventName: string,
+      _params?: Record<string, unknown>,
     ) => void;
     analytics?: {
-      track: (eventName: string, params?: Record<string, unknown>) => void;
+      track: (_eventName: string, _params?: Record<string, unknown>) => void;
     };
   }
 }
@@ -38,7 +39,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
         });
       }
     }
-    console.log(`${templateName} template clicked`);
+    logger.debug(`${templateName} template clicked`);
   };
 
   return (

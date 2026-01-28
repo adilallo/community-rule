@@ -1,5 +1,6 @@
 import createMDX from "@next/mdx";
 
+/* eslint-env node */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance optimizations

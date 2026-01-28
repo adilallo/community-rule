@@ -8,7 +8,7 @@ interface RadioButtonProps {
   state?: "default" | "hover" | "focus";
   disabled?: boolean;
   label?: string;
-  onChange?: (data: { checked: boolean; value?: string }) => void;
+  onChange?: (_data: { checked: boolean; value?: string }) => void;
   id?: string;
   name?: string;
   value?: string;

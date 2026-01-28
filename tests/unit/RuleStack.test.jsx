@@ -1,6 +1,7 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
+import { logger } from "../../lib/logger";
 import RuleStack from "../../app/components/RuleStack";
 
 afterEach(() => {
@@ -99,16 +100,18 @@ describe("RuleStack Component", () => {
 
   test("handles template click events", async () => {
     const user = userEvent.setup();
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const debugSpy = vi
+      .spyOn(logger, "debug")
+      .mockImplementation(() => undefined);
 
     render(<RuleStack />);
 
     const consensusCard = screen.getByText("Consensus").closest("div");
     await user.click(consensusCard);
 
-    expect(consoleSpy).toHaveBeenCalledWith("Consensus template clicked");
+    expect(debugSpy).toHaveBeenCalledWith("Consensus template clicked");
 
-    consoleSpy.mockRestore();
+    debugSpy.mockRestore();
   });
 
   test("renders with proper semantic structure", () => {

@@ -1,7 +1,7 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi, beforeEach } from "vitest";
+import { expect, describe, it, vi, beforeEach } from "vitest";
 import { axe, toHaveNoViolations } from "jest-axe";
 import ContextMenu from "../../app/components/ContextMenu";
 import ContextMenuItem from "../../app/components/ContextMenuItem";

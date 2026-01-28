@@ -54,25 +54,25 @@ export const Variants = {
     children: "Button",
     size: "large",
   },
-  render: (args) => (
+  render: (_args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <Button {...args} variant="default">
+        <Button {..._args} variant="default">
           Default
         </Button>
-        <Button {...args} variant="secondary">
+        <Button {..._args} variant="secondary">
           Secondary
         </Button>
-        <Button {...args} variant="primary">
+        <Button {..._args} variant="primary">
           Primary
         </Button>
-        <Button {...args} variant="outlined">
+        <Button {..._args} variant="outlined">
           Outlined
         </Button>
-        <Button {...args} variant="dark">
+        <Button {..._args} variant="dark">
           Dark
         </Button>
-        <Button {...args} variant="inverse">
+        <Button {..._args} variant="inverse">
           Inverse
         </Button>
       </div>
@@ -92,22 +92,22 @@ export const Sizes = {
     children: "Button",
     variant: "default",
   },
-  render: (args) => (
+  render: (_args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <Button {...args} size="xsmall">
+        <Button {..._args} size="xsmall">
           XSmall
         </Button>
-        <Button {...args} size="small">
+        <Button {..._args} size="small">
           Small
         </Button>
-        <Button {...args} size="medium">
+        <Button {..._args} size="medium">
           Medium
         </Button>
-        <Button {...args} size="large">
+        <Button {..._args} size="large">
           Large
         </Button>
-        <Button {...args} size="xlarge">
+        <Button {..._args} size="xlarge">
           XLarge
         </Button>
       </div>
@@ -128,11 +128,11 @@ export const States = {
     size: "large",
     variant: "default",
   },
-  render: (args) => (
+  render: (_args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <Button {...args}>Normal</Button>
-        <Button {...args} disabled>
+        <Button {..._args}>Normal</Button>
+        <Button {..._args} disabled>
           Disabled
         </Button>
       </div>

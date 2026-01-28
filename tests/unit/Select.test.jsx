@@ -1,7 +1,6 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { axe, toHaveNoViolations } from "jest-axe";
 import Select from "../../app/components/Select";
 

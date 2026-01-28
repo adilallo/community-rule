@@ -52,7 +52,6 @@ describe("RadioGroup Integration", () => {
 
   it("handles keyboard navigation", async () => {
     const user = userEvent.setup();
-    const handleChange = vi.fn();
 
     function KeyboardForm() {
       const [value, setValue] = useState("option1");

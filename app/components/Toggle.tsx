@@ -7,12 +7,12 @@ interface ToggleProps extends Omit<
   label?: string;
   checked?: boolean;
   onChange?: (
-    e:
+    _e:
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
-  onFocus?: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   state?: "default" | "hover" | "focus";
   showIcon?: boolean;

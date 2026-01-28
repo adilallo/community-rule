@@ -4,7 +4,7 @@ import { useClickOutside } from "../../../app/hooks/useClickOutside";
 import { useRef } from "react";
 
 describe("useClickOutside", () => {
-  let handler: ReturnType<typeof vi.fn>;
+  let handler;
 
   beforeEach(() => {
     handler = vi.fn();
@@ -26,7 +26,9 @@ describe("useClickOutside", () => {
     result.current.current = div;
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).toHaveBeenCalledTimes(1);
@@ -55,14 +57,16 @@ describe("useClickOutside", () => {
   });
 
   test("does not call handler when disabled", () => {
-    const { result } = renderHook(() => {
+    renderHook(() => {
       const ref = useRef(null);
       useClickOutside([ref], handler, false);
       return ref;
     });
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).not.toHaveBeenCalled();
@@ -84,7 +88,9 @@ describe("useClickOutside", () => {
     result.current.ref2.current = div2;
 
     act(() => {
-      document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      document.body.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true }),
+      );
     });
 
     expect(handler).toHaveBeenCalledTimes(1);

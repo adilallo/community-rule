@@ -24,7 +24,7 @@ export interface UseComponentStylesOptions {
   error?: boolean;
   sizeStyles: SizeStyleConfig;
   stateStyles: StateStyleConfig;
-  getStateStyles?: (params: {
+  getStateStyles?: (_params: {
     state?: string;
     disabled: boolean;
     error: boolean;
@@ -61,9 +61,7 @@ export interface UseComponentStylesOptions {
  * });
  * ```
  */
-export function useComponentStyles(
-  options: UseComponentStylesOptions,
-): {
+export function useComponentStyles(options: UseComponentStylesOptions): {
   sizeClasses: Record<string, string>;
   stateClasses: Record<string, string>;
 } {

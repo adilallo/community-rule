@@ -129,7 +129,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user explores the process through numbered cards", async () => {
-    const user = userEvent.setup();
     render(<Page />);
 
     // Wait for dynamically imported NumberedCards component
@@ -153,7 +152,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user accesses contact information through footer", async () => {
-    const user = userEvent.setup();
     render(
       <div>
         <Header />
@@ -179,7 +177,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user explores features and benefits", async () => {
-    const user = userEvent.setup();
     render(<Page />);
 
     // Wait for dynamically imported FeatureGrid component
@@ -201,7 +198,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user interacts with logo wall and social proof", async () => {
-    const user = userEvent.setup();
     render(
       <div>
         <Page />
@@ -232,7 +228,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user completes the full journey from discovery to action", async () => {
-    const user = userEvent.setup();
     render(
       <div>
         <Header />
@@ -278,7 +273,6 @@ describe("User Journey Integration", () => {
   });
 
   test("user can access all navigation options consistently", async () => {
-    const user = userEvent.setup();
     render(
       <div>
         <Header />

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, describe, it } from "vitest";
 import Select from "../../app/components/Select";
 
 describe("Select Component Integration", () => {

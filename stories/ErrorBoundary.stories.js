@@ -19,3 +19,22 @@ export default {
     },
   },
 };
+
+export const Default = {
+  args: {
+    children: <div>Normal content</div>,
+  },
+};
+
+export const WithError = {
+  render: () => {
+    const ThrowError = () => {
+      throw new Error("Test error for ErrorBoundary");
+    };
+    return (
+      <ErrorBoundary>
+        <ThrowError />
+      </ErrorBoundary>
+    );
+  },
+};

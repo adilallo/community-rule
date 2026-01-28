@@ -5,7 +5,6 @@
  * Monitors Core Web Vitals and performance metrics
  */
 
-const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -67,7 +66,7 @@ class PerformanceMonitor {
         execSync("curl -s http://localhost:3000 > /dev/null", {
           stdio: "pipe",
         });
-      } catch (error) {
+      } catch {
         console.warn(
           "⚠️ Development server not running, skipping Lighthouse CI...",
         );
@@ -82,7 +81,7 @@ class PerformanceMonitor {
 
       // Parse Lighthouse results
       await this.parseLighthouseResults();
-    } catch (error) {
+    } catch {
       console.warn("⚠️ Lighthouse CI failed, continuing with other metrics...");
     }
   }

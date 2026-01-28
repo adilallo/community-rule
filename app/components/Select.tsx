@@ -33,7 +33,7 @@ interface SelectProps {
   className?: string;
   children?: React.ReactNode;
   value?: string;
-  onChange?: (data: { target: { value: string; text: string } }) => void;
+  onChange?: (_data: { target: { value: string; text: string } }) => void;
   options?: SelectOptionData[];
 }
 
@@ -115,10 +115,11 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
       const baseStyles = "w-full";
 
       switch (size) {
-        case "small":
+        case "small": {
           const smallHeight =
             labelVariant === "horizontal" ? "h-[30px]" : "h-[32px]";
           return `${baseStyles} ${smallHeight} pl-[12px] pr-[36px] py-[8px] text-[10px] leading-[14px]`;
+        }
         case "medium":
           return `${baseStyles} h-[36px] pl-[12px] pr-[36px] py-[8px] text-[14px] leading-[20px]`;
         case "large":

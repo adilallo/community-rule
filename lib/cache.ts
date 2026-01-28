@@ -2,6 +2,8 @@
  * Content caching utilities for improved performance
  */
 
+import { logger } from "./logger";
+
 // In-memory cache for blog posts
 const blogPostCache = new Map<string, CacheEntry<unknown>>();
 const blogListCache = new Map<string, CacheEntry<unknown[]>>();
@@ -243,9 +245,9 @@ export async function warmCache<T>(
       cacheBlogPost(postWithSlug.slug, post);
     });
 
-    console.log("Cache warmed up successfully");
+    logger.info("Cache warmed up successfully");
   } catch (error) {
-    console.error("Error warming up cache:", error);
+    logger.error("Error warming up cache:", error);
   }
 }
 
@@ -258,7 +260,7 @@ export function isCacheHealthy(): boolean {
     clearExpiredCache();
     return blogPostCache.size < MAX_CACHE_SIZE;
   } catch (error) {
-    console.error("Cache health check failed:", error);
+    logger.error("Cache health check failed:", error);
     return false;
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { expect, test, describe, it, vi } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import { axe, toHaveNoViolations } from "jest-axe";
 import ContextMenu from "../../app/components/ContextMenu";
 import ContextMenuItem from "../../app/components/ContextMenuItem";
@@ -39,7 +39,6 @@ describe("ContextMenu Components Accessibility", () => {
     });
 
     it("has proper focus management", async () => {
-      const user = userEvent.setup();
       render(
         <ContextMenu>
           <ContextMenuItem onClick={vi.fn()}>Item 1</ContextMenuItem>
@@ -249,7 +248,6 @@ describe("ContextMenu Components Accessibility", () => {
     });
 
     it("maintains proper focus order", async () => {
-      const user = userEvent.setup();
       render(<TestMenu />);
 
       const items = screen.getAllByRole("menuitem");
@@ -340,7 +338,6 @@ describe("ContextMenu Components Accessibility", () => {
     });
 
     it("announces selection state changes", async () => {
-      const user = userEvent.setup();
       const { rerender } = render(
         <ContextMenuItem onClick={vi.fn()} selected={false}>
           Test Item

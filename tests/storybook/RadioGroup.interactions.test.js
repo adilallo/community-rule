@@ -164,7 +164,6 @@ export const SingleSelectionInteraction = {
 export const FormIntegration = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const radioGroup = canvas.getByRole("radiogroup");
     const radioButtons = canvas.getAllByRole("radio");
 
     // Should have hidden inputs for form submission

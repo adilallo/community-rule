@@ -160,7 +160,7 @@ describe("Page Flow Integration", () => {
       );
       expect(cards.length).toBeGreaterThan(0);
     });
-    
+
     // Check that all three cards are rendered
     const cards = screen.getAllByText(
       /Document how your community|Build an operating manual|Get a link to your manual/,
@@ -206,7 +206,7 @@ describe("Page Flow Integration", () => {
       const headings = screen.getAllByRole("heading");
       expect(headings.length).toBeGreaterThan(4); // Should have multiple headings
     });
-    
+
     // Check for proper heading hierarchy
     const headings = screen.getAllByRole("heading");
     expect(headings.length).toBeGreaterThan(4); // Should have multiple headings

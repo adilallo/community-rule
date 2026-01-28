@@ -202,7 +202,7 @@ class PerformanceTester {
         execSync("curl -s http://localhost:3000 > /dev/null", {
           stdio: "pipe",
         });
-      } catch (error) {
+      } catch {
         console.warn(
           "⚠️ Development server not running, skipping Lighthouse CI...",
         );

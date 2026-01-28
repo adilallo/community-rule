@@ -39,9 +39,9 @@ describe("Accessibility - Component Level", () => {
 
     // Check for proper heading structure (optional for header components)
     try {
-      const headings = screen.getAllByRole("heading");
+      screen.getAllByRole("heading");
       // Headings are not required in header components, so this is optional
-    } catch (error) {
+    } catch {
       // No headings found, which is fine for a header component
     }
   });
@@ -119,10 +119,10 @@ describe("Accessibility - Component Level", () => {
       try {
         element.focus();
         expect(element).toHaveFocus();
-      } catch (error) {
+      } catch {
         // Some elements might not be focusable in test environment
         // This is acceptable for accessibility testing
-        console.log(`Could not focus element: ${error.message}`);
+        // Intentionally ignore focus failures in JSDOM
       }
     });
   });
@@ -144,7 +144,7 @@ describe("Accessibility - Component Level", () => {
     let headings;
     try {
       headings = screen.getAllByRole("heading");
-    } catch (error) {
+    } catch {
       // No headings found, which is fine for a header component
       return;
     }

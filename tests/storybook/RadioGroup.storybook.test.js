@@ -63,7 +63,6 @@ test.describe("RadioGroup Storybook Tests", () => {
   test("interacts with controls", async ({ page }) => {
     // Test mode control
     await page.selectOption('[data-testid="mode-control"]', "inverse");
-    const radioGroup = page.locator('[role="radiogroup"]');
     const radioButtons = page.locator('[role="radio"]');
 
     // All radio buttons should have inverse styling

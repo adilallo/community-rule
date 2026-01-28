@@ -100,7 +100,8 @@ describe("Page", () => {
     // Wait for dynamically imported FeatureGrid component to load
     await waitFor(() => {
       expect(
-        screen.getAllByText("We've got your back, every step of the way").length,
+        screen.getAllByText("We've got your back, every step of the way")
+          .length,
       ).toBeGreaterThan(0);
     });
     expect(
@@ -143,7 +144,8 @@ describe("Page", () => {
     // FeatureGrid
     await waitFor(() => {
       expect(
-        screen.getAllByText("We've got your back, every step of the way").length,
+        screen.getAllByText("We've got your back, every step of the way")
+          .length,
       ).toBeGreaterThan(0);
     });
 
@@ -212,7 +214,7 @@ describe("Page", () => {
 
     // Check all section titles (using getAllByText since there are multiple instances)
     expect(screen.getAllByText("Collaborate").length).toBeGreaterThan(0);
-    
+
     // Wait for dynamically imported components
     await waitFor(() => {
       expect(
@@ -221,7 +223,8 @@ describe("Page", () => {
     });
     await waitFor(() => {
       expect(
-        screen.getAllByText("We've got your back, every step of the way").length,
+        screen.getAllByText("We've got your back, every step of the way")
+          .length,
       ).toBeGreaterThan(0);
     });
     expect(screen.getAllByText("Still have questions?").length).toBeGreaterThan(
@@ -236,7 +239,8 @@ describe("Page", () => {
     await waitFor(() => {
       // Check all three numbered card items (using getAllByText since there are multiple instances)
       expect(
-        screen.getAllByText("Document how your community makes decisions").length,
+        screen.getAllByText("Document how your community makes decisions")
+          .length,
       ).toBeGreaterThan(0);
     });
     expect(
@@ -256,7 +260,7 @@ describe("Page", () => {
 
     // Check subtitles (using getAllByText since there are multiple instances)
     expect(screen.getAllByText("with clarity").length).toBeGreaterThan(0);
-    
+
     // Wait for dynamically imported components
     await waitFor(() => {
       expect(

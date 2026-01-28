@@ -288,7 +288,7 @@ class WebPerformanceMonitor extends PerformanceMonitor {
   /**
    * Measure page load performance
    */
-  async measurePageLoad(url) {
+  async measurePageLoad() {
     return this.measureFunction("page_load", async () => {
       const start = performance.now();
 
@@ -326,18 +326,26 @@ class PlaywrightPerformanceMonitor extends PerformanceMonitor {
       // Navigate to the page
       // Use "load" instead of "networkidle" to handle dynamically imported components
       // "networkidle" can timeout with code splitting as chunks load asynchronously
-      await this.page.goto(url, { 
+      await this.page.goto(url, {
         waitUntil: "load",
         timeout: 60000, // 60 second timeout for slower networks
       });
     } catch (error) {
       // Handle interstitial/blocking errors
-      if (error.message.includes("interstitial") || error.message.includes("prevented")) {
-        console.warn("Page load was blocked, attempting to continue:", error.message);
+      if (
+        error.message.includes("interstitial") ||
+        error.message.includes("prevented")
+      ) {
+        console.warn(
+          "Page load was blocked, attempting to continue:",
+          error.message,
+        );
         // Try to wait for the page to be in a usable state
         try {
-          await this.page.waitForLoadState("domcontentloaded", { timeout: 10000 });
-        } catch (e) {
+          await this.page.waitForLoadState("domcontentloaded", {
+            timeout: 10000,
+          });
+        } catch {
           throw new Error(`Page failed to load: ${error.message}`);
         }
       } else {
@@ -349,9 +357,11 @@ class PlaywrightPerformanceMonitor extends PerformanceMonitor {
     // This ensures code-split components have loaded
     try {
       // Wait for main content sections that use dynamic imports
-      await this.page.waitForSelector("section", { timeout: 10000 }).catch(() => {
-        // Ignore if sections don't appear - page might still be valid
-      });
+      await this.page
+        .waitForSelector("section", { timeout: 10000 })
+        .catch(() => {
+          // Ignore if sections don't appear - page might still be valid
+        });
     } catch (error) {
       // Continue even if some components haven't loaded - we still want to measure performance
       console.warn("Some components may not have loaded:", error.message);

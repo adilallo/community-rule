@@ -9,29 +9,35 @@ This directory contains all project documentation organized by topic.
 Comprehensive guides for different aspects of the project:
 
 #### Testing
+
 - **[testing.md](./guides/testing.md)** - Complete testing strategy and philosophy
 - **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing framework documentation
 - **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Quick reference for daily development
 - **[visual-regression.md](./guides/visual-regression.md)** - Visual regression testing guide
 
 #### Performance
+
 - **[performance.md](./guides/performance.md)** - Performance optimization and monitoring guide
 
 #### Content
+
 - **[content-creation.md](./guides/content-creation.md)** - Content creation guidelines
 
 ## 🎯 Quick Navigation
 
 ### For New Team Members
+
 1. Start with **[testing.md](./guides/testing.md)** to understand the testing strategy
 2. Use **[testing-quick-reference.md](./guides/testing-quick-reference.md)** for daily development
 3. Reference **[performance.md](./guides/performance.md)** for performance optimization
 
 ### For Daily Development
+
 - **[testing-quick-reference.md](./guides/testing-quick-reference.md)** - Essential commands and troubleshooting
 - **[testing-framework.md](./guides/testing-framework.md)** - Detailed testing explanations
 
 ### For Specific Topics
+
 - **Visual Testing**: [visual-regression.md](./guides/visual-regression.md)
 - **Performance**: [performance.md](./guides/performance.md)
 - **Content**: [content-creation.md](./guides/content-creation.md)

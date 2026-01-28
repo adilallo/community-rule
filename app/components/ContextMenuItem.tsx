@@ -9,7 +9,7 @@ interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean;
   className?: string;
   onClick?: (
-    e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
+    _e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => void;
   size?: "small" | "medium" | "large";
 }

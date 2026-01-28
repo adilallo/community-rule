@@ -15,9 +15,9 @@ interface InputProps extends Omit<
   label?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (_e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (_e: React.FocusEvent<HTMLInputElement>) => void;
   className?: string;
 }
 
@@ -151,13 +151,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
      `.trim();
 
     // Form field handlers with disabled state handling
-    const { handleChange, handleFocus, handleBlur } = useFormField<
-      HTMLInputElement
-    >(disabled, {
-      onChange,
-      onFocus,
-      onBlur,
-    });
+    const { handleChange, handleFocus, handleBlur } =
+      useFormField<HTMLInputElement>(disabled, {
+        onChange,
+        onFocus,
+        onBlur,
+      });
 
     return (
       <div className={containerClasses}>

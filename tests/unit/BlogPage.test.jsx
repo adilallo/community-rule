@@ -60,7 +60,7 @@ vi.mock("../../app/components/ContentBanner", () => {
 
 vi.mock("../../app/components/RelatedArticles", () => {
   return {
-    default: ({ relatedPosts, currentPostSlug }) => (
+    default: ({ relatedPosts }) => (
       <div data-testid="related-articles">
         <h2>Related Articles</h2>
         {relatedPosts.map((post) => (
@@ -200,7 +200,7 @@ describe("BlogPostPage", () => {
     await waitFor(() => {
       expect(screen.getByTestId("related-articles")).toBeInTheDocument();
     });
-    
+
     expect(screen.getByText("Related Articles")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-1")).toBeInTheDocument();
     expect(screen.getByTestId("related-related-2")).toBeInTheDocument();
