@@ -486,10 +486,8 @@ jobs:
         with: { node-version: 20 }
       - run: npm ci
       - run: npm run storybook:build:github
-      # Temporarily disabled - test-runner needs updates for Storybook 10.x compatibility
-      # Will be re-enabled once test-runner compatibility issues are resolved
-      # - run: npm run test:sb
-      #   env: { CI: true }
+      # Storybook is used for component documentation only.
+      # Component tests (tests/components/*.test.tsx) provide all test coverage.
 
   lint:
     runs-on: [self-hosted, macos-latest]

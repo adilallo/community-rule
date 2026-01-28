@@ -147,7 +147,6 @@ The Storybook configuration automatically detects the environment:
 - `npm run e2e:ui` - Run E2E tests with UI
 - `npm run e2e:serve` - Start dev server and run E2E tests
 - `npm run lhci` - Run performance tests
-- `npm run test:sb` - Run Storybook tests
 
 ### Storybook
 

@@ -32,7 +32,6 @@ export default defineConfig({
       "tests/e2e/**/*.e2e.test.{js,jsx,ts,tsx}",
     ],
     exclude: [
-      "tests/e2e/**/*.storybook.test.{js,jsx,ts,tsx}",
       "tests/e2e/**/*.spec.{js,jsx,ts,tsx}",
     ],
     // Disable CSS processing in tests to avoid jsdom parsing errors with Tailwind v4

@@ -190,6 +190,15 @@ describe("Input – behaviour specifics", () => {
   npm run visual:test
   ```
 
+### Storybook
+
+**Storybook is used for component documentation and visual review only.** It is not used for automated testing.
+
+- Component tests (`tests/components/*.test.tsx`) provide all test coverage previously handled by Storybook test-runner
+- Storybook stories (`stories/*.stories.js`) serve as living documentation and visual examples
+- Interaction functions are inlined in story files for demonstration purposes
+- Run Storybook locally with `npm run storybook` for component development and review
+
 ### Accessibility Testing
 
 Accessibility is tested at two levels:
