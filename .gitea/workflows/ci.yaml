@@ -1,5 +1,5 @@
 name: CI Pipeline
-run-name: ${{ gitea.actor }} triggered CI pipeline
+run-name: "${{ gitea.actor }} triggered CI pipeline"
 
 on:
   workflow_dispatch: {}
@@ -20,18 +20,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - run: npm test -- --reporter=dot --maxConcurrency=1
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: "${{ secrets.CODECOV_TOKEN }}"
           files: ./coverage/lcov.info
           flags: unittests
 
@@ -44,18 +42,17 @@ jobs:
   e2e:
     runs-on: [self-hosted, macos-latest]
     strategy:
-      matrix: { browser: [chromium, firefox, webkit] }
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - name: Install Playwright
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: "npx playwright install --with-deps ${{ matrix.browser }}"
       - run: npm run build
 
       - name: E2E (start + test + teardown)
@@ -115,11 +112,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - name: Install Playwright
         run: npx playwright install --with-deps
@@ -304,11 +299,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
 
       - name: Build application
@@ -456,11 +449,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - run: npm run storybook:build:github
       # Storybook is used for component documentation only.
@@ -471,11 +462,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - run: npm run lint
       - run: npm exec prettier -- --check "**/*.{js,jsx,ts,tsx,json,css,md}"
@@ -485,11 +474,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: ${{ env.NODE_VERSION }}, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: ${{ env.NODE_VERSION }} }
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
       - run: npm ci --no-audit --fund=false
       - run: npm run build
       - run: npm run storybook:build:github
