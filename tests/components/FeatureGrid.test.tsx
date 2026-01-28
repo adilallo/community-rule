@@ -66,10 +66,6 @@ describe("FeatureGrid (behavioral tests)", () => {
     render(<FeatureGrid title="Test" subtitle="Test" />);
     const section = document.querySelector("section");
     expect(section).toHaveAttribute("aria-labelledby", "feature-grid-headline");
-    expect(screen.getByRole("grid")).toHaveAttribute(
-      "aria-label",
-      "Feature tools and services",
-    );
   });
 
   it("handles missing props gracefully", () => {

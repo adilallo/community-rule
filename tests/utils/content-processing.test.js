@@ -5,9 +5,18 @@ import path from "path";
 // Mock fs and path modules
 vi.mock("fs");
 vi.mock("path");
+vi.mock("../../lib/logger", () => ({
+  logger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 // Import the content processing functions
 import { getBlogPostFiles, markdownToHtml } from "../../lib/content";
+import { logger } from "../../lib/logger";
 
 describe("Content Processing Integration", () => {
   beforeEach(() => {
@@ -35,6 +44,8 @@ describe("Content Processing Integration", () => {
       const result = getBlogPostFiles();
 
       expect(result).toEqual([]);
+      // Verify we log the error without polluting test output
+      expect(logger.error).toHaveBeenCalled();
     });
 
     it("should filter out non-markdown files", () => {

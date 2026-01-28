@@ -12,9 +12,13 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-vi.mock("../../lib/assetUtils", () => ({
-  getAssetPath: vi.fn((asset: string) => `/assets/${asset}`),
-}));
+vi.mock("../../lib/assetUtils", async (importOriginal) => {
+  const actual = (await importOriginal()) as typeof import("../../lib/assetUtils");
+  return {
+    ...actual,
+    getAssetPath: vi.fn((asset: string) => `/assets/${asset}`),
+  };
+});
 
 const mockPost: BlogPost = {
   slug: "test-article",
