@@ -2,9 +2,7 @@ import React from "react";
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { axe, toHaveNoViolations } from "jest-axe";
-
-expect.extend(toHaveNoViolations);
+import { axe } from "jest-axe";
 
 type TestCases = {
   renders?: boolean;
@@ -134,9 +132,14 @@ export function componentTestSuite<TProps>(
 
         // Render again with optional props omitted to ensure no runtime error
         const { unmount } = render(
-          <Component {...({ ...props, ...Object.fromEntries(
-            Object.keys(optionalProps).map((k) => [k, undefined]),
-          ) } as TProps)} />,
+          <Component
+            {...({
+              ...props,
+              ...Object.fromEntries(
+                Object.keys(optionalProps).map((k) => [k, undefined]),
+              ),
+            } as TProps)}
+          />,
         );
 
         // Basic sanity check: component is mounted
@@ -149,7 +152,8 @@ export function componentTestSuite<TProps>(
       it("has no obvious accessibility violations (axe)", async () => {
         const { container } = render(<Component {...props} />);
         const results = await axe(container);
-        expect(results).toHaveNoViolations();
+        // Avoid relying on Jest matcher typings in Vitest/Next typecheck context.
+        expect(results.violations).toHaveLength(0);
       });
     }
 
@@ -218,4 +222,3 @@ export function componentTestSuite<TProps>(
     }
   });
 }
-

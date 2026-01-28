@@ -26,4 +26,3 @@ componentTestSuite<SwitchProps>({
     disabledProps: { disabled: true },
   },
 });
-

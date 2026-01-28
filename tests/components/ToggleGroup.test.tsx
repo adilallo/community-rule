@@ -20,4 +20,3 @@ componentTestSuite<ToggleGroupProps>({
     errorState: false,
   },
 });
-

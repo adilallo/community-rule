@@ -28,4 +28,3 @@ componentTestSuite<TextAreaProps>({
     errorProps: { error: true },
   },
 });
-

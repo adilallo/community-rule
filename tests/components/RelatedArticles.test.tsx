@@ -50,19 +50,13 @@ const mockPosts: BlogPost[] = [
 describe("RelatedArticles", () => {
   it("renders without crashing", () => {
     render(
-      <RelatedArticles
-        relatedPosts={mockPosts}
-        currentPostSlug="current"
-      />,
+      <RelatedArticles relatedPosts={mockPosts} currentPostSlug="current" />,
     );
   });
 
   it("renders related articles", () => {
     render(
-      <RelatedArticles
-        relatedPosts={mockPosts}
-        currentPostSlug="current"
-      />,
+      <RelatedArticles relatedPosts={mockPosts} currentPostSlug="current" />,
     );
     expect(screen.getByTestId("thumbnail-article-1")).toBeInTheDocument();
     expect(screen.getByTestId("thumbnail-article-2")).toBeInTheDocument();
@@ -70,10 +64,7 @@ describe("RelatedArticles", () => {
 
   it("filters out current post", () => {
     render(
-      <RelatedArticles
-        relatedPosts={mockPosts}
-        currentPostSlug="article-1"
-      />,
+      <RelatedArticles relatedPosts={mockPosts} currentPostSlug="article-1" />,
     );
     expect(screen.queryByTestId("thumbnail-article-1")).not.toBeInTheDocument();
     expect(screen.getByTestId("thumbnail-article-2")).toBeInTheDocument();

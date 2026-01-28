@@ -18,6 +18,7 @@ This directory contains project documentation organized by topic.
 ### For Testing
 
 Start with **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** for:
+
 - Testing philosophy and approach
 - Component testing with `componentTestSuite`
 - E2E testing with Playwright
@@ -27,6 +28,7 @@ Start with **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** for:
 ### For Custom Hooks
 
 See **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** for:
+
 - Available custom hooks
 - Usage examples
 - API documentation
@@ -34,6 +36,7 @@ See **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** for:
 ### For Content Creation
 
 See **[content-creation.md](./guides/content-creation.md)** for:
+
 - How to create blog articles
 - Content guidelines
 - Contribution workflow

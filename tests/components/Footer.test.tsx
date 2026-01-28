@@ -60,14 +60,24 @@ describe("Footer (behavioral tests)", () => {
 
   it("renders navigation links", () => {
     render(<Footer />);
-    expect(screen.getAllByRole("link", { name: "Use cases" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Learn" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "About" }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Use cases" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Learn" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "About" }).length,
+    ).toBeGreaterThan(0);
   });
 
   it("renders legal links", () => {
     render(<Footer />);
-    expect(screen.getAllByRole("link", { name: "Privacy Policy" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Terms of Service" }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Privacy Policy" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Terms of Service" }).length,
+    ).toBeGreaterThan(0);
   });
 });

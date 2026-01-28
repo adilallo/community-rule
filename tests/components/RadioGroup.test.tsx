@@ -25,4 +25,3 @@ componentTestSuite<RadioGroupProps>({
     errorState: false,
   },
 });
-

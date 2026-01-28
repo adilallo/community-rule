@@ -47,7 +47,9 @@ describe("AskOrganizer (behavioral tests)", () => {
 
   it("renders subtitle when provided", () => {
     render(<AskOrganizer title="Test" subtitle="Subtitle" />);
-    expect(screen.getByRole("heading", { name: "Subtitle" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Subtitle" }),
+    ).toBeInTheDocument();
   });
 
   it("renders button with default text", () => {

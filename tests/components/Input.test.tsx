@@ -27,4 +27,3 @@ componentTestSuite<InputProps>({
     errorProps: { error: true },
   },
 });
-

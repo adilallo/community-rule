@@ -32,4 +32,3 @@ componentTestSuite<SelectProps>({
     errorProps: { error: true },
   },
 });
-

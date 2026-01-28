@@ -1,0 +1,18 @@
+.next/
+out/
+build/
+dist/
+node_modules/
+
+# Test/build artifacts
+coverage/
+playwright-report/
+test-results/
+lhci-results/
+.lighthouseci/
+
+# Storybook build output
+storybook-static/
+
+# Misc generated
+*.log

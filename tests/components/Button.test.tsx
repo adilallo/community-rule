@@ -63,4 +63,3 @@ describe("Button (behavioral tests)", () => {
     expect(link).toHaveAttribute("href", "/learn");
   });
 });
-

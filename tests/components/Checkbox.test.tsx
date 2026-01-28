@@ -26,4 +26,3 @@ componentTestSuite<CheckboxProps>({
     disabledProps: { disabled: true },
   },
 });
-

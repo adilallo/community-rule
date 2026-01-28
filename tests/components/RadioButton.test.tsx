@@ -27,4 +27,3 @@ componentTestSuite<RadioButtonProps>({
     disabledProps: { disabled: true },
   },
 });
-

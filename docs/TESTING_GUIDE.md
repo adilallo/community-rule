@@ -74,7 +74,9 @@ const config: ComponentTestSuiteConfig<Props> = {
     error: {
       props: { error: true } as Partial<Props>,
       assert: (el) => {
-        expect(el).toHaveClass("border-[var(--color-border-default-utility-negative)]");
+        expect(el).toHaveClass(
+          "border-[var(--color-border-default-utility-negative)]",
+        );
       },
     },
   },
@@ -214,4 +216,3 @@ Accessibility is tested at two levels:
    - Tests complete user journeys for accessibility barriers
 
 This two-tier approach ensures both individual components and full page experiences meet accessibility standards.
-

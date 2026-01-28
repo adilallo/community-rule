@@ -73,9 +73,7 @@ const FeatureGrid = memo<FeatureGridProps>(
             </div>
 
             {/* MiniCard Grid */}
-            <div
-              className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)] lg:mt-0 lg:flex-grow lg:shrink-0"
-            >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)] lg:mt-0 lg:flex-grow lg:shrink-0">
               {features.map((feature, index) => (
                 <MiniCard
                   key={index}

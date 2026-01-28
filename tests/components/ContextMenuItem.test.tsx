@@ -23,4 +23,3 @@ componentTestSuite<ContextMenuItemProps>({
     disabledProps: { disabled: true },
   },
 });
-

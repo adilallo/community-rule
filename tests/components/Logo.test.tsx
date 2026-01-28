@@ -37,9 +37,7 @@ describe("Logo (behavioral tests)", () => {
 
   it("renders logo icon", () => {
     render(<Logo />);
-    expect(
-      screen.getByAltText("CommunityRule Logo Icon"),
-    ).toBeInTheDocument();
+    expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
   });
 
   it("renders text by default", () => {
@@ -50,9 +48,7 @@ describe("Logo (behavioral tests)", () => {
   it("hides text when showText is false", () => {
     render(<Logo showText={false} />);
     expect(screen.queryByText("CommunityRule")).not.toBeInTheDocument();
-    expect(
-      screen.getByAltText("CommunityRule Logo Icon"),
-    ).toBeInTheDocument();
+    expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
   });
 
   it("renders with different size variants", () => {

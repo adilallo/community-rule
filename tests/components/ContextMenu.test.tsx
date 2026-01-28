@@ -9,11 +9,7 @@ componentTestSuite<ContextMenuProps>({
   component: ContextMenu,
   name: "ContextMenu",
   props: {
-    children: (
-      <ContextMenuItem>
-        Item
-      </ContextMenuItem>
-    ),
+    children: <ContextMenuItem>Item</ContextMenuItem>,
   } as ContextMenuProps,
   requiredProps: [],
   primaryRole: "menu",
@@ -25,4 +21,3 @@ componentTestSuite<ContextMenuProps>({
     errorState: false,
   },
 });
-

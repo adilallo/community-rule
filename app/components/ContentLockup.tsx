@@ -169,7 +169,9 @@ const ContentLockup = memo<ContentLockupProps>(
               </div>
 
               {/* Subtitle */}
-              {subtitle ? <h2 className={styles.subtitle}>{subtitle}</h2> : null}
+              {subtitle ? (
+                <h2 className={styles.subtitle}>{subtitle}</h2>
+              ) : null}
             </div>
 
             {/* Description */}

@@ -45,7 +45,9 @@ describe("HeroBanner (behavioral tests)", () => {
 
   it("renders subtitle when provided", () => {
     render(<HeroBanner title="Test" subtitle="Subtitle" />);
-    expect(screen.getByRole("heading", { name: "Subtitle" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Subtitle" }),
+    ).toBeInTheDocument();
   });
 
   it("renders hero image", () => {
@@ -56,9 +58,7 @@ describe("HeroBanner (behavioral tests)", () => {
   });
 
   it("renders CTA button when provided", () => {
-    render(
-      <HeroBanner title="Test" ctaText="Get Started" ctaHref="/start" />,
-    );
+    render(<HeroBanner title="Test" ctaText="Get Started" ctaHref="/start" />);
     expect(
       screen.getAllByRole("button", { name: "Get Started" }).length,
     ).toBeGreaterThan(0);

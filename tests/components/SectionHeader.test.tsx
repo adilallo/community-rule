@@ -21,4 +21,3 @@ componentTestSuite<SectionHeaderProps>({
     errorState: false,
   },
 });
-

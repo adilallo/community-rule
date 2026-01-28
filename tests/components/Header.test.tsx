@@ -19,4 +19,3 @@ componentTestSuite<HeaderProps>({
     errorState: false,
   },
 });
-

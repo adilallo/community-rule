@@ -24,4 +24,3 @@ componentTestSuite<ToggleProps>({
     disabledProps: { disabled: true },
   },
 });
-
