@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { logger } from "../../../lib/logger";
 
 const WEB_VITALS_DIR = path.join(process.cwd(), ".next", "web-vitals");
 
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
         existingData = JSON.parse(fileContent) as WebVitalData[];
       } catch (error) {
         const err = error as Error;
-        console.warn("Could not parse existing vitals data:", err.message);
+        logger.warn("Could not parse existing vitals data:", err.message);
       }
     }
 
@@ -79,13 +80,13 @@ export async function POST(request: NextRequest) {
     fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
 
     // Log for monitoring
-    console.log(
+    logger.info(
       `Web Vital received: ${metric} = ${data.value}ms (${data.rating})`,
     );
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error processing web vital:", error);
+    logger.error("Error processing web vital:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -141,7 +142,7 @@ export async function GET() {
 
     return NextResponse.json({ metrics });
   } catch (error) {
-    console.error("Error fetching web vitals:", error);
+    logger.error("Error fetching web vitals:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

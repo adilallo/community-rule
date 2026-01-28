@@ -129,7 +129,26 @@ const eslintConfig = [
     rules: {
       // Basic rules
       "react/no-unescaped-entities": "off",
-      "no-console": "warn",
+      // Default: discourage console usage, but allow warn/error as "standard practice"
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+    },
+  },
+  // App/lib code: no console.* (enforced)
+  {
+    files: ["app/**/*.{ts,tsx,js,jsx}", "lib/**/*.{ts,tsx,js,jsx}"],
+    rules: {
+      "no-console": "error",
+    },
+  },
+  // Tests/Storybook/scripts: console is acceptable
+  {
+    files: [
+      "tests/**/*.{ts,tsx,js,jsx}",
+      "stories/**/*.{ts,tsx,js,jsx}",
+      "scripts/**/*.{ts,js}",
+    ],
+    rules: {
+      "no-console": "off",
     },
   },
   // Config files - allow Node.js globals

@@ -5,6 +5,7 @@ import Image from "next/image";
 import RuleCard from "./RuleCard";
 import Button from "./Button";
 import { getAssetPath } from "../../lib/assetUtils";
+import { logger } from "../../lib/logger";
 
 interface RuleStackProps {
   className?: string;
@@ -38,7 +39,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
         });
       }
     }
-    console.log(`${templateName} template clicked`);
+    logger.debug(`${templateName} template clicked`);
   };
 
   return (

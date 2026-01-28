@@ -3,6 +3,7 @@
 import { useState, memo } from "react";
 import Image from "next/image";
 import QuoteDecor from "./QuoteDecor";
+import { logger } from "../../lib/logger";
 
 interface QuoteBlockProps {
   variant?: "compact" | "standard" | "extended";
@@ -109,7 +110,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
 
     // Error handling functions
     const handleImageError = (error: unknown) => {
-      console.warn(
+      logger.warn(
         `QuoteBlock: Failed to load avatar image for ${author}:`,
         error,
       );
@@ -135,7 +136,7 @@ const QuoteBlock = memo<QuoteBlockProps>(
 
     // Validate required props
     if (!quote || !author) {
-      console.error("QuoteBlock: Missing required props (quote or author)");
+      logger.error("QuoteBlock: Missing required props (quote or author)");
       if (onError) {
         onError({
           type: "missing_props",

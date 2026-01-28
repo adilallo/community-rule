@@ -6,6 +6,7 @@ import {
   getAllBlogPosts as getAllPosts,
   type BlogPost,
 } from "../../../lib/content";
+import { logger } from "../../../lib/logger";
 import ContentBanner from "../../components/ContentBanner";
 import AskOrganizer from "../../components/AskOrganizer";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
@@ -44,7 +45,7 @@ export async function generateStaticParams() {
       slug: post.slug,
     }));
   } catch (error) {
-    console.error("Error generating static params:", error);
+    logger.error("Error generating static params:", error);
     return [];
   }
 }
@@ -87,7 +88,7 @@ export async function generateMetadata({
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    logger.error("Error generating metadata:", error);
     return {
       title: "Blog Post",
       description: "A blog post from our community.",

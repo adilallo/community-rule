@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { validateBlogPost, sanitizeBlogPost } from "./validation";
 import type { BlogPostFrontmatter } from "./validation";
+import { logger } from "./logger";
 
 /**
  * Content processing utilities for blog posts
@@ -73,7 +74,7 @@ export function getBlogPostFiles(): string[] {
       (file) => file.endsWith(".md") || file.endsWith(".mdx"),
     );
   } catch (error) {
-    console.error("Error reading blog content directory:", error);
+    logger.error("Error reading blog content directory:", error);
     return [];
   }
 }
@@ -92,7 +93,7 @@ export function parseBlogPost(filePath: string): BlogPost | null {
 
     const validationResult = validateBlogPost(data);
     if (!validationResult.isValid) {
-      console.error(
+      logger.error(
         `Validation errors for ${filePath}:`,
         validationResult.errors,
       );
@@ -111,7 +112,7 @@ export function parseBlogPost(filePath: string): BlogPost | null {
       lastModified: fs.statSync(fullPath).mtime,
     };
   } catch (error) {
-    console.error(`Error parsing blog post file ${filePath}:`, error);
+    logger.error(`Error parsing blog post file ${filePath}:`, error);
     return null;
   }
 }
