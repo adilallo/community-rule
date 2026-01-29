@@ -23,6 +23,7 @@ npm-cache/
 
 # Lighthouse CI results
 /lhci-results/
+/.lighthouseci/
 
 # Ignore other image files (but not visual regression snapshots)
 *.png
@@ -75,10 +76,6 @@ next-env.d.ts
 
 *storybook.log
 storybook-static
-
-# storybook config files (to avoid git changes when switching between local and production)
-.storybook/main.js
-.storybook/preview.js
 
 # Gitea runner runtime files
 .runner

@@ -2,6 +2,11 @@
 
 A Next.js application for community decision-making and governance documentation.
 
+## 📋 Requirements
+
+- **Node.js**: 20.0.0 or higher (LTS recommended)
+- **npm**: 10.0.0 or higher
+
 ## 🚀 Getting Started
 
 Run the development server:
@@ -14,28 +19,22 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🧪 Testing Framework
 
-This project includes a comprehensive testing framework with multiple layers of testing:
+This project uses a simplified, component‑first testing model:
+
+- **Component tests (Vitest + RTL)** live in `tests/components/` with a single file per component.
+- **E2E tests (Playwright)** cover critical user journeys and visual regression.
 
 ### Quick Test Commands
 
 ```bash
-# Unit tests with coverage
+# All component tests with coverage
 npm test
 
-# E2E tests
-npm run e2e
+# Component tests only (new structure)
+npm run test:component
 
-# Performance tests
-npm run lhci
-
-# Storybook tests
-npm run test:sb
-
-# Performance monitoring
-npm run test:performance    # Comprehensive performance testing
-npm run bundle:analyze      # Bundle size analysis
-npm run web-vitals:track   # Web Vitals tracking
-npm run monitor:all         # All monitoring tools
+# E2E tests only
+npm run test:e2e
 ```
 
 ### Test Coverage
@@ -56,7 +55,7 @@ npm run monitor:all         # All monitoring tools
 - **Performance monitoring**
 - **Code coverage reporting**
 
-📖 **For detailed testing documentation, see [docs/README.md](docs/README.md)**
+📖 **For detailed testing documentation, see `docs/TESTING_GUIDE.md` and [docs/README.md](docs/README.md)**
 
 ## ⚡ Performance Optimizations
 
@@ -73,16 +72,27 @@ This project includes comprehensive performance optimizations for sub-2-second l
 
 ### Performance Monitoring
 
-```bash
-# Individual monitoring tools
-npm run bundle:analyze      # Analyze bundle sizes and budgets
-npm run performance:monitor # Performance metrics and Lighthouse CI
-npm run web-vitals:track   # Core Web Vitals tracking
+Performance testing is handled by:
 
-# Comprehensive testing
-npm run test:performance    # All performance tests
-npm run monitor:all         # All monitoring tools
-```
+- **Lighthouse CI** (`.lighthouserc.json`): Comprehensive performance testing in CI
+
+  ```bash
+  npm run lhci              # Run Lighthouse CI
+  npm run lhci:mobile       # Mobile preset
+  npm run lhci:desktop      # Desktop preset
+  npm run performance:budget # With performance budgets
+  ```
+
+- **E2E Performance Tests** (`tests/e2e/performance.spec.ts`): Essential performance checks
+
+  ```bash
+  npm run e2e:performance   # Run E2E performance tests
+  ```
+
+- **Bundle Analysis**: Analyze bundle sizes
+  ```bash
+  npm run bundle:analyze    # Analyze bundle sizes
+  ```
 
 ### Performance Targets
 
@@ -144,14 +154,15 @@ The Storybook configuration automatically detects the environment:
 
 ### Testing
 
-- `npm test` - Run unit tests with coverage
+- `npm test` - Run all component tests with coverage
+- `npm run test:component` - Run tests in `tests/components/` only
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:ui` - Run tests with UI
-- `npm run e2e` - Run E2E tests
+- `npm run test:e2e` - Run E2E tests only
+- `npm run e2e` - Alias for Playwright E2E tests
 - `npm run e2e:ui` - Run E2E tests with UI
 - `npm run e2e:serve` - Start dev server and run E2E tests
 - `npm run lhci` - Run performance tests
-- `npm run test:sb` - Run Storybook tests
 
 ### Storybook
 
@@ -175,22 +186,21 @@ community-rule/
 │   └── runner-config.yaml      # Runner configuration
 ├── docs/                         # Documentation
 │   ├── README.md               # Documentation index
-│   └── guides/                 # Comprehensive guides
-│       ├── testing.md         # Testing strategy
-│       ├── testing-framework.md # Testing framework details
-│       ├── testing-quick-reference.md # Quick reference
-│       ├── performance.md     # Performance optimization
-│       ├── visual-regression.md # Visual testing
-│       └── content-creation.md # Content guidelines
+│   ├── TESTING_GUIDE.md        # Testing guide
+│   ├── CUSTOM_HOOKS.md         # Custom hooks documentation
+│   └── guides/                 # Guides
+│       └── content-creation.md # Content creation guide
 ├── scripts/                      # Utility scripts
 │   ├── start-runner.sh        # Start Gitea runner
 │   ├── status-runner.sh       # Check runner status
 │   └── stop-runner.sh         # Stop Gitea runner
 ├── tests/                        # Test files
-│   ├── unit/                   # Unit tests
-│   ├── integration/            # Integration tests
-│   ├── e2e/                    # E2E tests
-│   └── accessibility/          # Accessibility tests
+│   ├── components/             # Component tests (Vitest + RTL)
+│   ├── pages/                 # Page-level tests
+│   ├── e2e/                   # E2E tests (Playwright)
+│   ├── utils/                 # Test utilities (componentTestSuite, etc.)
+│   ├── msw/                   # MSW server setup
+│   └── accessibility/         # E2E accessibility checks
 ├── .storybook/                  # Storybook configuration
 ├── .gitea/                      # Gitea Actions workflows
 │   └── workflows/
@@ -200,26 +210,27 @@ community-rule/
 
 ## 🔧 Technology Stack
 
-- **Framework**: Next.js 15 + React 19
+- **Framework**: Next.js 16 + React 19
+- **Runtime**: Node.js 20+ (LTS)
 - **Styling**: Tailwind CSS 4
 - **Testing**: Vitest + Playwright + Lighthouse CI
-- **Documentation**: Storybook 9
+- **Documentation**: Storybook 10
 - **CI/CD**: Gitea Actions
 - **Hosting**: Gitea (Git hosting)
 
 ## 📖 Documentation
 
 - **[Documentation Index](docs/README.md)** - Complete documentation guide
-- **[Testing Guides](docs/guides/)** - Testing strategy, framework, and quick reference
-- **[Performance Guide](docs/guides/performance.md)** - Performance optimization guide
-- **[Visual Regression Guide](docs/guides/visual-regression.md)** - Visual testing guide
+- **[Testing Guide](docs/TESTING_GUIDE.md)** - Testing strategy, component tests, E2E tests, and accessibility
+- **[Custom Hooks](docs/CUSTOM_HOOKS.md)** - Documentation for custom React hooks
+- **[Content Creation Guide](docs/guides/content-creation.md)** - Guide for creating blog content
 - **[Storybook](http://localhost:6006)** - Component documentation (local)
 
 ## 🤝 Contributing
 
 1. **Fork the repository**
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Write tests first** (see [Testing Guide](docs/guides/testing.md))
+3. **Write tests first** (see [Testing Guide](docs/TESTING_GUIDE.md))
 4. **Make your changes**
 5. **Run tests**: `npm test && npm run e2e`
 6. **Commit changes**: `git commit -m "feat: add amazing feature"`

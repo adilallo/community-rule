@@ -1,11 +1,58 @@
 import React from "react";
 import Checkbox from "../app/components/Checkbox";
-import {
-  DefaultInteraction,
-  CheckedInteraction,
-  StandardInteraction,
-  InverseInteraction,
-} from "../tests/storybook/Checkbox.interactions.test";
+import { within, userEvent } from "@storybook/test";
+import { expect } from "@storybook/test";
+
+// Interaction functions for Storybook play functions
+const DefaultInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    expect(checkbox).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(checkbox);
+    expect(checkbox).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(checkbox);
+    expect(checkbox).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const CheckedInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkbox = canvas.getByRole("checkbox");
+    expect(checkbox).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(checkbox);
+    expect(checkbox).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const StandardInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkboxes = canvas.getAllByRole("checkbox");
+    expect(checkboxes).toHaveLength(2);
+    expect(checkboxes[0]).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(checkboxes[0]);
+    expect(checkboxes[0]).toHaveAttribute("aria-checked", "true");
+    expect(checkboxes[1]).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(checkboxes[1]);
+    expect(checkboxes[1]).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const InverseInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const checkboxes = canvas.getAllByRole("checkbox");
+    expect(checkboxes).toHaveLength(2);
+    expect(checkboxes[0]).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(checkboxes[0]);
+    expect(checkboxes[0]).toHaveAttribute("aria-checked", "true");
+    expect(checkboxes[1]).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(checkboxes[1]);
+    expect(checkboxes[1]).toHaveAttribute("aria-checked", "false");
+  },
+};
 
 export default {
   title: "Forms/Checkbox",

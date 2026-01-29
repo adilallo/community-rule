@@ -99,11 +99,13 @@ const AskOrganizer = memo<AskOrganizerProps>(
         ? "gap-[var(--spacing-scale-020)]"
         : "gap-[var(--spacing-scale-040)]";
 
+    const labelledBy = title ? "ask-organizer-headline" : undefined;
+
     return (
       <section
         className={`${sectionPadding} ${className}`}
-        aria-labelledby="ask-organizer-headline"
-        role="region"
+        aria-labelledby={labelledBy}
+        aria-label={labelledBy ? undefined : "Ask an organizer"}
         tabIndex={-1}
       >
         <div className={`flex flex-col ${contentGap} ${styles.container}`}>
@@ -114,6 +116,7 @@ const AskOrganizer = memo<AskOrganizerProps>(
             description={description}
             variant={variant === "inverse" ? "ask-inverse" : "ask"}
             alignment={variant === "left-aligned" ? "left" : "center"}
+            titleId={labelledBy}
           />
 
           {/* Button */}

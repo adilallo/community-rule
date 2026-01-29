@@ -1,11 +1,54 @@
 import React from "react";
 import RadioButton from "../app/components/RadioButton";
-import {
-  DefaultInteraction,
-  CheckedInteraction,
-  StandardInteraction,
-  InverseInteraction,
-} from "../tests/storybook/RadioButton.interactions.test";
+import { expect } from "@storybook/test";
+import { userEvent, within } from "@storybook/test";
+
+// Interaction functions for Storybook play functions
+const DefaultInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioButton = canvas.getByRole("radio");
+    await expect(radioButton).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(radioButton);
+    await expect(radioButton).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(radioButton);
+    await expect(radioButton).toHaveAttribute("aria-checked", "true");
+  },
+};
+
+const CheckedInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioButton = canvas.getByRole("radio");
+    await expect(radioButton).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(radioButton);
+    await expect(radioButton).toHaveAttribute("aria-checked", "true");
+  },
+};
+
+const StandardInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(radioButtons[0]);
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const InverseInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(radioButtons[0]);
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
+  },
+};
 
 const meta = {
   title: "Forms/RadioButton",

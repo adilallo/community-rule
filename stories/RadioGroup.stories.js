@@ -1,11 +1,67 @@
 import React from "react";
 import RadioGroup from "../app/components/RadioGroup";
-import {
-  DefaultInteraction,
-  StandardInteraction,
-  InverseInteraction,
-  InteractiveInteraction,
-} from "../tests/storybook/RadioGroup.interactions.test";
+import { expect } from "@storybook/test";
+import { userEvent, within } from "@storybook/test";
+
+// Interaction functions for Storybook play functions
+const DefaultInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole("radiogroup");
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioGroup).toBeInTheDocument();
+    await expect(radioButtons).toHaveLength(3);
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[2]).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const StandardInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole("radiogroup");
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioGroup).toBeInTheDocument();
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[2]).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(radioButtons[0]);
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[2]).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const InverseInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole("radiogroup");
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioGroup).toBeInTheDocument();
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[2]).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(radioButtons[1]);
+    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
+    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
+    await expect(radioButtons[2]).toHaveAttribute("aria-checked", "false");
+  },
+};
+
+const InteractiveInteraction = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const radioGroup = canvas.getByRole("radiogroup");
+    const radioButtons = canvas.getAllByRole("radio");
+    await expect(radioGroup).toBeInTheDocument();
+    await expect(canvas.getByText("Selected: option1")).toBeVisible();
+    await userEvent.click(radioButtons[1]);
+    await expect(canvas.getByText("Selected: option2")).toBeVisible();
+    await userEvent.click(radioButtons[2]);
+    await expect(canvas.getByText("Selected: option3")).toBeVisible();
+  },
+};
 
 const meta = {
   title: "Forms/RadioGroup",

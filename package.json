@@ -2,6 +2,9 @@
   "name": "community-rule",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -17,16 +20,15 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:sb": "storybook dev -p 6006 & wait-on http://localhost:6006 && test-storybook --url http://localhost:6006",
+    "test:component": "vitest run tests/components",
     "e2e": "playwright test",
+    "test:e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:performance": "playwright test tests/e2e/performance.spec.ts",
     "lhci": "lhci autorun",
     "lhci:mobile": "lhci autorun --settings.preset=mobile",
     "lhci:desktop": "lhci autorun --settings.preset=desktop",
     "performance:budget": "lhci autorun --budgetPath=performance-budgets.json",
-    "performance:monitor": "node scripts/performance-monitor.js",
-    "test:lhci": "node scripts/test-lhci.js",
     "preview": "next build && next start -p 3000",
     "e2e:serve": "start-server-and-test preview http://localhost:3000 e2e",
     "seed-snapshots": "./scripts/seed-snapshots.sh",
@@ -37,11 +39,7 @@
     "analyze": "npm run analyze:browser && npm run analyze:server",
     "analyze:server": "ANALYZE=true npm run build",
     "analyze:browser": "BUNDLE_ANALYZE=true npm run build",
-    "bundle:analyze": "node scripts/bundle-analyzer.js",
-    "web-vitals:track": "node scripts/web-vitals-tracker.js",
-    "monitor:all": "npm run bundle:analyze && npm run performance:monitor && npm run web-vitals:track",
-    "test:performance": "node scripts/test-performance.js",
-    "test:performance:ci": "npm run test:performance"
+    "bundle:analyze": "node scripts/bundle-analyzer.js"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -62,7 +60,6 @@
     "@storybook/addon-a11y": "^10.2.0",
     "@storybook/addon-interactions": "^8.6.14",
     "@storybook/nextjs": "^10.2.0",
-    "@storybook/test-runner": "^0.24.2",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/jest-dom": "^6.8.0",

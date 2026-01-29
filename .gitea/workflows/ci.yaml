@@ -1,57 +1,35 @@
 name: CI Pipeline
-run-name: ${{ gitea.actor }} triggered CI pipeline
+run-name: "${{ gitea.actor }} triggered CI pipeline"
 
 on:
   workflow_dispatch: {}
   pull_request:
-    branches: [main, develop] # PRs into main/develop
+    branches: [main]
     types: [opened, reopened, synchronize]
+
+env:
+  NODE_VERSION: "20"
+  NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
   test:
     runs-on: [self-hosted, macos-latest]
-    strategy:
-      matrix: { node-version: [18, 20] }
     env:
       NODE_OPTIONS: "--max_old_space_size=8192 --max_semi_space_size=128"
       CI: true
-      VITEST_MAX_CONCURRENCY: 1
-      VITEST_MAX_THREADS: 1
-      VITEST_MIN_THREADS: 1
-      VITEST_POOL: "vmThreads"
-      VITEST_POOL_OPTIONS: '{"vmThreads":{"singleThread":true}}'
-      VITEST_LOG_LEVEL: "info"
-      DEBUG: "vitest:*"
-      VITEST_WORKER_TIMEOUT: "300000"
-      VITEST_POOL_TIMEOUT: "300000"
-      VITEST_FORCE_RERUN_TRIGGERS: "**"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "${{ env.NODE_VERSION }}"
           cache: npm
-      - run: npm ci
-      - name: Show system info
-        run: |
-          echo "Node.js version: $(node -v)"
-          echo "NPM version: $(npm -v)"
-          echo "Available memory: $(free -h || vm_stat | head -10)"
-          echo "CPU info: $(sysctl -n machdep.cpu.brand_string || uname -m)"
-      - run: |
-          echo "Running tests with CI optimizations..."
-          # Run tests in smaller batches to avoid resource contention
-          echo "Running unit tests..."
-          npm test -- tests/unit/ --run --reporter=verbose --no-coverage --maxConcurrency=1
-          echo "Running integration tests..."
-          npm test -- tests/integration/ --run --reporter=verbose --no-coverage --maxConcurrency=1
-          echo "Running accessibility tests..."
-          npm test -- tests/accessibility/ --run --reporter=verbose --no-coverage --maxConcurrency=1
+      - run: npm ci --no-audit --fund=false
+      - run: npm test -- --reporter=dot --maxConcurrency=1
       # If the Codecov Action fails on Gitea, replace this with the bash uploader below
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: "${{ secrets.CODECOV_TOKEN }}"
           files: ./coverage/lcov.info
           flags: unittests
 
@@ -64,23 +42,22 @@ jobs:
   e2e:
     runs-on: [self-hosted, macos-latest]
     strategy:
-      matrix: { browser: [chromium, firefox, webkit] }
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+      - run: npm ci --no-audit --fund=false
       - name: Install Playwright
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: "npx playwright install --with-deps ${{ matrix.browser }}"
       - run: npm run build
 
       - name: E2E (start + test + teardown)
         run: |
-          set -euxo pipefail
+          set -euo pipefail
 
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
@@ -118,12 +95,12 @@ jobs:
 
       # package artifacts (keeps file count small)
       - name: Package E2E artifacts
-        if: always()
+        if: failure()
         run: |
           tar -czf playwright-${{ matrix.browser }}.tgz playwright-report test-results || true
 
       - name: Upload E2E artifacts
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: playwright-results-${{ matrix.browser }}
@@ -135,25 +112,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+      - run: npm ci --no-audit --fund=false
       - name: Install Playwright
         run: npx playwright install --with-deps
       - run: npm run build
       # 1) Sanity check that the build exists
       - name: Verify Next build output
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
       - name: Visual Regression (start + test + teardown)
         run: |
-          set -euxo pipefail
+          set -euo pipefail
 
           export PORT="${PORT:-3010}"
           export HOST="127.0.0.1"
@@ -295,7 +270,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Package visual artifacts
-        if: always()
+        if: failure()
         run: |
           # Include server logs for debugging
           echo "📋 Server logs for debugging:"
@@ -305,7 +280,7 @@ jobs:
           tar -czf visual-regression.tgz test-results tests/e2e/visual-regression.spec.ts-snapshots .next/runner.log || true
 
       - name: Upload visual artifacts
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: visual-regression-results
@@ -324,36 +299,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
-
-      - name: Install LHCI
-        run: npm i -D @lhci/cli
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+      - run: npm ci --no-audit --fund=false
 
       - name: Build application
         run: npm run build
 
-      - name: Comprehensive Performance Testing
-        run: |
-          echo "🧪 Running comprehensive performance testing..."
-          npm run test:performance:ci
-          echo "✅ Performance testing complete"
-
-          # 1) Sanity check that the build exists
+      # 1) Sanity check that the build exists
       - name: Verify Next build output
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           ls -la .next || true
           test -f .next/BUILD_ID || (echo "No Next build output (.next) – did build fail?" && exit 1)
 
       - name: Install Chrome via Puppeteer (mac_arm)
         run: |
           # Install Chrome (arm64) into a local cache
-          set -euxo pipefail
+          set -euo pipefail
           mkdir -p .cache/puppeteer
 
           # 1) Install and capture the build id that was actually installed
@@ -387,7 +351,7 @@ jobs:
 
       - name: Ensure arm64 Node for Lighthouse
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           echo "node before: $(node -v) arch=$(node -p 'process.arch')"
           if [ "$(node -p 'process.arch')" != "arm64" ]; then
             NODE_VER=20.17.0
@@ -407,7 +371,7 @@ jobs:
 
       - name: Performance (start + test + teardown)
         run: |
-          set -euxo pipefail
+          set -euo pipefail
 
           export PORT=3010 HOST=127.0.0.1
           mkdir -p .next
@@ -462,7 +426,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Upload Performance Artifacts
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: performance-results
@@ -474,34 +438,15 @@ jobs:
             .next/test-results
           retention-days: 30
 
-  storybook:
-    runs-on: [self-hosted, macos-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npm run storybook:build:github
-      # Temporarily disabled - test-runner needs updates for Storybook 10.x compatibility
-      # Will be re-enabled once test-runner compatibility issues are resolved
-      # - run: npm run test:sb
-      #   env: { CI: true }
-
   lint:
     runs-on: [self-hosted, macos-latest]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+      - run: npm ci --no-audit --fund=false
       - run: npm run lint
       - run: npm exec prettier -- --check "**/*.{js,jsx,ts,tsx,json,css,md}"
 
@@ -510,11 +455,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        if: ${{ github.server_url == 'https://github.com' }}
-        with: { node-version: 20, cache: npm }
-      - uses: actions/setup-node@v4
-        if: ${{ github.server_url != 'https://github.com' || !github.server_url }}
-        with: { node-version: 20 }
-      - run: npm ci
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+      - run: npm ci --no-audit --fund=false
       - run: npm run build
       - run: npm run storybook:build:github

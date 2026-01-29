@@ -15,6 +15,11 @@ interface ContentLockupProps {
   linkText?: string;
   linkHref?: string;
   alignment?: "center" | "left";
+  /**
+   * Optional id to attach to the primary title heading.
+   * Useful when a parent section uses aria-labelledby.
+   */
+  titleId?: string;
 }
 
 interface VariantStyle {
@@ -39,6 +44,7 @@ const ContentLockup = memo<ContentLockupProps>(
     linkText,
     linkHref,
     alignment = "center",
+    titleId,
   }) => {
     // Variant-specific styling
     const variantStyles: Record<string, VariantStyle> = {
@@ -132,9 +138,13 @@ const ContentLockup = memo<ContentLockupProps>(
                 alignment === "left" ? "justify-start" : "justify-center"
               }`}
             >
-              <h1 className={styles.title}>{title}</h1>
+              {title ? (
+                <h1 id={titleId} className={styles.title}>
+                  {title}
+                </h1>
+              ) : null}
             </div>
-            <h2 className={styles.subtitle}>{subtitle}</h2>
+            {subtitle ? <h2 className={styles.subtitle}>{subtitle}</h2> : null}
           </div>
         ) : (
           /* Full structure for other variants */
@@ -143,7 +153,11 @@ const ContentLockup = memo<ContentLockupProps>(
             <div className={styles.titleGroup}>
               {/* Title container */}
               <div className={styles.titleContainer}>
-                <h1 className={styles.title}>{title}</h1>
+                {title ? (
+                  <h1 id={titleId} className={styles.title}>
+                    {title}
+                  </h1>
+                ) : null}
                 {variant === "hero" && (
                   <img
                     src={getAssetPath("assets/Shapes_1.svg")}
@@ -155,7 +169,9 @@ const ContentLockup = memo<ContentLockupProps>(
               </div>
 
               {/* Subtitle */}
-              <h2 className={styles.subtitle}>{subtitle}</h2>
+              {subtitle ? (
+                <h2 className={styles.subtitle}>{subtitle}</h2>
+              ) : null}
             </div>
 
             {/* Description */}
