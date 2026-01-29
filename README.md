@@ -72,16 +72,27 @@ This project includes comprehensive performance optimizations for sub-2-second l
 
 ### Performance Monitoring
 
-```bash
-# Individual monitoring tools
-npm run bundle:analyze      # Analyze bundle sizes and budgets
-npm run performance:monitor # Performance metrics and Lighthouse CI
-npm run web-vitals:track   # Core Web Vitals tracking
+Performance testing is handled by:
 
-# Comprehensive testing
-npm run test:performance    # All performance tests
-npm run monitor:all         # All monitoring tools
-```
+- **Lighthouse CI** (`.lighthouserc.json`): Comprehensive performance testing in CI
+
+  ```bash
+  npm run lhci              # Run Lighthouse CI
+  npm run lhci:mobile       # Mobile preset
+  npm run lhci:desktop      # Desktop preset
+  npm run performance:budget # With performance budgets
+  ```
+
+- **E2E Performance Tests** (`tests/e2e/performance.spec.ts`): Essential performance checks
+
+  ```bash
+  npm run e2e:performance   # Run E2E performance tests
+  ```
+
+- **Bundle Analysis**: Analyze bundle sizes
+  ```bash
+  npm run bundle:analyze    # Analyze bundle sizes
+  ```
 
 ### Performance Targets
 

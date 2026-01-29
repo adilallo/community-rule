@@ -33,14 +33,15 @@ export default defineConfig({
     headless: true,
   },
   // Only start webServer in non-CI environments (CI starts its own server)
+  // Use production server for E2E tests to match CI and ensure reliability
   ...(process.env.CI
     ? {}
     : {
         webServer: {
-          command: "npm run dev -- --port 3010",
+          command: "npm run build && npx next start -p 3010",
           url: "http://localhost:3010",
-          reuseExistingServer: true,
-          timeout: 120_000,
+          reuseExistingServer: !process.env.CI,
+          timeout: 180_000, // Increased timeout to account for build time
         },
       }),
   // Browser-specific snapshot path template (includes projectName for cross-browser support)

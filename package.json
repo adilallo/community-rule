@@ -29,8 +29,6 @@
     "lhci:mobile": "lhci autorun --settings.preset=mobile",
     "lhci:desktop": "lhci autorun --settings.preset=desktop",
     "performance:budget": "lhci autorun --budgetPath=performance-budgets.json",
-    "performance:monitor": "node scripts/performance-monitor.js",
-    "test:lhci": "node scripts/test-lhci.js",
     "preview": "next build && next start -p 3000",
     "e2e:serve": "start-server-and-test preview http://localhost:3000 e2e",
     "seed-snapshots": "./scripts/seed-snapshots.sh",
@@ -41,11 +39,7 @@
     "analyze": "npm run analyze:browser && npm run analyze:server",
     "analyze:server": "ANALYZE=true npm run build",
     "analyze:browser": "BUNDLE_ANALYZE=true npm run build",
-    "bundle:analyze": "node scripts/bundle-analyzer.js",
-    "web-vitals:track": "node scripts/web-vitals-tracker.js",
-    "monitor:all": "npm run bundle:analyze && npm run performance:monitor && npm run web-vitals:track",
-    "test:performance": "node scripts/test-performance.js",
-    "test:performance:ci": "npm run test:performance"
+    "bundle:analyze": "node scripts/bundle-analyzer.js"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

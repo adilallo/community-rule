@@ -23,10 +23,10 @@ tests/
     home.test.jsx
     blog.test.jsx
   e2e/                  # True end‑to‑end flows + visual regression (Playwright)
-    homepage.spec.ts
-    user-journeys.spec.ts
-    visual-regression.spec.ts
-    performance.spec.ts
+    critical-journeys.spec.ts    # Main user journeys (homepage, navigation, interactions)
+    visual-regression.spec.ts   # Critical page screenshots only (5 tests)
+    edge-cases.spec.ts          # Critical error scenarios (4 tests)
+    performance.spec.ts          # Essential performance checks (2 tests)
   utils/                # Shared test utilities
     componentTestSuite.tsx
   msw/                  # MSW server setup for mocking
@@ -37,6 +37,18 @@ tests/
 ```
 
 **Component tests** (`tests/components/`) use the standard `componentTestSuite` utility to ensure consistent baseline coverage for all UI components. **Page tests** (`tests/pages/`) cover page-level rendering and flows. **E2E tests** (`tests/e2e/`) focus on critical user journeys, visual regression, and performance. **Accessibility E2E** (`tests/accessibility/e2e/`) provides high-level WCAG compliance checks.
+
+### E2E Testing Philosophy
+
+E2E tests follow a **sparse, critical-path approach** optimized for open source projects:
+
+- **Focus on user value**: Test critical user journeys that span multiple pages or systems, not individual component interactions
+- **Maintainability over coverage**: Keep tests maintainable and contributor-friendly rather than comprehensive
+- **Visual regression is minimal**: Only capture screenshots of major pages (homepage, blog listing/post, 404), not every component or viewport
+- **Performance monitoring is essential**: Track homepage load and Core Web Vitals, but detailed performance analysis is handled by Lighthouse CI
+- **Edge cases are critical only**: Test scenarios that would break user experience (slow network, offline mode, JS errors, missing images)
+
+This approach reduces test maintenance burden while ensuring critical functionality remains stable.
 
 ### Standard Component Test Suite
 
@@ -182,15 +194,51 @@ describe("Input – behaviour specifics", () => {
 
 ### E2E and Visual Regression
 
-- Use **Playwright** for:
-  - Critical user journeys (e.g., create rule, navigate blog, key flows).
-  - Responsive behaviour and cross‑browser checks.
-  - Visual regression (`tests/e2e/visual-regression.spec.ts`).
+E2E tests are organized into focused files:
 
-  ```bash
-  npm run test:e2e
-  npm run visual:test
-  ```
+- **`critical-journeys.spec.ts`**: Main user journeys (homepage loads, navigation, key interactions)
+- **`visual-regression.spec.ts`**: Critical page screenshots only (homepage full/viewport, blog listing/post, 404)
+- **`edge-cases.spec.ts`**: Critical error scenarios (slow network, offline mode, JS errors, missing images)
+- **`performance.spec.ts`**: Essential performance checks (homepage load, Core Web Vitals)
+
+**Commands:**
+
+```bash
+# Run all E2E tests
+npm run test:e2e
+
+# Run visual regression tests only
+npm run visual:test
+
+# Update visual regression snapshots (after UI changes)
+npm run visual:update
+
+# Run specific test file
+npx playwright test tests/e2e/critical-journeys.spec.ts
+```
+
+**When to add E2E tests:**
+
+- **Add E2E tests** when:
+  - A new critical user journey is introduced (e.g., new multi-step flow)
+  - A major page is added that needs visual regression coverage
+  - A critical error scenario needs to be tested (e.g., payment failure, form submission errors)
+
+- **Don't add E2E tests** for:
+  - Component-level interactions (use component tests instead)
+  - Single-page functionality (use page tests instead)
+  - Minor UI changes (visual regression will catch major regressions)
+  - Edge cases that don't impact core user experience
+
+**Visual regression snapshots:**
+
+Visual regression tests capture screenshots of critical pages. When UI changes are intentional, update snapshots:
+
+```bash
+npm run visual:update
+```
+
+This updates snapshots for all 5 critical page tests. Review the changes carefully before committing.
 
 ### Storybook
 

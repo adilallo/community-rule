@@ -31,9 +31,7 @@ export default defineConfig({
       "tests/unit/**/*.test.{js,jsx,ts,tsx}", // Legacy - remaining non-component tests
       "tests/e2e/**/*.e2e.test.{js,jsx,ts,tsx}",
     ],
-    exclude: [
-      "tests/e2e/**/*.spec.{js,jsx,ts,tsx}",
-    ],
+    exclude: ["tests/e2e/**/*.spec.{js,jsx,ts,tsx}"],
     // Disable CSS processing in tests to avoid jsdom parsing errors with Tailwind v4
     // Tailwind classes are still available via JIT compilation
     css: false,

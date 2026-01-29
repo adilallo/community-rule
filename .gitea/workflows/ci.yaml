@@ -307,13 +307,7 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Comprehensive Performance Testing
-        run: |
-          echo "🧪 Running comprehensive performance testing..."
-          npm run test:performance:ci
-          echo "✅ Performance testing complete"
-
-          # 1) Sanity check that the build exists
+      # 1) Sanity check that the build exists
       - name: Verify Next build output
         run: |
           set -euo pipefail
