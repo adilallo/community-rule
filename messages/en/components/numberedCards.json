@@ -1,0 +1,24 @@
+{
+  "_comment": "NumberedCards component translations",
+  "title": "How CommunityRule works",
+  "subtitle": "Here's a quick overview of the process, from start to finish.",
+  "titleLg": "How CommunityRule helps",
+  "buttons": {
+    "createCommunityRule": "Create CommunityRule",
+    "seeHowItWorks": "See how it works"
+  },
+  "cards": {
+    "card1": {
+      "text": "Document how your community makes decisions",
+      "_comment": "First step card"
+    },
+    "card2": {
+      "text": "Build an operating manual for a successful community",
+      "_comment": "Second step card"
+    },
+    "card3": {
+      "text": "Get a link to your manual for your group to review and evolve",
+      "_comment": "Third step card"
+    }
+  }
+}

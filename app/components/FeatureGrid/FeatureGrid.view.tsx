@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "../../contexts/MessagesContext";
 import ContentLockup from "../ContentLockup";
 import MiniCard from "../MiniCard";
 import type { FeatureGridViewProps } from "./FeatureGrid.types";
@@ -9,11 +12,16 @@ function FeatureGridView({
   features,
   labelledBy,
 }: FeatureGridViewProps) {
+  const t = useTranslation();
+  const ariaLabel = t("featureGrid.ariaLabel");
+  const linkText = t("featureGrid.linkText");
+  const linkHref = t("featureGrid.linkHref");
+
   return (
     <section
       className={`p-0 lg:p-[var(--spacing-scale-064)] ${className}`}
       aria-labelledby={labelledBy}
-      aria-label={labelledBy ? undefined : "Feature tools and services"}
+      aria-label={labelledBy ? undefined : ariaLabel}
     >
       <div className="py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:pt-[var(--spacing-scale-076)] md:pb-[var(--spacing-scale-048)] lg:pb-[var(--spacing-scale-076)] md:px-[var(--spacing-scale-048)] bg-[#171717] rounded-[var(--radius-measures-radius-xlarge)] focus-within:ring-2 focus-within:ring-[var(--color-surface-default-brand-royal)] focus-within:ring-offset-2">
         <div className="w-full mx-auto gap-[var(--spacing-scale-048)] lg:flex lg:items-start lg:gap-[var(--spacing-scale-048)] [container-type:inline-size]">
@@ -23,8 +31,8 @@ function FeatureGridView({
               title={title}
               subtitle={subtitle}
               variant="feature"
-              linkText="Learn more"
-              linkHref="#"
+              linkText={linkText}
+              linkHref={linkHref}
               titleId={labelledBy}
             />
           </div>

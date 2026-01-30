@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "../../contexts/MessagesContext";
 import ContentLockup from "../ContentLockup";
 import Button from "../Button";
 import type { AskOrganizerViewProps } from "./AskOrganizer.types";
@@ -16,11 +19,14 @@ function AskOrganizerView({
   labelledBy,
   onContactClick,
 }: AskOrganizerViewProps) {
+  const t = useTranslation();
+  const ariaLabel = t("askOrganizer.ariaLabel");
+
   return (
     <section
       className={`${sectionPadding} ${className}`}
       aria-labelledby={labelledBy}
-      aria-label={labelledBy ? undefined : "Ask an organizer"}
+      aria-label={labelledBy ? undefined : ariaLabel}
       tabIndex={-1}
     >
       <div className={`flex flex-col ${contentGap}`}>
@@ -42,7 +48,7 @@ function AskOrganizerView({
             variant={variant === "inverse" ? "primary" : "default"}
             className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
             onClick={onContactClick}
-            ariaLabel={`${buttonText} - Contact an organizer for help`}
+            ariaLabel={ariaLabel}
           >
             {buttonText}
           </Button>

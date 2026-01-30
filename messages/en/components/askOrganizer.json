@@ -1,0 +1,8 @@
+{
+  "_comment": "AskOrganizer component translations",
+  "title": "Still have questions?",
+  "subtitle": "Get answers from an experienced organizer",
+  "buttonText": "Ask an organizer",
+  "buttonHref": "#contact",
+  "ariaLabel": "Ask an organizer - Contact an organizer for help"
+}
