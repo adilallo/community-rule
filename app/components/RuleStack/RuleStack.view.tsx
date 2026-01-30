@@ -1,47 +1,13 @@
-"use client";
-
-import { memo } from "react";
 import Image from "next/image";
-import RuleCard from "./RuleCard";
-import Button from "./Button";
-import { getAssetPath } from "../../lib/assetUtils";
-import { logger } from "../../lib/logger";
+import RuleCard from "../RuleCard";
+import Button from "../Button";
+import { getAssetPath } from "../../../lib/assetUtils";
+import type { RuleStackViewProps } from "./RuleStack.types";
 
-interface RuleStackProps {
-  className?: string;
-}
-
-declare global {
-  interface Window {
-    gtag?: (
-      _command: string,
-      _eventName: string,
-      _params?: Record<string, unknown>,
-    ) => void;
-    analytics?: {
-      track: (_eventName: string, _params?: Record<string, unknown>) => void;
-    };
-  }
-}
-
-const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
-  const handleTemplateClick = (templateName: string) => {
-    // Basic analytics tracking
-    if (typeof window !== "undefined") {
-      if (window.gtag) {
-        window.gtag("event", "template_click", {
-          template_name: templateName,
-        });
-      }
-      if (window.analytics) {
-        window.analytics.track("Template Clicked", {
-          templateName: templateName,
-        });
-      }
-    }
-    logger.debug(`${templateName} template clicked`);
-  };
-
+export function RuleStackView({
+  className,
+  onTemplateClick,
+}: RuleStackViewProps) {
   return (
     <section
       className={`w-full bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] md:py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-032)] xmd:py-[var(--spacing-scale-056)] xmd:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] xl:px-[var(--spacing-scale-096)] flex flex-col gap-[var(--spacing-scale-024)] xmd:gap-[var(--spacing-scale-032)] lg:gap-[var(--spacing-scale-040)] ${className}`}
@@ -60,7 +26,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
-          onClick={() => handleTemplateClick("Consensus clusters")}
+          onClick={() => onTemplateClick("Consensus clusters")}
         />
         <RuleCard
           title="Consensus"
@@ -75,7 +41,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
-          onClick={() => handleTemplateClick("Consensus")}
+          onClick={() => onTemplateClick("Consensus")}
         />
         <RuleCard
           title="Elected Board"
@@ -90,7 +56,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-red)]"
-          onClick={() => handleTemplateClick("Elected Board")}
+          onClick={() => onTemplateClick("Elected Board")}
         />
         <RuleCard
           title="Petition"
@@ -105,7 +71,7 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
             />
           }
           backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
-          onClick={() => handleTemplateClick("Petition")}
+          onClick={() => onTemplateClick("Petition")}
         />
       </div>
 
@@ -117,8 +83,4 @@ const RuleStack = memo<RuleStackProps>(({ className = "" }) => {
       </div>
     </section>
   );
-});
-
-RuleStack.displayName = "RuleStack";
-
-export default RuleStack;
+}

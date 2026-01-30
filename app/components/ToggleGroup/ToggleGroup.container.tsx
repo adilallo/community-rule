@@ -1,25 +1,10 @@
+"use client";
+
 import { memo, useCallback, useId, forwardRef } from "react";
+import { ToggleGroupView } from "./ToggleGroup.view";
+import type { ToggleGroupProps } from "./ToggleGroup.types";
 
-interface ToggleGroupProps extends Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  "onChange"
-> {
-  children?: React.ReactNode;
-  className?: string;
-  position?: "left" | "middle" | "right";
-  state?: "default" | "hover" | "focus" | "selected";
-  showText?: boolean;
-  ariaLabel?: string;
-  onChange?: (
-    _e:
-      | React.MouseEvent<HTMLButtonElement>
-      | React.KeyboardEvent<HTMLButtonElement>,
-  ) => void;
-  onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
-}
-
-const ToggleGroup = memo(
+const ToggleGroupContainer = memo(
   forwardRef<HTMLButtonElement, ToggleGroupProps>((props, ref) => {
     const {
       children,
@@ -132,25 +117,25 @@ const ToggleGroup = memo(
       .replace(/\s+/g, " ");
 
     return (
-      <button
-        ref={ref}
-        id={groupId}
-        type="button"
-        role="button"
-        aria-label={ariaLabel || (showText ? undefined : "Toggle option")}
+      <ToggleGroupView
+        groupId={groupId}
+        children={children}
+        className={className}
+        position={position}
+        state={state}
+        showText={showText}
+        ariaLabel={ariaLabel}
+        toggleClasses={toggleClasses}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={toggleClasses}
         {...rest}
-      >
-        {showText ? children : children || "☰"}
-      </button>
+      />
     );
   }),
 );
 
-ToggleGroup.displayName = "ToggleGroup";
+ToggleGroupContainer.displayName = "ToggleGroup";
 
-export default ToggleGroup;
+export default ToggleGroupContainer;
