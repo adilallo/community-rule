@@ -1,19 +1,10 @@
-import Logo from "../Logo";
 import MenuBar from "../MenuBar";
-import MenuBarItem from "../MenuBarItem";
-import Button from "../Button";
-import AvatarContainer from "../AvatarContainer";
-import Avatar from "../Avatar";
 import type { HeaderViewProps } from "./Header.types";
 
 export function HeaderView({
   schemaData,
-  navigationItems,
-  avatarImages,
   logoConfig,
-  pathname,
   renderNavigationItems,
-  renderAvatarGroup,
   renderLoginButton,
   renderCreateRuleButton,
   renderLogo,

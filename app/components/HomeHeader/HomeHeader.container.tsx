@@ -178,13 +178,9 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
 
   return (
     <HomeHeaderView
-      pathname={pathname}
       schemaData={schemaData}
-      navigationItems={navigationItems}
-      avatarImages={avatarImages}
       logoConfig={logoConfig}
       renderNavigationItems={renderNavigationItems}
-      renderAvatarGroup={renderAvatarGroup}
       renderLoginButton={renderLoginButton}
       renderCreateRuleButton={renderCreateRuleButton}
       renderLogo={renderLogo}

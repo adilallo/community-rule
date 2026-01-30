@@ -2,23 +2,14 @@
 
 import { memo } from "react";
 import Script from "next/script";
-import Logo from "../Logo";
 import HeaderTab from "../HeaderTab";
 import MenuBar from "../MenuBar";
-import MenuBarItem from "../MenuBarItem";
-import Button from "../Button";
-import AvatarContainer from "../AvatarContainer";
-import Avatar from "../Avatar";
 import type { HomeHeaderViewProps } from "./HomeHeader.types";
 
 function HomeHeaderView({
-  pathname,
   schemaData,
-  navigationItems,
-  avatarImages,
   logoConfig,
   renderNavigationItems,
-  renderAvatarGroup,
   renderLoginButton,
   renderCreateRuleButton,
   renderLogo,

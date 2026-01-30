@@ -17,7 +17,6 @@ export interface CheckboxProps {
 }
 
 export interface CheckboxViewProps {
-  checkboxId: string;
   labelId: string;
   checked: boolean;
   mode: "standard" | "inverse";
@@ -26,7 +25,6 @@ export interface CheckboxViewProps {
   label?: string;
   name?: string;
   value?: string;
-  ariaLabel?: string;
   className: string;
   combinedBoxStyles: string;
   defaultOutlineClass: string;

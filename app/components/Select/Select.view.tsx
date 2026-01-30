@@ -1,4 +1,4 @@
-import React, { Children, type ReactElement, type ReactNode } from "react";
+import React, { Children, type ReactNode } from "react";
 import SelectDropdown from "../SelectDropdown";
 import SelectOption from "../SelectOption";
 import type { SelectOptionData } from "./Select.types";

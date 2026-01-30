@@ -17,17 +17,7 @@ export type NavSize =
   | "xlarge";
 
 export interface HomeHeaderViewProps {
-  pathname: string;
   schemaData: object;
-  navigationItems: Array<{
-    href: string;
-    text: string;
-    extraPadding?: boolean;
-  }>;
-  avatarImages: Array<{
-    src: string;
-    alt: string;
-  }>;
   logoConfig: Array<{
     breakpoint: string;
     size:
@@ -46,10 +36,6 @@ export interface HomeHeaderViewProps {
     showText: boolean;
   }>;
   renderNavigationItems: (size: NavSize) => React.ReactNode;
-  renderAvatarGroup: (
-    containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge",
-  ) => React.ReactNode;
   renderLoginButton: (size: NavSize) => React.ReactNode;
   renderCreateRuleButton: (
     buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",

@@ -138,12 +138,8 @@ const HeaderContainer = memo<HeaderProps>(() => {
   return (
     <HeaderView
       schemaData={schemaData}
-      navigationItems={navigationItems}
-      avatarImages={avatarImages}
       logoConfig={logoConfig}
-      pathname={pathname}
       renderNavigationItems={renderNavigationItems}
-      renderAvatarGroup={renderAvatarGroup}
       renderLoginButton={renderLoginButton}
       renderCreateRuleButton={renderCreateRuleButton}
       renderLogo={renderLogo}

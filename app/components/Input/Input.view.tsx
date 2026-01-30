@@ -12,7 +12,11 @@ export const InputView = forwardRef<HTMLInputElement, InputViewProps>(
       name,
       type,
       disabled,
-      className,
+      size: _size,
+      labelVariant: _labelVariant,
+      state: _state,
+      error: _error,
+      className: _className,
       containerClasses,
       labelClasses,
       inputClasses,
@@ -20,7 +24,6 @@ export const InputView = forwardRef<HTMLInputElement, InputViewProps>(
       handleChange,
       handleFocus,
       handleBlur,
-      ...props
     },
     ref,
   ) => {
@@ -49,7 +52,6 @@ export const InputView = forwardRef<HTMLInputElement, InputViewProps>(
             disabled={disabled}
             className={inputClasses}
             style={{ borderRadius }}
-            {...props}
           />
         </div>
       </div>

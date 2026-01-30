@@ -14,15 +14,6 @@ export interface HeaderViewProps {
       "query-input": string;
     };
   };
-  navigationItems: Array<{
-    href: string;
-    text: string;
-    extraPadding?: boolean;
-  }>;
-  avatarImages: Array<{
-    src: string;
-    alt: string;
-  }>;
   logoConfig: Array<{
     breakpoint: string;
     size:
@@ -40,12 +31,7 @@ export interface HeaderViewProps {
       | "footerLg";
     showText: boolean;
   }>;
-  pathname: string;
   renderNavigationItems: (size: NavSize) => React.ReactNode;
-  renderAvatarGroup: (
-    containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge",
-  ) => React.ReactNode;
   renderLoginButton: (size: NavSize) => React.ReactNode;
   renderCreateRuleButton: (
     buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",

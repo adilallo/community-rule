@@ -43,33 +43,31 @@ const defaultLogos = [
   },
 ];
 
-const LogoWallContainer = memo<LogoWallProps>(
-  ({ logos, className = "" }) => {
-    const [isVisible, setIsVisible] = useState(false);
+const LogoWallContainer = memo<LogoWallProps>(({ logos, className = "" }) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-    const displayLogos = useMemo(
-      () => (logos && logos.length > 0 ? logos : defaultLogos),
-      [logos],
-    );
+  const displayLogos = useMemo(
+    () => (logos && logos.length > 0 ? logos : defaultLogos),
+    [logos],
+  );
 
-    useEffect(() => {
-      // Trigger fade-in animation after component mounts
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 100);
+  useEffect(() => {
+    // Trigger fade-in animation after component mounts
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
 
-      return () => clearTimeout(timer);
-    }, []);
+    return () => clearTimeout(timer);
+  }, []);
 
-    return (
-      <LogoWallView
-        isVisible={isVisible}
-        displayLogos={displayLogos}
-        className={className}
-      />
-    );
-  },
-);
+  return (
+    <LogoWallView
+      isVisible={isVisible}
+      displayLogos={displayLogos}
+      className={className}
+    />
+  );
+});
 
 LogoWallContainer.displayName = "LogoWall";
 

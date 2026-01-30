@@ -21,7 +21,8 @@ export interface MiniCardViewProps {
   labelLine2?: string;
   computedAriaLabel: string;
   wrapperElement: "a" | "button" | "div";
-  wrapperProps: React.AnchorHTMLAttributes<HTMLAnchorElement> &
-    React.ButtonHTMLAttributes<HTMLButtonElement> &
-    React.HTMLAttributes<HTMLDivElement>;
+  wrapperProps:
+    | React.AnchorHTMLAttributes<HTMLAnchorElement>
+    | React.ButtonHTMLAttributes<HTMLButtonElement>
+    | React.HTMLAttributes<HTMLDivElement>;
 }

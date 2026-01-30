@@ -97,7 +97,6 @@ const CheckboxContainer = memo<CheckboxProps>(
 
     return (
       <CheckboxView
-        checkboxId={checkboxId}
         labelId={labelId}
         checked={checked}
         mode={mode}
@@ -106,7 +105,6 @@ const CheckboxContainer = memo<CheckboxProps>(
         label={label}
         name={name}
         value={value}
-        ariaLabel={ariaLabel}
         className={className}
         combinedBoxStyles={combinedBoxStyles}
         defaultOutlineClass={defaultOutlineClass}

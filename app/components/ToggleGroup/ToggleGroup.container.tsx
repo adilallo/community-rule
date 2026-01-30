@@ -5,7 +5,7 @@ import { ToggleGroupView } from "./ToggleGroup.view";
 import type { ToggleGroupProps } from "./ToggleGroup.types";
 
 const ToggleGroupContainer = memo(
-  forwardRef<HTMLButtonElement, ToggleGroupProps>((props, ref) => {
+  forwardRef<HTMLButtonElement, ToggleGroupProps>((props, _ref) => {
     const {
       children,
       className = "",

@@ -1,14 +1,12 @@
 import type { CheckboxViewProps } from "./Checkbox.types";
 
 export function CheckboxView({
-  checkboxId,
   labelId,
   checked,
   disabled,
   label,
   name,
   value,
-  ariaLabel,
   className,
   combinedBoxStyles,
   defaultOutlineClass,
