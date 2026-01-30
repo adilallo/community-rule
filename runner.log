@@ -1,4 +1,0 @@
-time="2026-01-29T20:16:26-07:00" level=info msg="log level changed to debug" func="[initLogging]" file="[daemon.go:158]"
-time="2026-01-29T20:16:26-07:00" level=info msg="Starting runner daemon" func="[func6]" file="[daemon.go:38]"
-time="2026-01-29T20:16:26-07:00" level=debug msg="gc: 2026-01-29 20:16:26.704803 -0700 MST m=+0.007200001" func="[gcCache]" file="[handler.go:439]" module=artifactcache
-time="2026-01-29T20:16:26-07:00" level=info msg="runner: community-rule-runner-mac, with version: v0.2.6, with labels: [self-hosted macos-latest], declare successfully" func="[func6]" file="[daemon.go:109]"
