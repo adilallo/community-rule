@@ -4,6 +4,8 @@ export interface LogoWallProps {
     alt: string;
     width?: number;
     height?: number;
+    size?: string;
+    order?: string;
   }>;
   className?: string;
 }
@@ -15,6 +17,8 @@ export interface LogoWallViewProps {
     alt: string;
     width?: number;
     height?: number;
+    size?: string;
+    order?: string;
   }>;
   className: string;
 }

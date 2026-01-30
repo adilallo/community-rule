@@ -12,6 +12,7 @@ const NavigationItemContainer = memo<NavigationItemProps>(
     size = "default",
     className = "",
     disabled = false,
+    isActive = false,
     ...props
   }) => {
     // Variant styles
@@ -43,7 +44,12 @@ const NavigationItemContainer = memo<NavigationItemProps>(
       finalVariant = "default"; // The disabled state is handled by disabled: utilities
     }
 
-    const combinedStyles = `${baseStyles} ${variantStyles[finalVariant]} ${className}`;
+    // Active state styling
+    const activeStyles = isActive
+      ? "!border-[var(--color-content-default-brand-primary)] !text-[var(--color-content-default-brand-primary)]"
+      : "";
+
+    const combinedStyles = `${baseStyles} ${variantStyles[finalVariant]} ${activeStyles} ${className}`;
 
     return (
       <NavigationItemView

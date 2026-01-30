@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
-import { logger } from "../../lib/logger";
+import { logger } from "../../../lib/logger";
 import WebVitalsDashboardView from "./WebVitalsDashboard.view";
 import type { Metrics, Vitals, VitalData } from "./WebVitalsDashboard.types";
 
