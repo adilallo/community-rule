@@ -1,40 +1,19 @@
-"use client";
+import SectionHeader from "../SectionHeader";
+import NumberedCard from "../NumberedCard";
+import Button from "../Button";
+import type { NumberedCardsViewProps } from "./NumberedCards.types";
 
-import { memo } from "react";
-import NumberedCard from "./NumberedCard";
-import SectionHeader from "./SectionHeader";
-import Button from "./Button";
-import { useSchemaData } from "../hooks";
-
-interface Card {
-  text: string;
-  iconShape?: string;
-  iconColor?: string;
-}
-
-interface NumberedCardsProps {
-  title: string;
-  subtitle: string;
-  cards: Card[];
-}
-
-const NumberedCards = memo<NumberedCardsProps>(({ title, subtitle, cards }) => {
-  // Generate schema data using hook
-  const schemaData = useSchemaData({
-    type: "HowTo",
-    name: title,
-    description: subtitle,
-    steps: cards.map((card) => ({
-      name: card.text,
-      text: card.text,
-    })),
-  });
-
+function NumberedCardsView({
+  title,
+  subtitle,
+  cards,
+  schemaJson,
+}: NumberedCardsViewProps) {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        dangerouslySetInnerHTML={{ __html: schemaJson }}
       />
       <section className="bg-transparent py-[var(--spacing-scale-032)] px-[var(--spacing-scale-020)] sm:py-[var(--spacing-scale-048)] sm:px-[var(--spacing-scale-032)] lg:py-[var(--spacing-scale-064)] lg:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-076)] xl:px-[var(--spacing-scale-064)]">
         <div className="max-w-[var(--spacing-measures-max-width-lg)] mx-auto">
@@ -81,8 +60,7 @@ const NumberedCards = memo<NumberedCardsProps>(({ title, subtitle, cards }) => {
       </section>
     </>
   );
-});
+}
 
-NumberedCards.displayName = "NumberedCards";
+export default NumberedCardsView;
 
-export default NumberedCards;

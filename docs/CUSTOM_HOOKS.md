@@ -347,13 +347,15 @@ const {
 
 The following components have been refactored to use custom hooks:
 
-- **Select.tsx** - Uses `useClickOutside`
-- **AskOrganizer.tsx** - Uses `useAnalytics`
+- **Select** - Uses `useClickOutside` (now uses Container/Presentation pattern)
+- **AskOrganizer** - Uses `useAnalytics` (now uses Container/Presentation pattern)
 - **Input.tsx** - Uses `useComponentId` and `useFormField`
 - **TextArea.tsx** - Uses `useComponentId` and `useFormField`
 - **Checkbox.tsx** - Uses `useComponentId`
-- **NumberedCards.tsx** - Uses `useSchemaData`
+- **NumberedCards** - Uses `useSchemaData` (now uses Container/Presentation pattern)
 - **RelatedArticles.tsx** - Uses `useIsMobile`
+
+> **Note**: Components marked with "Container/Presentation pattern" have been refactored to separate logic (container) from presentation (view). Hooks are used in the container components. See [Container/Presentation Pattern Guide](./guides/container-presentation-pattern.md) for details.
 
 ## Adding New Hooks
 

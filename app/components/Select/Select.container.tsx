@@ -11,33 +11,13 @@ import React, {
   useCallback,
   memo,
   useImperativeHandle,
+  useEffect,
 } from "react";
-import { useClickOutside } from "../hooks";
-import SelectDropdown from "./SelectDropdown";
-import SelectOption from "./SelectOption";
+import { useClickOutside } from "../../hooks";
+import { SelectView } from "./Select.view";
+import type { SelectProps } from "./Select.types";
 
-interface SelectOptionData {
-  value: string;
-  label: string;
-}
-
-interface SelectProps {
-  id?: string;
-  label?: string;
-  labelVariant?: "default" | "horizontal";
-  size?: "small" | "medium" | "large";
-  state?: "default" | "hover" | "focus";
-  disabled?: boolean;
-  error?: boolean;
-  placeholder?: string;
-  className?: string;
-  children?: React.ReactNode;
-  value?: string;
-  onChange?: (_data: { target: { value: string; text: string } }) => void;
-  options?: SelectOptionData[];
-}
-
-const Select = forwardRef<HTMLButtonElement, SelectProps>(
+const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
   (
     {
       id,
@@ -64,6 +44,13 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
     const [selectedValue, setSelectedValue] = useState(value || "");
     const selectRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+
+    // Sync internal state with external value prop
+    useEffect(() => {
+      if (value !== undefined) {
+        setSelectedValue(value);
+      }
+    }, [value]);
 
     useImperativeHandle(
       ref,
@@ -239,6 +226,12 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
         ? "flex items-center gap-[12px]"
         : "flex flex-col";
 
+    const chevronClasses = `${
+      size === "large" ? "w-5 h-5" : "w-4 h-4"
+    } text-[var(--color-content-default-primary)] transition-transform duration-200 ${
+      isOpen ? "rotate-180" : ""
+    }`;
+
     // Get display text for selected value
     const getDisplayText = (): string => {
       if (!selectedValue) return placeholder;
@@ -273,107 +266,39 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(
     };
 
     return (
-      <div className={containerClasses}>
-        {label && (
-          <label
-            id={labelId}
-            htmlFor={selectId}
-            className={`${labelClasses} text-[var(--color-content-default-secondary)]`}
-          >
-            {label}
-          </label>
-        )}
-        <div className="relative">
-          <button
-            ref={selectRef}
-            id={selectId}
-            disabled={disabled}
-            className={selectClasses}
-            aria-labelledby={label ? labelId : undefined}
-            aria-invalid={error}
-            aria-expanded={isOpen}
-            aria-haspopup="listbox"
-            onClick={handleSelectClick}
-            onKeyDown={handleKeyDown}
-            {...props}
-          >
-            <span className="text-left">{getDisplayText()}</span>
-          </button>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-[12px] pointer-events-none">
-            <svg
-              className={`${
-                size === "large" ? "w-5 h-5" : "w-4 h-4"
-              } text-[var(--color-content-default-primary)] transition-transform duration-200 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
-
-          {isOpen && (
-            <div
-              ref={menuRef}
-              className="absolute top-full left-0 right-0 z-50 mt-1"
-            >
-              <SelectDropdown>
-                {options && Array.isArray(options)
-                  ? options.map((option) => (
-                      <SelectOption
-                        key={option.value}
-                        selected={option.value === selectedValue}
-                        size={size}
-                        onClick={() =>
-                          handleOptionSelect(option.value, option.label)
-                        }
-                      >
-                        {option.label}
-                      </SelectOption>
-                    ))
-                  : Children.map(children, (child) => {
-                      if (
-                        React.isValidElement(child) &&
-                        child.type === "option"
-                      ) {
-                        const optionProps = child.props as {
-                          value: string;
-                          children: ReactNode;
-                        };
-                        return (
-                          <SelectOption
-                            key={optionProps.value}
-                            selected={optionProps.value === selectedValue}
-                            size={size}
-                            onClick={() =>
-                              handleOptionSelect(
-                                optionProps.value,
-                                String(optionProps.children),
-                              )
-                            }
-                          >
-                            {optionProps.children}
-                          </SelectOption>
-                        );
-                      }
-                      return child;
-                    })}
-              </SelectDropdown>
-            </div>
-          )}
-        </div>
-      </div>
+      <SelectView
+        label={label}
+        placeholder={placeholder}
+        size={size}
+        state={state}
+        disabled={disabled}
+        error={error}
+        labelVariant={labelVariant}
+        className={className}
+        options={options}
+        children={children}
+        selectId={selectId}
+        labelId={labelId}
+        isOpen={isOpen}
+        selectedValue={selectedValue}
+        displayText={getDisplayText()}
+        selectClasses={selectClasses}
+        labelClasses={labelClasses}
+        containerClasses={containerClasses}
+        chevronClasses={chevronClasses}
+        onButtonClick={handleSelectClick}
+        onButtonKeyDown={handleKeyDown}
+        onOptionClick={handleOptionSelect}
+        selectRef={selectRef}
+        menuRef={menuRef}
+        ariaLabelledby={label ? labelId : undefined}
+        ariaInvalid={error}
+        {...props}
+      />
     );
   },
 );
 
-Select.displayName = "Select";
+SelectContainer.displayName = "Select";
 
-export default memo(Select);
+export default memo(SelectContainer);

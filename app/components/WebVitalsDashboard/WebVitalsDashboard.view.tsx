@@ -1,159 +1,43 @@
-"use client";
+import type { WebVitalsDashboardViewProps } from "./WebVitalsDashboard.types";
 
-import { useState, useEffect, memo } from "react";
-import { logger } from "../../lib/logger";
+const getRatingColor = (rating: string): string => {
+  switch (rating) {
+    case "good":
+      return "text-green-600 bg-green-50";
+    case "needs-improvement":
+      return "text-yellow-600 bg-yellow-50";
+    case "poor":
+      return "text-red-600 bg-red-50";
+    default:
+      return "text-gray-600 bg-gray-50";
+  }
+};
 
-interface VitalData {
-  value: number;
-  rating: "good" | "needs-improvement" | "poor" | "unknown";
-}
+const getRatingIcon = (rating: string): string => {
+  switch (rating) {
+    case "good":
+      return "✅";
+    case "needs-improvement":
+      return "⚠️";
+    case "poor":
+      return "❌";
+    default:
+      return "❓";
+  }
+};
 
-interface Vitals {
-  lcp: VitalData;
-  fid: VitalData;
-  cls: VitalData;
-  fcp: VitalData;
-  ttfb: VitalData;
-}
+const formatValue = (metric: string, value: number): string => {
+  if (metric === "cls") {
+    return value.toFixed(3);
+  }
+  return `${value}ms`;
+};
 
-interface MetricData {
-  count: number;
-  average: number;
-  min: number;
-  max: number;
-  goodCount: number;
-  needsImprovementCount: number;
-  poorCount: number;
-  lastUpdated?: string;
-}
-
-interface Metrics {
-  [key: string]: MetricData;
-}
-
-const WebVitalsDashboard = memo(() => {
-  const [vitals, setVitals] = useState<Vitals>({
-    lcp: { value: 0, rating: "unknown" },
-    fid: { value: 0, rating: "unknown" },
-    cls: { value: 0, rating: "unknown" },
-    fcp: { value: 0, rating: "unknown" },
-    ttfb: { value: 0, rating: "unknown" },
-  });
-
-  const [metrics, setMetrics] = useState<Metrics>({});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch Web Vitals data from API
-    const fetchVitals = async () => {
-      try {
-        const response = await fetch("/api/web-vitals");
-        const data = (await response.json()) as { metrics?: Metrics };
-        setMetrics(data.metrics || {});
-      } catch (error) {
-        logger.error("Error fetching web vitals:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVitals();
-
-    // Set up Web Vitals tracking
-    if (typeof window !== "undefined") {
-      import("web-vitals").then((webVitals) => {
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as any;
-        // Track Largest Contentful Paint
-        getLCP((metric) => {
-          setVitals((prev) => ({
-            ...prev,
-            lcp: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-
-        // Track First Input Delay
-        getFID((metric) => {
-          setVitals((prev) => ({
-            ...prev,
-            fid: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-
-        // Track Cumulative Layout Shift
-        getCLS((metric) => {
-          setVitals((prev) => ({
-            ...prev,
-            cls: {
-              value: Math.round(metric.value * 1000) / 1000,
-              rating: metric.rating,
-            },
-          }));
-        });
-
-        // Track First Contentful Paint
-        getFCP((metric) => {
-          setVitals((prev) => ({
-            ...prev,
-            fcp: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-
-        // Track Time to First Byte
-        getTTFB((metric) => {
-          setVitals((prev) => ({
-            ...prev,
-            ttfb: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-      });
-    }
-  }, []);
-
-  const getRatingColor = (rating: string): string => {
-    switch (rating) {
-      case "good":
-        return "text-green-600 bg-green-50";
-      case "needs-improvement":
-        return "text-yellow-600 bg-yellow-50";
-      case "poor":
-        return "text-red-600 bg-red-50";
-      default:
-        return "text-gray-600 bg-gray-50";
-    }
-  };
-
-  const getRatingIcon = (rating: string): string => {
-    switch (rating) {
-      case "good":
-        return "✅";
-      case "needs-improvement":
-        return "⚠️";
-      case "poor":
-        return "❌";
-      default:
-        return "❓";
-    }
-  };
-
-  const formatValue = (metric: string, value: number): string => {
-    if (metric === "cls") {
-      return value.toFixed(3);
-    }
-    return `${value}ms`;
-  };
-
+function WebVitalsDashboardView({
+  vitals,
+  metrics,
+  loading,
+}: WebVitalsDashboardViewProps) {
   if (loading) {
     return (
       <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -227,7 +111,9 @@ const WebVitalsDashboard = memo(() => {
                     <span className="text-yellow-600">
                       Needs Improvement: {data.needsImprovementCount}
                     </span>
-                    <span className="text-red-600">Poor: {data.poorCount}</span>
+                    <span className="text-red-600">
+                      Poor: {data.poorCount}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -266,8 +152,7 @@ const WebVitalsDashboard = memo(() => {
       </div>
     </div>
   );
-});
+}
 
-WebVitalsDashboard.displayName = "WebVitalsDashboard";
+export default WebVitalsDashboardView;
 
-export default WebVitalsDashboard;
