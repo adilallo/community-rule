@@ -21,8 +21,8 @@ if pgrep -f "act_runner daemon" > /dev/null; then
     exit 1
 fi
 
-# Start the runner in the background with proper PATH
-PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:$PATH" ./act_runner daemon --config config/gitea-runner.yaml &
+# Start the runner in the background with proper PATH and log redirection
+PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:$PATH" ./act_runner daemon --config config/gitea-runner.yaml > runner.log 2>&1 &
 RUNNER_PID=$!
 
 # Save PID to file for easy stopping
