@@ -9,11 +9,12 @@ interface QuoteDecorProps {
 const QuoteDecor = memo<QuoteDecorProps>(({ className = "" }) => {
   return (
     <svg
-      className={`text-[var(--color-surface-inverse-brand-primary)] opacity-100 w-full h-full md:max-w-[640px] lg:max-w-[850px] xl:max-w-[1100px] ${className}`}
+      className={`text-[var(--color-surface-inverse-brand-primary)] opacity-100 ${className}`}
       viewBox="400 0 442 163"
       aria-hidden="true"
       overflow="visible"
       preserveAspectRatio="xMinYMin meet"
+      style={{ width: "100%", height: "100%" }}
     >
       <g fill="currentColor">
         {/* Mobile ellipses */}

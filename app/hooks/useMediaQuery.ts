@@ -33,27 +33,30 @@ export function useMediaQuery(
   query: string | keyof typeof BREAKPOINTS,
   direction: "min" | "max" = "min",
 ): boolean {
-  const [matches, setMatches] = useState(false);
+  // Convert breakpoint key to media query string
+  let mediaQuery: string;
+  if (query in BREAKPOINTS) {
+    const breakpoint = BREAKPOINTS[query as keyof typeof BREAKPOINTS];
+    mediaQuery = `(${direction}-width: ${breakpoint}px)`;
+  } else {
+    mediaQuery = query;
+  }
+
+  // Initialize state with current match if available (SSR safety)
+  const [matches, setMatches] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    return window.matchMedia(mediaQuery).matches;
+  });
 
   useEffect(() => {
-    // Convert breakpoint key to media query string
-    let mediaQuery: string;
-    if (query in BREAKPOINTS) {
-      const breakpoint = BREAKPOINTS[query as keyof typeof BREAKPOINTS];
-      mediaQuery = `(${direction}-width: ${breakpoint}px)`;
-    } else {
-      mediaQuery = query;
-    }
-
     // Check if window is available (SSR safety)
     if (typeof window === "undefined") {
       return;
     }
 
     const media = window.matchMedia(mediaQuery);
-    // Initialize matches synchronously - this is safe for media queries
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    setMatches(media.matches);
 
     // Create listener for changes
     const listener = (event: MediaQueryListEvent) => {

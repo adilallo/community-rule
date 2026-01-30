@@ -11,6 +11,7 @@ This directory contains project documentation organized by topic.
 
 ### Guides (`guides/`)
 
+- **[container-presentation-pattern.md](./guides/container-presentation-pattern.md)** - Container/Presentation pattern guide for component architecture
 - **[content-creation.md](./guides/content-creation.md)** - Guide for creating blog content
 
 ## Quick Navigation
@@ -32,6 +33,15 @@ See **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** for:
 - Available custom hooks
 - Usage examples
 - API documentation
+
+### For Component Architecture
+
+See **[container-presentation-pattern.md](./guides/container-presentation-pattern.md)** for:
+
+- Container/Presentation pattern overview
+- When and how to use the pattern
+- Migration guide for existing components
+- Best practices and examples
 
 ### For Content Creation
 
