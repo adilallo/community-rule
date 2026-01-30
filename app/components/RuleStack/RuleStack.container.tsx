@@ -36,7 +36,12 @@ const RuleStackContainer = memo<RuleStackProps>(({ className = "" }) => {
     logger.debug(`${templateName} template clicked`);
   };
 
-  return <RuleStackView className={className} onTemplateClick={handleTemplateClick} />;
+  return (
+    <RuleStackView
+      className={className}
+      onTemplateClick={handleTemplateClick}
+    />
+  );
 });
 
 RuleStackContainer.displayName = "RuleStack";

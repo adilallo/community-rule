@@ -111,9 +111,7 @@ function WebVitalsDashboardView({
                     <span className="text-yellow-600">
                       Needs Improvement: {data.needsImprovementCount}
                     </span>
-                    <span className="text-red-600">
-                      Poor: {data.poorCount}
-                    </span>
+                    <span className="text-red-600">Poor: {data.poorCount}</span>
                   </div>
                 </div>
               </div>
@@ -155,4 +153,3 @@ function WebVitalsDashboardView({
 }
 
 export default WebVitalsDashboardView;
-

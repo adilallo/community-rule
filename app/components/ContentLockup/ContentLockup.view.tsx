@@ -63,9 +63,7 @@ function ContentLockupView({
             </div>
 
             {/* Subtitle */}
-            {subtitle ? (
-              <h2 className={styles.subtitle}>{subtitle}</h2>
-            ) : null}
+            {subtitle ? <h2 className={styles.subtitle}>{subtitle}</h2> : null}
           </div>
 
           {/* Description */}
@@ -94,11 +92,7 @@ function ContentLockupView({
           </div>
           {/* Large button for md and lg breakpoints */}
           <div className="hidden md:block xl:hidden">
-            <Button
-              variant="primary"
-              size="large"
-              className={buttonClassName}
-            >
+            <Button variant="primary" size="large" className={buttonClassName}>
               {ctaText}
             </Button>
           </div>

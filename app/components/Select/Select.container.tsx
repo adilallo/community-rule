@@ -47,9 +47,10 @@ const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
 
     // Sync internal state with external value prop
     useEffect(() => {
-      if (value !== undefined) {
+      if (value !== undefined && value !== selectedValue) {
         setSelectedValue(value);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     useImperativeHandle(
@@ -276,7 +277,6 @@ const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
         labelVariant={labelVariant}
         className={className}
         options={options}
-        children={children}
         selectId={selectId}
         labelId={labelId}
         isOpen={isOpen}

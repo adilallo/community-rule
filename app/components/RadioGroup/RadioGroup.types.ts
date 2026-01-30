@@ -25,5 +25,5 @@ export interface RadioGroupViewProps {
   options: RadioOption[];
   className: string;
   ariaLabel?: string;
-  onOptionChange: (optionValue: string) => void;
+  onOptionChange: (_optionValue: string) => void;
 }

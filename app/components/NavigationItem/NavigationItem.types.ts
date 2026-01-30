@@ -1,5 +1,7 @@
-export interface NavigationItemProps
-  extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "isActive"> {
+export interface NavigationItemProps extends Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  "isActive"
+> {
   href?: string;
   children?: React.ReactNode;
   variant?: "default";

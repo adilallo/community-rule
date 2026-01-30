@@ -50,4 +50,3 @@ function FeatureGridView({
 }
 
 export default FeatureGridView;
-

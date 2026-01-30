@@ -11,7 +11,7 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
       value,
       name,
       disabled,
-      className,
+      className: _className,
       rows,
       containerClasses,
       labelClasses,

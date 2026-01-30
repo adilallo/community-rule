@@ -119,7 +119,6 @@ const ToggleGroupContainer = memo(
     return (
       <ToggleGroupView
         groupId={groupId}
-        children={children}
         className={className}
         position={position}
         state={state}
@@ -131,7 +130,9 @@ const ToggleGroupContainer = memo(
         onFocus={handleFocus}
         onBlur={handleBlur}
         {...rest}
-      />
+      >
+        {children}
+      </ToggleGroupView>
     );
   }),
 );

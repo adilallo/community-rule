@@ -1,5 +1,4 @@
-export interface MenuBarItemProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
   children?: React.ReactNode;
   variant?: "default" | "home";

@@ -11,6 +11,6 @@ export interface RelatedArticlesViewProps {
   slugOrder: string[];
   isMobile: boolean;
   transformStyle: React.CSSProperties;
-  getProgressStyle: (index: number) => React.CSSProperties;
-  onMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  getProgressStyle: (_index: number) => React.CSSProperties;
+  onMouseDown?: (_e: React.MouseEvent<HTMLDivElement>) => void;
 }

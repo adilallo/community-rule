@@ -38,9 +38,7 @@ function ContentContainerView({
           <h3 className={titleClasses}>{post.frontmatter.title}</h3>
 
           {/* Description */}
-          <p className={descriptionClasses}>
-            {post.frontmatter.description}
-          </p>
+          <p className={descriptionClasses}>{post.frontmatter.description}</p>
         </div>
       </div>
 

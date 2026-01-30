@@ -61,4 +61,3 @@ const FeatureGridContainer = memo<FeatureGridProps>(
 FeatureGridContainer.displayName = "FeatureGrid";
 
 export default FeatureGridContainer;
-

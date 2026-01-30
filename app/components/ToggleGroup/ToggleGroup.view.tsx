@@ -3,9 +3,9 @@ import type { ToggleGroupViewProps } from "./ToggleGroup.types";
 export function ToggleGroupView({
   groupId,
   children,
-  className,
-  position,
-  state,
+  className: _className,
+  position: _position,
+  state: _state,
   showText,
   ariaLabel,
   toggleClasses,

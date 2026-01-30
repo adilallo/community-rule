@@ -1,5 +1,7 @@
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "onChange" | "onFocus" | "onBlur"> {
+export interface InputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "onChange" | "onFocus" | "onBlur"
+> {
   size?: "small" | "medium" | "large";
   labelVariant?: "default" | "horizontal";
   state?: "default" | "active" | "hover" | "focus";
@@ -32,7 +34,7 @@ export interface InputViewProps {
   labelClasses: string;
   inputClasses: string;
   borderRadius: string;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
-  handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+  handleChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFocus: (_e: React.FocusEvent<HTMLInputElement>) => void;
+  handleBlur: (_e: React.FocusEvent<HTMLInputElement>) => void;
 }

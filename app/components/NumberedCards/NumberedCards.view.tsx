@@ -63,4 +63,3 @@ function NumberedCardsView({
 }
 
 export default NumberedCardsView;
-

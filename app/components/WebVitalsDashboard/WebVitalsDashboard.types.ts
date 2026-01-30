@@ -31,4 +31,3 @@ export interface WebVitalsDashboardViewProps {
   metrics: Metrics;
   loading: boolean;
 }
-

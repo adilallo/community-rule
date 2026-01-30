@@ -30,6 +30,6 @@ export interface RadioButtonViewProps {
   backgroundWhenChecked: string;
   dotColor: string;
   labelColor: string;
-  onToggle: (e: React.MouseEvent | React.KeyboardEvent) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLSpanElement>) => void;
+  onToggle: (_e: React.MouseEvent | React.KeyboardEvent) => void;
+  onKeyDown: (_e: React.KeyboardEvent<HTMLSpanElement>) => void;
 }

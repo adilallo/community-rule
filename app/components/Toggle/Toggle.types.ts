@@ -1,5 +1,7 @@
-export interface ToggleProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+export interface ToggleProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onChange"
+> {
   label?: string;
   checked?: boolean;
   onChange?: (
@@ -34,11 +36,11 @@ export interface ToggleViewProps {
   labelClasses: string;
   toggleClasses: string;
   onClick: (
-    e:
+    _e:
       | React.MouseEvent<HTMLButtonElement>
       | React.KeyboardEvent<HTMLButtonElement>,
   ) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
-  onFocus: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onKeyDown: (_e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onFocus: (_e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur: (_e: React.FocusEvent<HTMLButtonElement>) => void;
 }

@@ -33,4 +33,3 @@ const NumberedCardsContainer = memo<NumberedCardsProps>(
 NumberedCardsContainer.displayName = "NumberedCards";
 
 export default NumberedCardsContainer;
-

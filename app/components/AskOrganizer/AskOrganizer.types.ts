@@ -37,7 +37,6 @@ export interface AskOrganizerViewProps {
   variant: AskOrganizerVariant;
   labelledBy?: string;
   onContactClick: (
-    event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
+    _event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
   ) => void;
 }
-

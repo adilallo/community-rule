@@ -14,5 +14,5 @@ export interface RuleCardViewProps {
   backgroundColor: string;
   className: string;
   onClick: () => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown: (_event: React.KeyboardEvent<HTMLDivElement>) => void;
 }

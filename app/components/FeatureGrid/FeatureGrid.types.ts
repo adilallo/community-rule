@@ -17,4 +17,3 @@ export interface FeatureGridViewProps extends FeatureGridProps {
   features: Feature[];
   labelledBy?: string;
 }
-

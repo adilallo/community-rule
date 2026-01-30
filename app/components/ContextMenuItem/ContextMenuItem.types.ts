@@ -1,5 +1,4 @@
-export interface ContextMenuItemProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   selected?: boolean;
   hasSubmenu?: boolean;
@@ -18,6 +17,6 @@ export interface ContextMenuItemViewProps {
   disabled: boolean;
   className: string;
   itemClasses: string;
-  handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleClick: (_e: React.MouseEvent<HTMLDivElement>) => void;
+  handleKeyDown: (_e: React.KeyboardEvent<HTMLDivElement>) => void;
 }

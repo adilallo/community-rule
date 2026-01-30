@@ -1,5 +1,7 @@
-export interface TextAreaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "size" | "onChange" | "onFocus" | "onBlur"> {
+export interface TextAreaProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "size" | "onChange" | "onFocus" | "onBlur"
+> {
   size?: "small" | "medium" | "large";
   labelVariant?: "default" | "horizontal";
   state?: "default" | "active" | "hover" | "focus";
@@ -33,7 +35,7 @@ export interface TextAreaViewProps {
   labelClasses: string;
   textareaClasses: string;
   borderRadius: string;
-  handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleFocus: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
-  handleBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  handleChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleFocus: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  handleBlur: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }

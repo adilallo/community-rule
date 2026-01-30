@@ -16,6 +16,7 @@ The Container/Presentation pattern separates component logic from presentation, 
 ### When to Use
 
 Use this pattern for components that have:
+
 - Business logic or state management
 - Data fetching or API calls
 - Analytics tracking
@@ -40,6 +41,7 @@ app/components/[ComponentName]/
 ### File Responsibilities
 
 #### `index.tsx`
+
 - Exports the container component as the default export
 - Optionally exports types for external use
 - Maintains backward compatibility with existing import paths
@@ -50,7 +52,9 @@ export type { AskOrganizerProps } from "./AskOrganizer.types";
 ```
 
 #### `[ComponentName].container.tsx`
+
 **Contains all logic:**
+
 - React hooks (`useState`, `useEffect`, custom hooks)
 - Event handlers and business logic
 - Data fetching and API calls
@@ -60,6 +64,7 @@ export type { AskOrganizerProps } from "./AskOrganizer.types";
 - Side effects
 
 **Should NOT contain:**
+
 - JSX layout details (beyond composing the view)
 - Inline styles or complex className logic (pass as props)
 - Direct DOM manipulation
@@ -74,7 +79,7 @@ import type { AskOrganizerProps } from "./AskOrganizer.types";
 
 function AskOrganizerContainer(props: AskOrganizerProps) {
   const { trackEvent } = useAnalytics();
-  
+
   const handleContactClick = () => {
     trackEvent({
       event: "contact_button_click",
@@ -83,10 +88,10 @@ function AskOrganizerContainer(props: AskOrganizerProps) {
     });
     // ... additional logic
   };
-  
+
   // Compute derived props
   const variantStyles = computeVariantStyles(props.variant);
-  
+
   return (
     <AskOrganizerView
       {...props}
@@ -100,13 +105,16 @@ export default memo(AskOrganizerContainer);
 ```
 
 #### `[ComponentName].view.tsx`
+
 **Pure presentation:**
+
 - Receives all data via props
 - Renders JSX based on props
 - No hooks, no state, no side effects
 - Only imports other presentational components
 
 **Should NOT contain:**
+
 - `useState`, `useEffect`, or any hooks
 - Event handler implementations (receive as callbacks)
 - Data fetching or API calls
@@ -148,6 +156,7 @@ export function AskOrganizerView({
 ```
 
 #### `[ComponentName].types.ts`
+
 - Shared TypeScript interfaces and types
 - Public props interface (used by consumers)
 - Internal view props (used between container and view)
@@ -177,6 +186,7 @@ export interface AskOrganizerViewProps extends AskOrganizerProps {
 ### Container Components
 
 ✅ **DO:**
+
 - Use React hooks (`useState`, `useEffect`, custom hooks)
 - Handle all event handlers and business logic
 - Fetch data and manage loading states
@@ -185,6 +195,7 @@ export interface AskOrganizerViewProps extends AskOrganizerProps {
 - Compose the view component with computed props
 
 ❌ **DON'T:**
+
 - Include complex JSX layout (delegate to view)
 - Mix presentation logic with business logic
 - Access DOM directly (use refs when necessary)
@@ -192,6 +203,7 @@ export interface AskOrganizerViewProps extends AskOrganizerProps {
 ### View Components
 
 ✅ **DO:**
+
 - Receive all data via props
 - Render JSX based on props
 - Import only presentational components
@@ -199,6 +211,7 @@ export interface AskOrganizerViewProps extends AskOrganizerProps {
 - Accept callback props for user interactions
 
 ❌ **DON'T:**
+
 - Use any React hooks
 - Manage state or side effects
 - Fetch data or make API calls
@@ -220,11 +233,11 @@ import Button from "./Button";
 
 const AskOrganizer = memo(({ title, variant, ...props }) => {
   const { trackEvent } = useAnalytics();
-  
+
   const handleContactClick = () => {
     trackEvent({ event: "contact_click", component: "AskOrganizer" });
   };
-  
+
   return (
     <section>
       <ContentLockup title={title} />
@@ -237,6 +250,7 @@ const AskOrganizer = memo(({ title, variant, ...props }) => {
 ### After (Container/Presentation)
 
 **AskOrganizer.container.tsx:**
+
 ```typescript
 "use client";
 
@@ -247,11 +261,11 @@ import type { AskOrganizerProps } from "./AskOrganizer.types";
 
 function AskOrganizerContainer(props: AskOrganizerProps) {
   const { trackEvent } = useAnalytics();
-  
+
   const handleContactClick = () => {
     trackEvent({ event: "contact_click", component: "AskOrganizer" });
   };
-  
+
   return <AskOrganizerView {...props} onContactClick={handleContactClick} />;
 }
 
@@ -259,6 +273,7 @@ export default memo(AskOrganizerContainer);
 ```
 
 **AskOrganizer.view.tsx:**
+
 ```typescript
 import ContentLockup from "../ContentLockup";
 import Button from "../Button";
@@ -346,6 +361,7 @@ These components serve as reference implementations for the pattern.
 The following components are candidates for future conversion:
 
 ### High Priority (Complex Logic)
+
 - `Header` / `HomeHeader` - Navigation state, conditional rendering logic
 - `MenuBar` - Menu state management, keyboard navigation
 - `ContextMenu` - Positioning logic, click outside handling
@@ -353,12 +369,14 @@ The following components are candidates for future conversion:
 - `ToggleGroup` - Group state management
 
 ### Medium Priority (Some Logic)
+
 - `ContentContainer` - Data fetching or transformation
 - `RelatedArticles` - Data fetching, filtering logic
 - `RuleStack` - Complex rendering logic
 - `LogoWall` - Animation or interaction logic
 
 ### Low Priority (Mostly Presentational)
+
 - `Button`, `Avatar`, `Checkbox`, `Input`, `TextArea` - Simple presentational components
 - `Separator`, `SectionHeader`, `SectionNumber` - Pure presentation
 - `QuoteBlock`, `QuoteDecor`, `HeroDecor` - Decorative components

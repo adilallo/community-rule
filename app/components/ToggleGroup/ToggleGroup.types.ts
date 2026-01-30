@@ -1,5 +1,7 @@
-export interface ToggleGroupProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onChange"> {
+export interface ToggleGroupProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "onChange"
+> {
   children?: React.ReactNode;
   className?: string;
   position?: "left" | "middle" | "right";
@@ -24,8 +26,8 @@ export interface ToggleGroupViewProps {
   showText: boolean;
   ariaLabel?: string;
   toggleClasses: string;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
-  onFocus: (e: React.FocusEvent<HTMLButtonElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLButtonElement>) => void;
+  onClick: (_e: React.MouseEvent<HTMLButtonElement>) => void;
+  onKeyDown: (_e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onFocus: (_e: React.FocusEvent<HTMLButtonElement>) => void;
+  onBlur: (_e: React.FocusEvent<HTMLButtonElement>) => void;
 }

@@ -1,7 +1,10 @@
 import { forwardRef } from "react";
 import type { SelectOptionViewProps } from "./SelectOption.types";
 
-export const SelectOptionView = forwardRef<HTMLDivElement, SelectOptionViewProps>(
+export const SelectOptionView = forwardRef<
+  HTMLDivElement,
+  SelectOptionViewProps
+>(
   (
     {
       children,

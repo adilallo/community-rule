@@ -31,15 +31,15 @@ export interface HeaderViewProps {
       | "footerLg";
     showText: boolean;
   }>;
-  renderNavigationItems: (size: NavSize) => React.ReactNode;
-  renderLoginButton: (size: NavSize) => React.ReactNode;
+  renderNavigationItems: (_size: NavSize) => React.ReactNode;
+  renderLoginButton: (_size: NavSize) => React.ReactNode;
   renderCreateRuleButton: (
-    buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",
-    containerSize: "small" | "medium" | "large" | "xlarge",
-    avatarSize: "small" | "medium" | "large" | "xlarge",
+    _buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",
+    _containerSize: "small" | "medium" | "large" | "xlarge",
+    _avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => React.ReactNode;
   renderLogo: (
-    size:
+    _size:
       | "default"
       | "homeHeaderXsmall"
       | "homeHeaderSm"
@@ -52,7 +52,7 @@ export interface HeaderViewProps {
       | "headerXl"
       | "footer"
       | "footerLg",
-    showText: boolean,
+    _showText: boolean,
   ) => React.ReactNode;
 }
 

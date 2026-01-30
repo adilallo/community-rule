@@ -26,8 +26,8 @@ export interface SelectViewProps {
   chevronClasses: string;
   // Callbacks
   onButtonClick: () => void;
-  onButtonKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
-  onOptionClick: (value: string, text: string) => void;
+  onButtonKeyDown: (_e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onOptionClick: (_value: string, _text: string) => void;
   // Refs
   selectRef: React.RefObject<HTMLButtonElement>;
   menuRef: React.RefObject<HTMLDivElement>;
@@ -38,11 +38,11 @@ export interface SelectViewProps {
 
 export function SelectView({
   label,
-  placeholder,
+  placeholder: _placeholder,
   size,
   disabled,
-  error,
-  labelVariant,
+  error: _error,
+  labelVariant: _labelVariant,
   options,
   children,
   selectId,
@@ -118,9 +118,7 @@ export function SelectView({
                       key={option.value}
                       selected={option.value === selectedValue}
                       size={size}
-                      onClick={() =>
-                        onOptionClick(option.value, option.label)
-                      }
+                      onClick={() => onOptionClick(option.value, option.label)}
                     >
                       {option.label}
                     </SelectOption>

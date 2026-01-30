@@ -13,4 +13,3 @@ export interface NumberedCardsProps {
 export interface NumberedCardsViewProps extends NumberedCardsProps {
   schemaJson: string;
 }
-

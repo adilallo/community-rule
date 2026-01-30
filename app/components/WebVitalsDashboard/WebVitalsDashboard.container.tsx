@@ -96,11 +96,14 @@ const WebVitalsDashboardContainer = memo(() => {
   }, []);
 
   return (
-    <WebVitalsDashboardView vitals={vitals} metrics={metrics} loading={loading} />
+    <WebVitalsDashboardView
+      vitals={vitals}
+      metrics={metrics}
+      loading={loading}
+    />
   );
 });
 
 WebVitalsDashboardContainer.displayName = "WebVitalsDashboard";
 
 export default WebVitalsDashboardContainer;
-

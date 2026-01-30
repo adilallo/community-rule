@@ -78,9 +78,7 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
           buttonHref,
         },
         onContactClick as
-          | ((
-              _data: Record<string, unknown>,
-            ) => void)
+          | ((_data: Record<string, unknown>) => void)
           | undefined,
       );
 
@@ -111,4 +109,3 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
 AskOrganizerContainer.displayName = "AskOrganizer";
 
 export default AskOrganizerContainer;
-
