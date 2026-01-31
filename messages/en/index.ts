@@ -4,6 +4,13 @@ import numberedCards from "./components/numberedCards.json";
 import askOrganizer from "./components/askOrganizer.json";
 import featureGrid from "./components/featureGrid.json";
 import footer from "./components/footer.json";
+import header from "./components/header.json";
+import homeHeader from "./components/homeHeader.json";
+import languageSwitcher from "./components/languageSwitcher.json";
+import menuBar from "./components/menuBar.json";
+import quoteBlock from "./components/quoteBlock.json";
+import ruleCard from "./components/ruleCard.json";
+import ruleStack from "./components/ruleStack.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 
@@ -14,6 +21,13 @@ export default {
   askOrganizer,
   featureGrid,
   footer,
+  header,
+  homeHeader,
+  languageSwitcher,
+  menuBar,
+  quoteBlock,
+  ruleCard,
+  ruleStack,
   navigation,
   metadata,
 };

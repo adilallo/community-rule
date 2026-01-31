@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Script from "next/script";
+import { useTranslation } from "../../contexts/MessagesContext";
 import HeaderTab from "../HeaderTab";
 import MenuBar from "../MenuBar";
 import type { HomeHeaderViewProps } from "./HomeHeader.types";
@@ -14,6 +15,8 @@ function HomeHeaderView({
   renderCreateRuleButton,
   renderLogo,
 }: HomeHeaderViewProps) {
+  const t = useTranslation("homeHeader");
+
   return (
     <>
       <Script
@@ -24,12 +27,12 @@ function HomeHeaderView({
       <header
         className="w-full bg-transparent overflow-hidden"
         role="banner"
-        aria-label="Home page navigation header"
+        aria-label={t("ariaLabels.homePageNavigationHeader")}
       >
         <nav
           className="relative flex items-center justify-between mx-auto h-[50px] sm:h-[62px] md:h-[68px] lg:h-[68px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:pl-[var(--spacing-scale-024)] lg:pt-[var(--spacing-scale-016)] lg:pr-[var(--spacing-scale-056)] xl:pl-[var(--spacing-scale-048)] xl:pt-[var(--spacing-scale-024)] xl:pr-[var(--spacing-scale-056)]"
           role="navigation"
-          aria-label="Main navigation"
+          aria-label={t("ariaLabels.mainNavigation")}
         >
           <HeaderTab className="flex items-center self-end" stretch={true}>
             {/* Logo - Consistent left positioning within HeaderTab */}

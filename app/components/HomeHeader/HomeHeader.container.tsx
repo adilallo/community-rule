@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "../../contexts/MessagesContext";
 import MenuBarItem from "../MenuBarItem";
 import Button from "../Button";
 import AvatarContainer from "../AvatarContainer";
@@ -10,13 +11,6 @@ import Logo from "../Logo";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 import HomeHeaderView from "./HomeHeader.view";
 import type { HomeHeaderProps, NavSize } from "./HomeHeader.types";
-
-// Configuration data for testing
-export const navigationItems = [
-  { href: "#", text: "Use cases", extraPadding: true },
-  { href: "/learn", text: "Learn" },
-  { href: "#", text: "About" },
-];
 
 export const avatarImages = [
   { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
@@ -54,6 +48,7 @@ export const logoConfig = [
 
 const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
   const pathname = usePathname();
+  const t = useTranslation("header");
 
   // Schema markup for site navigation (home page specific)
   const schemaData = {
@@ -68,6 +63,13 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
       "query-input": "required name=search_term_string",
     },
   };
+
+  // Navigation items with translations
+  const navigationItems = [
+    { href: "#", text: t("navigation.useCases"), extraPadding: true },
+    { href: "/learn", text: t("navigation.learn") },
+    { href: "#", text: t("navigation.about") },
+  ];
 
   const renderNavigationItems = (size: NavSize) => {
     return navigationItems.map((item, index) => (
@@ -102,7 +104,7 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
             : "default"
         }
         isActive={pathname === item.href}
-        ariaLabel={`Navigate to ${item.text} page`}
+        ariaLabel={t("ariaLabels.navigateToPage").replace("{text}", item.text)}
       >
         {item.text}
       </MenuBarItem>
@@ -133,9 +135,9 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
         href="#"
         size={size}
         variant={size === "xsmall" || size === "default" ? "home" : "default"}
-        ariaLabel="Log in to your account"
+        ariaLabel={t("ariaLabels.logInToAccount")}
       >
-        Log in
+        {t("buttons.logIn")}
       </MenuBarItem>
     );
   };
@@ -149,10 +151,10 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
       <Button
         size={buttonSize}
         variant="secondary"
-        ariaLabel="Create a new rule with avatar decoration"
+        ariaLabel={t("ariaLabels.createNewRule")}
       >
         {renderAvatarGroup(containerSize, avatarSize)}
-        <span>Create rule</span>
+        <span>{t("buttons.createRule")}</span>
       </Button>
     );
   };

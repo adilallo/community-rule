@@ -1,4 +1,7 @@
+"use client";
+
 import { memo } from "react";
+import { useTranslation } from "../contexts/MessagesContext";
 
 interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -8,6 +11,7 @@ interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
 
 const MenuBar = memo<MenuBarProps>(
   ({ children, className = "", size = "default", ...props }) => {
+    const t = useTranslation("menuBar");
     const sizeStyles: Record<string, string> = {
       xsmall:
         "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)] rounded-[4px]",
@@ -25,7 +29,7 @@ const MenuBar = memo<MenuBarProps>(
       <nav
         className={baseStyles}
         role="menubar"
-        aria-label="Main navigation menu"
+        aria-label={t("ariaLabel")}
         {...props}
       >
         {children}

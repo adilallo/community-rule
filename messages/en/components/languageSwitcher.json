@@ -1,0 +1,11 @@
+{
+  "label": "Select language",
+  "ariaLabel": "Select language",
+  "comingSoonMessage": "Language switching functionality coming soon",
+  "languages": {
+    "english": {
+      "name": "English",
+      "nativeName": "English"
+    }
+  }
+}

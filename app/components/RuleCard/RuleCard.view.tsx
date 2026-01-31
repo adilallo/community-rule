@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "../../contexts/MessagesContext";
 import type { RuleCardViewProps } from "./RuleCard.types";
 
 export function RuleCardView({
@@ -9,12 +12,15 @@ export function RuleCardView({
   onClick,
   onKeyDown,
 }: RuleCardViewProps) {
+  const t = useTranslation("ruleCard");
+  const ariaLabel = t("ariaLabel").replace("{title}", title);
+
   return (
     <div
       className={`${backgroundColor} rounded-[var(--radius-measures-radius-small)] pt-[var(--spacing-scale-012)] pr-[var(--spacing-scale-012)] pl-[var(--spacing-scale-012)] pb-[var(--spacing-scale-024)] md:p-[var(--spacing-scale-024)] md:h-[210px] lg:h-[277px] flex flex-col gap-[18px] shadow-lg backdrop-blur-sm transition-all duration-500 ease-in-out hover:shadow-xl hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--color-community-teal-500)] focus:ring-offset-2 cursor-pointer min-h-[44px] min-w-[44px] ${className}`}
       tabIndex={0}
       role="button"
-      aria-label={`Learn more about ${title} governance pattern`}
+      aria-label={ariaLabel}
       onClick={onClick}
       onKeyDown={onKeyDown}
     >

@@ -1,0 +1,18 @@
+{
+  "navigation": {
+    "useCases": "Use cases",
+    "learn": "Learn",
+    "about": "About"
+  },
+  "buttons": {
+    "logIn": "Log in",
+    "createRule": "Create rule"
+  },
+  "ariaLabels": {
+    "mainNavigationHeader": "Main navigation header",
+    "mainNavigation": "Main navigation",
+    "navigateToPage": "Navigate to {text} page",
+    "logInToAccount": "Log in to your account",
+    "createNewRule": "Create a new rule with avatar decoration"
+  }
+}
