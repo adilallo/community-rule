@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../contexts/MessagesContext";
 import { useAnalytics } from "../../hooks";
 import AskOrganizerView from "./AskOrganizer.view";
 import type {
@@ -35,12 +36,15 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     title,
     subtitle,
     description,
-    buttonText = "Ask an organizer",
-    buttonHref = "#",
+    buttonText,
+    buttonHref,
     className = "",
     variant = "centered",
     onContactClick,
   }) => {
+    const t = useTranslation();
+    const defaultButtonText = buttonText ?? t("askOrganizer.buttonText");
+    const defaultButtonHref = buttonHref ?? t("askOrganizer.buttonHref");
     const { trackEvent, trackCustomEvent } = useAnalytics();
 
     const resolvedVariant: AskOrganizerVariant = variant ?? "centered";
@@ -74,8 +78,8 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
         {
           component: "AskOrganizer",
           variant: resolvedVariant,
-          buttonText,
-          buttonHref,
+          buttonText: defaultButtonText,
+          buttonHref: defaultButtonHref,
         },
         onContactClick as
           | ((_data: Record<string, unknown>) => void)
@@ -92,8 +96,8 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
         title={title}
         subtitle={subtitle}
         description={description}
-        buttonText={buttonText}
-        buttonHref={buttonHref}
+        buttonText={defaultButtonText}
+        buttonHref={defaultButtonHref}
         className={className}
         sectionPadding={sectionPadding}
         contentGap={`${contentGap} ${styles.container}`}

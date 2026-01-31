@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslation } from "../../contexts/MessagesContext";
 import MenuBarItem from "../MenuBarItem";
 import Button from "../Button";
 import AvatarContainer from "../AvatarContainer";
@@ -10,13 +11,6 @@ import Logo from "../Logo";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 import { HeaderView } from "./Header.view";
 import type { HeaderProps, NavSize } from "./Header.types";
-
-// Configuration data for testing
-export const navigationItems = [
-  { href: "#", text: "Use cases", extraPadding: true },
-  { href: "/learn", text: "Learn" },
-  { href: "#", text: "About" },
-];
 
 export const avatarImages = [
   { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
@@ -46,6 +40,7 @@ export const logoConfig = [
 
 const HeaderContainer = memo<HeaderProps>(() => {
   const pathname = usePathname();
+  const t = useTranslation("header");
 
   // Schema markup for site navigation
   const schemaData = {
@@ -60,6 +55,13 @@ const HeaderContainer = memo<HeaderProps>(() => {
     },
   };
 
+  // Navigation items with translations
+  const navigationItems = [
+    { href: "#", text: t("navigation.useCases"), extraPadding: true },
+    { href: "/learn", text: t("navigation.learn") },
+    { href: "#", text: t("navigation.about") },
+  ];
+
   const renderNavigationItems = (size: NavSize) => {
     return navigationItems.map((item, index) => (
       <MenuBarItem
@@ -67,7 +69,7 @@ const HeaderContainer = memo<HeaderProps>(() => {
         href={item.href}
         size={item.extraPadding && size === "xsmall" ? "xsmallUseCases" : size}
         isActive={pathname === item.href}
-        ariaLabel={`Navigate to ${item.text} page`}
+        ariaLabel={t("ariaLabels.navigateToPage").replace("{text}", item.text)}
       >
         {item.text}
       </MenuBarItem>
@@ -94,8 +96,12 @@ const HeaderContainer = memo<HeaderProps>(() => {
 
   const renderLoginButton = (size: NavSize) => {
     return (
-      <MenuBarItem href="#" size={size} ariaLabel="Log in to your account">
-        Log in
+      <MenuBarItem
+        href="#"
+        size={size}
+        ariaLabel={t("ariaLabels.logInToAccount")}
+      >
+        {t("buttons.logIn")}
       </MenuBarItem>
     );
   };
@@ -106,12 +112,9 @@ const HeaderContainer = memo<HeaderProps>(() => {
     avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
-      <Button
-        size={buttonSize}
-        ariaLabel="Create a new rule with avatar decoration"
-      >
+      <Button size={buttonSize} ariaLabel={t("ariaLabels.createNewRule")}>
         {renderAvatarGroup(containerSize, avatarSize)}
-        <span>Create rule</span>
+        <span>{t("buttons.createRule")}</span>
       </Button>
     );
   };

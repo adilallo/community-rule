@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Image from "next/image";
+import { useTranslation } from "../../contexts/MessagesContext";
 import QuoteDecor from "../QuoteDecor";
 import type { QuoteBlockViewProps } from "./QuoteBlock.types";
 
@@ -19,6 +20,9 @@ function QuoteBlockView({
   onImageLoad,
   onImageError,
 }: QuoteBlockViewProps) {
+  const t = useTranslation("quoteBlock");
+  const avatarAlt = t("avatarAlt").replace("{author}", author);
+
   return (
     <section
       className={`${config.container} ${className}`}
@@ -54,7 +58,7 @@ function QuoteBlockView({
               {!imageError ? (
                 <Image
                   src={currentAvatarSrc}
-                  alt={`Portrait of ${author}`}
+                  alt={avatarAlt}
                   width={64}
                   height={64}
                   className={`filter sepia ${

@@ -2,6 +2,8 @@ import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
+import { MessagesProvider } from "./contexts/MessagesContext";
+import messages from "../messages/en/index";
 import "./globals.css";
 import ConditionalHeader from "./components/ConditionalHeader";
 
@@ -86,6 +88,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  // Load messages for the default locale (single locale setup)
+
   return (
     <html lang="en" className="font-sans">
       <head>
@@ -101,11 +105,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.variable} ${bricolageGrotesque.variable} ${spaceGrotesk.variable}`}
       >
-        <div className="min-h-screen flex flex-col">
-          <ConditionalHeader />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <MessagesProvider messages={messages}>
+          <div className="min-h-screen flex flex-col">
+            <ConditionalHeader />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </MessagesProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../contexts/MessagesContext";
 import ContentLockup from "./ContentLockup";
 import HeroDecor from "./HeroDecor";
 import { getAssetPath } from "../../lib/assetUtils";
@@ -15,6 +16,9 @@ interface HeroBannerProps {
 
 const HeroBanner = memo<HeroBannerProps>(
   ({ title, subtitle, description, ctaText, ctaHref }) => {
+    const t = useTranslation();
+    const imageAlt = t("heroBanner.imageAlt");
+
     return (
       <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] lg:px-[var(--spacing-scale-024)] xl:px-[var(--spacing-scale-048)]">
         <div className="flex flex-col gap-[var(--spacing-scale-010)]">
@@ -44,7 +48,7 @@ const HeroBanner = memo<HeroBannerProps>(
             <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
               <img
                 src={getAssetPath("assets/HeroImage.png")}
-                alt="Hero illustration"
+                alt={imageAlt}
                 className="w-full h-auto"
                 loading="eager"
                 fetchPriority="high"

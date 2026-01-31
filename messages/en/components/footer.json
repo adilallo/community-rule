@@ -1,0 +1,31 @@
+{
+  "_comment": "Footer component translations",
+  "organization": {
+    "name": "Media Economies Design Lab",
+    "email": "medlab@colorado.edu",
+    "url": "https://communityrule.com"
+  },
+  "social": {
+    "bluesky": {
+      "handle": "medlabboulder",
+      "ariaLabel": "Follow us on Bluesky",
+      "url": "https://bsky.app/profile/medlabboulder"
+    },
+    "gitlab": {
+      "handle": "medlabboulder",
+      "ariaLabel": "Follow us on GitLab",
+      "url": "https://gitlab.com/medlabboulder"
+    }
+  },
+  "navigation": {
+    "useCases": "Use cases",
+    "learn": "Learn",
+    "about": "About"
+  },
+  "legal": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiesSettings": "Cookies Settings"
+  },
+  "copyright": "© All right reserved"
+}

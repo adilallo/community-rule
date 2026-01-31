@@ -1,5 +1,9 @@
 import { describe, test, expect } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  renderWithProviders as render,
+  screen,
+  waitFor,
+} from "../utils/test-utils";
 import Page from "../../app/page";
 
 describe("Page", () => {

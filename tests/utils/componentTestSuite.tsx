@@ -1,8 +1,9 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { renderWithProviders as render } from "./test-utils";
 
 type TestCases = {
   renders?: boolean;

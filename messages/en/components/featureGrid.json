@@ -1,0 +1,20 @@
+{
+  "_comment": "FeatureGrid component defaults (shared across pages)",
+  "linkText": "Learn more",
+  "linkHref": "#",
+  "ariaLabel": "Feature tools and services",
+  "features": {
+    "decisionMaking": {
+      "ariaLabel": "Decision-making support tools"
+    },
+    "valuesAlignment": {
+      "ariaLabel": "Values alignment exercises"
+    },
+    "membershipGuidance": {
+      "ariaLabel": "Membership guidance resources"
+    },
+    "conflictResolution": {
+      "ariaLabel": "Conflict resolution tools"
+    }
+  }
+}

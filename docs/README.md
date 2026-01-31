@@ -13,6 +13,7 @@ This directory contains project documentation organized by topic.
 
 - **[container-presentation-pattern.md](./guides/container-presentation-pattern.md)** - Container/Presentation pattern guide for component architecture
 - **[content-creation.md](./guides/content-creation.md)** - Guide for creating blog content
+- **[i18n-translation-workflow.md](./guides/i18n-translation-workflow.md)** - Guide for working with translations and UI content management
 
 ## Quick Navigation
 
@@ -50,6 +51,16 @@ See **[content-creation.md](./guides/content-creation.md)** for:
 - How to create blog articles
 - Content guidelines
 - Contribution workflow
+
+### For Translations and UI Content
+
+See **[i18n-translation-workflow.md](./guides/i18n-translation-workflow.md)** for:
+
+- How to update UI text content
+- Translation key structure and naming conventions
+- How to extract strings from components
+- How to add new translation keys
+- Best practices for content creators and developers
 
 ## Additional Resources
 

@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "../../contexts/MessagesContext";
 import MenuBar from "../MenuBar";
 import type { HeaderViewProps } from "./Header.types";
 
@@ -9,6 +12,8 @@ export function HeaderView({
   renderCreateRuleButton,
   renderLogo,
 }: HeaderViewProps) {
+  const t = useTranslation("header");
+
   return (
     <>
       <script
@@ -18,12 +23,12 @@ export function HeaderView({
       <header
         className="sticky top-0 z-50 bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
         role="banner"
-        aria-label="Main navigation header"
+        aria-label={t("ariaLabels.mainNavigationHeader")}
       >
         <nav
           className="flex items-center justify-between mx-auto h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]"
           role="navigation"
-          aria-label="Main navigation"
+          aria-label={t("ariaLabels.mainNavigation")}
         >
           {/* Logo - Consistent left positioning across all breakpoints */}
           <div className="flex items-center">

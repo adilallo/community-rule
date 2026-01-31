@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslation } from "../../contexts/MessagesContext";
 import SectionHeader from "../SectionHeader";
 import NumberedCard from "../NumberedCard";
 import Button from "../Button";
@@ -9,6 +12,8 @@ function NumberedCardsView({
   cards,
   schemaJson,
 }: NumberedCardsViewProps) {
+  const t = useTranslation();
+
   return (
     <>
       <script
@@ -23,7 +28,7 @@ function NumberedCardsView({
               <SectionHeader
                 title={title}
                 subtitle={subtitle}
-                titleLg="How CommunityRule helps"
+                titleLg={t("numberedCards.titleLg")}
               />
             </div>
 
@@ -45,13 +50,13 @@ function NumberedCardsView({
               {/* Default button for xsm and sm breakpoints */}
               <div className="block lg:hidden">
                 <Button variant="default" size="large">
-                  Create CommunityRule
+                  {t("numberedCards.buttons.createCommunityRule")}
                 </Button>
               </div>
               {/* Outlined button for lg and xlg breakpoints */}
               <div className="hidden lg:block">
                 <Button variant="outlined" size="large">
-                  See how it works
+                  {t("numberedCards.buttons.seeHowItWorks")}
                 </Button>
               </div>
             </div>

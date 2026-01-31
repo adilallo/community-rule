@@ -1,0 +1,15 @@
+{
+  "_comment": "Common UI strings shared across components",
+  "buttons": {
+    "createCommunityRule": "Create CommunityRule",
+    "seeHowItWorks": "See how it works",
+    "learnMore": "Learn more",
+    "askOrganizer": "Ask an organizer"
+  },
+  "ariaLabels": {
+    "followBluesky": "Follow us on Bluesky",
+    "followGitlab": "Follow us on GitLab",
+    "featureToolsAndServices": "Feature tools and services",
+    "askOrganizerContact": "Ask an organizer - Contact an organizer for help"
+  }
+}
