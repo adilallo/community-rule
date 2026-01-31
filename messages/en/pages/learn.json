@@ -1,0 +1,14 @@
+{
+  "_comment": "Learn page specific content",
+  "contentLockup": {
+    "title": "Organizing is hard",
+    "subtitle": "Find answers to your questions and see how other groups have solved similar challenges."
+  },
+  "askOrganizer": {
+    "title": "Still have questions?",
+    "subtitle": "Get answers from an experienced organizer",
+    "description": "Our community of organizers is here to help you navigate the challenges of building and maintaining effective community organizations.",
+    "buttonText": "Ask an organizer",
+    "buttonHref": "/contact"
+  }
+}

@@ -1,29 +1,19 @@
 {
-  "_comment": "FeatureGrid component translations",
-  "title": "We've got your back, every step of the way",
-  "subtitle": "Use our toolkit to improve, document, and evolve your organization.",
+  "_comment": "FeatureGrid component defaults (shared across pages)",
   "linkText": "Learn more",
   "linkHref": "#",
   "ariaLabel": "Feature tools and services",
   "features": {
     "decisionMaking": {
-      "labelLine1": "Decision-making",
-      "labelLine2": "support",
       "ariaLabel": "Decision-making support tools"
     },
     "valuesAlignment": {
-      "labelLine1": "Values alignment",
-      "labelLine2": "exercises",
       "ariaLabel": "Values alignment exercises"
     },
     "membershipGuidance": {
-      "labelLine1": "Membership",
-      "labelLine2": "guidance",
       "ariaLabel": "Membership guidance resources"
     },
     "conflictResolution": {
-      "labelLine1": "Conflict resolution",
-      "labelLine2": "tools",
       "ariaLabel": "Conflict resolution tools"
     }
   }

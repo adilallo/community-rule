@@ -11,6 +11,8 @@ import menuBar from "./components/menuBar.json";
 import quoteBlock from "./components/quoteBlock.json";
 import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
+import home from "./pages/home.json";
+import learn from "./pages/learn.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 
@@ -28,6 +30,10 @@ export default {
   quoteBlock,
   ruleCard,
   ruleStack,
+  pages: {
+    home,
+    learn,
+  },
   navigation,
   metadata,
 };

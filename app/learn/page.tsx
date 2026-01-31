@@ -1,3 +1,5 @@
+import messages from "../../messages/en/index";
+import { getTranslation } from "../../lib/i18n/getTranslation";
 import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
 import ContentLockup from "../components/ContentLockup";
 import AskOrganizer from "../components/AskOrganizer";
@@ -7,21 +9,22 @@ export default function LearnPage() {
   // Get real blog posts from the content system
   const allPosts = getAllBlogPosts();
 
+  // Use direct message access for server components
+  const t = (key: string) => getTranslation(messages, key);
+
   const contentLockupData = {
-    title: "Organizing is hard",
-    subtitle:
-      "Find answers to your questions and see how other groups have solved similar challenges.",
+    title: t("pages.learn.contentLockup.title"),
+    subtitle: t("pages.learn.contentLockup.subtitle"),
     variant: "learn" as const,
     alignment: "left" as const,
   };
 
   const askOrganizerData = {
-    title: "Still have questions?",
-    subtitle: "Get answers from an experienced organizer",
-    description:
-      "Our community of organizers is here to help you navigate the challenges of building and maintaining effective community organizations.",
-    buttonText: "Ask an organizer",
-    buttonHref: "/contact",
+    title: t("pages.learn.askOrganizer.title"),
+    subtitle: t("pages.learn.askOrganizer.subtitle"),
+    description: t("pages.learn.askOrganizer.description"),
+    buttonText: t("pages.learn.askOrganizer.buttonText"),
+    buttonHref: t("pages.learn.askOrganizer.buttonHref"),
     variant: "centered" as const,
   };
 

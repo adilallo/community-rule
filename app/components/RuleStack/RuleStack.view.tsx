@@ -11,7 +11,7 @@ export function RuleStackView({
   className,
   onTemplateClick,
 }: RuleStackViewProps) {
-  const t = useTranslation("ruleStack");
+  const t = useTranslation("pages.home.ruleStack");
 
   return (
     <section

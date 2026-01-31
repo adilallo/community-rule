@@ -46,29 +46,29 @@ export default function Page() {
   const t = (key: string) => getTranslation(messages, key);
 
   const heroBannerData = {
-    title: t("heroBanner.title"),
-    subtitle: t("heroBanner.subtitle"),
-    description: t("heroBanner.description"),
-    ctaText: t("heroBanner.ctaText"),
-    ctaHref: t("heroBanner.ctaHref"),
+    title: t("pages.home.heroBanner.title"),
+    subtitle: t("pages.home.heroBanner.subtitle"),
+    description: t("pages.home.heroBanner.description"),
+    ctaText: t("pages.home.heroBanner.ctaText"),
+    ctaHref: t("pages.home.heroBanner.ctaHref"),
   };
 
   const numberedCardsData = {
-    title: t("numberedCards.title"),
-    subtitle: t("numberedCards.subtitle"),
+    title: t("pages.home.numberedCards.title"),
+    subtitle: t("pages.home.numberedCards.subtitle"),
     cards: [
       {
-        text: t("numberedCards.cards.card1.text"),
+        text: t("pages.home.numberedCards.cards.card1.text"),
         iconShape: "blob",
         iconColor: "green",
       },
       {
-        text: t("numberedCards.cards.card2.text"),
+        text: t("pages.home.numberedCards.cards.card2.text"),
         iconShape: "gear",
         iconColor: "purple",
       },
       {
-        text: t("numberedCards.cards.card3.text"),
+        text: t("pages.home.numberedCards.cards.card3.text"),
         iconShape: "star",
         iconColor: "orange",
       },
@@ -76,15 +76,15 @@ export default function Page() {
   };
 
   const featureGridData = {
-    title: t("featureGrid.title"),
-    subtitle: t("featureGrid.subtitle"),
+    title: t("pages.home.featureGrid.title"),
+    subtitle: t("pages.home.featureGrid.subtitle"),
   };
 
   const askOrganizerData = {
-    title: t("askOrganizer.title"),
-    subtitle: t("askOrganizer.subtitle"),
-    buttonText: t("askOrganizer.buttonText"),
-    buttonHref: t("askOrganizer.buttonHref"),
+    title: t("pages.home.askOrganizer.title"),
+    subtitle: t("pages.home.askOrganizer.subtitle"),
+    buttonText: t("pages.home.askOrganizer.buttonText"),
+    buttonHref: t("pages.home.askOrganizer.buttonHref"),
   };
 
   return (

@@ -1,28 +1,4 @@
 {
-  "cards": {
-    "consensusClusters": {
-      "title": "Consensus clusters",
-      "description": "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
-      "iconAlt": "Sociocracy"
-    },
-    "consensus": {
-      "title": "Consensus",
-      "description": "Decisions that affect the group collectively should involve participation of all participants.",
-      "iconAlt": "Consensus"
-    },
-    "electedBoard": {
-      "title": "Elected Board",
-      "description": "An elected board determines policies and organizes their implementation.",
-      "iconAlt": "Elected Board"
-    },
-    "petition": {
-      "title": "Petition",
-      "description": "All participants can propose and vote on proposals for the group.",
-      "iconAlt": "Petition"
-    }
-  },
-  "button": {
-    "seeAllTemplates": "See all templates"
-  },
+  "_comment": "RuleStack component defaults (shared across pages)",
   "ariaLabel": "Learn more about {title} governance pattern"
 }

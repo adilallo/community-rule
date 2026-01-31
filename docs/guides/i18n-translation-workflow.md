@@ -1,26 +1,87 @@
 # i18n Translation Workflow Guide
 
-This guide explains how to work with translations in the CommunityRule application. The app uses `next-intl` for managing UI text content, making it easy for content creators and contributors to update text without modifying component code.
+This guide explains how to work with translations in the CommunityRule application. The app uses a hybrid approach combining globalized, shared UI elements with context-aware, localized content pages, making it easy for content creators and contributors to update text without modifying component code.
 
 ## Overview
 
-All UI text is stored in JSON files under `messages/en/`. Components reference these translations using keys, allowing content to be edited independently of the codebase.
+All UI text is stored in JSON files under `messages/en/`. The structure follows best practices:
+- **Page-specific content** lives in `pages/` (varies by page context)
+- **Component defaults** live in `components/` (shared across pages)
+- **Common strings** live in `common.json` (shared UI elements)
+
+Components reference these translations using keys, allowing content to be edited independently of the codebase.
 
 ## Directory Structure
 
 ```
 messages/
   en/
-    common.json              # Shared UI strings (buttons, links, labels)
+    pages/
+      home.json              # Home page specific content
+      learn.json             # Learn page specific content
     components/
-      heroBanner.json        # HeroBanner component translations
-      numberedCards.json      # NumberedCards component translations
-      askOrganizer.json       # AskOrganizer component translations
-      featureGrid.json        # FeatureGrid component translations
-      footer.json             # Footer component translations
+      heroBanner.json        # Component defaults (aria-labels, alt texts)
+      numberedCards.json     # Component defaults
+      askOrganizer.json      # Component defaults
+      featureGrid.json       # Component defaults
+      footer.json            # Shared across pages
+      header.json            # Shared across pages
+    common.json              # Shared UI strings (buttons, links, labels)
     navigation.json           # Navigation items
-    metadata.json             # Page metadata (title, description)
-    index.ts                  # Exports all messages
+    metadata.json            # Page metadata (title, description)
+    index.ts                 # Exports all messages
+```
+
+## When to Use `pages/` vs `components/`
+
+### Use `pages/` for:
+- **Page-specific content**: Titles, subtitles, descriptions that vary by page
+- **Context-aware text**: Content that changes based on where the component is used
+- **User-facing content**: All text that users see on a specific page
+
+**Example:** The home page hero banner title "Collaborate" goes in `pages/home.json`, not `components/heroBanner.json`
+
+### Use `components/` for:
+- **Component defaults**: Aria-labels, alt text patterns, shared behavior text
+- **Shared across pages**: Text that doesn't vary by page context
+- **Accessibility text**: Aria-labels and alt texts that are component-level
+
+**Example:** The hero banner image alt text "Hero illustration" stays in `components/heroBanner.json` because it's the same across all pages
+
+### Use `common.json` for:
+- **Shared UI strings**: Buttons, links, labels used across multiple components
+- **Global strings**: Text that appears in many places
+
+## Page-Specific Translations
+
+For page-specific content, use the `pages.*` namespace pattern:
+
+**Server Components:**
+```typescript
+import messages from "../../messages/en/index";
+import { getTranslation } from "../../lib/i18n/getTranslation";
+
+export default function LearnPage() {
+  const t = (key: string) => getTranslation(messages, key);
+  
+  const contentLockupData = {
+    title: t("pages.learn.contentLockup.title"),
+    subtitle: t("pages.learn.contentLockup.subtitle"),
+  };
+  
+  return <ContentLockup {...contentLockupData} />;
+}
+```
+
+**Client Components:**
+```typescript
+"use client";
+import { useTranslation } from "../../contexts/MessagesContext";
+
+export default function MyComponent() {
+  const t = useTranslation("pages.home.heroBanner");
+  return <h1>{t("title")}</h1>;
+}
 ```
 
 ## Adding New Translation Keys
@@ -67,35 +128,40 @@ Group related translations together:
 }
 ```
 
-### 4. Update the Component
+### 4. Update the Component or Page
 
-In your component, use the translation hook:
-
-**Server Components:**
+**For Page Components (Server Components):**
 ```typescript
-import { getTranslations } from "next-intl/server";
+import messages from "../../messages/en/index";
+import { getTranslation } from "../../lib/i18n/getTranslation";
 
-export default async function MyComponent() {
-  const t = await getTranslations();
-  return <h1>{t("heroBanner.title")}</h1>;
+export default function MyPage() {
+  const t = (key: string) => getTranslation(messages, key);
+  
+  // Use page-specific keys
+  const data = {
+    title: t("pages.home.heroBanner.title"),
+    subtitle: t("pages.home.heroBanner.subtitle"),
+  };
+  
+  return <HeroBanner {...data} />;
 }
 ```
 
-**Client Components:**
+**For Client Components:**
 ```typescript
 "use client";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "../../contexts/MessagesContext";
 
 export default function MyComponent() {
-  const t = useTranslations();
-  return <h1>{t("heroBanner.title")}</h1>;
+  // For page-specific content
+  const t = useTranslation("pages.home.heroBanner");
+  return <h1>{t("title")}</h1>;
+  
+  // For component defaults
+  const tDefault = useTranslation("heroBanner");
+  return <img alt={tDefault("imageAlt")} />;
 }
-```
-
-**Namespace-specific (recommended for component files):**
-```typescript
-const t = useTranslations("heroBanner");
-return <h1>{t("title")}</h1>;
 ```
 
 ## Translation Key Naming Conventions
@@ -155,15 +221,38 @@ export default function HeroBanner() {
 }
 ```
 
+## Adding a New Page
+
+When creating a new page that needs translations:
+
+1. **Create a page translation file**: `messages/en/pages/about.json` (for example)
+2. **Add page-specific content**: All user-facing text for that page
+3. **Import in index.ts**: Add the import and export in `messages/en/index.ts`
+4. **Use in page component**: Use `t("pages.about.*")` pattern in your page
+
+**Example:**
+```typescript
+// messages/en/pages/about.json
+{
+  "hero": {
+    "title": "About Us",
+    "subtitle": "Learn more about our mission"
+  }
+}
+
+// app/about/page.tsx
+const t = (key: string) => getTranslation(messages, key);
+const title = t("pages.about.hero.title");
+```
+
 ## Adding New Languages (Future)
 
 When adding support for a new language:
 
 1. **Create a new locale directory**: `messages/es/` (for Spanish, for example)
-2. **Copy the English files** as a starting point
+2. **Copy the English files** as a starting point (including `pages/` structure)
 3. **Translate all strings** in the JSON files
-4. **Update `app/i18n/routing.ts`** to include the new locale
-5. **Test thoroughly** to ensure all translations are present
+4. **Test thoroughly** to ensure all translations are present
 
 ## Testing Translations
 
@@ -242,14 +331,27 @@ If TypeScript complains about translation keys:
 
 If text doesn't appear:
 1. Check the browser console for errors
-2. Verify the component is wrapped in `NextIntlClientProvider` (for client components)
-3. Ensure `getMessages()` is called in server components
+2. Verify the component is wrapped in `MessagesProvider` (for client components)
+3. Ensure `getTranslation()` is called correctly in server components
+4. Check if you're using the correct namespace (`pages.*` vs component defaults)
+
+## Architecture: Hybrid Approach
+
+This implementation follows the recognized best practice of combining:
+- **Globalized, shared UI elements**: Component defaults in `components/` (aria-labels, alt texts)
+- **Context-aware, localized content pages**: Page-specific content in `pages/` (titles, descriptions)
+
+This allows:
+- Components to remain flexible and reusable
+- Page content to be easily edited without code changes
+- Clear separation between shared defaults and page-specific content
+- Scalable structure for adding new pages
 
 ## Resources
 
-- [next-intl Documentation](https://next-intl.dev/docs)
-- [Next.js Internationalization](https://nextjs.org/docs/app/guides/internationalization)
-- Component-specific translation files in `messages/en/components/`
+- Component defaults in `messages/en/components/`
+- Page-specific content in `messages/en/pages/`
+- Shared UI strings in `messages/en/common.json`
 
 ---
 

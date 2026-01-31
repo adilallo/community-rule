@@ -1,0 +1,83 @@
+{
+  "_comment": "Home page specific content",
+  "heroBanner": {
+    "title": "Collaborate",
+    "subtitle": "with clarity",
+    "description": "Help your community make important decisions in a way that reflects its unique values.",
+    "ctaText": "Learn how CommunityRule works",
+    "ctaHref": "#"
+  },
+  "numberedCards": {
+    "title": "How CommunityRule works",
+    "subtitle": "Here's a quick overview of the process, from start to finish.",
+    "cards": {
+      "card1": {
+        "text": "Document how your community makes decisions",
+        "_comment": "First step card"
+      },
+      "card2": {
+        "text": "Build an operating manual for a successful community",
+        "_comment": "Second step card"
+      },
+      "card3": {
+        "text": "Get a link to your manual for your group to review and evolve",
+        "_comment": "Third step card"
+      }
+    }
+  },
+  "featureGrid": {
+    "title": "We've got your back, every step of the way",
+    "subtitle": "Use our toolkit to improve, document, and evolve your organization.",
+    "features": {
+      "decisionMaking": {
+        "labelLine1": "Decision-making",
+        "labelLine2": "support"
+      },
+      "valuesAlignment": {
+        "labelLine1": "Values alignment",
+        "labelLine2": "exercises"
+      },
+      "membershipGuidance": {
+        "labelLine1": "Membership",
+        "labelLine2": "guidance"
+      },
+      "conflictResolution": {
+        "labelLine1": "Conflict resolution",
+        "labelLine2": "tools"
+      }
+    }
+  },
+  "askOrganizer": {
+    "title": "Still have questions?",
+    "subtitle": "Get answers from an experienced organizer",
+    "buttonText": "Ask an organizer",
+    "buttonHref": "#contact"
+  },
+  "ruleStack": {
+    "cards": {
+      "consensusClusters": {
+        "title": "Consensus clusters",
+        "description": "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
+        "iconAlt": "Sociocracy"
+      },
+      "consensus": {
+        "title": "Consensus",
+        "description": "Decisions that affect the group collectively should involve participation of all participants.",
+        "iconAlt": "Consensus"
+      },
+      "electedBoard": {
+        "title": "Elected Board",
+        "description": "An elected board determines policies and organizes their implementation.",
+        "iconAlt": "Elected Board"
+      },
+      "petition": {
+        "title": "Petition",
+        "description": "All participants can propose and vote on proposals for the group.",
+        "iconAlt": "Petition"
+      }
+    },
+    "button": {
+      "seeAllTemplates": "See all templates"
+    }
+  }
+}

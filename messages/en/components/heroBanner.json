@@ -1,9 +1,4 @@
 {
-  "_comment": "HeroBanner component translations",
-  "title": "Collaborate",
-  "subtitle": "with clarity",
-  "description": "Help your community make important decisions in a way that reflects its unique values.",
-  "ctaText": "Learn how CommunityRule works",
-  "ctaHref": "#",
+  "_comment": "HeroBanner component defaults (shared across pages)",
   "imageAlt": "Hero illustration"
 }
