@@ -5,6 +5,7 @@ This guide explains how to work with translations in the CommunityRule applicati
 ## Overview
 
 All UI text is stored in JSON files under `messages/en/`. The structure follows best practices:
+
 - **Page-specific content** lives in `pages/` (varies by page context)
 - **Component defaults** live in `components/` (shared across pages)
 - **Common strings** live in `common.json` (shared UI elements)
@@ -35,6 +36,7 @@ messages/
 ## When to Use `pages/` vs `components/`
 
 ### Use `pages/` for:
+
 - **Page-specific content**: Titles, subtitles, descriptions that vary by page
 - **Context-aware text**: Content that changes based on where the component is used
 - **User-facing content**: All text that users see on a specific page
@@ -42,6 +44,7 @@ messages/
 **Example:** The home page hero banner title "Collaborate" goes in `pages/home.json`, not `components/heroBanner.json`
 
 ### Use `components/` for:
+
 - **Component defaults**: Aria-labels, alt text patterns, shared behavior text
 - **Shared across pages**: Text that doesn't vary by page context
 - **Accessibility text**: Aria-labels and alt texts that are component-level
@@ -49,6 +52,7 @@ messages/
 **Example:** The hero banner image alt text "Hero illustration" stays in `components/heroBanner.json` because it's the same across all pages
 
 ### Use `common.json` for:
+
 - **Shared UI strings**: Buttons, links, labels used across multiple components
 - **Global strings**: Text that appears in many places
 
@@ -57,23 +61,25 @@ messages/
 For page-specific content, use the `pages.*` namespace pattern:
 
 **Server Components:**
+
 ```typescript
 import messages from "../../messages/en/index";
 import { getTranslation } from "../../lib/i18n/getTranslation";
 
 export default function LearnPage() {
   const t = (key: string) => getTranslation(messages, key);
-  
+
   const contentLockupData = {
     title: t("pages.learn.contentLockup.title"),
     subtitle: t("pages.learn.contentLockup.subtitle"),
   };
-  
+
   return <ContentLockup {...contentLockupData} />;
 }
 ```
 
 **Client Components:**
+
 ```typescript
 "use client";
 import { useTranslation } from "../../contexts/MessagesContext";
@@ -95,6 +101,7 @@ Determine which component needs the translation. If it's a shared string (like a
 Open the appropriate JSON file and add your translation key. Use descriptive, semantic keys:
 
 **Good:**
+
 ```json
 {
   "heroBanner": {
@@ -105,6 +112,7 @@ Open the appropriate JSON file and add your translation key. Use descriptive, se
 ```
 
 **Bad:**
+
 ```json
 {
   "text1": "Collaborate",
@@ -131,24 +139,26 @@ Group related translations together:
 ### 4. Update the Component or Page
 
 **For Page Components (Server Components):**
+
 ```typescript
 import messages from "../../messages/en/index";
 import { getTranslation } from "../../lib/i18n/getTranslation";
 
 export default function MyPage() {
   const t = (key: string) => getTranslation(messages, key);
-  
+
   // Use page-specific keys
   const data = {
     title: t("pages.home.heroBanner.title"),
     subtitle: t("pages.home.heroBanner.subtitle"),
   };
-  
+
   return <HeroBanner {...data} />;
 }
 ```
 
 **For Client Components:**
+
 ```typescript
 "use client";
 import { useTranslation } from "../../contexts/MessagesContext";
@@ -157,7 +167,7 @@ export default function MyComponent() {
   // For page-specific content
   const t = useTranslation("pages.home.heroBanner");
   return <h1>{t("title")}</h1>;
-  
+
   // For component defaults
   const tDefault = useTranslation("heroBanner");
   return <img alt={tDefault("imageAlt")} />;
@@ -173,6 +183,7 @@ export default function MyComponent() {
 5. **Include context in comments**: Use `_comment` fields for clarity
 
 Example:
+
 ```json
 {
   "_comment": "HeroBanner component translations",
@@ -194,6 +205,7 @@ When migrating a component to use translations:
 ### Example Migration
 
 **Before:**
+
 ```typescript
 export default function HeroBanner() {
   return (
@@ -206,6 +218,7 @@ export default function HeroBanner() {
 ```
 
 **After:**
+
 ```typescript
 "use client";
 import { useTranslations } from "next-intl";
@@ -231,6 +244,7 @@ When creating a new page that needs translations:
 4. **Use in page component**: Use `t("pages.about.*")` pattern in your page
 
 **Example:**
+
 ```typescript
 // messages/en/pages/about.json
 {
@@ -280,6 +294,7 @@ When adding support for a new language:
 ## Common Patterns
 
 ### Buttons and CTAs
+
 ```json
 {
   "buttons": {
@@ -290,6 +305,7 @@ When adding support for a new language:
 ```
 
 ### Aria Labels
+
 ```json
 {
   "ariaLabels": {
@@ -300,7 +316,9 @@ When adding support for a new language:
 ```
 
 ### Dynamic Content
+
 For content that varies (like card text), use arrays or numbered keys:
+
 ```json
 {
   "cards": {
@@ -316,6 +334,7 @@ For content that varies (like card text), use arrays or numbered keys:
 ### Translation Key Not Found
 
 If you see a key path like `heroBanner.title` instead of the text:
+
 1. Check the JSON file exists and has the key
 2. Verify the key path matches exactly (case-sensitive)
 3. Restart the dev server if you just added the key
@@ -323,6 +342,7 @@ If you see a key path like `heroBanner.title` instead of the text:
 ### TypeScript Errors
 
 If TypeScript complains about translation keys:
+
 1. Ensure the key exists in the JSON file
 2. Check for typos in the key path
 3. Verify the namespace is correct if using `useTranslations("namespace")`
@@ -330,6 +350,7 @@ If TypeScript complains about translation keys:
 ### Missing Translations
 
 If text doesn't appear:
+
 1. Check the browser console for errors
 2. Verify the component is wrapped in `MessagesProvider` (for client components)
 3. Ensure `getTranslation()` is called correctly in server components
@@ -338,10 +359,12 @@ If text doesn't appear:
 ## Architecture: Hybrid Approach
 
 This implementation follows the recognized best practice of combining:
+
 - **Globalized, shared UI elements**: Component defaults in `components/` (aria-labels, alt texts)
 - **Context-aware, localized content pages**: Page-specific content in `pages/` (titles, descriptions)
 
 This allows:
+
 - Components to remain flexible and reusable
 - Page content to be easily edited without code changes
 - Clear separation between shared defaults and page-specific content

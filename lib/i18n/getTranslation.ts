@@ -11,10 +11,7 @@ type Messages = typeof messages;
  * @param key - Dot-separated key path (e.g., "heroBanner.title")
  * @returns The translation string or the key if not found
  */
-export function getTranslation(
-  messages: Messages,
-  key: string,
-): string {
+export function getTranslation(messages: Messages, key: string): string {
   const keys = key.split(".");
   let value: any = messages;
 

@@ -1,4 +1,9 @@
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import {
+  renderWithProviders as render,
+  screen,
+  cleanup,
+  waitFor,
+} from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";

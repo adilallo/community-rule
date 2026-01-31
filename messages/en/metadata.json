@@ -3,6 +3,11 @@
   "home": {
     "title": "CommunityRule - Build operating manuals for successful communities",
     "description": "Help your community make important decisions in a way that reflects its unique values.",
-    "keywords": ["community", "governance", "decision-making", "operating manual"]
+    "keywords": [
+      "community",
+      "governance",
+      "decision-making",
+      "operating manual"
+    ]
   }
 }

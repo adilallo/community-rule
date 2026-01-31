@@ -17,10 +17,7 @@ const Footer = memo(() => {
     name: t("organization.name"),
     email: t("organization.email"),
     url: t("organization.url"),
-    sameAs: [
-      t("social.bluesky.url"),
-      t("social.gitlab.url"),
-    ],
+    sameAs: [t("social.bluesky.url"), t("social.gitlab.url")],
   };
 
   return (

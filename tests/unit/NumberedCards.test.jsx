@@ -1,4 +1,8 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import {
+  renderWithProviders as render,
+  screen,
+  cleanup,
+} from "../utils/test-utils";
 import { describe, test, expect, afterEach } from "vitest";
 import NumberedCards from "../../app/components/NumberedCards";
 

@@ -96,7 +96,11 @@ const HeaderContainer = memo<HeaderProps>(() => {
 
   const renderLoginButton = (size: NavSize) => {
     return (
-      <MenuBarItem href="#" size={size} ariaLabel={t("ariaLabels.logInToAccount")}>
+      <MenuBarItem
+        href="#"
+        size={size}
+        ariaLabel={t("ariaLabels.logInToAccount")}
+      >
         {t("buttons.logIn")}
       </MenuBarItem>
     );
@@ -108,10 +112,7 @@ const HeaderContainer = memo<HeaderProps>(() => {
     avatarSize: "small" | "medium" | "large" | "xlarge",
   ) => {
     return (
-      <Button
-        size={buttonSize}
-        ariaLabel={t("ariaLabels.createNewRule")}
-      >
+      <Button size={buttonSize} ariaLabel={t("ariaLabels.createNewRule")}>
         {renderAvatarGroup(containerSize, avatarSize)}
         <span>{t("buttons.createRule")}</span>
       </Button>

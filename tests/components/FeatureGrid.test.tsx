@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
 import FeatureGrid from "../../app/components/FeatureGrid";
 import {

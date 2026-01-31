@@ -12,7 +12,10 @@ interface MessagesProviderProps {
   children: ReactNode;
 }
 
-export function MessagesProvider({ messages, children }: MessagesProviderProps) {
+export function MessagesProvider({
+  messages,
+  children,
+}: MessagesProviderProps) {
   return (
     <MessagesContext.Provider value={messages}>
       {children}

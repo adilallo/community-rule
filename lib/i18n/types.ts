@@ -1,6 +1,6 @@
 /**
  * Type definitions for translation keys
- * 
+ *
  * These types provide type safety when accessing translation keys.
  * The actual types are inferred from the JSON files in messages/en/
  */
