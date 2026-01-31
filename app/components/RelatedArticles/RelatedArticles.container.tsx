@@ -15,7 +15,13 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [progress, setProgress] = useState(0);
+    const [mounted, setMounted] = useState(false);
     const isMobile = useIsMobile();
+
+    // Ensure hydration matches server render
+    useEffect(() => {
+      setMounted(true);
+    }, []);
 
     // Memoize the mouse down handler to prevent unnecessary re-renders
     const handleMouseDown = useCallback(
@@ -42,16 +48,17 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
     );
 
     // Memoize transform style to prevent unnecessary recalculations
+    // Use mounted state to prevent hydration mismatch
     const transformStyle = useMemo(
       () => ({
-        transform: isMobile
+        transform: mounted && isMobile
           ? `translateX(calc(50% - 130px - ${currentIndex * 260}px))`
           : "none",
-        scrollBehavior: (!isMobile
+        scrollBehavior: (mounted && !isMobile
           ? "smooth"
           : "auto") as React.CSSProperties["scrollBehavior"],
       }),
-      [isMobile, currentIndex],
+      [mounted, isMobile, currentIndex],
     );
 
     // Memoize progress bar style calculation
@@ -67,9 +74,9 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
       [currentIndex, progress],
     );
 
-    // Auto-advance every 3 seconds (only on mobile)
+    // Auto-advance every 3 seconds (only on mobile, after mount)
     useEffect(() => {
-      if (filteredPosts.length <= 1 || !isMobile) return;
+      if (filteredPosts.length <= 1 || !mounted || !isMobile) return;
 
       const interval = setInterval(() => {
         setProgress(0);
@@ -77,11 +84,11 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
       }, 3000);
 
       return () => clearInterval(interval);
-    }, [filteredPosts.length, isMobile]);
+    }, [filteredPosts.length, mounted, isMobile]);
 
-    // Progress animation (only on mobile)
+    // Progress animation (only on mobile, after mount)
     useEffect(() => {
-      if (filteredPosts.length <= 1 || !isMobile) return;
+      if (filteredPosts.length <= 1 || !mounted || !isMobile) return;
 
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
@@ -93,13 +100,13 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
       }, 30); // 30ms intervals for smooth animation
 
       return () => clearInterval(progressInterval);
-    }, [currentIndex, filteredPosts.length, isMobile]);
+    }, [currentIndex, filteredPosts.length, mounted, isMobile]);
 
     return (
       <RelatedArticlesView
         filteredPosts={filteredPosts}
         slugOrder={slugOrder}
-        isMobile={isMobile}
+        isMobile={mounted && isMobile}
         transformStyle={transformStyle}
         getProgressStyle={getProgressStyle}
         onMouseDown={handleMouseDown}

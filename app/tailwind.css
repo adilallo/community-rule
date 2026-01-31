@@ -41,6 +41,17 @@
     var(--font-space-grotesk), ui-monospace, SFMono-Regular, "SF Mono",
     Consolas, "Liberation Mono", Menlo, monospace;
 
+  /* Typography weight tokens */
+  --typography-thin: 100;
+  --typography-extralight: 200;
+  --typography-light: 300;
+  --typography-regular: 400;
+  --typography-medium: 500;
+  --typography-semibold: 600;
+  --typography-bold: 700;
+  --typography-extrabold: 800;
+  --typography-black: 900;
+
   /* Dimension */
   --spacing-scale-000: 0px;
   --spacing-scale-001: 1px;
@@ -52,8 +63,11 @@
   --spacing-scale-008: 8px;
   --spacing-scale-010: 10px;
   --spacing-scale-012: 12px;
+  --spacing-scale-014: 14px;
   --spacing-scale-016: 16px;
+  --spacing-scale-018: 18px;
   --spacing-scale-020: 20px;
+  --spacing-scale-022: 22px;
   --spacing-scale-024: 24px;
   --spacing-scale-032: 32px;
   --spacing-scale-040: 40px;
@@ -68,11 +82,56 @@
   --spacing-scale-260: 260px;
   --spacing-scale-290: 290px;
 
+  /* Negative spacing scales */
+  --spacing-scale--004: -4px;
+  --spacing-scale--008: -8px;
+  --spacing-scale--012: -12px;
+  --spacing-scale--016: -16px;
+  --spacing-scale--024: -24px;
+
+  /* Scale aliases for measures compatibility */
+  --scale-000: var(--spacing-scale-000);
+  --scale-001: var(--spacing-scale-001);
+  --scale-002: var(--spacing-scale-002);
+  --scale-003: var(--spacing-scale-003);
+  --scale-004: var(--spacing-scale-004);
+  --scale-005: var(--spacing-scale-005);
+  --scale-006: var(--spacing-scale-006);
+  --scale-008: var(--spacing-scale-008);
+  --scale-010: var(--spacing-scale-010);
+  --scale-012: var(--spacing-scale-012);
+  --scale-014: var(--spacing-scale-014);
+  --scale-016: var(--spacing-scale-016);
+  --scale-018: var(--spacing-scale-018);
+  --scale-020: var(--spacing-scale-020);
+  --scale-022: var(--spacing-scale-022);
+  --scale-024: var(--spacing-scale-024);
+  --scale-032: var(--spacing-scale-032);
+  --scale-040: var(--spacing-scale-040);
+  --scale-048: var(--spacing-scale-048);
+  --scale-056: var(--spacing-scale-056);
+  --scale-060: var(--spacing-scale-060);
+  --scale-064: var(--spacing-scale-064);
+  --scale-076: var(--spacing-scale-076);
+  --scale-096: var(--spacing-scale-096);
+  --scale-120: var(--spacing-scale-120);
+  --scale-160: var(--spacing-scale-160);
+  --scale-260: var(--spacing-scale-260);
+  --scale-290: var(--spacing-scale-290);
+  --scale--004: var(--spacing-scale--004);
+  --scale--008: var(--spacing-scale--008);
+  --scale--012: var(--spacing-scale--012);
+  --scale--016: var(--spacing-scale--016);
+  --scale--024: var(--spacing-scale--024);
+
   --spacing-measures-sizing-008: var(--spacing-scale-008);
   --spacing-measures-sizing-010: var(--spacing-scale-010);
   --spacing-measures-sizing-012: var(--spacing-scale-012);
+  --spacing-measures-sizing-014: var(--spacing-scale-014);
   --spacing-measures-sizing-016: var(--spacing-scale-016);
+  --spacing-measures-sizing-018: var(--spacing-scale-018);
   --spacing-measures-sizing-020: var(--spacing-scale-020);
+  --spacing-measures-sizing-022: var(--spacing-scale-022);
   --spacing-measures-sizing-024: var(--spacing-scale-024);
   --spacing-measures-sizing-032: var(--spacing-scale-032);
   --spacing-measures-sizing-040: var(--spacing-scale-040);
@@ -93,8 +152,11 @@
   --spacing-measures-spacing-008: var(--spacing-scale-008);
   --spacing-measures-spacing-010: var(--spacing-scale-010);
   --spacing-measures-spacing-012: var(--spacing-scale-012);
+  --spacing-measures-spacing-014: var(--spacing-scale-014);
   --spacing-measures-spacing-016: var(--spacing-scale-016);
+  --spacing-measures-spacing-018: var(--spacing-scale-018);
   --spacing-measures-spacing-020: var(--spacing-scale-020);
+  --spacing-measures-spacing-022: var(--spacing-scale-022);
   --spacing-measures-spacing-024: var(--spacing-scale-024);
   --spacing-measures-spacing-032: var(--spacing-scale-032);
   --spacing-measures-spacing-040: var(--spacing-scale-040);
@@ -136,8 +198,11 @@
   --measures-sizing-008: var(--spacing-measures-sizing-008);
   --measures-sizing-010: var(--spacing-measures-sizing-010);
   --measures-sizing-012: var(--spacing-measures-sizing-012);
+  --measures-sizing-014: var(--spacing-measures-sizing-014);
   --measures-sizing-016: var(--spacing-measures-sizing-016);
+  --measures-sizing-018: var(--spacing-measures-sizing-018);
   --measures-sizing-020: var(--spacing-measures-sizing-020);
+  --measures-sizing-022: var(--spacing-measures-sizing-022);
   --measures-sizing-024: var(--spacing-measures-sizing-024);
   --measures-sizing-032: var(--spacing-measures-sizing-032);
   --measures-sizing-040: var(--spacing-measures-sizing-040);
@@ -156,8 +221,11 @@
   --measures-spacing-008: var(--spacing-measures-spacing-008);
   --measures-spacing-010: var(--spacing-measures-spacing-010);
   --measures-spacing-012: var(--spacing-measures-spacing-012);
+  --measures-spacing-014: var(--spacing-measures-spacing-014);
   --measures-spacing-016: var(--spacing-measures-spacing-016);
+  --measures-spacing-018: var(--spacing-measures-spacing-018);
   --measures-spacing-020: var(--spacing-measures-spacing-020);
+  --measures-spacing-022: var(--spacing-measures-spacing-022);
   --measures-spacing-024: var(--spacing-measures-spacing-024);
   --measures-spacing-032: var(--spacing-measures-spacing-032);
   --measures-spacing-040: var(--spacing-measures-spacing-040);
@@ -170,6 +238,84 @@
   --measures-spacing-120: var(--spacing-measures-spacing-120);
   --measures-spacing-160: var(--spacing-measures-spacing-160);
   --measures-spacing-260: var(--spacing-measures-spacing-260);
+
+  /* Negative spacing aliases */
+  --measures-spacing--004: var(--spacing-scale--004);
+  --measures-spacing--008: var(--spacing-scale--008);
+  --measures-spacing--012: var(--spacing-scale--012);
+  --measures-spacing--016: var(--spacing-scale--016);
+  --measures-spacing--024: var(--spacing-scale--024);
+
+  /* Semantic space tokens */
+  --space-0: var(--spacing-scale-000);
+  --space-025: var(--spacing-scale-001);
+  --space-050: var(--spacing-scale-002);
+  --space-100: var(--spacing-scale-004);
+  --space-150: var(--spacing-scale-006);
+  --space-200: var(--spacing-scale-008);
+  --space-250: var(--spacing-scale-010);
+  --space-300: var(--spacing-scale-012);
+  --space-400: var(--spacing-scale-016);
+  --space-500: var(--spacing-scale-020);
+  --space-600: var(--spacing-scale-024);
+  --space-800: var(--spacing-scale-032);
+  --space-1000: var(--spacing-scale-040);
+  --space-1200: var(--spacing-scale-048);
+  --space-1400: var(--spacing-scale-056);
+  --space-1500: var(--spacing-scale-060);
+  --space-1800: var(--spacing-scale-064);
+  --space-2100: var(--spacing-scale-076);
+  --space-2400: var(--spacing-scale-096);
+  --space-3000: var(--spacing-scale-120);
+  --space-4000: var(--spacing-scale-160);
+  --space-6500: var(--spacing-scale-260);
+
+  /* Semantic negative space tokens */
+  --space-negative-100: var(--spacing-scale--004);
+  --space-negative-200: var(--spacing-scale--008);
+  --space-negative-300: var(--spacing-scale--012);
+  --space-negative-400: var(--spacing-scale--016);
+  --space-negative-600: var(--spacing-scale--024);
+
+  /* Semantic radius tokens */
+  --radius-0: var(--spacing-scale-000);
+  --radius-100: var(--spacing-scale-004);
+  --radius-200: var(--spacing-scale-008);
+  --radius-300: var(--spacing-scale-012);
+  --radius-400: var(--spacing-scale-016);
+  --radius-500: var(--spacing-scale-020);
+  --radius-full: 9999px;
+
+  /* Semantic sizing tokens */
+  --sizing-200: var(--spacing-scale-008);
+  --sizing-250: var(--spacing-scale-010);
+  --sizing-300: var(--spacing-scale-012);
+  --sizing-350: var(--spacing-scale-014);
+  --sizing-400: var(--spacing-scale-016);
+  --sizing-500: var(--spacing-scale-020);
+  --sizing-600: var(--spacing-scale-024);
+  --sizing-800: var(--spacing-scale-032);
+  --sizing-1000: var(--spacing-scale-040);
+  --sizing-1200: var(--spacing-scale-048);
+  --sizing-1400: var(--spacing-scale-056);
+  --sizing-1500: var(--spacing-scale-060);
+  --sizing-1600: var(--spacing-scale-064);
+  --sizing-2400: var(--spacing-scale-096);
+  --sizing-3000: var(--spacing-scale-120);
+  --sizing-6500: var(--spacing-scale-260);
+
+  /* Semantic border tokens */
+  --border-x-small: var(--spacing-scale-001);
+  --border-small: var(--spacing-scale-002);
+  --border-medium: var(--spacing-scale-004);
+  --border-large: var(--spacing-scale-008);
+
+  /* Semantic icon tokens */
+  --icon-xsmall: var(--spacing-scale-012);
+  --icon-small: var(--spacing-scale-016);
+  --icon-medium: var(--spacing-scale-024);
+  --icon-large: var(--spacing-scale-032);
+  --icon-xlarge: var(--spacing-scale-040);
 
   /* Grays & alpha */
   --color-gray-000: #ffffff;
@@ -345,6 +491,21 @@
   --color-border-default-utility-positive: var(--color-kiwi-kiwi300);
   --color-border-default-utility-warning: var(--color-yellow-yellow300);
 
+  /* Theme-dark aliases for utility tokens */
+  --color-border-default-negative-primary: var(--color-border-default-utility-negative);
+  --color-border-default-warning-primary: var(--color-border-default-utility-warning);
+  --color-border-default-positive-primary: var(--color-border-default-utility-positive);
+
+  /* Theme-light variants */
+  --color-border-default-negative-primary-light: var(--color-red-red300);
+  --color-border-default-warning-primary-light: var(--color-yellow-yellow600);
+  --color-border-default-positive-primary-light: var(--color-kiwi-kiwi400);
+  --color-border-default-brand-accent-light: var(--color-yellow-yellow600);
+  --color-border-default-brand-primary-light: var(--color-yellow-yellow800);
+  --color-border-default-primary-light: var(--color-gray-000);
+  --color-border-default-secondary-light: var(--color-gray-100);
+  --color-border-default-tertiary-light: var(--color-gray-300);
+
   --color-border-inverse-brand-accent: var(--color-yellow-yellow50);
   --color-border-inverse-brand-primary: var(--color-yellow-yellow800);
   --color-border-inverse-brand-secondary: var(--color-rust-rust800);
@@ -355,6 +516,26 @@
   --color-border-inverse-utility-negative: var(--color-red-red300);
   --color-border-inverse-utility-positive: var(--color-kiwi-kiwi400);
   --color-border-inverse-utility-warning: var(--color-yellow-yellow400);
+
+  /* Theme-dark invert aliases (mapping to inverse) */
+  --color-border-invert-primary: var(--color-border-inverse-primary);
+  --color-border-invert-secondary: var(--color-border-inverse-secondary);
+  --color-border-invert-tertiary: var(--color-border-inverse-tertiary);
+  --color-border-invert-brand-primary: var(--color-yellow-yellow800);
+  --color-border-invert-brand-accent: var(--color-yellow-yellow600);
+  --color-border-invert-positive-primary: var(--color-kiwi-kiwi500);
+  --color-border-invert-warning-primary: var(--color-yellow-yellow600);
+  --color-border-invert-negative-primary: var(--color-red-red300);
+
+  /* Theme-light invert variants */
+  --color-border-invert-primary-light: var(--color-gray-900);
+  --color-border-invert-secondary-light: var(--color-gray-800);
+  --color-border-invert-tertiary-light: var(--color-gray-600);
+  --color-border-invert-brand-primary-light: var(--color-yellow-yellow100);
+  --color-border-invert-brand-accent-light: var(--color-yellow-yellow300);
+  --color-border-invert-positive-primary-light: var(--color-kiwi-kiwi300);
+  --color-border-invert-warning-primary-light: var(--color-yellow-yellow300);
+  --color-border-invert-negative-primary-light: var(--color-red-red300);
 
   /* Content */
   --color-content-brand-darker-accent-2: var(--color-yellow-yellow200);
@@ -371,6 +552,13 @@
   --color-content-default-brand-accent: var(--color-opacity-700);
   --color-content-default-brand-primary: var(--color-yellow-yellow50);
   --color-content-default-brand-secondary: var(--color-rust-rust400);
+  --color-content-default-brand-lime: var(--color-lime-lime200);
+  --color-content-default-brand-rust: var(--color-rust-rust150);
+  --color-content-default-brand-royal: var(--color-royal-blue-royal-blue200);
+  --color-content-default-brand-red: var(--color-red-red100);
+  --color-content-default-brand-teal: var(--color-teal-teal200);
+  --color-content-default-brand-kiwi: var(--color-kiwi-kiwi100);
+  --color-content-default-brand-lavender: var(--color-lavender-lavender150);
   --color-content-default-primary: var(--color-gray-000);
   --color-content-default-secondary: var(--color-gray-200);
   --color-content-default-tertiary: var(--color-gray-300);
@@ -378,6 +566,28 @@
   --color-content-default-utility-negative: var(--color-red-red400);
   --color-content-default-utility-positive: var(--color-lime-lime400);
   --color-content-default-utility-warning: var(--color-yellow-yellow500);
+
+  /* Theme-dark aliases for utility tokens */
+  --color-content-default-negative-primary: var(--color-content-default-utility-negative);
+  --color-content-default-warning-primary: var(--color-content-default-utility-warning);
+  --color-content-default-positive-primary: var(--color-content-default-utility-positive);
+
+  /* Theme-light variants */
+  --color-content-default-negative-primary-light: var(--color-red-red500);
+  --color-content-default-warning-primary-light: var(--color-yellow-yellow600);
+  --color-content-default-positive-primary-light: var(--color-kiwi-kiwi700);
+  --color-content-default-brand-primary-light: var(--color-yellow-yellow900);
+  --color-content-default-brand-secondary-light: var(--color-yellow-yellow600);
+  --color-content-default-primary-light: var(--color-gray-1000);
+  --color-content-default-secondary-light: var(--color-gray-800);
+  --color-content-default-tertiary-light: var(--color-gray-700);
+  --color-content-default-brand-lime-light: var(--color-lime-lime600);
+  --color-content-default-brand-rust-light: var(--color-rust-rust500);
+  --color-content-default-brand-royal-light: var(--color-royal-blue-royal-blue1000);
+  --color-content-default-brand-red-light: var(--color-red-red500);
+  --color-content-default-brand-teal-light: var(--color-teal-teal500);
+  --color-content-default-brand-kiwi-light: var(--color-kiwi-kiwi600);
+  --color-content-default-brand-lavender-light: var(--color-lavender-lavender500);
 
   --color-content-inverse-brand-accent: var(--color-yellow-yellow700);
   --color-content-inverse-brand-primary: var(--color-yellow-yellow900);
@@ -391,6 +601,40 @@
   --color-content-inverse-utility-positive: var(--color-kiwi-kiwi300);
   --color-content-inverse-utility-warning: var(--color-yellow-yellow300);
 
+  /* Theme-dark invert aliases (mapping to inverse) */
+  --color-content-invert-primary: var(--color-content-inverse-primary);
+  --color-content-invert-secondary: var(--color-content-inverse-secondary);
+  --color-content-invert-tertiary: var(--color-content-inverse-tertiary);
+  --color-content-invert-brand-primary: var(--color-yellow-yellow900);
+  --color-content-invert-brand-secondary: var(--color-yellow-yellow600);
+  --color-content-invert-brand-lime: var(--color-lime-lime600);
+  --color-content-invert-brand-royal: var(--color-royal-blue-royal-blue1000);
+  --color-content-invert-brand-teal: var(--color-teal-teal500);
+  --color-content-invert-brand-rust: var(--color-rust-rust500);
+  --color-content-invert-brand-lavender: var(--color-lavender-lavender500);
+  --color-content-invert-brand-kiwi: var(--color-kiwi-kiwi600);
+  --color-content-invert-brand-red: var(--color-red-red500);
+  --color-content-invert-positive-primary: var(--color-kiwi-kiwi700);
+  --color-content-invert-warning-primary: var(--color-yellow-yellow600);
+  --color-content-invert-negative-primary: var(--color-red-red500);
+
+  /* Theme-light invert variants */
+  --color-content-invert-primary-light: var(--color-gray-000);
+  --color-content-invert-secondary-light: var(--color-gray-200);
+  --color-content-invert-tertiary-light: var(--color-gray-300);
+  --color-content-invert-brand-primary-light: var(--color-yellow-yellow50);
+  --color-content-invert-brand-secondary-light: var(--color-yellow-yellow200);
+  --color-content-invert-brand-lime-light: var(--color-lime-lime200);
+  --color-content-invert-brand-royal-light: var(--color-royal-blue-royal-blue200);
+  --color-content-invert-brand-teal-light: var(--color-teal-teal200);
+  --color-content-invert-brand-rust-light: var(--color-rust-rust150);
+  --color-content-invert-brand-lavender-light: var(--color-lavender-lavender150);
+  --color-content-invert-brand-kiwi-light: var(--color-kiwi-kiwi100);
+  --color-content-invert-brand-red-light: var(--color-red-red100);
+  --color-content-invert-positive-primary-light: var(--color-kiwi-kiwi300);
+  --color-content-invert-warning-primary-light: var(--color-yellow-yellow300);
+  --color-content-invert-negative-primary-light: var(--color-red-red300);
+
   /* Surface */
   --color-surface-default-brand-red: var(--color-red-red100);
   --color-surface-default-brand-darker-accent: var(--color-yellow-yellow200);
@@ -399,9 +643,22 @@
   --color-surface-default-brand-lighter-accent: var(--color-yellow-yellow100);
   --color-surface-default-brand-lime: var(--color-lime-lime100);
   --color-surface-default-brand-primary: var(--color-yellow-yellow100);
+  --color-surface-default-brand-secondary: var(--color-yellow-yellow800);
   --color-surface-default-brand-royal: var(--color-royal-blue-royal-blue50);
   --color-surface-default-brand-rust: var(--color-rust-rust100);
   --color-surface-default-brand-teal: var(--color-teal-teal50);
+
+  /* Theme-dark brand token variants */
+  --color-surface-default-brand-royal-dark: var(--color-royal-blue-royal-blue800);
+  --color-surface-default-brand-lime-dark: var(--color-lime-lime800);
+  --color-surface-default-brand-rust-dark: var(--color-rust-rust700);
+  --color-surface-default-brand-red-dark: var(--color-red-red700);
+  --color-surface-default-brand-kiwi-dark: var(--color-kiwi-kiwi700);
+  --color-surface-default-brand-lavender-dark: var(--color-lavender-lavender700);
+  --color-surface-default-brand-teal-dark: var(--color-teal-teal700);
+  --color-surface-default-positive-secondary: var(--color-kiwi-kiwi1000);
+  --color-surface-default-warning-secondary: var(--color-yellow-yellow1000);
+  --color-surface-default-negative-secondary: var(--color-red-red1000);
 
   --color-surface-default-primary: var(--color-gray-1000);
   --color-surface-default-secondary: var(--color-gray-900);
@@ -414,6 +671,24 @@
   --color-surface-default-utility-positive: var(--color-kiwi-kiwi500);
   --color-surface-default-utility-warning: var(--color-yellow-yellow500);
 
+  /* Theme-dark aliases for utility tokens */
+  --color-surface-default-negative-primary: var(--color-surface-default-utility-negative);
+  --color-surface-default-warning-primary: var(--color-surface-default-utility-warning);
+  --color-surface-default-positive-primary: var(--color-surface-default-utility-positive);
+
+  /* Theme-light variants */
+  --color-surface-default-negative-primary-light: var(--color-red-red200);
+  --color-surface-default-warning-primary-light: var(--color-yellow-yellow300);
+  --color-surface-default-positive-primary-light: var(--color-kiwi-kiwi300);
+  --color-surface-default-brand-primary-light: var(--color-yellow-yellow50);
+  --color-surface-default-primary-light: var(--color-gray-000);
+  --color-surface-default-secondary-light: var(--color-gray-100);
+  --color-surface-default-tertiary-light: var(--color-gray-200);
+  --color-surface-default-brand-secondary-light: var(--color-yellow-yellow200);
+  --color-surface-default-positive-secondary-light: var(--color-kiwi-kiwi0);
+  --color-surface-default-warning-secondary-light: var(--color-yellow-yellow0);
+  --color-surface-default-negative-secondary-light: var(--color-red-red0);
+
   --color-surface-inverse-brand-accent: var(--color-yellow-yellow100);
   --color-surface-inverse-brand-primary: var(--color-yellow-yellow50);
   --color-surface-inverse-brand-secondary: var(--color-rust-rust300);
@@ -424,6 +699,47 @@
   --color-surface-inverse-utility-negative: var(--color-red-red300);
   --color-surface-inverse-utility-positive: var(--color-kiwi-kiwi300);
   --color-surface-inverse-utility-warning: var(--color-yellow-yellow300);
+
+  /* Theme-dark invert aliases (mapping to inverse) */
+  --color-surface-invert-primary: var(--color-surface-inverse-primary);
+  --color-surface-invert-secondary: var(--color-surface-inverse-secondary);
+  --color-surface-invert-tertiary: var(--color-surface-inverse-tertiary);
+  --color-surface-invert-brand-primary: var(--color-surface-inverse-brand-primary);
+  --color-surface-invert-brand-secondary: var(--color-surface-inverse-brand-secondary);
+  --color-surface-invert-brand-accent: var(--color-surface-inverse-brand-accent);
+  --color-surface-invert-brand-lime: var(--color-lime-lime100);
+  --color-surface-invert-brand-royal: var(--color-royal-blue-royal-blue50);
+  --color-surface-invert-brand-teal: var(--color-teal-teal50);
+  --color-surface-invert-brand-rust: var(--color-rust-rust100);
+  --color-surface-invert-brand-lavender: var(--color-lavender-lavender150);
+  --color-surface-invert-brand-kiwi: var(--color-kiwi-kiwi200);
+  --color-surface-invert-brand-red: var(--color-red-red100);
+  --color-surface-invert-negative-primary: var(--color-red-red200);
+  --color-surface-invert-negative-secondary: var(--color-red-red0);
+  --color-surface-invert-warning-primary: var(--color-yellow-yellow300);
+  --color-surface-invert-warning-secondary: var(--color-yellow-yellow0);
+  --color-surface-invert-positive-primary: var(--color-kiwi-kiwi300);
+  --color-surface-invert-positive-secondary: var(--color-kiwi-kiwi0);
+
+  /* Theme-light invert variants */
+  --color-surface-invert-primary-light: var(--color-gray-1000);
+  --color-surface-invert-secondary-light: var(--color-gray-900);
+  --color-surface-invert-tertiary-light: var(--color-gray-800);
+  --color-surface-invert-brand-primary-light: var(--color-yellow-yellow1000);
+  --color-surface-invert-brand-secondary-light: var(--color-yellow-yellow800);
+  --color-surface-invert-brand-lime-light: var(--color-lime-lime800);
+  --color-surface-invert-brand-royal-light: var(--color-royal-blue-royal-blue800);
+  --color-surface-invert-brand-teal-light: var(--color-teal-teal700);
+  --color-surface-invert-brand-rust-light: var(--color-rust-rust700);
+  --color-surface-invert-brand-lavender-light: var(--color-lavender-lavender700);
+  --color-surface-invert-brand-kiwi-light: var(--color-kiwi-kiwi700);
+  --color-surface-invert-brand-red-light: var(--color-red-red700);
+  --color-surface-invert-negative-primary-light: var(--color-red-red400);
+  --color-surface-invert-negative-secondary-light: var(--color-red-red1000);
+  --color-surface-invert-warning-primary-light: var(--color-yellow-yellow500);
+  --color-surface-invert-warning-secondary-light: var(--color-yellow-yellow1000);
+  --color-surface-invert-positive-primary-light: var(--color-kiwi-kiwi500);
+  --color-surface-invert-positive-secondary-light: var(--color-kiwi-kiwi1000);
 
   /* Color */
   --color-config-europe-morning-magenta: oklch(66.27% 0.264 321.73);
@@ -1082,44 +1398,5 @@
     text-transform: none;
     text-indent: 0px;
     margin-bottom: 0px;
-  }
-
-  /* Blog post body styling with semantic spacing */
-  .post-body p {
-    /* Scales with font size - uses logical properties for better writing mode support */
-    margin-block: 1em;
-  }
-
-  /* Extra blank lines from markdown -> visible gaps that scale with font size */
-  .post-body .md-gap {
-    /* Each "extra blank line" is one em; scales with font size */
-    block-size: calc(1em * var(--gap, 1));
-    margin: 0; /* no extra margins around the gap */
-    line-height: 1; /* prevent tall line-height from compounding */
-  }
-
-  /* Heading rhythm for better typography */
-  .post-body h1 {
-    margin-block: 1.5em 0.6em;
-  }
-  .post-body h2 {
-    margin-block: 1.4em 0.6em;
-  }
-  .post-body h3 {
-    margin-block: 1.2em 0.5em;
-  }
-  .post-body h4 {
-    margin-block: 1.1em 0.5em;
-  }
-  .post-body h5 {
-    margin-block: 1em 0.4em;
-  }
-  .post-body h6 {
-    margin-block: 1em 0.4em;
-  }
-
-  /* Ensure line breaks are visible */
-  .post-body br {
-    display: block;
   }
 }
