@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 export interface InputWithCounterProps {
   label?: string;
   placeholder?: string;
@@ -8,3 +9,4 @@ export interface InputWithCounterProps {
   className?: string;
   inputClassName?: string;
 }
+/* eslint-enable no-unused-vars, @typescript-eslint/no-unused-vars */

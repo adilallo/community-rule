@@ -176,6 +176,14 @@ const eslintConfig = [
       "react-hooks/exhaustive-deps": "off",
     },
   },
+  // Type definition files - interface properties are used in implementation files
+  {
+    files: ["**/*.types.ts"],
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

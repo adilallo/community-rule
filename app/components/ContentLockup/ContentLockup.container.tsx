@@ -99,6 +99,8 @@ const ContentLockupContainer = memo<ContentLockupProps>(
         titleContainer: "flex items-center justify-start w-full",
         title:
           "font-bricolage-grotesque font-bold text-[28px] leading-[36px] tracking-[0] text-[var(--color-content-default-primary)] text-left",
+        subtitle:
+          "font-inter font-normal text-[16px] leading-[24px] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
         description:
           "font-inter font-normal text-[16px] leading-[24px] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
         shape: "w-[16px] h-[16px]",

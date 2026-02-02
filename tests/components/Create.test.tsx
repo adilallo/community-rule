@@ -1,7 +1,8 @@
 import React from "react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
+import { renderWithProviders } from "../utils/test-utils";
 import Create from "../../app/components/Create";
 import Input from "../../app/components/Input";
 
@@ -20,20 +21,22 @@ describe("Create", () => {
   });
 
   it("renders when isOpen is true", () => {
-    render(<Create {...defaultProps}>Create dialog content</Create>);
+    renderWithProviders(
+      <Create {...defaultProps}>Create dialog content</Create>,
+    );
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Test Create Dialog")).toBeInTheDocument();
     expect(screen.getByText("Create dialog content")).toBeInTheDocument();
   });
 
   it("does not render when isOpen is false", () => {
-    render(<Create {...defaultProps} isOpen={false} />);
+    renderWithProviders(<Create {...defaultProps} isOpen={false} />);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   it("calls onClose when close button is clicked", () => {
     const onClose = vi.fn();
-    render(<Create {...defaultProps} onClose={onClose} />);
+    renderWithProviders(<Create {...defaultProps} onClose={onClose} />);
     const closeButton = screen.getByLabelText("Close dialog");
     fireEvent.click(closeButton);
     expect(onClose).toHaveBeenCalledTimes(1);
@@ -41,14 +44,14 @@ describe("Create", () => {
 
   it("calls onClose when ESC key is pressed", () => {
     const onClose = vi.fn();
-    render(<Create {...defaultProps} onClose={onClose} />);
+    renderWithProviders(<Create {...defaultProps} onClose={onClose} />);
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it("calls onClose when overlay is clicked", () => {
     const onClose = vi.fn();
-    render(<Create {...defaultProps} onClose={onClose} />);
+    renderWithProviders(<Create {...defaultProps} onClose={onClose} />);
     const overlay = document.querySelector(".fixed.inset-0");
     if (overlay) {
       fireEvent.click(overlay);
@@ -59,7 +62,7 @@ describe("Create", () => {
   it("renders footer buttons when provided", () => {
     const onBack = vi.fn();
     const onNext = vi.fn();
-    render(
+    renderWithProviders(
       <Create
         {...defaultProps}
         showBackButton={true}
@@ -76,7 +79,7 @@ describe("Create", () => {
 
   it("calls onBack when back button is clicked", () => {
     const onBack = vi.fn();
-    render(
+    renderWithProviders(
       <Create
         {...defaultProps}
         showBackButton={true}
@@ -91,7 +94,7 @@ describe("Create", () => {
 
   it("calls onNext when next button is clicked", () => {
     const onNext = vi.fn();
-    render(
+    renderWithProviders(
       <Create
         {...defaultProps}
         showNextButton={true}
@@ -105,7 +108,7 @@ describe("Create", () => {
   });
 
   it("disables next button when nextButtonDisabled is true", () => {
-    render(
+    renderWithProviders(
       <Create
         {...defaultProps}
         showNextButton={true}
@@ -118,28 +121,20 @@ describe("Create", () => {
   });
 
   it("renders stepper when currentStep and totalSteps are provided", () => {
-    render(
-      <Create
-        {...defaultProps}
-        currentStep={2}
-        totalSteps={5}
-      />,
+    renderWithProviders(
+      <Create {...defaultProps} currentStep={2} totalSteps={5} />,
     );
-    const steppers = screen.getAllByRole("progressbar");
-    // Find the stepper in the footer (not the progress bar if any)
-    const footerStepper = steppers.find((stepper) => {
-      const parent = stepper.closest(".absolute.bottom-0");
-      return parent !== null;
+    // Find the stepper by its aria-label
+    const stepper = screen.getByRole("progressbar", {
+      name: "Step 2 of 5",
     });
-    expect(footerStepper).toBeInTheDocument();
-    if (footerStepper) {
-      expect(footerStepper).toHaveAttribute("aria-valuenow", "2");
-      expect(footerStepper).toHaveAttribute("aria-valuemax", "5");
-    }
+    expect(stepper).toBeInTheDocument();
+    expect(stepper).toHaveAttribute("aria-valuenow", "2");
+    expect(stepper).toHaveAttribute("aria-valuemax", "5");
   });
 
   it("renders custom footer content", () => {
-    render(
+    renderWithProviders(
       <Create
         {...defaultProps}
         footerContent={<button>Custom Footer</button>}
@@ -149,33 +144,35 @@ describe("Create", () => {
   });
 
   it("has proper ARIA attributes", () => {
-    render(<Create {...defaultProps} ariaLabel="Test create dialog" />);
+    renderWithProviders(
+      <Create {...defaultProps} ariaLabel="Test create dialog" />,
+    );
     const dialog = screen.getByRole("dialog");
     expect(dialog).toHaveAttribute("aria-modal", "true");
     expect(dialog).toHaveAttribute("aria-label", "Test create dialog");
   });
 
   it("locks body scroll when open", () => {
-    render(<Create {...defaultProps} />);
+    renderWithProviders(<Create {...defaultProps} />);
     expect(document.body.style.overflow).toBe("hidden");
   });
 
   it("restores body scroll when closed", () => {
-    const { rerender } = render(<Create {...defaultProps} />);
+    const { rerender } = renderWithProviders(<Create {...defaultProps} />);
     expect(document.body.style.overflow).toBe("hidden");
     rerender(<Create {...defaultProps} isOpen={false} />);
     expect(document.body.style.overflow).toBe("");
   });
 
   it("traps focus within create dialog", async () => {
-    render(
+    renderWithProviders(
       <Create {...defaultProps}>
         <Input label="Test Input" />
       </Create>,
     );
 
     const closeButton = screen.getByLabelText("Close dialog");
-    const input = screen.getByLabelText("Test Input");
+    screen.getByLabelText("Test Input"); // Verify input is rendered
 
     // Focus should start on first focusable element (close button)
     await waitFor(() => {

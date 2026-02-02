@@ -65,15 +65,10 @@ export const Default = Template.bind({});
 Default.args = {
   isOpen: true,
   title: "What do you call your group's new policy?",
-  description:
-    "You can also combine or add new approaches to the list",
+  description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input
-        label="Label"
-        placeholder="Policy name"
-        value=""
-      />
+      <Input label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>
@@ -90,15 +85,10 @@ export const WithStepper = Template.bind({});
 WithStepper.args = {
   isOpen: true,
   title: "What do you call your group's new policy?",
-  description:
-    "You can also combine or add new approaches to the list",
+  description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input
-        label="Label"
-        placeholder="Policy name"
-        value=""
-      />
+      <Input label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>
@@ -117,15 +107,10 @@ export const Step2 = Template.bind({});
 Step2.args = {
   isOpen: true,
   title: "How should conflicts be resolved?",
-  description:
-    "You can also combine or add new approaches to the list",
+  description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input
-        label="Label"
-        placeholder="Enter text"
-        value=""
-      />
+      <Input label="Label" placeholder="Enter text" value="" />
     </div>
   ),
   showBackButton: true,
@@ -178,15 +163,10 @@ export const NextButtonDisabled = Template.bind({});
 NextButtonDisabled.args = {
   isOpen: true,
   title: "What do you call your group's new policy?",
-  description:
-    "You can also combine or add new approaches to the list",
+  description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input
-        label="Label"
-        placeholder="Policy name"
-        value=""
-      />
+      <Input label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>

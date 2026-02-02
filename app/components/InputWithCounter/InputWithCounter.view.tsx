@@ -1,4 +1,3 @@
-import { getAssetPath } from "../../../lib/assetUtils";
 import type { InputWithCounterProps } from "./InputWithCounter.types";
 
 export function InputWithCounterView({

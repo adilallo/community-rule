@@ -9,7 +9,6 @@ import Progress from "../components/Progress";
 import Create from "../components/Create";
 import Input from "../components/Input";
 import InputWithCounter from "../components/InputWithCounter";
-import { getAssetPath } from "../../lib/assetUtils";
 
 export default function ComponentsPreview() {
   const [alertVisible, setAlertVisible] = useState({

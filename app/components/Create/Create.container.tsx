@@ -50,8 +50,7 @@ const CreateContainer = memo<CreateProps>(
       if (!isOpen) return;
 
       // Store previous active element
-      previousActiveElementRef.current =
-        document.activeElement as HTMLElement;
+      previousActiveElementRef.current = document.activeElement as HTMLElement;
 
       // Lock body scroll
       document.body.style.overflow = "hidden";
@@ -108,13 +107,13 @@ const CreateContainer = memo<CreateProps>(
       };
     }, [isOpen]);
 
-
     return (
       <CreateView
         isOpen={isOpen}
         onClose={onClose}
         title={title}
         description={description}
+        // eslint-disable-next-line react/no-children-prop
         children={children}
         footerContent={footerContent}
         showBackButton={showBackButton}
