@@ -492,9 +492,15 @@
   --color-border-default-utility-warning: var(--color-yellow-yellow300);
 
   /* Theme-dark aliases for utility tokens */
-  --color-border-default-negative-primary: var(--color-border-default-utility-negative);
-  --color-border-default-warning-primary: var(--color-border-default-utility-warning);
-  --color-border-default-positive-primary: var(--color-border-default-utility-positive);
+  --color-border-default-negative-primary: var(
+    --color-border-default-utility-negative
+  );
+  --color-border-default-warning-primary: var(
+    --color-border-default-utility-warning
+  );
+  --color-border-default-positive-primary: var(
+    --color-border-default-utility-positive
+  );
 
   /* Theme-light variants */
   --color-border-default-negative-primary-light: var(--color-red-red300);
@@ -568,9 +574,15 @@
   --color-content-default-utility-warning: var(--color-yellow-yellow500);
 
   /* Theme-dark aliases for utility tokens */
-  --color-content-default-negative-primary: var(--color-content-default-utility-negative);
-  --color-content-default-warning-primary: var(--color-content-default-utility-warning);
-  --color-content-default-positive-primary: var(--color-content-default-utility-positive);
+  --color-content-default-negative-primary: var(
+    --color-content-default-utility-negative
+  );
+  --color-content-default-warning-primary: var(
+    --color-content-default-utility-warning
+  );
+  --color-content-default-positive-primary: var(
+    --color-content-default-utility-positive
+  );
 
   /* Theme-light variants */
   --color-content-default-negative-primary-light: var(--color-red-red500);
@@ -583,11 +595,15 @@
   --color-content-default-tertiary-light: var(--color-gray-700);
   --color-content-default-brand-lime-light: var(--color-lime-lime600);
   --color-content-default-brand-rust-light: var(--color-rust-rust500);
-  --color-content-default-brand-royal-light: var(--color-royal-blue-royal-blue1000);
+  --color-content-default-brand-royal-light: var(
+    --color-royal-blue-royal-blue1000
+  );
   --color-content-default-brand-red-light: var(--color-red-red500);
   --color-content-default-brand-teal-light: var(--color-teal-teal500);
   --color-content-default-brand-kiwi-light: var(--color-kiwi-kiwi600);
-  --color-content-default-brand-lavender-light: var(--color-lavender-lavender500);
+  --color-content-default-brand-lavender-light: var(
+    --color-lavender-lavender500
+  );
 
   --color-content-inverse-brand-accent: var(--color-yellow-yellow700);
   --color-content-inverse-brand-primary: var(--color-yellow-yellow900);
@@ -625,10 +641,14 @@
   --color-content-invert-brand-primary-light: var(--color-yellow-yellow50);
   --color-content-invert-brand-secondary-light: var(--color-yellow-yellow200);
   --color-content-invert-brand-lime-light: var(--color-lime-lime200);
-  --color-content-invert-brand-royal-light: var(--color-royal-blue-royal-blue200);
+  --color-content-invert-brand-royal-light: var(
+    --color-royal-blue-royal-blue200
+  );
   --color-content-invert-brand-teal-light: var(--color-teal-teal200);
   --color-content-invert-brand-rust-light: var(--color-rust-rust150);
-  --color-content-invert-brand-lavender-light: var(--color-lavender-lavender150);
+  --color-content-invert-brand-lavender-light: var(
+    --color-lavender-lavender150
+  );
   --color-content-invert-brand-kiwi-light: var(--color-kiwi-kiwi100);
   --color-content-invert-brand-red-light: var(--color-red-red100);
   --color-content-invert-positive-primary-light: var(--color-kiwi-kiwi300);
@@ -649,12 +669,16 @@
   --color-surface-default-brand-teal: var(--color-teal-teal50);
 
   /* Theme-dark brand token variants */
-  --color-surface-default-brand-royal-dark: var(--color-royal-blue-royal-blue800);
+  --color-surface-default-brand-royal-dark: var(
+    --color-royal-blue-royal-blue800
+  );
   --color-surface-default-brand-lime-dark: var(--color-lime-lime800);
   --color-surface-default-brand-rust-dark: var(--color-rust-rust700);
   --color-surface-default-brand-red-dark: var(--color-red-red700);
   --color-surface-default-brand-kiwi-dark: var(--color-kiwi-kiwi700);
-  --color-surface-default-brand-lavender-dark: var(--color-lavender-lavender700);
+  --color-surface-default-brand-lavender-dark: var(
+    --color-lavender-lavender700
+  );
   --color-surface-default-brand-teal-dark: var(--color-teal-teal700);
   --color-surface-default-positive-secondary: var(--color-kiwi-kiwi1000);
   --color-surface-default-warning-secondary: var(--color-yellow-yellow1000);
@@ -672,9 +696,15 @@
   --color-surface-default-utility-warning: var(--color-yellow-yellow500);
 
   /* Theme-dark aliases for utility tokens */
-  --color-surface-default-negative-primary: var(--color-surface-default-utility-negative);
-  --color-surface-default-warning-primary: var(--color-surface-default-utility-warning);
-  --color-surface-default-positive-primary: var(--color-surface-default-utility-positive);
+  --color-surface-default-negative-primary: var(
+    --color-surface-default-utility-negative
+  );
+  --color-surface-default-warning-primary: var(
+    --color-surface-default-utility-warning
+  );
+  --color-surface-default-positive-primary: var(
+    --color-surface-default-utility-positive
+  );
 
   /* Theme-light variants */
   --color-surface-default-negative-primary-light: var(--color-red-red200);
@@ -704,9 +734,15 @@
   --color-surface-invert-primary: var(--color-surface-inverse-primary);
   --color-surface-invert-secondary: var(--color-surface-inverse-secondary);
   --color-surface-invert-tertiary: var(--color-surface-inverse-tertiary);
-  --color-surface-invert-brand-primary: var(--color-surface-inverse-brand-primary);
-  --color-surface-invert-brand-secondary: var(--color-surface-inverse-brand-secondary);
-  --color-surface-invert-brand-accent: var(--color-surface-inverse-brand-accent);
+  --color-surface-invert-brand-primary: var(
+    --color-surface-inverse-brand-primary
+  );
+  --color-surface-invert-brand-secondary: var(
+    --color-surface-inverse-brand-secondary
+  );
+  --color-surface-invert-brand-accent: var(
+    --color-surface-inverse-brand-accent
+  );
   --color-surface-invert-brand-lime: var(--color-lime-lime100);
   --color-surface-invert-brand-royal: var(--color-royal-blue-royal-blue50);
   --color-surface-invert-brand-teal: var(--color-teal-teal50);
@@ -728,16 +764,22 @@
   --color-surface-invert-brand-primary-light: var(--color-yellow-yellow1000);
   --color-surface-invert-brand-secondary-light: var(--color-yellow-yellow800);
   --color-surface-invert-brand-lime-light: var(--color-lime-lime800);
-  --color-surface-invert-brand-royal-light: var(--color-royal-blue-royal-blue800);
+  --color-surface-invert-brand-royal-light: var(
+    --color-royal-blue-royal-blue800
+  );
   --color-surface-invert-brand-teal-light: var(--color-teal-teal700);
   --color-surface-invert-brand-rust-light: var(--color-rust-rust700);
-  --color-surface-invert-brand-lavender-light: var(--color-lavender-lavender700);
+  --color-surface-invert-brand-lavender-light: var(
+    --color-lavender-lavender700
+  );
   --color-surface-invert-brand-kiwi-light: var(--color-kiwi-kiwi700);
   --color-surface-invert-brand-red-light: var(--color-red-red700);
   --color-surface-invert-negative-primary-light: var(--color-red-red400);
   --color-surface-invert-negative-secondary-light: var(--color-red-red1000);
   --color-surface-invert-warning-primary-light: var(--color-yellow-yellow500);
-  --color-surface-invert-warning-secondary-light: var(--color-yellow-yellow1000);
+  --color-surface-invert-warning-secondary-light: var(
+    --color-yellow-yellow1000
+  );
   --color-surface-invert-positive-primary-light: var(--color-kiwi-kiwi500);
   --color-surface-invert-positive-secondary-light: var(--color-kiwi-kiwi1000);
 

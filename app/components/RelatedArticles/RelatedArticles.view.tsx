@@ -50,7 +50,7 @@ export function RelatedArticlesView({
           </div>
         </div>
 
-        {/* Progress bars - only show on mobile (after hydration) */}
+        {/* Progress bars - only show on mobile */}
         {isMobile && (
           <div className="flex justify-center gap-[var(--measures-spacing-008)] px-[var(--measures-spacing-064)]">
             {filteredPosts.map((relatedPost, index) => (
