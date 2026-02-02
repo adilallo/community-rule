@@ -39,6 +39,7 @@ export const Default = {
   args: {
     progress: "3-2",
   },
+  render: (args) => <Progress {...args} />,
 };
 
 export const AllStates = {
@@ -46,41 +47,51 @@ export const AllStates = {
   render: (_args) => (
     <div className="space-y-4 w-full max-w-[600px]">
       <div>
-        <p className="text-white mb-2">Progress: 1-0 (1 segment)</p>
+        <p className="text-white mb-2">1-0</p>
         <Progress {..._args} progress="1-0" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 1-1 (1 segment + partial)</p>
+        <p className="text-white mb-2">1-1</p>
         <Progress {..._args} progress="1-1" />
       </div>
       <div>
-        <p className="text-white mb-2">
-          Progress: 1-5 (1 segment + full partial)
-        </p>
+        <p className="text-white mb-2">1-2</p>
+        <Progress {..._args} progress="1-2" />
+      </div>
+      <div>
+        <p className="text-white mb-2">1-3</p>
+        <Progress {..._args} progress="1-3" />
+      </div>
+      <div>
+        <p className="text-white mb-2">1-4</p>
+        <Progress {..._args} progress="1-4" />
+      </div>
+      <div>
+        <p className="text-white mb-2">1-5</p>
         <Progress {..._args} progress="1-5" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 2-0 (2 segments)</p>
+        <p className="text-white mb-2">2-0</p>
         <Progress {..._args} progress="2-0" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 2-1 (2 segments + partial)</p>
+        <p className="text-white mb-2">2-1</p>
         <Progress {..._args} progress="2-1" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 2-2 (2 segments + partial)</p>
+        <p className="text-white mb-2">2-2</p>
         <Progress {..._args} progress="2-2" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 3-0 (3 segments - complete)</p>
+        <p className="text-white mb-2">3-0</p>
         <Progress {..._args} progress="3-0" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 3-1 (3 segments - complete)</p>
+        <p className="text-white mb-2">3-1</p>
         <Progress {..._args} progress="3-1" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 3-2 (3 segments - complete)</p>
+        <p className="text-white mb-2">3-2</p>
         <Progress {..._args} progress="3-2" />
       </div>
     </div>
@@ -89,33 +100,6 @@ export const AllStates = {
     docs: {
       description: {
         story: "Different progress states of the progress bar component.",
-      },
-    },
-  },
-};
-
-export const ProgressExamples = {
-  args: {},
-  render: () => (
-    <div className="space-y-4 w-full max-w-[600px]">
-      <div>
-        <p className="text-white mb-2">Early (1-0)</p>
-        <Progress progress="1-0" />
-      </div>
-      <div>
-        <p className="text-white mb-2">Middle (2-1)</p>
-        <Progress progress="2-1" />
-      </div>
-      <div>
-        <p className="text-white mb-2">Complete (3-2)</p>
-        <Progress progress="3-2" />
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story: "Common progress bar examples.",
       },
     },
   },
