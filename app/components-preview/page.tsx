@@ -4,6 +4,8 @@ import { useState } from "react";
 import Tooltip from "../components/Tooltip";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
+import Stepper from "../components/Stepper";
+import Progress from "../components/Progress";
 
 export default function ComponentsPreview() {
   const [alertVisible, setAlertVisible] = useState({
@@ -175,6 +177,132 @@ export default function ComponentsPreview() {
                 status="danger"
                 type="banner"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Stepper Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Stepper Component
+          </h2>
+
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Step 1 of 5
+                </p>
+                <Stepper active={1} totalSteps={5} />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Step 2 of 5
+                </p>
+                <Stepper active={2} totalSteps={5} />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Step 3 of 5
+                </p>
+                <Stepper active={3} totalSteps={5} />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Step 4 of 5
+                </p>
+                <Stepper active={4} totalSteps={5} />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Step 5 of 5
+                </p>
+                <Stepper active={5} totalSteps={5} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Progress Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Progress Component
+          </h2>
+
+          <div className="bg-white rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-0
+                </p>
+                <Progress progress="1-0" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-1
+                </p>
+                <Progress progress="1-1" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-2
+                </p>
+                <Progress progress="1-2" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-3
+                </p>
+                <Progress progress="1-3" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-4
+                </p>
+                <Progress progress="1-4" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 1-5
+                </p>
+                <Progress progress="1-5" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 2-0
+                </p>
+                <Progress progress="2-0" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 2-1
+                </p>
+                <Progress progress="2-1" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 2-2
+                </p>
+                <Progress progress="2-2" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 3-0
+                </p>
+                <Progress progress="3-0" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 3-1
+                </p>
+                <Progress progress="3-1" />
+              </div>
+              <div>
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)] mb-[var(--spacing-scale-008)]">
+                  Progress: 3-2
+                </p>
+                <Progress progress="3-2" />
+              </div>
             </div>
           </div>
         </section>
