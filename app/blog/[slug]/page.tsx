@@ -10,6 +10,7 @@ import { logger } from "../../../lib/logger";
 import ContentBanner from "../../components/ContentBanner";
 import AskOrganizer from "../../components/AskOrganizer";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+import "../blog.css";
 
 // Code split RelatedArticles - blog-specific, below the fold
 const RelatedArticles = dynamic(
