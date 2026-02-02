@@ -54,7 +54,9 @@ export const AllStates = {
         <Progress {..._args} progress="1-1" />
       </div>
       <div>
-        <p className="text-white mb-2">Progress: 1-5 (1 segment + full partial)</p>
+        <p className="text-white mb-2">
+          Progress: 1-5 (1 segment + full partial)
+        </p>
         <Progress {..._args} progress="1-5" />
       </div>
       <div>
