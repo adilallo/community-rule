@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Create from "../app/components/Create";
 import Input from "../app/components/Input";
 
@@ -44,20 +43,10 @@ export default {
 };
 
 const Template = (args) => {
-  const [isOpen, setIsOpen] = useState(args.isOpen || false);
-
   return (
-    <div className="p-8">
-      <button
-        onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Open Create Dialog
-      </button>
-      <Create {...args} isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        {args.children}
-      </Create>
-    </div>
+    <Create {...args} isOpen={true} onClose={() => {}}>
+      {args.children}
+    </Create>
   );
 };
 
