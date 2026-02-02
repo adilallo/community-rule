@@ -13,7 +13,8 @@ type IconCardProps = React.ComponentProps<typeof IconCard>;
 const baseProps: IconCardProps = {
   icon: <div data-testid="test-icon">Icon</div>,
   title: "Worker's cooperatives",
-  description: "Employee-owned businesses often need to clarify how power is shared",
+  description:
+    "Employee-owned businesses often need to clarify how power is shared",
 };
 
 const config: ComponentTestSuiteConfig<IconCardProps> = {

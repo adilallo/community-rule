@@ -24,10 +24,10 @@ export function IconCardView({
         {icon}
       </div>
 
-        {/* Title - Centered with auto space above and below */}
-        <h3 className="font-inter font-normal text-[32px] leading-[36px] text-[var(--color-content-default-primary)] w-full">
-          {title}
-        </h3>
+      {/* Title - Centered with auto space above and below */}
+      <h3 className="font-inter font-normal text-[32px] leading-[36px] text-[var(--color-content-default-primary)] w-full">
+        {title}
+      </h3>
 
       {/* Description */}
       <p className="font-inter font-medium text-[10px] leading-[14px] uppercase text-[var(--color-content-default-primary)] w-full">

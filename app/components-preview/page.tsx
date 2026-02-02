@@ -436,7 +436,9 @@ export default function ComponentsPreview() {
                 }
                 title="Worker's cooperatives"
                 description="Employee-owned businesses often need to clarify how power is shared, decisions are made, and how processes operate within their organizations."
-                onClick={() => console.log("IconCard clicked")}
+                onClick={() => {
+                  // IconCard clicked handler
+                }}
               />
             </div>
           </div>
