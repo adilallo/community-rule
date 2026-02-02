@@ -35,7 +35,8 @@ const Template = (args) => {
 export const Default = Template.bind({});
 Default.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "default",
   type: "toast",
 };
@@ -43,7 +44,8 @@ Default.args = {
 export const Positive = Template.bind({});
 Positive.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "positive",
   type: "toast",
 };
@@ -51,7 +53,8 @@ Positive.args = {
 export const Warning = Template.bind({});
 Warning.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "warning",
   type: "toast",
 };
@@ -59,7 +62,8 @@ Warning.args = {
 export const Danger = Template.bind({});
 Danger.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "danger",
   type: "toast",
 };
@@ -67,7 +71,8 @@ Danger.args = {
 export const Banner = Template.bind({});
 Banner.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "default",
   type: "banner",
 };
@@ -75,7 +80,8 @@ Banner.args = {
 export const BannerPositive = Template.bind({});
 BannerPositive.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "positive",
   type: "banner",
 };
@@ -83,7 +89,8 @@ BannerPositive.args = {
 export const BannerWarning = Template.bind({});
 BannerWarning.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "warning",
   type: "banner",
 };
@@ -91,7 +98,8 @@ BannerWarning.args = {
 export const BannerDanger = Template.bind({});
 BannerDanger.args = {
   title: "Short alert banner message goes here",
-  description: "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "danger",
   type: "banner",
 };

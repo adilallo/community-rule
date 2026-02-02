@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export interface AlertProps {
   title: string;
   description?: string;

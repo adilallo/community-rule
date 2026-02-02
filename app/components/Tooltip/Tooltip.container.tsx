@@ -5,13 +5,7 @@ import { TooltipView } from "./Tooltip.view";
 import type { TooltipProps } from "./Tooltip.types";
 
 const TooltipContainer = memo<TooltipProps>(
-  ({
-    children,
-    text,
-    position = "top",
-    className = "",
-    disabled = false,
-  }) => {
+  ({ children, text, position = "top", className = "", disabled = false }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     if (disabled) {
@@ -28,8 +22,6 @@ const TooltipContainer = memo<TooltipProps>(
     const pointerClasses = `absolute ${
       position === "top" ? "bottom-[-7px]" : "top-[-7px]"
     } left-1/2 -translate-x-1/2`;
-
-    const tooltipId = `tooltip-${text.replace(/\s+/g, "-").toLowerCase()}`;
 
     return (
       <div

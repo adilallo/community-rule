@@ -59,7 +59,7 @@ export const ASSETS = {
   // Alert icons
   ICON_ALERT: "assets/Icon_Alert.svg",
   ICON_CLOSE: "assets/Icon_Close.svg",
-  
+
   // Tooltip icons
   ICON_POINTER: "assets/Icon_Pointer.svg",
 } as const;

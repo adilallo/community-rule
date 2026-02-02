@@ -50,9 +50,11 @@ const AlertContainer = memo<AlertProps>(
                 ? "var(--color-border-invert-negative-primary)"
                 : undefined,
             titleColor: "text-[var(--color-content-invert-negative-primary)]",
-            descriptionColor: "text-[var(--color-content-invert-negative-primary)]",
+            descriptionColor:
+              "text-[var(--color-content-invert-negative-primary)]",
             iconColor: "var(--color-red-red500)",
-            closeButtonColor: "text-[var(--color-content-invert-negative-primary)]",
+            closeButtonColor:
+              "text-[var(--color-content-invert-negative-primary)]",
             closeButtonIconColor: "var(--color-content-invert-primary)",
           };
         default:

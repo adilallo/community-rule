@@ -1,11 +1,10 @@
-import { getAssetPath, ASSETS } from "../../lib/assetUtils";
 import type { AlertViewProps } from "./Alert.types";
 
 export function AlertView({
   title,
   description,
-  status,
-  type,
+  status: _status,
+  type: _type,
   className,
   containerClasses,
   containerStyle,
@@ -55,32 +54,32 @@ export function AlertView({
         className={closeButtonClasses}
         aria-label="Close alert"
       >
-          <svg
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <mask
+            id="mask0_21296_8285"
+            style={{ maskType: "alpha" }}
+            maskUnits="userSpaceOnUse"
+            x="0"
+            y="0"
             width="20"
             height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
           >
-            <mask
-              id="mask0_21296_8285"
-              style={{ maskType: "alpha" }}
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="20"
-              height="20"
-            >
-              <rect width="20" height="20" fill="#D9D9D9" />
-            </mask>
-            <g mask="url(#mask0_21296_8285)">
-              <path
-                d="M5.33327 15.5448L4.45508 14.6666L9.12174 9.99993L4.45508 5.33327L5.33327 4.45508L9.99993 9.12174L14.6666 4.45508L15.5448 5.33327L10.8781 9.99993L15.5448 14.6666L14.6666 15.5448L9.99993 10.8781L5.33327 15.5448Z"
-                fill={closeButtonIconColor}
-              />
-            </g>
-          </svg>
-        </button>
+            <rect width="20" height="20" fill="#D9D9D9" />
+          </mask>
+          <g mask="url(#mask0_21296_8285)">
+            <path
+              d="M5.33327 15.5448L4.45508 14.6666L9.12174 9.99993L4.45508 5.33327L5.33327 4.45508L9.99993 9.12174L14.6666 4.45508L15.5448 5.33327L10.8781 9.99993L15.5448 14.6666L14.6666 15.5448L9.99993 10.8781L5.33327 15.5448Z"
+              fill={closeButtonIconColor}
+            />
+          </g>
+        </svg>
+      </button>
     </div>
   );
 }

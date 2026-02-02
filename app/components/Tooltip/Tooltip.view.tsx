@@ -3,7 +3,7 @@ import type { TooltipViewProps } from "./Tooltip.types";
 export function TooltipView({
   text,
   position,
-  className,
+  className: _className,
   tooltipClasses,
   pointerClasses,
 }: TooltipViewProps) {
