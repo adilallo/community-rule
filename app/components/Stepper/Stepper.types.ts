@@ -1,4 +1,4 @@
-export type StepperActive = 1 | 2 | 3 | 4 | 5;
+export type StepperActive = number;
 
 export interface StepperProps {
   active?: StepperActive;

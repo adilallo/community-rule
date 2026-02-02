@@ -5,7 +5,7 @@ export interface ContentLockupProps {
   ctaText?: string;
   ctaHref?: string;
   buttonClassName?: string;
-  variant?: "hero" | "feature" | "learn" | "ask" | "ask-inverse";
+  variant?: "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal";
   linkText?: string;
   linkHref?: string;
   alignment?: "center" | "left";
@@ -34,7 +34,7 @@ export interface ContentLockupViewProps {
   ctaText?: string;
   ctaHref?: string;
   buttonClassName: string;
-  variant: "hero" | "feature" | "learn" | "ask" | "ask-inverse";
+  variant: "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal";
   linkText?: string;
   linkHref?: string;
   alignment: "center" | "left";
