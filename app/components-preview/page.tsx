@@ -6,6 +6,10 @@ import Alert from "../components/Alert";
 import Button from "../components/Button";
 import Stepper from "../components/Stepper";
 import Progress from "../components/Progress";
+import Create from "../components/Create";
+import Input from "../components/Input";
+import InputWithCounter from "../components/InputWithCounter";
+import { getAssetPath } from "../../lib/assetUtils";
 
 export default function ComponentsPreview() {
   const [alertVisible, setAlertVisible] = useState({
@@ -15,6 +19,10 @@ export default function ComponentsPreview() {
     danger: true,
     banner: true,
   });
+
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createStep, setCreateStep] = useState(1);
+  const [policyName, setPolicyName] = useState("");
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-[var(--spacing-scale-032)]">
@@ -305,6 +313,106 @@ export default function ComponentsPreview() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Create Component Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Create Component
+          </h2>
+
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <Button
+                variant="primary"
+                size="medium"
+                onClick={() => setCreateOpen(true)}
+              >
+                Open Create Dialog
+              </Button>
+
+              <div className="space-y-[var(--spacing-scale-008)]">
+                <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)]">
+                  Step {createStep} of 3
+                </p>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => setCreateStep((prev) => Math.max(1, prev - 1))}
+                  disabled={createStep === 1}
+                >
+                  Previous Step
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => setCreateStep((prev) => Math.min(3, prev + 1))}
+                  disabled={createStep === 3}
+                >
+                  Next Step
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <Create
+            isOpen={createOpen}
+            onClose={() => setCreateOpen(false)}
+            title={
+              createStep === 1
+                ? "What do you call your group's new policy?"
+                : createStep === 2
+                  ? "How should conflicts be resolved?"
+                  : "Review your policy"
+            }
+            description="You can also combine or add new approaches to the list"
+            showBackButton={true}
+            showNextButton={true}
+            onBack={() => setCreateStep((prev) => Math.max(1, prev - 1))}
+            onNext={() => setCreateStep((prev) => Math.min(3, prev + 1))}
+            backButtonText="Back"
+            nextButtonText={createStep === 3 ? "Finish" : "Next"}
+            nextButtonDisabled={createStep === 1 && !policyName.trim()}
+            currentStep={createStep}
+            totalSteps={3}
+          >
+            <div className="space-y-[var(--spacing-scale-024)]">
+              {createStep === 1 && (
+                <InputWithCounter
+                  label="Label"
+                  placeholder="Policy name"
+                  value={policyName}
+                  onChange={setPolicyName}
+                  maxLength={48}
+                  showHelpIcon
+                />
+              )}
+              {createStep === 2 && (
+                <div className="space-y-[var(--spacing-scale-008)]">
+                  <Input
+                    label="Conflict Resolution Method"
+                    placeholder="Enter method"
+                    value=""
+                  />
+                  <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-primary)]">
+                    Select how conflicts should be resolved in your group.
+                  </p>
+                </div>
+              )}
+              {createStep === 3 && (
+                <div className="space-y-[var(--spacing-scale-016)]">
+                  <p className="font-inter text-[16px] leading-[24px] text-[var(--color-content-default-primary)]">
+                    Review your policy configuration before finalizing.
+                  </p>
+                  <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-200,8px)] p-[var(--spacing-scale-016)]">
+                    <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)]">
+                      Policy details will appear here
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Create>
         </section>
       </div>
     </div>

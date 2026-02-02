@@ -4,7 +4,10 @@
     "createCommunityRule": "Create CommunityRule",
     "seeHowItWorks": "See how it works",
     "learnMore": "Learn more",
-    "askOrganizer": "Ask an organizer"
+    "askOrganizer": "Ask an organizer",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
   },
   "ariaLabels": {
     "followBluesky": "Follow us on Bluesky",

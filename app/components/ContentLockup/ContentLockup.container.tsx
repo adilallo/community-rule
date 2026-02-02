@@ -91,6 +91,18 @@ const ContentLockupContainer = memo<ContentLockupProps>(
         shape:
           "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
       },
+      modal: {
+        container:
+          "flex flex-col gap-[var(--spacing-scale-008)] items-start justify-center py-[12px] relative w-full",
+        textContainer: "flex flex-col gap-[var(--spacing-scale-008)] w-full",
+        titleGroup: "flex flex-col gap-[var(--spacing-scale-008)] w-full",
+        titleContainer: "flex items-center justify-start w-full",
+        title:
+          "font-bricolage-grotesque font-bold text-[28px] leading-[36px] tracking-[0] text-[var(--color-content-default-primary)] text-left",
+        description:
+          "font-inter font-normal text-[16px] leading-[24px] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
+        shape: "w-[16px] h-[16px]",
+      },
     };
 
     const styles = variantStyles[variant] || variantStyles.hero;
