@@ -22,6 +22,7 @@ export default {
         "outlined",
         "dark",
         "inverse",
+        "ghost",
       ],
       description: "The visual style variant of the button",
     },
@@ -74,6 +75,9 @@ export const Variants = {
         </Button>
         <Button {..._args} variant="inverse">
           Inverse
+        </Button>
+        <Button {..._args} variant="ghost">
+          Ghost
         </Button>
       </div>
     </div>
@@ -268,6 +272,27 @@ export const AllVariants = {
       </div>
 
       <div>
+        <h3 className="text-white font-semibold mb-3">Ghost Variant</h3>
+        <div className="space-x-4">
+          <Button variant="ghost" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="ghost" size="small">
+            Small
+          </Button>
+          <Button variant="ghost" size="medium">
+            Medium
+          </Button>
+          <Button variant="ghost" size="large">
+            Large
+          </Button>
+          <Button variant="ghost" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
         <h3 className="text-white font-semibold mb-3">Disabled States</h3>
         <div className="space-x-4">
           <Button size="large" disabled>
@@ -287,6 +312,9 @@ export const AllVariants = {
           </Button>
           <Button variant="inverse" size="large" disabled>
             Inverse Disabled
+          </Button>
+          <Button variant="ghost" size="large" disabled>
+            Ghost Disabled
           </Button>
         </div>
       </div>

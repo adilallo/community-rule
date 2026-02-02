@@ -20,7 +20,7 @@ export function TooltipView({
       aria-live="polite"
       id={`tooltip-${text.replace(/\s+/g, "-").toLowerCase()}`}
     >
-      <p className="font-inter text-[var(--sizing-350,14px)] leading-[16px] font-medium tracking-[0%] text-[var(--color-content-inverse-primary)] relative shrink-0">
+      <p className="font-inter text-[var(--sizing-350,14px)] leading-[16px] font-medium tracking-[0%] text-[var(--color-content-default-primary)] relative shrink-0">
         {text}
       </p>
       <div

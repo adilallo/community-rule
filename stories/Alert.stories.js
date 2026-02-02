@@ -32,36 +32,36 @@ const Template = (args) => {
   );
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  title: "Short alert banner message goes here",
+export const ToastDefault = Template.bind({});
+ToastDefault.args = {
+  title: "Short alert toast message goes here",
   description:
     "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "default",
   type: "toast",
 };
 
-export const Positive = Template.bind({});
-Positive.args = {
-  title: "Short alert banner message goes here",
+export const ToastPositive = Template.bind({});
+ToastPositive.args = {
+  title: "Short alert toast message goes here",
   description:
     "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "positive",
   type: "toast",
 };
 
-export const Warning = Template.bind({});
-Warning.args = {
-  title: "Short alert banner message goes here",
+export const ToastWarning = Template.bind({});
+ToastWarning.args = {
+  title: "Short alert toast message goes here",
   description:
     "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "warning",
   type: "toast",
 };
 
-export const Danger = Template.bind({});
-Danger.args = {
-  title: "Short alert banner message goes here",
+export const ToastDanger = Template.bind({});
+ToastDanger.args = {
+  title: "Short alert toast message goes here",
   description:
     "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
   status: "danger",

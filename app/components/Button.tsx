@@ -8,7 +8,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "primary"
     | "outlined"
     | "dark"
-    | "inverse";
+    | "inverse"
+    | "ghost";
   size?: "xsmall" | "small" | "medium" | "large" | "xlarge";
   className?: string;
   disabled?: boolean;
@@ -69,6 +70,8 @@ const Button = memo<ButtonProps>(
       dark: "bg-transparent text-[var(--color-content-inverse-primary)] border border-[var(--border-color-default-primary)] hover:bg-transparent hover:text-[var(--color-content-inverse-brand-primary)] hover:border hover:border-[var(--border-color-inverse-brandprimary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-inverse-primary)] focus:outline-none focus:border focus:border-[var(--border-color-default-primary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:blur-[0px] focus:scale-[1.02] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:border-transparent active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
       inverse:
         "bg-transparent text-[var(--color-content-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:scale-[1.02] hover:bg-transparent hover:outline-none focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-tertiary)] focus:blur-[0px] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      ghost:
+        "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-secondary)] hover:text-[var(--color-content-default-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-content-default-brand-primary)] focus:ring-offset-1 focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-default-secondary)] active:text-[var(--color-content-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-transparent disabled:text-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
     };
 
     const hoverOutlineStyles: Record<string, string> = {
@@ -79,12 +82,13 @@ const Button = memo<ButtonProps>(
       xlarge: "hover:outline-[2.5px]",
     };
 
-    // Only apply outline styles to default and secondary variants, not primary, outlined, dark, or inverse
+    // Only apply outline styles to default and secondary variants, not primary, outlined, dark, inverse, or ghost
     const outlineStyles =
       variant === "primary" ||
       variant === "outlined" ||
       variant === "dark" ||
-      variant === "inverse"
+      variant === "inverse" ||
+      variant === "ghost"
         ? ""
         : hoverOutlineStyles[size];
 

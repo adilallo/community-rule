@@ -26,7 +26,6 @@ const AlertContainer = memo<AlertProps>(
             titleColor: "text-[var(--color-content-invert-primary)]",
             descriptionColor: "text-[var(--color-content-invert-secondary)]",
             iconColor: "var(--color-kiwi-kiwi500)",
-            closeButtonColor: "text-[var(--color-content-invert-primary)]",
             closeButtonIconColor: "var(--color-content-invert-primary)",
           };
         case "warning":
@@ -39,7 +38,6 @@ const AlertContainer = memo<AlertProps>(
             titleColor: "text-[var(--color-content-invert-primary)]",
             descriptionColor: "text-[var(--color-content-invert-secondary)]",
             iconColor: "var(--color-yellow-yellow500)",
-            closeButtonColor: "text-[var(--color-content-invert-primary)]",
             closeButtonIconColor: "var(--color-content-invert-primary)",
           };
         case "danger":
@@ -53,8 +51,6 @@ const AlertContainer = memo<AlertProps>(
             descriptionColor:
               "text-[var(--color-content-invert-negative-primary)]",
             iconColor: "var(--color-red-red500)",
-            closeButtonColor:
-              "text-[var(--color-content-invert-negative-primary)]",
             closeButtonIconColor: "var(--color-content-invert-primary)",
           };
         default:
@@ -67,7 +63,6 @@ const AlertContainer = memo<AlertProps>(
             titleColor: "text-[var(--color-content-default-primary)]",
             descriptionColor: "text-[var(--color-content-default-primary)]",
             iconColor: "var(--color-content-default-brand-primary)",
-            closeButtonColor: "text-[var(--color-content-default-primary)]",
             closeButtonIconColor: "var(--color-content-default-brand-primary)",
           };
       }
@@ -99,8 +94,6 @@ const AlertContainer = memo<AlertProps>(
         ? `font-inter text-[16px] leading-[24px] font-normal tracking-[0%] ${statusStyles.descriptionColor} relative shrink-0 w-full mt-[var(--spacing-scale-004)]`
         : `font-inter text-[18px] leading-[23.4px] font-normal tracking-[0%] ${statusStyles.descriptionColor} relative shrink-0 w-full mt-[var(--spacing-scale-004)]`;
 
-    const closeButtonClasses = `flex gap-[var(--spacing-scale-006)] items-center justify-center overflow-clip p-[var(--spacing-scale-012)] rounded-[var(--radius-full)] shrink-0 hover:bg-[var(--color-surface-default-secondary)] transition-colors ${statusStyles.closeButtonColor}`;
-
     return (
       <AlertView
         title={title}
@@ -113,7 +106,6 @@ const AlertContainer = memo<AlertProps>(
         titleClasses={titleClasses}
         descriptionClasses={descriptionClasses}
         iconColor={statusStyles.iconColor}
-        closeButtonClasses={closeButtonClasses}
         closeButtonIconColor={statusStyles.closeButtonIconColor}
         onClose={onClose}
       />

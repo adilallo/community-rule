@@ -1,4 +1,5 @@
 import type { AlertViewProps } from "./Alert.types";
+import Button from "../Button";
 
 export function AlertView({
   title,
@@ -11,7 +12,6 @@ export function AlertView({
   titleClasses,
   descriptionClasses,
   iconColor,
-  closeButtonClasses,
   closeButtonIconColor,
   onClose,
 }: AlertViewProps) {
@@ -48,11 +48,12 @@ export function AlertView({
         <p className={titleClasses}>{title}</p>
         {description && <p className={descriptionClasses}>{description}</p>}
       </div>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="xsmall"
         onClick={onClose}
-        className={closeButtonClasses}
-        aria-label="Close alert"
+        ariaLabel="Close alert"
+        className="shrink-0"
       >
         <svg
           width="20"
@@ -79,7 +80,7 @@ export function AlertView({
             />
           </g>
         </svg>
-      </button>
+      </Button>
     </div>
   );
 }

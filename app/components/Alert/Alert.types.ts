@@ -18,7 +18,6 @@ export interface AlertViewProps {
   titleClasses: string;
   descriptionClasses: string;
   iconColor: string;
-  closeButtonClasses: string;
   closeButtonIconColor: string;
   onClose?: () => void;
 }
