@@ -23,6 +23,8 @@ export default {
         "dark",
         "inverse",
         "ghost",
+        "danger",
+        "danger-inverse",
       ],
       description: "The visual style variant of the button",
     },
@@ -78,6 +80,12 @@ export const Variants = {
         </Button>
         <Button {..._args} variant="ghost">
           Ghost
+        </Button>
+        <Button {..._args} variant="danger">
+          Danger
+        </Button>
+        <Button {..._args} variant="danger-inverse">
+          Danger Inverse
         </Button>
       </div>
     </div>
@@ -293,6 +301,48 @@ export const AllVariants = {
       </div>
 
       <div>
+        <h3 className="text-white font-semibold mb-3">Danger Variant</h3>
+        <div className="space-x-4">
+          <Button variant="danger" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="danger" size="small">
+            Small
+          </Button>
+          <Button variant="danger" size="medium">
+            Medium
+          </Button>
+          <Button variant="danger" size="large">
+            Large
+          </Button>
+          <Button variant="danger" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-white font-semibold mb-3">Danger Inverse Variant</h3>
+        <div className="space-x-4">
+          <Button variant="danger-inverse" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="danger-inverse" size="small">
+            Small
+          </Button>
+          <Button variant="danger-inverse" size="medium">
+            Medium
+          </Button>
+          <Button variant="danger-inverse" size="large">
+            Large
+          </Button>
+          <Button variant="danger-inverse" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
         <h3 className="text-white font-semibold mb-3">Disabled States</h3>
         <div className="space-x-4">
           <Button size="large" disabled>
@@ -315,6 +365,12 @@ export const AllVariants = {
           </Button>
           <Button variant="ghost" size="large" disabled>
             Ghost Disabled
+          </Button>
+          <Button variant="danger" size="large" disabled>
+            Danger Disabled
+          </Button>
+          <Button variant="danger-inverse" size="large" disabled>
+            Danger Inverse Disabled
           </Button>
         </div>
       </div>
