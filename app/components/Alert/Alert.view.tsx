@@ -50,10 +50,10 @@ export function AlertView({
       </div>
       <Button
         variant="ghost"
-        size="xsmall"
+        size="large"
         onClick={onClose}
         ariaLabel="Close alert"
-        className="shrink-0"
+        className="shrink-0 [&_svg_path]:transition-colors [&_svg_path]:duration-200 hover:[&_svg_path]:fill-[var(--color-content-default-primary)]"
       >
         <svg
           width="20"
