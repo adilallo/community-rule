@@ -9,6 +9,8 @@ import Progress from "../components/Progress";
 import Create from "../components/Create";
 import Input from "../components/Input";
 import InputWithCounter from "../components/InputWithCounter";
+import IconCard from "../components/IconCard";
+import { getAssetPath } from "../../lib/assetUtils";
 
 export default function ComponentsPreview() {
   const [alertVisible, setAlertVisible] = useState({
@@ -412,6 +414,34 @@ export default function ComponentsPreview() {
               )}
             </div>
           </Create>
+        </section>
+
+        {/* IconCard Component Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            IconCard Component
+          </h2>
+
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="flex flex-wrap gap-[var(--spacing-scale-024)]">
+              <IconCard
+                icon={
+                  <img
+                    src={getAssetPath("assets/Vector_WorkerCoop.svg")}
+                    alt=""
+                    className="w-[36px] h-[36px]"
+                    width="36"
+                    height="36"
+                  />
+                }
+                title="Worker's cooperatives"
+                description="Employee-owned businesses often need to clarify how power is shared, decisions are made, and how processes operate within their organizations."
+                onClick={() => {
+                  // IconCard clicked handler
+                }}
+              />
+            </div>
+          </div>
         </section>
       </div>
     </div>
