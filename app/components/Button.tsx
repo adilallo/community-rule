@@ -10,6 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "dark"
     | "inverse"
     | "ghost"
+    | "ghost-inverse"
     | "danger"
     | "danger-inverse";
   size?: "xsmall" | "small" | "medium" | "large" | "xlarge";
@@ -73,7 +74,9 @@ const Button = memo<ButtonProps>(
       inverse:
         "bg-transparent text-[var(--color-content-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:scale-[1.02] hover:bg-transparent hover:outline-none focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-tertiary)] focus:blur-[0px] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
       ghost:
-        "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-secondary)] hover:text-[var(--color-content-default-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-content-default-brand-primary)] focus:ring-offset-1 focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-default-secondary)] active:text-[var(--color-content-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-transparent disabled:text-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+        "bg-transparent text-[var(--color-content-default-brand-primary)] border-[1.5px] border-transparent hover:bg-transparent hover:text-[var(--color-content-default-primary)] hover:border-transparent hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-transparent active:text-[var(--color-content-default-primary)] active:border-[var(--color-border-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-invert-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      "ghost-inverse":
+        "bg-transparent text-[var(--color-content-invert-primary)] border-[1.5px] border-transparent hover:bg-transparent hover:text-[var(--color-content-invert-primary)] hover:border-transparent hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-invert-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-invert-primary),0_0_0px_4px_var(--color-border-default-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-invert-brand-primary)] active:text-[var(--color-content-invert-primary)] active:border-[var(--color-border-invert-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-invert-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
       danger:
         "bg-transparent text-[var(--color-border-default-negative-primary)] border border-[var(--color-border-default-negative-primary)] hover:bg-[var(--color-surface-invert-negative-secondary)] hover:text-[var(--color-border-default-negative-primary)] hover:border-[var(--color-border-default-negative-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-border-default-negative-primary)] focus:outline-none focus:border-[var(--color-border-default-negative-primary)] focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-invert-negative-primary)] active:text-[var(--color-content-invert-negative-primary)] active:border-[1.5px] active:border-[var(--color-border-default-negative-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
       "danger-inverse":
@@ -88,13 +91,14 @@ const Button = memo<ButtonProps>(
       xlarge: "hover:outline-[2.5px]",
     };
 
-    // Only apply outline styles to default and secondary variants, not primary, outlined, dark, inverse, ghost, danger, or danger-inverse
+    // Only apply outline styles to default and secondary variants, not primary, outlined, dark, inverse, ghost, ghost-inverse, danger, or danger-inverse
     const outlineStyles =
       variant === "primary" ||
       variant === "outlined" ||
       variant === "dark" ||
       variant === "inverse" ||
       variant === "ghost" ||
+      variant === "ghost-inverse" ||
       variant === "danger" ||
       variant === "danger-inverse"
         ? ""

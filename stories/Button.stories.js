@@ -23,6 +23,7 @@ export default {
         "dark",
         "inverse",
         "ghost",
+        "ghost-inverse",
         "danger",
         "danger-inverse",
       ],
@@ -80,6 +81,9 @@ export const Variants = {
         </Button>
         <Button {..._args} variant="ghost">
           Ghost
+        </Button>
+        <Button {..._args} variant="ghost-inverse">
+          Ghost Inverse
         </Button>
         <Button {..._args} variant="danger">
           Danger
@@ -301,6 +305,27 @@ export const AllVariants = {
       </div>
 
       <div>
+        <h3 className="text-white font-semibold mb-3">Ghost Inverse Variant</h3>
+        <div className="space-x-4">
+          <Button variant="ghost-inverse" size="xsmall">
+            XSmall
+          </Button>
+          <Button variant="ghost-inverse" size="small">
+            Small
+          </Button>
+          <Button variant="ghost-inverse" size="medium">
+            Medium
+          </Button>
+          <Button variant="ghost-inverse" size="large">
+            Large
+          </Button>
+          <Button variant="ghost-inverse" size="xlarge">
+            XLarge
+          </Button>
+        </div>
+      </div>
+
+      <div>
         <h3 className="text-white font-semibold mb-3">Danger Variant</h3>
         <div className="space-x-4">
           <Button variant="danger" size="xsmall">
@@ -365,6 +390,9 @@ export const AllVariants = {
           </Button>
           <Button variant="ghost" size="large" disabled>
             Ghost Disabled
+          </Button>
+          <Button variant="ghost-inverse" size="large" disabled>
+            Ghost Inverse Disabled
           </Button>
           <Button variant="danger" size="large" disabled>
             Danger Disabled

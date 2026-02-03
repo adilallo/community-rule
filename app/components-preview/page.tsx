@@ -71,6 +71,9 @@ export default function ComponentsPreview() {
                   <Button variant="ghost" size="medium">
                     Ghost
                   </Button>
+                  <Button variant="ghost-inverse" size="medium">
+                    Ghost Inverse
+                  </Button>
                   <Button variant="danger" size="medium">
                     Danger
                   </Button>
@@ -151,6 +154,29 @@ export default function ComponentsPreview() {
 
               <div>
                 <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Sizes - Ghost Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)] items-center">
+                  <Button variant="ghost-inverse" size="xsmall">
+                    XSmall
+                  </Button>
+                  <Button variant="ghost-inverse" size="small">
+                    Small
+                  </Button>
+                  <Button variant="ghost-inverse" size="medium">
+                    Medium
+                  </Button>
+                  <Button variant="ghost-inverse" size="large">
+                    Large
+                  </Button>
+                  <Button variant="ghost-inverse" size="xlarge">
+                    XLarge
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
                   States - Danger Variant
                 </h3>
                 <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
@@ -186,6 +212,20 @@ export default function ComponentsPreview() {
                     Normal
                   </Button>
                   <Button variant="ghost" size="medium" disabled>
+                    Disabled
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  States - Ghost Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="ghost-inverse" size="medium">
+                    Normal
+                  </Button>
+                  <Button variant="ghost-inverse" size="medium" disabled>
                     Disabled
                   </Button>
                 </div>
