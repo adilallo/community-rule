@@ -39,58 +39,62 @@ export const Default = {
   args: {
     progress: "3-2",
   },
-  render: (args) => <Progress {...args} />,
+  render: (args) => (
+    <div className="w-full max-w-[600px]">
+      <Progress {...args} />
+    </div>
+  ),
 };
 
 export const AllStates = {
   args: {},
   render: (_args) => (
     <div className="space-y-4 w-full max-w-[600px]">
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-0</p>
         <Progress {..._args} progress="1-0" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-1</p>
         <Progress {..._args} progress="1-1" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-2</p>
         <Progress {..._args} progress="1-2" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-3</p>
         <Progress {..._args} progress="1-3" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-4</p>
         <Progress {..._args} progress="1-4" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">1-5</p>
         <Progress {..._args} progress="1-5" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">2-0</p>
         <Progress {..._args} progress="2-0" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">2-1</p>
         <Progress {..._args} progress="2-1" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">2-2</p>
         <Progress {..._args} progress="2-2" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">3-0</p>
         <Progress {..._args} progress="3-0" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">3-1</p>
         <Progress {..._args} progress="3-1" />
       </div>
-      <div>
+      <div className="w-full">
         <p className="text-white mb-2">3-2</p>
         <Progress {..._args} progress="3-2" />
       </div>

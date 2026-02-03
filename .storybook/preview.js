@@ -1,5 +1,7 @@
 import "../app/globals.css";
 import "./fonts.css";
+import { MessagesProvider } from "../app/contexts/MessagesContext";
+import messages from "../messages/en/index";
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -13,9 +15,11 @@ const preview = {
   },
   decorators: [
     (Story) => (
-      <div className="font-inter">
-        <Story />
-      </div>
+      <MessagesProvider messages={messages}>
+        <div className="font-inter">
+          <Story />
+        </div>
+      </MessagesProvider>
     ),
   ],
 };
