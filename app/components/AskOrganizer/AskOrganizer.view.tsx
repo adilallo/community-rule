@@ -45,7 +45,7 @@ function AskOrganizerView({
           <Button
             href={buttonHref}
             size="large"
-            variant={variant === "inverse" ? "primary" : "default"}
+            variant={variant === "inverse" ? "filled-inverse" : "filled"}
             className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}

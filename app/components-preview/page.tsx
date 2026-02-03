@@ -37,6 +37,197 @@ export default function ComponentsPreview() {
           </p>
         </header>
 
+        {/* Button Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Button Component
+          </h2>
+
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Variants
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="filled" size="medium">
+                    Filled
+                  </Button>
+                  <Button variant="filled-inverse" size="medium">
+                    Filled Inverse
+                  </Button>
+                  <Button variant="outline" size="medium">
+                    Outline
+                  </Button>
+                  <Button variant="outline-inverse" size="medium">
+                    Outline Inverse
+                  </Button>
+                  <Button variant="ghost" size="medium">
+                    Ghost
+                  </Button>
+                  <Button variant="ghost-inverse" size="medium">
+                    Ghost Inverse
+                  </Button>
+                  <Button variant="danger" size="medium">
+                    Danger
+                  </Button>
+                  <Button variant="danger-inverse" size="medium">
+                    Danger Inverse
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Sizes - Danger Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)] items-center">
+                  <Button variant="danger" size="xsmall">
+                    XSmall
+                  </Button>
+                  <Button variant="danger" size="small">
+                    Small
+                  </Button>
+                  <Button variant="danger" size="medium">
+                    Medium
+                  </Button>
+                  <Button variant="danger" size="large">
+                    Large
+                  </Button>
+                  <Button variant="danger" size="xlarge">
+                    XLarge
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Sizes - Danger Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)] items-center">
+                  <Button variant="danger-inverse" size="xsmall">
+                    XSmall
+                  </Button>
+                  <Button variant="danger-inverse" size="small">
+                    Small
+                  </Button>
+                  <Button variant="danger-inverse" size="medium">
+                    Medium
+                  </Button>
+                  <Button variant="danger-inverse" size="large">
+                    Large
+                  </Button>
+                  <Button variant="danger-inverse" size="xlarge">
+                    XLarge
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Sizes - Ghost Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)] items-center">
+                  <Button variant="ghost" size="xsmall">
+                    XSmall
+                  </Button>
+                  <Button variant="ghost" size="small">
+                    Small
+                  </Button>
+                  <Button variant="ghost" size="medium">
+                    Medium
+                  </Button>
+                  <Button variant="ghost" size="large">
+                    Large
+                  </Button>
+                  <Button variant="ghost" size="xlarge">
+                    XLarge
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  All Sizes - Ghost Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)] items-center">
+                  <Button variant="ghost-inverse" size="xsmall">
+                    XSmall
+                  </Button>
+                  <Button variant="ghost-inverse" size="small">
+                    Small
+                  </Button>
+                  <Button variant="ghost-inverse" size="medium">
+                    Medium
+                  </Button>
+                  <Button variant="ghost-inverse" size="large">
+                    Large
+                  </Button>
+                  <Button variant="ghost-inverse" size="xlarge">
+                    XLarge
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  States - Danger Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="danger" size="medium">
+                    Normal
+                  </Button>
+                  <Button variant="danger" size="medium" disabled>
+                    Disabled
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  States - Danger Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="danger-inverse" size="medium">
+                    Normal
+                  </Button>
+                  <Button variant="danger-inverse" size="medium" disabled>
+                    Disabled
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  States - Ghost Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="ghost" size="medium">
+                    Normal
+                  </Button>
+                  <Button variant="ghost" size="medium" disabled>
+                    Disabled
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  States - Ghost Inverse Variant
+                </h3>
+                <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
+                  <Button variant="ghost-inverse" size="medium">
+                    Normal
+                  </Button>
+                  <Button variant="ghost-inverse" size="medium" disabled>
+                    Disabled
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Tooltip Section */}
         <section className="space-y-[var(--spacing-scale-024)]">
           <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
@@ -46,19 +237,19 @@ export default function ComponentsPreview() {
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="flex flex-wrap gap-[var(--spacing-scale-024)] items-center">
               <Tooltip text="Tooltip positioned at top" position="top">
-                <Button variant="default" size="medium">
+                <Button variant="filled" size="medium">
                   Hover me (Top)
                 </Button>
               </Tooltip>
 
               <Tooltip text="Tooltip positioned at bottom" position="bottom">
-                <Button variant="primary" size="medium">
+                <Button variant="filled-inverse" size="medium">
                   Hover me (Bottom)
                 </Button>
               </Tooltip>
 
               <Tooltip text="Disabled tooltip" disabled>
-                <Button variant="secondary" size="medium">
+                <Button variant="ghost" size="medium">
                   Disabled Tooltip
                 </Button>
               </Tooltip>
@@ -325,7 +516,7 @@ export default function ComponentsPreview() {
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="space-y-[var(--spacing-scale-016)]">
               <Button
-                variant="primary"
+                variant="filled-inverse"
                 size="medium"
                 onClick={() => setCreateOpen(true)}
               >
@@ -337,7 +528,7 @@ export default function ComponentsPreview() {
                   Step {createStep} of 3
                 </p>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="small"
                   onClick={() => setCreateStep((prev) => Math.max(1, prev - 1))}
                   disabled={createStep === 1}
@@ -345,7 +536,7 @@ export default function ComponentsPreview() {
                   Previous Step
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="small"
                   onClick={() => setCreateStep((prev) => Math.min(3, prev + 1))}
                   disabled={createStep === 3}

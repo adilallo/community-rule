@@ -30,7 +30,7 @@ export function ModalFooterView({
       {/* Back Button - Absolutely positioned bottom left */}
       {showBackButton && (
         <div className="absolute left-[16px] top-[12px]">
-          <Button variant="outlined" size="medium" onClick={onBack}>
+          <Button variant="outline" size="medium" onClick={onBack}>
             {defaultBackText}
           </Button>
         </div>
@@ -47,7 +47,7 @@ export function ModalFooterView({
       {showNextButton && (
         <div className="absolute right-[16px] top-[12px]">
           <Button
-            variant="default"
+            variant="filled"
             size="medium"
             onClick={onNext}
             disabled={nextButtonDisabled}

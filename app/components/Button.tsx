@@ -3,13 +3,14 @@ import { memo } from "react";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?:
-    | "default"
-    | "secondary"
-    | "primary"
-    | "outlined"
-    | "dark"
-    | "inverse"
-    | "ghost";
+    | "filled"
+    | "filled-inverse"
+    | "outline"
+    | "outline-inverse"
+    | "ghost"
+    | "ghost-inverse"
+    | "danger"
+    | "danger-inverse";
   size?: "xsmall" | "small" | "medium" | "large" | "xlarge";
   className?: string;
   disabled?: boolean;
@@ -26,7 +27,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = memo<ButtonProps>(
   ({
     children,
-    variant = "default",
+    variant = "filled",
     size = "xsmall",
     className = "",
     disabled = false,
@@ -40,14 +41,14 @@ const Button = memo<ButtonProps>(
   }) => {
     const sizeStyles: Record<string, string> = {
       xsmall:
-        "px-[var(--spacing-scale-006)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)]",
+        "p-[var(--spacing-scale-006)] gap-[var(--spacing-scale-002)]",
       small:
-        "px-[var(--spacing-measures-spacing-008)] py-[var(--spacing-measures-spacing-008)] gap-[var(--spacing-scale-004)]",
+        "p-[var(--spacing-scale-008)] gap-[var(--spacing-scale-002)]",
       medium: "p-[var(--spacing-scale-010)] gap-[var(--spacing-scale-004)]",
       large:
-        "px-[var(--spacing-scale-012)] py-[var(--spacing-scale-010)] gap-[var(--spacing-scale-004)]",
+        "p-[var(--spacing-scale-012)] gap-[var(--spacing-scale-006)]",
       xlarge:
-        "px-[var(--spacing-scale-020)] py-[var(--spacing-scale-012)] gap-[var(--spacing-scale-008)]",
+        "p-[var(--spacing-scale-016)] gap-[var(--spacing-scale-008)]",
     };
 
     const fontStyles: Record<string, string> = {
@@ -59,19 +60,21 @@ const Button = memo<ButtonProps>(
     };
 
     const variantStyles: Record<string, string> = {
-      default:
-        "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:outline-[var(--border-color-default-brandprimary)] hover:outline-inset hover:scale-[1.02] hover:shadow-lg focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-content-default-brand-primary)] focus:ring-offset-1 focus:scale-[1.02] active:bg-[var(--color-surface-inverse-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:outline-[var(--border-color-default-brandprimary)] active:outline-offset-1 active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100 disabled:hover:shadow-none disabled:hover:outline-none",
-      secondary:
-        "bg-transparent text-[var(--color-content-default-brand-primary)] hover:text-[var(--color-content-default-primary)] hover:scale-[1.02] hover:bg-transparent hover:outline-none focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:blur-[0px] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
-      primary:
-        "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] hover:bg-[var(--color-surface-default-primary)] hover:text-[var(--color-content-default-brand-primary)] hover:scale-[1.02] focus:bg-[var(--color-surface-default-primary)] focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:blur-[0px] focus:scale-[1.02] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
-      outlined:
-        "bg-transparent text-[var(--color-content-default-primary)] border-[1.5px] border-[var(--color-content-default-primary)] hover:bg-transparent hover:text-[var(--color-content-default-brand-primary)] hover:border-[1.5px] hover:border-[var(--color-content-default-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-primary)] focus:outline-none focus:border-[1.5px] focus:border-[var(--color-content-default-primary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:blur-[0px] focus:scale-[1.02] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:border-transparent active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:border-[1.5px] disabled:border-[var(--color-surface-default-secondary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
-      dark: "bg-transparent text-[var(--color-content-inverse-primary)] border border-[var(--border-color-default-primary)] hover:bg-transparent hover:text-[var(--color-content-inverse-brand-primary)] hover:border hover:border-[var(--border-color-inverse-brandprimary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-inverse-primary)] focus:outline-none focus:border focus:border-[var(--border-color-default-primary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:blur-[0px] focus:scale-[1.02] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:border-transparent active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
-      inverse:
-        "bg-transparent text-[var(--color-content-inverse-primary)] hover:text-[var(--color-content-inverse-brand-primary)] hover:scale-[1.02] hover:bg-transparent hover:outline-none focus:outline-1 focus:outline-inset focus:outline-[var(--border-color-default-tertiary)] focus:shadow-[0_0_10px_1px_var(--color-surface-default-tertiary)] focus:blur-[0px] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-inverse-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-primary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      filled:
+        "bg-[var(--color-surface-inverse-primary)] text-[var(--color-content-inverse-primary)] border-[1.5px] border-transparent hover:bg-[var(--color-surface-inverse-primary)] hover:text-[var(--color-content-invert-brand-primary)] hover:border-[var(--color-border-invert-brand-primary)] hover:scale-[1.02] focus:bg-[var(--color-surface-inverse-primary)] focus:text-[var(--color-content-invert-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-invert-brand-primary)] active:text-[var(--color-content-invert-primary)] active:border-[var(--color-border-invert-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-invert-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      "filled-inverse":
+        "bg-[var(--color-surface-default-primary)] text-[var(--color-content-default-primary)] border-[1.5px] border-transparent hover:bg-[var(--color-surface-default-primary)] hover:text-[var(--color-content-default-brand-primary)] hover:border-[var(--color-border-default-brand-primary)] hover:scale-[1.02] focus:bg-[var(--color-surface-default-primary)] focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-invert-primary),0_0_0px_4px_var(--color-border-default-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-default-brand-primary)] active:text-[var(--color-content-default-primary)] active:border-[var(--color-border-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-invert-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      outline:
+        "bg-transparent text-[var(--color-content-default-primary)] border-[1.5px] border-[var(--color-border-invert-primary)] hover:bg-transparent hover:text-[var(--color-content-default-brand-primary)] hover:border-[1.5px] hover:border-[var(--color-border-default-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-primary)] focus:outline-none focus:border-[1.5px] focus:border-[var(--color-border-invert-primary)] focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-transparent active:text-[var(--color-content-default-primary)] active:border-[1.5px] active:border-[var(--color-border-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-invert-tertiary)] disabled:border-[1.5px] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      "outline-inverse": "bg-transparent text-[var(--color-content-invert-primary)] border-[1.5px] border-[var(--color-border-default-primary)] hover:bg-transparent hover:text-[var(--color-content-invert-brand-primary)] hover:border-[1.5px] hover:border-[var(--color-border-invert-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-invert-primary)] focus:outline-none focus:border-[1.5px] focus:border-[var(--color-border-default-primary)] focus:shadow-[0_0_0px_2px_var(--color-border-invert-primary),0_0_0px_4px_var(--color-border-default-primary)] focus:scale-[1.02] active:bg-transparent active:text-[var(--color-content-invert-primary)] active:border-[1.5px] active:border-[var(--color-border-invert-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-invert-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-[1.5px] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
       ghost:
-        "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-secondary)] hover:text-[var(--color-content-default-brand-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-content-default-brand-primary)] focus:ring-offset-1 focus:shadow-[0_0_10px_1px_var(--color-surface-default-brand-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-default-secondary)] active:text-[var(--color-content-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-transparent disabled:text-[var(--color-content-default-tertiary)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+        "bg-transparent text-[var(--color-content-default-brand-primary)] border-[1.5px] border-transparent hover:bg-transparent hover:text-[var(--color-content-default-primary)] hover:border-transparent hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-default-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-transparent active:text-[var(--color-content-default-primary)] active:border-[var(--color-border-default-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-invert-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      "ghost-inverse":
+        "bg-transparent text-[var(--color-content-invert-primary)] border-[1.5px] border-transparent hover:bg-transparent hover:text-[var(--color-content-invert-primary)] hover:border-transparent hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-invert-brand-primary)] focus:outline-none focus:border-transparent focus:shadow-[0_0_0px_2px_var(--color-border-invert-primary),0_0_0px_4px_var(--color-border-default-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-invert-brand-primary)] active:text-[var(--color-content-invert-primary)] active:border-[var(--color-border-invert-brand-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-invert-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      danger:
+        "bg-transparent text-[var(--color-border-default-negative-primary)] border border-[var(--color-border-default-negative-primary)] hover:bg-[var(--color-surface-invert-negative-secondary)] hover:text-[var(--color-border-default-negative-primary)] hover:border-[var(--color-border-default-negative-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-border-default-negative-primary)] focus:outline-none focus:border-[var(--color-border-default-negative-primary)] focus:shadow-[0_0_0px_2px_var(--color-border-default-primary),0_0_0px_4px_var(--color-border-invert-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-invert-negative-primary)] active:text-[var(--color-content-invert-negative-primary)] active:border-[1.5px] active:border-[var(--color-border-default-negative-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-default-secondary)] disabled:text-[var(--color-content-inverse-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
+      "danger-inverse":
+        "bg-transparent text-[var(--color-content-invert-negative-primary)] border border-[var(--color-border-invert-negative-primary)] hover:bg-transparent hover:text-[var(--color-content-invert-negative-primary)] hover:border-[var(--color-border-invert-negative-primary)] hover:scale-[1.02] focus:bg-transparent focus:text-[var(--color-content-invert-negative-primary)] focus:outline-none focus:border-[var(--color-border-invert-negative-primary)] focus:shadow-[0_0_0px_2px_var(--color-border-invert-primary),0_0_0px_4px_var(--color-border-default-primary)] focus:scale-[1.02] active:bg-[var(--color-surface-default-negative-primary)] active:text-[var(--color-content-default-primary)] active:border-[1.5px] active:border-[var(--color-border-default-negative-primary)] active:shadow-none active:scale-[0.98] disabled:bg-[var(--color-surface-inverse-secondary)] disabled:text-[var(--color-content-default-tertiary)] disabled:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:active:scale-100",
     };
 
     const hoverOutlineStyles: Record<string, string> = {
@@ -82,13 +85,15 @@ const Button = memo<ButtonProps>(
       xlarge: "hover:outline-[2.5px]",
     };
 
-    // Only apply outline styles to default and secondary variants, not primary, outlined, dark, inverse, or ghost
+    // Only apply outline styles to filled variant, not filled-inverse, outline, outline-inverse, ghost, ghost-inverse, danger, or danger-inverse
     const outlineStyles =
-      variant === "primary" ||
-      variant === "outlined" ||
-      variant === "dark" ||
-      variant === "inverse" ||
-      variant === "ghost"
+      variant === "filled-inverse" ||
+      variant === "outline" ||
+      variant === "outline-inverse" ||
+      variant === "ghost" ||
+      variant === "ghost-inverse" ||
+      variant === "danger" ||
+      variant === "danger-inverse"
         ? ""
         : hoverOutlineStyles[size];
 

@@ -150,7 +150,7 @@ const HomeHeaderContainer = memo<HomeHeaderProps>(() => {
     return (
       <Button
         size={buttonSize}
-        variant="secondary"
+        variant="ghost"
         ariaLabel={t("ariaLabels.createNewRule")}
       >
         {renderAvatarGroup(containerSize, avatarSize)}

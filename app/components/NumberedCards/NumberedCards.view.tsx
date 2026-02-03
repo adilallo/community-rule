@@ -47,15 +47,15 @@ function NumberedCardsView({
 
             {/* Call to Action Button */}
             <div className="text-center sm:text-left lg:text-center">
-              {/* Default button for xsm and sm breakpoints */}
+              {/* Filled button for xsm and sm breakpoints */}
               <div className="block lg:hidden">
-                <Button variant="default" size="large">
+                <Button variant="filled" size="large">
                   {t("numberedCards.buttons.createCommunityRule")}
                 </Button>
               </div>
-              {/* Outlined button for lg and xlg breakpoints */}
+              {/* Outline button for lg and xlg breakpoints */}
               <div className="hidden lg:block">
-                <Button variant="outlined" size="large">
+                <Button variant="outline" size="large">
                   {t("numberedCards.buttons.seeHowItWorks")}
                 </Button>
               </div>
