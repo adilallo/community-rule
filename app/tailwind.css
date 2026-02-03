@@ -662,7 +662,7 @@
   --color-surface-default-brand-lavender: var(--color-lavender-lavender200);
   --color-surface-default-brand-lighter-accent: var(--color-yellow-yellow100);
   --color-surface-default-brand-lime: var(--color-lime-lime100);
-  --color-surface-default-brand-primary: var(--color-yellow-yellow100);
+  --color-surface-default-brand-primary: var(--color-yellow-yellow1000);
   --color-surface-default-brand-secondary: var(--color-yellow-yellow800);
   --color-surface-default-brand-royal: var(--color-royal-blue-royal-blue50);
   --color-surface-default-brand-rust: var(--color-rust-rust100);

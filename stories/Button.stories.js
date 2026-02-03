@@ -16,12 +16,10 @@ export default {
     variant: {
       control: { type: "select" },
       options: [
-        "default",
-        "secondary",
-        "primary",
-        "outlined",
-        "dark",
-        "inverse",
+        "filled",
+        "filled-inverse",
+        "outline",
+        "outline-inverse",
         "ghost",
         "ghost-inverse",
         "danger",
@@ -61,23 +59,17 @@ export const Variants = {
   render: (_args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <Button {..._args} variant="default">
-          Default
+        <Button {..._args} variant="filled">
+          Filled
         </Button>
-        <Button {..._args} variant="secondary">
-          Secondary
+        <Button {..._args} variant="filled-inverse">
+          Filled Inverse
         </Button>
-        <Button {..._args} variant="primary">
-          Primary
+        <Button {..._args} variant="outline">
+          Outline
         </Button>
-        <Button {..._args} variant="outlined">
-          Outlined
-        </Button>
-        <Button {..._args} variant="dark">
-          Dark
-        </Button>
-        <Button {..._args} variant="inverse">
-          Inverse
+        <Button {..._args} variant="outline-inverse">
+          Outline Inverse
         </Button>
         <Button {..._args} variant="ghost">
           Ghost
@@ -106,7 +98,7 @@ export const Variants = {
 export const Sizes = {
   args: {
     children: "Button",
-    variant: "default",
+    variant: "filled",
   },
   render: (_args) => (
     <div className="space-y-4">
@@ -142,7 +134,7 @@ export const States = {
   args: {
     children: "Button",
     size: "large",
-    variant: "default",
+    variant: "filled",
   },
   render: (_args) => (
     <div className="space-y-4">
@@ -168,116 +160,84 @@ export const AllVariants = {
   render: () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-white font-semibold mb-3">Default Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Filled Variant</h3>
         <div className="space-x-4">
-          <Button size="xsmall">XSmall</Button>
-          <Button size="small">Small</Button>
-          <Button size="medium">Medium</Button>
-          <Button size="large">Large</Button>
-          <Button size="xlarge">XLarge</Button>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-white font-semibold mb-3">Secondary Variant</h3>
-        <div className="space-x-4">
-          <Button variant="secondary" size="xsmall">
+          <Button variant="filled" size="xsmall">
             XSmall
           </Button>
-          <Button variant="secondary" size="small">
+          <Button variant="filled" size="small">
             Small
           </Button>
-          <Button variant="secondary" size="medium">
+          <Button variant="filled" size="medium">
             Medium
           </Button>
-          <Button variant="secondary" size="large">
+          <Button variant="filled" size="large">
             Large
           </Button>
-          <Button variant="secondary" size="xlarge">
+          <Button variant="filled" size="xlarge">
             XLarge
           </Button>
         </div>
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Primary Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Filled Inverse Variant</h3>
         <div className="space-x-4">
-          <Button variant="primary" size="xsmall">
+          <Button variant="filled-inverse" size="xsmall">
             XSmall
           </Button>
-          <Button variant="primary" size="small">
+          <Button variant="filled-inverse" size="small">
             Small
           </Button>
-          <Button variant="primary" size="medium">
+          <Button variant="filled-inverse" size="medium">
             Medium
           </Button>
-          <Button variant="primary" size="large">
+          <Button variant="filled-inverse" size="large">
             Large
           </Button>
-          <Button variant="primary" size="xlarge">
+          <Button variant="filled-inverse" size="xlarge">
             XLarge
           </Button>
         </div>
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Outlined Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Outline Variant</h3>
         <div className="space-x-4">
-          <Button variant="outlined" size="xsmall">
+          <Button variant="outline" size="xsmall">
             XSmall
           </Button>
-          <Button variant="outlined" size="small">
+          <Button variant="outline" size="small">
             Small
           </Button>
-          <Button variant="outlined" size="medium">
+          <Button variant="outline" size="medium">
             Medium
           </Button>
-          <Button variant="outlined" size="large">
+          <Button variant="outline" size="large">
             Large
           </Button>
-          <Button variant="outlined" size="xlarge">
+          <Button variant="outline" size="xlarge">
             XLarge
           </Button>
         </div>
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Dark Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Outline Inverse Variant</h3>
         <div className="space-x-4">
-          <Button variant="dark" size="xsmall">
+          <Button variant="outline-inverse" size="xsmall">
             XSmall
           </Button>
-          <Button variant="dark" size="small">
+          <Button variant="outline-inverse" size="small">
             Small
           </Button>
-          <Button variant="dark" size="medium">
+          <Button variant="outline-inverse" size="medium">
             Medium
           </Button>
-          <Button variant="dark" size="large">
+          <Button variant="outline-inverse" size="large">
             Large
           </Button>
-          <Button variant="dark" size="xlarge">
-            XLarge
-          </Button>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-white font-semibold mb-3">Inverse Variant</h3>
-        <div className="space-x-4">
-          <Button variant="inverse" size="xsmall">
-            XSmall
-          </Button>
-          <Button variant="inverse" size="small">
-            Small
-          </Button>
-          <Button variant="inverse" size="medium">
-            Medium
-          </Button>
-          <Button variant="inverse" size="large">
-            Large
-          </Button>
-          <Button variant="inverse" size="xlarge">
+          <Button variant="outline-inverse" size="xlarge">
             XLarge
           </Button>
         </div>
@@ -370,23 +330,17 @@ export const AllVariants = {
       <div>
         <h3 className="text-white font-semibold mb-3">Disabled States</h3>
         <div className="space-x-4">
-          <Button size="large" disabled>
-            Default Disabled
+          <Button variant="filled" size="large" disabled>
+            Filled Disabled
           </Button>
-          <Button variant="secondary" size="large" disabled>
-            Secondary Disabled
+          <Button variant="filled-inverse" size="large" disabled>
+            Filled Inverse Disabled
           </Button>
-          <Button variant="primary" size="large" disabled>
-            Primary Disabled
+          <Button variant="outline" size="large" disabled>
+            Outline Disabled
           </Button>
-          <Button variant="outlined" size="large" disabled>
-            Outlined Disabled
-          </Button>
-          <Button variant="dark" size="large" disabled>
-            Dark Disabled
-          </Button>
-          <Button variant="inverse" size="large" disabled>
-            Inverse Disabled
+          <Button variant="outline-inverse" size="large" disabled>
+            Outline Inverse Disabled
           </Button>
           <Button variant="ghost" size="large" disabled>
             Ghost Disabled

@@ -93,19 +93,19 @@ function ContentLockupView({
         <div className="flex justify-start">
           {/* Small button for xsm and sm breakpoints */}
           <div className="block md:hidden">
-            <Button variant="primary" size="small">
+            <Button variant="filled-inverse" size="small">
               {ctaText}
             </Button>
           </div>
           {/* Large button for md and lg breakpoints */}
           <div className="hidden md:block xl:hidden">
-            <Button variant="primary" size="large" className={buttonClassName}>
+            <Button variant="filled-inverse" size="large" className={buttonClassName}>
               {ctaText}
             </Button>
           </div>
           {/* XLarge button for xl breakpoint */}
           <div className="hidden xl:block">
-            <Button variant="primary" size="xlarge">
+            <Button variant="filled-inverse" size="xlarge">
               {ctaText}
             </Button>
           </div>

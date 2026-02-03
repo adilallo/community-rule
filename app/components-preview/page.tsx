@@ -50,23 +50,17 @@ export default function ComponentsPreview() {
                   All Variants
                 </h3>
                 <div className="flex flex-wrap gap-[var(--spacing-scale-012)]">
-                  <Button variant="default" size="medium">
-                    Default
+                  <Button variant="filled" size="medium">
+                    Filled
                   </Button>
-                  <Button variant="secondary" size="medium">
-                    Secondary
+                  <Button variant="filled-inverse" size="medium">
+                    Filled Inverse
                   </Button>
-                  <Button variant="primary" size="medium">
-                    Primary
+                  <Button variant="outline" size="medium">
+                    Outline
                   </Button>
-                  <Button variant="outlined" size="medium">
-                    Outlined
-                  </Button>
-                  <Button variant="dark" size="medium">
-                    Dark
-                  </Button>
-                  <Button variant="inverse" size="medium">
-                    Inverse
+                  <Button variant="outline-inverse" size="medium">
+                    Outline Inverse
                   </Button>
                   <Button variant="ghost" size="medium">
                     Ghost
@@ -243,19 +237,19 @@ export default function ComponentsPreview() {
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="flex flex-wrap gap-[var(--spacing-scale-024)] items-center">
               <Tooltip text="Tooltip positioned at top" position="top">
-                <Button variant="default" size="medium">
+                <Button variant="filled" size="medium">
                   Hover me (Top)
                 </Button>
               </Tooltip>
 
               <Tooltip text="Tooltip positioned at bottom" position="bottom">
-                <Button variant="primary" size="medium">
+                <Button variant="filled-inverse" size="medium">
                   Hover me (Bottom)
                 </Button>
               </Tooltip>
 
               <Tooltip text="Disabled tooltip" disabled>
-                <Button variant="secondary" size="medium">
+                <Button variant="ghost" size="medium">
                   Disabled Tooltip
                 </Button>
               </Tooltip>
@@ -522,7 +516,7 @@ export default function ComponentsPreview() {
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="space-y-[var(--spacing-scale-016)]">
               <Button
-                variant="primary"
+                variant="filled-inverse"
                 size="medium"
                 onClick={() => setCreateOpen(true)}
               >
@@ -534,7 +528,7 @@ export default function ComponentsPreview() {
                   Step {createStep} of 3
                 </p>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="small"
                   onClick={() => setCreateStep((prev) => Math.max(1, prev - 1))}
                   disabled={createStep === 1}
@@ -542,7 +536,7 @@ export default function ComponentsPreview() {
                   Previous Step
                 </Button>
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   size="small"
                   onClick={() => setCreateStep((prev) => Math.min(3, prev + 1))}
                   disabled={createStep === 3}

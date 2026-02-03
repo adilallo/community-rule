@@ -82,7 +82,7 @@ export function RuleStackView({
 
       {/* See all templates button */}
       <div className="flex justify-center">
-        <Button variant="outlined" size="large">
+        <Button variant="outline" size="large">
           {t("button.seeAllTemplates")}
         </Button>
       </div>

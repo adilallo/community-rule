@@ -55,7 +55,7 @@ function NumberedCardsView({
               </div>
               {/* Outlined button for lg and xlg breakpoints */}
               <div className="hidden lg:block">
-                <Button variant="outlined" size="large">
+                <Button variant="outline" size="large">
                   {t("numberedCards.buttons.seeHowItWorks")}
                 </Button>
               </div>
