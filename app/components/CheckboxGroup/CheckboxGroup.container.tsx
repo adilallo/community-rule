@@ -3,17 +3,20 @@
 import { memo, useCallback, useId, useState } from "react";
 import { CheckboxGroupView } from "./CheckboxGroup.view";
 import type { CheckboxGroupProps } from "./CheckboxGroup.types";
+import { normalizeMode } from "../../../lib/propNormalization";
 
 const CheckboxGroupContainer = ({
   name,
   value,
   onChange,
-  mode = "standard",
+  mode: modeProp = "standard",
   disabled = false,
   options = [],
   className = "",
   ...props
 }: CheckboxGroupProps) => {
+  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+  const mode = normalizeMode(modeProp);
   // Generate unique ID for accessibility if not provided
   const generatedId = useId();
   const groupId = name || `checkbox-group-${generatedId}`;

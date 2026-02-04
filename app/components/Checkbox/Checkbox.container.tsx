@@ -4,12 +4,13 @@ import { memo } from "react";
 import { useComponentId } from "../../hooks";
 import { CheckboxView } from "./Checkbox.view";
 import type { CheckboxProps } from "./Checkbox.types";
+import { normalizeMode, normalizeState } from "../../../lib/propNormalization";
 
 const CheckboxContainer = memo<CheckboxProps>(
   ({
     checked = false,
-    mode = "standard",
-    state = "default",
+    mode: modeProp = "standard",
+    state: stateProp = "default",
     disabled = false,
     label,
     className = "",
@@ -20,6 +21,10 @@ const CheckboxContainer = memo<CheckboxProps>(
     ariaLabel,
     ...props
   }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const mode = normalizeMode(modeProp);
+    const state = normalizeState(stateProp);
+    
     const isInverse = mode === "inverse";
     const isStandard = mode === "standard";
 

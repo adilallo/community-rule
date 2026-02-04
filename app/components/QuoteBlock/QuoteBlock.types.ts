@@ -1,5 +1,17 @@
+export type QuoteBlockVariantValue =
+  | "compact"
+  | "standard"
+  | "extended"
+  | "Compact"
+  | "Standard"
+  | "Extended";
+
 export interface QuoteBlockProps {
-  variant?: "compact" | "standard" | "extended";
+  /**
+   * Quote block variant. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  variant?: QuoteBlockVariantValue;
   className?: string;
   quote?: string;
   author?: string;

@@ -3,6 +3,7 @@
 import { forwardRef, memo, useCallback } from "react";
 import { SelectOptionView } from "./SelectOption.view";
 import type { SelectOptionProps } from "./SelectOption.types";
+import { normalizeContextMenuItemSize } from "../../../lib/propNormalization";
 
 const SelectOptionContainer = forwardRef<HTMLDivElement, SelectOptionProps>(
   (
@@ -12,11 +13,13 @@ const SelectOptionContainer = forwardRef<HTMLDivElement, SelectOptionProps>(
       disabled = false,
       className = "",
       onClick,
-      size = "medium",
+      size: sizeProp = "medium",
       ...props
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeContextMenuItemSize(sizeProp);
     const getTextSize = (): string => {
       switch (size) {
         case "small":

@@ -1,8 +1,14 @@
+import type { InputStateValue } from "../../../lib/propNormalization";
+
 export interface TextInputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "size" | "onChange" | "onFocus" | "onBlur"
 > {
-  state?: "default" | "active" | "hover" | "focus";
+  /**
+   * Visual state. Accepts "default"/"Default", "active"/"Active", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  state?: InputStateValue;
   disabled?: boolean;
   error?: boolean;
   label?: string;

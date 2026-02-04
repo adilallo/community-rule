@@ -3,6 +3,7 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { SwitchView } from "./Switch.view";
 import type { SwitchProps } from "./Switch.types";
+import { normalizeState } from "../../../lib/propNormalization";
 
 const SwitchContainer = memo(
   forwardRef<HTMLButtonElement, SwitchProps>((props, ref) => {
@@ -11,11 +12,14 @@ const SwitchContainer = memo(
       onChange,
       onFocus,
       onBlur,
-      state = "default",
+      state: stateProp = "default",
       label,
       className = "",
       ...rest
     } = props;
+    
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const state = normalizeState(stateProp);
 
     const switchId = useId();
 

@@ -1,12 +1,31 @@
 "use client";
 
 import { memo } from "react";
+import { normalizeImagePlaceholderColor } from "../../lib/propNormalization";
+
+export type ImagePlaceholderColorValue =
+  | "blue"
+  | "green"
+  | "purple"
+  | "red"
+  | "orange"
+  | "teal"
+  | "Blue"
+  | "Green"
+  | "Purple"
+  | "Red"
+  | "Orange"
+  | "Teal";
 
 interface ImagePlaceholderProps {
   width?: number;
   height?: number;
   text?: string;
-  color?: "blue" | "green" | "purple" | "red" | "orange" | "teal";
+  /**
+   * Image placeholder color. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  color?: ImagePlaceholderColorValue;
   className?: string;
 }
 
@@ -19,9 +38,11 @@ const ImagePlaceholder = memo<ImagePlaceholderProps>(
     width = 260,
     height = 390,
     text = "Blog Image",
-    color = "blue",
+    color: colorProp = "blue",
     className = "",
   }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const color = normalizeImagePlaceholderColor(colorProp);
     const colors: Record<string, string> = {
       blue: "bg-blue-500",
       green: "bg-green-500",

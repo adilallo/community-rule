@@ -1,3 +1,19 @@
+export type ContentLockupVariantValue =
+  | "hero"
+  | "feature"
+  | "learn"
+  | "ask"
+  | "ask-inverse"
+  | "modal"
+  | "Hero"
+  | "Feature"
+  | "Learn"
+  | "Ask"
+  | "Ask-Inverse"
+  | "Modal";
+
+export type ContentLockupAlignmentValue = "center" | "left" | "Center" | "Left";
+
 export interface ContentLockupProps {
   title?: string;
   subtitle?: string;
@@ -5,10 +21,18 @@ export interface ContentLockupProps {
   ctaText?: string;
   ctaHref?: string;
   buttonClassName?: string;
-  variant?: "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal";
+  /**
+   * Content lockup variant. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  variant?: ContentLockupVariantValue;
   linkText?: string;
   linkHref?: string;
-  alignment?: "center" | "left";
+  /**
+   * Text alignment. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  alignment?: ContentLockupAlignmentValue;
   /**
    * Optional id to attach to the primary title heading.
    * Useful when a parent section uses aria-labelledby.

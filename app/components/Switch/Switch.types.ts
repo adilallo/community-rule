@@ -1,3 +1,5 @@
+import type { StateValue } from "../../../lib/propNormalization";
+
 export interface SwitchProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   "onChange"
@@ -10,7 +12,11 @@ export interface SwitchProps extends Omit<
   ) => void;
   onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
-  state?: "default" | "hover" | "focus";
+  /**
+   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  state?: StateValue;
   label?: string;
   className?: string;
 }

@@ -1,3 +1,5 @@
+export type SelectOptionSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+
 export interface SelectOptionProps {
   children?: React.ReactNode;
   selected?: boolean;
@@ -6,7 +8,11 @@ export interface SelectOptionProps {
   onClick?: (
     _e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => void;
-  size?: "small" | "medium" | "large";
+  /**
+   * Select option size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: SelectOptionSizeValue;
 }
 
 export interface SelectOptionViewProps {

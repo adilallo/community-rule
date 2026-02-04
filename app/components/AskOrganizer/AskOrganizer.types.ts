@@ -4,7 +4,11 @@ export type AskOrganizerVariant =
   | "centered"
   | "left-aligned"
   | "compact"
-  | "inverse";
+  | "inverse"
+  | "Centered"
+  | "Left-Aligned"
+  | "Compact"
+  | "Inverse";
 
 export interface AskOrganizerProps {
   title?: string;
@@ -13,6 +17,10 @@ export interface AskOrganizerProps {
   buttonText?: string;
   buttonHref?: string;
   className?: string;
+  /**
+   * Ask organizer variant. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
   variant?: AskOrganizerVariant;
   onContactClick?: (_data: {
     event: string;

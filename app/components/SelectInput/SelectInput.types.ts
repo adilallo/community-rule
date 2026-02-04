@@ -5,12 +5,29 @@ export interface SelectOptionData {
   label: string;
 }
 
+import type { StateValue } from "../../../lib/propNormalization";
+
+export type SelectInputLabelVariantValue = "default" | "horizontal" | "Default" | "Horizontal";
+export type SelectInputSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+
 export interface SelectInputProps {
   id?: string;
   label?: string;
-  labelVariant?: "default" | "horizontal";
-  size?: "small" | "medium" | "large";
-  state?: "default" | "hover" | "focus";
+  /**
+   * Label variant. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  labelVariant?: SelectInputLabelVariantValue;
+  /**
+   * Select input size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: SelectInputSizeValue;
+  /**
+   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  state?: StateValue;
   disabled?: boolean;
   error?: boolean;
   placeholder?: string;

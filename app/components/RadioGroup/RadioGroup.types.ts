@@ -5,12 +5,23 @@ export interface RadioOption {
   ariaLabel?: string;
 }
 
+import type { ModeValue, StateValue } from "../../../lib/propNormalization";
+
 export interface RadioGroupProps {
   name?: string;
   value?: string;
   onChange?: (_data: { value: string }) => void;
-  mode?: "standard" | "inverse";
-  state?: "default" | "hover" | "focus";
+  /**
+   * Mode variant. Accepts both "standard"/"Standard" and "inverse"/"Inverse" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  mode?: ModeValue;
+  /**
+   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
+   * Figma also supports "With Subtext" state, which is handled via RadioOption.subtext.
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  state?: StateValue | "With Subtext" | "with subtext";
   disabled?: boolean;
   options?: RadioOption[];
   className?: string;

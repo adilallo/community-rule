@@ -1,7 +1,17 @@
+import type { ModeValue, StateValue } from "../../../lib/propNormalization";
+
 export interface CheckboxProps {
   checked?: boolean;
-  mode?: "standard" | "inverse";
-  state?: "default" | "hover" | "focus";
+  /**
+   * Mode variant. Accepts both "standard"/"Standard" and "inverse"/"Inverse" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  mode?: ModeValue;
+  /**
+   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  state?: StateValue;
   disabled?: boolean;
   label?: string;
   className?: string;

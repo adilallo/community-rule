@@ -1,14 +1,23 @@
 import { memo } from "react";
+import { normalizeSize } from "../../lib/propNormalization";
+
+export type AvatarSizeValue = "small" | "medium" | "large" | "xlarge" | "Small" | "Medium" | "Large" | "XLarge";
 
 interface AvatarProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
-  size?: "small" | "medium" | "large" | "xlarge";
+  /**
+   * Avatar size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: AvatarSizeValue;
   className?: string;
 }
 
 const Avatar = memo<AvatarProps>(
-  ({ src, alt, size = "small", className = "", ...props }) => {
+  ({ src, alt, size: sizeProp = "small", className = "", ...props }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeSize(sizeProp, "small");
     const sizeStyles: Record<string, string> = {
       small: "w-[var(--spacing-scale-016)] h-[var(--spacing-scale-016)]",
       medium: "w-[18px] h-[18px]",

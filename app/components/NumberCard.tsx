@@ -3,15 +3,33 @@
 import { memo } from "react";
 import SectionNumber from "./SectionNumber";
 
+import { normalizeNumberCardSize } from "../../lib/propNormalization";
+
+export type NumberCardSizeValue =
+  | "Small"
+  | "Medium"
+  | "Large"
+  | "XLarge"
+  | "small"
+  | "medium"
+  | "large"
+  | "xlarge";
+
 interface NumberCardProps {
   number: number;
   text: string;
-  size?: "Small" | "Medium" | "Large" | "XLarge";
+  /**
+   * Number card size. Accepts both PascalCase (Figma default) and lowercase (case-insensitive).
+   * Figma uses PascalCase, codebase uses PascalCase - both are supported.
+   */
+  size?: NumberCardSizeValue;
   iconShape?: string;
   iconColor?: string;
 }
 
-const NumberCard = memo<NumberCardProps>(({ number, text, size }) => {
+const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
+  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+  const size = normalizeNumberCardSize(sizeProp);
   // Base classes common to all sizes
   const baseClasses = "bg-[var(--color-surface-inverse-primary)] rounded-[12px] shadow-lg";
 
