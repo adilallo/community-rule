@@ -11,7 +11,6 @@ export function RadioButtonView({
   ariaLabel,
   className,
   combinedBoxStyles,
-  dotColor,
   labelColor,
   onToggle,
   onKeyDown,

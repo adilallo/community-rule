@@ -188,9 +188,10 @@ describe("NumberCard Component", () => {
   it("applies Small size variant correctly", () => {
     render(<NumberCard {...defaultProps} size="Small" />);
 
+    // For Small size, text is directly in card div (no wrapper), so use closest("div")
     const card = screen
       .getByText("Test Card Text")
-      .closest("div").parentElement;
+      .closest("div");
     expect(card).toHaveClass(
       "flex",
       "flex-col",
@@ -198,6 +199,7 @@ describe("NumberCard Component", () => {
       "justify-center",
       "gap-4",
       "p-5",
+      "relative",
     );
 
     const textElement = screen.getByText("Test Card Text");

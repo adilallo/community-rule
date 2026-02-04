@@ -16,7 +16,6 @@ const RadioButtonContainer = ({
   value,
   ariaLabel,
   className = "",
-  ...props
 }: RadioButtonProps) => {
   const isInverse = mode === "inverse";
   const isStandard = mode === "standard";
@@ -82,23 +81,6 @@ const RadioButtonContainer = ({
 
   const combinedBoxStyles = getBoxStyles();
 
-  // Dot color per Figma
-  // Selected state: light cream/yellow (#fefcc9)
-  // Selected hover state: darker yellow/brown (#333000 or rgba(51, 48, 0, 1))
-  const getDotColor = (): string => {
-    if (!checked) return "transparent";
-    
-    if (isStandard) {
-      // Use CSS to handle hover state - default is light cream, hover is darker
-      return "var(--color-content-default-brand-primary, #fefcc9)";
-    }
-    
-    // Inverse mode: black dot
-    return "var(--color-content-default-primary, #000000)";
-  };
-
-  const dotColor = getDotColor();
-
   // Label color
   const labelColor = isInverse
     ? "var(--color-content-inverse-primary)"
@@ -139,7 +121,6 @@ const RadioButtonContainer = ({
       ariaLabel={ariaLabel}
       className={className}
       combinedBoxStyles={combinedBoxStyles}
-      dotColor={dotColor}
       labelColor={labelColor}
       onToggle={handleToggle}
       onKeyDown={handleKeyDown}

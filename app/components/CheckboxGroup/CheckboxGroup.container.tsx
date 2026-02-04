@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useId, useState, useEffect } from "react";
+import { memo, useCallback, useId, useState } from "react";
 import { CheckboxGroupView } from "./CheckboxGroup.view";
 import type { CheckboxGroupProps } from "./CheckboxGroup.types";
 
@@ -18,15 +18,11 @@ const CheckboxGroupContainer = ({
   const generatedId = useId();
   const groupId = name || `checkbox-group-${generatedId}`;
 
-  // Internal state to track checked values
-  const [checkedValues, setCheckedValues] = useState<string[]>(value || []);
-
-  // Sync internal state with external value prop
-  useEffect(() => {
-    if (value !== undefined) {
-      setCheckedValues(value);
-    }
-  }, [value]);
+  // Internal state to track checked values (only used if value prop is not provided)
+  const [internalCheckedValues, setInternalCheckedValues] = useState<string[]>([]);
+  
+  // Use controlled value if provided, otherwise use internal state
+  const checkedValues = value !== undefined ? value : internalCheckedValues;
 
   const handleOptionChange = useCallback(
     (optionValue: string, checked: boolean) => {
@@ -36,13 +32,16 @@ const CheckboxGroupContainer = ({
         ? [...checkedValues, optionValue]
         : checkedValues.filter((v) => v !== optionValue);
 
-      setCheckedValues(newCheckedValues);
+      // Only update internal state if uncontrolled
+      if (value === undefined) {
+        setInternalCheckedValues(newCheckedValues);
+      }
 
       if (onChange) {
         onChange({ value: newCheckedValues });
       }
     },
-    [disabled, checkedValues, onChange],
+    [disabled, checkedValues, onChange, value],
   );
 
   return (

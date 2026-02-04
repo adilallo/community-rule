@@ -99,7 +99,7 @@ Step2.args = {
   description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input label="Label" placeholder="Enter text" value="" />
+      <TextInput label="Label" placeholder="Enter text" value="" />
     </div>
   ),
   showBackButton: true,

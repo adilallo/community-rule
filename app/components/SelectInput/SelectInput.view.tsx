@@ -59,7 +59,6 @@ export function SelectInputView({
   menuRef,
   ariaLabelledby,
   ariaInvalid,
-  ...props
 }: SelectInputViewProps) {
   // Styles based on Figma design
   const containerClasses = "flex flex-col gap-[8px]";
