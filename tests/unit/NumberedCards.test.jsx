@@ -72,10 +72,10 @@ describe("NumberedCards Component", () => {
     expect(screen.getByText("Test Subtitle")).toBeInTheDocument();
   });
 
-  test("renders NumberedCard components with correct props", () => {
+  test("renders NumberCard components with correct props", () => {
     render(<NumberedCards title="Test" subtitle="Test" cards={mockCards} />);
 
-    // Check that NumberedCard components receive correct props
+    // Check that NumberCard components receive correct props
     expect(screen.getByText("1")).toBeInTheDocument(); // First card number
     expect(screen.getByText("2")).toBeInTheDocument(); // Second card number
     expect(screen.getByText("3")).toBeInTheDocument(); // Third card number

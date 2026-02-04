@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../../contexts/MessagesContext";
 import SectionHeader from "../SectionHeader";
-import NumberedCard from "../NumberedCard";
+import NumberCard from "../NumberCard";
 import Button from "../Button";
 import type { NumberedCardsViewProps } from "./NumberedCards.types";
 
@@ -35,7 +35,7 @@ function NumberedCardsView({
             {/* Cards Container */}
             <div className="grid grid-cols-1 gap-y-[var(--spacing-scale-024)] lg:grid-cols-3 lg:gap-[var(--spacing-scale-024)]">
               {cards.map((card, index) => (
-                <NumberedCard
+                <NumberCard
                   key={index}
                   number={index + 1}
                   text={card.text}
