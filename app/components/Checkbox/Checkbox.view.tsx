@@ -9,10 +9,6 @@ export function CheckboxView({
   value,
   className,
   combinedBoxStyles,
-  defaultOutlineClass,
-  conditionalHoverOutlineClass,
-  conditionalFocusClass,
-  backgroundWhenChecked,
   checkGlyphColor,
   labelColor,
   accessibilityProps,
@@ -30,18 +26,16 @@ export function CheckboxView({
         {...accessibilityProps}
         onClick={onToggle}
         onKeyDown={onKeyDown}
-        className={`${combinedBoxStyles} ${defaultOutlineClass} ${conditionalHoverOutlineClass} ${conditionalFocusClass} p-[var(--measures-spacing-004)]`}
-        style={{
-          backgroundColor: backgroundWhenChecked,
-        }}
+        className={`${combinedBoxStyles} p-[4px] ${disabled ? "" : "cursor-pointer"}`}
       >
-        {/* Simple check glyph */}
+        {/* Checkmark SVG per Figma - 16px size */}
         <svg
           width="16"
           height="16"
           viewBox="0 0 12 12"
           aria-hidden="true"
           focusable="false"
+          className="block"
         >
           <polyline
             points="2.5 6 5 8.5 10 3.5"
@@ -63,7 +57,7 @@ export function CheckboxView({
           {label}
         </span>
       )}
-      {/* Hidden native input for form compatibility (optional for now) */}
+      {/* Hidden native input for form compatibility */}
       <input
         type="checkbox"
         name={name}

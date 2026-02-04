@@ -2,13 +2,16 @@
 
 import { useState } from "react";
 import TextInput from "../components/TextInput";
-import SelectInput from "../components/SelectInput";
+import Checkbox from "../components/Checkbox";
+import RadioGroup from "../components/RadioGroup";
 
 export default function ComponentsPreview() {
   const [defaultInputValue, setDefaultInputValue] = useState("");
   const [activeInputValue, setActiveInputValue] = useState("");
   const [errorInputValue, setErrorInputValue] = useState("");
-  const [selectValue, setSelectValue] = useState("");
+  const [standardCheckbox, setStandardCheckbox] = useState(false);
+  const [inverseCheckbox, setInverseCheckbox] = useState(false);
+  const [radioValue, setRadioValue] = useState("");
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-[var(--spacing-scale-032)]">
@@ -67,10 +70,48 @@ export default function ComponentsPreview() {
           </div>
         </section>
 
-        {/* Select Input Section */}
+        {/* Checkbox Section */}
         <section className="space-y-[var(--spacing-scale-024)]">
           <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
-            Select Input Component
+            Checkbox Component
+          </h2>
+
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  Standard Mode
+                </h3>
+                <div className="space-y-[var(--spacing-scale-016)]">
+                  <Checkbox
+                    label="Standard Checkbox"
+                    checked={standardCheckbox}
+                    mode="standard"
+                    onChange={({ checked }) => setStandardCheckbox(checked)}
+                  />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  Inverse Mode
+                </h3>
+                <div className="space-y-[var(--spacing-scale-016)]">
+                  <Checkbox
+                    label="Inverse Checkbox"
+                    checked={inverseCheckbox}
+                    mode="inverse"
+                    onChange={({ checked }) => setInverseCheckbox(checked)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Radio Group Section */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Radio Group Component
           </h2>
 
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
@@ -80,9 +121,8 @@ export default function ComponentsPreview() {
                   States
                 </h3>
                 <div className="space-y-[var(--spacing-scale-016)]">
-                  <SelectInput
-                    label="Default Select Input"
-                    placeholder="Choose an option"
+                  <RadioGroup
+                    name="default-radio"
                     value=""
                     options={[
                       { value: "option1", label: "Option 1" },
@@ -90,33 +130,20 @@ export default function ComponentsPreview() {
                       { value: "option3", label: "Option 3" },
                     ]}
                   />
-                  <SelectInput
-                    label="Interactive Select Input (click = active)"
-                    placeholder="Choose an option"
-                    value={selectValue}
-                    onChange={(data) => setSelectValue(data.target.value)}
+                  <RadioGroup
+                    name="interactive-radio"
+                    value={radioValue}
+                    onChange={({ value }) => setRadioValue(value)}
                     options={[
                       { value: "option1", label: "Option 1" },
                       { value: "option2", label: "Option 2" },
                       { value: "option3", label: "Option 3" },
                     ]}
                   />
-                  <SelectInput
-                    label="Disabled Select Input"
-                    placeholder="Choose an option"
+                  <RadioGroup
+                    name="disabled-radio"
                     value=""
                     disabled
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-                  <SelectInput
-                    label="Error Select Input"
-                    placeholder="Choose an option"
-                    value=""
-                    error
                     options={[
                       { value: "option1", label: "Option 1" },
                       { value: "option2", label: "Option 2" },
