@@ -77,57 +77,24 @@ export default function ComponentsPreview() {
             <div className="space-y-[var(--spacing-scale-016)]">
               <div>
                 <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
-                  All Sizes
-                </h3>
-            <div className="space-y-[var(--spacing-scale-016)]">
-                  <SelectInput
-                    label="Small Select Input"
-                    placeholder="Choose an option"
-                    size="small"
-                    value={selectValue}
-                    onChange={(data) => setSelectValue(data.target.value)}
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-                  <SelectInput
-                    label="Medium Select Input"
-                    placeholder="Choose an option"
-                    size="medium"
-                    value={selectValue}
-                    onChange={(data) => setSelectValue(data.target.value)}
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-                  <SelectInput
-                    label="Large Select Input"
-                    placeholder="Choose an option"
-                    size="large"
-                    value={selectValue}
-                    onChange={(data) => setSelectValue(data.target.value)}
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-              </div>
-              </div>
-
-              <div>
-                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
                   States
                 </h3>
-            <div className="space-y-[var(--spacing-scale-016)]">
+                <div className="space-y-[var(--spacing-scale-016)]">
                   <SelectInput
                     label="Default Select Input"
                     placeholder="Choose an option"
                     value=""
+                    options={[
+                      { value: "option1", label: "Option 1" },
+                      { value: "option2", label: "Option 2" },
+                      { value: "option3", label: "Option 3" },
+                    ]}
+                  />
+                  <SelectInput
+                    label="Interactive Select Input (click = active)"
+                    placeholder="Choose an option"
+                    value={selectValue}
+                    onChange={(data) => setSelectValue(data.target.value)}
                     options={[
                       { value: "option1", label: "Option 1" },
                       { value: "option2", label: "Option 2" },
@@ -158,36 +125,6 @@ export default function ComponentsPreview() {
                   />
                 </div>
               </div>
-
-              <div>
-                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
-                  Label Variants
-                </h3>
-                <div className="space-y-[var(--spacing-scale-016)]">
-                  <SelectInput
-                    label="Default Label"
-                    placeholder="Choose an option"
-                    value=""
-                    labelVariant="default"
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-                  <SelectInput
-                    label="Horizontal Label"
-                    placeholder="Choose an option"
-                    value=""
-                    labelVariant="horizontal"
-                    options={[
-                      { value: "option1", label: "Option 1" },
-                      { value: "option2", label: "Option 2" },
-                      { value: "option3", label: "Option 3" },
-                    ]}
-                  />
-                </div>
-            </div>
             </div>
           </div>
         </section>

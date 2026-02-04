@@ -16,9 +16,7 @@ componentTestSuite<SelectInputProps>({
     ],
   } as SelectInputProps,
   requiredProps: ["options"],
-  optionalProps: {
-    size: "medium",
-  },
+  optionalProps: {},
   primaryRole: "button",
   testCases: {
     renders: true,
