@@ -34,9 +34,9 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size }) => {
       XLarge: "font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[#141414]",
     };
 
-    // Section number positioning classes
-    const sectionNumberClasses = {
-      Small: "flex justify-end items-end",
+    // Section number wrapper classes - Small doesn't need a wrapper
+    const sectionNumberWrapperClasses = {
+      Small: "relative shrink-0",
       Medium: "flex justify-start flex-shrink-0",
       Large: "absolute top-8 right-8",
       XLarge: "absolute top-8 right-8",
@@ -44,16 +44,31 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size }) => {
 
     // Content container classes
     const contentClasses = {
-      Small: "",
+      Small: "min-w-full relative shrink-0",
       Medium: "flex-1",
       Large: "absolute bottom-8 left-8 right-16",
       XLarge: "absolute bottom-8 left-8 right-16",
     };
 
+    // Small variant has section number as direct child, others need wrapper
+    if (size === "Small") {
+      return (
+        <div className={`${baseClasses} ${sizeClasses[size]}`}>
+          {/* Section Number - Direct child for Small */}
+          <SectionNumber number={number} />
+          
+          {/* Card Content */}
+          <p className={textClasses[size]}>
+            {text}
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className={`${baseClasses} ${sizeClasses[size]}`}>
         {/* Section Number */}
-        <div className={sectionNumberClasses[size]}>
+        <div className={sectionNumberWrapperClasses[size]}>
           <SectionNumber number={number} />
         </div>
 

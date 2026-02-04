@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { getAssetPath } from "../../lib/assetUtils";
 
 interface SectionNumberProps {
   number: number;
@@ -8,16 +9,19 @@ interface SectionNumberProps {
 
 const SectionNumber = memo<SectionNumberProps>(({ number }) => {
   const getImageSrc = (num: number): string => {
-    switch (num) {
-      case 1:
-        return "/assets/SectionNumber_1.png";
-      case 2:
-        return "/assets/SectionNumber_2.png";
-      case 3:
-        return "/assets/SectionNumber_3.png";
-      default:
-        return "/assets/SectionNumber_1.png";
-    }
+    const assetPath = (() => {
+      switch (num) {
+        case 1:
+          return "assets/SectionNumber_1.png";
+        case 2:
+          return "assets/SectionNumber_2.png";
+        case 3:
+          return "assets/SectionNumber_3.png";
+        default:
+          return "assets/SectionNumber_1.png";
+      }
+    })();
+    return getAssetPath(assetPath);
   };
 
   return (
