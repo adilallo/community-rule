@@ -1,6 +1,7 @@
 export interface RadioOption {
   value: string;
   label: string;
+  subtext?: string;
   ariaLabel?: string;
 }
 
