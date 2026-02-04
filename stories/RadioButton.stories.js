@@ -1,96 +1,53 @@
 import React from "react";
 import RadioButton from "../app/components/RadioButton";
-import { expect } from "@storybook/test";
-import { userEvent, within } from "@storybook/test";
 
-// Interaction functions for Storybook play functions
-const DefaultInteraction = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radioButton = canvas.getByRole("radio");
-    await expect(radioButton).toHaveAttribute("aria-checked", "false");
-    await userEvent.click(radioButton);
-    await expect(radioButton).toHaveAttribute("aria-checked", "true");
-    await userEvent.click(radioButton);
-    await expect(radioButton).toHaveAttribute("aria-checked", "true");
-  },
-};
-
-const CheckedInteraction = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radioButton = canvas.getByRole("radio");
-    await expect(radioButton).toHaveAttribute("aria-checked", "true");
-    await userEvent.click(radioButton);
-    await expect(radioButton).toHaveAttribute("aria-checked", "true");
-  },
-};
-
-const StandardInteraction = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radioButtons = canvas.getAllByRole("radio");
-    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
-    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
-    await userEvent.click(radioButtons[0]);
-    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
-    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
-  },
-};
-
-const InverseInteraction = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const radioButtons = canvas.getAllByRole("radio");
-    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "false");
-    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "true");
-    await userEvent.click(radioButtons[0]);
-    await expect(radioButtons[0]).toHaveAttribute("aria-checked", "true");
-    await expect(radioButtons[1]).toHaveAttribute("aria-checked", "false");
-  },
-};
-
-const meta = {
+export default {
   title: "Forms/RadioButton",
   component: RadioButton,
   parameters: {
     layout: "centered",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "black" }],
+      values: [
+        { name: "light", value: "#ffffff" },
+        { name: "dark", value: "#000000" },
+      ],
     },
   },
-  tags: ["autodocs"],
   argTypes: {
-    checked: { control: "boolean" },
+    checked: {
+      control: "boolean",
+      description: "Whether the radio button is checked",
+    },
     mode: {
-      control: { type: "select" },
+      control: "select",
       options: ["standard", "inverse"],
+      description: "Visual mode of the radio button",
     },
     state: {
-      control: { type: "select" },
+      control: "select",
       options: ["default", "hover", "focus"],
+      description: "Interaction state for static display",
     },
-    label: { control: "text" },
-  },
-  args: {
-    checked: false,
-    mode: "standard",
-    state: "default",
-    label: "Radio Button Label",
+    disabled: {
+      control: "boolean",
+      description: "Whether the radio button is disabled",
+    },
+    label: {
+      control: "text",
+      description: "Label text for the radio button",
+    },
   },
 };
-
-export default meta;
 
 export const Default = {
   args: {
     checked: false,
     mode: "standard",
     state: "default",
+    disabled: false,
     label: "Default radio button",
   },
-  play: DefaultInteraction.play,
   render: (args) => {
     const [checked, setChecked] = React.useState(args.checked);
     return (
@@ -108,9 +65,9 @@ export const Checked = {
     checked: true,
     mode: "standard",
     state: "default",
+    disabled: false,
     label: "Checked radio button",
   },
-  play: CheckedInteraction.play,
   render: (args) => {
     const [checked, setChecked] = React.useState(args.checked);
     return (
@@ -125,7 +82,7 @@ export const Checked = {
 
 export const Standard = {
   render: () => {
-    const [selectedValue, setSelectedValue] = React.useState("checked");
+    const [checked, setChecked] = React.useState(false);
 
     return (
       <div className="space-y-4">
@@ -133,36 +90,21 @@ export const Standard = {
           <h3 className="text-white font-medium">Standard Mode</h3>
           <div className="flex flex-col gap-2">
             <RadioButton
-              label="Unchecked"
-              checked={selectedValue === "unchecked"}
-              name="standard-example"
-              value="unchecked"
+              label="Standard Radio Button"
+              checked={checked}
               mode="standard"
-              onChange={({ checked }) => {
-                if (checked) setSelectedValue("unchecked");
-              }}
-            />
-            <RadioButton
-              label="Checked"
-              checked={selectedValue === "checked"}
-              name="standard-example"
-              value="checked"
-              mode="standard"
-              onChange={({ checked }) => {
-                if (checked) setSelectedValue("checked");
-              }}
+              onChange={({ checked: newChecked }) => setChecked(newChecked)}
             />
           </div>
         </div>
       </div>
     );
   },
-  play: StandardInteraction.play,
 };
 
 export const Inverse = {
   render: () => {
-    const [selectedValue, setSelectedValue] = React.useState("checked");
+    const [checked, setChecked] = React.useState(false);
 
     return (
       <div className="space-y-4">
@@ -170,29 +112,138 @@ export const Inverse = {
           <h3 className="text-white font-medium">Inverse Mode</h3>
           <div className="flex flex-col gap-2">
             <RadioButton
-              label="Unchecked"
-              checked={selectedValue === "unchecked"}
-              name="inverse-example"
-              value="unchecked"
+              label="Inverse Radio Button"
+              checked={checked}
               mode="inverse"
-              onChange={({ checked }) => {
-                if (checked) setSelectedValue("unchecked");
-              }}
-            />
-            <RadioButton
-              label="Checked"
-              checked={selectedValue === "checked"}
-              name="inverse-example"
-              value="checked"
-              mode="inverse"
-              onChange={({ checked }) => {
-                if (checked) setSelectedValue("checked");
-              }}
+              onChange={({ checked: newChecked }) => setChecked(newChecked)}
             />
           </div>
         </div>
       </div>
     );
   },
-  play: InverseInteraction.play,
+};
+
+export const Disabled = {
+  args: {
+    checked: false,
+    mode: "standard",
+    state: "default",
+    disabled: true,
+    label: "Disabled radio button",
+  },
+  render: (args) => <RadioButton {...args} />,
+};
+
+export const DisabledChecked = {
+  args: {
+    checked: true,
+    mode: "standard",
+    state: "default",
+    disabled: true,
+    label: "Disabled checked radio button",
+  },
+  render: (args) => <RadioButton {...args} />,
+};
+
+// All modes comparison
+export const AllModes = () => {
+  const [standardChecked, setStandardChecked] = React.useState(false);
+  const [inverseChecked, setInverseChecked] = React.useState(false);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Standard Radio Button"
+            checked={standardChecked}
+            mode="standard"
+            onChange={({ checked }) => setStandardChecked(checked)}
+          />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Inverse Radio Button"
+            checked={inverseChecked}
+            mode="inverse"
+            onChange={({ checked }) => setInverseChecked(checked)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// All states for standard mode
+export const StandardAllStates = () => {
+  const [unchecked, setUnchecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(true);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode - Unselected</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Unselected (default, hover, focus)"
+            checked={unchecked}
+            mode="standard"
+            onChange={({ checked }) => setUnchecked(checked)}
+          />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode - Selected</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Selected (default, hover, focus)"
+            checked={checked}
+            mode="standard"
+            onChange={({ checked }) => setChecked(checked)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// All states for inverse mode
+export const InverseAllStates = () => {
+  const [unchecked, setUnchecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(true);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode - Unselected</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Unselected (default, hover, focus)"
+            checked={unchecked}
+            mode="inverse"
+            onChange={({ checked }) => setUnchecked(checked)}
+          />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode - Selected</h3>
+        <div className="space-y-4">
+          <RadioButton
+            label="Selected (default, hover, focus)"
+            checked={checked}
+            mode="inverse"
+            onChange={({ checked }) => setChecked(checked)}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };

@@ -14,6 +14,7 @@ export default function ComponentsPreview() {
   const [inverseCheckbox, setInverseCheckbox] = useState(false);
   const [checkboxGroupValues, setCheckboxGroupValues] = useState<string[]>([]);
   const [radioValue, setRadioValue] = useState("");
+  const [inverseRadioValue, setInverseRadioValue] = useState("");
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-[var(--spacing-scale-032)]">
@@ -174,12 +175,14 @@ export default function ComponentsPreview() {
             <div className="space-y-[var(--spacing-scale-016)]">
               <div>
                 <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
-                  States
+                  Standard Mode
                 </h3>
                 <div className="space-y-[var(--spacing-scale-016)]">
                   <RadioGroup
                     name="default-radio"
-                    value=""
+                    value={radioValue}
+                    onChange={({ value }) => setRadioValue(value)}
+                    mode="standard"
                     options={[
                       { value: "option1", label: "Option 1" },
                       { value: "option2", label: "Option 2" },
@@ -190,6 +193,7 @@ export default function ComponentsPreview() {
                     name="interactive-radio"
                     value={radioValue}
                     onChange={({ value }) => setRadioValue(value)}
+                    mode="standard"
                     options={[
                       { value: "option1", label: "Option 1" },
                       { value: "option2", label: "Option 2" },
@@ -199,6 +203,47 @@ export default function ComponentsPreview() {
                   <RadioGroup
                     name="disabled-radio"
                     value=""
+                    mode="standard"
+                    disabled
+                    options={[
+                      { value: "option1", label: "Option 1" },
+                      { value: "option2", label: "Option 2" },
+                      { value: "option3", label: "Option 3" },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div>
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)] mb-[var(--spacing-scale-012)]">
+                  Inverse Mode
+                </h3>
+                <div className="space-y-[var(--spacing-scale-016)]">
+                  <RadioGroup
+                    name="inverse-default-radio"
+                    value={inverseRadioValue}
+                    onChange={({ value }) => setInverseRadioValue(value)}
+                    mode="inverse"
+                    options={[
+                      { value: "option1", label: "Option 1" },
+                      { value: "option2", label: "Option 2" },
+                      { value: "option3", label: "Option 3" },
+                    ]}
+                  />
+                  <RadioGroup
+                    name="inverse-interactive-radio"
+                    value={inverseRadioValue}
+                    onChange={({ value }) => setInverseRadioValue(value)}
+                    mode="inverse"
+                    options={[
+                      { value: "option1", label: "Option 1" },
+                      { value: "option2", label: "Option 2" },
+                      { value: "option3", label: "Option 3" },
+                    ]}
+                  />
+                  <RadioGroup
+                    name="inverse-disabled-radio"
+                    value=""
+                    mode="inverse"
                     disabled
                     options={[
                       { value: "option1", label: "Option 1" },
