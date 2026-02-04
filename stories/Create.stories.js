@@ -1,5 +1,5 @@
 import Create from "../app/components/Create";
-import Input from "../app/components/Input";
+import TextInput from "../app/components/TextInput";
 
 export default {
   title: "Components/Create",
@@ -57,7 +57,7 @@ Default.args = {
   description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input label="Label" placeholder="Policy name" value="" />
+      <TextInput label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>
@@ -77,7 +77,7 @@ WithStepper.args = {
   description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input label="Label" placeholder="Policy name" value="" />
+      <TextInput label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>
@@ -99,7 +99,7 @@ Step2.args = {
   description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input label="Label" placeholder="Enter text" value="" />
+      <TextInput label="Label" placeholder="Enter text" value="" />
     </div>
   ),
   showBackButton: true,
@@ -155,7 +155,7 @@ NextButtonDisabled.args = {
   description: "You can also combine or add new approaches to the list",
   children: (
     <div className="space-y-4">
-      <Input label="Label" placeholder="Policy name" value="" />
+      <TextInput label="Label" placeholder="Policy name" value="" />
       <p className="text-[12px] text-[var(--color-content-default-tertiary)]">
         0/48
       </p>

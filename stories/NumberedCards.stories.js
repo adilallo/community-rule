@@ -8,7 +8,7 @@ export default {
     docs: {
       description: {
         component:
-          "A component system for visually communicating multi-step workflows, processes, or value propositions. The component's modular design with NumberedCard and SectionNumber sub-components makes it ideal for explaining any sequential process while maintaining brand consistency and accessibility standards across the design system.",
+          "A component system for visually communicating multi-step workflows, processes, or value propositions. The component's modular design with NumberCard and SectionNumber sub-components makes it ideal for explaining any sequential process while maintaining brand consistency and accessibility standards across the design system.",
       },
     },
   },

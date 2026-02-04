@@ -1,9 +1,9 @@
 import React from "react";
-import RadioGroup from "../app/components/RadioGroup";
+import CheckboxGroup from "../app/components/CheckboxGroup";
 
 export default {
-  title: "Forms/RadioGroup",
-  component: RadioGroup,
+  title: "Forms/CheckboxGroup",
+  component: CheckboxGroup,
   parameters: {
     layout: "centered",
     backgrounds: {
@@ -18,29 +18,28 @@ export default {
     mode: {
       control: "select",
       options: ["standard", "inverse"],
-      description: "Visual mode of the radio group",
+      description: "Visual mode of the checkbox group",
     },
     disabled: {
       control: "boolean",
-      description: "Whether the radio group is disabled",
+      description: "Whether the checkbox group is disabled",
     },
   },
 };
 
 export const Default = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState([]);
 
     return (
-      <RadioGroup
-        name="default-radio-group"
+      <CheckboxGroup
+        name="default-checkbox-group"
         value={value}
         onChange={({ value: newValue }) => setValue(newValue)}
         mode="standard"
         options={[
-          { value: "option1", label: "Option 1" },
-          { value: "option2", label: "Option 2" },
-          { value: "option3", label: "Option 3" },
+          { value: "option1", label: "Checkbox label" },
+          { value: "option2", label: "Checkbox label" },
         ]}
       />
     );
@@ -49,20 +48,20 @@ export const Default = {
 
 export const WithSubtext = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState([]);
 
     return (
-      <RadioGroup
-        name="subtext-radio-group"
+      <CheckboxGroup
+        name="subtext-checkbox-group"
         value={value}
         onChange={({ value: newValue }) => setValue(newValue)}
         mode="standard"
         options={[
-          { value: "option1", label: "Option 1" },
+          { value: "option1", label: "Checkbox label" },
           {
             value: "option2",
-            label: "Option 2",
-            subtext: "Lorem ipsum dolor sit amet consectetur",
+            label: "Checkbox label",
+            subtext: "Nunc sed hendrerit consequat.",
           },
         ]}
       />
@@ -72,18 +71,17 @@ export const WithSubtext = {
 
 export const Inverse = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState([]);
 
     return (
-      <RadioGroup
-        name="inverse-radio-group"
+      <CheckboxGroup
+        name="inverse-checkbox-group"
         value={value}
         onChange={({ value: newValue }) => setValue(newValue)}
         mode="inverse"
         options={[
-          { value: "option1", label: "Option 1" },
-          { value: "option2", label: "Option 2" },
-          { value: "option3", label: "Option 3" },
+          { value: "option1", label: "Checkbox label" },
+          { value: "option2", label: "Checkbox label" },
         ]}
       />
     );
@@ -92,20 +90,20 @@ export const Inverse = {
 
 export const InverseWithSubtext = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = React.useState([]);
 
     return (
-      <RadioGroup
-        name="inverse-subtext-radio-group"
+      <CheckboxGroup
+        name="inverse-subtext-checkbox-group"
         value={value}
         onChange={({ value: newValue }) => setValue(newValue)}
         mode="inverse"
         options={[
-          { value: "option1", label: "Option 1" },
+          { value: "option1", label: "Checkbox label" },
           {
             value: "option2",
-            label: "Option 2",
-            subtext: "Lorem ipsum dolor sit amet consectetur",
+            label: "Checkbox label",
+            subtext: "Nunc sed hendrerit consequat.",
           },
         ]}
       />
@@ -115,39 +113,38 @@ export const InverseWithSubtext = {
 
 export const Disabled = {
   render: () => (
-    <RadioGroup
-      name="disabled-radio-group"
-      value=""
+    <CheckboxGroup
+      name="disabled-checkbox-group"
+      value={[]}
       mode="standard"
       disabled
       options={[
-        { value: "option1", label: "Option 1" },
-        { value: "option2", label: "Option 2" },
-        { value: "option3", label: "Option 3" },
+        { value: "option1", label: "Checkbox label" },
+        { value: "option2", label: "Checkbox label" },
       ]}
     />
   ),
 };
 
 export const AllModes = () => {
-  const [standardValue, setStandardValue] = React.useState("");
-  const [inverseValue, setInverseValue] = React.useState("");
+  const [standardValue, setStandardValue] = React.useState([]);
+  const [inverseValue, setInverseValue] = React.useState([]);
 
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode</h3>
-        <RadioGroup
-          name="standard-all-radio-group"
+        <CheckboxGroup
+          name="standard-all-checkbox-group"
           value={standardValue}
           onChange={({ value }) => setStandardValue(value)}
           mode="standard"
           options={[
-            { value: "option1", label: "Option 1" },
+            { value: "option1", label: "Checkbox label" },
             {
               value: "option2",
-              label: "Option 2",
-              subtext: "Lorem ipsum dolor sit amet consectetur",
+              label: "Checkbox label",
+              subtext: "Nunc sed hendrerit consequat.",
             },
           ]}
         />
@@ -155,17 +152,17 @@ export const AllModes = () => {
 
       <div>
         <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode</h3>
-        <RadioGroup
-          name="inverse-all-radio-group"
+        <CheckboxGroup
+          name="inverse-all-checkbox-group"
           value={inverseValue}
           onChange={({ value }) => setInverseValue(value)}
           mode="inverse"
           options={[
-            { value: "option3", label: "Option 1" },
+            { value: "option3", label: "Checkbox label" },
             {
               value: "option4",
-              label: "Option 2",
-              subtext: "Lorem ipsum dolor sit amet consectetur",
+              label: "Checkbox label",
+              subtext: "Nunc sed hendrerit consequat.",
             },
           ]}
         />

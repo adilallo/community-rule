@@ -76,8 +76,10 @@ export default defineConfig({
     workerTimeout: 120000, // 2min for worker timeout
     poolTimeout: 120000, // 2min for pool timeout
     // Optimize dependencies
-    deps: {
-      inline: ["@testing-library/jest-dom"], // Inline testing library
+    server: {
+      deps: {
+        inline: ["@testing-library/jest-dom"], // Inline testing library
+      },
     },
   },
 });

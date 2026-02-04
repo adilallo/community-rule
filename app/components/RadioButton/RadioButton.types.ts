@@ -24,11 +24,6 @@ export interface RadioButtonViewProps {
   ariaLabel?: string;
   className: string;
   combinedBoxStyles: string;
-  defaultOutlineClass: string;
-  conditionalHoverOutlineClass: string;
-  conditionalFocusClass: string;
-  backgroundWhenChecked: string;
-  dotColor: string;
   labelColor: string;
   onToggle: (_e: React.MouseEvent | React.KeyboardEvent) => void;
   onKeyDown: (_e: React.KeyboardEvent<HTMLSpanElement>) => void;

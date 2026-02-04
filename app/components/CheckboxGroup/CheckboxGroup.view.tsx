@@ -1,45 +1,41 @@
-import RadioButton from "../RadioButton";
-import type { RadioGroupViewProps } from "./RadioGroup.types";
+import Checkbox from "../Checkbox";
+import type { CheckboxGroupViewProps } from "./CheckboxGroup.types";
 
-export function RadioGroupView({
+export function CheckboxGroupView({
   groupId,
   value,
   mode,
-  state,
   disabled,
   options,
   className,
   ariaLabel,
   onOptionChange,
-}: RadioGroupViewProps) {
+}: CheckboxGroupViewProps) {
   return (
     <div
       className={`space-y-[8px] ${className}`}
-      role="radiogroup"
+      role="group"
       aria-label={ariaLabel}
     >
       {options.map((option) => {
-        const isSelected = value === option.value;
+        const isChecked = value.includes(option.value);
 
-        // If there's subtext, render radio button without label and handle layout separately
+        // If there's subtext, render checkbox without label and handle layout separately
         if (option.subtext) {
           return (
             <div
               key={option.value}
               className="flex gap-[8px] items-start"
             >
-              <RadioButton
-                checked={isSelected}
+              <Checkbox
+                checked={isChecked}
                 mode={mode}
-                state={state}
                 disabled={disabled}
                 name={groupId}
                 value={option.value}
                 ariaLabel={option.ariaLabel || option.label}
                 onChange={({ checked }) => {
-                  if (checked) {
-                    onOptionChange(option.value);
-                  }
+                  onOptionChange(option.value, checked);
                 }}
               />
               <div className="flex flex-col gap-[4px] flex-1">
@@ -56,7 +52,7 @@ export function RadioGroupView({
                   className={`font-inter text-[14px] leading-[20px] ${
                     mode === "inverse"
                       ? "text-[var(--color-content-inverse-secondary,#1f1f1f)]"
-                      : "text-[var(--color-content-default-secondary,#b4b4b4)]"
+                      : "text-[var(--color-content-default-tertiary,#b4b4b4)]"
                   }`}
                 >
                   {option.subtext}
@@ -66,22 +62,19 @@ export function RadioGroupView({
           );
         }
 
-        // If no subtext, use RadioButton's built-in label
+        // If no subtext, use Checkbox's built-in label
         return (
-          <RadioButton
+          <Checkbox
             key={option.value}
-            checked={isSelected}
+            checked={isChecked}
             mode={mode}
-            state={state}
             disabled={disabled}
             label={option.label}
             name={groupId}
             value={option.value}
             ariaLabel={option.ariaLabel}
             onChange={({ checked }) => {
-              if (checked) {
-                onOptionChange(option.value);
-              }
+              onOptionChange(option.value, checked);
             }}
           />
         );

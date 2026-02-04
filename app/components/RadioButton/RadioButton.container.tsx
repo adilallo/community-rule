@@ -7,7 +7,7 @@ import type { RadioButtonProps } from "./RadioButton.types";
 const RadioButtonContainer = ({
   checked = false,
   mode = "standard",
-  state = "default",
+  state = "default", // This state prop is now only for static display in Storybook/Preview
   disabled = false,
   label,
   onChange,
@@ -16,55 +16,75 @@ const RadioButtonContainer = ({
   value,
   ariaLabel,
   className = "",
-  ...props
 }: RadioButtonProps) => {
   const isInverse = mode === "inverse";
+  const isStandard = mode === "standard";
 
-  // Base tokens (using same design tokens as Checkbox)
-  const colorContent = isInverse
-    ? "var(--color-content-inverse-primary)"
-    : "var(--color-content-default-primary)";
+  // Base box styles per Figma - 24px size, circular
+  const baseBox = `
+    flex
+    items-center
+    justify-center
+    shrink-0
+    w-[24px]
+    h-[24px]
+    rounded-full
+    transition-all
+    duration-200
+    ease-in-out
+    p-[4px]
+  `.trim().replace(/\s+/g, " ");
 
-  // Visual container depending on state
-  const baseBox = `flex items-center justify-center shrink-0 w-[var(--measures-sizing-024)] h-[var(--measures-sizing-024)] rounded-[var(--measures-radius-medium)] transition-all duration-200 ease-in-out`;
+  // Get box styles based on mode and checked status per Figma designs
+  const getBoxStyles = (): string => {
+    // Standard mode styles
+    if (isStandard) {
+      // Default state: tertiary border (or brand primary when checked), with hover and focus states via CSS
+      // Hover changes border to brand primary color
+      // Focus shows shadow (double ring: 2px white inner, 4px dark outer)
+      // When checked, border is brand primary (but changes to invert tertiary on focus)
+      const defaultBorder = checked
+        ? "border-[var(--color-border-default-brand-primary,#fdfaa8)]"
+        : "border-[var(--color-border-default-tertiary,#464646)]";
+      
+      // When focused and checked, border should be invert tertiary (#2d2d2d) per Figma
+      const focusBorder = checked
+        ? "focus:border-[var(--color-content-invert-tertiary,#2d2d2d)]"
+        : "focus:border-[var(--color-border-default-tertiary,#464646)]";
+      
+      return `${baseBox} bg-[var(--color-surface-default-primary)] border border-solid ${defaultBorder} hover:border-[var(--color-border-default-brand-primary,#fdfaa8)] ${focusBorder} focus:shadow-[0px_0px_0px_2px_var(--color-border-invert-primary,white),0px_0px_0px_4px_var(--color-border-default-primary,#141414)] focus:outline-none`;
+    }
 
-  const stateStyles: Record<string, string> = {
-    default: "",
-    hover: "",
-    focus: "",
+    // Inverse mode styles
+    if (isInverse) {
+      // Default state: white border (or brand primary when checked), transparent background
+      // Hover changes border to inverse brand primary color (#6c6701) for both selected and unselected
+      // Focus shows shadow (double ring: 2px dark inner, 4px white outer)
+      // When checked, border is brand primary (but changes to white on focus)
+      const defaultBorder = checked
+        ? "border-[var(--color-border-default-brand-primary,#fdfaa8)]"
+        : "border-[var(--color-border-invert-primary,white)]";
+      
+      // Hover border: inverse brand primary for both selected and unselected per Figma
+      const hoverBorder = "hover:border-[var(--color-border-invert-brand-primary,#6c6701)]";
+      
+      // Focus border: when focused and checked, border should be white per Figma
+      const focusBorder = checked
+        ? "focus:border-[var(--color-border-invert-primary,white)]"
+        : "focus:border-[var(--color-border-invert-primary,white)]";
+      
+      return `${baseBox} bg-transparent border border-solid ${defaultBorder} ${hoverBorder} ${focusBorder} focus:shadow-[0px_0px_0px_2px_var(--color-border-default-primary,#141414),0px_0px_0px_4px_var(--color-border-invert-primary,white)] focus:outline-none`;
+    }
+
+    return baseBox;
   };
 
-  // Background behavior:
-  // - Standard: background does not change on check; only dot appears
-  // - Inverse: transparent background, dot appears on check
-  const backgroundWhenChecked = isInverse
-    ? "var(--color-surface-default-transparent)"
-    : "var(--color-surface-default-primary)";
+  const combinedBoxStyles = getBoxStyles();
 
-  // Dot color for selected state
-  const dotColor = checked
-    ? isInverse
-      ? "var(--color-content-inverse-primary)"
-      : "var(--color-border-default-brand-primary)"
-    : "transparent";
-  const labelColor = colorContent;
-
-  const combinedBoxStyles = `${baseBox} ${stateStyles[state]}`;
-
-  // Force visible outline for standard / default / unchecked
-  const defaultOutlineClass = isInverse
-    ? "outline outline-1 outline-[var(--color-border-inverse-primary)]"
-    : "outline outline-1 outline-[var(--color-border-default-tertiary)]";
-
-  // Apply brand outline only on actual :hover
-  // Standard mode uses default brand primary, inverse mode uses inverse brand primary
-  const conditionalHoverOutlineClass = isInverse
-    ? "hover:outline hover:outline-1 hover:outline-[var(--color-border-inverse-brand-primary)]"
-    : "hover:outline hover:outline-1 hover:outline-[var(--color-border-default-brand-primary)]";
-
-  // Focus state for standard/unchecked with brand primary color and specific blur/spread
-  const conditionalFocusClass =
-    "focus:outline focus:outline-1 focus:outline-[var(--color-border-default-utility-info)] focus:shadow-[0_0_10px_1px_var(--color-surface-inverse-brand-primary)]";
+  // Label color
+  const labelColor = isInverse
+    ? "var(--color-content-inverse-primary)"
+    : "var(--color-content-default-primary)";
 
   // Generate unique ID for accessibility if not provided
   const generatedId = useId();
@@ -72,11 +92,13 @@ const RadioButtonContainer = ({
 
   const handleToggle = useCallback(
     (_e: React.MouseEvent | React.KeyboardEvent) => {
-      if (!disabled && onChange && !checked) {
+      if (!disabled && onChange) {
+        // Always call onChange when clicked, even if already checked
+        // The parent (RadioGroup) will handle the logic
         onChange({ checked: true, value });
       }
     },
-    [disabled, onChange, checked, value],
+    [disabled, onChange, value],
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
@@ -91,7 +113,7 @@ const RadioButtonContainer = ({
       radioId={radioId}
       checked={checked}
       mode={mode}
-      state={state}
+      state={state} // Passed for static display in Storybook/Preview
       disabled={disabled}
       label={label}
       name={name}
@@ -99,15 +121,9 @@ const RadioButtonContainer = ({
       ariaLabel={ariaLabel}
       className={className}
       combinedBoxStyles={combinedBoxStyles}
-      defaultOutlineClass={defaultOutlineClass}
-      conditionalHoverOutlineClass={conditionalHoverOutlineClass}
-      conditionalFocusClass={conditionalFocusClass}
-      backgroundWhenChecked={backgroundWhenChecked}
-      dotColor={dotColor}
       labelColor={labelColor}
       onToggle={handleToggle}
       onKeyDown={handleKeyDown}
-      {...props}
     />
   );
 };

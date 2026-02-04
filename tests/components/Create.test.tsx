@@ -4,7 +4,7 @@ import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { renderWithProviders } from "../utils/test-utils";
 import Create from "../../app/components/Create";
-import Input from "../../app/components/Input";
+import TextInput from "../../app/components/TextInput";
 
 type CreateProps = React.ComponentProps<typeof Create>;
 
@@ -167,7 +167,7 @@ describe("Create", () => {
   it("traps focus within create dialog", async () => {
     renderWithProviders(
       <Create {...defaultProps}>
-        <Input label="Test Input" />
+        <TextInput label="Test Input" />
       </Create>,
     );
 

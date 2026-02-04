@@ -1,24 +1,22 @@
 import React from "react";
-import Select from "../../app/components/Select";
+import SelectInput from "../../app/components/SelectInput";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
-type SelectProps = React.ComponentProps<typeof Select>;
+type SelectInputProps = React.ComponentProps<typeof SelectInput>;
 
-componentTestSuite<SelectProps>({
-  component: Select,
-  name: "Select",
+componentTestSuite<SelectInputProps>({
+  component: SelectInput,
+  name: "SelectInput",
   props: {
-    label: "Test Select",
+    label: "Test Select Input",
     placeholder: "Select an option",
     options: [
       { value: "option1", label: "Option 1" },
       { value: "option2", label: "Option 2" },
     ],
-  } as SelectProps,
+  } as SelectInputProps,
   requiredProps: ["options"],
-  optionalProps: {
-    size: "medium",
-  },
+  optionalProps: {},
   primaryRole: "button",
   testCases: {
     renders: true,

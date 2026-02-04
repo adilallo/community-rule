@@ -27,10 +27,6 @@ export interface CheckboxViewProps {
   value?: string;
   className: string;
   combinedBoxStyles: string;
-  defaultOutlineClass: string;
-  conditionalHoverOutlineClass: string;
-  conditionalFocusClass: string;
-  backgroundWhenChecked: string;
   checkGlyphColor: string;
   labelColor: string;
   accessibilityProps: React.HTMLAttributes<HTMLSpanElement>;
