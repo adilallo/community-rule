@@ -14,10 +14,10 @@ import React, {
   useEffect,
 } from "react";
 import { useClickOutside } from "../../hooks";
-import { SelectView } from "./Select.view";
-import type { SelectProps } from "./Select.types";
+import { SelectInputView } from "./SelectInput.view";
+import type { SelectInputProps } from "./SelectInput.types";
 
-const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
+const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
   (
     {
       id,
@@ -38,7 +38,7 @@ const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
     ref,
   ) => {
     const generatedId = useId();
-    const selectId = id || `select-${generatedId}`;
+    const selectId = id || `select-input-${generatedId}`;
     const labelId = `${selectId}-label`;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(value || "");
@@ -267,7 +267,7 @@ const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
     };
 
     return (
-      <SelectView
+      <SelectInputView
         label={label}
         placeholder={placeholder}
         size={size}
@@ -299,6 +299,6 @@ const SelectContainer = forwardRef<HTMLButtonElement, SelectProps>(
   },
 );
 
-SelectContainer.displayName = "Select";
+SelectInputContainer.displayName = "SelectInput";
 
-export default memo(SelectContainer);
+export default memo(SelectInputContainer);

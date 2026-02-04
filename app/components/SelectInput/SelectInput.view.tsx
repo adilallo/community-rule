@@ -1,9 +1,9 @@
 import React, { Children, type ReactNode } from "react";
 import SelectDropdown from "../SelectDropdown";
 import SelectOption from "../SelectOption";
-import type { SelectOptionData } from "./Select.types";
+import type { SelectOptionData } from "./SelectInput.types";
 
-export interface SelectViewProps {
+export interface SelectInputViewProps {
   label?: string;
   placeholder: string;
   size: "small" | "medium" | "large";
@@ -36,7 +36,7 @@ export interface SelectViewProps {
   ariaInvalid?: boolean;
 }
 
-export function SelectView({
+export function SelectInputView({
   label,
   placeholder: _placeholder,
   size,
@@ -62,7 +62,7 @@ export function SelectView({
   ariaLabelledby,
   ariaInvalid,
   ...props
-}: SelectViewProps) {
+}: SelectInputViewProps) {
   return (
     <div className={containerClasses}>
       {label && (

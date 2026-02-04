@@ -5,7 +5,7 @@ export interface SelectOptionData {
   label: string;
 }
 
-export interface SelectProps {
+export interface SelectInputProps {
   id?: string;
   label?: string;
   labelVariant?: "default" | "horizontal";

@@ -1,9 +1,9 @@
 import React from "react";
-import Input from "../app/components/Input";
+import TextInput from "../app/components/TextInput";
 
 export default {
-  title: "Forms/Input",
-  component: Input,
+  title: "Forms/TextInput",
+  component: TextInput,
   parameters: {
     layout: "centered",
   },
@@ -38,12 +38,12 @@ export default {
   },
 };
 
-const Template = (args) => <Input {...args} />;
+const Template = (args) => <TextInput {...args} />;
 
 // Default story
 export const Default = Template.bind({});
 Default.args = {
-  label: "Default Input",
+  label: "Default Text Input",
   placeholder: "Enter text...",
   size: "medium",
   labelVariant: "default",
@@ -53,7 +53,7 @@ Default.args = {
 // Size variants
 export const Small = Template.bind({});
 Small.args = {
-  label: "Small Input",
+  label: "Small Text Input",
   placeholder: "Small size",
   size: "small",
   labelVariant: "default",
@@ -62,7 +62,7 @@ Small.args = {
 
 export const Medium = Template.bind({});
 Medium.args = {
-  label: "Medium Input",
+  label: "Medium Text Input",
   placeholder: "Medium size",
   size: "medium",
   labelVariant: "default",
@@ -71,7 +71,7 @@ Medium.args = {
 
 export const Large = Template.bind({});
 Large.args = {
-  label: "Large Input",
+  label: "Large Text Input",
   placeholder: "Large size",
   size: "large",
   labelVariant: "default",
@@ -151,7 +151,7 @@ export const Interactive = (args) => {
 
   return (
     <div className="space-y-4">
-      <Input
+      <TextInput
         {...args}
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -161,7 +161,7 @@ export const Interactive = (args) => {
   );
 };
 Interactive.args = {
-  label: "Interactive Input",
+  label: "Interactive Text Input",
   placeholder: "Type something...",
   size: "medium",
   labelVariant: "default",
@@ -174,7 +174,7 @@ export const AllSizes = () => (
     <div>
       <h3 className="text-lg font-semibold mb-4">Small Size</h3>
       <div className="space-y-4">
-        <Input
+        <TextInput
           label="Small Default"
           placeholder="Small with top label"
           size="small"
@@ -186,13 +186,13 @@ export const AllSizes = () => (
     <div>
       <h3 className="text-lg font-semibold mb-4">Medium Size</h3>
       <div className="space-y-4">
-        <Input
+        <TextInput
           label="Medium Default"
           placeholder="Medium with top label"
           size="medium"
           labelVariant="default"
         />
-        <Input
+        <TextInput
           label="Medium Horizontal"
           placeholder="Medium with left label"
           size="medium"
@@ -204,13 +204,13 @@ export const AllSizes = () => (
     <div>
       <h3 className="text-lg font-semibold mb-4">Large Size</h3>
       <div className="space-y-4">
-        <Input
+        <TextInput
           label="Large Default"
           placeholder="Large with top label"
           size="large"
           labelVariant="default"
         />
-        <Input
+        <TextInput
           label="Large Horizontal"
           placeholder="Large with left label"
           size="large"
@@ -225,39 +225,39 @@ export const AllSizes = () => (
 export const AllStates = () => (
   <div className="space-y-6">
     <div>
-      <h3 className="text-lg font-semibold mb-4">Input States</h3>
+      <h3 className="text-lg font-semibold mb-4">Text Input States</h3>
       <div className="space-y-4">
-        <Input
+        <TextInput
           label="Default State"
           placeholder="Default input"
           size="medium"
           state="default"
         />
-        <Input
+        <TextInput
           label="Active State"
           placeholder="Active input"
           size="medium"
           state="active"
         />
-        <Input
+        <TextInput
           label="Hover State"
           placeholder="Hover input"
           size="medium"
           state="hover"
         />
-        <Input
+        <TextInput
           label="Focus State"
           placeholder="Focused input"
           size="medium"
           state="focus"
         />
-        <Input
+        <TextInput
           label="Error State"
           placeholder="Error input"
           size="medium"
           error={true}
         />
-        <Input
+        <TextInput
           label="Disabled State"
           placeholder="Disabled input"
           size="medium"

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Select from "../app/components/Select";
+import SelectInput from "../app/components/SelectInput";
 
 export default {
-  title: "Forms/Select",
-  component: Select,
+  title: "Forms/SelectInput",
+  component: SelectInput,
   argTypes: {
     size: {
       control: { type: "select" },
@@ -35,10 +35,10 @@ export default {
 const Template = (args) => {
   const [value, setValue] = useState("");
   return (
-    <Select
+    <SelectInput
       {...args}
       value={value}
-      onChange={setValue}
+      onChange={(data) => setValue(data.target.value)}
       options={[
         { value: "option1", label: "Option 1" },
         { value: "option2", label: "Option 2" },
@@ -50,27 +50,27 @@ const Template = (args) => {
 
 export const Default = Template.bind({});
 Default.args = {
-  label: "Default Select",
+  label: "Default Select Input",
   placeholder: "Select",
 };
 
 export const Small = Template.bind({});
 Small.args = {
-  label: "Small Select",
+  label: "Small Select Input",
   size: "small",
   placeholder: "Select",
 };
 
 export const Medium = Template.bind({});
 Medium.args = {
-  label: "Medium Select",
+  label: "Medium Select Input",
   size: "medium",
   placeholder: "Select",
 };
 
 export const Large = Template.bind({});
 Large.args = {
-  label: "Large Select",
+  label: "Large Select Input",
   size: "large",
   placeholder: "Select",
 };
@@ -126,7 +126,7 @@ Disabled.args = {
 
 export const Interactive = Template.bind({});
 Interactive.args = {
-  label: "Interactive Select",
+  label: "Interactive Select Input",
   placeholder: "Choose an option",
 };
 
@@ -138,39 +138,42 @@ export const AllSizes = () => {
 
   return (
     <div className="space-y-4">
-      <Select
+      <SelectInput
         label="Small"
         size="small"
         value={smallValue}
-        onChange={(e) => setSmallValue(e.target.value)}
+        onChange={(data) => setSmallValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
-      <Select
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
+      <SelectInput
         label="Medium"
         size="medium"
         value={mediumValue}
-        onChange={(e) => setMediumValue(e.target.value)}
+        onChange={(data) => setMediumValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
-      <Select
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
+      <SelectInput
         label="Large"
         size="large"
         value={largeValue}
-        onChange={(e) => setLargeValue(e.target.value)}
+        onChange={(data) => setLargeValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
     </div>
   );
 };
@@ -182,38 +185,41 @@ export const AllStates = () => {
 
   return (
     <div className="space-y-4">
-      <Select
+      <SelectInput
         label="Default State"
         value={defaultValue}
-        onChange={(e) => setDefaultValue(e.target.value)}
+        onChange={(data) => setDefaultValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
-      <Select
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
+      <SelectInput
         label="Error State"
         error={true}
         value={errorValue}
-        onChange={(e) => setErrorValue(e.target.value)}
+        onChange={(data) => setErrorValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
-      <Select
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
+      <SelectInput
         label="Disabled State"
         disabled={true}
         value={disabledValue}
-        onChange={(e) => setDisabledValue(e.target.value)}
+        onChange={(data) => setDisabledValue(data.target.value)}
         placeholder="Select"
-      >
-        <option value="item1">Context Menu Item 1</option>
-        <option value="item2">Context Menu Item 2</option>
-        <option value="item3">Context Menu Item 3</option>
-      </Select>
+        options={[
+          { value: "item1", label: "Context Menu Item 1" },
+          { value: "item2", label: "Context Menu Item 2" },
+          { value: "item3", label: "Context Menu Item 3" },
+        ]}
+      />
     </div>
   );
 };

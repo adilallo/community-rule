@@ -1,15 +1,15 @@
 import React from "react";
-import Input from "../../app/components/Input";
+import TextInput from "../../app/components/TextInput";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
-type InputProps = React.ComponentProps<typeof Input>;
+type TextInputProps = React.ComponentProps<typeof TextInput>;
 
-componentTestSuite<InputProps>({
-  component: Input,
-  name: "Input",
+componentTestSuite<TextInputProps>({
+  component: TextInput,
+  name: "TextInput",
   props: {
-    label: "Test input",
-  } as InputProps,
+    label: "Test text input",
+  } as TextInputProps,
   requiredProps: ["label"],
   optionalProps: {
     placeholder: "Enter value",
