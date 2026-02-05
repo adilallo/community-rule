@@ -147,7 +147,9 @@ describe("RuleCard Component", () => {
     render(<RuleCard {...defaultProps} size="L" />);
 
     const heading = screen.getByRole("heading", { level: 3 });
-    expect(heading).toHaveClass("font-bricolage-grotesque", "font-extrabold");
+    // Check for responsive font classes - at 1440px+ it should have font-bricolage-grotesque and font-extrabold
+    expect(heading?.className).toMatch(/min-\[1440px\]:font-bricolage-grotesque/);
+    expect(heading?.className).toMatch(/min-\[1440px\]:font-extrabold/);
   });
 
   it("renders expanded state with categories", () => {

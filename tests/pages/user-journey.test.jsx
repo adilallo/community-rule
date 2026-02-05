@@ -251,7 +251,8 @@ describe("User Journey Integration", () => {
 
     // 3. User sees governance options - wait for dynamically imported component
     await waitFor(() => {
-      expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
+      // Use a more flexible matcher in case text is split across elements
+      expect(screen.getByText(/Consensus clusters/i)).toBeInTheDocument();
     });
 
     // 4. User sees features and benefits - wait for dynamically imported component

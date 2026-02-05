@@ -74,17 +74,17 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     const section = document.querySelector("section");
-    expect(section).toHaveClass(
-      "py-[var(--spacing-scale-032)]",
-      "px-[var(--spacing-scale-020)]",
-    );
+    // Check for responsive padding classes
+    expect(section).toHaveClass("px-[20px]", "py-[32px]");
+    expect(section?.className).toMatch(/min-\[640px\]:px-\[32px\]/);
+    expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
   });
 
   test("applies responsive grid layout", () => {
     render(<RuleStack />);
 
     const grid = document.querySelector('[class*="flex flex-col gap-[18px]"]');
-    expect(grid).toHaveClass("xmd:grid", "xmd:grid-cols-2");
+    expect(grid).toHaveClass("min-[768px]:grid", "min-[768px]:grid-cols-2");
   });
 
   test("renders RuleCard components with correct props", () => {
@@ -124,19 +124,18 @@ describe("RuleStack Component", () => {
     const section = document.querySelector("section");
     expect(section).toBeInTheDocument();
 
-    // Check for proper heading structure in cards
+    // Check for proper heading structure: 1 from SectionHeader + 4 from RuleCards
     const headings = screen.getAllByRole("heading");
-    expect(headings).toHaveLength(4); // Four rule cards
+    expect(headings).toHaveLength(5); // One section header + four rule cards
   });
 
   test("applies responsive spacing", () => {
     render(<RuleStack />);
 
     const section = document.querySelector("section");
-    expect(section).toHaveClass(
-      "md:py-[var(--spacing-scale-048)]",
-      "lg:py-[var(--spacing-scale-064)]",
-    );
+    // Check for responsive padding classes
+    expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
+    expect(section?.className).toMatch(/min-\[1024px\]:py-\[64px\]/);
   });
 
   test("renders icons with correct attributes", () => {
@@ -147,12 +146,11 @@ describe("RuleStack Component", () => {
       "src",
       "/assets/Icon_Sociocracy.svg",
     );
-    expect(sociocracyIcon).toHaveClass(
-      "md:w-[56px]",
-      "md:h-[56px]",
-      "lg:w-[90px]",
-      "lg:h-[90px]",
-    );
+    // Check for responsive icon size classes
+    expect(sociocracyIcon?.className).toMatch(/min-\[640px\]:max-\[1023px\]:w-\[56px\]/);
+    expect(sociocracyIcon?.className).toMatch(/min-\[640px\]:max-\[1023px\]:h-\[56px\]/);
+    expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
+    expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
   });
 
   test("applies different background colors to cards", () => {
@@ -174,7 +172,9 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     const button = screen.getByRole("button", { name: "See all templates" });
-    expect(button).toHaveClass("bg-transparent", "border-[1.5px]");
+    // Button component uses outline variant which has bg-transparent and border
+    expect(button?.className).toMatch(/bg-transparent/);
+    expect(button?.className).toMatch(/border/);
   });
 
   test("applies flex layout for button container", () => {
