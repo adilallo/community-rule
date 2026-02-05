@@ -39,7 +39,7 @@ describe("NumberCard Component", () => {
     const card = screen
       .getByText("Test Card Text")
       .closest("div").parentElement;
-    expect(card).toHaveClass("flex", "flex-col", "sm:flex-row", "lg:flex-col");
+    expect(card).toHaveClass("flex", "flex-col", "sm:flex-row", "sm:items-center", "lg:flex-col", "lg:items-start", "lg:justify-end", "lg:relative");
   });
 
   it("applies proper responsive spacing when size is not specified", () => {
@@ -66,7 +66,7 @@ describe("NumberCard Component", () => {
     const card = screen
       .getByText("Test Card Text")
       .closest("div").parentElement;
-    expect(card).toHaveClass("lg:h-[238px]");
+    expect(card).toHaveClass("lg:h-[238px]", "lg:relative");
   });
 
   it("applies proper background and shadow", () => {
@@ -128,8 +128,11 @@ describe("NumberCard Component", () => {
     expect(textElement).toHaveClass(
       "text-[24px]",
       "sm:text-[24px]",
+      "sm:leading-[24px]",
       "lg:text-[24px]",
+      "lg:leading-[24px]",
       "xl:text-[32px]",
+      "xl:leading-[32px]",
     );
   });
 
@@ -156,7 +159,7 @@ describe("NumberCard Component", () => {
       .closest("div").parentElement;
 
     // Mobile first approach
-    expect(card).toHaveClass("flex-col", "gap-4", "p-5");
+    expect(card).toHaveClass("flex", "flex-col", "gap-4", "p-5");
 
     // Small breakpoint
     expect(card).toHaveClass(
@@ -172,7 +175,9 @@ describe("NumberCard Component", () => {
       "lg:gap-[22px]",
       "lg:p-8",
       "lg:items-start",
+      "lg:justify-end",
       "lg:relative",
+      "lg:h-[238px]",
     );
   });
 

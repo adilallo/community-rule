@@ -39,8 +39,9 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     ref,
   ) => {
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
-    const size = sizeProp ? normalizeSmallMediumLargeSize(sizeProp) : undefined;
+    // Note: labelVariant and size are normalized for future use but not yet implemented in the view
+    const _labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
+    const _size = sizeProp ? normalizeSmallMediumLargeSize(sizeProp) : undefined;
     const externalState = normalizeState(externalStateProp);
     
     const generatedId = useId();

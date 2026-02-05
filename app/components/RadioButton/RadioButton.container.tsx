@@ -9,7 +9,7 @@ const RadioButtonContainer = ({
   checked = false,
   mode: modeProp = "standard",
   state: stateProp = "default", // This state prop is now only for static display in Storybook/Preview
-  indicator = true, // From Figma: whether to show the indicator dot
+  indicator: _indicator = true, // From Figma: whether to show the indicator dot (currently not used in view)
   disabled = false,
   label,
   onChange,

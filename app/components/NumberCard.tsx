@@ -28,14 +28,14 @@ interface NumberCardProps {
 }
 
 const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
-  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-  const size = normalizeNumberCardSize(sizeProp);
   // Base classes common to all sizes
   const baseClasses = "bg-[var(--color-surface-inverse-primary)] rounded-[12px] shadow-lg";
 
   // If size prop is provided, use explicit size classes
   // Otherwise, use responsive breakpoints for backward compatibility
-  if (size) {
+  if (sizeProp) {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeNumberCardSize(sizeProp);
     // Size-specific classes
     const sizeClasses = {
       Small: "flex flex-col items-end justify-center gap-4 p-5 relative",
