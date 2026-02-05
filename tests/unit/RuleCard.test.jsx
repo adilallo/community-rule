@@ -81,9 +81,8 @@ describe("RuleCard Component", () => {
 
     const card = screen.getByRole("button");
     expect(card).toHaveClass(
-      "hover:shadow-xl",
-      "hover:scale-[1.02]",
-      "transition-all",
+      "hover:shadow-[0px_0px_64px_0px_rgba(0,0,0,0.15)]",
+      "transition-shadow",
     );
   });
 
@@ -107,18 +106,19 @@ describe("RuleCard Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("applies proper responsive sizing", () => {
-    render(<RuleCard {...defaultProps} />);
+  it("applies proper sizing for expanded states", () => {
+    render(<RuleCard {...defaultProps} expanded={true} size="L" />);
 
     const card = screen.getByRole("button");
-    expect(card).toHaveClass("md:h-[210px]", "lg:h-[277px]");
+    expect(card).toHaveClass("w-[568px]");
   });
 
-  it("applies focus styles correctly", () => {
-    render(<RuleCard {...defaultProps} />);
+  it("applies proper accessibility attributes", () => {
+    render(<RuleCard {...defaultProps} expanded={true} />);
 
     const card = screen.getByRole("button");
-    expect(card).toHaveClass("focus:outline-none", "focus:ring-2");
+    expect(card).toHaveAttribute("aria-expanded", "true");
+    expect(card).toHaveAttribute("tabIndex", "0");
   });
 
   it("renders without icon when not provided", () => {
@@ -131,7 +131,8 @@ describe("RuleCard Component", () => {
     render(<RuleCard {...defaultProps} />);
 
     const card = screen.getByRole("button");
-    expect(card).toHaveClass("shadow-lg", "backdrop-blur-sm");
+    expect(card).toHaveClass("shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)]");
+    expect(card).toHaveClass("rounded-[var(--radius-measures-radius-small)]");
   });
 
   it("maintains proper heading structure", () => {
@@ -142,10 +143,54 @@ describe("RuleCard Component", () => {
     expect(heading.tagName).toBe("H3");
   });
 
-  it("applies proper font classes", () => {
-    render(<RuleCard {...defaultProps} />);
+  it("applies proper font classes for title", () => {
+    render(<RuleCard {...defaultProps} size="L" />);
 
     const heading = screen.getByRole("heading", { level: 3 });
-    expect(heading).toHaveClass("font-space-grotesk", "font-bold");
+    expect(heading).toHaveClass("font-bricolage-grotesque", "font-extrabold");
+  });
+
+  it("renders expanded state with categories", () => {
+    const categories = [
+      {
+        name: "Values",
+        chipOptions: [
+          { id: "v1", label: "Consciousness", state: "Unselected" },
+        ],
+      },
+    ];
+    render(
+      <RuleCard
+        {...defaultProps}
+        expanded={true}
+        categories={categories}
+      />,
+    );
+
+    expect(screen.getByText("Values")).toBeInTheDocument();
+  });
+
+  it("renders with logo URL", () => {
+    render(
+      <RuleCard
+        {...defaultProps}
+        logoUrl="http://localhost:3845/assets/test.png"
+        logoAlt="Test Logo"
+      />,
+    );
+
+    const logo = screen.getByAltText("Test Logo");
+    expect(logo).toBeInTheDocument();
+  });
+
+  it("renders with community initials fallback", () => {
+    render(
+      <RuleCard
+        {...defaultProps}
+        communityInitials="CE"
+      />,
+    );
+
+    expect(screen.getByText("CE")).toBeInTheDocument();
   });
 });

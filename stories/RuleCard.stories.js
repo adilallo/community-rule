@@ -43,8 +43,6 @@ export default {
       description: "Size variant of the card",
     },
     onClick: { action: "clicked" },
-    onPillClick: { action: "pillClicked" },
-    onCreateClick: { action: "createClicked" },
   },
   tags: ["autodocs"],
 };
@@ -82,28 +80,69 @@ export const Expanded = {
     categories: [
       {
         name: "Values",
-        items: ["Consciousness", "Ecology", "Abundance", "Art", "Decisiveness"],
-        createUrl: "/create/value",
+        chipOptions: [
+          { id: "values-1", label: "Consciousness", state: "Unselected" },
+          { id: "values-2", label: "Ecology", state: "Unselected" },
+          { id: "values-3", label: "Abundance", state: "Unselected" },
+          { id: "values-4", label: "Art", state: "Unselected" },
+          { id: "values-5", label: "Decisiveness", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
       {
         name: "Communication",
-        items: ["Signal"],
-        createUrl: "/create/communication",
+        chipOptions: [
+          { id: "comm-1", label: "Signal", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
       {
         name: "Membership",
-        items: ["Open Admission"],
-        createUrl: "/create/membership",
+        chipOptions: [
+          { id: "membership-1", label: "Open Admission", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
       {
         name: "Decision-making",
-        items: ["Lazy Consensus", "Modified Consensus"],
-        createUrl: "/create/decision-making",
+        chipOptions: [
+          { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
+          { id: "decision-2", label: "Modified Consensus", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
       {
         name: "Conflict management",
-        items: ["Code of Conduct", "Restorative Justice"],
-        createUrl: "/create/conflict-management",
+        chipOptions: [
+          { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
+          { id: "conflict-2", label: "Restorative Justice", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
     ],
   },
@@ -160,23 +199,39 @@ export const ExpandedMedium = {
     categories: [
       {
         name: "Values",
-        items: ["Consciousness", "Ecology", "Abundance", "Art", "Decisiveness"],
+        chipOptions: [
+          { id: "values-1", label: "Consciousness", state: "Unselected" },
+          { id: "values-2", label: "Ecology", state: "Unselected" },
+          { id: "values-3", label: "Abundance", state: "Unselected" },
+          { id: "values-4", label: "Art", state: "Unselected" },
+          { id: "values-5", label: "Decisiveness", state: "Unselected" },
+        ],
       },
       {
         name: "Communication",
-        items: ["Signal"],
+        chipOptions: [
+          { id: "comm-1", label: "Signal", state: "Unselected" },
+        ],
       },
       {
         name: "Membership",
-        items: ["Open Admission"],
+        chipOptions: [
+          { id: "membership-1", label: "Open Admission", state: "Unselected" },
+        ],
       },
       {
         name: "Decision-making",
-        items: ["Lazy Consensus", "Modified Consensus"],
+        chipOptions: [
+          { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
+          { id: "decision-2", label: "Modified Consensus", state: "Unselected" },
+        ],
       },
       {
         name: "Conflict management",
-        items: ["Code of Conduct", "Restorative Justice"],
+        chipOptions: [
+          { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
+          { id: "conflict-2", label: "Restorative Justice", state: "Unselected" },
+        ],
       },
     ],
   },
@@ -286,19 +341,31 @@ export const InteractiveStates = {
     categories: [
       {
         name: "Values",
-        items: ["Consciousness", "Ecology", "Abundance"],
+        chipOptions: [
+          { id: "values-1", label: "Consciousness", state: "Unselected" },
+          { id: "values-2", label: "Ecology", state: "Unselected" },
+          { id: "values-3", label: "Abundance", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
       {
         name: "Communication",
-        items: ["Signal"],
+        chipOptions: [
+          { id: "comm-1", label: "Signal", state: "Unselected" },
+        ],
+        onChipClick: (categoryName, chipId) => {
+          console.log(`Chip clicked: ${categoryName} - ${chipId}`);
+        },
+        onAddClick: (categoryName) => {
+          console.log(`Add clicked: ${categoryName}`);
+        },
       },
     ],
-    onPillClick: (category, item) => {
-      console.log(`Pill clicked: ${category} - ${item}`);
-    },
-    onCreateClick: (category) => {
-      console.log(`Create clicked: ${category}`);
-    },
   },
   parameters: {
     docs: {

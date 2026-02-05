@@ -77,6 +77,7 @@ function MultiSelectView({
         {showAddButton && (
           <button
             type="button"
+            aria-label={addButtonText || "Add option"}
             onClick={(e) => {
               e.stopPropagation();
               onAddClick?.();
