@@ -3,6 +3,7 @@
 import { useState } from "react";
 import RuleCard from "../components/RuleCard";
 import Chip from "../components/Chip";
+import MultiSelect from "../components/MultiSelect";
 import Image from "next/image";
 import { getAssetPath } from "../../lib/assetUtils";
 
@@ -12,6 +13,73 @@ interface ChipData {
   state: "Unselected" | "Selected" | "Custom";
   palette: "Default" | "Inverse";
   size: "S" | "M";
+}
+
+// MultiSelect example component with state management
+function MultiSelectExample({ size }: { size: "S" | "M" }) {
+  const [options, setOptions] = useState([
+    { id: "1", label: "1 member", state: "Unselected" as const },
+    { id: "2", label: "2-10 members", state: "Unselected" as const },
+    { id: "3", label: "10-24 members", state: "Unselected" as const },
+    { id: "4", label: "24-64 members", state: "Unselected" as const },
+    { id: "5", label: "64-128 members", state: "Unselected" as const },
+    { id: "6", label: "125-1000 members", state: "Unselected" as const },
+    { id: "7", label: "1000+ members", state: "Unselected" as const },
+  ]);
+
+  const handleChipClick = (chipId: string) => {
+    setOptions((prev) =>
+      prev.map((opt) =>
+        opt.id === chipId
+          ? {
+              ...opt,
+              state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+            }
+          : opt
+      )
+    );
+  };
+
+  const handleAddClick = () => {
+    const newId = `custom-${Date.now()}`;
+    setOptions((prev) => [
+      ...prev,
+      { id: newId, label: "", state: "Custom" as const },
+    ]);
+  };
+
+  const handleCustomConfirm = (chipId: string, value: string) => {
+    setOptions((prev) =>
+      prev.map((opt) =>
+        opt.id === chipId
+          ? { ...opt, label: value, state: "Selected" as const }
+          : opt
+      )
+    );
+  };
+
+  const handleCustomClose = (chipId: string) => {
+    setOptions((prev) => prev.filter((opt) => opt.id !== chipId));
+  };
+
+  return (
+    <div className="space-y-[var(--spacing-scale-016)]">
+      <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+        {size === "S" ? "Small (S)" : "Medium (M)"}
+      </h3>
+      <MultiSelect
+        label="Label"
+        showHelpIcon={true}
+        size={size}
+        options={options}
+        onChipClick={handleChipClick}
+        onAddClick={handleAddClick}
+        onCustomChipConfirm={handleCustomConfirm}
+        onCustomChipClose={handleCustomClose}
+        addButtonText="Add organization type"
+      />
+    </div>
+  );
 }
 
 export default function ComponentsPreview() {
@@ -387,6 +455,20 @@ export default function ComponentsPreview() {
               communityInitials="CE"
               onClick={() => console.log("Community Example selected")}
             />
+          </div>
+        </section>
+
+        {/* MultiSelect Component */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            MultiSelect Component (Controls)
+          </h2>
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            {/* Small size */}
+            <MultiSelectExample size="S" />
+            
+            {/* Medium size */}
+            <MultiSelectExample size="M" />
           </div>
         </section>
       </div>

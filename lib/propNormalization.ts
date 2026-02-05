@@ -602,3 +602,19 @@ export function normalizeChipSize(
   }
   return defaultValue;
 }
+
+/**
+ * Normalize MultiSelect size prop values (S/M -> s/m)
+ */
+export function normalizeMultiSelectSize(
+  value: string | undefined,
+  defaultValue: "m" = "m",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
