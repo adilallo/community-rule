@@ -3,19 +3,24 @@
 import { memo } from "react";
 import MenuBarItemView from "./MenuBarItem.view";
 import type { MenuBarItemProps } from "./MenuBarItem.types";
+import { normalizeMenuBarItemVariant } from "../../../lib/propNormalization";
 
 const MenuBarItemContainer = memo<MenuBarItemProps>(
   ({
     href = "#",
     children,
-    variant = "default",
-    size = "default",
+    variant: variantProp = "default",
+    size: sizeProp = "default",
     className = "",
     disabled = false,
     isActive = false,
     ariaLabel,
     ...props
   }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const variant = normalizeMenuBarItemVariant(variantProp);
+    // Size has many values, normalize by lowercasing
+    const size = (sizeProp?.toLowerCase() || "default") as typeof sizeProp;
     const variantStyles: Record<string, string> = {
       default:
         "bg-transparent text-[var(--color-content-default-brand-primary)] hover:bg-[var(--color-surface-default-tertiary)] hover:text-[var(--color-content-default-brand-primary)] hover:scale-[1.02] active:bg-transparent active:text-[var(--color-content-default-brand-primary)] active:scale-[0.98] disabled:bg-[var(--color-surface-default-tertiary)] disabled:text-[var(--color-content-default-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100",

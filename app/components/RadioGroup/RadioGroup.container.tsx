@@ -3,18 +3,26 @@
 import { memo, useCallback, useId } from "react";
 import { RadioGroupView } from "./RadioGroup.view";
 import type { RadioGroupProps } from "./RadioGroup.types";
+import { normalizeMode, normalizeState } from "../../../lib/propNormalization";
 
 const RadioGroupContainer = ({
   name,
   value,
   onChange,
-  mode = "standard",
-  state = "default",
+  mode: modeProp = "standard",
+  state: stateProp = "default",
   disabled = false,
   options = [],
   className = "",
   ...props
 }: RadioGroupProps) => {
+  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+  const mode = normalizeMode(modeProp);
+  // Normalize state, but handle "With Subtext" separately (it's represented by options with subtext)
+  const state = typeof stateProp === "string" && 
+    (stateProp.toLowerCase() === "with subtext" || stateProp === "With Subtext")
+    ? "default" // "With Subtext" is handled via RadioOption.subtext, use default state
+    : normalizeState(stateProp);
   // Generate unique ID for accessibility if not provided
   const generatedId = useId();
   const groupId = name || `radio-group-${generatedId}`;

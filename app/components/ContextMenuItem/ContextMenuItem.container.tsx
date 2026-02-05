@@ -3,6 +3,7 @@
 import { forwardRef, memo, useCallback } from "react";
 import { ContextMenuItemView } from "./ContextMenuItem.view";
 import type { ContextMenuItemProps } from "./ContextMenuItem.types";
+import { normalizeContextMenuItemSize } from "../../../lib/propNormalization";
 
 const ContextMenuItemContainer = forwardRef<
   HTMLDivElement,
@@ -16,11 +17,13 @@ const ContextMenuItemContainer = forwardRef<
       disabled = false,
       className = "",
       onClick,
-      size = "medium",
+      size: sizeProp = "medium",
       ...props
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeContextMenuItemSize(sizeProp);
     const getTextSize = (): string => {
       switch (size) {
         case "small":

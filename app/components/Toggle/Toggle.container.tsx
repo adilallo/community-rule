@@ -3,6 +3,7 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { ToggleView } from "./Toggle.view";
 import type { ToggleProps } from "./Toggle.types";
+import { normalizeState } from "../../../lib/propNormalization";
 
 const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(
   (
@@ -13,7 +14,7 @@ const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(
       onFocus,
       onBlur,
       disabled = false,
-      state = "default",
+      state: stateProp = "default",
       showIcon = false,
       showText = false,
       icon = "I",
@@ -23,6 +24,8 @@ const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const state = normalizeState(stateProp);
     const toggleId = useId();
     const labelId = useId();
 

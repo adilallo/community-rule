@@ -2,15 +2,32 @@
 
 import { memo } from "react";
 import { useTranslation } from "../contexts/MessagesContext";
+import { normalizeMenuBarSize } from "../../lib/propNormalization";
+
+export type MenuBarSizeValue =
+  | "xsmall"
+  | "default"
+  | "medium"
+  | "large"
+  | "XSmall"
+  | "Default"
+  | "Medium"
+  | "Large";
 
 interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
-  size?: "xsmall" | "default" | "medium" | "large";
+  /**
+   * Menu bar size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: MenuBarSizeValue;
 }
 
 const MenuBar = memo<MenuBarProps>(
-  ({ children, className = "", size = "default", ...props }) => {
+  ({ children, className = "", size: sizeProp = "default", ...props }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeMenuBarSize(sizeProp);
     const t = useTranslation("menuBar");
     const sizeStyles: Record<string, string> = {
       xsmall:

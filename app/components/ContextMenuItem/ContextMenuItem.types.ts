@@ -1,3 +1,5 @@
+export type ContextMenuItemSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+
 export interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   selected?: boolean;
@@ -7,7 +9,11 @@ export interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElemen
   onClick?: (
     _e: React.MouseEvent<HTMLDivElement> | React.KeyboardEvent<HTMLDivElement>,
   ) => void;
-  size?: "small" | "medium" | "large";
+  /**
+   * Context menu item size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: ContextMenuItemSizeValue;
 }
 
 export interface ContextMenuItemViewProps {

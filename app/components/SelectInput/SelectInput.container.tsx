@@ -16,13 +16,16 @@ import React, {
 import { useClickOutside } from "../../hooks";
 import { SelectInputView } from "./SelectInput.view";
 import type { SelectInputProps } from "./SelectInput.types";
+import { normalizeState, normalizeSmallMediumLargeSize, normalizeLabelVariant } from "../../../lib/propNormalization";
 
 const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
   (
     {
       id,
       label,
-      state: externalState = "default",
+      labelVariant: labelVariantProp,
+      size: sizeProp,
+      state: externalStateProp = "default",
       disabled = false,
       error = false,
       placeholder = "Choose an option",
@@ -35,6 +38,12 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    // Note: labelVariant and size are normalized for future use but not yet implemented in the view
+    const _labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
+    const _size = sizeProp ? normalizeSmallMediumLargeSize(sizeProp) : undefined;
+    const externalState = normalizeState(externalStateProp);
+    
     const generatedId = useId();
     const selectId = id || `select-input-${generatedId}`;
     const labelId = `${selectId}-label`;

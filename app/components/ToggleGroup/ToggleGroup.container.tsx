@@ -3,14 +3,15 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { ToggleGroupView } from "./ToggleGroup.view";
 import type { ToggleGroupProps } from "./ToggleGroup.types";
+import { normalizeToggleState, normalizeToggleGroupPosition } from "../../../lib/propNormalization";
 
 const ToggleGroupContainer = memo(
   forwardRef<HTMLButtonElement, ToggleGroupProps>((props, _ref) => {
     const {
       children,
       className = "",
-      position = "left",
-      state = "default",
+      position: positionProp = "left",
+      state: stateProp = "default",
       showText = true,
       ariaLabel,
       onChange,
@@ -18,6 +19,10 @@ const ToggleGroupContainer = memo(
       onBlur,
       ...rest
     } = props;
+    
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const position = normalizeToggleGroupPosition(positionProp);
+    const state = normalizeToggleState(stateProp);
 
     const groupId = useId();
 

@@ -85,14 +85,14 @@ describe("ContentContainer", () => {
   });
 
   it("applies correct width when specified", () => {
-    render(<ContentContainer post={mockPost} width="300px" size="sm" />);
+    render(<ContentContainer post={mockPost} width="300px" size="xs" />);
 
     const container = document.querySelector("div[class*='relative z-20']");
     expect(container).toHaveStyle("width: 300px");
   });
 
   it("applies default width when not specified", () => {
-    render(<ContentContainer post={mockPost} size="sm" />);
+    render(<ContentContainer post={mockPost} size="xs" />);
 
     const container = document.querySelector("div[class*='relative z-20']");
     expect(container).toHaveStyle("width: 200px");
@@ -183,8 +183,8 @@ describe("ContentContainer", () => {
     expect(screen.getByText("Incomplete Post")).toBeInTheDocument();
   });
 
-  it("applies correct responsive sizing for sm breakpoint", () => {
-    render(<ContentContainer post={mockPost} size="sm" />);
+  it("applies correct responsive sizing for xs breakpoint", () => {
+    render(<ContentContainer post={mockPost} size="xs" />);
 
     const icon = screen.getByAltText("Icon for Test Article Title");
     expect(icon).toHaveClass("w-[60px]", "h-[30px]");
@@ -196,8 +196,8 @@ describe("ContentContainer", () => {
     expect(description).toHaveClass("text-[12px]", "leading-[16px]");
   });
 
-  it("applies correct responsive sizing for md breakpoint", () => {
-    render(<ContentContainer post={mockPost} size="md" />);
+  it("applies correct responsive sizing for responsive breakpoint", () => {
+    render(<ContentContainer post={mockPost} size="responsive" />);
 
     const icon = screen.getByAltText("Icon for Test Article Title");
     expect(icon).toHaveClass("w-[60px]", "h-[30px]");

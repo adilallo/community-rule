@@ -85,3 +85,6 @@ act_runner
 # OS files
 Thumbs.db
 .DS_Store
+
+# Cursor rules (local development)
+.cursorrules

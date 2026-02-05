@@ -46,13 +46,13 @@ export default {
     },
     mode: {
       control: "select",
-      options: ["standard", "inverse"],
-      description: "Visual mode of the checkbox",
+      options: ["standard", "inverse", "Standard", "Inverse"],
+      description: "Visual mode of the checkbox (case-insensitive: accepts both lowercase and PascalCase)",
     },
     state: {
       control: "select",
-      options: ["default", "hover", "focus"],
-      description: "Interaction state for static display",
+      options: ["default", "hover", "focus", "Default", "Hover", "Focus"],
+      description: "Interaction state for static display (case-insensitive: accepts both lowercase and PascalCase)",
     },
     disabled: {
       control: "boolean",
@@ -200,6 +200,56 @@ export const AllModes = () => {
             checked={inverseChecked}
             mode="inverse"
             onChange={({ checked }) => setInverseChecked(checked)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Test PascalCase props from Figma
+export const FigmaPascalCase = () => {
+  const [standardChecked, setStandardChecked] = React.useState(false);
+  const [inverseChecked, setInverseChecked] = React.useState(false);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Figma PascalCase Props (Standard/Inverse)</h3>
+        <p className="text-sm text-gray-400 mb-4">
+          These components accept both PascalCase (from Figma) and lowercase (from codebase) prop values.
+        </p>
+        <div className="space-y-4">
+          <Checkbox
+            label="Standard Mode (PascalCase)"
+            checked={standardChecked}
+            mode="Standard"
+            state="Default"
+            onChange={({ checked }) => setStandardChecked(checked)}
+          />
+          <Checkbox
+            label="Inverse Mode (PascalCase)"
+            checked={inverseChecked}
+            mode="Inverse"
+            state="Default"
+            onChange={({ checked }) => setInverseChecked(checked)}
+          />
+        </div>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-4 text-white">Mixed Case (backward compatibility)</h3>
+        <div className="space-y-4">
+          <Checkbox
+            label="Standard mode (lowercase) - still works"
+            checked={false}
+            mode="standard"
+            state="default"
+          />
+          <Checkbox
+            label="Inverse Mode (mixed) - still works"
+            checked={false}
+            mode="inverse"
+            state="Default"
           />
         </div>
       </div>

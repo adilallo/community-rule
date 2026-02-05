@@ -4,13 +4,14 @@ import { memo, forwardRef } from "react";
 import { useComponentId, useFormField } from "../../hooks";
 import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
+import { normalizeInputState, normalizeSmallMediumLargeSize, normalizeLabelVariant } from "../../../lib/propNormalization";
 
 const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
-      size = "medium",
-      labelVariant = "default",
-      state = "default",
+      size: sizeProp = "medium",
+      labelVariant: labelVariantProp = "default",
+      state: stateProp = "default",
       disabled = false,
       error = false,
       label,
@@ -27,6 +28,10 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const size = normalizeSmallMediumLargeSize(sizeProp);
+    const labelVariant = normalizeLabelVariant(labelVariantProp);
+    const state = normalizeInputState(stateProp);
     // Generate unique ID for accessibility if not provided
     const { id: textareaId, labelId } = useComponentId("textarea", id);
 

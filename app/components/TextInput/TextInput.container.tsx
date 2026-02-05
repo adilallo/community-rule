@@ -4,11 +4,12 @@ import { memo, forwardRef, useState, useRef } from "react";
 import { useComponentId, useFormField } from "../../hooks";
 import { TextInputView } from "./TextInput.view";
 import type { TextInputProps } from "./TextInput.types";
+import { normalizeInputState } from "../../../lib/propNormalization";
 
 const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
-      state: externalState = "default",
+      state: externalStateProp = "default",
       disabled = false,
       error = false,
       label,
@@ -26,6 +27,9 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     },
     ref,
   ) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const externalState = normalizeInputState(externalStateProp);
+    
     // Generate unique ID for accessibility if not provided
     const { id: inputId, labelId } = useComponentId("text-input", id);
 

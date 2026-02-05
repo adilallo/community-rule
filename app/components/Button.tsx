@@ -1,17 +1,19 @@
 import { memo } from "react";
+import type { VariantValue, SizeValue } from "../../lib/propNormalization";
+import { normalizeVariant, normalizeSize } from "../../lib/propNormalization";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?:
-    | "filled"
-    | "filled-inverse"
-    | "outline"
-    | "outline-inverse"
-    | "ghost"
-    | "ghost-inverse"
-    | "danger"
-    | "danger-inverse";
-  size?: "xsmall" | "small" | "medium" | "large" | "xlarge";
+  /**
+   * Button variant. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  variant?: VariantValue;
+  /**
+   * Button size. Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   */
+  size?: SizeValue;
   className?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
@@ -27,8 +29,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = memo<ButtonProps>(
   ({
     children,
-    variant = "filled",
-    size = "xsmall",
+    variant: variantProp = "filled",
+    size: sizeProp = "xsmall",
     className = "",
     disabled = false,
     type = "button",
@@ -39,6 +41,9 @@ const Button = memo<ButtonProps>(
     ariaLabel,
     ...props
   }) => {
+    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+    const variant = normalizeVariant(variantProp);
+    const size = normalizeSize(sizeProp);
     const sizeStyles: Record<string, string> = {
       xsmall:
         "p-[var(--spacing-scale-006)] gap-[var(--spacing-scale-002)]",
