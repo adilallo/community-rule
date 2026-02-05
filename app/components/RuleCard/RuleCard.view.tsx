@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslation } from "../../contexts/MessagesContext";
 import type { RuleCardViewProps } from "./RuleCard.types";
 
@@ -11,40 +12,210 @@ export function RuleCardView({
   className,
   onClick,
   onKeyDown,
+  expanded,
+  size,
+  categories,
+  onPillClick,
+  onCreateClick,
+  logoUrl,
+  logoAlt,
+  communityInitials,
 }: RuleCardViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel").replace("{title}", title);
 
+  // Size-based styling
+  const isLarge = size === "L";
+  
+  // Card dimensions - make width flexible for grid layouts, but can be overridden via className
+  // For standalone/preview use, add fixed width via className
+  const cardPadding = isLarge ? "p-[24px]" : "p-[16px]";
+  const cardGap = expanded
+    ? "gap-[16px]"
+    : isLarge ? "gap-[10px]" : "gap-[12px]";
+
+  // Logo/Icon dimensions
+  const logoSize = isLarge ? 103 : 56;
+  const logoContainerClass = isLarge
+    ? "size-[103px]"
+    : "size-[56px]";
+
+  // Title typography
+  const titleClass = isLarge
+    ? "font-bricolage-grotesque font-extrabold text-[36px] leading-[44px]"
+    : "font-bricolage-grotesque font-bold text-[24px] leading-[32px]";
+
+  // Description typography
+  const descriptionClass = isLarge
+    ? "font-inter font-medium text-[18px] leading-[24px]"
+    : "font-inter font-medium text-[14px] leading-[16px]";
+
+  // Category label typography
+  const categoryLabelClass = "font-inter font-normal text-[14px] leading-[20px]";
+
+  // Pill typography
+  const pillTextClass = "font-inter font-medium text-[12px] leading-[14px]";
+
+  // Render logo/icon
+  const renderLogo = () => {
+    if (logoUrl) {
+      // Check if it's a localhost URL or external URL that needs regular img tag
+      const isLocalhost = logoUrl.startsWith("http://localhost") || logoUrl.startsWith("https://localhost");
+      
+      if (isLocalhost) {
+        return (
+          <div className={`${logoContainerClass} relative rounded-full overflow-hidden mix-blend-luminosity`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logoUrl}
+              alt={logoAlt || title}
+              width={logoSize}
+              height={logoSize}
+              className="absolute inset-0 w-full h-full object-cover rounded-full"
+            />
+          </div>
+        );
+      }
+      
+      return (
+        <div className={`${logoContainerClass} relative rounded-full overflow-hidden mix-blend-luminosity`}>
+          <Image
+            src={logoUrl}
+            alt={logoAlt || title}
+            width={logoSize}
+            height={logoSize}
+            className="absolute inset-0 w-full h-full object-cover rounded-full"
+          />
+        </div>
+      );
+    }
+    
+    if (icon) {
+      return (
+        <div className={`${logoContainerClass} flex items-center justify-center`}>
+          {icon}
+        </div>
+      );
+    }
+    
+    if (communityInitials) {
+      return (
+        <div className={`${logoContainerClass} rounded-full bg-[var(--color-surface-default-primary)] flex items-center justify-center`}>
+          <span className={`${isLarge ? "text-[36px]" : "text-[24px]"} font-bricolage-grotesque font-bold text-[var(--color-content-inverse-primary)]`}>
+            {communityInitials}
+          </span>
+        </div>
+      );
+    }
+    
+    return null;
+  };
+
+  // Handle pill click with stopPropagation
+  const handlePillClick = (e: React.MouseEvent<HTMLButtonElement>, categoryName: string, item: string) => {
+    e.stopPropagation();
+    if (onPillClick) {
+      onPillClick(categoryName, item);
+    }
+  };
+
+  // Handle create button click with stopPropagation
+  const handleCreateClick = (e: React.MouseEvent<HTMLButtonElement>, categoryName: string) => {
+    e.stopPropagation();
+    if (onCreateClick) {
+      onCreateClick(categoryName);
+    }
+  };
+
   return (
     <div
-      className={`${backgroundColor} rounded-[var(--radius-measures-radius-small)] pt-[var(--spacing-scale-012)] pr-[var(--spacing-scale-012)] pl-[var(--spacing-scale-012)] pb-[var(--spacing-scale-024)] md:p-[var(--spacing-scale-024)] md:h-[210px] lg:h-[277px] flex flex-col gap-[18px] shadow-lg backdrop-blur-sm transition-all duration-500 ease-in-out hover:shadow-xl hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[var(--color-community-teal-500)] focus:ring-offset-2 cursor-pointer min-h-[44px] min-w-[44px] ${className}`}
+      className={`${backgroundColor} ${cardPadding} ${cardGap} rounded-[var(--radius-measures-radius-small)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] flex flex-col items-start justify-center relative w-full ${className}`}
       tabIndex={0}
       role="button"
       aria-label={ariaLabel}
+      aria-expanded={expanded}
       onClick={onClick}
       onKeyDown={onKeyDown}
     >
       {/* Header Container */}
-      <div className="grid grid-cols-[auto_1fr] h-[72px] md:h-[80px] lg:h-[138px] border-b border-[var(--color-surface-default-primary)]">
-        {/* Icon Container */}
-        {icon && (
-          <div className="p-[var(--spacing-scale-016)] md:p-[var(--spacing-scale-012)] lg:p-[var(--spacing-scale-024)] border-r border-[var(--color-surface-default-primary)] w-fit flex items-center justify-center">
-            {icon}
+      <div className={`border-b border-[var(--color-content-inverse-primary)] flex gap-[16px] items-center relative shrink-0 w-full ${isLarge ? "min-h-[103px]" : "min-h-[56px]"}`}>
+        {/* Logo/Icon Container */}
+        {renderLogo() && (
+          <div className="flex items-center justify-center shrink-0">
+            {renderLogo()}
           </div>
         )}
         {/* Title Container */}
         {title && (
-          <div className="pl-[var(--spacing-scale-008)] md:pl-[var(--spacing-scale-012)] lg:pl-[var(--spacing-scale-024)] flex items-center gap-[var(--spacing-scale-004)]">
-            <h3 className="font-space-grotesk font-bold text-[20px] md:text-[28px] lg:text-[36px] leading-[28px] md:leading-[36px] lg:leading-[44px] text-[--color-content-inverse-primary]">
+          <div className={`border-l border-[var(--color-content-inverse-primary)] flex ${isLarge ? "px-[16px] py-[24px]" : "px-[16px] py-[12px]"} items-center justify-center flex-1 min-w-0`}>
+            <h3 className={`${titleClass} text-[var(--color-content-inverse-primary)] overflow-hidden text-ellipsis w-full`}>
               {title}
             </h3>
           </div>
         )}
       </div>
-      {description && (
-        <p className="font-inter font-medium text-[12px] md:text-[14px] lg:text-[18px] leading-[14px] md:leading-[16px] lg:leading-[24px] text-[var(--color-content-inverse-primary)]">
-          {description}
-        </p>
+
+      {expanded ? (
+        <>
+          {/* Categories Section */}
+          {categories && categories.length > 0 && (
+            <div className="flex flex-col gap-[16px] items-start px-[12px] relative shrink-0 w-full">
+              {categories.map((category, categoryIndex) => (
+                <div key={categoryIndex} className="flex flex-col gap-[var(--spacing-scale-008)] items-start relative shrink-0 w-full">
+                  {/* Category Label */}
+                  <div className="flex items-baseline gap-[var(--spacing-scale-008)] pr-[var(--spacing-scale-004)] relative shrink-0 w-full">
+                    <h4 className={`${categoryLabelClass} text-[var(--color-content-inverse-primary)]`}>
+                      {category.name}
+                    </h4>
+                  </div>
+                  {/* Pills Container */}
+                  <div className="flex flex-wrap gap-[var(--spacing-scale-008)] items-center relative shrink-0 w-full">
+                    {/* Pills */}
+                    {category.items && category.items.map((item, itemIndex) => (
+                      <button
+                        key={itemIndex}
+                        type="button"
+                        className="bg-transparent border-[1.25px] border-[var(--color-content-inverse-primary)] h-[30px] px-[var(--spacing-scale-008)] rounded-[var(--radius-measures-radius-full)] flex items-center justify-center shrink-0 cursor-pointer"
+                        onClick={(e) => handlePillClick(e, category.name, item)}
+                        aria-label={`Edit ${item}`}
+                      >
+                        <span className={`${pillTextClass} text-[var(--color-content-inverse-primary)]`}>
+                          {item}
+                        </span>
+                      </button>
+                    ))}
+                    {/* Add Button */}
+                    <button
+                      type="button"
+                      className="bg-transparent border-[1.25px] border-[var(--color-content-inverse-primary)] size-[30px] rounded-[var(--radius-measures-radius-full)] flex items-center justify-center shrink-0 cursor-pointer"
+                      onClick={(e) => handleCreateClick(e, category.name)}
+                      aria-label={`Add new ${category.name}`}
+                    >
+                      <span className="text-[var(--color-content-inverse-primary)] text-[14px] leading-[14px]">+</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Footer: Description */}
+          {description && (
+            <div className="border-t border-[var(--color-content-inverse-primary)] pt-[16px] relative shrink-0 w-full">
+              <p className={`${descriptionClass} text-[var(--color-content-inverse-primary)]`}>
+                {description}
+              </p>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Collapsed State: Description */
+        description && (
+          <div className="flex items-center justify-center relative shrink-0 w-full">
+            <p className={`${descriptionClass} text-[var(--color-content-inverse-primary)] flex-1`}>
+              {description}
+            </p>
+          </div>
+        )
       )}
     </div>
   );

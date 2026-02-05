@@ -512,3 +512,18 @@ export function normalizeSmallMediumLargeSize(
   }
   return defaultValue;
 }
+
+/**
+ * Normalize RuleCard size prop values (L/M -> l/m -> L/M)
+ */
+export function normalizeRuleCardSize(
+  value: string | undefined,
+  defaultValue: "L" = "L"
+): "L" | "M" {
+  if (!value) return defaultValue;
+  const normalized = value.toUpperCase();
+  if (normalized === "L" || normalized === "M") {
+    return normalized;
+  }
+  return defaultValue;
+}
