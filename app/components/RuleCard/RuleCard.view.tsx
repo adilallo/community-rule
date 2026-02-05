@@ -21,17 +21,21 @@ export function RuleCardView({
   communityInitials,
 }: RuleCardViewProps) {
   const t = useTranslation("ruleCard");
-  const ariaLabel = t("ariaLabel").replace("{title}", title);
+  const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
 
   // Size-based styling
   const isLarge = size === "L";
   
-  // Card dimensions - make width flexible for grid layouts, but can be overridden via className
-  // For standalone/preview use, add fixed width via className
+  // Card dimensions - fixed width for expanded states (568px for L, 398px for M per Figma)
   const cardPadding = isLarge ? "p-[24px]" : "p-[16px]";
   const cardGap = expanded
     ? "gap-[16px]"
     : isLarge ? "gap-[10px]" : "gap-[12px]";
+  const cardWidth = expanded
+    ? isLarge
+      ? "w-[568px]"
+      : "w-[398px]"
+    : "";
 
   // Logo/Icon dimensions
   const logoSize = isLarge ? 103 : 56;
@@ -48,12 +52,6 @@ export function RuleCardView({
   const descriptionClass = isLarge
     ? "font-inter font-medium text-[18px] leading-[24px]"
     : "font-inter font-medium text-[14px] leading-[16px]";
-
-  // Category label typography
-  const categoryLabelClass = "font-inter font-normal text-[14px] leading-[20px]";
-
-  // Pill typography
-  const pillTextClass = "font-inter font-medium text-[12px] leading-[14px]";
 
   // Render logo/icon
   const renderLogo = () => {
@@ -100,7 +98,7 @@ export function RuleCardView({
     if (communityInitials) {
       return (
         <div className={`${logoContainerClass} rounded-full bg-[var(--color-surface-default-primary)] flex items-center justify-center`}>
-          <span className={`${isLarge ? "text-[36px]" : "text-[24px]"} font-bricolage-grotesque font-bold text-[var(--color-content-inverse-primary)]`}>
+          <span className={`${isLarge ? "text-[36px]" : "text-[24px]"} font-bricolage-grotesque font-bold text-[var(--color-content-default-primary,white)]`}>
             {communityInitials}
           </span>
         </div>
@@ -113,7 +111,7 @@ export function RuleCardView({
 
   return (
     <div
-      className={`${backgroundColor} ${cardPadding} ${cardGap} rounded-[var(--radius-measures-radius-small)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] flex flex-col items-start justify-center relative w-full ${className}`}
+      className={`${backgroundColor} ${cardPadding} ${cardGap} rounded-[var(--radius-measures-radius-small)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] hover:shadow-[0px_0px_64px_0px_rgba(0,0,0,0.15)] transition-shadow duration-200 flex flex-col items-start justify-center relative ${cardWidth || "w-full"} ${className}`}
       tabIndex={0}
       role="button"
       aria-label={ariaLabel}
@@ -121,20 +119,25 @@ export function RuleCardView({
       onClick={onClick}
       onKeyDown={onKeyDown}
     >
-      {/* Header Container */}
-      <div className={`border-b border-[var(--color-content-inverse-primary)] flex gap-[16px] items-center relative shrink-0 w-full ${isLarge ? "min-h-[103px]" : "min-h-[56px]"}`}>
-        {/* Logo/Icon Container */}
+      {/* Outermost container with bottom border - taller to match Figma */}
+      <div className={`border-b border-black border-solid flex items-center relative shrink-0 w-full ${isLarge ? "h-[136px]" : "h-[88px]"}`}>
+        {/* Logo/Icon - fixed width/height, vertically centered, does not touch bottom */}
         {renderLogo() && (
-          <div className="flex items-center justify-center shrink-0">
+          <div className={`flex items-center justify-center shrink-0 ${isLarge ? "w-[103px] h-[103px]" : "w-[56px] h-[56px]"}`}>
             {renderLogo()}
           </div>
         )}
-        {/* Title Container */}
+        {/* 16px spacing */}
+        <div className="w-[16px] shrink-0" />
+        {/* Container with no padding and left border - extends full height to touch bottom */}
         {title && (
-          <div className={`border-l border-[var(--color-content-inverse-primary)] flex ${isLarge ? "px-[16px] py-[24px]" : "px-[16px] py-[12px]"} items-center justify-center flex-1 min-w-0`}>
-            <h3 className={`${titleClass} text-[var(--color-content-inverse-primary)] overflow-hidden text-ellipsis w-full`}>
-              {title}
-            </h3>
+          <div className="border-l border-black border-solid flex-1 min-w-0 h-full flex">
+            {/* Inner container for header text with padding */}
+            <div className={`flex ${isLarge ? "px-[16px] py-[24px]" : "px-[16px] py-[12px]"} items-center justify-center w-full`}>
+              <h3 className={`${titleClass} text-black overflow-hidden text-ellipsis w-full`}>
+                {title}
+              </h3>
+            </div>
           </div>
         )}
       </div>
@@ -173,8 +176,8 @@ export function RuleCardView({
           )}
           {/* Footer: Description */}
           {description && (
-            <div className="border-t border-[var(--color-content-inverse-primary)] pt-[16px] relative shrink-0 w-full">
-              <p className={`${descriptionClass} text-[var(--color-content-inverse-primary)]`}>
+            <div className="border-t border-black border-solid pt-[16px] relative shrink-0 w-full">
+              <p className={`${descriptionClass} text-black`}>
                 {description}
               </p>
             </div>
@@ -184,7 +187,7 @@ export function RuleCardView({
         /* Collapsed State: Description */
         description && (
           <div className="flex items-center justify-center relative shrink-0 w-full">
-            <p className={`${descriptionClass} text-[var(--color-content-inverse-primary)] flex-1`}>
+            <p className={`${descriptionClass} text-black flex-1`}>
               {description}
             </p>
           </div>
