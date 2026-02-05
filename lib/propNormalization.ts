@@ -519,10 +519,10 @@ export function normalizeSmallMediumLargeSize(
 export function normalizeRuleCardSize(
   value: string | undefined,
   defaultValue: "L" = "L"
-): "L" | "M" {
+): "XS" | "S" | "M" | "L" {
   if (!value) return defaultValue;
   const normalized = value.toUpperCase();
-  if (normalized === "L" || normalized === "M") {
+  if (normalized === "XS" || normalized === "S" || normalized === "M" || normalized === "L") {
     return normalized;
   }
   return defaultValue;

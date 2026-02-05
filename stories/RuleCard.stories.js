@@ -39,7 +39,7 @@ export default {
     },
     size: {
       control: { type: "select" },
-      options: ["L", "M", "l", "m"],
+      options: ["XS", "S", "M", "L", "xs", "s", "m", "l"],
       description: "Size variant of the card",
     },
     onClick: { action: "clicked" },
@@ -181,6 +181,44 @@ export const SizeMedium = {
         alt="Sociocracy"
         width={56}
         height={56}
+      />
+    ),
+  },
+};
+
+export const SizeSmall = {
+  args: {
+    title: "Consensus clusters",
+    description:
+      "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
+    backgroundColor: "bg-[var(--color-surface-default-brand-lime)]",
+    expanded: false,
+    size: "S",
+    icon: (
+      <Image
+        src="assets/Icon_Sociocracy.svg"
+        alt="Sociocracy"
+        width={56}
+        height={56}
+      />
+    ),
+  },
+};
+
+export const SizeExtraSmall = {
+  args: {
+    title: "Consensus clusters",
+    description:
+      "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
+    backgroundColor: "bg-[var(--color-surface-default-brand-lime)]",
+    expanded: false,
+    size: "XS",
+    icon: (
+      <Image
+        src="assets/Icon_Sociocracy.svg"
+        alt="Sociocracy"
+        width={8}
+        height={8}
       />
     ),
   },

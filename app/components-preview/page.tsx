@@ -474,7 +474,7 @@ export default function ComponentsPreview() {
             <div className="space-y-[var(--spacing-scale-016)]">
               <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
                 Default palette
-              </h3>
+                </h3>
               <div className="flex flex-wrap items-center gap-[var(--spacing-scale-016)]">
                 <Chip
                   label="Small"
@@ -585,7 +585,7 @@ export default function ComponentsPreview() {
             </div>
 
             {/* Inverse palette - on white background */}
-            <div className="space-y-[var(--spacing-scale-016)]">
+                <div className="space-y-[var(--spacing-scale-016)]">
               <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
                 Inverse palette (on white background)
               </h3>
@@ -643,8 +643,8 @@ export default function ComponentsPreview() {
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-            />
-          </div>
+                  />
+                </div>
         </section>
 
         {/* Collapsed State - Medium */}
@@ -663,16 +663,16 @@ export default function ComponentsPreview() {
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-            />
+                  />
           </div>
         </section>
 
         {/* Expanded State - Large */}
-        <section className="space-y-[var(--spacing-scale-024)]">
-          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            <section className="space-y-[var(--spacing-scale-024)]">
+              <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
             Expanded State - Large (L)
-          </h2>
-          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+              </h2>
+              <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <RuleCard
               title="Mutual Aid Mondays"
               description="Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness."
@@ -684,8 +684,8 @@ export default function ComponentsPreview() {
               logoAlt="Mutual Aid Mondays"
               categories={ruleCardCategories}
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-            />
-          </div>
+                      />
+                    </div>
         </section>
 
         {/* Expanded State - Medium */}
@@ -706,14 +706,14 @@ export default function ComponentsPreview() {
               categories={ruleCardCategories}
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
             />
-          </div>
-        </section>
+              </div>
+            </section>
 
         {/* Different Background Colors */}
-        <section className="space-y-[var(--spacing-scale-024)]">
-          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            <section className="space-y-[var(--spacing-scale-024)]">
+              <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
             Different Background Colors
-          </h2>
+              </h2>
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--spacing-scale-024)]">
               <RuleCard
@@ -749,9 +749,9 @@ export default function ComponentsPreview() {
                   />
                 }
                 onClick={() => console.log("Consensus selected")}
-              />
-            </div>
-          </div>
+                  />
+                </div>
+              </div>
         </section>
 
         {/* Logo Fallback */}
@@ -769,8 +769,8 @@ export default function ComponentsPreview() {
               className="w-[525px]"
               communityInitials="CE"
               onClick={() => console.log("Community Example selected")}
-            />
-          </div>
+                  />
+                </div>
         </section>
 
         {/* MultiSelect Component */}

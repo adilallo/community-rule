@@ -17,7 +17,7 @@ export interface RuleCardProps {
   className?: string;
   onClick?: () => void;
   expanded?: boolean;
-  size?: "L" | "M" | "l" | "m";
+  size?: "XS" | "S" | "M" | "L" | "xs" | "s" | "m" | "l";
   categories?: Category[];
   logoUrl?: string;
   logoAlt?: string;
@@ -33,7 +33,7 @@ export interface RuleCardViewProps {
   onClick: () => void;
   onKeyDown: (_event: React.KeyboardEvent<HTMLDivElement>) => void;
   expanded: boolean;
-  size: "L" | "M";
+  size: "XS" | "S" | "M" | "L";
   categories?: Category[];
   logoUrl?: string;
   logoAlt?: string;
