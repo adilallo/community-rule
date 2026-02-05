@@ -527,3 +527,78 @@ export function normalizeRuleCardSize(
   }
   return defaultValue;
 }
+
+/**
+ * Type helper for case-insensitive Chip state prop
+ */
+export type ChipStateValue =
+  | "unselected"
+  | "selected"
+  | "disabled"
+  | "custom"
+  | "Unselected"
+  | "Selected"
+  | "Disabled"
+  | "Custom";
+
+/**
+ * Type helper for case-insensitive Chip palette prop
+ */
+export type ChipPaletteValue =
+  | "default"
+  | "inverse"
+  | "Default"
+  | "Inverse";
+
+/**
+ * Type helper for case-insensitive Chip size prop
+ */
+export type ChipSizeValue = "s" | "m" | "S" | "M";
+
+/**
+ * Normalize Chip state prop values (Unselected/Selected/Disabled/Custom)
+ */
+export function normalizeChipState(
+  value: string | undefined,
+  defaultValue: "unselected" = "unselected",
+): "unselected" | "selected" | "disabled" | "custom" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const states = ["unselected", "selected", "disabled", "custom"];
+  if (states.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize Chip palette prop values (Default/Inverse -> default/inverse)
+ */
+export function normalizeChipPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default",
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const palettes = ["default", "inverse"];
+  if (palettes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize Chip size prop values (S/M -> s/m)
+ */
+export function normalizeChipSize(
+  value: string | undefined,
+  defaultValue: "s" = "s",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}

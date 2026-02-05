@@ -2,11 +2,32 @@
 
 import { useState } from "react";
 import RuleCard from "../components/RuleCard";
+import Chip from "../components/Chip";
 import Image from "next/image";
 import { getAssetPath } from "../../lib/assetUtils";
 
+interface ChipData {
+  id: string;
+  label: string;
+  state: "Unselected" | "Selected" | "Custom";
+  palette: "Default" | "Inverse";
+  size: "S" | "M";
+}
+
 export default function ComponentsPreview() {
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [chipStates, setChipStates] = useState<Record<string, "Unselected" | "Selected">>({
+    "default-s": "Unselected",
+    "default-m": "Unselected",
+    "inverse-s": "Unselected",
+    "inverse-m": "Unselected",
+  });
+  
+  // Manage custom chips separately
+  const [customChips, setCustomChips] = useState<ChipData[]>([
+    { id: "custom-1", label: "", state: "Custom", palette: "Default", size: "S" },
+    { id: "custom-2", label: "", state: "Custom", palette: "Default", size: "M" },
+  ]);
 
   const sampleCategories = [
     {
@@ -44,9 +65,172 @@ export default function ComponentsPreview() {
             Component Preview
           </h1>
           <p className="font-inter text-[18px] leading-[24px] text-[var(--color-content-default-secondary)]">
-            RuleCard component examples - collapsed/expanded states, size variants, and interactions
+            RuleCard and Chip component examples - states, palettes, sizes, and interactions
           </p>
         </header>
+
+        {/* Chip Component - Controls */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Chip Component (Controls)
+          </h2>
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            {/* Default palette */}
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                Default palette
+              </h3>
+              <div className="flex flex-wrap items-center gap-[var(--spacing-scale-016)]">
+                <Chip
+                  label="Small"
+                  state={chipStates["default-s"]}
+                  palette="Default"
+                  size="S"
+                  onClick={() =>
+                    setChipStates((prev) => ({
+                      ...prev,
+                      "default-s": prev["default-s"] === "Selected" ? "Unselected" : "Selected",
+                    }))
+                  }
+                />
+                <Chip
+                  label="Medium"
+                  state={chipStates["default-m"]}
+                  palette="Default"
+                  size="M"
+                  onClick={() =>
+                    setChipStates((prev) => ({
+                      ...prev,
+                      "default-m": prev["default-m"] === "Selected" ? "Unselected" : "Selected",
+                    }))
+                  }
+                />
+                <Chip
+                  label="Disabled"
+                  state="Disabled"
+                  palette="Default"
+                  size="S"
+                />
+                {customChips
+                  .filter((chip) => chip.palette === "Default")
+                  .map((chip) => (
+                    <Chip
+                      key={chip.id}
+                      label={chip.state === "Custom" ? "" : chip.label}
+                      state={chip.state}
+                      palette={chip.palette}
+                      size={chip.size}
+                      onCheck={(value, e) => {
+                        e.stopPropagation();
+                        setCustomChips((prev) =>
+                          prev.map((c) =>
+                            c.id === chip.id
+                              ? { ...c, label: value, state: "Selected" as const }
+                              : c
+                          )
+                        );
+                      }}
+                      onClose={(e) => {
+                        e.stopPropagation();
+                        setCustomChips((prev) => prev.filter((c) => c.id !== chip.id));
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Only toggle if the chip is in Selected or Unselected state (not Custom)
+                        if (chip.state === "Selected" || chip.state === "Unselected") {
+                          setCustomChips((prev) =>
+                            prev.map((c) =>
+                              c.id === chip.id
+                                ? {
+                                    ...c,
+                                    state: c.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                                  }
+                                : c
+                            )
+                          );
+                        }
+                      }}
+                    />
+                  ))}
+                {/* Add new custom chip button - Ghost button style */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newId = `custom-${Date.now()}`;
+                    setCustomChips((prev) => [
+                      ...prev,
+                      { id: newId, label: "", state: "Custom", palette: "Default", size: "S" },
+                    ]);
+                  }}
+                  className="flex gap-[var(--measures-spacing-050,2px)] items-center justify-center p-[var(--measures-spacing-200,8px)] rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity"
+                >
+                  {/* Plus icon */}
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-[var(--color-content-default-brand-primary,#fefcc9)] shrink-0"
+                  >
+                    <path
+                      d="M7 3V11M3 7H11"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  {/* Text */}
+                  <span className="font-inter font-medium text-[length:var(--sizing-300,12px)] leading-[14px] text-[color:var(--color-content-default-brand-primary,#fefcc9)]">
+                    Add Applicable Scope
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Inverse palette - on white background */}
+            <div className="space-y-[var(--spacing-scale-016)]">
+              <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                Inverse palette (on white background)
+              </h3>
+              <div className="!bg-white p-[var(--spacing-scale-032)] rounded-[var(--radius-300,12px)]" style={{ backgroundColor: '#ffffff' }}>
+                <div className="flex flex-wrap items-center gap-[var(--spacing-scale-016)]">
+                  <Chip
+                    label="Small"
+                    state={chipStates["inverse-s"]}
+                    palette="Inverse"
+                    size="S"
+                    onClick={() =>
+                      setChipStates((prev) => ({
+                        ...prev,
+                        "inverse-s": prev["inverse-s"] === "Selected" ? "Unselected" : "Selected",
+                      }))
+                    }
+                  />
+                  <Chip
+                    label="Medium"
+                    state={chipStates["inverse-m"]}
+                    palette="Inverse"
+                    size="M"
+                    onClick={() =>
+                      setChipStates((prev) => ({
+                        ...prev,
+                        "inverse-m": prev["inverse-m"] === "Selected" ? "Unselected" : "Selected",
+                      }))
+                    }
+                  />
+                  <Chip
+                    label="Disabled"
+                    state="Disabled"
+                    palette="Inverse"
+                    size="S"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Collapsed State - Large */}
         <section className="space-y-[var(--spacing-scale-024)]">
