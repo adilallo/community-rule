@@ -97,33 +97,360 @@ export default function ComponentsPreview() {
     { id: "custom-2", label: "", state: "Custom", palette: "Default", size: "M" },
   ]);
 
-  const sampleCategories = [
+  // RuleCard categories with chip options and state management
+  const [ruleCardCategories, setRuleCardCategories] = useState([
     {
       name: "Values",
-      items: ["Consciousness", "Ecology", "Abundance", "Art", "Decisiveness"],
-      createUrl: "/create/value",
+      chipOptions: [
+        { id: "values-1", label: "Consciousness", state: "Unselected" as const },
+        { id: "values-2", label: "Ecology", state: "Unselected" as const },
+        { id: "values-3", label: "Abundance", state: "Unselected" as const },
+        { id: "values-4", label: "Art", state: "Unselected" as const },
+        { id: "values-5", label: "Decisiveness", state: "Unselected" as const },
+      ],
+      onChipClick: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? {
+                          ...opt,
+                          state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                        }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onAddClick: (categoryName: string) => {
+        const newId = `custom-${categoryName}-${Date.now()}`;
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: [
+                    ...cat.chipOptions,
+                    { id: newId, label: "", state: "Custom" as const },
+                  ],
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? { ...opt, label: value, state: "Selected" as const }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipClose: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                }
+              : cat
+          )
+        );
+      },
     },
     {
       name: "Communication",
-      items: ["Signal"],
-      createUrl: "/create/communication",
+      chipOptions: [
+        { id: "comm-1", label: "Signal", state: "Unselected" as const },
+      ],
+      onChipClick: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? {
+                          ...opt,
+                          state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                        }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onAddClick: (categoryName: string) => {
+        const newId = `custom-${categoryName}-${Date.now()}`;
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: [
+                    ...cat.chipOptions,
+                    { id: newId, label: "", state: "Custom" as const },
+                  ],
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? { ...opt, label: value, state: "Selected" as const }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipClose: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                }
+              : cat
+          )
+        );
+      },
     },
     {
       name: "Membership",
-      items: ["Open Admission"],
-      createUrl: "/create/membership",
+      chipOptions: [
+        { id: "membership-1", label: "Open Admission", state: "Unselected" as const },
+      ],
+      onChipClick: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? {
+                          ...opt,
+                          state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                        }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onAddClick: (categoryName: string) => {
+        const newId = `custom-${categoryName}-${Date.now()}`;
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: [
+                    ...cat.chipOptions,
+                    { id: newId, label: "", state: "Custom" as const },
+                  ],
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? { ...opt, label: value, state: "Selected" as const }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipClose: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                }
+              : cat
+          )
+        );
+      },
     },
     {
       name: "Decision-making",
-      items: ["Lazy Consensus", "Modified Consensus"],
-      createUrl: "/create/decision-making",
+      chipOptions: [
+        { id: "decision-1", label: "Lazy Consensus", state: "Unselected" as const },
+        { id: "decision-2", label: "Modified Consensus", state: "Unselected" as const },
+      ],
+      onChipClick: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? {
+                          ...opt,
+                          state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                        }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onAddClick: (categoryName: string) => {
+        const newId = `custom-${categoryName}-${Date.now()}`;
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: [
+                    ...cat.chipOptions,
+                    { id: newId, label: "", state: "Custom" as const },
+                  ],
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? { ...opt, label: value, state: "Selected" as const }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipClose: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                }
+              : cat
+          )
+        );
+      },
     },
     {
       name: "Conflict management",
-      items: ["Code of Conduct", "Restorative Justice"],
-      createUrl: "/create/conflict-management",
+      chipOptions: [
+        { id: "conflict-1", label: "Code of Conduct", state: "Unselected" as const },
+        { id: "conflict-2", label: "Restorative Justice", state: "Unselected" as const },
+      ],
+      onChipClick: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? {
+                          ...opt,
+                          state: opt.state === "Selected" ? ("Unselected" as const) : ("Selected" as const),
+                        }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onAddClick: (categoryName: string) => {
+        const newId = `custom-${categoryName}-${Date.now()}`;
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: [
+                    ...cat.chipOptions,
+                    { id: newId, label: "", state: "Custom" as const },
+                  ],
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.map((opt) =>
+                    opt.id === chipId
+                      ? { ...opt, label: value, state: "Selected" as const }
+                      : opt
+                  ),
+                }
+              : cat
+          )
+        );
+      },
+      onCustomChipClose: (categoryName: string, chipId: string) => {
+        setRuleCardCategories((prev) =>
+          prev.map((cat) =>
+            cat.name === categoryName
+              ? {
+                  ...cat,
+                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                }
+              : cat
+          )
+        );
+      },
     },
-  ];
+  ]);
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-[var(--spacing-scale-032)]">
@@ -355,13 +682,7 @@ export default function ComponentsPreview() {
               className="w-[568px]"
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
-              categories={sampleCategories}
-              onPillClick={(category, item) => {
-                console.log(`Pill clicked: ${category} - ${item}`);
-              }}
-              onCreateClick={(category) => {
-                console.log(`Create clicked: ${category}`);
-              }}
+              categories={ruleCardCategories}
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
             />
           </div>
@@ -382,13 +703,7 @@ export default function ComponentsPreview() {
               className="w-[398px]"
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
-              categories={sampleCategories}
-              onPillClick={(category, item) => {
-                console.log(`Pill clicked: ${category} - ${item}`);
-              }}
-              onCreateClick={(category) => {
-                console.log(`Create clicked: ${category}`);
-              }}
+              categories={ruleCardCategories}
               onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
             />
           </div>

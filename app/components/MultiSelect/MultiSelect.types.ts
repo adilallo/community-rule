@@ -1,4 +1,4 @@
-import type { ChipStateValue, ChipSizeValue } from "../../../lib/propNormalization";
+import type { ChipStateValue, ChipSizeValue, ChipPaletteValue } from "../../../lib/propNormalization";
 
 export interface ChipOption {
   id: string;
@@ -22,6 +22,11 @@ export interface MultiSelectProps {
    * Accepts both uppercase (Figma) and lowercase values.
    */
   size?: MultiSelectSizeValue;
+  /**
+   * Palette for chips: "Default" or "Inverse"
+   * Accepts both PascalCase (Figma) and lowercase values.
+   */
+  palette?: ChipPaletteValue;
   /**
    * Array of chip options to display
    */
@@ -57,6 +62,7 @@ export interface MultiSelectViewProps {
   label?: string;
   showHelpIcon: boolean;
   size: "s" | "m";
+  palette: "default" | "inverse";
   options: ChipOption[];
   onChipClick?: (chipId: string) => void;
   onAddClick?: () => void;

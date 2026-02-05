@@ -618,3 +618,35 @@ export function normalizeMultiSelectSize(
   }
   return defaultValue;
 }
+
+/**
+ * Normalize InputLabel size prop values (S/M -> s/m)
+ */
+export function normalizeInputLabelSize(
+  value: string | undefined,
+  defaultValue: "s" = "s",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize InputLabel palette prop values (Default/Inverse -> default/inverse)
+ */
+export function normalizeInputLabelPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default",
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const palettes = ["default", "inverse"];
+  if (palettes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}

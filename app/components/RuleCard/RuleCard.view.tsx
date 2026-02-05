@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslation } from "../../contexts/MessagesContext";
+import MultiSelect from "../MultiSelect";
 import type { RuleCardViewProps } from "./RuleCard.types";
 
 export function RuleCardView({
@@ -15,8 +16,6 @@ export function RuleCardView({
   expanded,
   size,
   categories,
-  onPillClick,
-  onCreateClick,
   logoUrl,
   logoAlt,
   communityInitials,
@@ -111,21 +110,6 @@ export function RuleCardView({
     return null;
   };
 
-  // Handle pill click with stopPropagation
-  const handlePillClick = (e: React.MouseEvent<HTMLButtonElement>, categoryName: string, item: string) => {
-    e.stopPropagation();
-    if (onPillClick) {
-      onPillClick(categoryName, item);
-    }
-  };
-
-  // Handle create button click with stopPropagation
-  const handleCreateClick = (e: React.MouseEvent<HTMLButtonElement>, categoryName: string) => {
-    e.stopPropagation();
-    if (onCreateClick) {
-      onCreateClick(categoryName);
-    }
-  };
 
   return (
     <div
@@ -157,44 +141,33 @@ export function RuleCardView({
 
       {expanded ? (
         <>
-          {/* Categories Section */}
+          {/* Categories Section - Using MultiSelect */}
           {categories && categories.length > 0 && (
             <div className="flex flex-col gap-[16px] items-start px-[12px] relative shrink-0 w-full">
               {categories.map((category, categoryIndex) => (
-                <div key={categoryIndex} className="flex flex-col gap-[var(--spacing-scale-008)] items-start relative shrink-0 w-full">
-                  {/* Category Label */}
-                  <div className="flex items-baseline gap-[var(--spacing-scale-008)] pr-[var(--spacing-scale-004)] relative shrink-0 w-full">
-                    <h4 className={`${categoryLabelClass} text-[var(--color-content-inverse-primary)]`}>
-                      {category.name}
-                    </h4>
-                  </div>
-                  {/* Pills Container */}
-                  <div className="flex flex-wrap gap-[var(--spacing-scale-008)] items-center relative shrink-0 w-full">
-                    {/* Pills */}
-                    {category.items && category.items.map((item, itemIndex) => (
-                      <button
-                        key={itemIndex}
-                        type="button"
-                        className="bg-transparent border-[1.25px] border-[var(--color-content-inverse-primary)] h-[30px] px-[var(--spacing-scale-008)] rounded-[var(--radius-measures-radius-full)] flex items-center justify-center shrink-0 cursor-pointer"
-                        onClick={(e) => handlePillClick(e, category.name, item)}
-                        aria-label={`Edit ${item}`}
-                      >
-                        <span className={`${pillTextClass} text-[var(--color-content-inverse-primary)]`}>
-                          {item}
-                        </span>
-                      </button>
-                    ))}
-                    {/* Add Button */}
-                    <button
-                      type="button"
-                      className="bg-transparent border-[1.25px] border-[var(--color-content-inverse-primary)] size-[30px] rounded-[var(--radius-measures-radius-full)] flex items-center justify-center shrink-0 cursor-pointer"
-                      onClick={(e) => handleCreateClick(e, category.name)}
-                      aria-label={`Add new ${category.name}`}
-                    >
-                      <span className="text-[var(--color-content-inverse-primary)] text-[14px] leading-[14px]">+</span>
-                    </button>
-                  </div>
-                </div>
+                <MultiSelect
+                  key={categoryIndex}
+                  label={category.name}
+                  showHelpIcon={false}
+                  size="S"
+                  palette="Inverse"
+                  options={category.chipOptions}
+                  onChipClick={(chipId) => {
+                    category.onChipClick?.(category.name, chipId);
+                  }}
+                  onAddClick={() => {
+                    category.onAddClick?.(category.name);
+                  }}
+                  onCustomChipConfirm={(chipId, value) => {
+                    category.onCustomChipConfirm?.(category.name, chipId, value);
+                  }}
+                  onCustomChipClose={(chipId) => {
+                    category.onCustomChipClose?.(category.name, chipId);
+                  }}
+                  showAddButton={true}
+                  addButtonText="" // Empty text for icon-only circular button
+                  className="w-full"
+                />
               ))}
             </div>
           )}

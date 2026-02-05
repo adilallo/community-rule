@@ -29,8 +29,6 @@ const RuleCardContainer = memo<RuleCardProps>(
     expanded = false,
     size: sizeProp,
     categories,
-    onPillClick,
-    onCreateClick,
     logoUrl,
     logoAlt,
     communityInitials,
@@ -77,8 +75,6 @@ const RuleCardContainer = memo<RuleCardProps>(
         expanded={expanded}
         size={size}
         categories={categories}
-        onPillClick={onPillClick}
-        onCreateClick={onCreateClick}
         logoUrl={logoUrl}
         logoAlt={logoAlt}
         communityInitials={communityInitials}

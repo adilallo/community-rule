@@ -1,7 +1,12 @@
+import type { ChipOption } from "../MultiSelect/MultiSelect.types";
+
 export interface Category {
   name: string;
-  items: string[];
-  createUrl?: string;
+  chipOptions: ChipOption[];
+  onChipClick?: (categoryName: string, chipId: string) => void;
+  onAddClick?: (categoryName: string) => void;
+  onCustomChipConfirm?: (categoryName: string, chipId: string, value: string) => void;
+  onCustomChipClose?: (categoryName: string, chipId: string) => void;
 }
 
 export interface RuleCardProps {
@@ -14,8 +19,6 @@ export interface RuleCardProps {
   expanded?: boolean;
   size?: "L" | "M" | "l" | "m";
   categories?: Category[];
-  onPillClick?: (category: string, item: string) => void;
-  onCreateClick?: (category: string) => void;
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;
@@ -32,8 +35,6 @@ export interface RuleCardViewProps {
   expanded: boolean;
   size: "L" | "M";
   categories?: Category[];
-  onPillClick?: (category: string, item: string) => void;
-  onCreateClick?: (category: string) => void;
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;

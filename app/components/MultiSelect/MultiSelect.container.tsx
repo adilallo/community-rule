@@ -3,13 +3,14 @@
 import { memo } from "react";
 import MultiSelectView from "./MultiSelect.view";
 import type { MultiSelectProps } from "./MultiSelect.types";
-import { normalizeMultiSelectSize } from "../../../lib/propNormalization";
+import { normalizeMultiSelectSize, normalizeChipPalette } from "../../../lib/propNormalization";
 
 const MultiSelectContainer = memo<MultiSelectProps>(
   ({
     label,
     showHelpIcon = true,
     size: sizeProp = "M",
+    palette: paletteProp = "Default",
     options,
     onChipClick,
     onAddClick,
@@ -20,12 +21,14 @@ const MultiSelectContainer = memo<MultiSelectProps>(
     className = "",
   }) => {
     const size = normalizeMultiSelectSize(sizeProp);
+    const palette = normalizeChipPalette(paletteProp);
 
     return (
       <MultiSelectView
         label={label}
         showHelpIcon={showHelpIcon}
         size={size}
+        palette={palette}
         options={options}
         onChipClick={onChipClick}
         onAddClick={onAddClick}
