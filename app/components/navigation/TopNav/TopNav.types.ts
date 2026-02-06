@@ -1,7 +1,12 @@
 import type React from "react";
 
-export interface HomeHeaderProps {
-  // Currently no props, but keeping interface for future extensibility
+export interface TopNavProps {
+  className?: string;
+  size?: "320-429" | "430-639" | "640-1023" | "1024-1440" | "1440+";
+  loggedIn?: boolean;
+  folderTop?: boolean;
+  profile?: boolean;
+  logIn?: boolean;
 }
 
 export type NavSize =
@@ -16,8 +21,23 @@ export type NavSize =
   | "homeXlarge"
   | "xlarge";
 
-export interface HomeHeaderViewProps {
-  schemaData: object;
+export interface TopNavViewProps {
+  folderTop: boolean;
+  loggedIn: boolean;
+  profile: boolean;
+  logIn: boolean;
+  schemaData: {
+    "@context": string;
+    "@type": string;
+    name: string;
+    url: string;
+    description?: string;
+    potentialAction: {
+      "@type": string;
+      target: string;
+      "query-input": string;
+    };
+  };
   logoConfig: Array<{
     breakpoint: string;
     size:

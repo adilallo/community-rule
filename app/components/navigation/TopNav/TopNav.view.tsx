@@ -1,0 +1,242 @@
+"use client";
+
+import { memo } from "react";
+import Script from "next/script";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import HeaderTab from "../HeaderTab";
+import MenuBar from "../MenuBar";
+import type { TopNavViewProps } from "./TopNav.types";
+
+function TopNavView({
+  folderTop,
+  loggedIn: _loggedIn,
+  profile: _profile,
+  logIn,
+  schemaData,
+  logoConfig,
+  renderNavigationItems,
+  renderLoginButton,
+  renderCreateRuleButton,
+  renderLogo,
+}: TopNavViewProps) {
+  const t = useTranslation(folderTop ? "homeHeader" : "header");
+
+  // Render folderTop variant (HomeHeader style)
+  if (folderTop) {
+    return (
+      <>
+        <Script
+          id="top-nav-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
+        <header
+          className="w-full bg-transparent overflow-hidden"
+          role="banner"
+          aria-label={t("ariaLabels.homePageNavigationHeader")}
+        >
+          <nav
+            className="relative flex items-center justify-between mx-auto h-[50px] sm:h-[62px] md:h-[68px] lg:h-[68px] xl:h-[88px] px-[var(--spacing-scale-008)] pr-[var(--spacing-scale-016)] pt-[var(--spacing-scale-010)] sm:px-[var(--spacing-scale-010)] sm:pr-[var(--spacing-scale-020)] sm:pt-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] md:pr-[var(--spacing-scale-032)] md:pt-[var(--spacing-scale-016)] lg:pl-[var(--spacing-scale-024)] lg:pt-[var(--spacing-scale-016)] lg:pr-[var(--spacing-scale-056)] xl:pl-[var(--spacing-scale-048)] xl:pt-[var(--spacing-scale-024)] xl:pr-[var(--spacing-scale-056)]"
+            role="navigation"
+            aria-label={t("ariaLabels.mainNavigation")}
+          >
+            <HeaderTab className="flex items-center self-end" stretch={true}>
+              {/* Logo - Consistent left positioning within HeaderTab */}
+              <div>
+                {logoConfig.map((config, index) => (
+                  <div key={index} className={config.breakpoint}>
+                    {renderLogo(config.size, config.showText)}
+                  </div>
+                ))}
+              </div>
+
+              {/* XSmall menu bar - positioned next to logo */}
+              <div className="block sm:hidden -me-[2px]">
+                <MenuBar size="default">
+                  {renderNavigationItems("xsmall")}
+                  {logIn && renderLoginButton("xsmall")}
+                </MenuBar>
+              </div>
+            </HeaderTab>
+
+            {/* Navigation Links - Centered in header for SM and up */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 hidden sm:block">
+              <div className="hidden sm:block md:hidden">
+                <MenuBar size="default">
+                  {renderNavigationItems("xsmall")}
+                  {logIn && renderLoginButton("xsmall")}
+                </MenuBar>
+              </div>
+
+              <div className="hidden md:block lg:hidden">
+                <MenuBar size="medium">{renderNavigationItems("homeMd")}</MenuBar>
+              </div>
+
+              <div className="hidden lg:block xl:hidden">
+                <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
+              </div>
+
+              <div className="hidden xl:block">
+                <MenuBar size="large">
+                  {renderNavigationItems("homeXlarge")}
+                </MenuBar>
+              </div>
+            </div>
+
+            {/* Authentication Elements - Consistent right alignment outside HeaderTab */}
+            <div className="flex items-center">
+              {/* XSmall and Small breakpoints - create rule button outside HeaderTab */}
+              <div className="block md:hidden">
+                {renderCreateRuleButton("xsmall", "small", "small")}
+              </div>
+
+              {/* Medium breakpoint - login outside HeaderTab, create rule outside */}
+              <div className="hidden md:block lg:hidden absolute right-[var(--spacing-measures-spacing-016)]">
+                <div className="flex items-center gap-[var(--spacing-scale-010)]">
+                  {logIn && renderLoginButton("homeMd")}
+                  {renderCreateRuleButton("small", "medium", "medium")}
+                </div>
+              </div>
+
+              {/* Large breakpoint */}
+              <div className="hidden lg:flex xl:hidden items-center">
+                <div className="flex items-center gap-[var(--spacing-scale-004)]">
+                  {logIn && renderLoginButton("large")}
+                  {renderCreateRuleButton("large", "large", "large")}
+                </div>
+              </div>
+
+              {/* XLarge breakpoint */}
+              <div className="hidden xl:flex items-center">
+                <div className="flex items-center gap-[var(--spacing-scale-004)]">
+                  {logIn && renderLoginButton("homeXlarge")}
+                  {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
+                </div>
+              </div>
+            </div>
+          </nav>
+        </header>
+      </>
+    );
+  }
+
+  // Render standard variant (Header style)
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+      <header
+        className="sticky top-0 z-50 bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
+        role="banner"
+        aria-label={t("ariaLabels.mainNavigationHeader")}
+      >
+        <nav
+          className="flex items-center justify-between mx-auto h-[40px] lg:h-[84px] xl:h-[88px] px-[var(--spacing-measures-spacing-016)] py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)]"
+          role="navigation"
+          aria-label={t("ariaLabels.mainNavigation")}
+        >
+          {/* Logo - Consistent left positioning across all breakpoints */}
+          <div className="flex items-center">
+            {logoConfig.map((config, index) => (
+              <div
+                key={index}
+                className={config.breakpoint}
+                data-testid="logo-wrapper"
+              >
+                {renderLogo(config.size, config.showText)}
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation Links - Consistent center positioning */}
+          <div className="flex items-center">
+            {/* XSmall breakpoint - Navigation items moved to right section */}
+            <div className="block sm:hidden" data-testid="nav-xs">
+              {/* Empty for XSmall - navigation moved to right */}
+            </div>
+
+            {/* Small breakpoint - All items grouped together, centered */}
+            <div className="hidden sm:block md:hidden" data-testid="nav-sm">
+              <MenuBar size="default">
+                {renderNavigationItems("xsmall")}
+                {logIn && renderLoginButton("xsmall")}
+              </MenuBar>
+            </div>
+
+            <div className="hidden md:block lg:hidden" data-testid="nav-md">
+              <MenuBar size="default">
+                {renderNavigationItems("xsmall")}
+              </MenuBar>
+            </div>
+
+            <div className="hidden lg:block xl:hidden" data-testid="nav-lg">
+              <MenuBar size="large">{renderNavigationItems("large")}</MenuBar>
+            </div>
+
+            <div className="hidden xl:block" data-testid="nav-xl">
+              <MenuBar size="large">{renderNavigationItems("xlarge")}</MenuBar>
+            </div>
+          </div>
+
+          {/* Authentication Elements - Consistent right alignment across all breakpoints */}
+          <div className="flex items-center">
+            {/* XSmall breakpoint - All navigation items + Create Rule button */}
+            <div className="block sm:hidden" data-testid="auth-xs">
+              <div className="flex items-center gap-[var(--spacing-scale-001)]">
+                <MenuBar size="default">
+                  {renderNavigationItems("xsmall")}
+                  {logIn && renderLoginButton("xsmall")}
+                </MenuBar>
+                {renderCreateRuleButton("xsmall", "small", "small")}
+              </div>
+            </div>
+
+            {/* Small breakpoint - Only Create Rule button */}
+            <div className="hidden sm:block md:hidden" data-testid="auth-sm">
+              <div className="flex items-center gap-[var(--spacing-scale-004)]">
+                {renderCreateRuleButton("xsmall", "small", "small")}
+              </div>
+            </div>
+
+            {/* Medium breakpoint */}
+            <div className="hidden md:block lg:hidden" data-testid="auth-md">
+              <div className="flex items-center gap-[var(--spacing-measures-spacing-010)]">
+                <MenuBar size="default">
+                  {logIn && renderLoginButton("xsmall")}
+                </MenuBar>
+                {renderCreateRuleButton("xsmall", "medium", "medium")}
+              </div>
+            </div>
+
+            {/* Large breakpoint */}
+            <div className="hidden lg:block xl:hidden" data-testid="auth-lg">
+              <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
+                <MenuBar size="large">
+                  {logIn && renderLoginButton("large")}
+                </MenuBar>
+                {renderCreateRuleButton("large", "xlarge", "xlarge")}
+              </div>
+            </div>
+
+            {/* XLarge breakpoint */}
+            <div className="hidden xl:block" data-testid="auth-xl">
+              <div className="flex items-center gap-[var(--spacing-measures-spacing-004)]">
+                <MenuBar size="large">
+                  {logIn && renderLoginButton("xlarge")}
+                </MenuBar>
+                {renderCreateRuleButton("xlarge", "xlarge", "xlarge")}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+    </>
+  );
+}
+
+TopNavView.displayName = "TopNavView";
+
+export default memo(TopNavView);
+export { TopNavView };

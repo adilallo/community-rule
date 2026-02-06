@@ -1,11 +1,11 @@
 import WebVitalsDashboard from "../components/WebVitalsDashboard";
-import Header from "../components/navigation/Header";
+import TopNav from "../components/navigation/TopNav";
 import Footer from "../components/navigation/Footer";
 
 export default function MonitorPage() {
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
-      <Header />
+      <TopNav folderTop={false} />
 
       <main className="container mx-auto px-[var(--spacing-scale-024)] py-[var(--spacing-scale-032)]">
         <div className="max-w-6xl mx-auto">
