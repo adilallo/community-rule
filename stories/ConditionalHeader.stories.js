@@ -1,4 +1,4 @@
-import ConditionalHeader from "../app/components/ConditionalHeader";
+import ConditionalHeader from "../app/components/navigation/ConditionalHeader";
 
 export default {
   title: "Components/ConditionalHeader",

@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { getAssetPath } from "../../../lib/assetUtils";
-import ContentContainer from "../ContentContainer";
+import ContentContainer from "../content/ContentContainer";
 import type { BlogPost } from "../../../lib/content";
 
 interface ContentBannerProps {

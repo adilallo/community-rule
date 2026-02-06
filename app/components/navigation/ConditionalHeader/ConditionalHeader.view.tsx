@@ -1,5 +1,5 @@
-import HomeHeader from "../navigation/HomeHeader";
-import Header from "../navigation/Header";
+import HomeHeader from "../HomeHeader";
+import Header from "../Header";
 import type { ConditionalHeaderViewProps } from "./ConditionalHeader.types";
 
 export function ConditionalHeaderView({

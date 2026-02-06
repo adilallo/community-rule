@@ -1,10 +1,10 @@
 "use client";
 
 import { memo } from "react";
-import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import ContentThumbnailTemplateView from "./ContentThumbnailTemplate.view";
 import type { ContentThumbnailTemplateProps } from "./ContentThumbnailTemplate.types";
-import { normalizeContentThumbnailVariant } from "../../../lib/propNormalization";
+import { normalizeContentThumbnailVariant } from "../../../../lib/propNormalization";
 
 const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
   ({ post, className = "", variant: variantProp = "vertical" }) => {

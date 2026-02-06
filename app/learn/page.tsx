@@ -1,6 +1,6 @@
 import messages from "../../messages/en/index";
 import { getTranslation } from "../../lib/i18n/getTranslation";
-import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../components/content/ContentThumbnailTemplate";
 import ContentLockup from "../components/type/ContentLockup";
 import AskOrganizer from "../components/sections/AskOrganizer";
 import { getAllBlogPosts } from "../../lib/content";

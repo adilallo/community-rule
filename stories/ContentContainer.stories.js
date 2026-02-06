@@ -1,4 +1,4 @@
-import ContentContainer from "../app/components/ContentContainer";
+import ContentContainer from "../app/components/content/ContentContainer";
 
 const mockPost = {
   slug: "sample-article",

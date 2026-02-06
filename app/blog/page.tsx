@@ -1,5 +1,5 @@
 import { getAllBlogPosts } from "../../lib/content";
-import ContentThumbnailTemplate from "../components/ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../components/content/ContentThumbnailTemplate";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

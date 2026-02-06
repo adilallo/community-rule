@@ -3,7 +3,7 @@
 import { memo } from "react";
 import Image from "next/image";
 import { useTranslation } from "../../../contexts/MessagesContext";
-import QuoteDecor from "../../QuoteDecor";
+import QuoteDecor from "./QuoteDecor";
 import type { QuoteBlockViewProps } from "./QuoteBlock.types";
 
 function QuoteBlockView({

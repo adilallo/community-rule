@@ -3,7 +3,7 @@
 import { forwardRef, memo, useCallback } from "react";
 import { SelectOptionView } from "./SelectOption.view";
 import type { SelectOptionProps } from "./SelectOption.types";
-import { normalizeContextMenuItemSize } from "../../../lib/propNormalization";
+import { normalizeContextMenuItemSize } from "../../../../lib/propNormalization";
 
 const SelectOptionContainer = forwardRef<HTMLDivElement, SelectOptionProps>(
   (

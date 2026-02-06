@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Chip from "../Chip";
-import InputLabel from "../../InputLabel";
+import InputLabel from "../../utility/InputLabel";
 import type { MultiSelectViewProps } from "./MultiSelect.types";
 
 function MultiSelectView({

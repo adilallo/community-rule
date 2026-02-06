@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { useTranslation } from "../../contexts/MessagesContext";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import type { LanguageSwitcherProps, Language } from "./LanguageSwitcher.types";
 
 function LanguageSwitcherView({ className = "" }: LanguageSwitcherProps) {

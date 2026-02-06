@@ -1,4 +1,4 @@
-import ContentThumbnailTemplate from "../../ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../../content/ContentThumbnailTemplate";
 import type { RelatedArticlesViewProps } from "./RelatedArticles.types";
 
 export function RelatedArticlesView({

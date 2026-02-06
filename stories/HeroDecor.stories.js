@@ -1,4 +1,4 @@
-import HeroDecor from "../app/components/HeroDecor";
+import HeroDecor from "../app/components/sections/HeroBanner/HeroDecor";
 
 export default {
   title: "Components/HeroDecor",

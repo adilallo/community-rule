@@ -1,10 +1,10 @@
 "use client";
 
 import { memo } from "react";
-import { useTranslation } from "../../contexts/MessagesContext";
-import ContentLockup from "../type/ContentLockup";
-import HeroDecor from "../HeroDecor";
-import { getAssetPath } from "../../../lib/assetUtils";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import ContentLockup from "../../type/ContentLockup";
+import HeroDecor from "./HeroDecor";
+import { getAssetPath } from "../../../../lib/assetUtils";
 
 interface HeroBannerProps {
   title?: string;

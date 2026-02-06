@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import "./globals.css";
-import ConditionalHeader from "./components/ConditionalHeader";
+import ConditionalHeader from "./components/navigation/ConditionalHeader";
 
 // Code split Footer - below the fold, can be lazy loaded
 const Footer = dynamic(() => import("./components/navigation/Footer"), {

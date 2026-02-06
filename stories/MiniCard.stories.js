@@ -1,4 +1,4 @@
-import MiniCard from "../app/components/MiniCard";
+import MiniCard from "../app/components/cards/MiniCard";
 
 export default {
   title: "Components/MiniCard",

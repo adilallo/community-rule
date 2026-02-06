@@ -6,7 +6,7 @@ import type { InputLabelProps } from "./InputLabel.types";
 import {
   normalizeInputLabelSize,
   normalizeInputLabelPalette,
-} from "../../../lib/propNormalization";
+} from "../../../../lib/propNormalization";
 
 const InputLabelContainer = memo<InputLabelProps>(
   ({

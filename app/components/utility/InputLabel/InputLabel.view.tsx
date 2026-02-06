@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import type { InputLabelViewProps } from "./InputLabel.types";
 
 function InputLabelView({

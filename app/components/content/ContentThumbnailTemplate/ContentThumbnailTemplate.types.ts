@@ -1,4 +1,4 @@
-import type { BlogPost } from "../../../lib/content";
+import type { BlogPost } from "../../../../lib/content";
 
 export type ContentThumbnailTemplateVariantValue = "vertical" | "horizontal" | "Vertical" | "Horizontal";
 

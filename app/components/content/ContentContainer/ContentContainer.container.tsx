@@ -1,10 +1,10 @@
 "use client";
 
 import { memo } from "react";
-import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import ContentContainerView from "./ContentContainer.view";
 import type { ContentContainerProps } from "./ContentContainer.types";
-import { normalizeContentContainerSize } from "../../../lib/propNormalization";
+import { normalizeContentContainerSize } from "../../../../lib/propNormalization";
 
 const ContentContainerContainer = memo<ContentContainerProps>(
   ({ post, width = "200px", size: sizeProp = "responsive" }) => {

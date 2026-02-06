@@ -1,7 +1,7 @@
 import React, { Children, type ReactNode } from "react";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
-import SelectDropdown from "../../SelectDropdown";
-import SelectOption from "../../SelectOption";
+import SelectDropdown from "./SelectDropdown";
+import SelectOption from "./SelectOption";
 import type { SelectOptionData } from "./SelectInput.types";
 
 export interface SelectInputViewProps {

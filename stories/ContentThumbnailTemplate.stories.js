@@ -1,4 +1,4 @@
-import ContentThumbnailTemplate from "../app/components/ContentThumbnailTemplate";
+import ContentThumbnailTemplate from "../app/components/content/ContentThumbnailTemplate";
 
 const mockPost = {
   slug: "sample-article",

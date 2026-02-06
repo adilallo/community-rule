@@ -1,6 +1,6 @@
-import HeroBanner from "../app/components/HeroBanner";
-import ContentLockup from "../app/components/ContentLockup";
-import HeroDecor from "../app/components/HeroDecor";
+import HeroBanner from "../app/components/sections/HeroBanner";
+import ContentLockup from "../app/components/type/ContentLockup";
+import HeroDecor from "../app/components/sections/HeroBanner/HeroDecor";
 
 export default {
   title: "Systems/HeroBanner System",

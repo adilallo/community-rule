@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentLockup from "../../type/ContentLockup";
-import MiniCard from "../../MiniCard";
+import MiniCard from "../../cards/MiniCard";
 import type { FeatureGridViewProps } from "./FeatureGrid.types";
 
 function FeatureGridView({
