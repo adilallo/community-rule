@@ -8,14 +8,14 @@ export default {
     docs: {
       description: {
         component:
-          "Unified navigation component that supports two variants: folderTop (home page style with yellow HeaderTab) and standard (dark sticky header). Supports all props from Figma design: size, loggedIn, folderTop, profile, and logIn.",
+          "Unified navigation component that supports two variants: folderTop (home page style with yellow tab container) and standard (dark sticky header). Supports all props from Figma design: size, loggedIn, folderTop, profile, and logIn.",
       },
     },
   },
   argTypes: {
     folderTop: {
       control: "boolean",
-      description: "When true, renders the home page variant with HeaderTab wrapper. When false, renders the standard header variant.",
+      description: "When true, renders the home page variant with yellow tab container. When false, renders the standard header variant.",
     },
     loggedIn: {
       control: "boolean",
@@ -63,7 +63,7 @@ export const HomePage = {
     docs: {
       description: {
         story:
-          "Home page variant (folderTop=true) with transparent background and yellow HeaderTab wrapper. Use the Viewport toolbar to see responsive behavior.",
+          "Home page variant (folderTop=true) with transparent background and yellow tab container. Use the Viewport toolbar to see responsive behavior.",
       },
     },
   },

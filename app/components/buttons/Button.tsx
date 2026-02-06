@@ -46,7 +46,7 @@ const Button = memo<ButtonProps>(
     const size = normalizeSize(sizeProp);
     const sizeStyles: Record<string, string> = {
       xsmall:
-        "p-[var(--spacing-scale-006)] gap-[var(--spacing-scale-002)]",
+        "p-[var(--spacing-scale-004)] gap-[var(--spacing-scale-002)]",
       small:
         "p-[var(--spacing-scale-008)] gap-[var(--spacing-scale-002)]",
       medium: "p-[var(--spacing-scale-010)] gap-[var(--spacing-scale-004)]",
@@ -102,7 +102,7 @@ const Button = memo<ButtonProps>(
         ? ""
         : hoverOutlineStyles[size];
 
-    const baseStyles = `inline-flex items-center justify-start box-border ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-500 ease-in-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
+    const baseStyles = `inline-flex items-center justify-start box-border whitespace-nowrap shrink-0 ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-500 ease-in-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
     const combinedStyles = `${baseStyles} ${className}`;
 
     const sharedA11y = {

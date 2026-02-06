@@ -5,39 +5,42 @@ import { useTranslation } from "../../contexts/MessagesContext";
 import { normalizeMenuBarSize } from "../../../lib/propNormalization";
 
 export type MenuBarSizeValue =
-  | "xsmall"
-  | "default"
-  | "medium"
-  | "large"
-  | "XSmall"
-  | "Default"
+  | "X Small"
+  | "Small"
   | "Medium"
-  | "Large";
+  | "Large"
+  | "X Large";
 
 interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
   /**
-   * Menu bar size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Menu bar size. Uses Figma format: "X Small", "Small", "Medium", "Large", "X Large".
+   * @default "X Small"
    */
   size?: MenuBarSizeValue;
 }
 
 const MenuBar = memo<MenuBarProps>(
-  ({ children, className = "", size: sizeProp = "default", ...props }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
+  ({ children, className = "", size: sizeProp = "X Small", ...props }) => {
     const size = normalizeMenuBarSize(sizeProp);
     const t = useTranslation("menuBar");
-    const sizeStyles: Record<string, string> = {
-      xsmall:
-        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)] rounded-[4px]",
-      default:
-        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)]",
-      medium:
-        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-004)]",
-      large:
-        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-012)]",
+    
+    // Size styles based on Figma specifications
+    const sizeStyles: Record<
+      "X Small" | "Small" | "Medium" | "Large" | "X Large",
+      string
+    > = {
+      "X Small":
+        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-001)] rounded-[var(--spacing-scale-004)]",
+      Small:
+        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-004)] rounded-[var(--spacing-scale-004)]",
+      Medium:
+        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-004)] rounded-[var(--spacing-scale-004)]",
+      Large:
+        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-012)] rounded-[var(--spacing-scale-004)]",
+      "X Large":
+        "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-004)] gap-[var(--spacing-scale-012)] rounded-[var(--spacing-scale-004)]",
     };
 
     const baseStyles = `flex items-center ${sizeStyles[size]} ${className}`;

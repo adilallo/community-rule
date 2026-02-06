@@ -13,23 +13,14 @@ export default {
     },
   },
   argTypes: {
-    variant: {
+    mode: {
       control: { type: "select" },
-      options: ["default", "home"],
-      description: "The visual style variant of the menu item",
+      options: ["default", "inverse"],
+      description: "The visual style mode of the menu item",
     },
     size: {
       control: { type: "select" },
-      options: [
-        "xsmall",
-        "xsmallUseCases",
-        "homeMd",
-        "homeUseCases",
-        "large",
-        "largeUseCases",
-        "homeXlarge",
-        "xlarge",
-      ],
+      options: ["X Small", "Small", "Medium", "Large", "X Large"],
       description: "The size of the menu item",
     },
     disabled: {
@@ -48,23 +39,23 @@ export default {
 export const Default = {
   args: {
     children: "Menu Item",
-    size: "large",
+    size: "Large",
   },
 };
 
-export const Variants = {
+export const Modes = {
   args: {
     children: "Menu Item",
-    size: "large",
+    size: "Large",
   },
   render: (args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <MenuBarItem {...args} variant="default">
+        <MenuBarItem {...args} mode="default">
           Default
         </MenuBarItem>
-        <MenuBarItem {...args} variant="home">
-          Home
+        <MenuBarItem {...args} mode="inverse">
+          Inverse
         </MenuBarItem>
       </div>
     </div>
@@ -72,7 +63,7 @@ export const Variants = {
   parameters: {
     docs: {
       description: {
-        story: "Different visual variants of the menu item component.",
+        story: "Different visual modes of the menu item component.",
       },
     },
   },
@@ -81,19 +72,25 @@ export const Variants = {
 export const Sizes = {
   args: {
     children: "Menu Item",
-    variant: "default",
+    mode: "default",
   },
   render: (args) => (
     <div className="space-y-4">
       <div className="space-x-4">
-        <MenuBarItem {...args} size="xsmall">
-          XSmall
+        <MenuBarItem {...args} size="X Small">
+          X Small
         </MenuBarItem>
-        <MenuBarItem {...args} size="large">
+        <MenuBarItem {...args} size="Small">
+          Small
+        </MenuBarItem>
+        <MenuBarItem {...args} size="Medium">
+          Medium
+        </MenuBarItem>
+        <MenuBarItem {...args} size="Large">
           Large
         </MenuBarItem>
-        <MenuBarItem {...args} size="xlarge">
-          XLarge
+        <MenuBarItem {...args} size="X Large">
+          X Large
         </MenuBarItem>
       </div>
     </div>
@@ -110,8 +107,8 @@ export const Sizes = {
 export const States = {
   args: {
     children: "Menu Item",
-    size: "large",
-    variant: "default",
+    size: "Large",
+    mode: "default",
   },
   render: (args) => (
     <div className="space-y-4">
@@ -132,30 +129,30 @@ export const States = {
   },
 };
 
-export const AllVariants = {
+export const AllModes = {
   args: {},
   render: () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-white font-semibold mb-3">Default Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Default Mode</h3>
         <div className="space-x-4">
-          <MenuBarItem size="xsmall">XSmall</MenuBarItem>
-          <MenuBarItem size="large">Large</MenuBarItem>
-          <MenuBarItem size="xlarge">XLarge</MenuBarItem>
+          <MenuBarItem size="X Small" mode="default">X Small</MenuBarItem>
+          <MenuBarItem size="Large" mode="default">Large</MenuBarItem>
+          <MenuBarItem size="X Large" mode="default">X Large</MenuBarItem>
         </div>
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Home Variant</h3>
+        <h3 className="text-white font-semibold mb-3">Inverse Mode</h3>
         <div className="space-x-4">
-          <MenuBarItem variant="home" size="xsmall">
-            XSmall
+          <MenuBarItem mode="inverse" size="X Small">
+            X Small
           </MenuBarItem>
-          <MenuBarItem variant="home" size="large">
+          <MenuBarItem mode="inverse" size="Large">
             Large
           </MenuBarItem>
-          <MenuBarItem variant="home" size="xlarge">
-            XLarge
+          <MenuBarItem mode="inverse" size="X Large">
+            X Large
           </MenuBarItem>
         </div>
       </div>
@@ -163,11 +160,11 @@ export const AllVariants = {
       <div>
         <h3 className="text-white font-semibold mb-3">Disabled States</h3>
         <div className="space-x-4">
-          <MenuBarItem size="large" disabled>
+          <MenuBarItem size="Large" mode="default" disabled>
             Default Disabled
           </MenuBarItem>
-          <MenuBarItem variant="home" size="large" disabled>
-            Home Disabled
+          <MenuBarItem mode="inverse" size="Large" disabled>
+            Inverse Disabled
           </MenuBarItem>
         </div>
       </div>
@@ -177,7 +174,7 @@ export const AllVariants = {
     docs: {
       description: {
         story:
-          "Complete overview of all menu item variants, sizes, and states.",
+          "Complete overview of all menu item modes, sizes, and states.",
       },
     },
   },

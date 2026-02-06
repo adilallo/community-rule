@@ -19,13 +19,13 @@ const Avatar = memo<AvatarProps>(
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const size = normalizeSize(sizeProp, "small");
     const sizeStyles: Record<string, string> = {
-      small: "w-[var(--spacing-scale-016)] h-[var(--spacing-scale-016)]",
-      medium: "w-[18px] h-[18px]",
+      small: "w-[var(--spacing-scale-016)] h-[var(--spacing-scale-016)] border-[1.5px] border-[#FFFFFF4D] border-solid",
+      medium: "w-[var(--spacing-scale-018)] h-[var(--spacing-scale-018)]",
       large: "w-[var(--spacing-scale-024)] h-[var(--spacing-scale-024)]",
       xlarge: "w-[var(--spacing-scale-032)] h-[var(--spacing-scale-032)]",
     };
 
-    const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover ${sizeStyles[size]} ${className}`;
+    const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover box-border ${sizeStyles[size]} ${className}`;
 
     return <img src={src} alt={alt} className={baseStyles} {...props} />;
   },

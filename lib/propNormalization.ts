@@ -238,33 +238,23 @@ export type SizeValue =
   | "XLarge";
 
 /**
- * Normalize menu bar size prop values
+ * Normalize MenuBar size prop values to Figma specifications
+ * Maps to: "X Small" | "Small" | "Medium" | "Large" | "X Large"
+ * Also supports legacy format for backward compatibility
  */
 export function normalizeMenuBarSize(
   value: string | undefined,
-  defaultValue: "default" = "default"
-): "xsmall" | "default" | "medium" | "large" {
+  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
   if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["xsmall", "default", "medium", "large"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize menu bar item variant prop values
- */
-export function normalizeMenuBarItemVariant(
-  value: string | undefined,
-  defaultValue: "default" = "default"
-): "default" | "home" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["default", "home"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
+  if (
+    value === "X Small" ||
+    value === "Small" ||
+    value === "Medium" ||
+    value === "Large" ||
+    value === "X Large"
+  ) {
+    return value;
   }
   return defaultValue;
 }
@@ -650,3 +640,55 @@ export function normalizeInputLabelPalette(
   }
   return defaultValue;
 }
+
+/**
+ * Normalize MenuBarItem state prop values (Default/Hover/Selected -> default/hover/selected)
+ */
+export function normalizeMenuBarItemState(
+  value: string | undefined,
+  defaultValue: "default" | "hover" | "selected" = "default"
+): "default" | "hover" | "selected" {
+  if (!value) return defaultValue;
+  if (value === "default" || value === "hover" || value === "selected") {
+    return value;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize MenuBarItem mode prop values.
+ * Default mode: yellow text on dark background (standard header)
+ * Inverse mode: black text on yellow background (folderTop variant)
+ */
+export function normalizeMenuBarItemMode(
+  value: string | undefined,
+  defaultValue: "default" | "inverse" = "default"
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  if (value === "default" || value === "inverse") {
+    return value;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize MenuBarItem size prop values.
+ * Accepts: "X Small", "Small", "Medium", "Large", "X Large"
+ */
+export function normalizeMenuBarItemSize(
+  value: string | undefined,
+  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
+  if (!value) return defaultValue;
+  if (
+    value === "X Small" ||
+    value === "Small" ||
+    value === "Medium" ||
+    value === "Large" ||
+    value === "X Large"
+  ) {
+    return value;
+  }
+  return defaultValue;
+}
+

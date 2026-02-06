@@ -1,43 +1,50 @@
 export type MenuBarItemSizeValue =
-  | "default"
-  | "xsmall"
-  | "xsmallUseCases"
-  | "home"
-  | "homeMd"
-  | "homeUseCases"
-  | "large"
-  | "largeUseCases"
-  | "homeXlarge"
-  | "xlarge"
-  | "Default"
-  | "XSmall"
-  | "XSmallUseCases"
-  | "Home"
-  | "HomeMd"
-  | "HomeUseCases"
+  | "X Small"
+  | "Small"
+  | "Medium"
   | "Large"
-  | "LargeUseCases"
-  | "HomeXlarge"
-  | "XLarge";
+  | "X Large";
 
-export type MenuBarItemVariantValue = "default" | "home" | "Default" | "Home";
+export type MenuBarItemStateValue =
+  | "default"
+  | "hover"
+  | "selected";
+
+export type MenuBarItemModeValue =
+  | "default"
+  | "inverse";
 
 export interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
   children?: React.ReactNode;
   /**
-   * Menu bar item variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Menu bar item state: "default", "hover", or "selected".
+   * @default "default"
    */
-  variant?: MenuBarItemVariantValue;
+  state?: MenuBarItemStateValue;
   /**
-   * Menu bar item size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Menu bar item mode. Default mode has yellow text on dark background.
+   * Inverse mode has black text on yellow background (for folderTop variant).
+   * @default "default"
+   */
+  mode?: MenuBarItemModeValue;
+  /**
+   * Whether to show an icon (for future icon support).
+   * @default false
+   */
+  icon?: boolean;
+  /**
+   * Menu bar item size. Uses Figma format: "X Small", "Small", "Medium", "Large", "X Large".
+   * @default "X Small"
    */
   size?: MenuBarItemSizeValue;
   className?: string;
   disabled?: boolean;
-  isActive?: boolean;
+  /**
+   * Whether to use reduced padding (for "use cases" button).
+   * @default false
+   */
+  reducedPadding?: boolean;
   ariaLabel?: string;
 }
 

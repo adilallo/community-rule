@@ -99,54 +99,38 @@ const TopNavContainer = memo<TopNavProps>(
     ];
 
     const renderNavigationItems = (size: NavSize) => {
-      return navigationItems.map((item, index) => {
-        // Determine size based on folderTop and item properties
-        let itemSize: NavSize = size;
-        if (item.extraPadding) {
-          if (folderTop) {
-            if (
-              size === "xsmall" ||
-              size === "default" ||
-              size === "home" ||
-              size === "homeMd" ||
-              size === "large" ||
-              size === "homeXlarge"
-            ) {
-              itemSize =
-                size === "home" || size === "homeMd"
-                  ? "homeMd"
-                  : size === "large"
-                    ? "large"
-                    : size === "homeXlarge"
-                      ? "homeXlarge"
-                      : "xsmallUseCases";
-            }
-          } else {
-            if (size === "xsmall") {
-              itemSize = "xsmallUseCases";
-            }
-          }
-        }
+      // Map NavSize to Figma MenuBarItem sizes
+      const sizeMap: Record<NavSize, "X Small" | "Small" | "Medium" | "Large" | "X Large"> = {
+        default: "Small",
+        xsmall: "X Small",
+        xsmallUseCases: "X Small",
+        home: "X Small",
+        homeMd: "Medium",
+        homeUseCases: "Small",
+        large: "Large",
+        largeUseCases: "Large",
+        homeXlarge: "X Large",
+        xlarge: "X Large",
+      };
 
-        // Determine variant based on folderTop
-        const variant = folderTop
-          ? size === "xsmall" ||
-              size === "default" ||
-              size === "home" ||
-              size === "homeMd" ||
-              size === "large" ||
-              size === "homeXlarge"
-            ? "home"
-            : "default"
-          : "default";
+      // Determine mode based on folderTop
+      const mode = folderTop ? "inverse" : "default";
+
+      return navigationItems.map((item, index) => {
+        // Map size to Figma size
+        let itemSize = sizeMap[size] || "Small";
+
+        // Pass reducedPadding for "use cases" button (item with extraPadding: true)
+        const isUseCases = item.extraPadding === true;
 
         return (
           <MenuBarItem
             key={index}
             href={item.href}
             size={itemSize}
-            variant={variant}
-            isActive={pathname === item.href}
+            mode={mode}
+            state={pathname === item.href ? "selected" : "default"}
+            reducedPadding={isUseCases}
             ariaLabel={t("ariaLabels.navigateToPage").replace("{text}", item.text)}
           >
             {item.text}
@@ -174,18 +158,32 @@ const TopNavContainer = memo<TopNavProps>(
     };
 
     const renderLoginButton = (size: NavSize) => {
-      // Determine variant based on folderTop
-      const variant = folderTop
-        ? size === "xsmall" || size === "default"
-          ? "home"
-          : "default"
-        : "default";
+      // Map NavSize to Figma MenuBarItem sizes
+      const sizeMap: Record<NavSize, "X Small" | "Small" | "Medium" | "Large" | "X Large"> = {
+        default: "Small",
+        xsmall: "X Small",
+        xsmallUseCases: "X Small",
+        home: "X Small",
+        homeMd: "Medium",
+        homeUseCases: "Small",
+        large: "Large",
+        largeUseCases: "Large",
+        homeXlarge: "X Large",
+        xlarge: "X Large",
+      };
+
+      // Determine mode based on folderTop and breakpoint size
+      // folderTop: inverse mode (black text) for smallest breakpoints (xsmall/home)
+      // folderTop: default mode (yellow text) for 640px+ breakpoints (homeMd/large/homeXlarge/xlarge)
+      // false folderTop: always default mode (yellow text on dark background)
+      const isSmallBreakpoint = size === "xsmall" || size === "home";
+      const mode = folderTop && isSmallBreakpoint ? "inverse" : "default";
 
       return (
         <MenuBarItem
           href="#"
-          size={size}
-          variant={variant}
+          size={sizeMap[size] || "Small"}
+          mode={mode}
           ariaLabel={t("ariaLabels.logInToAccount")}
         >
           {t("buttons.logIn")}
