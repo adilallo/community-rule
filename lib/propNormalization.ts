@@ -142,13 +142,13 @@ export function normalizeVariant(
  */
 export function normalizeSize(
   value: string | undefined,
-  defaultValue: "xsmall" = "xsmall"
+  defaultValue: "xsmall" | "small" | "medium" | "large" | "xlarge" = "xsmall"
 ): "xsmall" | "small" | "medium" | "large" | "xlarge" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
   const sizes = ["xsmall", "small", "medium", "large", "xlarge"];
   if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
+    return normalized as "xsmall" | "small" | "medium" | "large" | "xlarge";
   }
   return defaultValue;
 }
@@ -508,6 +508,144 @@ export function normalizeSmallMediumLargeSize(
   const normalized = value.toLowerCase();
   const sizes = ["small", "medium", "large"];
   if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize RuleCard size prop values (L/M -> l/m -> L/M)
+ */
+export function normalizeRuleCardSize(
+  value: string | undefined,
+  defaultValue: "L" = "L"
+): "XS" | "S" | "M" | "L" {
+  if (!value) return defaultValue;
+  const normalized = value.toUpperCase();
+  if (normalized === "XS" || normalized === "S" || normalized === "M" || normalized === "L") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
+ * Type helper for case-insensitive Chip state prop
+ */
+export type ChipStateValue =
+  | "unselected"
+  | "selected"
+  | "disabled"
+  | "custom"
+  | "Unselected"
+  | "Selected"
+  | "Disabled"
+  | "Custom";
+
+/**
+ * Type helper for case-insensitive Chip palette prop
+ */
+export type ChipPaletteValue =
+  | "default"
+  | "inverse"
+  | "Default"
+  | "Inverse";
+
+/**
+ * Type helper for case-insensitive Chip size prop
+ */
+export type ChipSizeValue = "s" | "m" | "S" | "M";
+
+/**
+ * Normalize Chip state prop values (Unselected/Selected/Disabled/Custom)
+ */
+export function normalizeChipState(
+  value: string | undefined,
+  defaultValue: "unselected" = "unselected",
+): "unselected" | "selected" | "disabled" | "custom" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const states = ["unselected", "selected", "disabled", "custom"];
+  if (states.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize Chip palette prop values (Default/Inverse -> default/inverse)
+ */
+export function normalizeChipPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default",
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const palettes = ["default", "inverse"];
+  if (palettes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize Chip size prop values (S/M -> s/m)
+ */
+export function normalizeChipSize(
+  value: string | undefined,
+  defaultValue: "s" = "s",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize MultiSelect size prop values (S/M -> s/m)
+ */
+export function normalizeMultiSelectSize(
+  value: string | undefined,
+  defaultValue: "m" = "m",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize InputLabel size prop values (S/M -> s/m)
+ */
+export function normalizeInputLabelSize(
+  value: string | undefined,
+  defaultValue: "s" = "s",
+): "s" | "m" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const sizes = ["s", "m"];
+  if (sizes.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize InputLabel palette prop values (Default/Inverse -> default/inverse)
+ */
+export function normalizeInputLabelPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default",
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const palettes = ["default", "inverse"];
+  if (palettes.includes(normalized)) {
     return normalized as typeof defaultValue;
   }
   return defaultValue;

@@ -54,6 +54,9 @@
     "buttonHref": "#contact"
   },
   "ruleStack": {
+    "title": "Popular templates",
+    "subtitle": "These are popular patterns for making decisions in mutual aid and open source communities. You can use them as they are or as a starting place for customizing your own CommunityRule.",
+    "subtitleLg": "These are popular patterns for making decisions in communities with egalitarian values. You can use them as they are or as a starting place for customizing your own CommunityRule.",
     "cards": {
       "consensusClusters": {
         "title": "Consensus clusters",

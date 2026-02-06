@@ -11,7 +11,7 @@ import type {
 import { normalizeAskOrganizerVariant } from "../../../lib/propNormalization";
 
 const VARIANT_STYLES: Record<
-  AskOrganizerVariant,
+  "centered" | "left-aligned" | "compact" | "inverse",
   { container: string; buttonContainer: string }
 > = {
   centered: {

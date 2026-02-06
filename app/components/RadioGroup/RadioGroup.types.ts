@@ -32,7 +32,7 @@ export interface RadioGroupViewProps {
   groupId: string;
   value?: string;
   mode: "standard" | "inverse";
-  state: "default" | "hover" | "focus";
+  state: "default" | "hover" | "focus" | "selected";
   disabled: boolean;
   options: RadioOption[];
   className: string;

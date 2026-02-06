@@ -31,7 +31,7 @@ export interface ToggleViewProps {
   labelId: string;
   checked: boolean;
   disabled: boolean;
-  state: "default" | "hover" | "focus";
+  state: "default" | "hover" | "focus" | "selected";
   label?: string;
   showIcon: boolean;
   showText: boolean;

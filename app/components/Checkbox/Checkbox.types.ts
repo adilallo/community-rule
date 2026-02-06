@@ -30,7 +30,7 @@ export interface CheckboxViewProps {
   labelId: string;
   checked: boolean;
   mode: "standard" | "inverse";
-  state: "default" | "hover" | "focus";
+  state: "default" | "hover" | "focus" | "selected";
   disabled: boolean;
   label?: string;
   name?: string;

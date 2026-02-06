@@ -42,6 +42,9 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     // Note: labelVariant and size are normalized for future use but not yet implemented in the view
     const _labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
     const _size = sizeProp ? normalizeSmallMediumLargeSize(sizeProp) : undefined;
+    // Mark as intentionally unused for future implementation
+    void _labelVariant;
+    void _size;
     const externalState = normalizeState(externalStateProp);
     
     const generatedId = useId();
