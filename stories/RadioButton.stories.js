@@ -1,5 +1,5 @@
 import React from "react";
-import RadioButton from "../app/components/RadioButton";
+import RadioButton from "../app/components/controls/RadioButton";
 
 export default {
   title: "Forms/RadioButton",

@@ -30,8 +30,8 @@ vi.mock("next/dynamic", () => {
     },
   };
 });
-import Header from "../../app/components/Header";
-import Footer from "../../app/components/Footer";
+import Header from "../../app/components/navigation/Header";
+import Footer from "../../app/components/navigation/Footer";
 
 afterEach(() => {
   cleanup();

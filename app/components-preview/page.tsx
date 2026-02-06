@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import RuleCard from "../components/RuleCard";
-import Chip from "../components/Chip";
-import MultiSelect from "../components/MultiSelect";
+import RuleCard from "../components/cards/RuleCard";
+import Chip from "../components/controls/Chip";
+import MultiSelect from "../components/controls/MultiSelect";
 import Image from "next/image";
 import { getAssetPath } from "../../lib/assetUtils";
 

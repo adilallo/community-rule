@@ -4,7 +4,7 @@ import {
   fireEvent,
 } from "../utils/test-utils";
 import { describe, it, expect, vi } from "vitest";
-import RuleCard from "../../app/components/RuleCard";
+import RuleCard from "../../app/components/cards/RuleCard";
 
 describe("RuleCard Component", () => {
   const defaultProps = {

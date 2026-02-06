@@ -8,7 +8,7 @@ import "./globals.css";
 import ConditionalHeader from "./components/ConditionalHeader";
 
 // Code split Footer - below the fold, can be lazy loaded
-const Footer = dynamic(() => import("./components/Footer"), {
+const Footer = dynamic(() => import("./components/navigation/Footer"), {
   loading: () => (
     <footer className="bg-[var(--color-surface-default-primary)] w-full min-h-[200px]" />
   ),

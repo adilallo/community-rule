@@ -1,5 +1,5 @@
 import React from "react";
-import Checkbox from "../app/components/Checkbox";
+import Checkbox from "../app/components/controls/Checkbox";
 import { within, userEvent } from "@storybook/test";
 import { expect } from "@storybook/test";
 

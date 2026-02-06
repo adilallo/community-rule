@@ -1,4 +1,4 @@
-import RuleCard from "../app/components/RuleCard";
+import RuleCard from "../app/components/cards/RuleCard";
 import Image from "next/image";
 
 export default {
