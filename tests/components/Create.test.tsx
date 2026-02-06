@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { renderWithProviders } from "../utils/test-utils";
-import Create from "../../app/components/Create";
-import TextInput from "../../app/components/TextInput";
+import Create from "../../app/components/modals/Create";
+import TextInput from "../../app/components/controls/TextInput";
 
 type CreateProps = React.ComponentProps<typeof Create>;
 

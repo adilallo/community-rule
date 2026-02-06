@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import ContentBanner from "../../app/components/ContentBanner";
+import ContentBanner from "../../app/components/sections/ContentBanner";
 import type { BlogPost } from "../../lib/content";
 
 vi.mock("next/link", () => ({

@@ -1,7 +1,7 @@
 import React from "react";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
-import HeroBanner from "../../app/components/HeroBanner";
+import HeroBanner from "../../app/components/sections/HeroBanner";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

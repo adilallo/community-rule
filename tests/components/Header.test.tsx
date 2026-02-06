@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../../app/components/Header";
+import Header from "../../app/components/navigation/Header";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type HeaderProps = React.ComponentProps<typeof Header>;

@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../../../contexts/MessagesContext";
 import Button from "../../buttons/Button";
-import Stepper from "../../progress/Stepper";
+import Stepper from "../../progress/Progress/Stepper";
 import type { ModalFooterProps } from "./ModalFooter.types";
 
 export function ModalFooterView({

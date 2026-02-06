@@ -1,5 +1,5 @@
 import React from "react";
-import TextArea from "../../app/components/TextArea";
+import TextArea from "../../app/components/controls/TextArea";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type TextAreaProps = React.ComponentProps<typeof TextArea>;

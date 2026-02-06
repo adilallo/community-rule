@@ -1,5 +1,5 @@
 import React from "react";
-import Toggle from "../../app/components/Toggle";
+import Toggle from "../../app/components/controls/Toggle";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type ToggleProps = React.ComponentProps<typeof Toggle>;

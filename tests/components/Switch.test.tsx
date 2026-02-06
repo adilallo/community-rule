@@ -1,5 +1,5 @@
 import React from "react";
-import Switch from "../../app/components/Switch";
+import Switch from "../../app/components/controls/Switch";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type SwitchProps = React.ComponentProps<typeof Switch>;

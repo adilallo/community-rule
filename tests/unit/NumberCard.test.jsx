@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import NumberCard from "../../app/components/NumberCard";
+import NumberCard from "../../app/components/cards/NumberCard";
 
 describe("NumberCard Component", () => {
   const defaultProps = {

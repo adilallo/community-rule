@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import RelatedArticles from "../../app/components/RelatedArticles";
+import RelatedArticles from "../../app/components/sections/RelatedArticles";
 import type { BlogPost } from "../../lib/content";
 
 vi.mock("next/link", () => ({
@@ -12,7 +12,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-vi.mock("../../app/components/ContentThumbnailTemplate", () => ({
+vi.mock("../../app/components/content/ContentThumbnailTemplate", () => ({
   default: ({ post }: { post: BlogPost }) => (
     <div data-testid={`thumbnail-${post.slug}`}>
       <a href={`/blog/${post.slug}`}>

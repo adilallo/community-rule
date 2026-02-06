@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import Tooltip from "../../app/components/Tooltip";
+import Tooltip from "../../app/components/modals/Tooltip";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type TooltipProps = React.ComponentProps<typeof Tooltip>;

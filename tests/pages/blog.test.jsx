@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { renderWithProviders as render } from "../utils/test-utils";
 import React from "react";
 import BlogPostPage from "../../app/blog/[slug]/page";
 
@@ -47,7 +48,7 @@ vi.mock("../../lib/content", () => ({
 }));
 
 // Mock components
-vi.mock("../../app/components/ContentBanner", () => {
+vi.mock("../../app/components/sections/ContentBanner", () => {
   return {
     default: ({ post }) => (
       <div data-testid="content-banner">
@@ -58,7 +59,7 @@ vi.mock("../../app/components/ContentBanner", () => {
   };
 });
 
-vi.mock("../../app/components/RelatedArticles", () => {
+vi.mock("../../app/components/sections/RelatedArticles", () => {
   return {
     default: ({ relatedPosts }) => (
       <div data-testid="related-articles">
@@ -73,7 +74,7 @@ vi.mock("../../app/components/RelatedArticles", () => {
   };
 });
 
-vi.mock("../../app/components/AskOrganizer", () => {
+vi.mock("../../app/components/sections/AskOrganizer", () => {
   return {
     default: ({ title, subtitle, buttonText }) => (
       <div data-testid="ask-organizer">

@@ -3,7 +3,7 @@
 import { forwardRef, memo, useCallback } from "react";
 import { ContextMenuItemView } from "./ContextMenuItem.view";
 import type { ContextMenuItemProps } from "./ContextMenuItem.types";
-import { normalizeContextMenuItemSize } from "../../../lib/propNormalization";
+import { normalizeContextMenuItemSize } from "../../../../lib/propNormalization";
 
 const ContextMenuItemContainer = forwardRef<
   HTMLDivElement,

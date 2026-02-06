@@ -1,7 +1,7 @@
 import React from "react";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
-import AskOrganizer from "../../app/components/AskOrganizer";
+import AskOrganizer from "../../app/components/sections/AskOrganizer";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

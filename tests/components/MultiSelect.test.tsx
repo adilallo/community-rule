@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders as render } from "../utils/test-utils";
-import MultiSelect from "../../app/components/MultiSelect";
+import MultiSelect from "../../app/components/controls/MultiSelect";
 import {
   componentTestSuite,
   type ComponentTestSuiteConfig,

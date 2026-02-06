@@ -1,5 +1,5 @@
 import React from "react";
-import RadioButton from "../../app/components/RadioButton";
+import RadioButton from "../../app/components/controls/RadioButton";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type RadioButtonProps = React.ComponentProps<typeof RadioButton>;

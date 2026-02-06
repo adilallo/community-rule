@@ -1,5 +1,5 @@
 import React from "react";
-import SelectInput from "../../app/components/SelectInput";
+import SelectInput from "../../app/components/controls/SelectInput";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type SelectInputProps = React.ComponentProps<typeof SelectInput>;

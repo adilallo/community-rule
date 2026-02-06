@@ -4,7 +4,7 @@ import {
   cleanup,
 } from "../utils/test-utils";
 import { describe, test, expect, afterEach } from "vitest";
-import NumberedCards from "../../app/components/NumberedCards";
+import NumberedCards from "../../app/components/sections/NumberedCards";
 
 afterEach(() => {
   cleanup();

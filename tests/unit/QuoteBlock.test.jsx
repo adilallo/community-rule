@@ -4,7 +4,7 @@ import {
   cleanup,
 } from "../utils/test-utils";
 import { vi, describe, test, expect, afterEach } from "vitest";
-import QuoteBlock from "../../app/components/QuoteBlock";
+import QuoteBlock from "../../app/components/sections/QuoteBlock";
 
 afterEach(() => {
   cleanup();
