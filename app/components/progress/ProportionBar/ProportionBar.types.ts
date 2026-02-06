@@ -1,4 +1,4 @@
-export type ProgressBarState =
+export type ProportionBarState =
   | "1-0"
   | "1-1"
   | "1-2"
@@ -12,13 +12,13 @@ export type ProgressBarState =
   | "3-1"
   | "3-2";
 
-export interface ProgressProps {
-  progress?: ProgressBarState;
+export interface ProportionBarProps {
+  progress?: ProportionBarState;
   className?: string;
 }
 
-export interface ProgressViewProps {
-  progress: ProgressBarState;
+export interface ProportionBarViewProps {
+  progress: ProportionBarState;
   className: string;
   barClasses: string;
 }

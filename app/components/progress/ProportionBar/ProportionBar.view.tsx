@@ -1,11 +1,11 @@
-import type { ProgressViewProps } from "./Progress.types";
+import type { ProportionBarViewProps } from "./ProportionBar.types";
 
-export function ProgressView({
+export function ProportionBarView({
   progress,
   className,
   barClasses,
-}: ProgressViewProps) {
-  // Progress bar type
+}: ProportionBarViewProps) {
+  // Proportion bar type
   const [fullSegments, partialSegment] = progress.split("-").map(Number);
   // Calculate total progress:
   // - For 1-X: first section is (X+1)/6 filled
