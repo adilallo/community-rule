@@ -48,7 +48,6 @@ export function RuleStackView({
 
   // Icon sizes: XS=40px, S=56px, M=56px, L=90px
   // Use a large default (90px) and let CSS handle responsive sizing
-  const iconSize = 90;
 
   // Card data
   const cards = [

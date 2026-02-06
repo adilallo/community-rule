@@ -142,13 +142,13 @@ export function normalizeVariant(
  */
 export function normalizeSize(
   value: string | undefined,
-  defaultValue: "xsmall" = "xsmall"
+  defaultValue: "xsmall" | "small" | "medium" | "large" | "xlarge" = "xsmall"
 ): "xsmall" | "small" | "medium" | "large" | "xlarge" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
   const sizes = ["xsmall", "small", "medium", "large", "xlarge"];
   if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
+    return normalized as "xsmall" | "small" | "medium" | "large" | "xlarge";
   }
   return defaultValue;
 }

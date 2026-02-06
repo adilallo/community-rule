@@ -24,7 +24,7 @@ export interface SwitchProps extends Omit<
 export interface SwitchViewProps {
   switchId: string;
   checked: boolean;
-  state: "default" | "hover" | "focus";
+  state: "default" | "hover" | "focus" | "selected";
   label?: string;
   className: string;
   switchClasses: string;

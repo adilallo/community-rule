@@ -134,12 +134,12 @@ function ChipView({
     .filter(Boolean)
     .join(" ");
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (isDisabled) {
       event.preventDefault();
       return;
     }
-    onClick?.(event);
+    onClick?.(event as React.MouseEvent<HTMLButtonElement>);
   };
 
   const sharedA11y = {

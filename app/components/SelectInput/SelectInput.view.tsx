@@ -7,7 +7,7 @@ import type { SelectOptionData } from "./SelectInput.types";
 export interface SelectInputViewProps {
   label?: string;
   placeholder: string;
-  state: "default" | "active" | "hover" | "focus";
+  state: "default" | "active" | "hover" | "focus" | "selected";
   disabled: boolean;
   error: boolean;
   className: string;
