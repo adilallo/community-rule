@@ -14,6 +14,12 @@ export interface ModalFooterProps {
   nextButtonDisabled?: boolean;
   currentStep?: number;
   totalSteps?: number;
+  /**
+   * Whether to show the stepper component in the footer (Figma prop).
+   * Defaults to true if currentStep and totalSteps are provided.
+   * @default true
+   */
+  stepper?: boolean;
   footerContent?: React.ReactNode;
   className?: string;
 }

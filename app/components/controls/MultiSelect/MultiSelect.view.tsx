@@ -15,6 +15,7 @@ function MultiSelectView({
   onAddClick,
   showAddButton,
   addButtonText,
+  formHeader = true,
   onCustomChipConfirm,
   onCustomChipClose,
   className,
@@ -32,7 +33,7 @@ function MultiSelectView({
   return (
     <div className={`flex flex-col ${isSmall ? "gap-[var(--measures-spacing-200,8px)]" : "gap-[var(--measures-spacing-300,12px)]"} items-start relative w-full ${className}`}>
       {/* Label using InputLabel component */}
-      {label && (
+      {formHeader && label && (
         <InputLabel
           label={label}
           helpIcon={showHelpIcon}

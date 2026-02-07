@@ -40,13 +40,23 @@ export interface MultiSelectProps {
    */
   onAddClick?: () => void;
   /**
-   * Show the add button
+   * Show the add button (backward compatibility - use addButton instead)
    */
   showAddButton?: boolean;
+  /**
+   * Whether to show add button (Figma prop).
+   * @default true
+   */
+  addButton?: boolean;
   /**
    * Text for the add button
    */
   addButtonText?: string;
+  /**
+   * Whether to show form header (label and help icon) above multi-select (Figma prop).
+   * @default true
+   */
+  formHeader?: boolean;
   /**
    * Callback when a custom chip is confirmed (check button clicked)
    */
@@ -68,6 +78,7 @@ export interface MultiSelectViewProps {
   onAddClick?: () => void;
   showAddButton: boolean;
   addButtonText: string;
+  formHeader: boolean;
   onCustomChipConfirm?: (chipId: string, value: string) => void;
   onCustomChipClose?: (chipId: string) => void;
   className: string;

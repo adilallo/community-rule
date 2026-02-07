@@ -4,7 +4,15 @@ export interface SwitchProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   "onChange"
 > {
+  /**
+   * Whether the switch is checked (backward compatibility - use propSwitch instead).
+   */
   checked?: boolean;
+  /**
+   * Whether the switch is checked (Figma prop).
+   * @default false
+   */
+  propSwitch?: boolean;
   onChange?: (
     _e:
       | React.MouseEvent<HTMLButtonElement>
@@ -17,7 +25,14 @@ export interface SwitchProps extends Omit<
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
    */
   state?: StateValue;
+  /**
+   * Label text (backward compatibility - use text instead).
+   */
   label?: string;
+  /**
+   * Label text (Figma prop).
+   */
+  text?: string;
   className?: string;
 }
 

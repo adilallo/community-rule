@@ -32,6 +32,21 @@ export interface TextAreaProps extends Omit<
   onBlur?: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
   className?: string;
   rows?: number;
+  /**
+   * Whether to show hint text below textarea (Figma prop).
+   * @default false
+   */
+  textHint?: boolean;
+  /**
+   * Whether to show form header (label and help icon) above textarea (Figma prop).
+   * @default true
+   */
+  formHeader?: boolean;
+  /**
+   * Whether to show help icon in label.
+   * @default false
+   */
+  showHelpIcon?: boolean;
 }
 
 export interface TextAreaViewProps {
@@ -55,4 +70,7 @@ export interface TextAreaViewProps {
   handleChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleFocus: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
   handleBlur: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  textHint?: boolean;
+  formHeader?: boolean;
+  showHelpIcon?: boolean;
 }

@@ -14,14 +14,18 @@ const MultiSelectContainer = memo<MultiSelectProps>(
     options,
     onChipClick,
     onAddClick,
-    showAddButton = true,
+    showAddButton: showAddButtonProp,
+    addButton: addButtonProp,
     addButtonText = "Add organization type",
+    formHeader = true,
     onCustomChipConfirm,
     onCustomChipClose,
     className = "",
   }) => {
     const size = normalizeMultiSelectSize(sizeProp);
     const palette = normalizeChipPalette(paletteProp);
+    // Backward compatibility: if addButton is provided, use it; otherwise use showAddButton
+    const showAddButton = addButtonProp !== undefined ? addButtonProp : (showAddButtonProp !== undefined ? showAddButtonProp : true);
 
     return (
       <MultiSelectView
@@ -34,6 +38,7 @@ const MultiSelectContainer = memo<MultiSelectProps>(
         onAddClick={onAddClick}
         showAddButton={showAddButton}
         addButtonText={addButtonText}
+        formHeader={formHeader}
         onCustomChipConfirm={onCustomChipConfirm}
         onCustomChipClose={onCustomChipClose}
         className={className}

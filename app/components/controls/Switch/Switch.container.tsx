@@ -8,15 +8,22 @@ import { normalizeState } from "../../../../lib/propNormalization";
 const SwitchContainer = memo(
   forwardRef<HTMLButtonElement, SwitchProps>((props, ref) => {
     const {
-      checked = false,
+      checked: checkedProp,
+      propSwitch: propSwitchProp,
       onChange,
       onFocus,
       onBlur,
       state: stateProp = "default",
-      label,
+      label: labelProp,
+      text: textProp,
       className = "",
       ...rest
     } = props;
+    
+    // Backward compatibility: use propSwitch if provided, otherwise use checked
+    const checked = propSwitchProp !== undefined ? propSwitchProp : (checkedProp !== undefined ? checkedProp : false);
+    // Backward compatibility: use text if provided, otherwise use label
+    const label = textProp !== undefined ? textProp : labelProp;
     
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const state = normalizeState(stateProp);

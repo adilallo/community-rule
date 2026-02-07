@@ -24,6 +24,9 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       name,
       className = "",
       rows,
+      textHint = false,
+      formHeader = true,
+      showHelpIcon = false,
       ...props
     },
     ref,
@@ -174,6 +177,9 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         handleFocus={handleFocus}
         handleBlur={handleBlur}
         aria-invalid={error}
+        textHint={textHint}
+        formHeader={formHeader}
+        showHelpIcon={showHelpIcon}
         {...props}
       />
     );
