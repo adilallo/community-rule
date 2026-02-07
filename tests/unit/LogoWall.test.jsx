@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import { describe, test, expect, afterEach } from "vitest";
-import LogoWall from "../../app/components/LogoWall";
+import LogoWall from "../../app/components/sections/LogoWall";
 
 afterEach(() => {
   cleanup();

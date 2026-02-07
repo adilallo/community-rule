@@ -5,10 +5,10 @@ import dynamic from "next/dynamic";
 import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import "./globals.css";
-import ConditionalHeader from "./components/ConditionalHeader";
+import TopNavWithPathname from "./components/navigation/TopNav/TopNavWithPathname";
 
 // Code split Footer - below the fold, can be lazy loaded
-const Footer = dynamic(() => import("./components/Footer"), {
+const Footer = dynamic(() => import("./components/navigation/Footer"), {
   loading: () => (
     <footer className="bg-[var(--color-surface-default-primary)] w-full min-h-[200px]" />
   ),
@@ -107,7 +107,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <MessagesProvider messages={messages}>
           <div className="min-h-screen flex flex-col">
-            <ConditionalHeader />
+            <TopNavWithPathname />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>

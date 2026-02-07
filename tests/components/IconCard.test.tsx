@@ -2,7 +2,7 @@ import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import IconCard from "../../app/components/IconCard";
+import IconCard from "../../app/components/cards/IconCard";
 import {
   componentTestSuite,
   type ComponentTestSuiteConfig,

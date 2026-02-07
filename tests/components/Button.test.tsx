@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import Button from "../../app/components/Button";
+import Button from "../../app/components/buttons/Button";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,
@@ -54,7 +54,7 @@ describe("Button (behavioral tests)", () => {
 
   it("renders as a link when href is provided", () => {
     render(
-      <Button href="/learn" variant="default">
+      <Button href="/learn" buttonType="filled" palette="default">
         Learn more
       </Button>,
     );

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ContentContainer from "../../app/components/ContentContainer";
+import ContentContainer from "../../app/components/content/ContentContainer";
 
 // Mock asset utils
 vi.mock("../../lib/assetUtils", () => ({

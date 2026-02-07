@@ -112,30 +112,6 @@ export type InputStateValue =
   | "Hover"
   | "Focus";
 
-/**
- * Normalize button variant prop values
- */
-export function normalizeVariant(
-  value: string | undefined,
-  defaultValue: "filled" = "filled"
-): "filled" | "filled-inverse" | "outline" | "outline-inverse" | "ghost" | "ghost-inverse" | "danger" | "danger-inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = [
-    "filled",
-    "filled-inverse",
-    "outline",
-    "outline-inverse",
-    "ghost",
-    "ghost-inverse",
-    "danger",
-    "danger-inverse",
-  ];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
 
 /**
  * Normalize button size prop values
@@ -202,27 +178,6 @@ export function normalizeTooltipPosition(
 }
 
 /**
- * Type helper for case-insensitive variant prop
- */
-export type VariantValue =
-  | "filled"
-  | "filled-inverse"
-  | "outline"
-  | "outline-inverse"
-  | "ghost"
-  | "ghost-inverse"
-  | "danger"
-  | "danger-inverse"
-  | "Filled"
-  | "Filled-Inverse"
-  | "Outline"
-  | "Outline-Inverse"
-  | "Ghost"
-  | "Ghost-Inverse"
-  | "Danger"
-  | "Danger-Inverse";
-
-/**
  * Type helper for case-insensitive size prop
  */
 export type SizeValue =
@@ -238,33 +193,23 @@ export type SizeValue =
   | "XLarge";
 
 /**
- * Normalize menu bar size prop values
+ * Normalize MenuBar size prop values to Figma specifications
+ * Maps to: "X Small" | "Small" | "Medium" | "Large" | "X Large"
+ * Also supports legacy format for backward compatibility
  */
 export function normalizeMenuBarSize(
   value: string | undefined,
-  defaultValue: "default" = "default"
-): "xsmall" | "default" | "medium" | "large" {
+  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
   if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["xsmall", "default", "medium", "large"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize menu bar item variant prop values
- */
-export function normalizeMenuBarItemVariant(
-  value: string | undefined,
-  defaultValue: "default" = "default"
-): "default" | "home" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["default", "home"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
+  if (
+    value === "X Small" ||
+    value === "Small" ||
+    value === "Medium" ||
+    value === "Large" ||
+    value === "X Large"
+  ) {
+    return value;
   }
   return defaultValue;
 }
@@ -650,3 +595,143 @@ export function normalizeInputLabelPalette(
   }
   return defaultValue;
 }
+
+/**
+ * Normalize MenuBarItem state prop values (Default/Hover/Selected -> default/hover/selected)
+ */
+export function normalizeMenuBarItemState(
+  value: string | undefined,
+  defaultValue: "default" | "hover" | "selected" = "default"
+): "default" | "hover" | "selected" {
+  if (!value) return defaultValue;
+  if (value === "default" || value === "hover" || value === "selected") {
+    return value;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize MenuBarItem mode prop values.
+ * Default mode: yellow text on dark background (standard header)
+ * Inverse mode: black text on yellow background (folderTop variant)
+ */
+export function normalizeMenuBarItemMode(
+  value: string | undefined,
+  defaultValue: "default" | "inverse" = "default"
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  if (value === "default" || value === "inverse") {
+    return value;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize MenuBarItem size prop values.
+ * Accepts: "X Small", "Small", "Medium", "Large", "X Large"
+ */
+export function normalizeMenuBarItemSize(
+  value: string | undefined,
+  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
+  if (!value) return defaultValue;
+  if (
+    value === "X Small" ||
+    value === "Small" ||
+    value === "Medium" ||
+    value === "Large" ||
+    value === "X Large"
+  ) {
+    return value;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize button type prop values (Filled/Outline/Ghost/Danger -> filled/outline/ghost/danger)
+ */
+export function normalizeButtonType(
+  value: string | undefined,
+  defaultValue: "filled" = "filled"
+): "filled" | "outline" | "ghost" | "danger" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const types = ["filled", "outline", "ghost", "danger"];
+  if (types.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize button palette prop values (Default/Invert -> default/inverse)
+ */
+export function normalizeButtonPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default"
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  // Handle "invert" -> "inverse" mapping
+  if (normalized === "invert" || normalized === "inverse") {
+    return "inverse";
+  }
+  if (normalized === "default") {
+    return "default";
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize button state prop values (Default/Focus/Active/Hover/Disabled -> default/focus/active/hover/disabled)
+ */
+export function normalizeButtonState(
+  value: string | undefined,
+  defaultValue: "default" = "default"
+): "default" | "focus" | "active" | "hover" | "disabled" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const states = ["default", "focus", "active", "hover", "disabled"];
+  if (states.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Type helper for case-insensitive button type prop
+ */
+export type ButtonTypeValue =
+  | "filled"
+  | "outline"
+  | "ghost"
+  | "danger"
+  | "Filled"
+  | "Outline"
+  | "Ghost"
+  | "Danger";
+
+/**
+ * Type helper for case-insensitive button palette prop
+ */
+export type ButtonPaletteValue =
+  | "default"
+  | "inverse"
+  | "Default"
+  | "Invert"
+  | "Inverse";
+
+/**
+ * Type helper for case-insensitive button state prop
+ */
+export type ButtonStateValue =
+  | "default"
+  | "focus"
+  | "active"
+  | "hover"
+  | "disabled"
+  | "Default"
+  | "Focus"
+  | "Active"
+  | "Hover"
+  | "Disabled";

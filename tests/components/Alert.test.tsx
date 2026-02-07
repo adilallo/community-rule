@@ -1,5 +1,5 @@
 import React from "react";
-import Alert from "../../app/components/Alert";
+import Alert from "../../app/components/modals/Alert";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type AlertProps = React.ComponentProps<typeof Alert>;

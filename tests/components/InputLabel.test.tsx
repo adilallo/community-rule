@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { screen } from "@testing-library/react";
 import { renderWithProviders as render } from "../utils/test-utils";
-import InputLabel from "../../app/components/InputLabel";
+import InputLabel from "../../app/components/utility/InputLabel";
 import {
   componentTestSuite,
   type ComponentTestSuiteConfig,

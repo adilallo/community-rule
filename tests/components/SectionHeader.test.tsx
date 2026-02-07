@@ -1,5 +1,5 @@
 import React from "react";
-import SectionHeader from "../../app/components/SectionHeader";
+import SectionHeader from "../../app/components/sections/SectionHeader";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type SectionHeaderProps = React.ComponentProps<typeof SectionHeader>;

@@ -1,7 +1,7 @@
 import React from "react";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
-import FeatureGrid from "../../app/components/FeatureGrid";
+import FeatureGrid from "../../app/components/sections/FeatureGrid";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

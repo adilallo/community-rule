@@ -1,7 +1,7 @@
 import React from "react";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
-import Footer from "../../app/components/Footer";
+import Footer from "../../app/components/navigation/Footer";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

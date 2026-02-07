@@ -6,7 +6,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
 import { logger } from "../../lib/logger";
-import RuleStack from "../../app/components/RuleStack";
+import RuleStack from "../../app/components/sections/RuleStack";
 
 afterEach(() => {
   cleanup();

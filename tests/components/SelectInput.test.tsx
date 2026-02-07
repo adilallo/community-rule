@@ -1,5 +1,5 @@
 import React from "react";
-import SelectInput from "../../app/components/SelectInput";
+import SelectInput from "../../app/components/controls/SelectInput";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type SelectInputProps = React.ComponentProps<typeof SelectInput>;
@@ -8,7 +8,8 @@ componentTestSuite<SelectInputProps>({
   component: SelectInput,
   name: "SelectInput",
   props: {
-    label: "Test Select Input",
+    labelText: "Test Select Input",
+    showLabel: true,
     placeholder: "Select an option",
     options: [
       { value: "option1", label: "Option 1" },

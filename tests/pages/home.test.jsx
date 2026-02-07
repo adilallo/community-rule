@@ -4,7 +4,7 @@ import {
   screen,
   waitFor,
 } from "../utils/test-utils";
-import Page from "../../app/page";
+import Page from "../../app/(marketing)/page";
 
 describe("Page", () => {
   test("renders all main sections", async () => {

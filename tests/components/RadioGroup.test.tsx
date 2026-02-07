@@ -1,5 +1,5 @@
 import React from "react";
-import RadioGroup from "../../app/components/RadioGroup";
+import RadioGroup from "../../app/components/controls/RadioGroup";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type RadioGroupProps = React.ComponentProps<typeof RadioGroup>;

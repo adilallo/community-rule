@@ -1,5 +1,5 @@
 import React from "react";
-import TextInput from "../../app/components/TextInput";
+import TextInput from "../../app/components/controls/TextInput";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type TextInputProps = React.ComponentProps<typeof TextInput>;
