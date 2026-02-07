@@ -692,3 +692,91 @@ export function normalizeMenuBarItemSize(
   return defaultValue;
 }
 
+/**
+ * Normalize button type prop values (Filled/Outline/Ghost/Danger -> filled/outline/ghost/danger)
+ */
+export function normalizeButtonType(
+  value: string | undefined,
+  defaultValue: "filled" = "filled"
+): "filled" | "outline" | "ghost" | "danger" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const types = ["filled", "outline", "ghost", "danger"];
+  if (types.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize button palette prop values (Default/Invert -> default/inverse)
+ */
+export function normalizeButtonPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default"
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  // Handle "invert" -> "inverse" mapping
+  if (normalized === "invert" || normalized === "inverse") {
+    return "inverse";
+  }
+  if (normalized === "default") {
+    return "default";
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize button state prop values (Default/Focus/Active/Hover/Disabled -> default/focus/active/hover/disabled)
+ */
+export function normalizeButtonState(
+  value: string | undefined,
+  defaultValue: "default" = "default"
+): "default" | "focus" | "active" | "hover" | "disabled" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  const states = ["default", "focus", "active", "hover", "disabled"];
+  if (states.includes(normalized)) {
+    return normalized as typeof defaultValue;
+  }
+  return defaultValue;
+}
+
+/**
+ * Type helper for case-insensitive button type prop
+ */
+export type ButtonTypeValue =
+  | "filled"
+  | "outline"
+  | "ghost"
+  | "danger"
+  | "Filled"
+  | "Outline"
+  | "Ghost"
+  | "Danger";
+
+/**
+ * Type helper for case-insensitive button palette prop
+ */
+export type ButtonPaletteValue =
+  | "default"
+  | "inverse"
+  | "Default"
+  | "Invert"
+  | "Inverse";
+
+/**
+ * Type helper for case-insensitive button state prop
+ */
+export type ButtonStateValue =
+  | "default"
+  | "focus"
+  | "active"
+  | "hover"
+  | "disabled"
+  | "Default"
+  | "Focus"
+  | "Active"
+  | "Hover"
+  | "Disabled";

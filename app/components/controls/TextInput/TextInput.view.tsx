@@ -26,12 +26,14 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
       showHelpIcon = true,
       inputWrapperClasses = "relative",
       focusRingClasses = "",
+      textHint = false,
+      formHeader = true,
     },
     ref,
   ) => {
     return (
       <div className={containerClasses}>
-        {label && (
+        {formHeader && label && (
           <div className="flex flex-wrap gap-[var(--measures-spacing-200,4px_8px)] items-baseline pr-[var(--measures-spacing-100,4px)] relative shrink-0 w-full">
             <div className="flex gap-[var(--measures-spacing-050,2px)] items-center relative shrink-0">
               <label
@@ -75,6 +77,13 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
             <div className={focusRingClasses} aria-hidden="true" />
           )}
         </div>
+        {textHint && (
+          <div className="flex items-start relative shrink-0 w-full">
+            <p className="flex-[1_0_0] font-inter font-normal leading-[16px] min-h-px min-w-px relative text-[color:var(--color-content-default-tertiary,#b4b4b4)] text-[length:var(--sizing-300,12px)]">
+              Hint text here
+            </p>
+          </div>
+        )}
       </div>
     );
   },

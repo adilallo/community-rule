@@ -1,19 +1,64 @@
 import { memo } from "react";
-import type { VariantValue, SizeValue } from "../../../lib/propNormalization";
-import { normalizeVariant, normalizeSize } from "../../../lib/propNormalization";
+import type {
+  VariantValue,
+  SizeValue,
+  ButtonTypeValue,
+  ButtonPaletteValue,
+  ButtonStateValue,
+} from "../../../lib/propNormalization";
+import {
+  normalizeVariant,
+  normalizeSize,
+  normalizeButtonType,
+  normalizeButtonPalette,
+} from "../../../lib/propNormalization";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   /**
+   * @deprecated Use `type` and `palette` props instead. This prop is maintained for backward compatibility.
    * Button variant. Accepts both lowercase and PascalCase (case-insensitive).
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
    */
   variant?: VariantValue;
   /**
+   * Button type (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * @default "filled"
+   */
+  buttonType?: ButtonTypeValue;
+  /**
+   * Button palette (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
+   * Figma uses "Invert", codebase uses "inverse" - both are supported.
+   * @default "default"
+   */
+  palette?: ButtonPaletteValue;
+  /**
    * Button size. Accepts both lowercase and PascalCase (case-insensitive).
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * @default "xsmall"
    */
   size?: SizeValue;
+  /**
+   * Button state (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
+   * @default "default"
+   */
+  state?: ButtonStateValue;
+  /**
+   * Whether to show a leading icon (Figma prop).
+   * @default false
+   */
+  hasIconLeading?: boolean;
+  /**
+   * Whether to show a following icon (Figma prop).
+   * @default false
+   */
+  hasIconFollowing?: boolean;
+  /**
+   * Whether to show text (Figma prop).
+   * @default true
+   */
+  hasText?: boolean;
   className?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
@@ -29,11 +74,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = memo<ButtonProps>(
   ({
     children,
-    variant: variantProp = "filled",
+    variant: variantProp,
+    buttonType: typeProp,
+    palette: paletteProp,
     size: sizeProp = "xsmall",
+    state: _stateProp,
+    hasIconLeading = false,
+    hasIconFollowing = false,
+    hasText = true,
     className = "",
     disabled = false,
-    type = "button",
+    type: htmlType = "button",
     onClick,
     href,
     target,
@@ -41,9 +92,68 @@ const Button = memo<ButtonProps>(
     ariaLabel,
     ...props
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeVariant(variantProp);
+    // Determine type and palette from either new props or legacy variant prop
+    let buttonType: "filled" | "outline" | "ghost" | "danger";
+    let buttonPalette: "default" | "inverse";
+
+    if (variantProp) {
+      // Backward compatibility: map old variant to new type/palette
+      const variant = normalizeVariant(variantProp);
+      if (variant === "filled") {
+        buttonType = "filled";
+        buttonPalette = "default";
+      } else if (variant === "filled-inverse") {
+        buttonType = "filled";
+        buttonPalette = "inverse";
+      } else if (variant === "outline") {
+        buttonType = "outline";
+        buttonPalette = "default";
+      } else if (variant === "outline-inverse") {
+        buttonType = "outline";
+        buttonPalette = "inverse";
+      } else if (variant === "ghost") {
+        buttonType = "ghost";
+        buttonPalette = "default";
+      } else if (variant === "ghost-inverse") {
+        buttonType = "ghost";
+        buttonPalette = "inverse";
+      } else if (variant === "danger") {
+        buttonType = "danger";
+        buttonPalette = "default";
+      } else {
+        // danger-inverse
+        buttonType = "danger";
+        buttonPalette = "inverse";
+      }
+    } else {
+      // Use new type/palette props
+      buttonType = normalizeButtonType(typeProp, "filled");
+      buttonPalette = normalizeButtonPalette(paletteProp, "default");
+    }
+
+    // Normalize other props
     const size = normalizeSize(sizeProp);
+    // State prop is for Figma alignment - actual state is handled by CSS pseudo-classes
+    // We accept it for API alignment but don't use it for styling (CSS handles states)
+
+    // Map type + palette to legacy variant for styling (maintains existing styles)
+    const getVariantFromTypeAndPalette = (
+      type: typeof buttonType,
+      palette: typeof buttonPalette,
+    ): string => {
+      if (type === "filled" && palette === "default") return "filled";
+      if (type === "filled" && palette === "inverse") return "filled-inverse";
+      if (type === "outline" && palette === "default") return "outline";
+      if (type === "outline" && palette === "inverse") return "outline-inverse";
+      if (type === "ghost" && palette === "default") return "ghost";
+      if (type === "ghost" && palette === "inverse") return "ghost-inverse";
+      if (type === "danger" && palette === "default") return "danger";
+      // danger + inverse
+      return "danger-inverse";
+    };
+
+    const variant = getVariantFromTypeAndPalette(buttonType, buttonPalette);
+
     const sizeStyles: Record<string, string> = {
       xsmall:
         "p-[var(--spacing-scale-004)] gap-[var(--spacing-scale-002)]",
@@ -102,6 +212,10 @@ const Button = memo<ButtonProps>(
         ? ""
         : hoverOutlineStyles[size];
 
+    // Apply state-based styles if state prop is provided (overrides default hover/focus/active)
+    // Note: State prop is informational for Figma alignment - actual state is handled by CSS pseudo-classes
+    // For now, we maintain existing behavior and state prop is for documentation/alignment purposes
+
     const baseStyles = `inline-flex items-center justify-start box-border whitespace-nowrap shrink-0 ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-500 ease-in-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
     const combinedStyles = `${baseStyles} ${className}`;
 
@@ -109,6 +223,16 @@ const Button = memo<ButtonProps>(
       ...(ariaLabel && { "aria-label": ariaLabel }),
       ...(disabled && { "aria-disabled": true }),
       tabIndex: disabled ? -1 : 0,
+    };
+
+    // Filter children based on hasIconLeading, hasIconFollowing, hasText props
+    // For now, we render all children but these props are available for future icon support
+    const renderContent = () => {
+      if (!hasText && !hasIconLeading && !hasIconFollowing) {
+        return children; // If all are false, render children as-is (backward compatibility)
+      }
+      // TODO: When icon support is added, filter children based on these props
+      return children;
     };
 
     if (href && !disabled) {
@@ -121,11 +245,11 @@ const Button = memo<ButtonProps>(
         ...(rel && { rel }),
       };
 
-      return <a {...anchorProps}>{children}</a>;
+      return <a {...anchorProps}>{renderContent()}</a>;
     }
 
     const buttonProps: React.ButtonHTMLAttributes<HTMLButtonElement> = {
-      type,
+      type: htmlType,
       className: combinedStyles,
       disabled,
       onClick,
@@ -133,7 +257,7 @@ const Button = memo<ButtonProps>(
       ...props,
     };
 
-    return <button {...buttonProps}>{children}</button>;
+    return <button {...buttonProps}>{renderContent()}</button>;
   },
 );
 

@@ -22,10 +22,18 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
   (
     {
       id,
-      label,
+      label: labelProp,
+      labelText,
+      showLabel,
       labelVariant: labelVariantProp,
       size: sizeProp,
       state: externalStateProp = "default",
+      asterisk = false,
+      iconHelp = true,
+      textOptional = false,
+      textData = true,
+      iconRight = true,
+      textHint = false,
       disabled = false,
       error = false,
       placeholder = "Choose an option",
@@ -38,6 +46,17 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     },
     ref,
   ) => {
+    // Handle backward compatibility: if label is string, use it as labelText
+    const actualLabelText = labelText || labelProp;
+    const shouldShowLabel = showLabel !== undefined ? showLabel : (actualLabelText !== undefined);
+    
+    // Normalize state - handle "state5" as disabled
+    let normalizedState = externalStateProp;
+    if (normalizedState === "state5" || normalizedState === "State5") {
+      normalizedState = "default"; // Map to default, disabled prop handles the disabled state
+    }
+    const externalState = normalizeState(normalizedState);
+    
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     // Note: labelVariant and size are normalized for future use but not yet implemented in the view
     const _labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
@@ -45,7 +64,6 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     // Mark as intentionally unused for future implementation
     void _labelVariant;
     void _size;
-    const externalState = normalizeState(externalStateProp);
     
     const generatedId = useId();
     const selectId = id || `select-input-${generatedId}`;
@@ -193,7 +211,7 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
 
     return (
       <SelectInputView
-        label={label}
+        label={shouldShowLabel ? actualLabelText : undefined}
         placeholder={placeholder}
         state={actualState}
         disabled={disabled}
@@ -214,8 +232,14 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
         onOptionClick={handleOptionSelect}
         selectRef={selectRef}
         menuRef={menuRef}
-        ariaLabelledby={label ? labelId : undefined}
+        ariaLabelledby={shouldShowLabel ? labelId : undefined}
         ariaInvalid={error}
+        asterisk={asterisk}
+        iconHelp={iconHelp}
+        textOptional={textOptional}
+        textData={textData}
+        iconRight={iconRight}
+        textHint={textHint}
         {...props}
       />
     );

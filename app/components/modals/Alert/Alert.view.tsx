@@ -6,6 +6,8 @@ export function AlertView({
   description,
   status: _status,
   type: _type,
+  hasLeadingIcon,
+  hasBodyText,
   className,
   containerClasses,
   containerStyle,
@@ -41,12 +43,16 @@ export function AlertView({
       style={containerStyle}
       role="alert"
     >
-      <div className="shrink-0 w-[24px] h-[24px] flex items-center justify-center">
-        {getIcon()}
-      </div>
+      {hasLeadingIcon && (
+        <div className="shrink-0 w-[24px] h-[24px] flex items-center justify-center">
+          {getIcon()}
+        </div>
+      )}
       <div className="flex flex-1 flex-col items-start justify-center min-h-0 min-w-0">
         <p className={titleClasses}>{title}</p>
-        {description && <p className={descriptionClasses}>{description}</p>}
+        {hasBodyText && description && (
+          <p className={descriptionClasses}>{description}</p>
+        )}
       </div>
       <Button
         variant="ghost"

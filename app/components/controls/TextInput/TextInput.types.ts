@@ -19,6 +19,16 @@ export interface TextInputProps extends Omit<
   onBlur?: (_e: React.FocusEvent<HTMLInputElement>) => void;
   className?: string;
   showHelpIcon?: boolean;
+  /**
+   * Whether to show hint text below input (Figma prop).
+   * @default false
+   */
+  textHint?: boolean;
+  /**
+   * Whether to show form header (label and help icon) above input (Figma prop).
+   * @default true
+   */
+  formHeader?: boolean;
 }
 
 export interface TextInputViewProps {
@@ -45,4 +55,6 @@ export interface TextInputViewProps {
   isFilled?: boolean;
   inputWrapperClasses?: string;
   focusRingClasses?: string;
+  textHint?: boolean;
+  formHeader?: boolean;
 }

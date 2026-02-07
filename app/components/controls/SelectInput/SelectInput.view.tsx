@@ -33,6 +33,13 @@ export interface SelectInputViewProps {
   // Additional props
   ariaLabelledby?: string;
   ariaInvalid?: boolean;
+  // Figma props
+  asterisk?: boolean;
+  iconHelp?: boolean;
+  textOptional?: boolean;
+  textData?: boolean;
+  iconRight?: boolean;
+  textHint?: boolean;
 }
 
 export function SelectInputView({
@@ -59,6 +66,12 @@ export function SelectInputView({
   menuRef,
   ariaLabelledby,
   ariaInvalid,
+  asterisk = false,
+  iconHelp = true,
+  textOptional = false,
+  textData = true,
+  iconRight = true,
+  textHint = false,
 }: SelectInputViewProps) {
   // Styles based on Figma design
   const containerClasses = "flex flex-col gap-[8px]";
@@ -135,14 +148,26 @@ export function SelectInputView({
             >
               {label}
             </label>
-            <div className="relative shrink-0 size-[12px]">
-              <img
-                src={getAssetPath(ASSETS.ICON_HELP)}
-                alt="Help"
-                className="block max-w-none size-full"
-              />
-            </div>
+            {asterisk && (
+              <span className="text-[var(--color-content-default-negative-primary,#ea4845)] text-[10px] leading-[12px] font-medium">
+                *
+              </span>
+            )}
+            {iconHelp && (
+              <div className="relative shrink-0 size-[12px]">
+                <img
+                  src={getAssetPath(ASSETS.ICON_HELP)}
+                  alt="Help"
+                  className="block max-w-none size-full"
+                />
+              </div>
+            )}
           </div>
+          {textOptional && (
+            <span className="text-[var(--color-content-default-tertiary,#b4b4b4)] text-[10px] leading-[14px] font-normal">
+              Optional text
+            </span>
+          )}
         </div>
       )}
       <div className="relative">
@@ -161,24 +186,26 @@ export function SelectInputView({
           onFocus={onButtonFocus}
           onBlur={onButtonBlur}
         >
-          <span className={`flex-1 text-left pr-[32px] ${textColorClass}`}>
-            {displayText}
+          <span className={`flex-1 text-left ${iconRight ? "pr-[32px]" : ""} ${textColorClass}`}>
+            {textData ? displayText : placeholder}
           </span>
-          <div className="flex items-center justify-center shrink-0">
-            <svg
-              className={chevronClasses}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </div>
+          {iconRight && (
+            <div className="flex items-center justify-center shrink-0">
+              <svg
+                className={chevronClasses}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          )}
         </button>
         {state === "focus" && (
           <div
@@ -235,6 +262,13 @@ export function SelectInputView({
           </div>
         )}
       </div>
+      {textHint && (
+        <div className="flex items-start relative shrink-0 w-full">
+          <p className="flex-[1_0_0] font-inter font-normal leading-[16px] min-h-px min-w-px relative text-[color:var(--color-content-default-tertiary,#b4b4b4)] text-[length:var(--sizing-300,12px)]">
+            Hint text here
+          </p>
+        </div>
+      )}
     </div>
   );
 }

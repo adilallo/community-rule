@@ -11,6 +11,8 @@ const AlertContainer = memo<AlertProps>(
     description,
     status: statusProp = "default",
     type: typeProp = "toast",
+    hasLeadingIcon = true,
+    hasBodyText = true,
     onClose,
     className = "",
   }) => {
@@ -104,6 +106,8 @@ const AlertContainer = memo<AlertProps>(
         description={description}
         status={status}
         type={type}
+        hasLeadingIcon={hasLeadingIcon}
+        hasBodyText={hasBodyText}
         className={className}
         containerClasses={containerClasses}
         containerStyle={containerStyle}

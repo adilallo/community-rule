@@ -23,6 +23,8 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
       type = "text",
       className = "",
       showHelpIcon = true,
+      textHint = false,
+      formHeader = true,
       ...props
     },
     ref,
@@ -220,6 +222,8 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
         isFilled={isFilled}
         inputWrapperClasses={stateStyles.inputWrapper}
         focusRingClasses={stateStyles.focusRing}
+        textHint={textHint}
+        formHeader={formHeader}
         {...props}
       />
     );
