@@ -55,7 +55,8 @@ export function AlertView({
         )}
       </div>
       <Button
-        variant="ghost"
+        buttonType="ghost"
+        palette="default"
         size="large"
         onClick={onClose}
         ariaLabel="Close alert"

@@ -8,22 +8,15 @@ import { normalizeState } from "../../../../lib/propNormalization";
 const SwitchContainer = memo(
   forwardRef<HTMLButtonElement, SwitchProps>((props, ref) => {
     const {
-      checked: checkedProp,
-      propSwitch: propSwitchProp,
+      propSwitch = false,
       onChange,
       onFocus,
       onBlur,
       state: stateProp = "default",
-      label: labelProp,
-      text: textProp,
+      text,
       className = "",
       ...rest
     } = props;
-    
-    // Backward compatibility: use propSwitch if provided, otherwise use checked
-    const checked = propSwitchProp !== undefined ? propSwitchProp : (checkedProp !== undefined ? checkedProp : false);
-    // Backward compatibility: use text if provided, otherwise use label
-    const label = textProp !== undefined ? textProp : labelProp;
     
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const state = normalizeState(stateProp);
@@ -69,14 +62,14 @@ const SwitchContainer = memo(
       [onBlur],
     );
 
-    // Switch track styles based on checked state
+    // Switch track styles based on propSwitch state
     const getTrackStyles = useCallback(() => {
-      return checked
+      return propSwitch
         ? "bg-[var(--color-surface-inverse-tertiary)]"
         : "bg-[var(--color-surface-default-tertiary)]";
-    }, [checked]);
+    }, [propSwitch]);
 
-    // Switch thumb styles based on checked state
+    // Switch thumb styles based on propSwitch state
     const getThumbStyles = useCallback(() => {
       return "bg-[var(--color-gray-000)]";
     }, []);
@@ -118,7 +111,7 @@ const SwitchContainer = memo(
       duration-200
       flex
       items-center
-      ${checked ? "justify-end" : "justify-start"}
+      ${propSwitch ? "justify-end" : "justify-start"}
       p-[2px]
     `
       .trim()
@@ -151,9 +144,9 @@ const SwitchContainer = memo(
       <SwitchView
         ref={ref}
         switchId={switchId}
-        checked={checked}
+        propSwitch={propSwitch}
         state={state}
-        label={label}
+        text={text}
         className={className}
         switchClasses={switchClasses}
         trackClasses={trackClasses}

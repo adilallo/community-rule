@@ -54,7 +54,7 @@ describe("Button (behavioral tests)", () => {
 
   it("renders as a link when href is provided", () => {
     render(
-      <Button href="/learn" variant="default">
+      <Button href="/learn" buttonType="filled" palette="default">
         Learn more
       </Button>,
     );

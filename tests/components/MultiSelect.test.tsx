@@ -24,7 +24,7 @@ const config: ComponentTestSuiteConfig<Props> = {
     size: "S",
     palette: "Default",
     options: defaultChipOptions,
-    showAddButton: true,
+    addButton: true,
     addButtonText: "",
   } as Props,
   requiredProps: ["options"],
@@ -35,7 +35,7 @@ const config: ComponentTestSuiteConfig<Props> = {
     palette: "Inverse",
     onChipClick: vi.fn(),
     onAddClick: vi.fn(),
-    showAddButton: false,
+    addButton: false,
     addButtonText: "Add",
   },
   primaryRole: undefined, // MultiSelect contains multiple interactive elements
@@ -83,7 +83,7 @@ describe("MultiSelect – behaviour specifics", () => {
       <MultiSelect
         options={defaultChipOptions}
         onAddClick={handleAddClick}
-        showAddButton={true}
+        addButton={true}
         addButtonText="Add option"
       />,
     );
@@ -100,7 +100,7 @@ describe("MultiSelect – behaviour specifics", () => {
       <MultiSelect
         options={defaultChipOptions}
         onAddClick={handleAddClick}
-        showAddButton={true}
+        addButton={true}
         addButtonText=""
       />,
     );
@@ -127,18 +127,18 @@ describe("MultiSelect – behaviour specifics", () => {
     render(
       <MultiSelect
         options={defaultChipOptions}
-        showAddButton={true}
+        addButton={true}
         addButtonText="Add option"
       />,
     );
     expect(screen.getByText("Add option")).toBeInTheDocument();
   });
 
-  it("does not render add button when showAddButton is false", () => {
+  it("does not render add button when addButton is false", () => {
     render(
       <MultiSelect
         options={defaultChipOptions}
-        showAddButton={false}
+        addButton={false}
       />,
     );
     expect(screen.queryByRole("button", { name: /add/i })).not.toBeInTheDocument();

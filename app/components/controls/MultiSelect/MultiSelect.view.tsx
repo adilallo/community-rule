@@ -13,7 +13,7 @@ function MultiSelectView({
   options,
   onChipClick,
   onAddClick,
-  showAddButton,
+  addButton,
   addButtonText,
   formHeader = true,
   onCustomChipConfirm,
@@ -75,7 +75,7 @@ function MultiSelectView({
         ))}
 
         {/* Add button - Circular button with border (not ghost) when no text, ghost style when text provided */}
-        {showAddButton && (
+        {addButton && (
           <button
             type="button"
             aria-label={addButtonText || "Add option"}

@@ -22,7 +22,7 @@ export default {
 const Template = (args) => (
   <div className="p-16 flex items-center justify-center min-h-[200px]">
     <Tooltip {...args}>
-      <Button variant="default" size="medium">
+      <Button buttonType="filled" palette="default" size="medium">
         Hover me
       </Button>
     </Tooltip>

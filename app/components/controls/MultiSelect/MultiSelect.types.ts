@@ -40,10 +40,6 @@ export interface MultiSelectProps {
    */
   onAddClick?: () => void;
   /**
-   * Show the add button (backward compatibility - use addButton instead)
-   */
-  showAddButton?: boolean;
-  /**
    * Whether to show add button (Figma prop).
    * @default true
    */
@@ -76,7 +72,7 @@ export interface MultiSelectViewProps {
   options: ChipOption[];
   onChipClick?: (chipId: string) => void;
   onAddClick?: () => void;
-  showAddButton: boolean;
+  addButton: boolean;
   addButtonText: string;
   formHeader: boolean;
   onCustomChipConfirm?: (chipId: string, value: string) => void;

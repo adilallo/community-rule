@@ -5,10 +5,6 @@ export interface SwitchProps extends Omit<
   "onChange"
 > {
   /**
-   * Whether the switch is checked (backward compatibility - use propSwitch instead).
-   */
-  checked?: boolean;
-  /**
    * Whether the switch is checked (Figma prop).
    * @default false
    */
@@ -26,10 +22,6 @@ export interface SwitchProps extends Omit<
    */
   state?: StateValue;
   /**
-   * Label text (backward compatibility - use text instead).
-   */
-  label?: string;
-  /**
    * Label text (Figma prop).
    */
   text?: string;
@@ -38,9 +30,9 @@ export interface SwitchProps extends Omit<
 
 export interface SwitchViewProps {
   switchId: string;
-  checked: boolean;
+  propSwitch: boolean;
   state: "default" | "hover" | "focus" | "selected";
-  label?: string;
+  text?: string;
   className: string;
   switchClasses: string;
   trackClasses: string;

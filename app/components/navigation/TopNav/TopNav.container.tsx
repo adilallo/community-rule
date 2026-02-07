@@ -196,13 +196,15 @@ const TopNavContainer = memo<TopNavProps>(
       containerSize: "small" | "medium" | "large" | "xlarge",
       avatarSize: "small" | "medium" | "large" | "xlarge",
     ) => {
-      // Use ghost variant when folderTop is true, standard otherwise
-      const variant = folderTop ? "ghost" : undefined;
+      // Use ghost type when folderTop is true, filled (default) otherwise
+      const buttonType = folderTop ? "ghost" : "filled";
+      const palette = "default";
 
       return (
         <Button
           size={buttonSize}
-          variant={variant}
+          buttonType={buttonType}
+          palette={palette}
           ariaLabel={t("ariaLabels.createNewRule")}
         >
           {renderAvatarGroup(containerSize, avatarSize)}

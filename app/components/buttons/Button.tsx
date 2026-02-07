@@ -1,13 +1,11 @@
 import { memo } from "react";
 import type {
-  VariantValue,
   SizeValue,
   ButtonTypeValue,
   ButtonPaletteValue,
   ButtonStateValue,
 } from "../../../lib/propNormalization";
 import {
-  normalizeVariant,
   normalizeSize,
   normalizeButtonType,
   normalizeButtonPalette,
@@ -15,12 +13,6 @@ import {
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  /**
-   * @deprecated Use `type` and `palette` props instead. This prop is maintained for backward compatibility.
-   * Button variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
-   */
-  variant?: VariantValue;
   /**
    * Button type (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
@@ -74,7 +66,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = memo<ButtonProps>(
   ({
     children,
-    variant: variantProp,
     buttonType: typeProp,
     palette: paletteProp,
     size: sizeProp = "xsmall",
@@ -92,51 +83,14 @@ const Button = memo<ButtonProps>(
     ariaLabel,
     ...props
   }) => {
-    // Determine type and palette from either new props or legacy variant prop
-    let buttonType: "filled" | "outline" | "ghost" | "danger";
-    let buttonPalette: "default" | "inverse";
-
-    if (variantProp) {
-      // Backward compatibility: map old variant to new type/palette
-      const variant = normalizeVariant(variantProp);
-      if (variant === "filled") {
-        buttonType = "filled";
-        buttonPalette = "default";
-      } else if (variant === "filled-inverse") {
-        buttonType = "filled";
-        buttonPalette = "inverse";
-      } else if (variant === "outline") {
-        buttonType = "outline";
-        buttonPalette = "default";
-      } else if (variant === "outline-inverse") {
-        buttonType = "outline";
-        buttonPalette = "inverse";
-      } else if (variant === "ghost") {
-        buttonType = "ghost";
-        buttonPalette = "default";
-      } else if (variant === "ghost-inverse") {
-        buttonType = "ghost";
-        buttonPalette = "inverse";
-      } else if (variant === "danger") {
-        buttonType = "danger";
-        buttonPalette = "default";
-      } else {
-        // danger-inverse
-        buttonType = "danger";
-        buttonPalette = "inverse";
-      }
-    } else {
-      // Use new type/palette props
-      buttonType = normalizeButtonType(typeProp, "filled");
-      buttonPalette = normalizeButtonPalette(paletteProp, "default");
-    }
-
-    // Normalize other props
+    // Normalize props
+    const buttonType = normalizeButtonType(typeProp, "filled");
+    const buttonPalette = normalizeButtonPalette(paletteProp, "default");
     const size = normalizeSize(sizeProp);
     // State prop is for Figma alignment - actual state is handled by CSS pseudo-classes
     // We accept it for API alignment but don't use it for styling (CSS handles states)
 
-    // Map type + palette to legacy variant for styling (maintains existing styles)
+    // Map type + palette to variant string for styling (internal use only)
     const getVariantFromTypeAndPalette = (
       type: typeof buttonType,
       palette: typeof buttonPalette,

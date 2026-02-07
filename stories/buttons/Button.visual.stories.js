@@ -22,9 +22,13 @@ export default {
       control: { type: "select" },
       options: ["xsmall", "small", "medium", "large", "xlarge"],
     },
-    variant: {
+    buttonType: {
       control: { type: "select" },
-      options: ["default", "home"],
+      options: ["filled", "outline", "ghost", "danger"],
+    },
+    palette: {
+      control: { type: "select" },
+      options: ["default", "inverse"],
     },
     disabled: {
       control: { type: "boolean" },
@@ -192,7 +196,8 @@ export const XLarge = {
 export const HomeVariant = {
   args: {
     children: "Home Button",
-    variant: "home",
+    buttonType: "filled",
+    palette: "default",
   },
   parameters: {
     docs: {
@@ -268,8 +273,8 @@ export const StateComparison = {
         <Button disabled>Disabled</Button>
       </div>
       <div className="flex flex-wrap gap-4 items-center">
-        <Button variant="home">Home Default</Button>
-        <Button variant="home" disabled>
+        <Button buttonType="filled" palette="default">Home Default</Button>
+        <Button buttonType="filled" palette="default" disabled>
           Home Disabled
         </Button>
       </div>
@@ -336,8 +341,8 @@ export const EdgeCases = {
       <div className="flex flex-wrap gap-4 items-center">
         <Button>Normal</Button>
         <Button disabled>Disabled</Button>
-        <Button variant="home">Home</Button>
-        <Button variant="home" disabled>
+        <Button buttonType="filled" palette="default">Home</Button>
+        <Button buttonType="filled" palette="default" disabled>
           Home Disabled
         </Button>
       </div>

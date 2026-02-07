@@ -13,17 +13,12 @@ export type SelectInputSizeValue = "small" | "medium" | "large" | "Small" | "Med
 export interface SelectInputProps {
   id?: string;
   /**
-   * Label text (backward compatibility - if provided, label is shown).
-   * For Figma alignment, use `labelText` prop instead.
-   */
-  label?: string;
-  /**
-   * Label text (Figma prop - use this for new code).
+   * Label text (Figma prop).
    */
   labelText?: string;
   /**
    * Whether to show label above input (Figma prop).
-   * If `label` or `labelText` is provided, defaults to true.
+   * If `labelText` is provided, defaults to true.
    * @default true
    */
   showLabel?: boolean;

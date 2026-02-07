@@ -22,7 +22,6 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
   (
     {
       id,
-      label: labelProp,
       labelText,
       showLabel,
       labelVariant: labelVariantProp,
@@ -46,9 +45,8 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     },
     ref,
   ) => {
-    // Handle backward compatibility: if label is string, use it as labelText
-    const actualLabelText = labelText || labelProp;
-    const shouldShowLabel = showLabel !== undefined ? showLabel : (actualLabelText !== undefined);
+    // Determine if label should be shown
+    const shouldShowLabel = showLabel !== undefined ? showLabel : (labelText !== undefined);
     
     // Normalize state - handle "state5" as disabled
     let normalizedState = externalStateProp;
@@ -211,7 +209,7 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
 
     return (
       <SelectInputView
-        label={shouldShowLabel ? actualLabelText : undefined}
+        label={shouldShowLabel ? labelText : undefined}
         placeholder={placeholder}
         state={actualState}
         disabled={disabled}

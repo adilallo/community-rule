@@ -8,18 +8,18 @@ export default {
     layout: "centered",
   },
   argTypes: {
-    checked: {
+    propSwitch: {
       control: "boolean",
-      description: "Whether the switch is checked (on) or not (off)",
+      description: "Whether the switch is checked (on) or not (off) (Figma prop)",
     },
     state: {
       control: "select",
       options: ["default", "focus"],
       description: "Visual state of the switch",
     },
-    label: {
+    text: {
       control: "text",
-      description: "Label text displayed next to the switch",
+      description: "Label text displayed next to the switch (Figma prop)",
     },
     onChange: {
       action: "changed",
@@ -40,28 +40,28 @@ const Template = (args) => <Switch {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  checked: false,
-  label: "Switch label",
+  propSwitch: false,
+  text: "Switch label",
 };
 
 export const Checked = Template.bind({});
 Checked.args = {
-  checked: true,
-  label: "Switch label",
+  propSwitch: true,
+  text: "Switch label",
 };
 
 export const Focus = Template.bind({});
 Focus.args = {
-  checked: false,
+  propSwitch: false,
   state: "focus",
-  label: "Switch label",
+  text: "Switch label",
 };
 
 export const FocusChecked = Template.bind({});
 FocusChecked.args = {
-  checked: true,
+  propSwitch: true,
   state: "focus",
-  label: "Switch label",
+  text: "Switch label",
 };
 
 export const States = () => (
@@ -69,17 +69,17 @@ export const States = () => (
     <div className="space-y-2">
       <h3 className="text-lg font-semibold">Switch States</h3>
       <div className="space-y-4">
-        <Switch checked={false} label="Switch label" />
-        <Switch checked={true} label="Switch label" />
-        <Switch checked={false} state="focus" label="Switch label" />
-        <Switch checked={true} state="focus" label="Switch label" />
+        <Switch propSwitch={false} text="Switch label" />
+        <Switch propSwitch={true} text="Switch label" />
+        <Switch propSwitch={false} state="focus" text="Switch label" />
+        <Switch propSwitch={true} state="focus" text="Switch label" />
       </div>
     </div>
   </div>
 );
 
 export const Interactive = () => {
-  const [checked, setChecked] = React.useState(false);
+  const [propSwitch, setPropSwitch] = React.useState(false);
   const [state, setState] = React.useState("default");
 
   return (
@@ -87,10 +87,10 @@ export const Interactive = () => {
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Interactive Switch</h3>
         <Switch
-          checked={checked}
+          propSwitch={propSwitch}
           state={state}
-          onChange={() => setChecked(!checked)}
-          label="Enable notifications"
+          onChange={() => setPropSwitch(!propSwitch)}
+          text="Enable notifications"
         />
       </div>
       <div className="space-y-4">
@@ -118,10 +118,10 @@ export const WithText = () => (
     <div className="space-y-2">
       <h3 className="text-lg font-semibold">Switch with Different Labels</h3>
       <div className="space-y-4">
-        <Switch checked={false} label="Enable notifications" />
-        <Switch checked={true} label="Auto-save documents" />
-        <Switch checked={false} label="Dark mode" />
-        <Switch checked={true} label="Email updates" />
+        <Switch propSwitch={false} text="Enable notifications" />
+        <Switch propSwitch={true} text="Auto-save documents" />
+        <Switch propSwitch={false} text="Dark mode" />
+        <Switch propSwitch={true} text="Email updates" />
       </div>
     </div>
   </div>

@@ -242,7 +242,7 @@ export function RuleCardView({
                   onCustomChipClose={(chipId) => {
                     category.onCustomChipClose?.(category.name, chipId);
                   }}
-                  showAddButton={true}
+                  addButton={true}
                   addButtonText="" // Empty text for icon-only circular button
                   className="w-full"
                 />

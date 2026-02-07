@@ -112,30 +112,6 @@ export type InputStateValue =
   | "Hover"
   | "Focus";
 
-/**
- * Normalize button variant prop values
- */
-export function normalizeVariant(
-  value: string | undefined,
-  defaultValue: "filled" = "filled"
-): "filled" | "filled-inverse" | "outline" | "outline-inverse" | "ghost" | "ghost-inverse" | "danger" | "danger-inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = [
-    "filled",
-    "filled-inverse",
-    "outline",
-    "outline-inverse",
-    "ghost",
-    "ghost-inverse",
-    "danger",
-    "danger-inverse",
-  ];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
 
 /**
  * Normalize button size prop values
@@ -200,27 +176,6 @@ export function normalizeTooltipPosition(
   }
   return defaultValue;
 }
-
-/**
- * Type helper for case-insensitive variant prop
- */
-export type VariantValue =
-  | "filled"
-  | "filled-inverse"
-  | "outline"
-  | "outline-inverse"
-  | "ghost"
-  | "ghost-inverse"
-  | "danger"
-  | "danger-inverse"
-  | "Filled"
-  | "Filled-Inverse"
-  | "Outline"
-  | "Outline-Inverse"
-  | "Ghost"
-  | "Ghost-Inverse"
-  | "Danger"
-  | "Danger-Inverse";
 
 /**
  * Type helper for case-insensitive size prop

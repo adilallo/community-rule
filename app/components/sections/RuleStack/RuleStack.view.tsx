@@ -157,7 +157,8 @@ export function RuleStackView({
         min-[1024px]:mt-[var(--measures-spacing-1000,40px)]
       ">
         <Button
-          variant="outline"
+          buttonType="outline"
+          palette="default"
           size="large"
         >
           {buttonText}
