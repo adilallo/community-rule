@@ -7,7 +7,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";
-import Page from "../../app/page";
+import Page from "../../app/(marketing)/page";
 
 // Mock next/dynamic to return components synchronously in tests
 vi.mock("next/dynamic", () => {

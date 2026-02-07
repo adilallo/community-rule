@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import { renderWithProviders as render } from "../utils/test-utils";
 import React from "react";
-import BlogPostPage from "../../app/blog/[slug]/page";
+import BlogPostPage from "../../app/(marketing)/blog/[slug]/page";
 
 // Mock Next.js components
 vi.mock("next/navigation", () => ({

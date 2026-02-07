@@ -5,7 +5,7 @@ import RuleCard from "../components/cards/RuleCard";
 import Chip from "../components/controls/Chip";
 import MultiSelect from "../components/controls/MultiSelect";
 import Image from "next/image";
-import { getAssetPath } from "../../lib/assetUtils";
+import { getAssetPath } from "../../../lib/assetUtils";
 
 interface ChipData {
   id: string;

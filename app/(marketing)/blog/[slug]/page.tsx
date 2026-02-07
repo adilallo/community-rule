@@ -5,16 +5,16 @@ import {
   getBlogPostBySlug,
   getAllBlogPosts as getAllPosts,
   type BlogPost,
-} from "../../../lib/content";
-import { logger } from "../../../lib/logger";
-import ContentBanner from "../../components/sections/ContentBanner";
-import AskOrganizer from "../../components/sections/AskOrganizer";
-import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
+} from "../../../../lib/content";
+import { logger } from "../../../../lib/logger";
+import ContentBanner from "../../../components/sections/ContentBanner";
+import AskOrganizer from "../../../components/sections/AskOrganizer";
+import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import "../blog.css";
 
 // Code split RelatedArticles - blog-specific, below the fold
 const RelatedArticles = dynamic(
-  () => import("../../components/sections/RelatedArticles"),
+  () => import("../../../components/sections/RelatedArticles"),
   {
     loading: () => (
       <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />

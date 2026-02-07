@@ -1,39 +1,39 @@
 import dynamic from "next/dynamic";
-import messages from "../messages/en/index";
-import { getTranslation } from "../lib/i18n/getTranslation";
-import HeroBanner from "./components/sections/HeroBanner";
-import AskOrganizer from "./components/sections/AskOrganizer";
+import messages from "../../messages/en/index";
+import { getTranslation } from "../../lib/i18n/getTranslation";
+import HeroBanner from "../components/sections/HeroBanner";
+import AskOrganizer from "../components/sections/AskOrganizer";
 
 // Code split below-the-fold components to reduce initial bundle size
-const LogoWall = dynamic(() => import("./components/sections/LogoWall"), {
+const LogoWall = dynamic(() => import("../components/sections/LogoWall"), {
   loading: () => (
     <section className="py-[var(--spacing-scale-032)] min-h-[200px]" />
   ),
   ssr: true,
 });
 
-const NumberedCards = dynamic(() => import("./components/sections/NumberedCards"), {
+const NumberedCards = dynamic(() => import("../components/sections/NumberedCards"), {
   loading: () => (
     <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
   ),
   ssr: true,
 });
 
-const RuleStack = dynamic(() => import("./components/sections/RuleStack"), {
+const RuleStack = dynamic(() => import("../components/sections/RuleStack"), {
   loading: () => (
     <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />
   ),
   ssr: true,
 });
 
-const FeatureGrid = dynamic(() => import("./components/sections/FeatureGrid"), {
+const FeatureGrid = dynamic(() => import("../components/sections/FeatureGrid"), {
   loading: () => (
     <section className="py-[var(--spacing-scale-032)] min-h-[500px]" />
   ),
   ssr: true,
 });
 
-const QuoteBlock = dynamic(() => import("./components/sections/QuoteBlock"), {
+const QuoteBlock = dynamic(() => import("../components/sections/QuoteBlock"), {
   loading: () => (
     <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
   ),
