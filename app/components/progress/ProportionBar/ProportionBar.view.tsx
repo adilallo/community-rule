@@ -22,6 +22,19 @@ export function ProportionBarView({
   }
   const maxProgress = 3;
   const progressPercentage = Math.round((totalProgress / maxProgress) * 100);
+  // Check if at 100% completion (all 3 segments fully filled)
+  // Note: Current type system max is "3-2" (88.9%), true 100% would require "3-3" or all segments fully filled
+  const isFull = totalProgress >= maxProgress;
+  // Generate descriptive aria-label
+  const ariaLabelText = isFull
+    ? "Progress: Complete (100%)"
+    : fullSegments === 3 && partialSegment === 2
+      ? `Progress: ${fullSegments} segments complete, maximum state (${progressPercentage}%)`
+      : fullSegments === 3
+        ? `Progress: ${fullSegments} segments, ${partialSegment} of 3 parts filled (${progressPercentage}%)`
+        : fullSegments === 2
+          ? `Progress: ${fullSegments} segments, ${partialSegment} of 3 parts filled (${progressPercentage}%)`
+          : `Progress: ${fullSegments} segment, ${partialSegment + 1} of 6 parts filled (${progressPercentage}%)`;
 
   return (
     <div
@@ -30,7 +43,7 @@ export function ProportionBarView({
       aria-valuenow={totalProgress}
       aria-valuemin={0}
       aria-valuemax={3}
-      aria-label={`Progress: ${progressPercentage}%`}
+      aria-label={ariaLabelText}
     >
       {/* Background layer - 3 segments */}
       <div className="absolute inset-0 flex gap-[var(--spacing-scale-008)] px-[4px]">
@@ -66,11 +79,14 @@ export function ProportionBarView({
           ) : null}
         </div>
         {/* Third section - for 3-X: X/3 filled, otherwise empty */}
+        {/* Round right corner when at 100% (third section fully filled, partialSegment === 3) */}
         <div className="flex-1 h-full relative">
           {fullSegments === 3 && partialSegment > 0 ? (
             <div
-              className="absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)]"
-              style={{ width: `${(partialSegment / 3) * 100}%` }}
+              className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] ${
+                partialSegment >= 3 ? "rounded-r-[var(--radius-full)]" : ""
+              }`}
+              style={{ width: `${Math.min((partialSegment / 3) * 100, 100)}%` }}
             />
           ) : null}
         </div>

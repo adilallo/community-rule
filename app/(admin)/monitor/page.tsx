@@ -1,6 +1,6 @@
-import WebVitalsDashboard from "../components/WebVitalsDashboard";
-import TopNav from "../components/navigation/TopNav";
-import Footer from "../components/navigation/Footer";
+import WebVitalsDashboard from "../../components/WebVitalsDashboard";
+import TopNav from "../../components/navigation/TopNav";
+import Footer from "../../components/navigation/Footer";
 
 export default function MonitorPage() {
   return (
