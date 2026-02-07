@@ -8,7 +8,8 @@ componentTestSuite<SelectInputProps>({
   component: SelectInput,
   name: "SelectInput",
   props: {
-    label: "Test Select Input",
+    labelText: "Test Select Input",
+    showLabel: true,
     placeholder: "Select an option",
     options: [
       { value: "option1", label: "Option 1" },

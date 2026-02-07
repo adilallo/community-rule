@@ -8,7 +8,7 @@ componentTestSuite<SwitchProps>({
   component: Switch,
   name: "Switch",
   props: {
-    label: "Test Switch",
+    text: "Test Switch",
   } as SwitchProps,
   requiredProps: [],
   optionalProps: {
