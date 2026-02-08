@@ -38,44 +38,12 @@ export interface TopNavViewProps {
       "query-input": string;
     };
   };
-  logoConfig: Array<{
-    breakpoint: string;
-    size:
-      | "default"
-      | "homeHeaderXsmall"
-      | "homeHeaderSm"
-      | "homeHeaderMd"
-      | "homeHeaderLg"
-      | "homeHeaderXl"
-      | "header"
-      | "headerMd"
-      | "headerLg"
-      | "headerXl"
-      | "footer"
-      | "footerLg";
-    showText: boolean;
-  }>;
+  logoSize: "topNavFolderTop" | "topNavHeader";
   renderNavigationItems: (_size: NavSize) => React.ReactNode;
   renderLoginButton: (_size: NavSize) => React.ReactNode;
   renderCreateRuleButton: (
     _buttonSize: "xsmall" | "small" | "medium" | "large" | "xlarge",
     _containerSize: "small" | "medium" | "large" | "xlarge",
     _avatarSize: "small" | "medium" | "large" | "xlarge",
-  ) => React.ReactNode;
-  renderLogo: (
-    _size:
-      | "default"
-      | "homeHeaderXsmall"
-      | "homeHeaderSm"
-      | "homeHeaderMd"
-      | "homeHeaderLg"
-      | "homeHeaderXl"
-      | "header"
-      | "headerMd"
-      | "headerLg"
-      | "headerXl"
-      | "footer"
-      | "footerLg",
-    _showText: boolean,
   ) => React.ReactNode;
 }

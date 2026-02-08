@@ -17,17 +17,10 @@ export default {
       control: { type: "select" },
       options: [
         "default",
-        "homeHeaderXsmall",
-        "homeHeaderSm",
-        "homeHeaderMd",
-        "homeHeaderLg",
-        "homeHeaderXl",
-        "header",
-        "headerMd",
-        "headerLg",
-        "headerXl",
         "footer",
-        "footerLg",
+        "createFlow",
+        "topNavFolderTop",
+        "topNavHeader",
       ],
       description: "The size variant of the logo",
     },
@@ -53,40 +46,19 @@ export const Sizes = {
   render: (args) => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-white font-semibold mb-3">Default Sizes</h3>
+        <h3 className="text-white font-semibold mb-3">Standard Sizes</h3>
         <div className="space-x-4">
           <Logo {...args} size="default" />
-          <Logo {...args} size="header" />
           <Logo {...args} size="footer" />
         </div>
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Header Sizes</h3>
+        <h3 className="text-white font-semibold mb-3">Responsive Sizes</h3>
         <div className="space-x-4">
-          <Logo {...args} size="header" />
-          <Logo {...args} size="headerMd" />
-          <Logo {...args} size="headerLg" />
-          <Logo {...args} size="headerXl" />
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-white font-semibold mb-3">Home Header Sizes</h3>
-        <div className="space-x-4">
-          <Logo {...args} size="homeHeaderXsmall" />
-          <Logo {...args} size="homeHeaderSm" />
-          <Logo {...args} size="homeHeaderMd" />
-          <Logo {...args} size="homeHeaderLg" />
-          <Logo {...args} size="homeHeaderXl" />
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-white font-semibold mb-3">Footer Sizes</h3>
-        <div className="space-x-4">
-          <Logo {...args} size="footer" />
-          <Logo {...args} size="footerLg" />
+          <Logo {...args} size="createFlow" />
+          <Logo {...args} size="topNavFolderTop" />
+          <Logo {...args} size="topNavHeader" />
         </div>
       </div>
     </div>
@@ -95,7 +67,7 @@ export const Sizes = {
     docs: {
       description: {
         story:
-          "Different size variants available for the logo component across different contexts.",
+          "Different size variants available for the logo component. Responsive sizes adapt to breakpoints.",
       },
     },
   },
@@ -110,37 +82,22 @@ export const IconOnly = {
     <div className="space-y-6">
       <div>
         <h3 className="text-white font-semibold mb-3">
-          Icon Only - Default Sizes
+          Icon Only - Standard Sizes
         </h3>
         <div className="space-x-4">
           <Logo {...args} size="default" />
-          <Logo {...args} size="header" />
           <Logo {...args} size="footer" />
         </div>
       </div>
 
       <div>
         <h3 className="text-white font-semibold mb-3">
-          Icon Only - Header Sizes
+          Icon Only - Responsive Sizes
         </h3>
         <div className="space-x-4">
-          <Logo {...args} size="header" />
-          <Logo {...args} size="headerMd" />
-          <Logo {...args} size="headerLg" />
-          <Logo {...args} size="headerXl" />
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-white font-semibold mb-3">
-          Icon Only - Home Header Sizes
-        </h3>
-        <div className="space-x-4">
-          <Logo {...args} size="homeHeaderXsmall" />
-          <Logo {...args} size="homeHeaderSm" />
-          <Logo {...args} size="homeHeaderMd" />
-          <Logo {...args} size="homeHeaderLg" />
-          <Logo {...args} size="homeHeaderXl" />
+          <Logo {...args} size="createFlow" />
+          <Logo {...args} size="topNavFolderTop" />
+          <Logo {...args} size="topNavHeader" />
         </div>
       </div>
     </div>
@@ -155,34 +112,22 @@ export const IconOnly = {
   },
 };
 
-export const HomeHeaderContext = {
+export const TopNavContext = {
   args: {},
   render: () => (
     <div className="min-h-screen bg-gradient-to-b from-[var(--color-surface-default-primary)] to-[var(--color-surface-default-secondary)] p-8">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-white font-semibold mb-6">
-          Home Header Context (White Text)
+          TopNav Context (Responsive)
         </h2>
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">XSmall:</span>
-            <Logo size="homeHeaderXsmall" />
+            <span className="text-white text-sm w-32">FolderTop:</span>
+            <Logo size="topNavFolderTop" showText={true} />
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Small:</span>
-            <Logo size="homeHeaderSm" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Medium:</span>
-            <Logo size="homeHeaderMd" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Large:</span>
-            <Logo size="homeHeaderLg" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">XLarge:</span>
-            <Logo size="homeHeaderXl" />
+            <span className="text-white text-sm w-32">Header:</span>
+            <Logo size="topNavHeader" showText={true} />
           </div>
         </div>
       </div>
@@ -192,36 +137,24 @@ export const HomeHeaderContext = {
     docs: {
       description: {
         story:
-          "Home header context showing white text variants. These are used on dark/transparent backgrounds.",
+          "TopNav context showing responsive logo sizes. Text hides on smallest breakpoint, shows on larger breakpoints.",
       },
     },
   },
 };
 
-export const HeaderContext = {
+export const CreateFlowContext = {
   args: {},
   render: () => (
-    <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-8">
+    <div className="min-h-screen bg-black p-8">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-white font-semibold mb-6">
-          Header Context (Dark Text)
+          Create Flow Context
         </h2>
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Default:</span>
-            <Logo size="header" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Medium:</span>
-            <Logo size="headerMd" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Large:</span>
-            <Logo size="headerLg" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">XLarge:</span>
-            <Logo size="headerXl" />
+            <span className="text-white text-sm w-32">CreateFlow:</span>
+            <Logo size="createFlow" showText={true} />
           </div>
         </div>
       </div>
@@ -231,38 +164,7 @@ export const HeaderContext = {
     docs: {
       description: {
         story:
-          "Header context showing dark text variants. These are used on light backgrounds.",
-      },
-    },
-  },
-};
-
-export const FooterContext = {
-  args: {},
-  render: () => (
-    <div className="min-h-screen bg-[var(--color-surface-default-primary)] p-8">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-white font-semibold mb-6">
-          Footer Context (Larger Sizes)
-        </h2>
-        <div className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Default:</span>
-            <Logo size="footer" />
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-white text-sm w-24">Large:</span>
-            <Logo size="footerLg" />
-          </div>
-        </div>
-      </div>
-    </div>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Footer context showing larger size variants for footer placement.",
+          "Create flow context showing responsive logo. Used in CreateFlowTopNav component.",
       },
     },
   },

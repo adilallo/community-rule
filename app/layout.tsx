@@ -1,19 +1,11 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import dynamic from "next/dynamic";
 import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import "./globals.css";
-import TopNavWithPathname from "./components/navigation/TopNav/TopNavWithPathname";
-
-// Code split Footer - below the fold, can be lazy loaded
-const Footer = dynamic(() => import("./components/navigation/Footer"), {
-  loading: () => (
-    <footer className="bg-[var(--color-surface-default-primary)] w-full min-h-[200px]" />
-  ),
-  ssr: true, // Keep SSR for SEO
-});
+import ConditionalNavigation from "./components/navigation/ConditionalNavigation";
+import ConditionalFooter from "./components/navigation/ConditionalFooter";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -107,9 +99,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <MessagesProvider messages={messages}>
           <div className="min-h-screen flex flex-col">
-            <TopNavWithPathname />
+            <ConditionalNavigation />
             <main className="flex-1">{children}</main>
-            <Footer />
+            <ConditionalFooter />
           </div>
         </MessagesProvider>
       </body>
