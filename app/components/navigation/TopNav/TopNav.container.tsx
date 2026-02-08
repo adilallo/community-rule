@@ -205,6 +205,7 @@ const TopNavContainer = memo<TopNavProps>(
           size={buttonSize}
           buttonType={buttonType}
           palette={palette}
+          href="/create/informational"
           ariaLabel={t("ariaLabels.createNewRule")}
         >
           {renderAvatarGroup(containerSize, avatarSize)}
