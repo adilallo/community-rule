@@ -39,16 +39,8 @@ const Footer = memo(() => {
           lg:py-[var(--spacing-measures-spacing-096,96px)]
           lg:gap-[var(--spacing-measures-spacing-060,60px)]"
         >
-          {/* Logo*/}
-          <div className="block sm:hidden">
-            <Logo />
-          </div>
-          <div className="hidden sm:block lg:hidden">
-            <Logo size="footer" />
-          </div>
-          <div className="hidden lg:block">
-            <Logo size="footerLg" />
-          </div>
+          {/* Logo */}
+          <Logo size="footer" />
 
           {/* Content section */}
           <div className="flex flex-col items-start w-full gap-[var(--spacing-measures-spacing-048,48px)] sm:flex-row sm:justify-between sm:gap-0">

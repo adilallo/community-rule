@@ -7,17 +7,18 @@ import { getAssetPath } from "../../../../lib/assetUtils";
 import MenuBar from "../MenuBar";
 import type { TopNavViewProps } from "./TopNav.types";
 
+import Logo from "../../icons/Logo";
+
 function TopNavView({
   folderTop,
   loggedIn: _loggedIn,
   profile: _profile,
   logIn,
   schemaData,
-  logoConfig,
+  logoSize,
   renderNavigationItems,
   renderLoginButton,
   renderCreateRuleButton,
-  renderLogo,
 }: TopNavViewProps) {
   const t = useTranslation(folderTop ? "homeHeader" : "header");
 
@@ -43,13 +44,7 @@ function TopNavView({
             {/* Header Tab - Yellow tab container with decorative Union images */}
             <div className="HeaderTab header-breakpoint-transition relative bg-[var(--color-surface-inverse-brand-primary)] rounded-tl-[var(--radius-measures-radius-medium)] rounded-tr-[var(--radius-measures-radius-medium)] sm:rounded-t-[var(--radius-measures-radius-xlarge)] md:rounded-t-[var(--radius-measures-radius-xlarge)] lg:rounded-t-[var(--radius-measures-radius-xlarge)] xl:rounded-t-[var(--radius-measures-radius-xlarge)] pl-[var(--spacing-scale-012)] pr-[var(--spacing-scale-048)] h-[var(--spacing-scale-040)] sm:pl-[var(--spacing-scale-012)] sm:h-[52px] sm:pr-[var(--spacing-scale-006)] md:h-[52px] md:pl-[var(--spacing-scale-024)] md:pr-[var(--spacing-scale-012)] lg:h-[52px] lg:pl-[var(--spacing-scale-024)] lg:pr-[var(--spacing-scale-048)] xl:h-[64px] xl:pl-[var(--spacing-scale-032)] xl:pr-[var(--spacing-scale-120)] md:gap-[var(--spacing-scale-032)] flex-1 min-w-0 min-w-[197px] sm:min-w-0 sm:mr-[var(--spacing-scale-008)] md:mr-[185px] lg:mr-[var(--spacing-scale-024)] xl:mr-[var(--spacing-scale-032)] flex items-center self-end">
               {/* Logo - Consistent left positioning within HeaderTab */}
-              <div>
-                {logoConfig.map((config, index) => (
-                  <div key={index} className={config.breakpoint}>
-                    {renderLogo(config.size, config.showText)}
-                  </div>
-                ))}
-              </div>
+              <Logo size={logoSize} showText={true} />
 
               {/* XSmall menu bar - positioned next to logo */}
               <div className="block sm:hidden -me-[2px]">
@@ -163,17 +158,7 @@ function TopNavView({
           aria-label={t("ariaLabels.mainNavigation")}
         >
           {/* Logo - Consistent left positioning across all breakpoints */}
-          <div className="flex items-center">
-            {logoConfig.map((config, index) => (
-              <div
-                key={index}
-                className={config.breakpoint}
-                data-testid="logo-wrapper"
-              >
-                {renderLogo(config.size, config.showText)}
-              </div>
-            ))}
-          </div>
+          <Logo size={logoSize} showText={true} />
 
           {/* Navigation Links - Consistent center positioning */}
           <div className="flex items-center flex-1 justify-end sm:flex-none sm:justify-center">

@@ -42,54 +42,8 @@ const TopNavContainer = memo<TopNavProps>(
       },
     };
 
-    // Logo configuration based on folderTop prop
-    const logoConfig = folderTop
-      ? [
-          {
-            breakpoint: "block sm:hidden",
-            size: "homeHeaderXsmall" as const,
-            showText: false,
-          },
-          {
-            breakpoint: "hidden sm:block md:hidden",
-            size: "homeHeaderSm" as const,
-            showText: true,
-          },
-          {
-            breakpoint: "hidden md:block lg:hidden",
-            size: "homeHeaderMd" as const,
-            showText: true,
-          },
-          {
-            breakpoint: "hidden lg:block xl:hidden",
-            size: "homeHeaderLg" as const,
-            showText: true,
-          },
-          {
-            breakpoint: "hidden xl:block",
-            size: "homeHeaderXl" as const,
-            showText: true,
-          },
-        ]
-      : [
-          { breakpoint: "block sm:hidden", size: "header" as const, showText: false },
-          {
-            breakpoint: "hidden sm:block md:hidden",
-            size: "header" as const,
-            showText: true,
-          },
-          {
-            breakpoint: "hidden md:block lg:hidden",
-            size: "headerMd" as const,
-            showText: true,
-          },
-          {
-            breakpoint: "hidden lg:block xl:hidden",
-            size: "headerLg" as const,
-            showText: true,
-          },
-          { breakpoint: "hidden xl:block", size: "headerXl" as const, showText: true },
-        ];
+    // Logo size based on folderTop prop
+    const logoSize = folderTop ? "topNavFolderTop" : "topNavHeader";
 
     // Navigation items with translations
     const navigationItems = [
@@ -214,25 +168,6 @@ const TopNavContainer = memo<TopNavProps>(
       );
     };
 
-    const renderLogo = (
-      size:
-        | "default"
-        | "homeHeaderXsmall"
-        | "homeHeaderSm"
-        | "homeHeaderMd"
-        | "homeHeaderLg"
-        | "homeHeaderXl"
-        | "header"
-        | "headerMd"
-        | "headerLg"
-        | "headerXl"
-        | "footer"
-        | "footerLg",
-      showText: boolean,
-    ) => {
-      return <Logo size={size} showText={showText} />;
-    };
-
     return (
       <TopNavView
         folderTop={folderTop}
@@ -240,11 +175,10 @@ const TopNavContainer = memo<TopNavProps>(
         profile={profile}
         logIn={logIn}
         schemaData={schemaData}
-        logoConfig={logoConfig}
+        logoSize={logoSize}
         renderNavigationItems={renderNavigationItems}
         renderLoginButton={renderLoginButton}
         renderCreateRuleButton={renderCreateRuleButton}
-        renderLogo={renderLogo}
       />
     );
   },
