@@ -46,19 +46,26 @@ describe("Logo (behavioral tests)", () => {
   });
 
   it("hides text when showText is false", () => {
-    render(<Logo showText={false} />);
-    expect(screen.queryByText("CommunityRule")).not.toBeInTheDocument();
+    const { container } = render(<Logo showText={false} />);
+    const textElement = container.querySelector('.hidden');
+    expect(textElement).toBeInTheDocument();
     expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
   });
 
   it("renders with different size variants", () => {
-    const { rerender } = render(<Logo size="header" />);
+    const { rerender } = render(<Logo size="default" />);
     expect(screen.getByRole("link")).toBeInTheDocument();
 
     rerender(<Logo size="footer" />);
     expect(screen.getByRole("link")).toBeInTheDocument();
 
-    rerender(<Logo size="homeHeaderMd" />);
+    rerender(<Logo size="createFlow" />);
+    expect(screen.getByRole("link")).toBeInTheDocument();
+
+    rerender(<Logo size="topNavFolderTop" />);
+    expect(screen.getByRole("link")).toBeInTheDocument();
+
+    rerender(<Logo size="topNavHeader" />);
     expect(screen.getByRole("link")).toBeInTheDocument();
   });
 });
