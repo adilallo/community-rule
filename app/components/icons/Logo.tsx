@@ -15,7 +15,8 @@ interface LogoProps {
     | "headerLg"
     | "headerXl"
     | "footer"
-    | "footerLg";
+    | "footerLg"
+    | "createFlow";
   showText?: boolean;
 }
 
@@ -114,6 +115,13 @@ const Logo = memo<LogoProps>(({ size = "default", showText = true }) => {
       lineHeight: "leading-[calc(27.05px*2.05)]",
       iconSize: "w-[calc(27.05px*2.05)] h-[calc(27.05px*2.05)]",
     },
+    createFlow: {
+      containerHeight: "h-[30px] md:h-[41px]",
+      gap: "gap-[6px] md:gap-[8.28px]",
+      textSize: "text-[16.48px] md:text-[21.97px]",
+      lineHeight: "leading-[20.28px] md:leading-[27.05px]",
+      iconSize: "w-[20.28px] h-[20.28px] md:w-[27.05px] md:h-[27.05px]",
+    },
   };
 
   const config =
@@ -137,8 +145,10 @@ const Logo = memo<LogoProps>(({ size = "default", showText = true }) => {
                       ? sizes.headerXl
                       : size === "footer"
                         ? sizes.footer
-                        : size === "footerLg"
-                          ? sizes.footerLg
+                      : size === "footerLg"
+                        ? sizes.footerLg
+                        : size === "createFlow"
+                          ? sizes.createFlow
                           : sizes.default;
 
   return (
