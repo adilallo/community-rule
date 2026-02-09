@@ -14,6 +14,10 @@ export interface CreateFlowFooterProps {
    */
   progressBar?: boolean;
   /**
+   * Callback function for Back button click
+   */
+  onBackClick?: () => void;
+  /**
    * Additional CSS classes
    */
   className?: string;

@@ -278,6 +278,66 @@ export function normalizeAlignment(
 }
 
 /**
+ * Normalize numbered list size prop values
+ */
+export function normalizeNumberedListSize(
+  value: string | undefined,
+  defaultValue: "M" = "M"
+): "M" | "S" {
+  if (!value) return defaultValue;
+  const normalized = value.toUpperCase();
+  if (normalized === "M" || normalized === "S") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize header lockup justification prop values
+ */
+export function normalizeHeaderLockupJustification(
+  value: string | undefined,
+  defaultValue: "left" = "left"
+): "left" | "center" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  if (normalized === "left" || normalized === "center") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize header lockup size prop values
+ */
+export function normalizeHeaderLockupSize(
+  value: string | undefined,
+  defaultValue: "L" = "L"
+): "L" | "M" {
+  if (!value) return defaultValue;
+  const normalized = value.toUpperCase();
+  if (normalized === "L" || normalized === "M") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
+ * Normalize text input size prop values
+ */
+export function normalizeTextInputSize(
+  value: string | undefined,
+  defaultValue: "medium" = "medium"
+): "small" | "medium" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  if (normalized === "small" || normalized === "medium") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
  * Normalize content container size prop values
  */
 export function normalizeContentContainerSize(
