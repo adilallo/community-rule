@@ -42,23 +42,18 @@ export function useMediaQuery(
     mediaQuery = query;
   }
 
-  // Initialize state with current match if available (SSR safety)
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-    return window.matchMedia(mediaQuery).matches;
-  });
+  // Always start with false so server and first client render match (avoids hydration mismatch).
+  // Real value is set in useEffect after mount.
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
-    // Check if window is available (SSR safety)
     if (typeof window === "undefined") {
       return;
     }
 
     const media = window.matchMedia(mediaQuery);
+    setMatches(media.matches);
 
-    // Create listener for changes
     const listener = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
