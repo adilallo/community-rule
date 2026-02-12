@@ -503,6 +503,18 @@ export function normalizeLabelVariant(
 }
 
 /**
+ * Normalize TextArea appearance prop (default/embedded; Figma: Default/Embedded).
+ */
+export function normalizeTextAreaAppearance(
+  value: string | undefined,
+  defaultValue: "default" = "default"
+): "default" | "embedded" {
+  if (!value) return defaultValue;
+  const n = value.toLowerCase();
+  return n === "embedded" ? "embedded" : "default";
+}
+
+/**
  * Normalize small/medium/large size prop values (for SelectInput, TextArea, etc.)
  */
 export function normalizeSmallMediumLargeSize(

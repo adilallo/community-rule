@@ -133,6 +133,20 @@ describe("Create", () => {
     expect(stepper).toHaveAttribute("aria-valuemax", "5");
   });
 
+  it("renders custom header when headerContent is provided", () => {
+    renderWithProviders(
+      <Create
+        {...defaultProps}
+        title="Default Title"
+        description="Default description"
+        headerContent={<span>Custom header</span>}
+      />,
+    );
+    expect(screen.getByText("Custom header")).toBeInTheDocument();
+    expect(screen.queryByText("Default Title")).not.toBeInTheDocument();
+    expect(screen.queryByText("Default description")).not.toBeInTheDocument();
+  });
+
   it("renders custom footer content", () => {
     renderWithProviders(
       <Create

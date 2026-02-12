@@ -15,6 +15,36 @@
   display: none; /* Safari and Chrome */
 }
 
+/* Design system scrollbar (Figma node 20612-36521): dark track + thumb with states */
+.scrollbar-design {
+  scrollbar-width: thin; /* Firefox: narrow scrollbar */
+  scrollbar-color: #545B64 #292D32; /* Firefox: thumb track */
+}
+.scrollbar-design::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+.scrollbar-design::-webkit-scrollbar-track {
+  background: #292D32;
+}
+.scrollbar-design::-webkit-scrollbar-thumb {
+  background: #545B64;
+  border-radius: 4px;
+  border: 4px solid #292D32; /* visual padding: thumb appears 8px within 16px track */
+  background-clip: padding-box;
+}
+.scrollbar-design::-webkit-scrollbar-thumb:hover {
+  background: #787F8A;
+  border-width: 2px; /* hover: thumb expands to 12px */
+}
+.scrollbar-design::-webkit-scrollbar-thumb:active {
+  background: #3F434C;
+  border-width: 2px;
+}
+.scrollbar-design::-webkit-scrollbar-corner {
+  background: #292D32;
+}
+
 @theme inline {
   /* Custom breakpoints */
   --breakpoint-xsm: 429px;

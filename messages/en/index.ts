@@ -15,6 +15,7 @@ import home from "./pages/home.json";
 import learn from "./pages/learn.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
+import communication from "./create/communication.json";
 
 export default {
   common,
@@ -33,6 +34,9 @@ export default {
   pages: {
     home,
     learn,
+  },
+  create: {
+    communication,
   },
   navigation,
   metadata,

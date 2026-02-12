@@ -70,6 +70,16 @@ Large.args = {
   value: "",
 };
 
+export const Embedded = Template.bind({});
+Embedded.args = {
+  label: "Section content",
+  placeholder: "Enter text...",
+  value: "Embedded appearance used in create-flow modals: borderless, darker grey block.",
+  appearance: "embedded",
+  size: "large",
+  rows: 4,
+};
+
 export const HorizontalLabel = Template.bind({});
 HorizontalLabel.args = {
   labelVariant: "horizontal",

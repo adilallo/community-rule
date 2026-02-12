@@ -3,7 +3,7 @@
 import HeaderLockup from "../../components/type/HeaderLockup";
 import RuleCard from "../../components/cards/RuleCard";
 
-/** Mid-flow review step (after upload, before compact-cards). */
+/** Mid-flow review step (after upload, before cards). */
 export default function ReviewPage() {
   return (
     <div className="w-full max-w-[1280px] shrink-0 px-5 md:px-16">

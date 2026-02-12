@@ -132,6 +132,22 @@ Step3.args = {
   totalSteps: 3,
 };
 
+export const WithCustomHeader = Template.bind({});
+WithCustomHeader.args = {
+  isOpen: true,
+  headerContent: <div className="text-lg font-semibold">Custom header</div>,
+  children: (
+    <div className="space-y-4">
+      <p className="text-[var(--color-content-default-primary)]">
+        When headerContent is provided, the default title and description are not shown.
+      </p>
+    </div>
+  ),
+  showBackButton: false,
+  showNextButton: true,
+  nextButtonText: "Continue",
+};
+
 export const WithoutFooter = Template.bind({});
 WithoutFooter.args = {
   isOpen: true,

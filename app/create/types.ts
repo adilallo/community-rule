@@ -14,8 +14,7 @@ export type CreateFlowStep =
   | "select"
   | "upload"
   | "review"
-  | "compact-cards"
-  | "expanded-cards"
+  | "cards"
   | "right-rail"
   | "final-review"
   | "completed";

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import RuleCard from "../components/cards/RuleCard";
-import Chip from "../components/controls/Chip";
-import MultiSelect from "../components/controls/MultiSelect";
+import RuleCard from "../../components/cards/RuleCard";
+import Card from "../../components/cards/Card";
+import Chip from "../../components/controls/Chip";
+import MultiSelect from "../../components/controls/MultiSelect";
 import Image from "next/image";
 import { getAssetPath } from "../../../lib/assetUtils";
 
@@ -466,7 +467,7 @@ export default function ComponentsPreview() {
             Component Preview
           </h1>
           <p className="font-inter text-[18px] leading-[24px] text-[var(--color-content-default-secondary)]">
-            RuleCard and Chip component examples - states, palettes, sizes, and interactions
+            RuleCard, Card, and Chip component examples - states, palettes, sizes, and interactions
           </p>
         </header>
 
@@ -628,6 +629,74 @@ export default function ComponentsPreview() {
                     size="S"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Card Component - Create flow selection card variants */}
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+            Card Component
+          </h2>
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+            <p className="font-inter text-[18px] leading-[24px] text-[var(--color-content-default-secondary)]">
+              Horizontal and vertical orientations with recommended and selected states.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+              <div className="space-y-2">
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                  Horizontal + Recommended
+                </h3>
+                <Card
+                  label="Label"
+                  supportText="Members vote to resolve a dispute democratically."
+                  recommended={true}
+                  selected={false}
+                  orientation="horizontal"
+                  onClick={() => console.log("Card clicked")}
+                />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                  Horizontal + Selected
+                </h3>
+                <Card
+                  label="Label"
+                  supportText="Members vote to resolve a dispute democratically."
+                  recommended={false}
+                  selected={true}
+                  orientation="horizontal"
+                  onClick={() => console.log("Card clicked")}
+                />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                  Vertical + Recommended
+                </h3>
+                <Card
+                  label="Label"
+                  supportText="Invite-only"
+                  recommended={true}
+                  selected={false}
+                  orientation="vertical"
+                  showInfoIcon={true}
+                  onClick={() => console.log("Card clicked")}
+                />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
+                  Vertical + Selected
+                </h3>
+                <Card
+                  label="Label"
+                  supportText="Invite-only"
+                  recommended={false}
+                  selected={true}
+                  orientation="vertical"
+                  showInfoIcon={true}
+                  onClick={() => console.log("Card clicked")}
+                />
               </div>
             </div>
           </div>
