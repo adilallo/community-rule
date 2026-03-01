@@ -7,7 +7,7 @@ import RuleCard from "../../components/cards/RuleCard";
 export default function ReviewPage() {
   return (
     <div className="w-full max-w-[1280px] shrink-0 px-5 md:px-16">
-      <div className="flex w-full flex-col gap-4 min-w-0 sm:grid sm:grid-cols-2 sm:gap-12">
+      <div className="flex w-full flex-col gap-4 min-w-0 sm:grid sm:grid-cols-2 sm:gap-[var(--measures-spacing-1200,48px)]">
         <div className="min-w-0">
           <HeaderLockup
             title="Your community is added - congrats!"

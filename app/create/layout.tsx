@@ -59,12 +59,18 @@ function CreateFlowLayoutContent({ children }: { children: ReactNode }) {
   const previousStep = getPreviousStep();
 
   const handleNext = () => {
+    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     if (nextStep) {
       router.push(`/create/${nextStep}`);
     }
   };
 
   const handleBack = () => {
+    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     if (previousStep) {
       router.push(`/create/${previousStep}`);
     }
