@@ -27,7 +27,10 @@ const Avatar = memo<AvatarProps>(
 
     const baseStyles = `rounded-[var(--radius-measures-radius-full)] object-cover box-border ${sizeStyles[size]} ${className}`;
 
-    return <img src={src} alt={alt} className={baseStyles} {...props} />;
+    return (
+      /* eslint-disable-next-line @next/next/no-img-element -- avatar image from URL */
+      <img src={src} alt={alt} className={baseStyles} {...props} />
+    );
   },
 );
 

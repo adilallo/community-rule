@@ -46,6 +46,7 @@ const HeroBanner = memo<HeroBannerProps>(
 
             {/* Hero Image Container */}
             <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element -- dynamic path from getAssetPath */}
               <img
                 src={getAssetPath("assets/HeroImage.png")}
                 alt={imageAlt}

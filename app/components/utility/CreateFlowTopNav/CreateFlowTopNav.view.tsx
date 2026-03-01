@@ -17,7 +17,7 @@ export function CreateFlowTopNavView({
 
   return (
     <header
-      className={`bg-black w-full border-b border-[var(--color-border-default-tertiary)] ${className}`}
+      className={`bg-black w-full ${className}`}
       role="banner"
       aria-label="Create Rule Flow Navigation"
     >

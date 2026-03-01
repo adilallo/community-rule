@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.describe("Visual Regression Tests", () => {
-  async function settle(page: any) {
+  async function settle(page: Page) {
     await page.evaluate(() => {
       window.scrollTo(0, window.scrollY); // ensure a frame boundary
       void document.body.getBoundingClientRect();

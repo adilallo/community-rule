@@ -39,7 +39,16 @@ describe("NumberCard Component", () => {
     const card = screen
       .getByText("Test Card Text")
       .closest("div").parentElement;
-    expect(card).toHaveClass("flex", "flex-col", "sm:flex-row", "sm:items-center", "lg:flex-col", "lg:items-start", "lg:justify-end", "lg:relative");
+    expect(card).toHaveClass(
+      "flex",
+      "flex-col",
+      "sm:flex-row",
+      "sm:items-center",
+      "lg:flex-col",
+      "lg:items-start",
+      "lg:justify-end",
+      "lg:relative",
+    );
   });
 
   it("applies proper responsive spacing when size is not specified", () => {
@@ -194,9 +203,7 @@ describe("NumberCard Component", () => {
     render(<NumberCard {...defaultProps} size="Small" />);
 
     // For Small size, text is directly in card div (no wrapper), so use closest("div")
-    const card = screen
-      .getByText("Test Card Text")
-      .closest("div");
+    const card = screen.getByText("Test Card Text").closest("div");
     expect(card).toHaveClass(
       "flex",
       "flex-col",

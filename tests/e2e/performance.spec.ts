@@ -74,7 +74,11 @@ test.describe("Performance Monitoring", () => {
             const metrics: { lcp?: number; fid?: number; cls?: number } = {};
 
             for (const entry of entries) {
-              const e = entry as any;
+              const e = entry as PerformanceEntry & {
+                startTime?: number;
+                processingStart?: number;
+                value?: number;
+              };
               if (
                 e.name === "LCP" ||
                 e.entryType === "largest-contentful-paint"

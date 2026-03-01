@@ -17,6 +17,8 @@ export interface CardStackProps {
   showLessLabel?: string;
   title?: string;
   description?: string;
+  /** "default" = compact grid/column + expanded grid; "singleStack" = always one column, expand shows more in same stack */
+  layout?: "default" | "singleStack";
   className?: string;
 }
 
@@ -31,5 +33,6 @@ export interface CardStackViewProps {
   showLessLabel: string;
   title: string;
   description: string;
+  layout: "default" | "singleStack";
   className: string;
 }

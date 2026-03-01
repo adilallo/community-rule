@@ -42,7 +42,7 @@ export function CardView({
   const selectedBorder = selected
     ? "outline outline-2 outline-dashed outline-black outline-offset-[-2px]"
     : "";
-  const baseClasses = `rounded-[var(--radius-measures-radius-small)] bg-[#FFFFFF] p-4 transition-all duration-200 cursor-pointer ${borderClass} ${selectedBorder} ${className}`;
+  const baseClasses = `select-none rounded-[var(--radius-measures-radius-small)] bg-[#FFFFFF] p-4 transition-[border-color,box-shadow,outline] duration-200 cursor-pointer ${borderClass} ${selectedBorder} ${className}`;
 
   if (orientation === "horizontal") {
     return (
@@ -93,7 +93,7 @@ export function CardView({
           </p>
         ) : null}
       </div>
-      <div className="shrink-0">
+      <div className="shrink-0 w-[6rem]">
         <CardTag recommended={recommended} selected={selected} />
       </div>
     </div>

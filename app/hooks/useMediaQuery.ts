@@ -52,6 +52,7 @@ export function useMediaQuery(
     }
 
     const media = window.matchMedia(mediaQuery);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync with external system (matchMedia)
     setMatches(media.matches);
 
     const listener = (event: MediaQueryListEvent) => {
@@ -67,7 +68,7 @@ export function useMediaQuery(
       media.addListener(listener);
       return () => media.removeListener(listener);
     }
-  }, [query, direction]);
+  }, [mediaQuery]);
 
   return matches;
 }

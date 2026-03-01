@@ -9,9 +9,24 @@ import { vi, describe, test, expect, afterEach } from "vitest";
 import CardStack from "../../app/components/utility/CardStack";
 
 const SAMPLE_CARDS = [
-  { id: "1", label: "Option A", supportText: "Description A", recommended: true },
-  { id: "2", label: "Option B", supportText: "Description B", recommended: false },
-  { id: "3", label: "Option C", supportText: "Description C", recommended: true },
+  {
+    id: "1",
+    label: "Option A",
+    supportText: "Description A",
+    recommended: true,
+  },
+  {
+    id: "2",
+    label: "Option B",
+    supportText: "Description B",
+    recommended: false,
+  },
+  {
+    id: "3",
+    label: "Option C",
+    supportText: "Description C",
+    recommended: true,
+  },
 ];
 
 afterEach(() => {
@@ -62,7 +77,9 @@ describe("CardStack Component", () => {
     render(<CardStack cards={SAMPLE_CARDS} hasMore={false} />);
 
     expect(
-      screen.queryByRole("button", { name: "See all communication approaches" }),
+      screen.queryByRole("button", {
+        name: "See all communication approaches",
+      }),
     ).not.toBeInTheDocument();
   });
 
@@ -82,9 +99,7 @@ describe("CardStack Component", () => {
 
   test("calls onCardSelect when a card is clicked", () => {
     const onCardSelect = vi.fn();
-    render(
-      <CardStack cards={SAMPLE_CARDS} onCardSelect={onCardSelect} />,
-    );
+    render(<CardStack cards={SAMPLE_CARDS} onCardSelect={onCardSelect} />);
 
     const cardButtons = screen.getAllByRole("button", {
       name: "Option A: Description A",

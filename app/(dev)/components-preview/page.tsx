@@ -8,6 +8,9 @@ import MultiSelect from "../../components/controls/MultiSelect";
 import Image from "next/image";
 import { getAssetPath } from "../../../lib/assetUtils";
 
+/** Module-level counter for unique rule card chip IDs (avoids ref in initial state). */
+let ruleCardIdCounter = 0;
+
 interface ChipData {
   id: string;
   label: string;
@@ -18,7 +21,13 @@ interface ChipData {
 
 // MultiSelect example component with state management
 function MultiSelectExample({ size }: { size: "S" | "M" }) {
-  const [options, setOptions] = useState<Array<{ id: string; label: string; state: "Unselected" | "Selected" | "Custom" }>>([
+  const [options, setOptions] = useState<
+    Array<{
+      id: string;
+      label: string;
+      state: "Unselected" | "Selected" | "Custom";
+    }>
+  >([
     { id: "1", label: "1 member", state: "Unselected" },
     { id: "2", label: "2-10 members", state: "Unselected" },
     { id: "3", label: "10-24 members", state: "Unselected" },
@@ -36,17 +45,14 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
               ...opt,
               state: opt.state === "Selected" ? "Unselected" : "Selected",
             }
-          : opt
-      )
+          : opt,
+      ),
     );
   };
 
   const handleAddClick = () => {
     const newId = `custom-${Date.now()}`;
-    setOptions((prev) => [
-      ...prev,
-      { id: newId, label: "", state: "Custom" },
-    ]);
+    setOptions((prev) => [...prev, { id: newId, label: "", state: "Custom" }]);
   };
 
   const handleCustomConfirm = (chipId: string, value: string) => {
@@ -54,8 +60,8 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
       prev.map((opt) =>
         opt.id === chipId
           ? { ...opt, label: value, state: "Selected" as const }
-          : opt
-      )
+          : opt,
+      ),
     );
   };
 
@@ -84,28 +90,52 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
 }
 
 export default function ComponentsPreview() {
-  const [chipStates, setChipStates] = useState<Record<string, "Unselected" | "Selected">>({
+  const [chipStates, setChipStates] = useState<
+    Record<string, "Unselected" | "Selected">
+  >({
     "default-s": "Unselected",
     "default-m": "Unselected",
     "inverse-s": "Unselected",
     "inverse-m": "Unselected",
   });
-  
+
   // Manage custom chips separately
   const [customChips, setCustomChips] = useState<ChipData[]>([
-    { id: "custom-1", label: "", state: "Custom", palette: "Default", size: "S" },
-    { id: "custom-2", label: "", state: "Custom", palette: "Default", size: "M" },
+    {
+      id: "custom-1",
+      label: "",
+      state: "Custom",
+      palette: "Default",
+      size: "S",
+    },
+    {
+      id: "custom-2",
+      label: "",
+      state: "Custom",
+      palette: "Default",
+      size: "M",
+    },
   ]);
 
   // RuleCard categories with chip options and state management
-  const [ruleCardCategories, setRuleCardCategories] = useState<Array<{
-    name: string;
-    chipOptions: Array<{ id: string; label: string; state: "Unselected" | "Selected" | "Custom" }>;
-    onChipClick?: (categoryName: string, chipId: string) => void;
-    onAddClick?: (categoryName: string) => void;
-    onCustomChipConfirm?: (categoryName: string, chipId: string, value: string) => void;
-    onCustomChipClose?: (categoryName: string, chipId: string) => void;
-  }>>([
+  const [ruleCardCategories, setRuleCardCategories] = useState<
+    Array<{
+      name: string;
+      chipOptions: Array<{
+        id: string;
+        label: string;
+        state: "Unselected" | "Selected" | "Custom";
+      }>;
+      onChipClick?: (_categoryName: string, _chipId: string) => void;
+      onAddClick?: (_categoryName: string) => void;
+      onCustomChipConfirm?: (
+        _categoryName: string,
+        _chipId: string,
+        _value: string,
+      ) => void;
+      onCustomChipClose?: (_categoryName: string, _chipId: string) => void;
+    }>
+  >([
     {
       name: "Values",
       chipOptions: [
@@ -125,17 +155,20 @@ export default function ComponentsPreview() {
                     opt.id === chipId
                       ? {
                           ...opt,
-                          state: opt.state === "Selected" ? "Unselected" : "Selected",
+                          state:
+                            opt.state === "Selected"
+                              ? "Unselected"
+                              : "Selected",
                         }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onAddClick: (categoryName: string) => {
-        const newId = `custom-${categoryName}-${Date.now()}`;
+        const newId = `custom-${categoryName}-${++ruleCardIdCounter}`;
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -146,11 +179,15 @@ export default function ComponentsPreview() {
                     { id: newId, label: "", state: "Custom" },
                   ],
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
-      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+      onCustomChipConfirm: (
+        categoryName: string,
+        chipId: string,
+        value: string,
+      ) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -159,11 +196,11 @@ export default function ComponentsPreview() {
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
                       ? { ...opt, label: value, state: "Selected" }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onCustomChipClose: (categoryName: string, chipId: string) => {
@@ -172,18 +209,18 @@ export default function ComponentsPreview() {
             cat.name === categoryName
               ? {
                   ...cat,
-                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                  chipOptions: cat.chipOptions.filter(
+                    (opt) => opt.id !== chipId,
+                  ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
     },
     {
       name: "Communication",
-      chipOptions: [
-        { id: "comm-1", label: "Signal", state: "Unselected" },
-      ],
+      chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
@@ -194,17 +231,20 @@ export default function ComponentsPreview() {
                     opt.id === chipId
                       ? {
                           ...opt,
-                          state: opt.state === "Selected" ? "Unselected" : "Selected",
+                          state:
+                            opt.state === "Selected"
+                              ? "Unselected"
+                              : "Selected",
                         }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onAddClick: (categoryName: string) => {
-        const newId = `custom-${categoryName}-${Date.now()}`;
+        const newId = `custom-${categoryName}-${++ruleCardIdCounter}`;
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -215,11 +255,15 @@ export default function ComponentsPreview() {
                     { id: newId, label: "", state: "Custom" },
                   ],
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
-      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+      onCustomChipConfirm: (
+        categoryName: string,
+        chipId: string,
+        value: string,
+      ) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -228,11 +272,11 @@ export default function ComponentsPreview() {
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
                       ? { ...opt, label: value, state: "Selected" }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onCustomChipClose: (categoryName: string, chipId: string) => {
@@ -241,10 +285,12 @@ export default function ComponentsPreview() {
             cat.name === categoryName
               ? {
                   ...cat,
-                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                  chipOptions: cat.chipOptions.filter(
+                    (opt) => opt.id !== chipId,
+                  ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
     },
@@ -263,17 +309,20 @@ export default function ComponentsPreview() {
                     opt.id === chipId
                       ? {
                           ...opt,
-                          state: opt.state === "Selected" ? "Unselected" : "Selected",
+                          state:
+                            opt.state === "Selected"
+                              ? "Unselected"
+                              : "Selected",
                         }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onAddClick: (categoryName: string) => {
-        const newId = `custom-${categoryName}-${Date.now()}`;
+        const newId = `custom-${categoryName}-${++ruleCardIdCounter}`;
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -284,11 +333,15 @@ export default function ComponentsPreview() {
                     { id: newId, label: "", state: "Custom" },
                   ],
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
-      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+      onCustomChipConfirm: (
+        categoryName: string,
+        chipId: string,
+        value: string,
+      ) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -297,11 +350,11 @@ export default function ComponentsPreview() {
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
                       ? { ...opt, label: value, state: "Selected" }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onCustomChipClose: (categoryName: string, chipId: string) => {
@@ -310,10 +363,12 @@ export default function ComponentsPreview() {
             cat.name === categoryName
               ? {
                   ...cat,
-                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                  chipOptions: cat.chipOptions.filter(
+                    (opt) => opt.id !== chipId,
+                  ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
     },
@@ -333,17 +388,20 @@ export default function ComponentsPreview() {
                     opt.id === chipId
                       ? {
                           ...opt,
-                          state: opt.state === "Selected" ? "Unselected" : "Selected",
+                          state:
+                            opt.state === "Selected"
+                              ? "Unselected"
+                              : "Selected",
                         }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onAddClick: (categoryName: string) => {
-        const newId = `custom-${categoryName}-${Date.now()}`;
+        const newId = `custom-${categoryName}-${++ruleCardIdCounter}`;
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -354,11 +412,15 @@ export default function ComponentsPreview() {
                     { id: newId, label: "", state: "Custom" },
                   ],
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
-      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+      onCustomChipConfirm: (
+        categoryName: string,
+        chipId: string,
+        value: string,
+      ) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -367,11 +429,11 @@ export default function ComponentsPreview() {
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
                       ? { ...opt, label: value, state: "Selected" }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onCustomChipClose: (categoryName: string, chipId: string) => {
@@ -380,10 +442,12 @@ export default function ComponentsPreview() {
             cat.name === categoryName
               ? {
                   ...cat,
-                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                  chipOptions: cat.chipOptions.filter(
+                    (opt) => opt.id !== chipId,
+                  ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
     },
@@ -403,17 +467,20 @@ export default function ComponentsPreview() {
                     opt.id === chipId
                       ? {
                           ...opt,
-                          state: opt.state === "Selected" ? "Unselected" : "Selected",
+                          state:
+                            opt.state === "Selected"
+                              ? "Unselected"
+                              : "Selected",
                         }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onAddClick: (categoryName: string) => {
-        const newId = `custom-${categoryName}-${Date.now()}`;
+        const newId = `custom-${categoryName}-${++ruleCardIdCounter}`;
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -424,11 +491,15 @@ export default function ComponentsPreview() {
                     { id: newId, label: "", state: "Custom" },
                   ],
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
-      onCustomChipConfirm: (categoryName: string, chipId: string, value: string) => {
+      onCustomChipConfirm: (
+        categoryName: string,
+        chipId: string,
+        value: string,
+      ) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
             cat.name === categoryName
@@ -437,11 +508,11 @@ export default function ComponentsPreview() {
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
                       ? { ...opt, label: value, state: "Selected" }
-                      : opt
+                      : opt,
                   ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
       onCustomChipClose: (categoryName: string, chipId: string) => {
@@ -450,10 +521,12 @@ export default function ComponentsPreview() {
             cat.name === categoryName
               ? {
                   ...cat,
-                  chipOptions: cat.chipOptions.filter((opt) => opt.id !== chipId),
+                  chipOptions: cat.chipOptions.filter(
+                    (opt) => opt.id !== chipId,
+                  ),
                 }
-              : cat
-          )
+              : cat,
+          ),
         );
       },
     },
@@ -467,7 +540,8 @@ export default function ComponentsPreview() {
             Component Preview
           </h1>
           <p className="font-inter text-[18px] leading-[24px] text-[var(--color-content-default-secondary)]">
-            RuleCard, Card, and Chip component examples - states, palettes, sizes, and interactions
+            RuleCard, Card, and Chip component examples - states, palettes,
+            sizes, and interactions
           </p>
         </header>
 
@@ -481,7 +555,7 @@ export default function ComponentsPreview() {
             <div className="space-y-[var(--spacing-scale-016)]">
               <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
                 Default palette
-                </h3>
+              </h3>
               <div className="flex flex-wrap items-center gap-[var(--spacing-scale-016)]">
                 <Chip
                   label="Small"
@@ -491,7 +565,10 @@ export default function ComponentsPreview() {
                   onClick={() =>
                     setChipStates((prev) => ({
                       ...prev,
-                      "default-s": prev["default-s"] === "Selected" ? "Unselected" : "Selected",
+                      "default-s":
+                        prev["default-s"] === "Selected"
+                          ? "Unselected"
+                          : "Selected",
                     }))
                   }
                 />
@@ -503,7 +580,10 @@ export default function ComponentsPreview() {
                   onClick={() =>
                     setChipStates((prev) => ({
                       ...prev,
-                      "default-m": prev["default-m"] === "Selected" ? "Unselected" : "Selected",
+                      "default-m":
+                        prev["default-m"] === "Selected"
+                          ? "Unselected"
+                          : "Selected",
                     }))
                   }
                 />
@@ -528,27 +608,35 @@ export default function ComponentsPreview() {
                           prev.map((c) =>
                             c.id === chip.id
                               ? { ...c, label: value, state: "Selected" }
-                              : c
-                          )
+                              : c,
+                          ),
                         );
                       }}
                       onClose={(e) => {
                         e.stopPropagation();
-                        setCustomChips((prev) => prev.filter((c) => c.id !== chip.id));
+                        setCustomChips((prev) =>
+                          prev.filter((c) => c.id !== chip.id),
+                        );
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
                         // Only toggle if the chip is in Selected or Unselected state (not Custom)
-                        if (chip.state === "Selected" || chip.state === "Unselected") {
+                        if (
+                          chip.state === "Selected" ||
+                          chip.state === "Unselected"
+                        ) {
                           setCustomChips((prev) =>
                             prev.map((c) =>
                               c.id === chip.id
                                 ? {
                                     ...c,
-                                    state: c.state === "Selected" ? "Unselected" : "Selected",
+                                    state:
+                                      c.state === "Selected"
+                                        ? "Unselected"
+                                        : "Selected",
                                   }
-                                : c
-                            )
+                                : c,
+                            ),
                           );
                         }
                       }}
@@ -561,7 +649,13 @@ export default function ComponentsPreview() {
                     const newId = `custom-${Date.now()}`;
                     setCustomChips((prev) => [
                       ...prev,
-                      { id: newId, label: "", state: "Custom", palette: "Default", size: "S" },
+                      {
+                        id: newId,
+                        label: "",
+                        state: "Custom",
+                        palette: "Default",
+                        size: "S",
+                      },
                     ]);
                   }}
                   className="flex gap-[var(--measures-spacing-050,2px)] items-center justify-center p-[var(--measures-spacing-200,8px)] rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity"
@@ -592,11 +686,14 @@ export default function ComponentsPreview() {
             </div>
 
             {/* Inverse palette - on white background */}
-                <div className="space-y-[var(--spacing-scale-016)]">
+            <div className="space-y-[var(--spacing-scale-016)]">
               <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
                 Inverse palette (on white background)
               </h3>
-              <div className="!bg-white p-[var(--spacing-scale-032)] rounded-[var(--radius-300,12px)]" style={{ backgroundColor: '#ffffff' }}>
+              <div
+                className="!bg-white p-[var(--spacing-scale-032)] rounded-[var(--radius-300,12px)]"
+                style={{ backgroundColor: "#ffffff" }}
+              >
                 <div className="flex flex-wrap items-center gap-[var(--spacing-scale-016)]">
                   <Chip
                     label="Small"
@@ -606,7 +703,10 @@ export default function ComponentsPreview() {
                     onClick={() =>
                       setChipStates((prev) => ({
                         ...prev,
-                        "inverse-s": prev["inverse-s"] === "Selected" ? "Unselected" : "Selected",
+                        "inverse-s":
+                          prev["inverse-s"] === "Selected"
+                            ? "Unselected"
+                            : "Selected",
                       }))
                     }
                   />
@@ -618,7 +718,10 @@ export default function ComponentsPreview() {
                     onClick={() =>
                       setChipStates((prev) => ({
                         ...prev,
-                        "inverse-m": prev["inverse-m"] === "Selected" ? "Unselected" : "Selected",
+                        "inverse-m":
+                          prev["inverse-m"] === "Selected"
+                            ? "Unselected"
+                            : "Selected",
                       }))
                     }
                   />
@@ -641,7 +744,8 @@ export default function ComponentsPreview() {
           </h2>
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <p className="font-inter text-[18px] leading-[24px] text-[var(--color-content-default-secondary)]">
-              Horizontal and vertical orientations with recommended and selected states.
+              Horizontal and vertical orientations with recommended and selected
+              states.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
               <div className="space-y-2">
@@ -654,7 +758,7 @@ export default function ComponentsPreview() {
                   recommended={true}
                   selected={false}
                   orientation="horizontal"
-                  onClick={() => console.log("Card clicked")}
+                  onClick={() => console.warn("Card clicked")}
                 />
               </div>
               <div className="space-y-2">
@@ -667,7 +771,7 @@ export default function ComponentsPreview() {
                   recommended={false}
                   selected={true}
                   orientation="horizontal"
-                  onClick={() => console.log("Card clicked")}
+                  onClick={() => console.warn("Card clicked")}
                 />
               </div>
               <div className="space-y-2">
@@ -681,7 +785,7 @@ export default function ComponentsPreview() {
                   selected={false}
                   orientation="vertical"
                   showInfoIcon={true}
-                  onClick={() => console.log("Card clicked")}
+                  onClick={() => console.warn("Card clicked")}
                 />
               </div>
               <div className="space-y-2">
@@ -695,7 +799,7 @@ export default function ComponentsPreview() {
                   selected={true}
                   orientation="vertical"
                   showInfoIcon={true}
-                  onClick={() => console.log("Card clicked")}
+                  onClick={() => console.warn("Card clicked")}
                 />
               </div>
             </div>
@@ -717,9 +821,9 @@ export default function ComponentsPreview() {
               className="w-[525px]"
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
-              onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-                  />
-                </div>
+              onClick={() => console.warn("Card clicked: Mutual Aid Mondays")}
+            />
+          </div>
         </section>
 
         {/* Collapsed State - Medium */}
@@ -737,17 +841,17 @@ export default function ComponentsPreview() {
               className="w-[289px]"
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
-              onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-                  />
+              onClick={() => console.warn("Card clicked: Mutual Aid Mondays")}
+            />
           </div>
         </section>
 
         {/* Expanded State - Large */}
-            <section className="space-y-[var(--spacing-scale-024)]">
-              <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
             Expanded State - Large (L)
-              </h2>
-              <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
+          </h2>
+          <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <RuleCard
               title="Mutual Aid Mondays"
               description="Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness."
@@ -758,9 +862,9 @@ export default function ComponentsPreview() {
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
               categories={ruleCardCategories}
-              onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
-                      />
-                    </div>
+              onClick={() => console.warn("Card clicked: Mutual Aid Mondays")}
+            />
+          </div>
         </section>
 
         {/* Expanded State - Medium */}
@@ -779,16 +883,16 @@ export default function ComponentsPreview() {
               logoUrl="http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png"
               logoAlt="Mutual Aid Mondays"
               categories={ruleCardCategories}
-              onClick={() => console.log("Card clicked: Mutual Aid Mondays")}
+              onClick={() => console.warn("Card clicked: Mutual Aid Mondays")}
             />
-              </div>
-            </section>
+          </div>
+        </section>
 
         {/* Different Background Colors */}
-            <section className="space-y-[var(--spacing-scale-024)]">
-              <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
+        <section className="space-y-[var(--spacing-scale-024)]">
+          <h2 className="font-bricolage-grotesque text-[32px] leading-[40px] font-bold text-[var(--color-content-default-primary)]">
             Different Background Colors
-              </h2>
+          </h2>
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--spacing-scale-024)]">
               <RuleCard
@@ -806,7 +910,7 @@ export default function ComponentsPreview() {
                     height={103}
                   />
                 }
-                onClick={() => console.log("Consensus clusters selected")}
+                onClick={() => console.warn("Consensus clusters selected")}
               />
               <RuleCard
                 title="Consensus"
@@ -823,10 +927,10 @@ export default function ComponentsPreview() {
                     height={103}
                   />
                 }
-                onClick={() => console.log("Consensus selected")}
-                  />
-                </div>
-              </div>
+                onClick={() => console.warn("Consensus selected")}
+              />
+            </div>
+          </div>
         </section>
 
         {/* Logo Fallback */}
@@ -843,9 +947,9 @@ export default function ComponentsPreview() {
               size="L"
               className="w-[525px]"
               communityInitials="CE"
-              onClick={() => console.log("Community Example selected")}
-                  />
-                </div>
+              onClick={() => console.warn("Community Example selected")}
+            />
+          </div>
         </section>
 
         {/* MultiSelect Component */}
@@ -856,7 +960,7 @@ export default function ComponentsPreview() {
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             {/* Small size */}
             <MultiSelectExample size="S" />
-            
+
             {/* Medium size */}
             <MultiSelectExample size="M" />
           </div>

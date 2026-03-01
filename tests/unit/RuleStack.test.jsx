@@ -147,8 +147,12 @@ describe("RuleStack Component", () => {
       "/assets/Icon_Sociocracy.svg",
     );
     // Check for responsive icon size classes
-    expect(sociocracyIcon?.className).toMatch(/min-\[640px\]:max-\[1023px\]:w-\[56px\]/);
-    expect(sociocracyIcon?.className).toMatch(/min-\[640px\]:max-\[1023px\]:h-\[56px\]/);
+    expect(sociocracyIcon?.className).toMatch(
+      /min-\[640px\]:max-\[1023px\]:w-\[56px\]/,
+    );
+    expect(sociocracyIcon?.className).toMatch(
+      /min-\[640px\]:max-\[1023px\]:h-\[56px\]/,
+    );
     expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
     expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
   });

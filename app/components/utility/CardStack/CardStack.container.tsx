@@ -20,6 +20,7 @@ const CardStackContainer = memo<CardStackProps>(
     showLessLabel = DEFAULT_SHOW_LESS_LABEL,
     title = "",
     description = "",
+    layout = "default",
     className = "",
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
@@ -68,6 +69,7 @@ const CardStackContainer = memo<CardStackProps>(
         showLessLabel={showLessLabel}
         title={title}
         description={description}
+        layout={layout}
         className={className}
       />
     );

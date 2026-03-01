@@ -52,8 +52,7 @@ const ADD_PLATFORM_MODALS: Record<
   },
   [VIDEO_MEETINGS_CARD_ID]: {
     title: "Video Meetings",
-    description:
-      "Synchronous video calls for remote face-to-face interaction.",
+    description: "Synchronous video calls for remote face-to-face interaction.",
     nextButtonText: "Add Platform",
   },
 };
@@ -93,12 +92,12 @@ const ADD_PLATFORM_SECTION_DEFAULTS: Record<
  */
 function CreateModalSection({
   title,
-  value,
+  value: _value,
   onChange,
 }: {
   title: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (_value: string) => void;
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -115,7 +114,7 @@ function CreateModalSection({
       </div>
       <TextArea
         formHeader={false}
-        value={value}
+        value={_value}
         onChange={(e) => onChange(e.target.value)}
         size="large"
         rows={6}
@@ -126,9 +125,15 @@ function CreateModalSection({
 }
 
 /** Body for any "Add platform" modal: three editable sections (TextArea only). */
-function AddPlatformModalContent({ platformCardId }: { platformCardId: string }) {
+function AddPlatformModalContent({
+  platformCardId,
+}: {
+  platformCardId: string;
+}) {
   const defaults = ADD_PLATFORM_SECTION_DEFAULTS[platformCardId];
-  const [sectionValues, setSectionValues] = useState<Record<SectionKey, string>>(
+  const [sectionValues, setSectionValues] = useState<
+    Record<SectionKey, string>
+  >(
     defaults ?? {
       "Core Principle & Scope": "",
       "Logistics, Admin & Norms": "",
@@ -168,15 +173,13 @@ const SAMPLE_CARDS = [
   {
     id: SIGNAL_CARD_ID,
     label: "Signal",
-    supportText:
-      "Encrypted messaging for high-security, private coordination.",
+    supportText: "Encrypted messaging for high-security, private coordination.",
     recommended: true,
   },
   {
     id: VIDEO_MEETINGS_CARD_ID,
     label: "Video Meetings",
-    supportText:
-      "Synchronous video calls for remote face-to-face interaction.",
+    supportText: "Synchronous video calls for remote face-to-face interaction.",
     recommended: true,
   },
   {

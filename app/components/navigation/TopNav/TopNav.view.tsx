@@ -55,18 +55,21 @@ function TopNavView({
               </div>
 
               {/* Decorative Union images for tab appearance */}
+              {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG, not content */}
               <img
                 src={getAssetPath("assets/Union_xsm.svg")}
                 alt=""
                 role="presentation"
                 className="absolute -bottom-[3px] -right-[52px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] sm:hidden -z-10"
               />
+              {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG */}
               <img
                 src={getAssetPath("assets/Union_sm_md_lg.svg")}
                 alt=""
                 role="presentation"
                 className="absolute -bottom-[3.7px] -right-[53px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] hidden sm:block xl:hidden -z-10"
               />
+              {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG */}
               <img
                 src={getAssetPath("assets/Union_xlg.svg")}
                 alt=""

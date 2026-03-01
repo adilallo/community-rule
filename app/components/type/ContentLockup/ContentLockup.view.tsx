@@ -60,12 +60,15 @@ function ContentLockupView({
                 </h1>
               ) : null}
               {variant === "hero" && (
-                <img
-                  src={getAssetPath("assets/Shapes_1.svg")}
-                  alt=""
-                  className={styles.shape}
-                  role="presentation"
-                />
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- decorative shape SVG */}
+                  <img
+                    src={getAssetPath("assets/Shapes_1.svg")}
+                    alt=""
+                    className={styles.shape}
+                    role="presentation"
+                  />
+                </>
               )}
             </div>
 

@@ -75,6 +75,7 @@ function InputLabelView({
         </div>
         {helpIcon && (
           <div className={`relative shrink-0 ${helpIconSize}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- icon from asset path */}
             <img
               src={getAssetPath(ASSETS.ICON_HELP)}
               alt="Help"

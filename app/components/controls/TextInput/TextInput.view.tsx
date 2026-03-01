@@ -45,6 +45,7 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
               </label>
               {showHelpIcon && (
                 <div className="relative shrink-0 size-[12px]">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
                   <img
                     src={getAssetPath(ASSETS.ICON_HELP)}
                     alt="Help"

@@ -45,9 +45,7 @@ describe("HeaderLockup (behavioral tests)", () => {
   });
 
   it("renders description when provided", () => {
-    render(
-      <HeaderLockup title="Test Title" description="Test description" />,
-    );
+    render(<HeaderLockup title="Test Title" description="Test description" />);
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
@@ -71,13 +69,7 @@ describe("HeaderLockup (behavioral tests)", () => {
   });
 
   it("accepts PascalCase props", () => {
-    render(
-      <HeaderLockup
-        title="Test Title"
-        justification="Left"
-        size="L"
-      />,
-    );
+    render(<HeaderLockup title="Test Title" justification="Left" size="L" />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 });

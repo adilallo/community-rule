@@ -13,7 +13,9 @@ describe("ReviewPage", () => {
   it("renders HeaderLockup with expected title", () => {
     render(<ReviewPage />);
     expect(
-      screen.getByRole("heading", { name: "Your community is added - congrats!" }),
+      screen.getByRole("heading", {
+        name: "Your community is added - congrats!",
+      }),
     ).toBeInTheDocument();
   });
 
@@ -44,6 +46,8 @@ describe("ReviewPage", () => {
     render(<ReviewPage />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);
-    expect(buttons.some((el) => el.textContent?.includes("Mutual Aid Mondays"))).toBe(true);
+    expect(
+      buttons.some((el) => el.textContent?.includes("Mutual Aid Mondays")),
+    ).toBe(true);
   });
 });

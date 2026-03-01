@@ -7,7 +7,6 @@ import MenuBarItem from "../MenuBarItem";
 import Button from "../../buttons/Button";
 import AvatarContainer from "../../utility/AvatarContainer";
 import Avatar from "../../icons/Avatar";
-import Logo from "../../icons/Logo";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import { TopNavView } from "./TopNav.view";
 import type { TopNavProps, NavSize } from "./TopNav.types";
@@ -19,12 +18,7 @@ export const avatarImages = [
 ];
 
 const TopNavContainer = memo<TopNavProps>(
-  ({
-    folderTop = false,
-    loggedIn = false,
-    profile = false,
-    logIn = true,
-  }) => {
+  ({ folderTop = false, loggedIn = false, profile = false, logIn = true }) => {
     const pathname = usePathname();
     const t = useTranslation("header");
 
@@ -34,7 +28,9 @@ const TopNavContainer = memo<TopNavProps>(
       "@type": "WebSite",
       name: "CommunityRule",
       url: "https://communityrule.com",
-      ...(folderTop && { description: "Build operating manuals for successful communities" }),
+      ...(folderTop && {
+        description: "Build operating manuals for successful communities",
+      }),
       potentialAction: {
         "@type": "SearchAction",
         target: "https://communityrule.com/search?q={search_term_string}",
@@ -54,7 +50,10 @@ const TopNavContainer = memo<TopNavProps>(
 
     const renderNavigationItems = (size: NavSize) => {
       // Map NavSize to Figma MenuBarItem sizes
-      const sizeMap: Record<NavSize, "X Small" | "Small" | "Medium" | "Large" | "X Large"> = {
+      const sizeMap: Record<
+        NavSize,
+        "X Small" | "Small" | "Medium" | "Large" | "X Large"
+      > = {
         default: "Small",
         xsmall: "X Small",
         xsmallUseCases: "X Small",
@@ -85,7 +84,10 @@ const TopNavContainer = memo<TopNavProps>(
             mode={mode}
             state={pathname === item.href ? "selected" : "default"}
             reducedPadding={isUseCases}
-            ariaLabel={t("ariaLabels.navigateToPage").replace("{text}", item.text)}
+            ariaLabel={t("ariaLabels.navigateToPage").replace(
+              "{text}",
+              item.text,
+            )}
           >
             {item.text}
           </MenuBarItem>
@@ -113,7 +115,10 @@ const TopNavContainer = memo<TopNavProps>(
 
     const renderLoginButton = (size: NavSize) => {
       // Map NavSize to Figma MenuBarItem sizes
-      const sizeMap: Record<NavSize, "X Small" | "Small" | "Medium" | "Large" | "X Large"> = {
+      const sizeMap: Record<
+        NavSize,
+        "X Small" | "Small" | "Medium" | "Large" | "X Large"
+      > = {
         default: "Small",
         xsmall: "X Small",
         xsmallUseCases: "X Small",

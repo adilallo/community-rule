@@ -148,7 +148,9 @@ describe("RuleCard Component", () => {
 
     const heading = screen.getByRole("heading", { level: 3 });
     // Check for responsive font classes - at 1440px+ it should have font-bricolage-grotesque and font-extrabold
-    expect(heading?.className).toMatch(/min-\[1440px\]:font-bricolage-grotesque/);
+    expect(heading?.className).toMatch(
+      /min-\[1440px\]:font-bricolage-grotesque/,
+    );
     expect(heading?.className).toMatch(/min-\[1440px\]:font-extrabold/);
   });
 
@@ -162,11 +164,7 @@ describe("RuleCard Component", () => {
       },
     ];
     render(
-      <RuleCard
-        {...defaultProps}
-        expanded={true}
-        categories={categories}
-      />,
+      <RuleCard {...defaultProps} expanded={true} categories={categories} />,
     );
 
     expect(screen.getByText("Values")).toBeInTheDocument();
@@ -186,12 +184,7 @@ describe("RuleCard Component", () => {
   });
 
   it("renders with community initials fallback", () => {
-    render(
-      <RuleCard
-        {...defaultProps}
-        communityInitials="CE"
-      />,
-    );
+    render(<RuleCard {...defaultProps} communityInitials="CE" />);
 
     expect(screen.getByText("CE")).toBeInTheDocument();
   });

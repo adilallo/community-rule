@@ -6,7 +6,7 @@ import Upload from "../../components/controls/Upload";
 
 /**
  * Upload page for the create flow
- * 
+ *
  * Displays upload functionality using HeaderLockup and Upload components.
  * Responsive layout: centered at 640px+, left-aligned below 640px.
  * Responsive sizing: uses L/M for HeaderLockup based on 640px breakpoint.
@@ -15,8 +15,7 @@ export default function UploadPage() {
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
 
   const handleUploadClick = () => {
-    // Handle upload button click
-    console.log("Upload clicked");
+    // TODO: Handle upload button click (e.g. open file picker)
   };
 
   return (

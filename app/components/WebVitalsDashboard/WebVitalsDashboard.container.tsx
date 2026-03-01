@@ -40,7 +40,23 @@ const WebVitalsDashboardContainer = memo(() => {
 
     if (typeof window !== "undefined") {
       import("web-vitals").then((webVitals) => {
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as any;
+        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as {
+          getCLS: (
+            _fn: (_m: { value: number; rating: string }) => void,
+          ) => void;
+          getFID: (
+            _fn: (_m: { value: number; rating: string }) => void,
+          ) => void;
+          getFCP: (
+            _fn: (_m: { value: number; rating: string }) => void,
+          ) => void;
+          getLCP: (
+            _fn: (_m: { value: number; rating: string }) => void,
+          ) => void;
+          getTTFB: (
+            _fn: (_m: { value: number; rating: string }) => void,
+          ) => void;
+        };
 
         getLCP((metric: { value: number; rating: VitalData["rating"] }) => {
           setVitals((prev) => ({

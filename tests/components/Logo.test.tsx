@@ -47,7 +47,7 @@ describe("Logo (behavioral tests)", () => {
 
   it("hides text when showText is false", () => {
     const { container } = render(<Logo showText={false} />);
-    const textElement = container.querySelector('.hidden');
+    const textElement = container.querySelector(".hidden");
     expect(textElement).toBeInTheDocument();
     expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
   });

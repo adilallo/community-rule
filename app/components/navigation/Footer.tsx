@@ -66,6 +66,7 @@ const Footer = memo(() => {
                   className="flex items-center gap-[var(--spacing-measures-spacing-06,6px)] hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer group"
                   aria-label={t("social.bluesky.ariaLabel")}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- social logo */}
                   <img
                     src={getAssetPath(ASSETS.BLUESKY_LOGO)}
                     alt="Bluesky"
@@ -82,6 +83,7 @@ const Footer = memo(() => {
                   className="flex items-center gap-[var(--spacing-measures-spacing-06,6px)] hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer group"
                   aria-label={t("social.gitlab.ariaLabel")}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- social icon */}
                   <img
                     src={getAssetPath(ASSETS.GITLAB_ICON)}
                     alt="GitLab"

@@ -10,16 +10,12 @@ import type { TagViewProps } from "./Tag.types";
  */
 export function TagView({ variant, children, className }: TagViewProps) {
   const isRecommended = variant === "recommended";
-  const bgClass = isRecommended
-    ? "bg-[#F6EEA7]"
-    : "bg-[#3F3F3F]";
-  const textClass = isRecommended
-    ? "text-[#3F3F3F]"
-    : "text-[#FFFFFF]";
+  const bgClass = isRecommended ? "bg-[#F6EEA7]" : "bg-[#3F3F3F]";
+  const textClass = isRecommended ? "text-[#3F3F3F]" : "text-[#FFFFFF]";
 
   return (
     <span
-      className={`inline-flex items-center justify-center rounded px-2 py-0.5 font-inter text-[10px] font-medium uppercase leading-3 ${bgClass} ${textClass} ${className}`}
+      className={`inline-flex w-[6rem] min-w-[6rem] items-center justify-center rounded px-2 py-0.5 font-inter text-[10px] font-medium uppercase leading-3 ${bgClass} ${textClass} ${className}`}
       role="status"
     >
       {children}

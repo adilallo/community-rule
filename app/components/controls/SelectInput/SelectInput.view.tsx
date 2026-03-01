@@ -75,7 +75,8 @@ export function SelectInputView({
 }: SelectInputViewProps) {
   // Styles based on Figma design
   const containerClasses = "flex flex-col gap-[8px]";
-  const labelClasses = "text-[14px] leading-[20px] font-medium font-inter text-[var(--color-content-default-primary)]";
+  const labelClasses =
+    "text-[14px] leading-[20px] font-medium font-inter text-[var(--color-content-default-primary)]";
 
   // Button styles per Figma
   const getButtonClasses = (): string => {
@@ -101,7 +102,9 @@ export function SelectInputView({
       cursor-pointer
       appearance-none
       m-0
-    `.trim().replace(/\s+/g, " ");
+    `
+      .trim()
+      .replace(/\s+/g, " ");
 
     if (disabled) {
       return `${baseClasses} bg-[var(--color-surface-default-secondary)] text-[var(--color-content-inverse-tertiary,#2d2d2d)] border-[var(--color-border-default-primary)] cursor-not-allowed opacity-40`;
@@ -142,10 +145,7 @@ export function SelectInputView({
       {label && (
         <div className="flex flex-wrap gap-[var(--measures-spacing-200,4px_8px)] items-baseline pr-[var(--measures-spacing-100,4px)] relative shrink-0 w-full">
           <div className="flex gap-[var(--measures-spacing-050,2px)] items-center relative shrink-0">
-            <label
-              id={labelId}
-              className={labelClasses}
-            >
+            <label id={labelId} className={labelClasses}>
               {label}
             </label>
             {asterisk && (
@@ -155,6 +155,7 @@ export function SelectInputView({
             )}
             {iconHelp && (
               <div className="relative shrink-0 size-[12px]">
+                {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
                 <img
                   src={getAssetPath(ASSETS.ICON_HELP)}
                   alt="Help"
@@ -186,8 +187,10 @@ export function SelectInputView({
           onFocus={onButtonFocus}
           onBlur={onButtonBlur}
         >
-          <span className={`flex-1 text-left ${iconRight ? "pr-[32px]" : ""} ${textColorClass}`}>
-            {textData ? displayText : placeholder}
+          <span
+            className={`flex-1 text-left ${iconRight ? "pr-[32px]" : ""} ${textColorClass}`}
+          >
+            {textData ? displayText : _placeholder}
           </span>
           {iconRight && (
             <div className="flex items-center justify-center shrink-0">

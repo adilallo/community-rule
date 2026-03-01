@@ -16,19 +16,24 @@ export function RuleStackView({
 }: RuleStackViewProps) {
   const t = useTranslation("pages.home.ruleStack");
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Debug: Log button text to ensure translation works
   const buttonText = t("button.seeAllTemplates");
 
   // Determine current breakpoint for RuleCard size
   // 320-639: XS, 640-767: S, 768-1023: S, 1024-1439: M, 1440+: L
   const isMax639 = useMediaQuery("(max-width: 639px)");
-  const isMin640Max1023 = useMediaQuery("(min-width: 640px) and (max-width: 1023px)");
-  const isMin1024Max1439 = useMediaQuery("(min-width: 1024px) and (max-width: 1439px)");
+  const isMin640Max1023 = useMediaQuery(
+    "(min-width: 640px) and (max-width: 1023px)",
+  );
+  const isMin1024Max1439 = useMediaQuery(
+    "(min-width: 1024px) and (max-width: 1439px)",
+  );
   const isMin1440 = useMediaQuery("(min-width: 1440px)");
 
   // Handle hydration: only use media queries after mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer breakpoint until after mount to avoid hydration mismatch
     setIsMounted(true);
   }, []);
 
@@ -38,12 +43,12 @@ export function RuleStackView({
     ? isMax639
       ? "XS"
       : isMin640Max1023
-      ? "S"
-      : isMin1024Max1439
-      ? "M"
-      : isMin1440
-      ? "L"
-      : "M"
+        ? "S"
+        : isMin1024Max1439
+          ? "M"
+          : isMin1440
+            ? "L"
+            : "M"
     : "M";
 
   // Icon sizes: XS=40px, S=56px, M=56px, L=90px
@@ -150,17 +155,15 @@ export function RuleStackView({
       </div>
 
       {/* See all templates button */}
-      <div className="
+      <div
+        className="
         flex justify-center w-full
         max-[767px]:mt-[var(--measures-spacing-600,24px)]
         min-[768px]:max-[1023px]:mt-[var(--measures-spacing-800,32px)]
         min-[1024px]:mt-[var(--measures-spacing-1000,40px)]
-      ">
-        <Button
-          buttonType="outline"
-          palette="default"
-          size="large"
-        >
+      "
+      >
+        <Button buttonType="outline" palette="default" size="large">
           {buttonText}
         </Button>
       </div>

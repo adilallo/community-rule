@@ -15,17 +15,59 @@ export function CardStackView({
   showLessLabel,
   title,
   description,
+  layout,
   className,
 }: CardStackViewProps) {
   const isSelected = (id: string) => selectedIds.includes(id);
   // Compact: recommended only (up to 5). Expanded: all cards.
-  const compactCards = cards
-    .filter((c) => c.recommended ?? false)
-    .slice(0, 5);
+  const compactCards = cards.filter((c) => c.recommended ?? false).slice(0, 5);
+
+  // Single stack: always one column; expand reveals more in same stack (scrollable)
+  if (layout === "singleStack") {
+    const displayedCards = expanded ? cards : compactCards;
+    return (
+      <div className={`flex w-full flex-col gap-6 min-w-0 ${className}`}>
+        {title || description ? (
+          <div className="min-w-0 shrink-0">
+            <HeaderLockup
+              title={title}
+              description={description}
+              justification="center"
+              size="L"
+            />
+          </div>
+        ) : null}
+        <div className="flex flex-col gap-[8px] w-full min-w-0">
+          {displayedCards.map((item) => (
+            <Card
+              key={item.id}
+              id={item.id}
+              label={item.label}
+              supportText={item.supportText}
+              recommended={item.recommended ?? false}
+              selected={isSelected(item.id)}
+              orientation="vertical"
+              showInfoIcon={true}
+              onClick={() => onCardSelect(item.id)}
+            />
+          ))}
+        </div>
+        {hasMore ? (
+          <button
+            type="button"
+            onClick={onToggleExpand}
+            className="font-inter text-base font-normal leading-6 text-[var(--color-gray-000)] underline hover:opacity-90 focus:outline-none self-center cursor-pointer"
+          >
+            {expanded ? showLessLabel : toggleLabel}
+          </button>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <div className={`flex w-full flex-col gap-6 min-w-0 ${className}`}>
-      {(title || description) ? (
+      {title || description ? (
         <div className="min-w-0">
           <HeaderLockup
             title={title}

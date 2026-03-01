@@ -32,7 +32,9 @@ describe("Create flow cards page", () => {
     render(<CardsPage />);
 
     expect(
-      screen.getByText("How should this community communicate with each-other?"),
+      screen.getByText(
+        "How should this community communicate with each-other?",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -58,7 +60,9 @@ describe("Create flow cards page", () => {
     });
     await user.click(toggle);
 
-    expect(screen.getByRole("button", { name: "Show less" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Show less" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(
         "What method should this community use to communicate with eachother?",

@@ -33,13 +33,17 @@ describe("Upload (behavioral tests)", () => {
   it("renders with active state by default", () => {
     render(<Upload label="Upload" />);
     const button = screen.getByRole("button", { name: /upload/i });
-    expect(button).toHaveClass("bg-[var(--color-surface-invert-primary,white)]");
+    expect(button).toHaveClass(
+      "bg-[var(--color-surface-invert-primary,white)]",
+    );
   });
 
   it("renders with inactive state when active is false", () => {
     render(<Upload label="Upload" active={false} />);
     const button = screen.getByRole("button", { name: /upload/i });
-    expect(button).toHaveClass("bg-[var(--color-surface-default-secondary,#141414)]");
+    expect(button).toHaveClass(
+      "bg-[var(--color-surface-default-secondary,#141414)]",
+    );
   });
 
   it("displays label when provided", () => {
@@ -76,20 +80,30 @@ describe("Upload (behavioral tests)", () => {
 
   it("displays description text", () => {
     render(<Upload label="Upload" />);
-    expect(screen.getByText(/Add images, PDFs, and other files to the policy/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Add images, PDFs, and other files to the policy/i),
+    ).toBeInTheDocument();
   });
 
   it("applies active state styles correctly", () => {
     render(<Upload label="Upload" active={true} />);
-    const descriptionText = screen.getByText(/Add images, PDFs, and other files to the policy/i);
+    const descriptionText = screen.getByText(
+      /Add images, PDFs, and other files to the policy/i,
+    );
     const descriptionContainer = descriptionText.parentElement;
-    expect(descriptionContainer).toHaveClass("text-[color:var(--color-content-default-primary,white)]");
+    expect(descriptionContainer).toHaveClass(
+      "text-[color:var(--color-content-default-primary,white)]",
+    );
   });
 
   it("applies inactive state styles correctly", () => {
     render(<Upload label="Upload" active={false} />);
-    const descriptionText = screen.getByText(/Add images, PDFs, and other files to the policy/i);
+    const descriptionText = screen.getByText(
+      /Add images, PDFs, and other files to the policy/i,
+    );
     const descriptionContainer = descriptionText.parentElement;
-    expect(descriptionContainer).toHaveClass("text-[color:var(--color-content-default-tertiary,#b4b4b4)]");
+    expect(descriptionContainer).toHaveClass(
+      "text-[color:var(--color-content-default-tertiary,#b4b4b4)]",
+    );
   });
 });

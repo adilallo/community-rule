@@ -15,10 +15,8 @@ vi.mock("next/dynamic", () => {
     default: (importFn, options) => {
       // In tests, resolve the dynamic import immediately and return the component
       let Component = null;
-      let resolved = false;
       importFn().then((mod) => {
         Component = mod.default || mod;
-        resolved = true;
       });
       // Return a synchronous wrapper that uses the mocked component
       return (props) => {
@@ -261,10 +259,12 @@ describe("User Journey Integration", () => {
         },
         { timeout: 3000 },
       );
-    } catch (error) {
+    } catch {
       // Dynamic import may not resolve in test environment - this is a known limitation
       // The component functionality is tested in RuleStack.test.jsx
-      console.warn("Dynamic import for RuleStack did not resolve in test environment");
+      console.warn(
+        "Dynamic import for RuleStack did not resolve in test environment",
+      );
     }
 
     // 4. User sees features and benefits - wait for dynamically imported component

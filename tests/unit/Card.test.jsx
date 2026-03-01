@@ -89,10 +89,7 @@ describe("Card Component", () => {
     render(<Card {...defaultProps} />);
 
     const card = screen.getByRole("button");
-    expect(card).toHaveAttribute(
-      "aria-label",
-      "Label: Support text here",
-    );
+    expect(card).toHaveAttribute("aria-label", "Label: Support text here");
     expect(card).toHaveAttribute("tabIndex", "0");
   });
 
@@ -100,6 +97,9 @@ describe("Card Component", () => {
     render(<Card label="Label only" orientation="horizontal" />);
 
     expect(screen.getByText("Label only")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toHaveAttribute("aria-label", "Label only");
+    expect(screen.getByRole("button")).toHaveAttribute(
+      "aria-label",
+      "Label only",
+    );
   });
 });
