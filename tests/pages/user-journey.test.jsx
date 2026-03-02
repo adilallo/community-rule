@@ -9,24 +9,24 @@ import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";
 import Page from "../../app/(marketing)/page";
 
-// Mock next/dynamic to return components synchronously in tests
+// Mock next/dynamic so dynamically loaded components render after the import resolves
 vi.mock("next/dynamic", () => {
+  const React = require("react");
   return {
     default: (importFn, options) => {
-      // In tests, resolve the dynamic import immediately and return the component
-      let Component = null;
-      importFn().then((mod) => {
-        Component = mod.default || mod;
-      });
-      // Return a synchronous wrapper that uses the mocked component
-      return (props) => {
-        // Use the mocked component directly once resolved
-        if (Component) {
-          return <Component {...props} />;
+      function DynamicWrapper(props) {
+        const [Component, setComponent] = React.useState(null);
+        React.useEffect(() => {
+          importFn().then((mod) =>
+            setComponent(() => mod.default || mod),
+          );
+        }, []);
+        if (!Component) {
+          return options?.loading ? options.loading() : null;
         }
-        // Fallback: return the loading placeholder if component not ready
-        return options?.loading ? options.loading() : null;
-      };
+        return <Component {...props} />;
+      }
+      return DynamicWrapper;
     },
   };
 });

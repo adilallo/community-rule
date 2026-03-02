@@ -92,7 +92,9 @@ function CreateFlowLayoutContent({ children }: { children: ReactNode }) {
               className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]"
               onClick={handleNext}
             >
-              Next
+              {currentStep === "final-review"
+                ? "Finalize CommunityRule"
+                : "Next"}
             </Button>
           ) : null
         }
