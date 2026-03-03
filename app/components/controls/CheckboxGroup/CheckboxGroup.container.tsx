@@ -22,8 +22,10 @@ const CheckboxGroupContainer = ({
   const groupId = name || `checkbox-group-${generatedId}`;
 
   // Internal state to track checked values (only used if value prop is not provided)
-  const [internalCheckedValues, setInternalCheckedValues] = useState<string[]>([]);
-  
+  const [internalCheckedValues, setInternalCheckedValues] = useState<string[]>(
+    [],
+  );
+
   // Use controlled value if provided, otherwise use internal state
   const checkedValues = value !== undefined ? value : internalCheckedValues;
 

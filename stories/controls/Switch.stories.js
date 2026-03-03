@@ -10,7 +10,8 @@ export default {
   argTypes: {
     propSwitch: {
       control: "boolean",
-      description: "Whether the switch is checked (on) or not (off) (Figma prop)",
+      description:
+        "Whether the switch is checked (on) or not (off) (Figma prop)",
     },
     state: {
       control: "select",

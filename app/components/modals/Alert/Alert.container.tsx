@@ -3,7 +3,10 @@
 import { memo } from "react";
 import { AlertView } from "./Alert.view";
 import type { AlertProps } from "./Alert.types";
-import { normalizeAlertStatus, normalizeAlertType } from "../../../../lib/propNormalization";
+import {
+  normalizeAlertStatus,
+  normalizeAlertType,
+} from "../../../../lib/propNormalization";
 
 const AlertContainer = memo<AlertProps>(
   ({

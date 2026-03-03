@@ -44,7 +44,9 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     onContactClick,
   }) => {
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeAskOrganizerVariant(variantProp) as AskOrganizerVariant;
+    const variant = normalizeAskOrganizerVariant(
+      variantProp,
+    ) as AskOrganizerVariant;
     const t = useTranslation();
     const defaultButtonText = buttonText ?? t("askOrganizer.buttonText");
     const defaultButtonHref = buttonHref ?? t("askOrganizer.buttonHref");

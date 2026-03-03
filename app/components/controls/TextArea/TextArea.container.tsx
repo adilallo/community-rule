@@ -4,7 +4,12 @@ import { memo, forwardRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
 import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
-import { normalizeInputState, normalizeSmallMediumLargeSize, normalizeLabelVariant, normalizeTextAreaAppearance } from "../../../../lib/propNormalization";
+import {
+  normalizeInputState,
+  normalizeSmallMediumLargeSize,
+  normalizeLabelVariant,
+  normalizeTextAreaAppearance,
+} from "../../../../lib/propNormalization";
 
 const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (

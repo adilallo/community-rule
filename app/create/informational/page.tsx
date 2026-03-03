@@ -6,7 +6,7 @@ import NumberedList from "../../components/type/NumberedList";
 
 /**
  * Informational page for the create flow
- * 
+ *
  * Displays information about the create flow process using HeaderLockup and NumberedList components.
  * Responsive sizing: uses L/M for HeaderLockup and M/S for NumberedList based on 640px breakpoint.
  */

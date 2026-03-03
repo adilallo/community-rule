@@ -3,7 +3,10 @@
 import { memo } from "react";
 import ContentLockupView from "./ContentLockup.view";
 import type { ContentLockupProps, VariantStyle } from "./ContentLockup.types";
-import { normalizeContentLockupVariant, normalizeAlignment } from "../../../../lib/propNormalization";
+import {
+  normalizeContentLockupVariant,
+  normalizeAlignment,
+} from "../../../../lib/propNormalization";
 
 const ContentLockupContainer = memo<ContentLockupProps>(
   ({

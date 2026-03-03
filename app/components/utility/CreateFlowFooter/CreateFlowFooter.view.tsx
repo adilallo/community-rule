@@ -36,9 +36,7 @@ export function CreateFlowFooterView({
         </Button>
 
         {/* Second Button - Right */}
-        {secondButton && (
-          <div className="flex-shrink-0">{secondButton}</div>
-        )}
+        {secondButton && <div className="flex-shrink-0">{secondButton}</div>}
       </div>
     </footer>
   );

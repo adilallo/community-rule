@@ -4,7 +4,10 @@ import { memo } from "react";
 import { useComponentId } from "../../../hooks";
 import { CheckboxView } from "./Checkbox.view";
 import type { CheckboxProps } from "./Checkbox.types";
-import { normalizeMode, normalizeState } from "../../../../lib/propNormalization";
+import {
+  normalizeMode,
+  normalizeState,
+} from "../../../../lib/propNormalization";
 
 const CheckboxContainer = memo<CheckboxProps>(
   ({
@@ -24,7 +27,7 @@ const CheckboxContainer = memo<CheckboxProps>(
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const mode = normalizeMode(modeProp);
     const state = normalizeState(stateProp);
-    
+
     const isInverse = mode === "inverse";
     const isStandard = mode === "standard";
 
@@ -43,7 +46,9 @@ const CheckboxContainer = memo<CheckboxProps>(
       transition-all
       duration-200
       ease-in-out
-    `.trim().replace(/\s+/g, " ");
+    `
+      .trim()
+      .replace(/\s+/g, " ");
 
     // Get box styles based on state and checked status per Figma designs
     const getBoxStyles = (): string => {

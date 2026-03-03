@@ -42,32 +42,26 @@ function ChipView({
   // Palette + state styling based on Figma examples
   // Use consistent border width to prevent layout shift
   const borderWidth = isSmall ? "border-[1.25px]" : "border-2";
-  
-  let background = "bg-[var(--color-surface-default-transparent,rgba(0,0,0,0))]";
-  let border =
-    `${borderWidth} border-[var(--color-border-default-tertiary,#464646)]`;
+
+  let background =
+    "bg-[var(--color-surface-default-transparent,rgba(0,0,0,0))]";
+  let border = `${borderWidth} border-[var(--color-border-default-tertiary,#464646)]`;
   let textColor =
     "text-[color:var(--color-content-default-brand-primary,#fefcc9)]";
 
   if (isDefault) {
     if (state === "custom") {
-      background =
-        "bg-[var(--color-surface-default-secondary,#141414)]"; // dark background for custom
+      background = "bg-[var(--color-surface-default-secondary,#141414)]"; // dark background for custom
       border = "border-none";
-      textColor =
-        "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
+      textColor = "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
     } else if (state === "disabled") {
-      background =
-        "bg-[var(--color-surface-default-secondary,#141414)]"; // dark background
+      background = "bg-[var(--color-surface-default-secondary,#141414)]"; // dark background
       border = "border-none";
-      textColor =
-        "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
+      textColor = "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
     } else if (isSelected) {
-      background =
-        "bg-[var(--color-surface-inverse-brandaccent,#fdfaa8)]"; // yellow selected
+      background = "bg-[var(--color-surface-inverse-brandaccent,#fdfaa8)]"; // yellow selected
       border = `${borderWidth} border-[var(--color-border-default-brand-primary,#fdfaa8)]`;
-      textColor =
-        "text-[color:var(--color-content-inverse-primary,black)]";
+      textColor = "text-[color:var(--color-content-inverse-primary,black)]";
     } else {
       // Unselected default
       background =
@@ -78,24 +72,20 @@ function ChipView({
     }
   } else if (isInverse) {
     if (state === "disabled") {
-      background =
-        "bg-[var(--color-surface-inverse-tertiary,#d2d2d2)]";
+      background = "bg-[var(--color-surface-inverse-tertiary,#d2d2d2)]";
       border = "border-none";
-      textColor =
-        "text-[color:var(--color-content-inverse-primary,black)]";
+      textColor = "text-[color:var(--color-content-inverse-primary,black)]";
     } else if (isSelected) {
       background =
         "bg-[var(--color-surface-default-semi-opaque,rgba(0,0,0,0.05))]";
       border = `${borderWidth} border-[var(--color-border-default-primary,#141414)]`;
-      textColor =
-        "text-[color:var(--color-content-inverse-primary,black)]";
+      textColor = "text-[color:var(--color-content-inverse-primary,black)]";
     } else {
       // Unselected / custom inverse
       background =
         "bg-[var(--color-surface-default-transparent,rgba(0,0,0,0))]";
       border = `${borderWidth} border-[var(--color-border-default-primary,#141414)]`;
-      textColor =
-        "text-[color:var(--color-content-inverse-primary,black)]";
+      textColor = "text-[color:var(--color-content-inverse-primary,black)]";
     }
   }
 
@@ -134,7 +124,9 @@ function ChipView({
     .filter(Boolean)
     .join(" ");
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
+  ) => {
     if (isDisabled) {
       event.preventDefault();
       return;
@@ -162,7 +154,9 @@ function ChipView({
         }}
         {...sharedA11y}
       >
-        <div className={`flex items-center ${isSmall ? "gap-[8px]" : "gap-[12px]"}`}>
+        <div
+          className={`flex items-center ${isSmall ? "gap-[8px]" : "gap-[12px]"}`}
+        >
           {/* Check button */}
           {onCheck && (
             <button
@@ -208,7 +202,9 @@ function ChipView({
               placeholder="Type to add"
               className="bg-transparent border-none outline-none flex-1 min-w-0 font-inter font-normal text-[color:var(--color-content-default-tertiary,#b4b4b4)] placeholder:text-[color:var(--color-content-default-tertiary,#b4b4b4)]"
               style={{
-                fontSize: isSmall ? "var(--sizing-300,12px)" : "var(--sizing-400,16px)",
+                fontSize: isSmall
+                  ? "var(--sizing-300,12px)"
+                  : "var(--sizing-400,16px)",
                 lineHeight: isSmall ? "16px" : "24px",
               }}
               onClick={(e) => e.stopPropagation()}
@@ -259,9 +255,7 @@ function ChipView({
       onClick={handleClick}
       {...sharedA11y}
     >
-      <span className="flex items-center justify-center">
-        {label}
-      </span>
+      <span className="flex items-center justify-center">{label}</span>
       {onRemove && !isDisabled && (
         <button
           type="button"
@@ -284,4 +278,3 @@ function ChipView({
 ChipView.displayName = "ChipView";
 
 export default memo(ChipView);
-

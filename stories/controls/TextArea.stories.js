@@ -74,7 +74,8 @@ export const Embedded = Template.bind({});
 Embedded.args = {
   label: "Section content",
   placeholder: "Enter text...",
-  value: "Embedded appearance used in create-flow modals: borderless, darker grey block.",
+  value:
+    "Embedded appearance used in create-flow modals: borderless, darker grey block.",
   appearance: "embedded",
   size: "large",
   rows: 4,

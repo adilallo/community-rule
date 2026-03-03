@@ -20,7 +20,8 @@ export default {
     },
     secondButton: {
       control: false,
-      description: "The second button (typically Next) to display on the right side",
+      description:
+        "The second button (typically Next) to display on the right side",
     },
   },
   tags: ["autodocs"],

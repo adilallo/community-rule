@@ -33,7 +33,9 @@ function UploadView({
     : "text-[color:var(--color-content-invert-tertiary,#2d2d2d)]";
 
   return (
-    <div className={`flex flex-col gap-[var(--measures-spacing-300,12px)] items-start relative w-full ${className}`}>
+    <div
+      className={`flex flex-col gap-[var(--measures-spacing-300,12px)] items-start relative w-full ${className}`}
+    >
       {/* Label using InputLabel component */}
       {label && (
         <InputLabel
@@ -92,13 +94,17 @@ function UploadView({
             </svg>
           </div>
           {/* Button text */}
-          <div className={`flex flex-col font-inter font-medium justify-center leading-[0] relative shrink-0 text-[length:var(--sizing-400,16px)] whitespace-nowrap ${buttonTextColor}`}>
+          <div
+            className={`flex flex-col font-inter font-medium justify-center leading-[0] relative shrink-0 text-[length:var(--sizing-400,16px)] whitespace-nowrap ${buttonTextColor}`}
+          >
             <p className="leading-[20px]">Upload</p>
           </div>
         </button>
 
         {/* Description text */}
-        <div className={`flex flex-[1_0_0] flex-col font-inter font-normal h-[32px] justify-center leading-[0] min-h-px min-w-px relative text-[length:var(--sizing-350,14px)] ${descriptionTextColor}`}>
+        <div
+          className={`flex flex-[1_0_0] flex-col font-inter font-normal h-[32px] justify-center leading-[0] min-h-px min-w-px relative text-[length:var(--sizing-350,14px)] ${descriptionTextColor}`}
+        >
           <p className="leading-[20px] whitespace-pre-wrap">
             Add images, PDFs, and other files to the policy
           </p>

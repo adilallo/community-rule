@@ -31,7 +31,9 @@ function MultiSelectView({
   const chipSize = isSmall ? "S" : "M";
 
   return (
-    <div className={`flex flex-col ${isSmall ? "gap-[var(--measures-spacing-200,8px)]" : "gap-[var(--measures-spacing-300,12px)]"} items-start relative w-full ${className}`}>
+    <div
+      className={`flex flex-col ${isSmall ? "gap-[var(--measures-spacing-200,8px)]" : "gap-[var(--measures-spacing-300,12px)]"} items-start relative w-full ${className}`}
+    >
       {/* Label using InputLabel component */}
       {formHeader && label && (
         <InputLabel
@@ -45,7 +47,9 @@ function MultiSelectView({
       )}
 
       {/* Chips container */}
-      <div className={`flex flex-wrap ${gapClass} items-center relative shrink-0 w-full`}>
+      <div
+        className={`flex flex-wrap ${gapClass} items-center relative shrink-0 w-full`}
+      >
         {options.map((option) => (
           <Chip
             key={option.id}
@@ -110,7 +114,9 @@ function MultiSelectView({
             </svg>
             {/* Text - only show if addButtonText is provided */}
             {addButtonText && (
-              <span className={`font-inter font-medium ${isSmall ? "text-[length:var(--sizing-300,12px)] leading-[14px]" : "text-[length:var(--sizing-400,16px)] leading-[20px]"} ${isInverse ? "text-[color:var(--color-content-inverse-primary,black)]" : "text-[color:var(--color-content-default-brand-primary,#fefcc9)]"}`}>
+              <span
+                className={`font-inter font-medium ${isSmall ? "text-[length:var(--sizing-300,12px)] leading-[14px]" : "text-[length:var(--sizing-400,16px)] leading-[20px]"} ${isInverse ? "text-[color:var(--color-content-inverse-primary,black)]" : "text-[color:var(--color-content-default-brand-primary,#fefcc9)]"}`}
+              >
                 {addButtonText}
               </span>
             )}

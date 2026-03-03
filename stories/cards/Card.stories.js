@@ -46,8 +46,7 @@ export default {
 export const Default = {
   args: {
     label: "Label",
-    supportText:
-      "Members vote to resolve a dispute democratically.",
+    supportText: "Members vote to resolve a dispute democratically.",
     recommended: true,
     selected: false,
     orientation: "horizontal",
@@ -69,8 +68,7 @@ export const HorizontalRecommended = {
 export const HorizontalSelected = {
   args: {
     label: "Label",
-    supportText:
-      "Members vote to resolve a dispute democratically.",
+    supportText: "Members vote to resolve a dispute democratically.",
     recommended: false,
     selected: true,
     orientation: "horizontal",
@@ -157,8 +155,7 @@ export const AllVariants = {
   parameters: {
     docs: {
       description: {
-        story:
-          "All four variants: horizontal/vertical × recommended/selected.",
+        story: "All four variants: horizontal/vertical × recommended/selected.",
       },
     },
   },

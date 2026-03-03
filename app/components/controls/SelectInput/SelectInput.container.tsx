@@ -16,7 +16,11 @@ import React, {
 import { useClickOutside } from "../../../hooks";
 import { SelectInputView } from "./SelectInput.view";
 import type { SelectInputProps } from "./SelectInput.types";
-import { normalizeState, normalizeSmallMediumLargeSize, normalizeLabelVariant } from "../../../../lib/propNormalization";
+import {
+  normalizeState,
+  normalizeSmallMediumLargeSize,
+  normalizeLabelVariant,
+} from "../../../../lib/propNormalization";
 
 const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
   (
@@ -46,23 +50,28 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     ref,
   ) => {
     // Determine if label should be shown
-    const shouldShowLabel = showLabel !== undefined ? showLabel : (labelText !== undefined);
-    
+    const shouldShowLabel =
+      showLabel !== undefined ? showLabel : labelText !== undefined;
+
     // Normalize state - handle "state5" as disabled
     let normalizedState = externalStateProp;
     if (normalizedState === "state5" || normalizedState === "State5") {
       normalizedState = "default"; // Map to default, disabled prop handles the disabled state
     }
     const externalState = normalizeState(normalizedState);
-    
+
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     // Note: labelVariant and size are normalized for future use but not yet implemented in the view
-    const _labelVariant = labelVariantProp ? normalizeLabelVariant(labelVariantProp) : undefined;
-    const _size = sizeProp ? normalizeSmallMediumLargeSize(sizeProp) : undefined;
+    const _labelVariant = labelVariantProp
+      ? normalizeLabelVariant(labelVariantProp)
+      : undefined;
+    const _size = sizeProp
+      ? normalizeSmallMediumLargeSize(sizeProp)
+      : undefined;
     // Mark as intentionally unused for future implementation
     void _labelVariant;
     void _size;
-    
+
     const generatedId = useId();
     const selectId = id || `select-input-${generatedId}`;
     const labelId = `${selectId}-label`;
@@ -73,11 +82,14 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
 
     // Internal state management: track if focused and how (mouse vs keyboard)
     const [isFocused, setIsFocused] = useState(false);
-    const [focusMethod, setFocusMethod] = useState<"mouse" | "keyboard" | null>(null);
+    const [focusMethod, setFocusMethod] = useState<"mouse" | "keyboard" | null>(
+      null,
+    );
     const wasMouseDownRef = useRef(false);
 
     // Determine if we should auto-manage focus (only when state is "default" or undefined)
-    const shouldAutoManageFocus = externalState === "default" || externalState === undefined;
+    const shouldAutoManageFocus =
+      externalState === "default" || externalState === undefined;
 
     // Sync internal state with external value prop
     useEffect(() => {

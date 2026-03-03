@@ -1,4 +1,10 @@
-export type SelectOptionSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+export type SelectOptionSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "Small"
+  | "Medium"
+  | "Large";
 
 export interface SelectOptionProps {
   children?: React.ReactNode;

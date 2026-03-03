@@ -9,16 +9,14 @@ const DEFAULT_LABELS: Record<TagProps["variant"], string> = {
   selected: "SELECTED",
 };
 
-const TagContainer = memo<TagProps>(
-  ({ variant, children, className = "" }) => {
-    const content = children ?? DEFAULT_LABELS[variant];
-    return (
-      <TagView variant={variant} className={className}>
-        {content}
-      </TagView>
-    );
-  },
-);
+const TagContainer = memo<TagProps>(({ variant, children, className = "" }) => {
+  const content = children ?? DEFAULT_LABELS[variant];
+  return (
+    <TagView variant={variant} className={className}>
+      {content}
+    </TagView>
+  );
+});
 
 TagContainer.displayName = "Tag";
 

@@ -34,7 +34,8 @@ function InputLabelView({
     ? "text-[color:var(--color-content-inverse-secondary,#1f1f1f)]"
     : "text-[color:var(--color-content-default-secondary,#d2d2d2)]";
 
-  const helperTextColor = "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
+  const helperTextColor =
+    "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
 
   // Layout: S uses flex-wrap with baseline, M uses flex with center
   const containerClass = isSmall

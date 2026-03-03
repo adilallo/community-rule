@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import Logo from "../../app/components/icons/Logo";
+import Logo from "../../app/components/asset/logo";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,
@@ -45,11 +45,20 @@ describe("Logo (behavioral tests)", () => {
     expect(screen.getByText("CommunityRule")).toBeInTheDocument();
   });
 
-  it("hides text when showText is false", () => {
-    const { container } = render(<Logo showText={false} />);
+  it("hides wordmark when wordmark is false", () => {
+    const { container } = render(<Logo wordmark={false} />);
     const textElement = container.querySelector(".hidden");
     expect(textElement).toBeInTheDocument();
     expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
+  });
+
+  it("applies inverse palette styling when palette is inverse", () => {
+    render(<Logo palette="inverse" />);
+    const link = screen.getByRole("link");
+    const textEl = link.querySelector(".font-bricolage-grotesque");
+    const img = link.querySelector("img");
+    expect(textEl).toHaveClass("text-[var(--color-content-invert-primary)]");
+    expect(img).toHaveClass("brightness-0");
   });
 
   it("renders with different size variants", () => {

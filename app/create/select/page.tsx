@@ -7,7 +7,7 @@ import MultiSelect from "../../components/controls/MultiSelect";
 
 /**
  * Select page for the create flow
- * 
+ *
  * Displays selection options using HeaderLockup and MultiSelect components.
  * Responsive layout: two-column at 640px+, single column below 640px.
  * Responsive sizing: uses L/M for HeaderLockup and S for MultiSelect based on 640px breakpoint.
@@ -44,9 +44,12 @@ export default function SelectPage() {
     setCommunitySizeOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
-          ? { ...opt, state: opt.state === "Selected" ? "Unselected" : "Selected" }
-          : opt
-      )
+          ? {
+              ...opt,
+              state: opt.state === "Selected" ? "Unselected" : "Selected",
+            }
+          : opt,
+      ),
     );
   };
 
@@ -54,9 +57,12 @@ export default function SelectPage() {
     setOrganizationTypeOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
-          ? { ...opt, state: opt.state === "Selected" ? "Unselected" : "Selected" }
-          : opt
-      )
+          ? {
+              ...opt,
+              state: opt.state === "Selected" ? "Unselected" : "Selected",
+            }
+          : opt,
+      ),
     );
   };
 
@@ -64,9 +70,12 @@ export default function SelectPage() {
     setGovernanceStyleOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
-          ? { ...opt, state: opt.state === "Selected" ? "Unselected" : "Selected" }
-          : opt
-      )
+          ? {
+              ...opt,
+              state: opt.state === "Selected" ? "Unselected" : "Selected",
+            }
+          : opt,
+      ),
     );
   };
 

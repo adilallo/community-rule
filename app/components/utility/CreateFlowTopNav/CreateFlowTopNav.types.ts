@@ -1,6 +1,6 @@
 /**
  * Type definitions for CreateFlowTopNav component
- * 
+ *
  * Top navigation bar for the create rule flow.
  * Includes logo and action buttons (Share, Export, Edit, Exit).
  */
@@ -42,6 +42,11 @@ export interface CreateFlowTopNavProps {
    * Callback when Exit/Save & Exit button is clicked
    */
   onExit?: () => void;
+  /**
+   * Palette for nav buttons (e.g. "inverse" on completed page to match teal background)
+   * @default "default"
+   */
+  buttonPalette?: "default" | "inverse";
   /**
    * Additional CSS classes
    */

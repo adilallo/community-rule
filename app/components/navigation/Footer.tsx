@@ -3,7 +3,7 @@
 import { memo } from "react";
 import { useTranslation } from "../../contexts/MessagesContext";
 import Link from "next/link";
-import Logo from "../icons/Logo";
+import Logo from "../asset/logo";
 import Separator from "../utility/Separator";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
@@ -40,7 +40,7 @@ const Footer = memo(() => {
           lg:gap-[var(--spacing-measures-spacing-060,60px)]"
         >
           {/* Logo */}
-          <Logo size="footer" />
+          <Logo size="footer" wordmark />
 
           {/* Content section */}
           <div className="flex flex-col items-start w-full gap-[var(--spacing-measures-spacing-048,48px)] sm:flex-row sm:justify-between sm:gap-0">

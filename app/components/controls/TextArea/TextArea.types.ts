@@ -1,9 +1,23 @@
 import type { InputStateValue } from "../../../../lib/propNormalization";
 
-export type TextAreaSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
-export type TextAreaLabelVariantValue = "default" | "horizontal" | "Default" | "Horizontal";
+export type TextAreaSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "Small"
+  | "Medium"
+  | "Large";
+export type TextAreaLabelVariantValue =
+  | "default"
+  | "horizontal"
+  | "Default"
+  | "Horizontal";
 
-export type TextAreaAppearanceValue = "default" | "embedded" | "Default" | "Embedded";
+export type TextAreaAppearanceValue =
+  | "default"
+  | "embedded"
+  | "Default"
+  | "Embedded";
 
 export interface TextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,

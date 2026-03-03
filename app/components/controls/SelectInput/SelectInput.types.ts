@@ -7,8 +7,18 @@ export interface SelectOptionData {
 
 import type { StateValue } from "../../../../lib/propNormalization";
 
-export type SelectInputLabelVariantValue = "default" | "horizontal" | "Default" | "Horizontal";
-export type SelectInputSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+export type SelectInputLabelVariantValue =
+  | "default"
+  | "horizontal"
+  | "Default"
+  | "Horizontal";
+export type SelectInputSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "Small"
+  | "Medium"
+  | "Large";
 
 export interface SelectInputProps {
   id?: string;

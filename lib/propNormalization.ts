@@ -1,7 +1,7 @@
 /**
  * Utility functions for normalizing component props to match Figma specifications
  * while maintaining backward compatibility with existing lowercase usage.
- * 
+ *
  * Figma uses PascalCase (e.g., "Standard", "Inverse") but codebase uses lowercase.
  * These helpers accept both formats and normalize to lowercase for internal use.
  */
@@ -11,7 +11,7 @@
  */
 export function normalizeMode(
   value: string | undefined,
-  defaultValue: "standard" | "inverse" = "standard"
+  defaultValue: "standard" | "inverse" = "standard",
 ): "standard" | "inverse" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -26,7 +26,7 @@ export function normalizeMode(
  */
 export function normalizeState(
   value: string | undefined,
-  defaultValue: "default" | "hover" | "focus" | "selected" = "default"
+  defaultValue: "default" | "hover" | "focus" | "selected" = "default",
 ): "default" | "hover" | "focus" | "selected" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -46,7 +46,7 @@ export function normalizeState(
  */
 export function normalizeInputState(
   value: string | undefined,
-  defaultValue: "default" | "active" | "hover" | "focus" = "default"
+  defaultValue: "default" | "active" | "hover" | "focus" = "default",
 ): "default" | "active" | "hover" | "focus" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -66,7 +66,7 @@ export function normalizeInputState(
  */
 export function normalizeToggleState(
   value: string | undefined,
-  defaultValue: "default" | "hover" | "focus" | "selected" = "default"
+  defaultValue: "default" | "hover" | "focus" | "selected" = "default",
 ): "default" | "hover" | "focus" | "selected" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -112,13 +112,12 @@ export type InputStateValue =
   | "Hover"
   | "Focus";
 
-
 /**
  * Normalize button size prop values
  */
 export function normalizeSize(
   value: string | undefined,
-  defaultValue: "xsmall" | "small" | "medium" | "large" | "xlarge" = "xsmall"
+  defaultValue: "xsmall" | "small" | "medium" | "large" | "xlarge" = "xsmall",
 ): "xsmall" | "small" | "medium" | "large" | "xlarge" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -134,7 +133,7 @@ export function normalizeSize(
  */
 export function normalizeAlertStatus(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "positive" | "warning" | "danger" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -150,7 +149,7 @@ export function normalizeAlertStatus(
  */
 export function normalizeAlertType(
   value: string | undefined,
-  defaultValue: "toast" = "toast"
+  defaultValue: "toast" = "toast",
 ): "toast" | "banner" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -166,7 +165,7 @@ export function normalizeAlertType(
  */
 export function normalizeTooltipPosition(
   value: string | undefined,
-  defaultValue: "top" = "top"
+  defaultValue: "top" = "top",
 ): "top" | "bottom" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -199,7 +198,12 @@ export type SizeValue =
  */
 export function normalizeMenuBarSize(
   value: string | undefined,
-  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+  defaultValue:
+    | "X Small"
+    | "Small"
+    | "Medium"
+    | "Large"
+    | "X Large" = "X Small",
 ): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
   if (!value) return defaultValue;
   if (
@@ -219,7 +223,7 @@ export function normalizeMenuBarSize(
  */
 export function normalizeNavigationItemVariant(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -234,7 +238,7 @@ export function normalizeNavigationItemVariant(
  */
 export function normalizeNavigationItemSize(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "xsmall" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -250,7 +254,7 @@ export function normalizeNavigationItemSize(
  */
 export function normalizeContentLockupVariant(
   value: string | undefined,
-  defaultValue: "hero" = "hero"
+  defaultValue: "hero" = "hero",
 ): "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -266,7 +270,7 @@ export function normalizeContentLockupVariant(
  */
 export function normalizeAlignment(
   value: string | undefined,
-  defaultValue: "center" = "center"
+  defaultValue: "center" = "center",
 ): "center" | "left" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -282,7 +286,7 @@ export function normalizeAlignment(
  */
 export function normalizeNumberedListSize(
   value: string | undefined,
-  defaultValue: "M" = "M"
+  defaultValue: "M" = "M",
 ): "M" | "S" {
   if (!value) return defaultValue;
   const normalized = value.toUpperCase();
@@ -297,7 +301,7 @@ export function normalizeNumberedListSize(
  */
 export function normalizeHeaderLockupJustification(
   value: string | undefined,
-  defaultValue: "left" = "left"
+  defaultValue: "left" = "left",
 ): "left" | "center" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -312,7 +316,7 @@ export function normalizeHeaderLockupJustification(
  */
 export function normalizeHeaderLockupSize(
   value: string | undefined,
-  defaultValue: "L" = "L"
+  defaultValue: "L" = "L",
 ): "L" | "M" {
   if (!value) return defaultValue;
   const normalized = value.toUpperCase();
@@ -323,11 +327,26 @@ export function normalizeHeaderLockupSize(
 }
 
 /**
+ * Normalize header lockup palette prop values (Default/Inverse -> default/inverse)
+ */
+export function normalizeHeaderLockupPalette(
+  value: string | undefined,
+  defaultValue: "default" = "default",
+): "default" | "inverse" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  if (normalized === "default" || normalized === "inverse") {
+    return normalized;
+  }
+  return defaultValue;
+}
+
+/**
  * Normalize text input size prop values
  */
 export function normalizeTextInputSize(
   value: string | undefined,
-  defaultValue: "medium" = "medium"
+  defaultValue: "medium" = "medium",
 ): "small" | "medium" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -342,7 +361,7 @@ export function normalizeTextInputSize(
  */
 export function normalizeContentContainerSize(
   value: string | undefined,
-  defaultValue: "responsive" = "responsive"
+  defaultValue: "responsive" = "responsive",
 ): "xs" | "responsive" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -358,7 +377,7 @@ export function normalizeContentContainerSize(
  */
 export function normalizeContentThumbnailVariant(
   value: string | undefined,
-  defaultValue: "vertical" = "vertical"
+  defaultValue: "vertical" = "vertical",
 ): "vertical" | "horizontal" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -374,7 +393,7 @@ export function normalizeContentThumbnailVariant(
  */
 export function normalizeSectionHeaderVariant(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "multi-line" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -390,7 +409,7 @@ export function normalizeSectionHeaderVariant(
  */
 export function normalizeQuoteBlockVariant(
   value: string | undefined,
-  defaultValue: "standard" = "standard"
+  defaultValue: "standard" = "standard",
 ): "compact" | "standard" | "extended" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -406,11 +425,16 @@ export function normalizeQuoteBlockVariant(
  */
 export function normalizeNumberCardSize(
   value: string | undefined,
-  defaultValue: "Medium" = "Medium"
+  defaultValue: "Medium" = "Medium",
 ): "Small" | "Medium" | "Large" | "XLarge" {
   if (!value) return defaultValue;
   // Check if already PascalCase
-  if (value === "Small" || value === "Medium" || value === "Large" || value === "XLarge") {
+  if (
+    value === "Small" ||
+    value === "Medium" ||
+    value === "Large" ||
+    value === "XLarge"
+  ) {
     return value;
   }
   // Normalize lowercase to PascalCase
@@ -427,7 +451,7 @@ export function normalizeNumberCardSize(
  */
 export function normalizeAskOrganizerVariant(
   value: string | undefined,
-  defaultValue: "centered" = "centered"
+  defaultValue: "centered" = "centered",
 ): "centered" | "left-aligned" | "compact" | "inverse" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -443,7 +467,7 @@ export function normalizeAskOrganizerVariant(
  */
 export function normalizeContextMenuItemSize(
   value: string | undefined,
-  defaultValue: "medium" = "medium"
+  defaultValue: "medium" = "medium",
 ): "small" | "medium" | "large" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -459,7 +483,7 @@ export function normalizeContextMenuItemSize(
  */
 export function normalizeImagePlaceholderColor(
   value: string | undefined,
-  defaultValue: "blue" = "blue"
+  defaultValue: "blue" = "blue",
 ): "blue" | "green" | "purple" | "red" | "orange" | "teal" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -475,7 +499,7 @@ export function normalizeImagePlaceholderColor(
  */
 export function normalizeToggleGroupPosition(
   value: string | undefined,
-  defaultValue: "left" = "left"
+  defaultValue: "left" = "left",
 ): "left" | "middle" | "right" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -491,7 +515,7 @@ export function normalizeToggleGroupPosition(
  */
 export function normalizeLabelVariant(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "horizontal" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -507,7 +531,7 @@ export function normalizeLabelVariant(
  */
 export function normalizeTextAreaAppearance(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "embedded" {
   if (!value) return defaultValue;
   const n = value.toLowerCase();
@@ -519,7 +543,7 @@ export function normalizeTextAreaAppearance(
  */
 export function normalizeSmallMediumLargeSize(
   value: string | undefined,
-  defaultValue: "medium" = "medium"
+  defaultValue: "medium" = "medium",
 ): "small" | "medium" | "large" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -535,11 +559,16 @@ export function normalizeSmallMediumLargeSize(
  */
 export function normalizeRuleCardSize(
   value: string | undefined,
-  defaultValue: "L" = "L"
+  defaultValue: "L" = "L",
 ): "XS" | "S" | "M" | "L" {
   if (!value) return defaultValue;
   const normalized = value.toUpperCase();
-  if (normalized === "XS" || normalized === "S" || normalized === "M" || normalized === "L") {
+  if (
+    normalized === "XS" ||
+    normalized === "S" ||
+    normalized === "M" ||
+    normalized === "L"
+  ) {
     return normalized;
   }
   return defaultValue;
@@ -561,11 +590,7 @@ export type ChipStateValue =
 /**
  * Type helper for case-insensitive Chip palette prop
  */
-export type ChipPaletteValue =
-  | "default"
-  | "inverse"
-  | "Default"
-  | "Inverse";
+export type ChipPaletteValue = "default" | "inverse" | "Default" | "Inverse";
 
 /**
  * Type helper for case-insensitive Chip size prop
@@ -673,7 +698,7 @@ export function normalizeInputLabelPalette(
  */
 export function normalizeMenuBarItemState(
   value: string | undefined,
-  defaultValue: "default" | "hover" | "selected" = "default"
+  defaultValue: "default" | "hover" | "selected" = "default",
 ): "default" | "hover" | "selected" {
   if (!value) return defaultValue;
   if (value === "default" || value === "hover" || value === "selected") {
@@ -689,7 +714,7 @@ export function normalizeMenuBarItemState(
  */
 export function normalizeMenuBarItemMode(
   value: string | undefined,
-  defaultValue: "default" | "inverse" = "default"
+  defaultValue: "default" | "inverse" = "default",
 ): "default" | "inverse" {
   if (!value) return defaultValue;
   if (value === "default" || value === "inverse") {
@@ -704,7 +729,12 @@ export function normalizeMenuBarItemMode(
  */
 export function normalizeMenuBarItemSize(
   value: string | undefined,
-  defaultValue: "X Small" | "Small" | "Medium" | "Large" | "X Large" = "X Small"
+  defaultValue:
+    | "X Small"
+    | "Small"
+    | "Medium"
+    | "Large"
+    | "X Large" = "X Small",
 ): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
   if (!value) return defaultValue;
   if (
@@ -724,7 +754,7 @@ export function normalizeMenuBarItemSize(
  */
 export function normalizeButtonType(
   value: string | undefined,
-  defaultValue: "filled" = "filled"
+  defaultValue: "filled" = "filled",
 ): "filled" | "outline" | "ghost" | "danger" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -740,7 +770,7 @@ export function normalizeButtonType(
  */
 export function normalizeButtonPalette(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "inverse" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
@@ -759,7 +789,7 @@ export function normalizeButtonPalette(
  */
 export function normalizeButtonState(
   value: string | undefined,
-  defaultValue: "default" = "default"
+  defaultValue: "default" = "default",
 ): "default" | "focus" | "active" | "hover" | "disabled" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();

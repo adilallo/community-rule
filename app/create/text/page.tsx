@@ -7,7 +7,7 @@ import TextInput from "../../components/controls/TextInput";
 
 /**
  * Text page for the create flow
- * 
+ *
  * Displays a text input field for user input using HeaderLockup and TextInput components.
  * Responsive sizing: uses L/M for HeaderLockup and medium/small for TextInput based on 640px breakpoint.
  */

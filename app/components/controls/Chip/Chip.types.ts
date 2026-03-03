@@ -68,4 +68,3 @@ export interface ChipViewProps {
   inputRef?: React.RefObject<HTMLInputElement>;
   ariaLabel?: string;
 }
-

@@ -17,7 +17,7 @@ const SwitchContainer = memo(
       className = "",
       ...rest
     } = props;
-    
+
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const state = normalizeState(stateProp);
 

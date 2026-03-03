@@ -1,4 +1,4 @@
-import Logo from "../../icons/Logo";
+import Logo from "../../asset/logo";
 import Button from "../../buttons/Button";
 import type { CreateFlowTopNavProps } from "./CreateFlowTopNav.types";
 
@@ -11,6 +11,7 @@ export function CreateFlowTopNavView({
   onExport,
   onEdit,
   onExit,
+  buttonPalette = "default",
   className = "",
 }: CreateFlowTopNavProps) {
   const exitButtonText = loggedIn ? "Save & Exit" : "Exit";
@@ -27,14 +28,14 @@ export function CreateFlowTopNavView({
         aria-label="Create Flow Navigation"
       >
         {/* Logo - Left */}
-        <Logo size="createFlow" showText={true} />
+        <Logo size="createFlow" wordmark palette={buttonPalette} />
 
         {/* Button Group - Right */}
         <div className="flex items-center gap-[var(--spacing-scale-012,12px)]">
           {hasShare && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onShare}
               ariaLabel="Share"
@@ -47,7 +48,7 @@ export function CreateFlowTopNavView({
           {hasExport && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onExport}
               ariaLabel="Export"
@@ -74,7 +75,7 @@ export function CreateFlowTopNavView({
           {hasEdit && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onEdit}
               ariaLabel="Edit"
@@ -86,7 +87,7 @@ export function CreateFlowTopNavView({
 
           <Button
             buttonType="outline"
-            palette="default"
+            palette={buttonPalette}
             size="xsmall"
             onClick={onExit}
             ariaLabel={exitButtonText}

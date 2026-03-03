@@ -17,9 +17,7 @@ vi.mock("next/dynamic", () => {
       function DynamicWrapper(props) {
         const [Component, setComponent] = React.useState(null);
         React.useEffect(() => {
-          importFn().then((mod) =>
-            setComponent(() => mod.default || mod),
-          );
+          importFn().then((mod) => setComponent(() => mod.default || mod));
         }, []);
         if (!Component) {
           return options?.loading ? options.loading() : null;

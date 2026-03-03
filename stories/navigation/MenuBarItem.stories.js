@@ -136,9 +136,15 @@ export const AllModes = {
       <div>
         <h3 className="text-white font-semibold mb-3">Default Mode</h3>
         <div className="space-x-4">
-          <MenuBarItem size="X Small" mode="default">X Small</MenuBarItem>
-          <MenuBarItem size="Large" mode="default">Large</MenuBarItem>
-          <MenuBarItem size="X Large" mode="default">X Large</MenuBarItem>
+          <MenuBarItem size="X Small" mode="default">
+            X Small
+          </MenuBarItem>
+          <MenuBarItem size="Large" mode="default">
+            Large
+          </MenuBarItem>
+          <MenuBarItem size="X Large" mode="default">
+            X Large
+          </MenuBarItem>
         </div>
       </div>
 
@@ -173,8 +179,7 @@ export const AllModes = {
   parameters: {
     docs: {
       description: {
-        story:
-          "Complete overview of all menu item modes, sizes, and states.",
+        story: "Complete overview of all menu item modes, sizes, and states.",
       },
     },
   },

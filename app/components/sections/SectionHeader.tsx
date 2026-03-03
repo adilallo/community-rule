@@ -3,7 +3,11 @@
 import { memo } from "react";
 import { normalizeSectionHeaderVariant } from "../../../lib/propNormalization";
 
-export type SectionHeaderVariantValue = "default" | "multi-line" | "Default" | "Multi-Line";
+export type SectionHeaderVariantValue =
+  | "default"
+  | "multi-line"
+  | "Default"
+  | "Multi-Line";
 
 interface SectionHeaderProps {
   title: string;

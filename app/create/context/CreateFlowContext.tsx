@@ -16,7 +16,7 @@ interface CreateFlowProviderProps {
 
 /**
  * Provider component for Create Flow state management
- * 
+ *
  * This is a basic implementation that will be expanded in CR-56
  * with full navigation logic, state persistence, and validation.
  */
@@ -25,9 +25,7 @@ export function CreateFlowProvider({
   initialStep = null,
 }: CreateFlowProviderProps) {
   const [state, setState] = useState<CreateFlowState>({});
-  const [currentStep] = useState<CreateFlowStep | null>(
-    initialStep,
-  );
+  const [currentStep] = useState<CreateFlowStep | null>(initialStep);
 
   const updateState = (updates: Partial<CreateFlowState>) => {
     setState((prevState) => ({
@@ -51,7 +49,7 @@ export function CreateFlowProvider({
 
 /**
  * Hook to access Create Flow context
- * 
+ *
  * @throws Error if used outside CreateFlowProvider
  * @returns CreateFlowContextValue
  */

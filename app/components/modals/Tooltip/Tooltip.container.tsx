@@ -6,7 +6,13 @@ import type { TooltipProps } from "./Tooltip.types";
 import { normalizeTooltipPosition } from "../../../../lib/propNormalization";
 
 const TooltipContainer = memo<TooltipProps>(
-  ({ children, text, position: positionProp = "top", className = "", disabled = false }) => {
+  ({
+    children,
+    text,
+    position: positionProp = "top",
+    className = "",
+    disabled = false,
+  }) => {
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const position = normalizeTooltipPosition(positionProp);
     const [isVisible, setIsVisible] = useState(false);

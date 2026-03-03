@@ -24,10 +24,7 @@ export function RadioGroupView({
         // If there's subtext, render radio button without label and handle layout separately
         if (option.subtext) {
           return (
-            <div
-              key={option.value}
-              className="flex gap-[8px] items-start"
-            >
+            <div key={option.value} className="flex gap-[8px] items-start">
               <RadioButton
                 checked={isSelected}
                 mode={mode}

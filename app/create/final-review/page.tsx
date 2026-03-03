@@ -32,9 +32,7 @@ const FINAL_REVIEW_CATEGORIES: Category[] = [
   },
   {
     name: "Membership",
-    chipOptions: [
-      { id: "m1", label: "Open Admission", state: "unselected" },
-    ],
+    chipOptions: [{ id: "m1", label: "Open Admission", state: "unselected" }],
   },
   {
     name: "Decision-making",
@@ -70,7 +68,7 @@ export default function FinalReviewPage() {
 
   if (showDesktopLayout) {
     return (
-      <div className="w-full max-w-[1280px] shrink-0 px-5 md:px-16">
+      <div className="w-full max-w-[1280px] shrink-0 px-5 md:px-12">
         <div className="flex w-full flex-col gap-4 min-w-0 sm:grid sm:grid-cols-2 sm:gap-[var(--measures-spacing-1200,48px)]">
           <div className="min-w-0 flex flex-col justify-center">
             <HeaderLockup

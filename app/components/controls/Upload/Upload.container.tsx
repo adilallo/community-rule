@@ -5,13 +5,7 @@ import UploadView from "./Upload.view";
 import type { UploadProps } from "./Upload.types";
 
 const UploadContainer = memo<UploadProps>(
-  ({
-    active = true,
-    label,
-    showHelpIcon = true,
-    onClick,
-    className = "",
-  }) => {
+  ({ active = true, label, showHelpIcon = true, onClick, className = "" }) => {
     return (
       <UploadView
         active={active}

@@ -8,9 +8,18 @@ function HeaderLockupView({
   description,
   justification,
   size,
+  palette,
 }: HeaderLockupViewProps) {
   const isL = size === "L";
   const isLeft = justification === "left";
+  const isInverse = palette === "inverse";
+
+  const titleColorClass = isInverse
+    ? "text-[var(--color-content-invert-primary)]"
+    : "text-[var(--color-content-default-primary,white)]";
+  const descriptionColorClass = isInverse
+    ? "text-[#2d2d2d]"
+    : "text-[var(--color-content-default-tertiary,#b4b4b4)]";
 
   return (
     <div
@@ -21,7 +30,7 @@ function HeaderLockupView({
       {/* Title */}
       <div className="flex items-center relative shrink-0 w-full">
         <h1
-          className={`flex-[1_0_0] min-h-px min-w-px overflow-hidden relative text-[var(--color-content-default-primary,white)] text-ellipsis whitespace-pre-wrap ${
+          className={`flex-[1_0_0] min-h-px min-w-px overflow-hidden relative ${titleColorClass} text-ellipsis whitespace-pre-wrap ${
             isLeft ? "text-left" : "text-center"
           } ${
             isL
@@ -36,12 +45,10 @@ function HeaderLockupView({
       {/* Description */}
       {description && (
         <p
-          className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 text-[var(--color-content-default-tertiary,#b4b4b4)] text-ellipsis w-full whitespace-pre-wrap ${
+          className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
             isLeft ? "" : "text-center"
           } ${
-            isL
-              ? "text-[18px] leading-[1.3]"
-              : "text-[14px] leading-[20px]"
+            isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
           }`}
         >
           {description}

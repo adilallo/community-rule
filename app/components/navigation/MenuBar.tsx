@@ -25,7 +25,7 @@ const MenuBar = memo<MenuBarProps>(
   ({ children, className = "", size: sizeProp = "X Small", ...props }) => {
     const size = normalizeMenuBarSize(sizeProp);
     const t = useTranslation("menuBar");
-    
+
     // Size styles based on Figma specifications
     const sizeStyles: Record<
       "X Small" | "Small" | "Medium" | "Large" | "X Large",

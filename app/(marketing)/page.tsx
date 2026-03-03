@@ -12,12 +12,15 @@ const LogoWall = dynamic(() => import("../components/sections/LogoWall"), {
   ssr: true,
 });
 
-const NumberedCards = dynamic(() => import("../components/sections/NumberedCards"), {
-  loading: () => (
-    <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
-  ),
-  ssr: true,
-});
+const NumberedCards = dynamic(
+  () => import("../components/sections/NumberedCards"),
+  {
+    loading: () => (
+      <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
+    ),
+    ssr: true,
+  },
+);
 
 const RuleStack = dynamic(() => import("../components/sections/RuleStack"), {
   loading: () => (
@@ -26,12 +29,15 @@ const RuleStack = dynamic(() => import("../components/sections/RuleStack"), {
   ssr: true,
 });
 
-const FeatureGrid = dynamic(() => import("../components/sections/FeatureGrid"), {
-  loading: () => (
-    <section className="py-[var(--spacing-scale-032)] min-h-[500px]" />
-  ),
-  ssr: true,
-});
+const FeatureGrid = dynamic(
+  () => import("../components/sections/FeatureGrid"),
+  {
+    loading: () => (
+      <section className="py-[var(--spacing-scale-032)] min-h-[500px]" />
+    ),
+    ssr: true,
+  },
+);
 
 const QuoteBlock = dynamic(() => import("../components/sections/QuoteBlock"), {
   loading: () => (

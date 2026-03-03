@@ -5,14 +5,9 @@ export type MenuBarItemSizeValue =
   | "Large"
   | "X Large";
 
-export type MenuBarItemStateValue =
-  | "default"
-  | "hover"
-  | "selected";
+export type MenuBarItemStateValue = "default" | "hover" | "selected";
 
-export type MenuBarItemModeValue =
-  | "default"
-  | "inverse";
+export type MenuBarItemModeValue = "default" | "inverse";
 
 export interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;

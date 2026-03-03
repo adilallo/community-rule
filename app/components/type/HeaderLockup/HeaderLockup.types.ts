@@ -1,5 +1,14 @@
-export type HeaderLockupJustificationValue = "left" | "center" | "Left" | "Center";
+export type HeaderLockupJustificationValue =
+  | "left"
+  | "center"
+  | "Left"
+  | "Center";
 export type HeaderLockupSizeValue = "L" | "M" | "l" | "m";
+export type HeaderLockupPaletteValue =
+  | "default"
+  | "inverse"
+  | "Default"
+  | "Inverse";
 
 export interface HeaderLockupProps {
   /**
@@ -20,6 +29,11 @@ export interface HeaderLockupProps {
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
    */
   size?: HeaderLockupSizeValue;
+  /**
+   * Palette. Default = light text (dark bg); Inverse = dark text (light bg).
+   * Accepts both PascalCase (Figma) and lowercase (codebase).
+   */
+  palette?: HeaderLockupPaletteValue;
 }
 
 export interface HeaderLockupViewProps {
@@ -27,4 +41,5 @@ export interface HeaderLockupViewProps {
   description?: string;
   justification: "left" | "center";
   size: "L" | "M";
+  palette: "default" | "inverse";
 }

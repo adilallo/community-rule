@@ -44,8 +44,7 @@ export const SizeM = {
 export const CenterJustified = {
   args: {
     title: "How should conflicts be resolved?",
-    description:
-      "You can also combine or add new approaches to the list",
+    description: "You can also combine or add new approaches to the list",
     justification: "center",
     size: "L",
   },

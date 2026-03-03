@@ -1,5 +1,9 @@
 export type NavigationItemVariantValue = "default" | "Default";
-export type NavigationItemSizeValue = "default" | "xsmall" | "Default" | "XSmall";
+export type NavigationItemSizeValue =
+  | "default"
+  | "xsmall"
+  | "Default"
+  | "XSmall";
 
 export interface NavigationItemProps extends Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,

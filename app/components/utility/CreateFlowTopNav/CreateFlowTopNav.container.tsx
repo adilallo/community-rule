@@ -15,6 +15,7 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
     onExport,
     onEdit,
     onExit,
+    buttonPalette,
     className = "",
   }) => {
     const router = useRouter();
@@ -38,6 +39,7 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         onExport={onExport}
         onEdit={onEdit}
         onExit={handleExit}
+        buttonPalette={buttonPalette}
         className={className}
       />
     );

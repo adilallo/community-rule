@@ -139,7 +139,8 @@ WithCustomHeader.args = {
   children: (
     <div className="space-y-4">
       <p className="text-[var(--color-content-default-primary)]">
-        When headerContent is provided, the default title and description are not shown.
+        When headerContent is provided, the default title and description are
+        not shown.
       </p>
     </div>
   ),

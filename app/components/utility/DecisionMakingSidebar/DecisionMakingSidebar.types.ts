@@ -24,7 +24,9 @@ export interface DecisionMakingSidebarViewProps {
   messageBoxTitle: string;
   messageBoxItems: InfoMessageBoxItem[];
   messageBoxCheckedIds: string[] | undefined;
-  onMessageBoxCheckboxChange: ((id: string, checked: boolean) => void) | undefined;
+  onMessageBoxCheckboxChange:
+    | ((id: string, checked: boolean) => void)
+    | undefined;
   size: "L" | "M";
   justification: "left" | "center";
   className: string;

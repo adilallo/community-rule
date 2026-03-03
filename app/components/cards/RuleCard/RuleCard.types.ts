@@ -5,7 +5,11 @@ export interface Category {
   chipOptions: ChipOption[];
   onChipClick?: (categoryName: string, chipId: string) => void;
   onAddClick?: (categoryName: string) => void;
-  onCustomChipConfirm?: (categoryName: string, chipId: string, value: string) => void;
+  onCustomChipConfirm?: (
+    categoryName: string,
+    chipId: string,
+    value: string,
+  ) => void;
   onCustomChipClose?: (categoryName: string, chipId: string) => void;
 }
 

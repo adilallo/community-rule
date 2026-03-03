@@ -53,9 +53,7 @@ function DecisionMakingSidebarView({
               className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 text-[var(--color-content-default-tertiary,#b4b4b4)] text-ellipsis w-full whitespace-pre-wrap ${
                 isLeft ? "" : "text-center"
               } ${
-                isL
-                  ? "text-[18px] leading-[1.3]"
-                  : "text-[14px] leading-[20px]"
+                isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
               }`}
             >
               {description}

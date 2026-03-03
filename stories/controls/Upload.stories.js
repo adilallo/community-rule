@@ -51,7 +51,8 @@ Active.args = {
 Active.parameters = {
   docs: {
     description: {
-      story: "Upload component in active state with white button and black text.",
+      story:
+        "Upload component in active state with white button and black text.",
     },
   },
 };
@@ -66,7 +67,8 @@ Inactive.args = {
 Inactive.parameters = {
   docs: {
     description: {
-      story: "Upload component in inactive state with dark button and gray text.",
+      story:
+        "Upload component in inactive state with dark button and gray text.",
     },
   },
 };

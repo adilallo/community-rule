@@ -3,7 +3,10 @@
 import { memo } from "react";
 import NavigationItemView from "./NavigationItem.view";
 import type { NavigationItemProps } from "./NavigationItem.types";
-import { normalizeNavigationItemVariant, normalizeNavigationItemSize } from "../../../../lib/propNormalization";
+import {
+  normalizeNavigationItemVariant,
+  normalizeNavigationItemSize,
+} from "../../../../lib/propNormalization";
 
 const NavigationItemContainer = memo<NavigationItemProps>(
   ({

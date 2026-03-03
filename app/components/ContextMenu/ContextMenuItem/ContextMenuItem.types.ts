@@ -1,4 +1,10 @@
-export type ContextMenuItemSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
+export type ContextMenuItemSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "Small"
+  | "Medium"
+  | "Large";
 
 export interface ContextMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;

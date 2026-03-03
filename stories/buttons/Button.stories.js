@@ -179,7 +179,9 @@ export const AllVariants = {
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Filled Inverse Variant</h3>
+        <h3 className="text-white font-semibold mb-3">
+          Filled Inverse Variant
+        </h3>
         <div className="space-x-4">
           <Button buttonType="filled" palette="inverse" size="xsmall">
             XSmall
@@ -221,7 +223,9 @@ export const AllVariants = {
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Outline Inverse Variant</h3>
+        <h3 className="text-white font-semibold mb-3">
+          Outline Inverse Variant
+        </h3>
         <div className="space-x-4">
           <Button buttonType="outline" palette="inverse" size="xsmall">
             XSmall
@@ -305,7 +309,9 @@ export const AllVariants = {
       </div>
 
       <div>
-        <h3 className="text-white font-semibold mb-3">Danger Inverse Variant</h3>
+        <h3 className="text-white font-semibold mb-3">
+          Danger Inverse Variant
+        </h3>
         <div className="space-x-4">
           <Button buttonType="danger" palette="inverse" size="xsmall">
             XSmall

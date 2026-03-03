@@ -24,7 +24,9 @@ const CardStackContainer = memo<CardStackProps>(
     className = "",
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
-    const [internalSelectedIds, setInternalSelectedIds] = useState<string[]>([]);
+    const [internalSelectedIds, setInternalSelectedIds] = useState<string[]>(
+      [],
+    );
 
     const expanded =
       controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
@@ -41,7 +43,9 @@ const CardStackContainer = memo<CardStackProps>(
       controlledSelectedIds !== undefined
         ? controlledSelectedIds
         : controlledSelectedId !== undefined
-          ? (controlledSelectedId ? [controlledSelectedId] : [])
+          ? controlledSelectedId
+            ? [controlledSelectedId]
+            : []
           : internalSelectedIds;
 
     const handleCardSelect = useCallback(

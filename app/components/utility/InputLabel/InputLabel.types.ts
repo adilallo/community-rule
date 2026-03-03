@@ -1,5 +1,9 @@
 export type InputLabelSizeValue = "S" | "M" | "s" | "m";
-export type InputLabelPaletteValue = "Default" | "Inverse" | "default" | "inverse";
+export type InputLabelPaletteValue =
+  | "Default"
+  | "Inverse"
+  | "default"
+  | "inverse";
 
 export interface InputLabelProps {
   /**

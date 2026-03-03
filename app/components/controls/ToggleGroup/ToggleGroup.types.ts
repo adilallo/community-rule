@@ -1,6 +1,12 @@
 import type { StateValue } from "../../../../lib/propNormalization";
 
-export type ToggleGroupPositionValue = "left" | "middle" | "right" | "Left" | "Middle" | "Right";
+export type ToggleGroupPositionValue =
+  | "left"
+  | "middle"
+  | "right"
+  | "Left"
+  | "Middle"
+  | "Right";
 
 export interface ToggleGroupProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,

@@ -273,7 +273,9 @@ export const StateComparison = {
         <Button disabled>Disabled</Button>
       </div>
       <div className="flex flex-wrap gap-4 items-center">
-        <Button buttonType="filled" palette="default">Home Default</Button>
+        <Button buttonType="filled" palette="default">
+          Home Default
+        </Button>
         <Button buttonType="filled" palette="default" disabled>
           Home Disabled
         </Button>
@@ -341,7 +343,9 @@ export const EdgeCases = {
       <div className="flex flex-wrap gap-4 items-center">
         <Button>Normal</Button>
         <Button disabled>Disabled</Button>
-        <Button buttonType="filled" palette="default">Home</Button>
+        <Button buttonType="filled" palette="default">
+          Home
+        </Button>
         <Button buttonType="filled" palette="default" disabled>
           Home Disabled
         </Button>

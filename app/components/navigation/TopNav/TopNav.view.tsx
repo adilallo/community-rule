@@ -7,7 +7,7 @@ import { getAssetPath } from "../../../../lib/assetUtils";
 import MenuBar from "../MenuBar";
 import type { TopNavViewProps } from "./TopNav.types";
 
-import Logo from "../../icons/Logo";
+import Logo from "../../asset/logo";
 
 function TopNavView({
   folderTop,
@@ -44,7 +44,11 @@ function TopNavView({
             {/* Header Tab - Yellow tab container with decorative Union images */}
             <div className="HeaderTab header-breakpoint-transition relative bg-[var(--color-surface-inverse-brand-primary)] rounded-tl-[var(--radius-measures-radius-medium)] rounded-tr-[var(--radius-measures-radius-medium)] sm:rounded-t-[var(--radius-measures-radius-xlarge)] md:rounded-t-[var(--radius-measures-radius-xlarge)] lg:rounded-t-[var(--radius-measures-radius-xlarge)] xl:rounded-t-[var(--radius-measures-radius-xlarge)] pl-[var(--spacing-scale-012)] pr-[var(--spacing-scale-048)] h-[var(--spacing-scale-040)] sm:pl-[var(--spacing-scale-012)] sm:h-[52px] sm:pr-[var(--spacing-scale-006)] md:h-[52px] md:pl-[var(--spacing-scale-024)] md:pr-[var(--spacing-scale-012)] lg:h-[52px] lg:pl-[var(--spacing-scale-024)] lg:pr-[var(--spacing-scale-048)] xl:h-[64px] xl:pl-[var(--spacing-scale-032)] xl:pr-[var(--spacing-scale-120)] md:gap-[var(--spacing-scale-032)] flex-1 min-w-0 min-w-[197px] sm:min-w-0 sm:mr-[var(--spacing-scale-008)] md:mr-[185px] lg:mr-[var(--spacing-scale-024)] xl:mr-[var(--spacing-scale-032)] flex items-center self-end">
               {/* Logo - Consistent left positioning within HeaderTab */}
-              <Logo size={logoSize} showText={true} />
+              <Logo
+                size={logoSize}
+                wordmark
+                palette={folderTop ? "inverse" : "default"}
+              />
 
               {/* XSmall menu bar - positioned next to logo */}
               <div className="block sm:hidden -me-[2px]">
@@ -90,7 +94,9 @@ function TopNavView({
 
               {/* 640-1023px (md: breakpoint): MenuBar Small */}
               <div className="hidden md:block lg:hidden">
-                <MenuBar size="Small">{renderNavigationItems("homeMd")}</MenuBar>
+                <MenuBar size="Small">
+                  {renderNavigationItems("homeMd")}
+                </MenuBar>
               </div>
 
               {/* 1024-1440px (lg: breakpoint): MenuBar Large */}
@@ -161,7 +167,11 @@ function TopNavView({
           aria-label={t("ariaLabels.mainNavigation")}
         >
           {/* Logo - Consistent left positioning across all breakpoints */}
-          <Logo size={logoSize} showText={true} />
+          <Logo
+            size={logoSize}
+            wordmark
+            palette={folderTop ? "inverse" : "default"}
+          />
 
           {/* Navigation Links - Consistent center positioning */}
           <div className="flex items-center flex-1 justify-end sm:flex-none sm:justify-center">
@@ -193,7 +203,9 @@ function TopNavView({
             </div>
 
             <div className="hidden xl:block" data-testid="nav-xl">
-              <MenuBar size="X Large">{renderNavigationItems("xlarge")}</MenuBar>
+              <MenuBar size="X Large">
+                {renderNavigationItems("xlarge")}
+              </MenuBar>
             </div>
           </div>
 
