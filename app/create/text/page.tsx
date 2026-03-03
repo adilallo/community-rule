@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import TextInput from "../../components/controls/TextInput";
@@ -12,8 +12,17 @@ import TextInput from "../../components/controls/TextInput";
  * Responsive sizing: uses L/M for HeaderLockup and medium/small for TextInput based on 640px breakpoint.
  */
 export default function TextPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
   const [value, setValue] = useState("");
+
+  // Avoid flash: only use breakpoint after mount so SSR and first paint use same layout (desktop).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
+    setIsMounted(true);
+  }, []);
+
+  const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   const maxLength = 48;
   const characterCount = value.length;
@@ -26,7 +35,7 @@ export default function TextPage() {
           title="What is your community called?"
           description="This will be the name of your community"
           justification="left"
-          size={isMdOrLarger ? "L" : "M"}
+          size={effectiveMdOrLarger ? "L" : "M"}
         />
 
         {/* TextInput: medium size at 640px+, small size below 640px */}
@@ -35,7 +44,7 @@ export default function TextPage() {
             placeholder="Enter your community name"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            inputSize={isMdOrLarger ? "medium" : "small"}
+            inputSize={effectiveMdOrLarger ? "medium" : "small"}
             formHeader={false}
             textHint={`${characterCount}/${maxLength}`}
             maxLength={maxLength}

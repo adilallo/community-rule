@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import MultiSelect from "../../components/controls/MultiSelect";
@@ -13,7 +13,16 @@ import MultiSelect from "../../components/controls/MultiSelect";
  * Responsive sizing: uses L/M for HeaderLockup and S for MultiSelect based on 640px breakpoint.
  */
 export default function SelectPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
+
+  // Avoid flash: only use breakpoint after mount so SSR and first paint use same layout (desktop).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
+    setIsMounted(true);
+  }, []);
+
+  const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   // Sample options for MultiSelect components
   const [communitySizeOptions, setCommunitySizeOptions] = useState([
@@ -81,7 +90,7 @@ export default function SelectPage() {
 
   return (
     <div className="w-full flex flex-col items-center px-[var(--spacing-measures-spacing-500,20px)] md:px-[64px]">
-      {isMdOrLarger ? (
+      {effectiveMdOrLarger ? (
         // Two-column layout for 640px+
         <div className="flex gap-[var(--measures-spacing-1200,48px)] items-center justify-center w-full max-w-[1280px]">
           {/* Left column: HeaderLockup */}

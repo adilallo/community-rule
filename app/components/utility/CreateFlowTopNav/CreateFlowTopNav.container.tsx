@@ -20,9 +20,9 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
   }) => {
     const router = useRouter();
 
-    const handleExit = () => {
+    const handleExit = (options?: { saveDraft?: boolean }) => {
       if (onExit) {
-        onExit();
+        onExit(options);
       } else {
         // Default behavior: navigate to home
         router.push("/");

@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import MenuBarItem from "../MenuBarItem";
 import Button from "../../buttons/Button";
@@ -20,6 +20,7 @@ export const avatarImages = [
 const TopNavContainer = memo<TopNavProps>(
   ({ folderTop = false, loggedIn = false, profile = false, logIn = true }) => {
     const pathname = usePathname();
+    const router = useRouter();
     const t = useTranslation("header");
 
     // Schema markup for site navigation
@@ -164,7 +165,7 @@ const TopNavContainer = memo<TopNavProps>(
           size={buttonSize}
           buttonType={buttonType}
           palette={palette}
-          href="/create/informational"
+          onClick={() => router.push("/create/informational")}
           ariaLabel={t("ariaLabels.createNewRule")}
         >
           {renderAvatarGroup(containerSize, avatarSize)}

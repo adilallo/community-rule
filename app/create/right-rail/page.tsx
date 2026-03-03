@@ -115,35 +115,41 @@ export default function RightRailPage() {
 
   if (showDesktopLayout) {
     return (
-      <div className="w-full flex flex-col items-center px-5 md:px-12">
-        <div className="flex gap-12 items-stretch w-full max-w-[1280px] min-w-0">
-          <div className="flex flex-1 flex-col justify-center gap-3 min-w-0">
-            <DecisionMakingSidebar
-              title={SIDEBAR_TITLE}
-              description={SIDEBAR_DESCRIPTION}
-              messageBoxTitle={MESSAGE_BOX_TITLE}
-              messageBoxItems={MESSAGE_BOX_ITEMS}
-              messageBoxCheckedIds={messageBoxCheckedIds}
-              onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
-              size="L"
-              justification="left"
-            />
-          </div>
-          <div className="flex flex-1 flex-col gap-6 items-center min-w-0">
-            <CardStack
-              cards={SAMPLE_CARDS}
-              selectedIds={selectedIds}
-              onCardSelect={handleCardSelect}
-              expanded={expanded}
-              onToggleExpand={handleToggleExpand}
-              hasMore={true}
-              toggleLabel="See all decision approaches"
-              showLessLabel="Show less"
-              title=""
-              description=""
-              layout="singleStack"
-              className="w-full"
-            />
+      <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1 overflow-hidden px-5 md:px-12">
+          <div className="grid h-full max-w-[1280px] grid-cols-2 shrink-0 gap-12 min-h-0 min-w-0 w-full">
+            {/* Left column: sidebar stays put, does not scroll */}
+            <div className="flex min-w-0 flex-col justify-center overflow-hidden py-8">
+              <DecisionMakingSidebar
+                title={SIDEBAR_TITLE}
+                description={SIDEBAR_DESCRIPTION}
+                messageBoxTitle={MESSAGE_BOX_TITLE}
+                messageBoxItems={MESSAGE_BOX_ITEMS}
+                messageBoxCheckedIds={messageBoxCheckedIds}
+                onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
+                size="L"
+                justification="left"
+              />
+            </div>
+            {/* Right column: card stack — this column scrolls independently */}
+            <div className="scrollbar-hide relative flex min-h-0 min-w-0 flex-col overflow-x-hidden overflow-y-auto">
+              <div className="py-8 flex flex-col gap-6 items-center min-w-0">
+                <CardStack
+                  cards={SAMPLE_CARDS}
+                  selectedIds={selectedIds}
+                  onCardSelect={handleCardSelect}
+                  expanded={expanded}
+                  onToggleExpand={handleToggleExpand}
+                  hasMore={true}
+                  toggleLabel="See all decision approaches"
+                  showLessLabel="Show less"
+                  title=""
+                  description=""
+                  layout="singleStack"
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -151,8 +157,8 @@ export default function RightRailPage() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center px-5">
-      <div className="flex flex-col gap-6 w-full min-w-0">
+    <div className="w-full h-full min-h-0 overflow-y-auto flex flex-col items-center px-5">
+      <div className="flex flex-col gap-6 w-full min-w-0 py-8">
         <DecisionMakingSidebar
           title={SIDEBAR_TITLE}
           description={SIDEBAR_DESCRIPTION}

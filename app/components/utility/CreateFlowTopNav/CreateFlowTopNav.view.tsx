@@ -89,7 +89,7 @@ export function CreateFlowTopNavView({
             buttonType="outline"
             palette={buttonPalette}
             size="xsmall"
-            onClick={onExit}
+            onClick={() => onExit?.({ saveDraft: loggedIn })}
             ariaLabel={exitButtonText}
             className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
           >

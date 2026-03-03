@@ -39,9 +39,10 @@ export interface CreateFlowTopNavProps {
    */
   onEdit?: () => void;
   /**
-   * Callback when Exit/Save & Exit button is clicked
+   * Callback when Exit/Save & Exit button is clicked.
+   * When user is logged in, called with { saveDraft: true } to stub "Save & Exit".
    */
-  onExit?: () => void;
+  onExit?: (options?: { saveDraft?: boolean }) => void;
   /**
    * Palette for nav buttons (e.g. "inverse" on completed page to match teal background)
    * @default "default"

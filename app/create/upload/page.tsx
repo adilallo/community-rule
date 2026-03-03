@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import Upload from "../../components/controls/Upload";
@@ -12,7 +13,16 @@ import Upload from "../../components/controls/Upload";
  * Responsive sizing: uses L/M for HeaderLockup based on 640px breakpoint.
  */
 export default function UploadPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
+
+  // Avoid flash: only use breakpoint after mount so SSR and first paint use same layout (desktop).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
+    setIsMounted(true);
+  }, []);
+
+  const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   const handleUploadClick = () => {
     // TODO: Handle upload button click (e.g. open file picker)
@@ -25,8 +35,8 @@ export default function UploadPage() {
         <HeaderLockup
           title="How should conflicts be resolved?"
           description="This will be the name of your community"
-          justification={isMdOrLarger ? "center" : "left"}
-          size={isMdOrLarger ? "L" : "M"}
+          justification={effectiveMdOrLarger ? "center" : "left"}
+          size={effectiveMdOrLarger ? "L" : "M"}
         />
 
         {/* Upload component: no label in create flow, max width 474px */}

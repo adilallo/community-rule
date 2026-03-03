@@ -36,7 +36,8 @@ export interface CreateFlowContextValue {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
   updateState: (_updates: Partial<CreateFlowState>) => void;
-  // Navigation handlers will be added in CR-56
+  /** Clear all flow state (e.g. on exit). Also clears persisted draft. */
+  clearState: () => void;
 }
 
 /**
