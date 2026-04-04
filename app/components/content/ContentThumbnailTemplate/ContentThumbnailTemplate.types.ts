@@ -1,6 +1,10 @@
 import type { BlogPost } from "../../../../lib/content";
 
-export type ContentThumbnailTemplateVariantValue = "vertical" | "horizontal" | "Vertical" | "Horizontal";
+export type ContentThumbnailTemplateVariantValue =
+  | "vertical"
+  | "horizontal"
+  | "Vertical"
+  | "Horizontal";
 
 export interface ContentThumbnailTemplateProps {
   post: BlogPost;

@@ -1,4 +1,4 @@
-import Logo from "../../icons/Logo";
+import Logo from "../../asset/logo";
 import Button from "../../buttons/Button";
 import type { CreateFlowTopNavProps } from "./CreateFlowTopNav.types";
 
@@ -11,13 +11,14 @@ export function CreateFlowTopNavView({
   onExport,
   onEdit,
   onExit,
+  buttonPalette = "default",
   className = "",
 }: CreateFlowTopNavProps) {
   const exitButtonText = loggedIn ? "Save & Exit" : "Exit";
 
   return (
     <header
-      className={`bg-black w-full border-b border-[var(--color-border-default-tertiary)] ${className}`}
+      className={`bg-black w-full ${className}`}
       role="banner"
       aria-label="Create Rule Flow Navigation"
     >
@@ -27,14 +28,14 @@ export function CreateFlowTopNavView({
         aria-label="Create Flow Navigation"
       >
         {/* Logo - Left */}
-        <Logo size="createFlow" showText={true} />
+        <Logo size="createFlow" wordmark palette={buttonPalette} />
 
         {/* Button Group - Right */}
         <div className="flex items-center gap-[var(--spacing-scale-012,12px)]">
           {hasShare && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onShare}
               ariaLabel="Share"
@@ -47,7 +48,7 @@ export function CreateFlowTopNavView({
           {hasExport && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onExport}
               ariaLabel="Export"
@@ -74,7 +75,7 @@ export function CreateFlowTopNavView({
           {hasEdit && (
             <Button
               buttonType="outline"
-              palette="default"
+              palette={buttonPalette}
               size="xsmall"
               onClick={onEdit}
               ariaLabel="Edit"
@@ -86,9 +87,9 @@ export function CreateFlowTopNavView({
 
           <Button
             buttonType="outline"
-            palette="default"
+            palette={buttonPalette}
             size="xsmall"
-            onClick={onExit}
+            onClick={() => onExit?.({ saveDraft: loggedIn })}
             ariaLabel={exitButtonText}
             className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
           >

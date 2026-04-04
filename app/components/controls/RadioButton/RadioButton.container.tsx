@@ -3,7 +3,10 @@
 import { memo, useCallback, useId } from "react";
 import { RadioButtonView } from "./RadioButton.view";
 import type { RadioButtonProps } from "./RadioButton.types";
-import { normalizeMode, normalizeState } from "../../../../lib/propNormalization";
+import {
+  normalizeMode,
+  normalizeState,
+} from "../../../../lib/propNormalization";
 
 const RadioButtonContainer = ({
   checked = false,
@@ -22,10 +25,10 @@ const RadioButtonContainer = ({
   // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
   const mode = normalizeMode(modeProp);
   const state = normalizeState(stateProp);
-  
+
   // If state is "selected", it means checked in Figma terms
   const normalizedState = state === "selected" || checked ? "selected" : state;
-  
+
   const isInverse = mode === "inverse";
   const isStandard = mode === "standard";
 
@@ -42,7 +45,9 @@ const RadioButtonContainer = ({
     duration-200
     ease-in-out
     p-[4px]
-  `.trim().replace(/\s+/g, " ");
+  `
+    .trim()
+    .replace(/\s+/g, " ");
 
   // Get box styles based on mode and checked status per Figma designs
   const getBoxStyles = (): string => {
@@ -55,12 +60,12 @@ const RadioButtonContainer = ({
       const defaultBorder = checked
         ? "border-[var(--color-border-default-brand-primary,#fdfaa8)]"
         : "border-[var(--color-border-default-tertiary,#464646)]";
-      
+
       // When focused and checked, border should be invert tertiary (#2d2d2d) per Figma
       const focusBorder = checked
         ? "focus:border-[var(--color-content-invert-tertiary,#2d2d2d)]"
         : "focus:border-[var(--color-border-default-tertiary,#464646)]";
-      
+
       return `${baseBox} bg-[var(--color-surface-default-primary)] border border-solid ${defaultBorder} hover:border-[var(--color-border-default-brand-primary,#fdfaa8)] ${focusBorder} focus:shadow-[0px_0px_0px_2px_var(--color-border-invert-primary,white),0px_0px_0px_4px_var(--color-border-default-primary,#141414)] focus:outline-none`;
     }
 
@@ -73,15 +78,16 @@ const RadioButtonContainer = ({
       const defaultBorder = checked
         ? "border-[var(--color-border-default-brand-primary,#fdfaa8)]"
         : "border-[var(--color-border-invert-primary,white)]";
-      
+
       // Hover border: inverse brand primary for both selected and unselected per Figma
-      const hoverBorder = "hover:border-[var(--color-border-invert-brand-primary,#6c6701)]";
-      
+      const hoverBorder =
+        "hover:border-[var(--color-border-invert-brand-primary,#6c6701)]";
+
       // Focus border: when focused and checked, border should be white per Figma
       const focusBorder = checked
         ? "focus:border-[var(--color-border-invert-primary,white)]"
         : "focus:border-[var(--color-border-invert-primary,white)]";
-      
+
       return `${baseBox} bg-transparent border border-solid ${defaultBorder} ${hoverBorder} ${focusBorder} focus:shadow-[0px_0px_0px_2px_var(--color-border-default-primary,#141414),0px_0px_0px_4px_var(--color-border-invert-primary,white)] focus:outline-none`;
     }
 

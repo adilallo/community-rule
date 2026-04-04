@@ -4,12 +4,16 @@ import { memo, forwardRef, useState, useRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
 import { TextInputView } from "./TextInput.view";
 import type { TextInputProps } from "./TextInput.types";
-import { normalizeInputState } from "../../../../lib/propNormalization";
+import {
+  normalizeInputState,
+  normalizeTextInputSize,
+} from "../../../../lib/propNormalization";
 
 const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       state: externalStateProp = "default",
+      inputSize: inputSizeProp = "medium",
       disabled = false,
       error = false,
       label,
@@ -31,18 +35,22 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
   ) => {
     // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
     const externalState = normalizeInputState(externalStateProp);
-    
+    const inputSize = normalizeTextInputSize(inputSizeProp);
+
     // Generate unique ID for accessibility if not provided
     const { id: inputId, labelId } = useComponentId("text-input", id);
 
     // Internal state management: track if focused and how (mouse vs keyboard)
     const [isFocused, setIsFocused] = useState(false);
-    const [focusMethod, setFocusMethod] = useState<"mouse" | "keyboard" | null>(null);
+    const [focusMethod, setFocusMethod] = useState<"mouse" | "keyboard" | null>(
+      null,
+    );
     const wasMouseDownRef = useRef(false);
 
     // Determine if we should auto-manage focus (only when state is "default" or undefined)
     // If state is "active", "hover", or "focus", respect it and don't override
-    const shouldAutoManageFocus = externalState === "default" || externalState === undefined;
+    const shouldAutoManageFocus =
+      externalState === "default" || externalState === undefined;
 
     // Determine actual state:
     // - Active: when clicked (mouse focus)
@@ -59,13 +67,21 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     // Determine if input is filled (has value)
     const isFilled = Boolean(value && value.trim().length > 0);
 
-    // Fixed size styles (medium only per Figma designs)
-    const sizeStyles = {
-      input: "h-[40px] px-[12px] py-[8px] text-[16px]",
-      label: "text-[14px] leading-[20px] font-medium",
-      container: "gap-[8px]",
-      radius: "var(--measures-radius-200,8px)",
-    };
+    // Size styles based on inputSize prop
+    const sizeStyles =
+      inputSize === "small"
+        ? {
+            input: "h-[32px] px-[10px] py-[6px] text-[14px]",
+            label: "text-[12px] leading-[16px] font-medium",
+            container: "gap-[6px]",
+            radius: "var(--measures-radius-200,8px)",
+          }
+        : {
+            input: "h-[40px] px-[12px] py-[8px] text-[16px]",
+            label: "text-[14px] leading-[20px] font-medium",
+            container: "gap-[8px]",
+            radius: "var(--measures-radius-200,8px)",
+          };
 
     // State styles based on Figma designs
     const getStateStyles = (): {
@@ -158,17 +174,20 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
       : "text-[var(--color-content-default-tertiary,#b4b4b4)]";
 
     // Form field handlers with disabled state handling
-    const { handleChange, handleBlur } = useFormField<HTMLInputElement>(disabled, {
-      onChange,
-      onBlur: (e) => {
-        if (shouldAutoManageFocus) {
-          setIsFocused(false);
-          setFocusMethod(null);
-          wasMouseDownRef.current = false;
-        }
-        onBlur?.(e);
+    const { handleChange, handleBlur } = useFormField<HTMLInputElement>(
+      disabled,
+      {
+        onChange,
+        onBlur: (e) => {
+          if (shouldAutoManageFocus) {
+            setIsFocused(false);
+            setFocusMethod(null);
+            wasMouseDownRef.current = false;
+          }
+          onBlur?.(e);
+        },
       },
-    });
+    );
 
     // Handle mouse down to detect mouse clicks
     const handleMouseDown = () => {
@@ -180,19 +199,19 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     // Custom focus handler to detect mouse vs keyboard
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       if (disabled) return;
-      
+
       // Detect if focus came from keyboard (Tab) or mouse (click)
       // If mouseDown was detected before focus, it's a mouse click (active)
       // Otherwise, it's keyboard navigation (focus)
       const method = wasMouseDownRef.current ? "mouse" : "keyboard";
-      
+
       if (shouldAutoManageFocus) {
         setIsFocused(true);
         setFocusMethod(method);
         // Reset mouse down flag after focus is processed
         wasMouseDownRef.current = false;
       }
-      
+
       onFocus?.(e);
     };
 

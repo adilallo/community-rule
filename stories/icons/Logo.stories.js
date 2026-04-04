@@ -1,4 +1,4 @@
-import Logo from "../../app/components/icons/Logo";
+import Logo from "../../app/components/asset/logo";
 
 export default {
   title: "Components/Icons/Logo",
@@ -24,9 +24,15 @@ export default {
       ],
       description: "The size variant of the logo",
     },
-    showText: {
+    palette: {
+      control: { type: "select" },
+      options: ["default", "inverse"],
+      description:
+        "Visual style: default (dark on light) or inverse (e.g. on teal)",
+    },
+    wordmark: {
       control: { type: "boolean" },
-      description: "Whether to show the text portion of the logo",
+      description: "Whether to show the CommunityRule wordmark",
     },
   },
   tags: ["autodocs"],
@@ -35,13 +41,13 @@ export default {
 export const Default = {
   args: {
     size: "default",
-    showText: true,
+    wordmark: true,
   },
 };
 
 export const Sizes = {
   args: {
-    showText: true,
+    wordmark: true,
   },
   render: (args) => (
     <div className="space-y-6">
@@ -76,7 +82,7 @@ export const Sizes = {
 export const IconOnly = {
   args: {
     size: "default",
-    showText: false,
+    wordmark: false,
   },
   render: (args) => (
     <div className="space-y-6">
@@ -123,11 +129,11 @@ export const TopNavContext = {
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <span className="text-white text-sm w-32">FolderTop:</span>
-            <Logo size="topNavFolderTop" showText={true} />
+            <Logo size="topNavFolderTop" wordmark palette="inverse" />
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-white text-sm w-32">Header:</span>
-            <Logo size="topNavHeader" showText={true} />
+            <Logo size="topNavHeader" wordmark />
           </div>
         </div>
       </div>
@@ -148,13 +154,11 @@ export const CreateFlowContext = {
   render: () => (
     <div className="min-h-screen bg-black p-8">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-white font-semibold mb-6">
-          Create Flow Context
-        </h2>
+        <h2 className="text-white font-semibold mb-6">Create Flow Context</h2>
         <div className="space-y-4">
           <div className="flex items-center space-x-4">
             <span className="text-white text-sm w-32">CreateFlow:</span>
-            <Logo size="createFlow" showText={true} />
+            <Logo size="createFlow" wordmark />
           </div>
         </div>
       </div>
@@ -165,6 +169,33 @@ export const CreateFlowContext = {
       description: {
         story:
           "Create flow context showing responsive logo. Used in CreateFlowTopNav component.",
+      },
+    },
+  },
+};
+
+export const CreateFlowCompletedInverse = {
+  args: {},
+  render: () => (
+    <div
+      className="min-h-screen p-8"
+      style={{ background: "var(--color-teal-teal50, #c9fef9)" }}
+    >
+      <div className="max-w-4xl mx-auto">
+        <h2 className="font-semibold mb-6 text-[var(--color-content-invert-primary)]">
+          Completed page (inverse on teal)
+        </h2>
+        <div className="space-y-4">
+          <Logo size="createFlow" wordmark palette="inverse" />
+        </div>
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Same size as CreateFlowTopNav with inverse palette, as used on the completed page.",
       },
     },
   },

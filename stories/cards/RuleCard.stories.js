@@ -75,7 +75,8 @@ export const Expanded = {
     backgroundColor: "bg-[#b7d9d5]",
     expanded: true,
     size: "L",
-    logoUrl: "http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png",
+    logoUrl:
+      "http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png",
     logoAlt: "Mutual Aid Mondays",
     categories: [
       {
@@ -96,9 +97,7 @@ export const Expanded = {
       },
       {
         name: "Communication",
-        chipOptions: [
-          { id: "comm-1", label: "Signal", state: "Unselected" },
-        ],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
         },
@@ -122,7 +121,11 @@ export const Expanded = {
         name: "Decision-making",
         chipOptions: [
           { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
-          { id: "decision-2", label: "Modified Consensus", state: "Unselected" },
+          {
+            id: "decision-2",
+            label: "Modified Consensus",
+            state: "Unselected",
+          },
         ],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
@@ -135,7 +138,11 @@ export const Expanded = {
         name: "Conflict management",
         chipOptions: [
           { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
-          { id: "conflict-2", label: "Restorative Justice", state: "Unselected" },
+          {
+            id: "conflict-2",
+            label: "Restorative Justice",
+            state: "Unselected",
+          },
         ],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
@@ -232,7 +239,8 @@ export const ExpandedMedium = {
     backgroundColor: "bg-[#b7d9d5]",
     expanded: true,
     size: "M",
-    logoUrl: "http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png",
+    logoUrl:
+      "http://localhost:3845/assets/d2513a6ab56f2b2927e8a7c442c06326e7a29541.png",
     logoAlt: "Mutual Aid Mondays",
     categories: [
       {
@@ -247,9 +255,7 @@ export const ExpandedMedium = {
       },
       {
         name: "Communication",
-        chipOptions: [
-          { id: "comm-1", label: "Signal", state: "Unselected" },
-        ],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
       },
       {
         name: "Membership",
@@ -261,14 +267,22 @@ export const ExpandedMedium = {
         name: "Decision-making",
         chipOptions: [
           { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
-          { id: "decision-2", label: "Modified Consensus", state: "Unselected" },
+          {
+            id: "decision-2",
+            label: "Modified Consensus",
+            state: "Unselected",
+          },
         ],
       },
       {
         name: "Conflict management",
         chipOptions: [
           { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
-          { id: "conflict-2", label: "Restorative Justice", state: "Unselected" },
+          {
+            id: "conflict-2",
+            label: "Restorative Justice",
+            state: "Unselected",
+          },
         ],
       },
     ],
@@ -393,9 +407,7 @@ export const InteractiveStates = {
       },
       {
         name: "Communication",
-        chipOptions: [
-          { id: "comm-1", label: "Signal", state: "Unselected" },
-        ],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
         },

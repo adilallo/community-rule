@@ -2,31 +2,15 @@
 
 import { notFound } from "next/navigation";
 import { use } from "react";
-import type { CreateFlowStep } from "../types";
+import { VALID_STEPS } from "../utils/flowSteps";
 
 interface PageProps {
   params: Promise<{ step: string }>;
 }
 
 /**
- * Valid step IDs for the create rule flow
- */
-const VALID_STEPS: CreateFlowStep[] = [
-  "informational",
-  "text",
-  "select",
-  "upload",
-  "review",
-  "compact-cards",
-  "expanded-cards",
-  "right-rail",
-  "final-review",
-  "completed",
-];
-
-/**
  * Dynamic route handler for create flow steps
- * 
+ *
  * Handles all flow steps via dynamic routing: /create/[step]
  * Validates step exists and renders appropriate template (placeholder for now)
  */
@@ -34,7 +18,7 @@ export default function CreateFlowStepPage({ params }: PageProps) {
   const { step } = use(params);
 
   // Validate step exists
-  if (!VALID_STEPS.includes(step as CreateFlowStep)) {
+  if (!(VALID_STEPS as readonly string[]).includes(step)) {
     notFound();
   }
 

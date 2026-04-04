@@ -189,7 +189,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       url: "https://communityrule.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://communityrule.com/assets/Logo.svg",
+        url: "https://communityrule.com/assets/logo/Logo.svg",
       },
     },
     datePublished: post.frontmatter.date,

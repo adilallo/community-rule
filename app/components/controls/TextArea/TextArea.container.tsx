@@ -4,7 +4,12 @@ import { memo, forwardRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
 import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
-import { normalizeInputState, normalizeSmallMediumLargeSize, normalizeLabelVariant } from "../../../../lib/propNormalization";
+import {
+  normalizeInputState,
+  normalizeSmallMediumLargeSize,
+  normalizeLabelVariant,
+  normalizeTextAreaAppearance,
+} from "../../../../lib/propNormalization";
 
 const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
@@ -27,6 +32,7 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       textHint = false,
       formHeader = true,
       showHelpIcon = false,
+      appearance: appearanceProp = "default",
       ...props
     },
     ref,
@@ -35,6 +41,7 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const size = normalizeSmallMediumLargeSize(sizeProp);
     const labelVariant = normalizeLabelVariant(labelVariantProp);
     const state = normalizeInputState(stateProp);
+    const appearance = normalizeTextAreaAppearance(appearanceProp);
     // Generate unique ID for accessibility if not provided
     const { id: textareaId, labelId } = useComponentId("textarea", id);
 
@@ -74,11 +81,26 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       },
     };
 
-    // State styles
+    // State styles (embedded: Figma 20736-12668 – borderless, darker grey block, white text)
     const getStateStyles = (): {
       textarea: string;
       label: string;
     } => {
+      if (appearance === "embedded") {
+        if (disabled) {
+          return {
+            textarea:
+              "border-0 bg-[var(--color-surface-default-secondary)] text-[var(--color-content-default-primary)] cursor-not-allowed opacity-60",
+            label: "text-[var(--color-content-default-secondary)]",
+          };
+        }
+        return {
+          textarea:
+            "border-0 bg-[var(--color-surface-default-secondary)] text-[var(--color-content-default-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-default-tertiary)] focus:ring-inset",
+          label: "text-[var(--color-content-default-secondary)]",
+        };
+      }
+
       if (disabled) {
         return {
           textarea:
@@ -138,8 +160,8 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         : `${currentSize.label} font-inter`;
 
     const textareaClasses = `
-       w-full border transition-all duration-200 ease-in-out
-       focus:outline-none focus:ring-0 resize-none
+       scrollbar-design w-full transition-all duration-200 ease-in-out resize-none
+       ${appearance === "embedded" ? "rounded-[var(--radius-300,12px)]" : "border"}
        ${currentSize.textarea}
        ${stateStyles.textarea}
        ${className}
@@ -180,6 +202,7 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         textHint={textHint}
         formHeader={formHeader}
         showHelpIcon={showHelpIcon}
+        appearance={appearance}
         {...props}
       />
     );

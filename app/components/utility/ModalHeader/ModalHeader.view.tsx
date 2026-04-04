@@ -19,6 +19,7 @@ export function ModalHeaderView({
           className="absolute bg-[var(--color-surface-default-secondary)] h-[24px] w-[24px] rounded-full left-[24px] top-[12px] flex items-center justify-center cursor-pointer"
           aria-label="Close dialog"
         >
+          {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
           <img
             src={getAssetPath("assets/Icon_Close.svg")}
             alt=""

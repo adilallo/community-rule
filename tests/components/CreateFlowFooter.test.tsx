@@ -44,7 +44,9 @@ describe("CreateFlowFooter (behavioral tests)", () => {
 
   it("renders progress bar when progressBar is true", () => {
     render(<CreateFlowFooter progressBar={true} />);
-    const footer = screen.getByRole("contentinfo", { name: "Create Flow Footer" });
+    const footer = screen.getByRole("contentinfo", {
+      name: "Create Flow Footer",
+    });
     expect(footer).toBeInTheDocument();
   });
 

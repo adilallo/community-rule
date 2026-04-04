@@ -9,26 +9,22 @@ import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";
 import Page from "../../app/(marketing)/page";
 
-// Mock next/dynamic to return components synchronously in tests
+// Mock next/dynamic so dynamically loaded components render after the import resolves
 vi.mock("next/dynamic", () => {
+  const React = require("react");
   return {
     default: (importFn, options) => {
-      // In tests, resolve the dynamic import immediately and return the component
-      let Component = null;
-      let resolved = false;
-      importFn().then((mod) => {
-        Component = mod.default || mod;
-        resolved = true;
-      });
-      // Return a synchronous wrapper that uses the mocked component
-      return (props) => {
-        // Use the mocked component directly once resolved
-        if (Component) {
-          return <Component {...props} />;
+      function DynamicWrapper(props) {
+        const [Component, setComponent] = React.useState(null);
+        React.useEffect(() => {
+          importFn().then((mod) => setComponent(() => mod.default || mod));
+        }, []);
+        if (!Component) {
+          return options?.loading ? options.loading() : null;
         }
-        // Fallback: return the loading placeholder if component not ready
-        return options?.loading ? options.loading() : null;
-      };
+        return <Component {...props} />;
+      }
+      return DynamicWrapper;
     },
   };
 });
@@ -261,10 +257,12 @@ describe("User Journey Integration", () => {
         },
         { timeout: 3000 },
       );
-    } catch (error) {
+    } catch {
       // Dynamic import may not resolve in test environment - this is a known limitation
       // The component functionality is tested in RuleStack.test.jsx
-      console.warn("Dynamic import for RuleStack did not resolve in test environment");
+      console.warn(
+        "Dynamic import for RuleStack did not resolve in test environment",
+      );
     }
 
     // 4. User sees features and benefits - wait for dynamically imported component

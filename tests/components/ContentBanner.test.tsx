@@ -5,7 +5,15 @@ import ContentBanner from "../../app/components/sections/ContentBanner";
 import type { BlogPost } from "../../lib/content";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    href?: string;
+    [key: string]: unknown;
+  }) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -29,6 +37,10 @@ const mockPost: BlogPost = {
     author: "Test Author",
     date: "2025-04-15",
   },
+  content: "",
+  htmlContent: "",
+  filePath: "test-article.md",
+  lastModified: new Date("2025-04-15"),
 };
 
 describe("ContentBanner", () => {

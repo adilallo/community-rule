@@ -8,13 +8,9 @@ export default {
     layout: "centered",
   },
   argTypes: {
-    size: {
+    inputSize: {
       control: { type: "select" },
-      options: ["small", "medium", "large"],
-    },
-    labelVariant: {
-      control: { type: "select" },
-      options: ["default", "horizontal"],
+      options: ["small", "medium", "Small", "Medium"],
     },
     state: {
       control: { type: "select" },
@@ -45,8 +41,7 @@ export const Default = Template.bind({});
 Default.args = {
   label: "Default Text Input",
   placeholder: "Enter text...",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "default",
 };
 
@@ -55,8 +50,7 @@ export const Small = Template.bind({});
 Small.args = {
   label: "Small Text Input",
   placeholder: "Small size",
-  size: "small",
-  labelVariant: "default",
+  inputSize: "small",
   state: "default",
 };
 
@@ -64,36 +58,7 @@ export const Medium = Template.bind({});
 Medium.args = {
   label: "Medium Text Input",
   placeholder: "Medium size",
-  size: "medium",
-  labelVariant: "default",
-  state: "default",
-};
-
-export const Large = Template.bind({});
-Large.args = {
-  label: "Large Text Input",
-  placeholder: "Large size",
-  size: "large",
-  labelVariant: "default",
-  state: "default",
-};
-
-// Label variants
-export const DefaultLabel = Template.bind({});
-DefaultLabel.args = {
-  label: "Default Label (Top)",
-  placeholder: "Top label",
-  size: "medium",
-  labelVariant: "default",
-  state: "default",
-};
-
-export const HorizontalLabel = Template.bind({});
-HorizontalLabel.args = {
-  label: "Horizontal Label",
-  placeholder: "Left label",
-  size: "medium",
-  labelVariant: "horizontal",
+  inputSize: "medium",
   state: "default",
 };
 
@@ -102,8 +67,7 @@ export const Active = Template.bind({});
 Active.args = {
   label: "Active State",
   placeholder: "Active input",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "active",
 };
 
@@ -111,8 +75,7 @@ export const Hover = Template.bind({});
 Hover.args = {
   label: "Hover State",
   placeholder: "Hover input",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "hover",
 };
 
@@ -120,8 +83,7 @@ export const Focus = Template.bind({});
 Focus.args = {
   label: "Focus State",
   placeholder: "Focused input",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "focus",
 };
 
@@ -129,8 +91,7 @@ export const Error = Template.bind({});
 Error.args = {
   label: "Error State",
   placeholder: "Error input",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "default",
   error: true,
 };
@@ -139,8 +100,7 @@ export const Disabled = Template.bind({});
 Disabled.args = {
   label: "Disabled State",
   placeholder: "Disabled input",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "default",
   disabled: true,
 };
@@ -163,8 +123,7 @@ export const Interactive = (args) => {
 Interactive.args = {
   label: "Interactive Text Input",
   placeholder: "Type something...",
-  size: "medium",
-  labelVariant: "default",
+  inputSize: "medium",
   state: "default",
 };
 
@@ -175,10 +134,9 @@ export const AllSizes = () => (
       <h3 className="text-lg font-semibold mb-4">Small Size</h3>
       <div className="space-y-4">
         <TextInput
-          label="Small Default"
-          placeholder="Small with top label"
-          size="small"
-          labelVariant="default"
+          label="Small Text Input"
+          placeholder="Small size input"
+          inputSize="small"
         />
       </div>
     </div>
@@ -187,34 +145,9 @@ export const AllSizes = () => (
       <h3 className="text-lg font-semibold mb-4">Medium Size</h3>
       <div className="space-y-4">
         <TextInput
-          label="Medium Default"
-          placeholder="Medium with top label"
-          size="medium"
-          labelVariant="default"
-        />
-        <TextInput
-          label="Medium Horizontal"
-          placeholder="Medium with left label"
-          size="medium"
-          labelVariant="horizontal"
-        />
-      </div>
-    </div>
-
-    <div>
-      <h3 className="text-lg font-semibold mb-4">Large Size</h3>
-      <div className="space-y-4">
-        <TextInput
-          label="Large Default"
-          placeholder="Large with top label"
-          size="large"
-          labelVariant="default"
-        />
-        <TextInput
-          label="Large Horizontal"
-          placeholder="Large with left label"
-          size="large"
-          labelVariant="horizontal"
+          label="Medium Text Input"
+          placeholder="Medium size input"
+          inputSize="medium"
         />
       </div>
     </div>
@@ -230,37 +163,37 @@ export const AllStates = () => (
         <TextInput
           label="Default State"
           placeholder="Default input"
-          size="medium"
+          inputSize="medium"
           state="default"
         />
         <TextInput
           label="Active State"
           placeholder="Active input"
-          size="medium"
+          inputSize="medium"
           state="active"
         />
         <TextInput
           label="Hover State"
           placeholder="Hover input"
-          size="medium"
+          inputSize="medium"
           state="hover"
         />
         <TextInput
           label="Focus State"
           placeholder="Focused input"
-          size="medium"
+          inputSize="medium"
           state="focus"
         />
         <TextInput
           label="Error State"
           placeholder="Error input"
-          size="medium"
+          inputSize="medium"
           error={true}
         />
         <TextInput
           label="Disabled State"
           placeholder="Disabled input"
-          size="medium"
+          inputSize="medium"
           disabled={true}
         />
       </div>

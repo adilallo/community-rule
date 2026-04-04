@@ -5,11 +5,12 @@ import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
 export function CreateFlowFooterView({
   secondButton,
   progressBar = true,
+  onBackClick,
   className = "",
 }: CreateFlowFooterProps) {
   return (
     <footer
-      className={`sticky bottom-0 z-50 bg-black w-full ${className}`}
+      className={`bg-black w-full ${className}`}
       role="contentinfo"
       aria-label="Create Flow Footer"
     >
@@ -28,14 +29,14 @@ export function CreateFlowFooterView({
           palette="default"
           size="xsmall"
           className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]"
+          onClick={onBackClick}
+          disabled={!onBackClick}
         >
           Back
         </Button>
 
         {/* Second Button - Right */}
-        {secondButton && (
-          <div className="flex-shrink-0">{secondButton}</div>
-        )}
+        {secondButton && <div className="flex-shrink-0">{secondButton}</div>}
       </div>
     </footer>
   );

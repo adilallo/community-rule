@@ -14,9 +14,9 @@ export type CreateFlowStep =
   | "select"
   | "upload"
   | "review"
-  | "compact-cards"
-  | "expanded-cards"
+  | "cards"
   | "right-rail"
+  | "confirm-stakeholders"
   | "final-review"
   | "completed";
 
@@ -36,8 +36,9 @@ export interface CreateFlowState {
 export interface CreateFlowContextValue {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
-  updateState: (updates: Partial<CreateFlowState>) => void;
-  // Navigation handlers will be added in CR-56
+  updateState: (_updates: Partial<CreateFlowState>) => void;
+  /** Clear all flow state (e.g. on exit). Also clears persisted draft. */
+  clearState: () => void;
 }
 
 /**
@@ -56,7 +57,7 @@ export interface PageTemplateProps {
 export interface NavigationHandlers {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  goToStep: (step: CreateFlowStep) => void;
+  goToStep: (_step: CreateFlowStep) => void;
   canGoNext: () => boolean;
   canGoBack: () => boolean;
 }

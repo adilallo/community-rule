@@ -1,4 +1,7 @@
-import type { ChipStateValue, ChipPaletteValue } from "../../../../lib/propNormalization";
+import type {
+  ChipStateValue,
+  ChipPaletteValue,
+} from "../../../../lib/propNormalization";
 
 export interface ChipOption {
   id: string;

@@ -1,7 +1,23 @@
 import type { InputStateValue } from "../../../../lib/propNormalization";
 
-export type TextAreaSizeValue = "small" | "medium" | "large" | "Small" | "Medium" | "Large";
-export type TextAreaLabelVariantValue = "default" | "horizontal" | "Default" | "Horizontal";
+export type TextAreaSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "Small"
+  | "Medium"
+  | "Large";
+export type TextAreaLabelVariantValue =
+  | "default"
+  | "horizontal"
+  | "Default"
+  | "Horizontal";
+
+export type TextAreaAppearanceValue =
+  | "default"
+  | "embedded"
+  | "Default"
+  | "Embedded";
 
 export interface TextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -47,6 +63,12 @@ export interface TextAreaProps extends Omit<
    * @default false
    */
   showHelpIcon?: boolean;
+  /**
+   * Visual appearance. "embedded" matches Create modal sections (Figma 20736-12668):
+   * borderless, darker grey background, white text. "default" is standard bordered input.
+   * @default "default"
+   */
+  appearance?: TextAreaAppearanceValue;
 }
 
 export interface TextAreaViewProps {
@@ -73,4 +95,5 @@ export interface TextAreaViewProps {
   textHint?: boolean;
   formHeader?: boolean;
   showHelpIcon?: boolean;
+  appearance?: "default" | "embedded";
 }

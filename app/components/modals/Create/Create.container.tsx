@@ -10,6 +10,7 @@ const CreateContainer = memo<CreateProps>(
     onClose,
     title,
     description,
+    headerContent,
     children,
     footerContent,
     showBackButton = true,
@@ -113,6 +114,7 @@ const CreateContainer = memo<CreateProps>(
         onClose={onClose}
         title={title}
         description={description}
+        headerContent={headerContent}
         // eslint-disable-next-line react/no-children-prop
         children={children}
         footerContent={footerContent}

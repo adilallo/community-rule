@@ -1,6 +1,10 @@
 import type { BlogPost } from "../../../../lib/content";
 
-export type ContentContainerSizeValue = "xs" | "responsive" | "Xs" | "Responsive";
+export type ContentContainerSizeValue =
+  | "xs"
+  | "responsive"
+  | "Xs"
+  | "Responsive";
 
 export interface ContentContainerProps {
   post: BlogPost;

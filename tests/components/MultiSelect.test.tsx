@@ -135,13 +135,10 @@ describe("MultiSelect – behaviour specifics", () => {
   });
 
   it("does not render add button when addButton is false", () => {
-    render(
-      <MultiSelect
-        options={defaultChipOptions}
-        addButton={false}
-      />,
-    );
-    expect(screen.queryByRole("button", { name: /add/i })).not.toBeInTheDocument();
+    render(<MultiSelect options={defaultChipOptions} addButton={false} />);
+    expect(
+      screen.queryByRole("button", { name: /add/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("handles custom chip confirm", async () => {
@@ -163,7 +160,7 @@ describe("MultiSelect – behaviour specifics", () => {
     // Now the check button should be enabled
     const checkButton = screen.getByRole("button", { name: "Confirm" });
     expect(checkButton).not.toBeDisabled();
-    
+
     await userEvent.click(checkButton);
 
     expect(handleConfirm).toHaveBeenCalledWith("custom-1", "NewOption");
@@ -175,10 +172,7 @@ describe("MultiSelect – behaviour specifics", () => {
       { id: "custom-1", label: "", state: "Custom" as const },
     ];
     render(
-      <MultiSelect
-        options={customOptions}
-        onCustomChipClose={handleClose}
-      />,
+      <MultiSelect options={customOptions} onCustomChipClose={handleClose} />,
     );
 
     const closeButton = screen.getByRole("button", { name: "Close" });

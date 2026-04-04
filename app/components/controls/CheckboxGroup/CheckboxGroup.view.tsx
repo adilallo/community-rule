@@ -23,10 +23,7 @@ export function CheckboxGroupView({
         // If there's subtext, render checkbox without label and handle layout separately
         if (option.subtext) {
           return (
-            <div
-              key={option.value}
-              className="flex gap-[8px] items-start"
-            >
+            <div key={option.value} className="flex gap-[8px] items-start">
               <Checkbox
                 checked={isChecked}
                 mode={mode}

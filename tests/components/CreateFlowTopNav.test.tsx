@@ -80,7 +80,9 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
 
   it("does not render Share button when hasShare is false", () => {
     render(<CreateFlowTopNav hasShare={false} />);
-    expect(screen.queryByRole("button", { name: "Share" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Share" }),
+    ).not.toBeInTheDocument();
   });
 
   it("renders Export button when hasExport is true", () => {

@@ -3,7 +3,10 @@
 import { memo } from "react";
 import MultiSelectView from "./MultiSelect.view";
 import type { MultiSelectProps } from "./MultiSelect.types";
-import { normalizeMultiSelectSize, normalizeChipPalette } from "../../../../lib/propNormalization";
+import {
+  normalizeMultiSelectSize,
+  normalizeChipPalette,
+} from "../../../../lib/propNormalization";
 
 const MultiSelectContainer = memo<MultiSelectProps>(
   ({

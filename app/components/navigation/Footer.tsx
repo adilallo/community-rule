@@ -3,7 +3,7 @@
 import { memo } from "react";
 import { useTranslation } from "../../contexts/MessagesContext";
 import Link from "next/link";
-import Logo from "../icons/Logo";
+import Logo from "../asset/logo";
 import Separator from "../utility/Separator";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
@@ -40,7 +40,7 @@ const Footer = memo(() => {
           lg:gap-[var(--spacing-measures-spacing-060,60px)]"
         >
           {/* Logo */}
-          <Logo size="footer" />
+          <Logo size="footer" wordmark />
 
           {/* Content section */}
           <div className="flex flex-col items-start w-full gap-[var(--spacing-measures-spacing-048,48px)] sm:flex-row sm:justify-between sm:gap-0">
@@ -66,6 +66,7 @@ const Footer = memo(() => {
                   className="flex items-center gap-[var(--spacing-measures-spacing-06,6px)] hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer group"
                   aria-label={t("social.bluesky.ariaLabel")}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- social logo */}
                   <img
                     src={getAssetPath(ASSETS.BLUESKY_LOGO)}
                     alt="Bluesky"
@@ -82,6 +83,7 @@ const Footer = memo(() => {
                   className="flex items-center gap-[var(--spacing-measures-spacing-06,6px)] hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity p-2 -m-2 cursor-pointer group"
                   aria-label={t("social.gitlab.ariaLabel")}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- social icon */}
                   <img
                     src={getAssetPath(ASSETS.GITLAB_ICON)}
                     alt="GitLab"

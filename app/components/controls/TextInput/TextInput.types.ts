@@ -1,5 +1,7 @@
 import type { InputStateValue } from "../../../../lib/propNormalization";
 
+export type TextInputSizeValue = "small" | "medium" | "Small" | "Medium";
+
 export interface TextInputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "size" | "onChange" | "onFocus" | "onBlur"
@@ -9,6 +11,12 @@ export interface TextInputProps extends Omit<
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
    */
   state?: InputStateValue;
+  /**
+   * Size variant. Accepts both PascalCase (Figma) and lowercase (codebase).
+   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * @default "medium"
+   */
+  inputSize?: TextInputSizeValue;
   disabled?: boolean;
   error?: boolean;
   label?: string;
@@ -21,9 +29,10 @@ export interface TextInputProps extends Omit<
   showHelpIcon?: boolean;
   /**
    * Whether to show hint text below input (Figma prop).
+   * Can be a boolean or a string to display custom text (e.g., character count).
    * @default false
    */
-  textHint?: boolean;
+  textHint?: boolean | string;
   /**
    * Whether to show form header (label and help icon) above input (Figma prop).
    * @default true
@@ -55,6 +64,6 @@ export interface TextInputViewProps {
   isFilled?: boolean;
   inputWrapperClasses?: string;
   focusRingClasses?: string;
-  textHint?: boolean;
+  textHint?: boolean | string;
   formHeader?: boolean;
 }

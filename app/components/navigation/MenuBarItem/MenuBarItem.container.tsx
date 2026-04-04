@@ -32,11 +32,17 @@ const MenuBarItemContainer = memo<MenuBarItemProps>(
       "X Small" | "Small" | "Medium" | "Large" | "X Large",
       string
     > = {
-      "X Small": reducedPadding ? "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)]" : "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)]",
+      "X Small": reducedPadding
+        ? "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)]"
+        : "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)]",
       Small: "px-[var(--spacing-scale-004)] py-[var(--spacing-scale-002)]",
-      Medium: reducedPadding ? "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-008)] h-[32px]" : "px-[var(--spacing-scale-008)] py-[var(--spacing-scale-008)] h-[32px]",
-      Large: "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] h-[44px]",
-      "X Large": "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] h-[44px]",
+      Medium: reducedPadding
+        ? "px-[var(--spacing-scale-002)] py-[var(--spacing-scale-008)] h-[32px]"
+        : "px-[var(--spacing-scale-008)] py-[var(--spacing-scale-008)] h-[32px]",
+      Large:
+        "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] h-[44px]",
+      "X Large":
+        "px-[var(--spacing-scale-016)] py-[var(--spacing-scale-016)] h-[44px]",
     };
 
     // Text styles based on Figma specifications
@@ -46,41 +52,34 @@ const MenuBarItemContainer = memo<MenuBarItemProps>(
     > = {
       "X Small":
         "font-inter text-[10px] leading-[12px] font-medium tracking-[0%]",
-      Small:
-        "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]",
-      Medium:
-        "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]",
-      Large:
-        "font-inter text-[16px] leading-[20px] font-medium tracking-[0%]",
+      Small: "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]",
+      Medium: "font-inter text-[12px] leading-[14px] font-medium tracking-[0%]",
+      Large: "font-inter text-[16px] leading-[20px] font-medium tracking-[0%]",
       "X Large":
         "font-inter text-[24px] leading-[28px] font-normal tracking-[0%]",
     };
 
     // State styles for Default mode (yellow text on dark background)
-    const defaultModeStyles: Record<
-      "default" | "hover" | "selected",
-      string
-    > = {
-      default:
-        "bg-transparent text-[var(--color-content-default-brand-primary,#fefcc9)] hover:bg-[var(--color-gray-800)] hover:text-[var(--color-content-default-brand-primary,#fefcc9)]",
-      hover:
-        "bg-[var(--color-gray-800)] text-[var(--color-content-default-brand-primary,#fefcc9)]",
-      selected:
-        "border border-[var(--color-border-default-brand-primary,#fdfaa8)] text-[var(--color-content-default-brand-primary,#fefcc9)] bg-transparent hover:bg-[var(--color-gray-800)]",
-    };
+    const defaultModeStyles: Record<"default" | "hover" | "selected", string> =
+      {
+        default:
+          "bg-transparent text-[var(--color-content-default-brand-primary,#fefcc9)] hover:bg-[var(--color-gray-800)] hover:text-[var(--color-content-default-brand-primary,#fefcc9)]",
+        hover:
+          "bg-[var(--color-gray-800)] text-[var(--color-content-default-brand-primary,#fefcc9)]",
+        selected:
+          "border border-[var(--color-border-default-brand-primary,#fdfaa8)] text-[var(--color-content-default-brand-primary,#fefcc9)] bg-transparent hover:bg-[var(--color-gray-800)]",
+      };
 
     // State styles for Inverse mode (black text on yellow background)
-    const inverseModeStyles: Record<
-      "default" | "hover" | "selected",
-      string
-    > = {
-      default:
-        "bg-transparent text-[var(--color-content-inverse-primary,black)] hover:bg-[var(--color-surface-brand-accent,#4d4a00)] hover:text-[var(--color-content-inverse-primary,black)]",
-      hover:
-        "bg-[var(--color-surface-brand-accent,#4d4a00)] text-[var(--color-content-inverse-primary,black)]",
-      selected:
-        "border border-[var(--color-border-default-primary,#141414)] text-[var(--color-content-inverse-primary,black)] bg-transparent hover:bg-[var(--color-surface-brand-accent,#4d4a00)]",
-    };
+    const inverseModeStyles: Record<"default" | "hover" | "selected", string> =
+      {
+        default:
+          "bg-transparent text-[var(--color-content-inverse-primary,black)] hover:bg-[var(--color-surface-brand-accent,#4d4a00)] hover:text-[var(--color-content-inverse-primary,black)]",
+        hover:
+          "bg-[var(--color-surface-brand-accent,#4d4a00)] text-[var(--color-content-inverse-primary,black)]",
+        selected:
+          "border border-[var(--color-border-default-primary,#141414)] text-[var(--color-content-inverse-primary,black)] bg-transparent hover:bg-[var(--color-surface-brand-accent,#4d4a00)]",
+      };
 
     // Get state styles based on mode
     const stateStyles =

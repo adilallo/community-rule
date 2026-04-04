@@ -5,7 +5,15 @@ import RelatedArticles from "../../app/components/sections/RelatedArticles";
 import type { BlogPost } from "../../lib/content";
 
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({
+    children,
+    href,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    href?: string;
+    [key: string]: unknown;
+  }) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -35,6 +43,10 @@ const mockPosts: BlogPost[] = [
       author: "Author",
       date: "2025-04-10",
     },
+    content: "",
+    htmlContent: "",
+    filePath: "article-1.md",
+    lastModified: new Date("2025-04-10"),
   },
   {
     slug: "article-2",
@@ -44,6 +56,10 @@ const mockPosts: BlogPost[] = [
       author: "Author",
       date: "2025-04-11",
     },
+    content: "",
+    htmlContent: "",
+    filePath: "article-2.md",
+    lastModified: new Date("2025-04-11"),
   },
 ];
 

@@ -24,6 +24,12 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
       textHint = false,
       formHeader = true,
       showHelpIcon = false,
+      appearance: _appearance,
+      // Component-only props: do not pass to DOM
+      size: _size,
+      labelVariant: _labelVariant,
+      state: _state,
+      error: _error,
       ...props
     },
     ref,
@@ -42,6 +48,7 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
               </label>
               {showHelpIcon && (
                 <div className="relative shrink-0 size-[12px]">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
                   <img
                     src={getAssetPath(ASSETS.ICON_HELP)}
                     alt="Help"

@@ -30,7 +30,7 @@ export function getAssetPath(assetPath: string): string {
  */
 export const ASSETS = {
   // Logo
-  LOGO: "assets/Logo.svg",
+  LOGO: "assets/logo/Logo.svg",
 
   // Avatars
   AVATAR_1: "assets/Avatar_1.png",

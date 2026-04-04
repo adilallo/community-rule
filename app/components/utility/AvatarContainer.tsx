@@ -1,7 +1,15 @@
 import { memo } from "react";
 import { normalizeSize } from "../../../lib/propNormalization";
 
-export type AvatarContainerSizeValue = "small" | "medium" | "large" | "xlarge" | "Small" | "Medium" | "Large" | "XLarge";
+export type AvatarContainerSizeValue =
+  | "small"
+  | "medium"
+  | "large"
+  | "xlarge"
+  | "Small"
+  | "Medium"
+  | "Large"
+  | "XLarge";
 
 interface AvatarContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;

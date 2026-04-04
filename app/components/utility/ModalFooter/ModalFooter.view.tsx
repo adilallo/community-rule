@@ -24,12 +24,13 @@ export function ModalFooterView({
   // Use localized defaults if text not provided
   const defaultBackText = backButtonText || t("buttons.back");
   const defaultNextText = nextButtonText || t("buttons.next");
-  
+
   // Determine if stepper should be shown
   // Defaults to true if currentStep and totalSteps are provided, unless explicitly set to false
-  const shouldShowStepper = stepperProp !== undefined 
-    ? stepperProp 
-    : (currentStep !== undefined && totalSteps !== undefined);
+  const shouldShowStepper =
+    stepperProp !== undefined
+      ? stepperProp
+      : currentStep !== undefined && totalSteps !== undefined;
 
   return (
     <div
@@ -38,7 +39,12 @@ export function ModalFooterView({
       {/* Back Button - Absolutely positioned bottom left */}
       {showBackButton && (
         <div className="absolute left-[16px] top-[12px]">
-          <Button buttonType="outline" palette="default" size="medium" onClick={onBack}>
+          <Button
+            buttonType="outline"
+            palette="default"
+            size="medium"
+            onClick={onBack}
+          >
             {defaultBackText}
           </Button>
         </div>

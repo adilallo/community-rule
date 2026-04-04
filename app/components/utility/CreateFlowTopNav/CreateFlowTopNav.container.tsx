@@ -15,13 +15,14 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
     onExport,
     onEdit,
     onExit,
+    buttonPalette,
     className = "",
   }) => {
     const router = useRouter();
 
-    const handleExit = () => {
+    const handleExit = (options?: { saveDraft?: boolean }) => {
       if (onExit) {
-        onExit();
+        onExit(options);
       } else {
         // Default behavior: navigate to home
         router.push("/");
@@ -38,6 +39,7 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         onExport={onExport}
         onEdit={onEdit}
         onExit={handleExit}
+        buttonPalette={buttonPalette}
         className={className}
       />
     );

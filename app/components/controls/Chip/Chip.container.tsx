@@ -41,7 +41,10 @@ const ChipContainer = memo<ChipProps>(
       }
     }, [isCustom]);
 
-    const handleCheck = (value: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleCheck = (
+      value: string,
+      event: React.MouseEvent<HTMLButtonElement>,
+    ) => {
       if (onCheck && value.trim()) {
         onCheck(value.trim(), event);
         // Reset input after successful check
@@ -63,7 +66,10 @@ const ChipContainer = memo<ChipProps>(
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter" && inputValue.trim() && onCheck) {
         event.preventDefault();
-        handleCheck(inputValue.trim(), event as unknown as React.MouseEvent<HTMLButtonElement>);
+        handleCheck(
+          inputValue.trim(),
+          event as unknown as React.MouseEvent<HTMLButtonElement>,
+        );
       } else if (event.key === "Escape" && onClose) {
         event.preventDefault();
         handleClose(event as unknown as React.MouseEvent<HTMLButtonElement>);
@@ -95,4 +101,3 @@ const ChipContainer = memo<ChipProps>(
 ChipContainer.displayName = "Chip";
 
 export default ChipContainer;
-

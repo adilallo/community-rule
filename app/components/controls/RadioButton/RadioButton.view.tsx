@@ -41,8 +41,8 @@ export function RadioButtonView({
             checked && mode === "standard"
               ? "bg-[var(--color-content-default-brand-primary,#fefcc9)] group-hover:!bg-[#333000]"
               : checked && mode === "inverse"
-              ? "bg-[var(--color-content-default-primary,#000000)]"
-              : "bg-transparent"
+                ? "bg-[var(--color-content-default-primary,#000000)]"
+                : "bg-transparent"
           }`}
         />
       </span>

@@ -22,12 +22,23 @@ export default {
     mode: {
       control: "select",
       options: ["standard", "inverse", "Standard", "Inverse"],
-      description: "Visual mode of the radio button (case-insensitive: accepts both lowercase and PascalCase)",
+      description:
+        "Visual mode of the radio button (case-insensitive: accepts both lowercase and PascalCase)",
     },
     state: {
       control: "select",
-      options: ["default", "hover", "focus", "selected", "Default", "Hover", "Focus", "Selected"],
-      description: "Interaction state for static display (case-insensitive: accepts both lowercase and PascalCase)",
+      options: [
+        "default",
+        "hover",
+        "focus",
+        "selected",
+        "Default",
+        "Hover",
+        "Focus",
+        "Selected",
+      ],
+      description:
+        "Interaction state for static display (case-insensitive: accepts both lowercase and PascalCase)",
     },
     disabled: {
       control: "boolean",
@@ -188,7 +199,9 @@ export const StandardAllStates = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode - Unselected</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Standard Mode - Unselected
+        </h3>
         <div className="space-y-4">
           <RadioButton
             label="Unselected (default, hover, focus)"
@@ -200,7 +213,9 @@ export const StandardAllStates = () => {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Standard Mode - Selected</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Standard Mode - Selected
+        </h3>
         <div className="space-y-4">
           <RadioButton
             label="Selected (default, hover, focus)"
@@ -222,7 +237,9 @@ export const InverseAllStates = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode - Unselected</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Inverse Mode - Unselected
+        </h3>
         <div className="space-y-4">
           <RadioButton
             label="Unselected (default, hover, focus)"
@@ -234,7 +251,9 @@ export const InverseAllStates = () => {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Inverse Mode - Selected</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Inverse Mode - Selected
+        </h3>
         <div className="space-y-4">
           <RadioButton
             label="Selected (default, hover, focus)"
@@ -256,9 +275,12 @@ export const FigmaPascalCase = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Figma PascalCase Props (Standard/Inverse)</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Figma PascalCase Props (Standard/Inverse)
+        </h3>
         <p className="text-sm text-gray-400 mb-4">
-          These components accept both PascalCase (from Figma) and lowercase (from codebase) prop values.
+          These components accept both PascalCase (from Figma) and lowercase
+          (from codebase) prop values.
         </p>
         <div className="space-y-4">
           <RadioButton
@@ -278,7 +300,9 @@ export const FigmaPascalCase = () => {
         </div>
       </div>
       <div>
-        <h3 className="text-lg font-semibold mb-4 text-white">Mixed Case (backward compatibility)</h3>
+        <h3 className="text-lg font-semibold mb-4 text-white">
+          Mixed Case (backward compatibility)
+        </h3>
         <div className="space-y-4">
           <RadioButton
             label="Standard mode (lowercase) - still works"

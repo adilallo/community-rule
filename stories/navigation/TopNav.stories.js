@@ -15,11 +15,13 @@ export default {
   argTypes: {
     folderTop: {
       control: "boolean",
-      description: "When true, renders the home page variant with yellow tab container. When false, renders the standard header variant.",
+      description:
+        "When true, renders the home page variant with yellow tab container. When false, renders the standard header variant.",
     },
     loggedIn: {
       control: "boolean",
-      description: "Whether the user is logged in (affects displayed elements).",
+      description:
+        "Whether the user is logged in (affects displayed elements).",
     },
     profile: {
       control: "boolean",
@@ -123,8 +125,8 @@ export const StandardInPageContext = {
           </h1>
           <p className="text-white mb-4">
             This demonstrates how the standard header looks in a realistic page
-            context. The header maintains its responsive behavior while providing
-            navigation for the page content.
+            context. The header maintains its responsive behavior while
+            providing navigation for the page content.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (

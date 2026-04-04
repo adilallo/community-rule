@@ -29,7 +29,8 @@ interface NumberCardProps {
 
 const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
   // Base classes common to all sizes
-  const baseClasses = "bg-[var(--color-surface-inverse-primary)] rounded-[12px] shadow-lg";
+  const baseClasses =
+    "bg-[var(--color-surface-inverse-primary)] rounded-[12px] shadow-lg";
 
   // If size prop is provided, use explicit size classes
   // Otherwise, use responsive breakpoints for backward compatibility
@@ -40,16 +41,22 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
     const sizeClasses = {
       Small: "flex flex-col items-end justify-center gap-4 p-5 relative",
       Medium: "flex flex-row items-center gap-8 p-8 relative",
-      Large: "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
-      XLarge: "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
+      Large:
+        "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
+      XLarge:
+        "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
     };
 
     // Text size classes
     const textClasses = {
-      Small: "font-bricolage-grotesque font-medium text-[24px] leading-[32px] text-[#141414]",
-      Medium: "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
-      Large: "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
-      XLarge: "font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[#141414]",
+      Small:
+        "font-bricolage-grotesque font-medium text-[24px] leading-[32px] text-[#141414]",
+      Medium:
+        "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
+      Large:
+        "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
+      XLarge:
+        "font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[#141414]",
     };
 
     // Section number wrapper classes - Small doesn't need a wrapper
@@ -74,11 +81,9 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
         <div className={`${baseClasses} ${sizeClasses[size]}`}>
           {/* Section Number - Direct child for Small */}
           <SectionNumber number={number} />
-          
+
           {/* Card Content */}
-          <p className={textClasses[size]}>
-            {text}
-          </p>
+          <p className={textClasses[size]}>{text}</p>
         </div>
       );
     }
@@ -92,9 +97,7 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
 
         {/* Card Content */}
         <div className={contentClasses[size]}>
-          <p className={textClasses[size]}>
-            {text}
-          </p>
+          <p className={textClasses[size]}>{text}</p>
         </div>
       </div>
     );
@@ -103,7 +106,9 @@ const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
   // Responsive breakpoints for backward compatibility (matches original behavior)
   // Maps to: Small (mobile) -> Medium (sm) -> Large (lg) -> XLarge (xl)
   return (
-    <div className={`${baseClasses} flex flex-col gap-4 p-5 sm:flex-row sm:gap-8 sm:p-8 sm:items-center lg:flex-col lg:gap-[22px] lg:items-start lg:justify-end lg:p-8 lg:relative lg:h-[238px]`}>
+    <div
+      className={`${baseClasses} flex flex-col gap-4 p-5 sm:flex-row sm:gap-8 sm:p-8 sm:items-center lg:flex-col lg:gap-[22px] lg:items-start lg:justify-end lg:p-8 lg:relative lg:h-[238px]`}
+    >
       {/* Section Number - Responsive positioning */}
       <div className="flex justify-end items-end sm:justify-start sm:flex-shrink-0 lg:absolute lg:top-8 lg:right-8">
         <SectionNumber number={number} />

@@ -26,6 +26,7 @@ const SectionNumber = memo<SectionNumberProps>(({ number }) => {
 
   return (
     <div className="relative size-[40px] overflow-visible -rotate-[15deg]">
+      {/* eslint-disable-next-line @next/next/no-img-element -- dynamic src from getImageSrc */}
       <img
         src={getImageSrc(number)}
         alt={`Section ${number}`}

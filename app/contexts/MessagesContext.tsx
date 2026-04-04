@@ -39,11 +39,11 @@ export function useMessages(): Messages {
  */
 function getTranslationValue(messages: Messages, key: string): string {
   const keys = key.split(".");
-  let value: any = messages;
+  let value: unknown = messages;
 
   for (const k of keys) {
     if (value && typeof value === "object" && k in value) {
-      value = value[k as keyof typeof value];
+      value = (value as Record<string, unknown>)[k];
     } else {
       return key; // Fallback to key if path not found
     }
