@@ -34,7 +34,9 @@ describe("ConfirmStakeholdersPage", () => {
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Close alert" }));
     expect(
-      screen.queryByText(/Congratulations! You've drafted your CommunityRule!/i),
+      screen.queryByText(
+        /Congratulations! You've drafted your CommunityRule!/i,
+      ),
     ).not.toBeInTheDocument();
   });
 });

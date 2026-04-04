@@ -13,8 +13,7 @@ const TITLE =
 const DESCRIPTION =
   "Adding people at this step will invite them to see your proposed CommunityRule and make their own proposals.";
 
-const DRAFT_TOAST_TITLE =
-  "Congratulations! You've drafted your CommunityRule!";
+const DRAFT_TOAST_TITLE = "Congratulations! You've drafted your CommunityRule!";
 
 /**
  * Confirm stakeholders step — stacked lockup + MultiSelect (not split columns).
@@ -23,7 +22,9 @@ const DRAFT_TOAST_TITLE =
 export default function ConfirmStakeholdersPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [toastDismissed, setToastDismissed] = useState(false);
-  const [stakeholderOptions, setStakeholderOptions] = useState<ChipOption[]>([]);
+  const [stakeholderOptions, setStakeholderOptions] = useState<ChipOption[]>(
+    [],
+  );
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
 
   useEffect(() => {
@@ -43,9 +44,7 @@ export default function ConfirmStakeholdersPage() {
   const handleCustomChipConfirm = (chipId: string, value: string) => {
     setStakeholderOptions((prev) =>
       prev.map((opt) =>
-        opt.id === chipId
-          ? { ...opt, label: value, state: "Selected" }
-          : opt,
+        opt.id === chipId ? { ...opt, label: value, state: "Selected" } : opt,
       ),
     );
   };

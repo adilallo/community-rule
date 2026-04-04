@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import MultiSelect from "../../components/controls/MultiSelect";
@@ -48,17 +54,17 @@ export default function SelectPage() {
 
   const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
-  const [communitySizeOptions, setCommunitySizeOptions] = useState<ChipOption[]>(
-    [
-      { id: "1", label: "1 member", state: "Unselected" },
-      { id: "2", label: "2-10 members", state: "Unselected" },
-      { id: "3", label: "10-24 members", state: "Unselected" },
-      { id: "4", label: "24-64 members", state: "Unselected" },
-      { id: "5", label: "64-128 members", state: "Unselected" },
-      { id: "6", label: "125-1000 members", state: "Unselected" },
-      { id: "7", label: "1000+ members", state: "Unselected" },
-    ],
-  );
+  const [communitySizeOptions, setCommunitySizeOptions] = useState<
+    ChipOption[]
+  >([
+    { id: "1", label: "1 member", state: "Unselected" },
+    { id: "2", label: "2-10 members", state: "Unselected" },
+    { id: "3", label: "10-24 members", state: "Unselected" },
+    { id: "4", label: "24-64 members", state: "Unselected" },
+    { id: "5", label: "64-128 members", state: "Unselected" },
+    { id: "6", label: "125-1000 members", state: "Unselected" },
+    { id: "7", label: "1000+ members", state: "Unselected" },
+  ]);
 
   const [organizationTypeOptions, setOrganizationTypeOptions] = useState<
     ChipOption[]

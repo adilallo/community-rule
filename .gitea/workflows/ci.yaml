@@ -2,7 +2,7 @@ name: CI Pipeline
 run-name: "${{ gitea.actor }} triggered CI pipeline"
 
 on:
-  workflow_dispatch: {}  # Manual trigger only - run tests locally before merging
+  workflow_dispatch: {} # Manual trigger only - run tests locally before merging
   # Auto-runs disabled for solo development
   # Re-enable when ready for collaborators:
   # pull_request:

@@ -11,10 +11,10 @@ describe("InfoMessageBox", () => {
   ];
 
   it("renders title and item labels", () => {
-    render(
-      <InfoMessageBox title="Important" items={items} />,
-    );
-    expect(screen.getByRole("region", { name: "Important" })).toBeInTheDocument();
+    render(<InfoMessageBox title="Important" items={items} />);
+    expect(
+      screen.getByRole("region", { name: "Important" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Important")).toBeInTheDocument();
     expect(screen.getByText("Option A")).toBeInTheDocument();
     expect(screen.getByText("Option B")).toBeInTheDocument();
