@@ -1,9 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, type Dispatch, type SetStateAction } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import MultiSelect from "../../components/controls/MultiSelect";
+import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
+
+function createListCustomHandlers(
+  setList: Dispatch<SetStateAction<ChipOption[]>>,
+  confirmState: "Unselected" | "Selected",
+) {
+  return {
+    onAddClick: () =>
+      setList((prev) => [
+        ...prev,
+        { id: crypto.randomUUID(), label: "", state: "Custom" },
+      ]),
+    onCustomChipConfirm: (chipId: string, value: string) =>
+      setList((prev) =>
+        prev.map((opt) =>
+          opt.id === chipId
+            ? { ...opt, label: value, state: confirmState }
+            : opt,
+        ),
+      ),
+    onCustomChipClose: (chipId: string) =>
+      setList((prev) => prev.filter((o) => o.id !== chipId)),
+  };
+}
 
 /**
  * Select page for the create flow
@@ -24,30 +48,48 @@ export default function SelectPage() {
 
   const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
-  // Sample options for MultiSelect components
-  const [communitySizeOptions, setCommunitySizeOptions] = useState([
-    { id: "1", label: "1 member", state: "Unselected" as const },
-    { id: "2", label: "2-10 members", state: "Unselected" as const },
-    { id: "3", label: "10-24 members", state: "Unselected" as const },
-    { id: "4", label: "24-64 members", state: "Unselected" as const },
-    { id: "5", label: "64-128 members", state: "Unselected" as const },
-    { id: "6", label: "125-1000 members", state: "Unselected" as const },
-    { id: "7", label: "1000+ members", state: "Unselected" as const },
+  const [communitySizeOptions, setCommunitySizeOptions] = useState<ChipOption[]>(
+    [
+      { id: "1", label: "1 member", state: "Unselected" },
+      { id: "2", label: "2-10 members", state: "Unselected" },
+      { id: "3", label: "10-24 members", state: "Unselected" },
+      { id: "4", label: "24-64 members", state: "Unselected" },
+      { id: "5", label: "64-128 members", state: "Unselected" },
+      { id: "6", label: "125-1000 members", state: "Unselected" },
+      { id: "7", label: "1000+ members", state: "Unselected" },
+    ],
+  );
+
+  const [organizationTypeOptions, setOrganizationTypeOptions] = useState<
+    ChipOption[]
+  >([
+    { id: "1", label: "Non-profit", state: "Unselected" },
+    { id: "2", label: "For-profit", state: "Unselected" },
+    { id: "3", label: "Community", state: "Unselected" },
+    { id: "4", label: "Educational", state: "Unselected" },
   ]);
 
-  const [organizationTypeOptions, setOrganizationTypeOptions] = useState([
-    { id: "1", label: "Non-profit", state: "Unselected" as const },
-    { id: "2", label: "For-profit", state: "Unselected" as const },
-    { id: "3", label: "Community", state: "Unselected" as const },
-    { id: "4", label: "Educational", state: "Unselected" as const },
+  const [governanceStyleOptions, setGovernanceStyleOptions] = useState<
+    ChipOption[]
+  >([
+    { id: "1", label: "Democratic", state: "Unselected" },
+    { id: "2", label: "Consensus", state: "Unselected" },
+    { id: "3", label: "Hierarchical", state: "Unselected" },
+    { id: "4", label: "Flat", state: "Unselected" },
   ]);
 
-  const [governanceStyleOptions, setGovernanceStyleOptions] = useState([
-    { id: "1", label: "Democratic", state: "Unselected" as const },
-    { id: "2", label: "Consensus", state: "Unselected" as const },
-    { id: "3", label: "Hierarchical", state: "Unselected" as const },
-    { id: "4", label: "Flat", state: "Unselected" as const },
-  ]);
+  const communityCustomHandlers = useMemo(
+    () => createListCustomHandlers(setCommunitySizeOptions, "Unselected"),
+    [],
+  );
+  const organizationCustomHandlers = useMemo(
+    () => createListCustomHandlers(setOrganizationTypeOptions, "Unselected"),
+    [],
+  );
+  const governanceCustomHandlers = useMemo(
+    () => createListCustomHandlers(setGovernanceStyleOptions, "Unselected"),
+    [],
+  );
 
   const handleCommunitySizeClick = (chipId: string) => {
     setCommunitySizeOptions((prev) =>
@@ -110,6 +152,7 @@ export default function SelectPage() {
               size="S"
               options={communitySizeOptions}
               onChipClick={handleCommunitySizeClick}
+              {...communityCustomHandlers}
               addButton={true}
               addButtonText="Add organization type"
             />
@@ -118,6 +161,7 @@ export default function SelectPage() {
               size="S"
               options={organizationTypeOptions}
               onChipClick={handleOrganizationTypeClick}
+              {...organizationCustomHandlers}
               addButton={true}
               addButtonText="Add organization type"
             />
@@ -126,6 +170,7 @@ export default function SelectPage() {
               size="S"
               options={governanceStyleOptions}
               onChipClick={handleGovernanceStyleClick}
+              {...governanceCustomHandlers}
               addButton={true}
               addButtonText="Add organization type"
             />
@@ -148,6 +193,7 @@ export default function SelectPage() {
             size="S"
             options={communitySizeOptions}
             onChipClick={handleCommunitySizeClick}
+            {...communityCustomHandlers}
             addButton={true}
             addButtonText="Add organization type"
           />
@@ -156,6 +202,7 @@ export default function SelectPage() {
             size="S"
             options={organizationTypeOptions}
             onChipClick={handleOrganizationTypeClick}
+            {...organizationCustomHandlers}
             addButton={true}
             addButtonText="Add organization type"
           />
@@ -164,6 +211,7 @@ export default function SelectPage() {
             size="S"
             options={governanceStyleOptions}
             onChipClick={handleGovernanceStyleClick}
+            {...governanceCustomHandlers}
             addButton={true}
             addButtonText="Add organization type"
           />

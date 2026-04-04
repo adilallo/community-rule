@@ -16,6 +16,7 @@ export type CreateFlowStep =
   | "review"
   | "cards"
   | "right-rail"
+  | "confirm-stakeholders"
   | "final-review"
   | "completed";
 

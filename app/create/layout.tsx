@@ -87,7 +87,9 @@ function CreateFlowLayoutContent({ children }: { children: ReactNode }) {
               >
                 {currentStep === "final-review"
                   ? "Finalize CommunityRule"
-                  : "Next"}
+                  : currentStep === "confirm-stakeholders"
+                    ? "Confirm Stakeholders"
+                    : "Next"}
               </Button>
             ) : null
           }

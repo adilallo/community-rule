@@ -17,6 +17,7 @@ export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
   "review",
   "cards",
   "right-rail",
+  "confirm-stakeholders",
   "final-review",
   "completed",
 ] as const;
