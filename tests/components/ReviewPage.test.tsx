@@ -1,4 +1,3 @@
-import React from "react";
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";

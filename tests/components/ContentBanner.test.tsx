@@ -37,6 +37,10 @@ const mockPost: BlogPost = {
     author: "Test Author",
     date: "2025-04-15",
   },
+  content: "",
+  htmlContent: "",
+  filePath: "test-article.md",
+  lastModified: new Date("2025-04-15"),
 };
 
 describe("ContentBanner", () => {

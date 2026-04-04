@@ -40,7 +40,8 @@ const WebVitalsDashboardContainer = memo(() => {
 
     if (typeof window !== "undefined") {
       import("web-vitals").then((webVitals) => {
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as {
+        // web-vitals v4 typings don't expose legacy get* names the same way; runtime bundle still provides them for this dashboard.
+        const { getCLS, getFID, getFCP, getLCP, getTTFB } = webVitals as unknown as {
           getCLS: (
             _fn: (_m: { value: number; rating: string }) => void,
           ) => void;

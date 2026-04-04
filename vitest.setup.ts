@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import type React from "react";
+import React from "react";
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { server } from "./tests/msw/server";
@@ -18,8 +18,9 @@ vi.mock("next/dynamic", () => {
     ) => {
       // In tests, return a component that immediately resolves and renders
       return function DynamicComponent(props: Record<string, unknown>) {
-        const [Component, setComponent] =
-          React.useState<React.ComponentType | null>(null);
+        const [Component, setComponent] = React.useState(
+          null as React.ComponentType | null,
+        );
         const [loading, setLoading] = React.useState(true);
 
         React.useEffect(() => {
