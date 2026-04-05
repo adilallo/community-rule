@@ -79,6 +79,11 @@ export function CreateFlowProvider({
     }));
   }, []);
 
+  const replaceState = useCallback((next: CreateFlowState) => {
+    setState(next);
+    writeStateToStorage(STORAGE_KEY, next);
+  }, []);
+
   const clearState = useCallback(() => {
     setState({});
     removeFromStorage(STORAGE_KEY);
@@ -89,6 +94,7 @@ export function CreateFlowProvider({
     state,
     currentStep,
     updateState,
+    replaceState,
     clearState,
   };
 

@@ -37,6 +37,8 @@ export interface CreateFlowContextValue {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
   updateState: (_updates: Partial<CreateFlowState>) => void;
+  /** Replace entire flow state (e.g. hydrate from server draft). */
+  replaceState: (_next: CreateFlowState) => void;
   /** Clear all flow state (e.g. on exit). Also clears persisted draft. */
   clearState: () => void;
 }

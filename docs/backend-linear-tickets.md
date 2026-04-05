@@ -1,0 +1,447 @@
+# Backend work — linear tickets
+
+Copy each block into Linear (or your tracker) as a separate issue, **in order**. Earlier tickets are prerequisites for later ones.
+
+**Foundation already in the repo (no ticket needed unless you are onboarding a greenfield clone):** Prisma schema ([prisma/schema.prisma](prisma/schema.prisma)), migrations, `lib/server/*`, Route Handlers under `app/api/*`, [docker-compose.yml](docker-compose.yml), [Dockerfile](Dockerfile), [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example), [lib/create/api.ts](lib/create/api.ts), [CreateFlowBackendSync](app/create/context/CreateFlowBackendSync.tsx) behind `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`.
+
+### Review sync (relevant feedback only)
+
+A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), in-memory OTP limits until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**. **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors, blocked by CR-73), **CR-85** (session lifecycle, blocked by CR-75)—see **Linear** table at the end of this doc.
+
+---
+
+## When you need server / admin access (and for what)
+
+Use this if you **do not** have SSH or hosting access yet. Most engineering tickets are **local-only** until you deploy somewhere shared.
+
+### You do **not** need the server admin for
+
+- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env.local`, `npm run dev`, `npx prisma migrate dev`. OTP email can use Mailhog or dev log (no real SMTP).
+- **Verifying APIs:** Use `localhost` and the same Docker Postgres—no production host.
+
+### The **first** time you need someone with hosting access
+
+That is when you deploy to **staging** or **production** (a URL other people use, or a persistent DB not on your laptop). Until then, you can finish the core product slice without server credentials.
+
+Ask the admin to provide (or do for you) the items below—**Ticket 12** turns this into a written runbook.
+
+| What                 | Why you need it                                                                                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Postgres**         | Managed instance or container; a **`DATABASE_URL`** you can plug into the deployed app.                                                                          |
+| **Run migrations**   | Someone runs **`npx prisma migrate deploy`** against that database **before** the new app version serves traffic (or gives you a secure way to run it in CI/CD). |
+| **`SESSION_SECRET`** | Long random string in production env (sessions + OTP hashing).                                                                                                   |
+| **SMTP**             | **`SMTP_URL`** + **`SMTP_FROM`** for real OTP email; not required on laptop if you use logs/Mailhog.                                                             |
+| **DNS for mail**     | Often **SPF/DKIM** so OTP messages are not spam—admin or whoever owns DNS.                                                                                       |
+| **TLS + hostname**   | HTTPS URL for the site; reverse proxy (nginx, Caddy, etc.) in front of Node.                                                                                     |
+| **Health check**     | Load balancer or platform should probe **`GET /api/health`** (or your chosen path).                                                                              |
+| **Secrets storage**  | Env vars or secret manager—never commit `.env.local`.                                                                                                            |
+| **Backups**          | Postgres backup/restore for production (and ideally staging).                                                                                                    |
+
+Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admin builds/pushes/runs the container with the env vars above.
+
+### Ticket-by-ticket: admin involvement
+
+| Ticket | Need server admin?                                                                       | What for                                                                                                                                                             |
+| ------ | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1–2    | **No**                                                                                   | Docs and app code only.                                                                                                                                              |
+| 3      | **No** to build/test; **Yes** when OTP must work on a **deployed** env                   | Real **SMTP** + DNS on staging/prod (same as table above).                                                                                                           |
+| 4–8    | **No**                                                                                   | Local or staging URL is still “your” deploy—admin only if that URL is on their infra.                                                                                |
+| 9      | **No** to implement; **Yes** when **production** uses multiple instances or read-only FS | **Default** is external RUM/log drain; Postgres vitals only if ops explicitly wants one datastore—may need vendor keys for SaaS.                                     |
+| 10     | **No** to code                                                                           | Same deploy pipeline as the rest of the app.                                                                                                                         |
+| 11     | **Maybe**                                                                                | Whoever owns **Gitea runners**: can they run Postgres in CI? Not the same as production server, but often the same “infra” person.                                   |
+| 12     | **Yes—this is the handoff ticket**                                                       | You (or admin) write **`docs/ops-backend-deploy.md`** so deploy steps are explicit; **you need admin input** to fill in hostnames, DB provider, SMTP, backup policy. |
+
+### One-line summary
+
+**You only need the server admin when you move off your laptop to a shared staging/production host**—for database, secrets, TLS, SMTP/DNS, migrations on that DB, health checks, and backups. Until then, **Tickets 1–8 are unblocked** with Docker Compose locally.
+
+---
+
+## Ticket 1 — Align `docs/backend-roadmap.md` with the current codebase
+
+**Depends on:** nothing.
+
+**Goal:** Remove stale statements so the roadmap matches reality and stays a trustworthy reference until you delete it.
+
+**Context:** Section 1 still says there is no DB and only web-vitals API; the app now has Postgres models, auth, drafts, rules, templates API, etc.
+
+**Implementation:**
+
+1. Rewrite **§1 Where we are** to list: Prisma + Postgres, existing `app/api/*` routes, `localStorage` + optional server draft sync, web-vitals still file-based.
+2. In **§9 Build order** (build steps were renumbered from old §5), mark what is **operator/manual**, what is **already shipped in the repo**, and what is **still product/frontend** (sign-in UI, publish wiring, etc.).
+3. Add **HTTP API (implemented in repo)** — table mirroring [CONTRIBUTING.md](CONTRIBUTING.md), plus note for `/api/web-vitals`.
+
+**Acceptance criteria:**
+
+- [x] A new contributor reading only the roadmap does not think the backend is unbuilt.
+- [x] **§13 Optional later** (old §9) unchanged in intent — optional Redis, session-library spike, draft versioning, standalone API, OpenAPI, fourth env.
+
+**Status:** [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase) **Done**.
+
+**Files:** [docs/backend-roadmap.md](docs/backend-roadmap.md) only.
+
+---
+
+## Ticket 2 — Formalize `CreateFlowState` and validate API payloads
+
+**Depends on:** Ticket 1 (optional but keeps docs honest).
+
+**Goal:** Replace the open `[key: string]: unknown` shape in [app/create/types.ts](app/create/types.ts) with real fields (or nested objects) agreed with design/product, and validate JSON on the server for drafts and publish.
+
+**Context:** `PUT /api/drafts/me` and `POST /api/rules` accept loose objects today; oversized or malformed payloads are a stability and security concern.
+
+**Implementation:**
+
+1. Document intended fields per create-flow step (can start minimal: e.g. `title`, `sections`, `stakeholders` placeholders) in `CreateFlowState`.
+2. Add **Zod** (or reuse **Ajv** if you prefer consistency with [lib/validation.ts](lib/validation.ts)) schemas:
+   - `createFlowStateSchema` for draft `payload`.
+   - `publishedRuleDocumentSchema` for `document` on `POST /api/rules`.
+3. In [app/api/drafts/me/route.ts](app/api/drafts/me/route.ts) and [app/api/rules/route.ts](app/api/rules/route.ts), parse with schema; on failure return `400` with a small `{ error, details? }` body.
+4. Enforce a **max payload size** (e.g. reject bodies &gt; 512KB) via route handler check or Next config if applicable.
+
+**Acceptance criteria:**
+
+- [ ] TypeScript reflects the real shape of `CreateFlowState` (no unnecessary `unknown` for known keys).
+- [ ] Invalid draft/publish requests return 400, not 500.
+- [ ] Unit tests for schemas (Vitest) or route tests with MSW.
+
+**Files:** [app/create/types.ts](app/create/types.ts), [app/api/drafts/me/route.ts](app/api/drafts/me/route.ts), [app/api/rules/route.ts](app/api/rules/route.ts), new `lib/server/validation/` or `lib/validation/createFlow.ts`, [package.json](package.json) if adding `zod`.
+
+**Note:** Repo-wide **API error JSON shape** and **request-id logging** are **Ticket 13 / CR-84**—coordinate 400 response bodies with that issue so validation errors match the agreed `{ error: { code, message } }` pattern.
+
+---
+
+## Ticket 3 — Email OTP sign-in UI (end-to-end with existing APIs)
+
+**Depends on:** Ticket 2 (soft dependency: types help name fields you might store post-login; can start in parallel if needed).
+
+**Server / admin:** **Not required** to build and test (Mailhog or console OTP locally). **Required** when OTP must work on **staging/production**: admin provides **SMTP** + usually **DNS (SPF/DKIM)** and sets env on the host (see top table).
+
+**Goal:** Let a user request a code and verify it in the browser using existing endpoints.
+
+**Context:** APIs exist: `POST /api/auth/otp/request`, `POST /api/auth/otp/verify`, `GET /api/auth/session`, `POST /api/auth/logout`. Client helpers: [lib/create/api.ts](lib/create/api.ts).
+
+**Implementation:**
+
+1. Add a **route** (e.g. `app/(marketing)/login/page.tsx`) or a **modal** from the main header, designer-approved.
+2. Flow: email → “Send code” → 6-digit code → “Verify” → success closes UI or redirects to `/create` (product decision).
+3. Surface API errors: invalid email, 429 `retryAfterMs`, wrong code, network failure (accessible copy).
+4. Ensure `fetch` calls use `credentials: "include"` (already in `lib/create/api.ts`).
+5. **Dev:** document that without `SMTP_URL`, OTP prints to server logs; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `SMTP_URL=smtp://localhost:1025`.
+
+**Acceptance criteria:**
+
+- [ ] Happy path: user can complete OTP and `GET /api/auth/session` returns user in the same browser session.
+- [ ] Keyboard + screen-reader friendly forms (labels, errors associated with fields).
+- [ ] No secrets in client bundle.
+
+**Files:** new page/components under `app/` and `app/components/…`, optional [messages/en/…](messages/en/) JSON for i18n, [lib/create/api.ts](lib/create/api.ts) only if you need new helpers.
+
+---
+
+## Ticket 4 — Session affordances in the create flow (signed-in state + sign out)
+
+**Depends on:** Ticket 3.
+
+**Goal:** While in `/create/*`, users see whether they are signed in and can sign out without leaving the flow awkwardly.
+
+**Context:** [CreateFlowTopNav](app/components/utility/CreateFlowTopNav/) has props like `loggedIn` currently tied to step UI in [app/create/layout.tsx](app/create/layout.tsx) (`isCompletedStep`). Decouple **auth session** from **step**.
+
+**Implementation:**
+
+1. On create layout mount (or a small wrapper provider), call `fetchAuthSession()` and store `{ user }` in React state or a tiny `AuthSessionContext`.
+2. Pass **real** `loggedIn={Boolean(user)}` (or rename prop to `isAuthenticated` if clearer) and show **email** (truncated) per design.
+3. Wire **Sign out** to `logout()` from [lib/create/api.ts](lib/create/api.ts), clear client state as needed, refresh session.
+4. Optionally: if `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` and user is anonymous, show one-line CTA “Sign in to save progress to your account” linking to login.
+
+**Acceptance criteria:**
+
+- [ ] Completed step still works; auth state is independent of `completed` step.
+- [ ] Sign out clears httpOnly session server-side and UI updates.
+
+**Files:** [app/create/layout.tsx](app/create/layout.tsx), [app/components/utility/CreateFlowTopNav/](app/components/utility/CreateFlowTopNav/), optional new `app/create/context/AuthSessionContext.tsx`.
+
+---
+
+## Ticket 5 — Harden server draft sync (UX + edge cases)
+
+**Depends on:** Tickets 2–4.
+
+**Goal:** `CreateFlowBackendSync` is production-grade when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`.
+
+**Context:** [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx) hydrates from server and debounces saves; today it can race with localStorage-first paint and silently fail saves.
+
+**Implementation:**
+
+1. **Hydration:** Show a non-blocking “Loading your saved progress…” until first session + draft fetch completes (only when sync enabled).
+2. **Conflict:** If `localStorage` has non-empty state and server returns non-empty draft, pick a policy: prefer server with confirm modal, or prefer newer `updatedAt` (requires storing timestamp client-side). Document choice in code comment.
+3. **Save failures:** If `PUT /api/drafts/me` fails, show toast/banner; optionally retry with backoff.
+4. **Tests:** Component test or Playwright scenario with sync flag on (may require test DB or route mocks).
+
+**Acceptance criteria:**
+
+- [ ] No silent data loss when server save fails.
+- [ ] User understands when server draft replaced local state (if applicable).
+
+**Files:** [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
+
+---
+
+## Ticket 6 — Wire “Publish rule” from the create flow to `POST /api/rules`
+
+**Depends on:** Tickets 2–4 (Ticket 5 optional).
+
+**Goal:** Completing the flow persists a **PublishedRule** via existing [publishRule](lib/create/api.ts).
+
+**Context:** [lib/create/api.ts](lib/create/api.ts) already wraps `POST /api/rules`. UI on [app/create/final-review/page.tsx](app/create/final-review/page.tsx) or [completed/page.tsx](app/create/completed/page.tsx) must call it with `{ title, summary?, document }` derived from `CreateFlowState`.
+
+**Implementation:**
+
+1. Map `useCreateFlow().state` → `title` / `summary` / `document` (document likely mirrors [CommunityRuleDocument](app/components/sections/CommunityRuleDocument/) shape or raw JSON).
+2. Call `publishRule` on explicit user action (“Publish” / “Finalize”) or on transition to `completed` (product decision—prefer explicit button to avoid double-submit).
+3. Handle **401**: redirect or modal to sign-in (Ticket 3).
+4. Success: navigate to `completed` with rule id in query or state; optional confetti per design.
+
+**Acceptance criteria:**
+
+- [ ] Published row appears in Postgres (`PublishedRule`) and `GET /api/rules` lists it.
+- [ ] User sees clear success/failure.
+
+**Files:** relevant `app/create/*/page.tsx`, [lib/create/api.ts](lib/create/api.ts) if request shape changes, types from Ticket 2.
+
+---
+
+## Ticket 7 — Seed `RuleTemplate` data and document how to re-run
+
+**Depends on:** none (API exists at [app/api/templates/route.ts](app/api/templates/route.ts)).
+
+**Goal:** Curated templates exist in DB for recommendations (v1 = static curated list, no ML).
+
+**Implementation:**
+
+1. Add [Prisma seed](https://www.prisma.io/docs/guides/migrate/seed-database): `prisma/seed.ts` with `upsert` on `slug` for idempotent runs.
+2. In [package.json](package.json), set `"prisma": { "seed": "tsx prisma/seed.ts" }` or `node --loader ts-node/esm` per your preference.
+3. Seed 3–10 rows aligned with marketing copy today ([messages/en/components/ruleStack.json](messages/en/components/ruleStack.json) or home cards) — `title`, `category`, `description`, `body` JSON, `sortOrder`, `featured`.
+4. Document: `npx prisma db seed` in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Acceptance criteria:**
+
+- [ ] `GET /api/templates` returns non-empty `templates` after seed on empty DB.
+- [ ] Re-running seed does not duplicate rows.
+
+**Files:** `prisma/seed.ts`, [package.json](package.json), [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Ticket 8 — Load rule templates from the API in the UI
+
+**Depends on:** Ticket 7.
+
+**Goal:** Home or create entry surfaces use live template data instead of only static i18n JSON.
+
+**Context:** [RuleStack.view.tsx](app/components/sections/RuleStack/RuleStack.view.tsx) and [app/create/[step]/page.tsx](app/create/[step]/page.tsx) placeholders reference future template work (CR-51–55).
+
+**Implementation:**
+
+1. Add a small client or server data fetch to `GET /api/templates` (RSC `fetch` with cache tags, or client `useEffect` with loading skeleton—match existing data-fetch patterns in the app).
+2. Map API rows to existing card components; keep i18n for chrome strings (“See all templates”).
+3. Empty state: if API returns `[]`, fall back to static copy or hide section per design.
+
+**Acceptance criteria:**
+
+- [ ] Changing a template row in Prisma Studio reflects after refresh (or revalidate).
+- [ ] No layout shift regression on LCP-critical pages (use skeletons).
+
+**Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), [app/create/[step]/page.tsx](app/create/[step]/page.tsx) or related, possibly new `lib/templates/fetchTemplates.ts`.
+
+---
+
+## Ticket 9 — Persist web vitals outside `.next` (prefer external RUM)
+
+**Depends on:** none (orthogonal).
+
+**Server / admin:** **Not required** to implement. **Relevant** when production is **multi-instance** or **read-only filesystem**; external tools may need **vendor API keys** in env.
+
+**Goal:** [app/api/web-vitals/route.ts](app/api/web-vitals/route.ts) stops relying on ephemeral files under `.next/web-vitals` in production.
+
+**Context:** Multi-instance / Docker loses file-based metrics. [docs/backend-roadmap.md](backend-roadmap.md) §7: **default** is **external** analytics or log drain—keep product Postgres for product data.
+
+**Implementation (pick one — prefer A or B first):**
+
+- **A (preferred):** Integrate **external RUM / logging** (host metrics, Vercel Web Analytics, OpenTelemetry export, Datadog, etc.); stop or thin local aggregation; `app/(admin)/monitor/page.tsx` links out or shows reduced scope.
+- **B:** Forward events from the route to a **log drain** or APM; trim custom dashboard if redundant.
+- **C (fallback only):** New Prisma model `WebVitalEvent` + migrate + read path in monitor—**only** if ops explicitly chooses a single-store tradeoff (document why).
+
+**Acceptance criteria:**
+
+- [ ] Production with read-only filesystem does not break vitals collection path.
+- [ ] Monitor page still useful or intentionally replaced with a doc link.
+
+**Files:** [app/api/web-vitals/route.ts](app/api/web-vitals/route.ts), [app/(admin)/monitor/](<app/(admin)/monitor/page.tsx>) (adjust paths as needed), optionally `prisma/schema.prisma` **only if** option C.
+
+---
+
+## Ticket 10 — Public rule detail (optional product scope)
+
+**Depends on:** Ticket 6.
+
+**Goal:** Shareable link for a published rule.
+
+**Implementation:**
+
+1. Add `GET /api/rules/[id]/route.ts` returning `{ rule }` or 404 (public read; no secrets).
+2. Add `app/(marketing)/rules/[id]/page.tsx` (or under `create` if private) rendering `document` JSON with existing document components.
+3. Consider soft-delete flag later; out of scope unless product requires hide.
+
+**Acceptance criteria:**
+
+- [ ] UUID/cuid from Ticket 6 opens a readable page for anonymous users.
+- [ ] Invalid id returns 404.
+
+**Files:** new route handler, new page, optional layout.
+
+---
+
+## Ticket 11 — CI: database migration smoke (optional, runner-dependent)
+
+**Depends on:** existing [`.gitea/workflows/ci.yaml`](.gitea/workflows/ci.yaml).
+
+**Server / admin:** **Not production server**—but you may need whoever runs **Gitea/self-hosted runners** to allow **Postgres in CI** (Docker service / sidecar) or to accept a **manual migrate** process documented instead.
+
+**Goal:** Catch broken SQL migrations before merge.
+
+**Context:** Lint job already runs `prisma validate` with a dummy `DATABASE_URL`. **Migrate** needs a real Postgres reachable from the runner.
+
+**Implementation:**
+
+1. If Gitea runners support **Docker sidecar** or **postgres service**, add a job: start Postgres, set `DATABASE_URL`, `npx prisma migrate deploy`, then run a minimal test that hits `/api/health` with DB connected (may require `next build` + short `next start` + curl).
+2. If **macOS self-hosted** runners cannot run service containers easily, document in CONTRIBUTING: “run `migrate deploy` against staging before prod” and keep validate-only in CI.
+
+**Acceptance criteria:**
+
+- [ ] Broken migration fails CI **or** documented alternative process is explicit.
+
+**Files:** [.gitea/workflows/ci.yaml](.gitea/workflows/ci.yaml), [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Ticket 12 — Staging / production runbook (operator checklist)
+
+**Depends on:** Tickets 1–8 complete enough to deploy a vertical slice.
+
+**Server / admin:** **This is the main ticket where you need the admin.** You draft the runbook; **admin fills in real hostnames, DB endpoint, SMTP, backup tooling, and who runs `migrate deploy`.** Without their input, you cannot complete production-ready deploy steps.
+
+**Goal:** Single doc for admin: env vars, TLS, DB backups, migrations, Docker, SMTP, health checks.
+
+**Implementation:**
+
+1. Add `docs/ops-backend-deploy.md` (or similar) with numbered steps:
+   - Required env: `DATABASE_URL`, `SESSION_SECRET`, `SMTP_URL`, `SMTP_FROM`, optional `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`.
+   - `docker compose` vs `Dockerfile` deploy; `prisma migrate deploy` before traffic.
+   - Reverse proxy: `GET /api/health` for LB health.
+   - Backups and restore drill for Postgres.
+   - SMTP DNS (SPF/DKIM).
+2. Cross-link [docs/backend-roadmap.md](docs/backend-roadmap.md) §11 (environments) and §8 (migrations policy); note **never rewrite applied migrations** and where application logs go.
+
+**Acceptance criteria:**
+
+- [ ] Someone who did not write the code can deploy and roll back migrations with only the doc.
+
+**Files:** new `docs/ops-backend-deploy.md`.
+
+---
+
+## Ticket 13 — API error contract + structured logging
+
+**Depends on:** Ticket 2 (validation work defines many 400s).
+
+**Server / admin:** None.
+
+**Goal:** Standardize JSON errors and lightweight observability per [docs/backend-roadmap.md](backend-roadmap.md) §7.
+
+**Implementation:**
+
+1. Document target shape `{ error: { code, message }, details? }` and map validation failures into `details` where useful.
+2. Add a small **route helper** or wrapper: generate or forward **`x-request-id`**, log errors with `lib/logger` + id.
+3. Migrate high-traffic or auth routes first; follow-up pass for remaining `app/api/*`.
+
+**Acceptance criteria:**
+
+- [ ] At least auth + draft + rules routes return the agreed shape for new code paths.
+- [ ] Errors in logs include request id when available.
+
+**Files:** `lib/server/` (new helper), selected `app/api/**/route.ts`, optional tests.
+
+**Linear:** [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging) (blocked by **CR-73**).
+
+---
+
+## Ticket 14 — Custom session lifecycle (rotation, cleanup, policy)
+
+**Depends on:** Ticket 4 (session visible in create flow).
+
+**Server / admin:** None for implementation; production cron may need admin if cleanup runs as a job.
+
+**Goal:** Make custom Prisma sessions maintainable: rotation, invalidation policy, expired-row cleanup—per [docs/backend-roadmap.md](backend-roadmap.md) §4–5.
+
+**Implementation:**
+
+1. **Policy:** On new OTP login, decide whether to **delete other `Session` rows** for that user (single active session) or allow multiple devices (document choice).
+2. **Rotation (optional v1.1):** Issue new token on privilege-sensitive actions if product requires.
+3. **Cleanup:** Delete or mark expired sessions (scheduled job, or prune on read with occasional batch).
+4. **Docs:** Add short ADR or comment block in `lib/server/session.ts`.
+
+**Acceptance criteria:**
+
+- [ ] Documented behavior matches implementation.
+- [ ] Expired sessions do not accumulate unbounded in production over months.
+
+**Files:** [lib/server/session.ts](lib/server/session.ts), [app/api/auth/otp/verify/route.ts](app/api/auth/otp/verify/route.ts) if invalidating siblings, optional `prisma` migration if new columns (unlikely).
+
+**Linear:** [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy) (blocked by **CR-75**).
+
+---
+
+## Summary order
+
+| Order | Ticket | Short name                       |
+| ----: | ------ | -------------------------------- |
+|     1 | 1      | Refresh backend-roadmap          |
+|     2 | 2      | CreateFlowState + API validation |
+|     3 | 3      | OTP sign-in UI                   |
+|     4 | 4      | Create flow session UI           |
+|     5 | 5      | Draft sync hardening             |
+|     6 | 6      | Publish wiring                   |
+|     7 | 7      | Template seed                    |
+|     8 | 8      | Templates in UI                  |
+|     9 | 9      | Web vitals persistence           |
+|    10 | 10     | Public rule detail (optional)    |
+|    11 | 11     | CI migrate smoke (optional)      |
+|    12 | 12     | Ops runbook                      |
+|    13 | 13     | API errors + request-id logging  |
+|    14 | 14     | Session lifecycle + cleanup      |
+
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Tickets 13–14** are parallel to that chain (blocked by **CR-73** and **CR-75** respectively), not sequential after CR-83.
+
+---
+
+## Linear (Community-rule team)
+
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (blocked by CR-73), **CR-85** (blocked by CR-75).
+
+| Doc ticket | Linear                                                                                                                      | Title (short)                    |
+| ---------: | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+|          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap            |
+|          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation |
+|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-email-otp-sign-in-ui-existing-apis)                           | OTP sign-in UI                   |
+|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out)                              | Create flow session UI           |
+|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-createflowbackendsync)               | Draft sync hardening             |
+|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring                   |
+|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed                    |
+|          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                  |
+|          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)     |
+|         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)    |
+|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | CI migrate smoke (optional)      |
+|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops runbook / admin handoff      |
+|         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging  |
+|         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup      |

@@ -3,6 +3,8 @@ import createMDX from "@next/mdx";
 /* eslint-env node */
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
+  serverExternalPackages: ["@prisma/client"],
   // Performance optimizations
   experimental: {
     optimizeCss: true,
