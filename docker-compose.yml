@@ -11,8 +11,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  # Official image is amd64-only; pin platform so Apple Silicon uses emulation cleanly.
   mailhog:
     image: mailhog/mailhog:v1.0.1
+    platform: linux/amd64
     restart: unless-stopped
     ports:
       - "1025:1025"
