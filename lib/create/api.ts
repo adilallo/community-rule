@@ -7,6 +7,24 @@ async function parseJson<T>(response: Response): Promise<T> {
   return data;
 }
 
+/** Supports legacy `{ error: string }` and `{ error: { message: string } }` from API routes. */
+function readApiErrorMessage(data: unknown): string {
+  if (!data || typeof data !== "object" || !("error" in data)) {
+    return "Request failed";
+  }
+  const err = (data as { error: unknown }).error;
+  if (typeof err === "string") {
+    return err;
+  }
+  if (err && typeof err === "object" && "message" in err) {
+    const m = (err as { message: unknown }).message;
+    if (typeof m === "string") {
+      return m;
+    }
+  }
+  return "Request failed";
+}
+
 export async function fetchAuthSession(): Promise<{
   user: { id: string; email: string } | null;
 }> {
@@ -28,7 +46,7 @@ export async function requestOtp(email: string): Promise<{ ok: true } | { error:
   });
   const data = await parseJson<{ error?: string }>(res);
   if (!res.ok) {
-    return { error: data.error ?? "Request failed" };
+    return { error: readApiErrorMessage(data) };
   }
   return { ok: true };
 }
@@ -50,7 +68,7 @@ export async function verifyOtp(
     user?: { id: string; email: string };
   }>(res);
   if (!res.ok || !data.user) {
-    return { error: data.error ?? "Verification failed" };
+    return { error: readApiErrorMessage(data) };
   }
   return { ok: true, user: data.user };
 }
@@ -106,7 +124,7 @@ export async function publishRule(input: {
     rule?: { id: string; title: string };
   }>(res);
   if (!res.ok || !data.rule) {
-    return { error: data.error ?? "Publish failed" };
+    return { error: readApiErrorMessage(data) };
   }
   return { ok: true, id: data.rule.id, title: data.rule.title };
 }

@@ -1,8 +1,12 @@
+import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../lib/server/env";
 import { dbUnavailable } from "../../../lib/server/responses";
 import { getSessionUser } from "../../../lib/server/session";
+import { publishRuleBodySchema } from "../../../lib/server/validation/createFlowSchemas";
+import { readLimitedJson } from "../../../lib/server/validation/requestBody";
+import { jsonFromZodError } from "../../../lib/server/validation/zodHttp";
 
 export async function GET(request: NextRequest) {
   if (!isDatabaseConfigured()) {
@@ -37,43 +41,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  const parsedBody = await readLimitedJson(request);
+  if (parsedBody.ok === false) {
+    return parsedBody.response;
   }
 
-  if (!body || typeof body !== "object") {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  const validated = publishRuleBodySchema.safeParse(parsedBody.value);
+  if (!validated.success) {
+    return jsonFromZodError(validated.error);
   }
 
-  const { title, summary, document } = body as {
-    title?: unknown;
-    summary?: unknown;
-    document?: unknown;
-  };
-
-  if (typeof title !== "string" || title.trim().length === 0) {
-    return NextResponse.json({ error: "title required" }, { status: 400 });
-  }
-
-  if (document === undefined || typeof document !== "object" || document === null) {
-    return NextResponse.json(
-      { error: "document must be a JSON object" },
-      { status: 400 },
-    );
-  }
+  const { title, summary, document } = validated.data;
 
   const rule = await prisma.publishedRule.create({
     data: {
       userId: user.id,
-      title: title.trim(),
-      summary:
-        typeof summary === "string" && summary.trim().length > 0
-          ? summary.trim()
-          : null,
-      document: document as object,
+      title,
+      summary,
+      document: document as Prisma.InputJsonValue,
     },
   });
 

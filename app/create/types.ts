@@ -21,11 +21,19 @@ export type CreateFlowStep =
   | "completed";
 
 /**
- * Flow state interface for storing user inputs across all steps
- * Will be expanded in CR-56 with specific field definitions
+ * Flow state for inputs across create-flow steps.
+ * Validated on `PUT /api/drafts/me` via `createFlowStateSchema` (Zod + JSON safety checks).
+ * Additional string keys are allowed at runtime for forward-compatible step data.
  */
 export interface CreateFlowState {
-  // Placeholder structure - will be expanded in CR-56
+  title?: string;
+  summary?: string;
+  currentStep?: CreateFlowStep;
+  /** Section drafts; structure will tighten as steps persist real shapes. */
+  sections?: Record<string, unknown>[];
+  /** Stakeholder placeholders until the confirm-stakeholders step defines a schema. */
+  stakeholders?: Record<string, unknown>[];
+  /** Extra step-specific fields (must be JSON-serializable for server draft sync). */
   [key: string]: unknown;
 }
 

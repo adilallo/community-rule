@@ -1,8 +1,12 @@
+import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../../lib/server/env";
 import { dbUnavailable } from "../../../../lib/server/responses";
 import { getSessionUser } from "../../../../lib/server/session";
+import { putDraftBodySchema } from "../../../../lib/server/validation/createFlowSchemas";
+import { readLimitedJson } from "../../../../lib/server/validation/requestBody";
+import { jsonFromZodError } from "../../../../lib/server/validation/zodHttp";
 
 export async function GET() {
   if (!isDatabaseConfigured()) {
@@ -33,33 +37,28 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  const parsedBody = await readLimitedJson(request);
+  if (parsedBody.ok === false) {
+    return parsedBody.response;
   }
 
-  if (!body || typeof body !== "object" || !("payload" in body)) {
-    return NextResponse.json({ error: "payload required" }, { status: 400 });
+  const validated = putDraftBodySchema.safeParse(parsedBody.value);
+  if (!validated.success) {
+    return jsonFromZodError(validated.error);
   }
 
-  const payload = (body as { payload: unknown }).payload;
-  if (payload === undefined || typeof payload !== "object" || payload === null) {
-    return NextResponse.json(
-      { error: "payload must be a JSON object" },
-      { status: 400 },
-    );
-  }
+  const { payload } = validated.data;
+
+  const jsonPayload = payload as Prisma.InputJsonValue;
 
   const draft = await prisma.ruleDraft.upsert({
     where: { userId: user.id },
     create: {
       userId: user.id,
-      payload: payload as object,
+      payload: jsonPayload,
     },
     update: {
-      payload: payload as object,
+      payload: jsonPayload,
     },
   });
 

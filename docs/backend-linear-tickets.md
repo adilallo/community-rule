@@ -101,11 +101,13 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Acceptance criteria:**
 
-- [ ] TypeScript reflects the real shape of `CreateFlowState` (no unnecessary `unknown` for known keys).
-- [ ] Invalid draft/publish requests return 400, not 500.
-- [ ] Unit tests for schemas (Vitest) or route tests with MSW.
+- [x] TypeScript reflects the real shape of `CreateFlowState` (no unnecessary `unknown` for known keys).
+- [x] Invalid draft/publish requests return 400, not 500.
+- [x] Unit tests for schemas (Vitest) or route tests with MSW.
 
-**Files:** [app/create/types.ts](app/create/types.ts), [app/api/drafts/me/route.ts](app/api/drafts/me/route.ts), [app/api/rules/route.ts](app/api/rules/route.ts), new `lib/server/validation/` or `lib/validation/createFlow.ts`, [package.json](package.json) if adding `zod`.
+**Status:** [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) **Done**.
+
+**Files:** [app/create/types.ts](app/create/types.ts), [app/api/drafts/me/route.ts](app/api/drafts/me/route.ts), [app/api/rules/route.ts](app/api/rules/route.ts), [lib/server/validation/](lib/server/validation/) (Zod + plain-JSON checks), [package.json](package.json) (`zod`).
 
 **Note:** Repo-wide **API error JSON shape** and **request-id logging** are **Ticket 13 / CR-84**—coordinate 400 response bodies with that issue so validation errors match the agreed `{ error: { code, message } }` pattern.
 
@@ -175,15 +177,16 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 1. **Hydration:** Show a non-blocking “Loading your saved progress…” until first session + draft fetch completes (only when sync enabled).
 2. **Conflict:** If `localStorage` has non-empty state and server returns non-empty draft, pick a policy: prefer server with confirm modal, or prefer newer `updatedAt` (requires storing timestamp client-side). Document choice in code comment.
-3. **Save failures:** If `PUT /api/drafts/me` fails, show toast/banner; optionally retry with backoff.
-4. **Tests:** Component test or Playwright scenario with sync flag on (may require test DB or route mocks).
+3. **Save failures (API surface):** Change [saveDraftToServer](lib/create/api.ts) from `Promise<boolean>` to a result type such as `{ ok: true } | { ok: false; message: string; status?: number }`, parsing the response body with [readApiErrorMessage](lib/create/api.ts) so both legacy `{ error: string }` and CR-73 validation `{ error: { message } }` (and 413 `payload_too_large`) produce a useful `message`. Update [CreateFlowBackendSync](app/create/context/CreateFlowBackendSync.tsx) to branch on that result.
+4. **Save failures (UX):** On `ok: false`, show toast/banner (include `message`); optionally retry with backoff.
+5. **Tests:** Component test or Playwright scenario with sync flag on (may require test DB or route mocks).
 
 **Acceptance criteria:**
 
 - [ ] No silent data loss when server save fails.
 - [ ] User understands when server draft replaced local state (if applicable).
 
-**Files:** [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
+**Files:** [lib/create/api.ts](lib/create/api.ts), [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
 
 ---
 
