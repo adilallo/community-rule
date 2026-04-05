@@ -126,7 +126,7 @@ Match the current API behavior; tighten as product evolves:
 
 ---
 
-**Step 1.** Copy `.env.example` to `.env.local`. Set `DATABASE_URL` and secrets (see file comments).
+**Step 1.** Copy `.env.example` to `.env`. Set `DATABASE_URL` and secrets (see file comments).
 
 **Step 2.** Start Postgres locally:
 
@@ -162,7 +162,7 @@ npm run dev
 
 **Step 9.** **Templates** (when ready): seed `RuleTemplate` rows; `GET /api/templates` is implemented.
 
-**Step 10.** **Frontend sync**: Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env.local` for server drafts when logged in; `localStorage` remains fallback when off or anonymous.
+**Step 10.** **Frontend sync**: Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` for server drafts when logged in; `localStorage` remains fallback when off or anonymous.
 
 **Step 11.** **Web vitals:** Move off `.next` files—**prefer an external analytics or logging pipeline** (see §7). Use Postgres for vitals only as a deliberate ops choice.
 
@@ -173,7 +173,7 @@ npm run dev
 - **HTTPS** in staging/production; session cookie **Secure**.
 - **Rate-limit** OTP (in-memory OK for one instance; **shared store before multi-instance**—see §5).
 - **Hash** OTP codes and session tokens before storing; short OTP expiry.
-- **Secrets** only in env / secret store — never commit `.env.local`.
+- **Secrets** only in env / secret store — never commit `.env` with real values.
 - **CORS:** prefer **same-origin** `/api/*`; if cross-origin, configure CORS and CSRF carefully.
 
 ---

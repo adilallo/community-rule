@@ -2,8 +2,8 @@
 
 ## Backend (local)
 
-1. Copy [`.env.example`](.env.example) to `.env.local` and set `SESSION_SECRET` (at least 16 characters).
-2. Start Postgres (and optional Mailhog): `docker compose up -d postgres mailhog`. On Apple Silicon, Mailhog is configured for `linux/amd64` in [`docker-compose.yml`](docker-compose.yml) (clear emulation path). You can use `docker compose up -d postgres` only and read OTPs from the dev server log instead of Mailhog (see `.env.example`).
+1. Copy [`.env.example`](.env.example) to `.env` and set `SESSION_SECRET` (at least 16 characters).
+2. `docker compose up -d postgres mailhog` — omit `mailhog` if you only need Postgres; with `SMTP_URL` unset, OTPs are printed in the dev server log (see `.env.example`).
 3. Install dependencies: `npm ci`
 4. Apply migrations: `npx prisma migrate dev`
 5. Run the app: `npm run dev`
@@ -30,7 +30,7 @@ Use `npx prisma studio` to inspect the database.
 
 ### Optional draft sync
 
-Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env.local` so the create flow saves drafts to the server when a user is logged in.
+Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so the create flow saves drafts to the server when a user is logged in.
 
 ## Frontend / tests
 

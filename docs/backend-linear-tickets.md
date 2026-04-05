@@ -16,7 +16,7 @@ Use this if you **do not** have SSH or hosting access yet. Most engineering tick
 
 ### You do **not** need the server admin for
 
-- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env.local`, `npm run dev`, `npx prisma migrate dev`. OTP email can use Mailhog or dev log (no real SMTP).
+- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env`, `npm run dev`, `npx prisma migrate dev`. OTP email can use Mailhog or dev log (no real SMTP).
 - **Verifying APIs:** Use `localhost` and the same Docker Postgres—no production host.
 
 ### The **first** time you need someone with hosting access
@@ -34,7 +34,7 @@ Ask the admin to provide (or do for you) the items below—**Ticket 12** turns t
 | **DNS for mail**     | Often **SPF/DKIM** so OTP messages are not spam—admin or whoever owns DNS.                                                                                       |
 | **TLS + hostname**   | HTTPS URL for the site; reverse proxy (nginx, Caddy, etc.) in front of Node.                                                                                     |
 | **Health check**     | Load balancer or platform should probe **`GET /api/health`** (or your chosen path).                                                                              |
-| **Secrets storage**  | Env vars or secret manager—never commit `.env.local`.                                                                                                            |
+| **Secrets storage**  | Env vars or secret manager—never commit `.env` with secrets.                                                                                                     |
 | **Backups**          | Postgres backup/restore for production (and ideally staging).                                                                                                    |
 
 Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admin builds/pushes/runs the container with the env vars above.
