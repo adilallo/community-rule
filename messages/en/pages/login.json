@@ -1,0 +1,22 @@
+{
+  "title": "Log in to CommunityRule",
+  "subtitle": "Enter your email and we'll send you a magic link to sign in. No password needed!",
+  "emailLabel": "Email address",
+  "emailPlaceholder": "you@example.com",
+  "sendMagicLink": "Send me a magic link",
+  "successTitle": "Check your email",
+  "successBody": "We sent a sign-in link. Open it on this device to continue.",
+  "legalPrefix": "By continuing, you agree to our ",
+  "legalAnd": " and ",
+  "legalSuffix": ".",
+  "backToHome": "← Back to home",
+  "errors": {
+    "network": "Something went wrong. Check your connection and try again.",
+    "emailInvalid": "Enter a valid email address.",
+    "rateLimited": "Too many requests. Try again in {seconds} seconds.",
+    "generic": "Something went wrong. Try again.",
+    "invalidLink": "That sign-in link is not valid. Request a new one from the login page.",
+    "expiredLink": "That sign-in link has expired. Request a new one from the login page.",
+    "serverError": "Something went wrong on our end. Try again later."
+  }
+}

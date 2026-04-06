@@ -14,13 +14,14 @@ const Footer = dynamic(() => import("./Footer"), {
 
 /**
  * Conditionally renders Footer based on pathname.
- * Hides footer for /create/* routes (full-screen create flow).
+ * Hides footer for /create/* and /login (full-screen flows; login uses a body portal).
  */
 const ConditionalFooter = memo(() => {
   const pathname = usePathname();
   const isCreateFlow = pathname?.startsWith("/create");
+  const isLogin = pathname === "/login";
 
-  if (isCreateFlow) {
+  if (isCreateFlow || isLogin) {
     return null;
   }
 

@@ -7,6 +7,9 @@ import "./globals.css";
 import ConditionalNavigation from "./components/navigation/ConditionalNavigation";
 import ConditionalFooter from "./components/navigation/ConditionalFooter";
 
+/** Header reads `cr_session` via Server Components; must not use prerendered guest HTML. */
+export const dynamic = "force-dynamic";
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],

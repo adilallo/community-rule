@@ -6,6 +6,7 @@
   },
   "buttons": {
     "logIn": "Log in",
+    "profile": "Profile",
     "createRule": "Create rule"
   },
   "ariaLabels": {
@@ -13,6 +14,7 @@
     "mainNavigation": "Main navigation",
     "navigateToPage": "Navigate to {text} page",
     "logInToAccount": "Log in to your account",
+    "goToProfile": "Go to your profile",
     "createNewRule": "Create a new rule with avatar decoration"
   }
 }

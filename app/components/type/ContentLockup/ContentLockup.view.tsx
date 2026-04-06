@@ -20,18 +20,21 @@ function ContentLockupView({
 }: ContentLockupViewProps) {
   return (
     <div className={styles.container}>
-      {variant === "ask" || variant === "ask-inverse" || variant === "modal" ? (
-        /* Simplified structure for ask and modal variants */
+      {variant === "ask" ||
+      variant === "ask-inverse" ||
+      variant === "modal" ||
+      variant === "login" ? (
+        /* Simplified structure for ask, modal, and login variants */
         <div
           className={`${styles.titleGroup} ${
-            alignment === "left" || variant === "modal"
+            alignment === "left" || variant === "modal" || variant === "login"
               ? "text-left"
               : "text-center"
           }`}
         >
           <div
             className={`${styles.titleContainer} ${
-              alignment === "left" || variant === "modal"
+              alignment === "left" || variant === "modal" || variant === "login"
                 ? "justify-start"
                 : "justify-center"
             }`}
@@ -43,7 +46,7 @@ function ContentLockupView({
             ) : null}
           </div>
           {subtitle ? <h2 className={styles.subtitle}>{subtitle}</h2> : null}
-          {variant === "modal" && description && (
+          {(variant === "modal" || variant === "login") && description && (
             <p className={styles.description}>{description}</p>
           )}
         </div>

@@ -21,7 +21,8 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   workers: process.env.CI ? 2 : undefined, // Reduce workers in CI to prevent server overload
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:3010",
+    // Prefer 127.0.0.1 so it matches standalone server HOSTNAME and CI (wait-on tcp:127.0.0.1:3010).
+    baseURL: process.env.BASE_URL || "http://127.0.0.1:3010",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -38,10 +39,11 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: "npm run build && npx next start -p 3010",
-          url: "http://localhost:3010",
+          // `output: "standalone"` — use the standalone Node server (see Dockerfile), not `next start`.
+          command: "npm run build && npm run start:e2e",
+          url: "http://127.0.0.1:3010",
           reuseExistingServer: !process.env.CI,
-          timeout: 180_000, // Increased timeout to account for build time
+          timeout: 240_000,
         },
       }),
   // Browser-specific snapshot path template (includes projectName for cross-browser support)

@@ -139,14 +139,24 @@ const TopNavContainer = memo<TopNavProps>(
       const isSmallBreakpoint = size === "xsmall" || size === "home";
       const mode = folderTop && isSmallBreakpoint ? "inverse" : "default";
 
+      const href = loggedIn ? "/profile" : "/login";
+      const label = loggedIn ? t("buttons.profile") : t("buttons.logIn");
+      const ariaLabel = loggedIn
+        ? t("ariaLabels.goToProfile")
+        : t("ariaLabels.logInToAccount");
+      const navSelected =
+        (loggedIn && pathname === "/profile") ||
+        (!loggedIn && pathname === "/login");
+
       return (
         <MenuBarItem
-          href="#"
+          href={href}
           size={sizeMap[size] || "Small"}
           mode={mode}
-          ariaLabel={t("ariaLabels.logInToAccount")}
+          state={navSelected ? "selected" : "default"}
+          ariaLabel={ariaLabel}
         >
-          {t("buttons.logIn")}
+          {label}
         </MenuBarItem>
       );
     };

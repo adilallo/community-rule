@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { CreateFlowBackendSync } from "./context/CreateFlowBackendSync";
 import {
   CreateFlowProvider,
   useCreateFlow,
@@ -107,6 +108,7 @@ export default function CreateFlowLayout({
 }) {
   return (
     <CreateFlowProvider>
+      <CreateFlowBackendSync />
       <CreateFlowLayoutContent>{children}</CreateFlowLayoutContent>
     </CreateFlowProvider>
   );

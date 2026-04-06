@@ -112,6 +112,20 @@ const ContentLockupContainer = memo<ContentLockupProps>(
           "font-inter font-normal text-[16px] leading-[24px] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
         shape: "w-[16px] h-[16px]",
       },
+      login: {
+        container:
+          "flex flex-col gap-[var(--spacing-scale-012)] items-start justify-center relative w-full",
+        textContainer: "flex flex-col gap-[var(--spacing-scale-012)] w-full",
+        titleGroup: "flex flex-col gap-[var(--spacing-scale-012)] w-full",
+        titleContainer: "flex items-center justify-start w-full",
+        title:
+          "font-bricolage-grotesque font-extrabold text-[36px] leading-[44px] tracking-[0] text-[var(--color-content-default-primary)] text-left",
+        subtitle:
+          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
+        description:
+          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] text-[var(--color-content-default-tertiary)] text-left",
+        shape: "w-[16px] h-[16px]",
+      },
     };
 
     const styles = variantStyles[variant] || variantStyles.hero;

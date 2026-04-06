@@ -1,6 +1,9 @@
 import { getAssetPath } from "../../../../lib/assetUtils";
 import type { ModalHeaderProps } from "./ModalHeader.types";
 
+const iconButtonClass =
+  "absolute bg-[var(--color-surface-default-secondary)] h-[24px] w-[24px] rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-invert-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-default-primary)]";
+
 export function ModalHeaderView({
   onClose,
   onMoreOptions,
@@ -15,8 +18,9 @@ export function ModalHeaderView({
       {/* Close Button - Left */}
       {showCloseButton && (
         <button
+          type="button"
           onClick={onClose}
-          className="absolute bg-[var(--color-surface-default-secondary)] h-[24px] w-[24px] rounded-full left-[24px] top-[12px] flex items-center justify-center cursor-pointer"
+          className={`${iconButtonClass} left-[24px] top-[12px]`}
           aria-label="Close dialog"
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
@@ -34,8 +38,9 @@ export function ModalHeaderView({
       {/* More Options Button - Right */}
       {showMoreOptionsButton && (
         <button
+          type="button"
           onClick={onMoreOptions}
-          className="absolute bg-[var(--color-surface-default-secondary)] h-[24px] w-[24px] rounded-full right-[24px] top-[12px] flex items-center justify-center cursor-pointer"
+          className={`${iconButtonClass} right-[24px] top-[12px]`}
           aria-label="More options"
         >
           <svg
