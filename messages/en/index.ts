@@ -13,6 +13,8 @@ import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
 import home from "./pages/home.json";
 import learn from "./pages/learn.json";
+import login from "./pages/login.json";
+import profile from "./pages/profile.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import communication from "./create/communication.json";
@@ -34,6 +36,8 @@ export default {
   pages: {
     home,
     learn,
+    login,
+    profile,
   },
   create: {
     communication,

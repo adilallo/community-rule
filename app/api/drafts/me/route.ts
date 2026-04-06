@@ -23,7 +23,9 @@ export async function GET() {
   });
 
   return NextResponse.json({
-    draft: draft ? { payload: draft.payload, updatedAt: draft.updatedAt } : null,
+    draft: draft
+      ? { payload: draft.payload, updatedAt: draft.updatedAt }
+      : null,
   });
 }
 

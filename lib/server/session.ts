@@ -50,7 +50,10 @@ export async function createSessionForUser(
   return { token, expiresAt };
 }
 
-export async function setSessionCookie(token: string, expiresAt: Date): Promise<void> {
+export async function setSessionCookie(
+  token: string,
+  expiresAt: Date,
+): Promise<void> {
   const store = await cookies();
   store.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,

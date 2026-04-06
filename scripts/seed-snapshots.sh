@@ -33,7 +33,7 @@ docker run --rm -it \
     sleep 10
     
     echo '📸 Generating snapshots...'
-    PLAYWRIGHT_UPDATE_SNAPSHOTS=1 npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium
+    npx playwright test tests/e2e/visual-regression.spec.ts --project=chromium --update-snapshots=all
     
     echo '✅ Snapshots generated successfully!'
   "

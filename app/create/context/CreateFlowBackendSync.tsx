@@ -8,8 +8,7 @@ import {
 } from "../../../lib/create/api";
 import { useCreateFlow } from "./CreateFlowContext";
 
-const SYNC_ENABLED =
-  process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
+const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
 const DEBOUNCE_MS = 1000;
 

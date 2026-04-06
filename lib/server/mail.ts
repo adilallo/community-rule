@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
 import { logger } from "../logger";
 
-export async function sendOtpEmail(to: string, code: string): Promise<void> {
+export async function sendMagicLinkEmail(
+  to: string,
+  verifyUrl: string,
+): Promise<void> {
   const url = process.env.SMTP_URL;
 
   if (!url) {
     if (process.env.NODE_ENV === "development") {
-      logger.info(`[dev] OTP for ${to}: ${code}`);
+      logger.info(`[dev] Magic link for ${to}: ${verifyUrl}`);
       return;
     }
     throw new Error("SMTP_URL is not configured");
@@ -18,7 +21,7 @@ export async function sendOtpEmail(to: string, code: string): Promise<void> {
   await transporter.sendMail({
     from,
     to,
-    subject: "Your Community Rule sign-in code",
-    text: `Your sign-in code is: ${code}\n\nIt expires in 10 minutes.`,
+    subject: "Sign in to Community Rule",
+    text: `Open this link to sign in (it expires in 15 minutes):\n\n${verifyUrl}\n\nIf you did not request this, you can ignore this email.`,
   });
 }

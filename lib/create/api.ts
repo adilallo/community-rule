@@ -37,40 +37,29 @@ export async function fetchAuthSession(): Promise<{
   return parseJson(res);
 }
 
-export async function requestOtp(email: string): Promise<{ ok: true } | { error: string }> {
-  const res = await fetch("/api/auth/otp/request", {
+export async function requestMagicLink(
+  email: string,
+  nextPath?: string,
+): Promise<{ ok: true } | { ok: false; error: string; retryAfterMs?: number }> {
+  const res = await fetch("/api/auth/magic-link/request", {
     method: "POST",
     credentials: "include",
     headers: jsonHeaders,
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({
+      email,
+      ...(nextPath ? { next: nextPath } : {}),
+    }),
   });
-  const data = await parseJson<{ error?: string }>(res);
+  const data = await parseJson<{ error?: string; retryAfterMs?: number }>(res);
   if (!res.ok) {
-    return { error: readApiErrorMessage(data) };
+    return {
+      ok: false,
+      error: readApiErrorMessage(data),
+      retryAfterMs:
+        typeof data.retryAfterMs === "number" ? data.retryAfterMs : undefined,
+    };
   }
   return { ok: true };
-}
-
-export async function verifyOtp(
-  email: string,
-  code: string,
-): Promise<
-  { ok: true; user: { id: string; email: string } } | { error: string }
-> {
-  const res = await fetch("/api/auth/otp/verify", {
-    method: "POST",
-    credentials: "include",
-    headers: jsonHeaders,
-    body: JSON.stringify({ email, code }),
-  });
-  const data = await parseJson<{
-    error?: string;
-    user?: { id: string; email: string };
-  }>(res);
-  if (!res.ok || !data.user) {
-    return { error: readApiErrorMessage(data) };
-  }
-  return { ok: true, user: data.user };
 }
 
 export async function logout(): Promise<void> {
@@ -91,7 +80,9 @@ export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   return data.draft.payload as CreateFlowState;
 }
 
-export async function saveDraftToServer(state: CreateFlowState): Promise<boolean> {
+export async function saveDraftToServer(
+  state: CreateFlowState,
+): Promise<boolean> {
   const res = await fetch("/api/drafts/me", {
     method: "PUT",
     credentials: "include",
@@ -105,10 +96,7 @@ export async function publishRule(input: {
   title: string;
   summary?: string;
   document: Record<string, unknown>;
-}): Promise<
-  | { ok: true; id: string; title: string }
-  | { error: string }
-> {
+}): Promise<{ ok: true; id: string; title: string } | { error: string }> {
   const res = await fetch("/api/rules", {
     method: "POST",
     credentials: "include",

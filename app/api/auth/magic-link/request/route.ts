@@ -4,13 +4,17 @@ import {
   getSessionPepper,
   isDatabaseConfigured,
 } from "../../../../../lib/server/env";
-import { hashOtpCode } from "../../../../../lib/server/hash";
-import { sendOtpEmail } from "../../../../../lib/server/mail";
+import {
+  hashSessionToken,
+  newSessionToken,
+} from "../../../../../lib/server/hash";
+import { sendMagicLinkEmail } from "../../../../../lib/server/mail";
 import { rateLimitKey } from "../../../../../lib/server/rateLimit";
 import { dbUnavailable } from "../../../../../lib/server/responses";
 import { logger } from "../../../../../lib/logger";
+import { safeInternalPath } from "../../../../../lib/safeInternalPath";
 
-const OTP_TTL_MS = 10 * 60 * 1000;
+const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 const EMAIL_MIN_INTERVAL_MS = 60 * 1000;
 const IP_MIN_INTERVAL_MS = 20 * 1000;
 
@@ -19,6 +23,13 @@ function normalizeEmail(raw: unknown): string | null {
   const email = raw.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
   return email;
+}
+
+function readNextPath(body: unknown): string | null {
+  if (!body || typeof body !== "object" || !("next" in body)) return null;
+  const n = (body as { next: unknown }).next;
+  if (typeof n !== "string") return null;
+  return safeInternalPath(n);
 }
 
 export async function POST(request: NextRequest) {
@@ -39,7 +50,10 @@ export async function POST(request: NextRequest) {
       : null,
   );
   if (!email) {
-    return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Valid email required" },
+      { status: 400 },
+    );
   }
 
   const ip =
@@ -47,7 +61,7 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-real-ip") ??
     "unknown";
 
-  const rlEmail = rateLimitKey(`otp-email:${email}`, EMAIL_MIN_INTERVAL_MS);
+  const rlEmail = rateLimitKey(`magic-email:${email}`, EMAIL_MIN_INTERVAL_MS);
   if (rlEmail.ok === false) {
     return NextResponse.json(
       { error: "Too many requests", retryAfterMs: rlEmail.retryAfterMs },
@@ -55,7 +69,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const rlIp = rateLimitKey(`otp-ip:${ip}`, IP_MIN_INTERVAL_MS);
+  const rlIp = rateLimitKey(`magic-ip:${ip}`, IP_MIN_INTERVAL_MS);
   if (rlIp.ok === false) {
     return NextResponse.json(
       { error: "Too many requests", retryAfterMs: rlIp.retryAfterMs },
@@ -73,20 +87,29 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const code = String(Math.floor(100000 + Math.random() * 900000));
-  const codeHash = hashOtpCode(code, pepper);
-  const expiresAt = new Date(Date.now() + OTP_TTL_MS);
+  const token = newSessionToken();
+  const tokenHash = hashSessionToken(token, pepper);
+  const expiresAt = new Date(Date.now() + MAGIC_LINK_TTL_MS);
+  const nextPath = readNextPath(body);
 
-  await prisma.otpChallenge.deleteMany({ where: { email } });
-  await prisma.otpChallenge.create({
-    data: { email, codeHash, expiresAt },
+  await prisma.magicLinkToken.deleteMany({ where: { email } });
+  await prisma.magicLinkToken.create({
+    data: {
+      email,
+      tokenHash,
+      expiresAt,
+      nextPath: nextPath ?? undefined,
+    },
   });
 
+  const origin = request.nextUrl.origin;
+  const verifyUrl = `${origin}/api/auth/magic-link/verify?token=${encodeURIComponent(token)}`;
+
   try {
-    await sendOtpEmail(email, code);
+    await sendMagicLinkEmail(email, verifyUrl);
   } catch (err) {
-    logger.error("sendOtpEmail failed:", err);
-    await prisma.otpChallenge.deleteMany({ where: { email } });
+    logger.error("sendMagicLinkEmail failed:", err);
+    await prisma.magicLinkToken.deleteMany({ where: { email } });
     return NextResponse.json(
       { error: "Could not send email" },
       { status: 502 },

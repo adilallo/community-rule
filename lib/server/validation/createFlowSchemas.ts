@@ -1,14 +1,8 @@
 import { z } from "zod";
 import { FLOW_STEP_ORDER } from "../../../app/create/utils/flowSteps";
-import {
-  assertPlainJsonValue,
-  DEFAULT_PLAIN_JSON_LIMITS,
-} from "./plainJson";
+import { assertPlainJsonValue, DEFAULT_PLAIN_JSON_LIMITS } from "./plainJson";
 
-const flowStepTuple = FLOW_STEP_ORDER as unknown as [
-  string,
-  ...string[],
-];
+const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];
 
 const createFlowStepSchema = z.enum(flowStepTuple);
 
@@ -47,25 +41,24 @@ export const createFlowStateSchema = z
     }
   });
 
-export const publishRuleBodySchema = z
-  .object({
-    title: z
-      .string()
-      .max(500)
-      .transform((s) => s.trim())
-      .refine((s) => s.length > 0, { message: "title required" }),
-    summary: z
-      .union([z.string().max(8000), z.null()])
-      .optional()
-      .transform((val) => {
-        if (val === undefined || val === null) {
-          return null;
-        }
-        const t = val.trim();
-        return t.length > 0 ? t : null;
-      }),
-    document: publishedRuleDocumentSchema,
-  });
+export const publishRuleBodySchema = z.object({
+  title: z
+    .string()
+    .max(500)
+    .transform((s) => s.trim())
+    .refine((s) => s.length > 0, { message: "title required" }),
+  summary: z
+    .union([z.string().max(8000), z.null()])
+    .optional()
+    .transform((val) => {
+      if (val === undefined || val === null) {
+        return null;
+      }
+      const t = val.trim();
+      return t.length > 0 ? t : null;
+    }),
+  document: publishedRuleDocumentSchema,
+});
 
 export type PublishRuleBody = z.infer<typeof publishRuleBodySchema>;
 

@@ -255,12 +255,27 @@ export function normalizeNavigationItemSize(
 export function normalizeContentLockupVariant(
   value: string | undefined,
   defaultValue: "hero" = "hero",
-): "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal" {
+): "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal" | "login" {
   if (!value) return defaultValue;
   const normalized = value.toLowerCase();
-  const variants = ["hero", "feature", "learn", "ask", "ask-inverse", "modal"];
+  const variants = [
+    "hero",
+    "feature",
+    "learn",
+    "ask",
+    "ask-inverse",
+    "modal",
+    "login",
+  ];
   if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
+    return normalized as
+      | "hero"
+      | "feature"
+      | "learn"
+      | "ask"
+      | "ask-inverse"
+      | "modal"
+      | "login";
   }
   return defaultValue;
 }

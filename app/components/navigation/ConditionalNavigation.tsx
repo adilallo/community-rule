@@ -1,24 +1,11 @@
-"use client";
-
-import { memo } from "react";
-import { usePathname } from "next/navigation";
-import TopNavWithPathname from "./TopNav/TopNavWithPathname";
+import { getNavAuthSignedIn } from "../../../lib/server/navAuth";
+import ConditionalNavigationClient from "./ConditionalNavigationClient";
 
 /**
- * Conditionally renders TopNav based on pathname.
- * Hides navigation for /create/* routes (full-screen create flow).
+ * Resolves the session on the server so the header matches the HttpOnly cookie on the
+ * first HTML response (no “Log in” flash before `/api/auth/session`).
  */
-const ConditionalNavigation = memo(() => {
-  const pathname = usePathname();
-  const isCreateFlow = pathname?.startsWith("/create");
-
-  if (isCreateFlow) {
-    return null;
-  }
-
-  return <TopNavWithPathname />;
-});
-
-ConditionalNavigation.displayName = "ConditionalNavigation";
-
-export default ConditionalNavigation;
+export default async function ConditionalNavigation() {
+  const initialSignedIn = await getNavAuthSignedIn();
+  return <ConditionalNavigationClient initialSignedIn={initialSignedIn} />;
+}

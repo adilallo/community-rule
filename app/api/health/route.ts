@@ -14,9 +14,6 @@ export async function GET() {
     await prisma.$queryRaw`SELECT 1`;
     return NextResponse.json({ ok: true, database: "connected" });
   } catch {
-    return NextResponse.json(
-      { ok: false, database: "error" },
-      { status: 503 },
-    );
+    return NextResponse.json({ ok: false, database: "error" }, { status: 503 });
   }
 }

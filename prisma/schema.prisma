@@ -29,12 +29,12 @@ model Session {
   @@index([userId])
 }
 
-model OtpChallenge {
+model MagicLinkToken {
   id        String   @id @default(cuid())
   email     String
-  codeHash  String
+  tokenHash String   @unique
   expiresAt DateTime
-  attempts  Int      @default(0)
+  nextPath  String?
   createdAt DateTime @default(now())
 
   @@index([email])

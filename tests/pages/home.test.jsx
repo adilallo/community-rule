@@ -32,10 +32,13 @@ describe("Page", () => {
       ).length,
     ).toBeGreaterThan(0);
 
-    // Check feature grid section (using getAllByText since there are multiple instances)
-    expect(
-      screen.getAllByText("We've got your back, every step of the way").length,
-    ).toBeGreaterThan(0);
+    // FeatureGrid is next/dynamic — wait like other code-split sections
+    await waitFor(() => {
+      expect(
+        screen.getAllByText("We've got your back, every step of the way")
+          .length,
+      ).toBeGreaterThan(0);
+    });
     expect(
       screen.getAllByText(
         "Use our toolkit to improve, document, and evolve your organization.",

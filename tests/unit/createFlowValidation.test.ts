@@ -21,7 +21,10 @@ describe("assertPlainJsonValue", () => {
   });
 
   it("rejects __proto__ keys", () => {
-    const obj = JSON.parse('{"__proto__": {"x": 1}}') as Record<string, unknown>;
+    const obj = JSON.parse('{"__proto__": {"x": 1}}') as Record<
+      string,
+      unknown
+    >;
     expect(assertPlainJsonValue(obj, 0, DEFAULT_PLAIN_JSON_LIMITS)).toBe(
       "Unsafe object key",
     );
