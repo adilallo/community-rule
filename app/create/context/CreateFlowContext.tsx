@@ -63,9 +63,8 @@ export function CreateFlowProvider({
     if (!wasOff) return;
     const from = readAnonymousCreateFlowState();
     if (Object.keys(from).length === 0) return;
-    setState((prev) =>
-      Object.keys(prev).length > 0 ? prev : { ...from },
-    );
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate anonymous draft when guest persistence turns on
+    setState((prev) => (Object.keys(prev).length > 0 ? prev : { ...from }));
   }, [enableAnonymousPersistence]);
 
   useEffect(() => {

@@ -173,7 +173,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 **Acceptance criteria:**
 
 - [x] Completed step still works; **Save & Exit** gating uses session + step (not conflated with `completed` only).
-- [x] Signed in + sync: Save & Exit persists server-side; anonymous: localStorage + exit modal + transfer after magic link. Sign out on profile clears session. *(Re-verify on staging/prod as needed.)*
+- [x] Signed in + sync: Save & Exit persists server-side; anonymous: localStorage + exit modal + transfer after magic link. Sign out on profile clears session. _(Re-verify on staging/prod as needed.)_
 
 **Files:** [app/create/layout.tsx](app/create/layout.tsx), [app/create/hooks/useCreateFlowExit.ts](app/create/hooks/useCreateFlowExit.ts), [app/components/utility/CreateFlowTopNav/](app/components/utility/CreateFlowTopNav/), [app/create/context/CreateFlowContext.tsx](app/create/context/CreateFlowContext.tsx), [messages/en/create/topNav.json](messages/en/create/topNav.json), [app/profile/ProfilePageClient.tsx](app/profile/ProfilePageClient.tsx).
 
@@ -185,22 +185,22 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Server draft **PUT** path is production-grade when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` (Save & Exit, post-login transfer from anonymous draft).
 
-**Context:** Auto-hydrate / debounced autosave component was removed; create flow starts fresh for signed-in users until profile “open draft” (future). Residual risks: silent **PUT** failure (confirm on exit today), richer error surfaces.
+**Context:** Auto-hydrate / debounced autosave component was removed; signed-in resume uses `GET /api/drafts/me` in the create layout.
 
 **Implementation:**
 
-1. **Hydration:** Show a non-blocking “Loading your saved progress…” until first session + draft fetch completes (only when sync enabled).
-2. **Conflict:** If `localStorage` has non-empty state and server returns non-empty draft, pick a policy: prefer server with confirm modal, or prefer newer `updatedAt` (requires storing timestamp client-side). Document choice in code comment.
-3. **Save failures (API surface):** Change [saveDraftToServer](lib/create/api.ts) from `Promise<boolean>` to a result type such as `{ ok: true } | { ok: false; message: string; status?: number }`, parsing the response body with [readApiErrorMessage](lib/create/api.ts) so both legacy `{ error: string }` and CR-73 validation `{ error: { message } }` (and 413 `payload_too_large`) produce a useful `message`. Use that result in [useCreateFlowExit](app/create/hooks/useCreateFlowExit.ts) and [PostLoginDraftTransfer](app/create/PostLoginDraftTransfer.tsx).
-4. **Save failures (UX):** On `ok: false`, show toast/banner (include `message`); optionally retry with backoff.
-5. **Tests:** Component test or Playwright scenario with sync flag on (may require test DB or route mocks).
+1. **Hydration:** **Done:** [SignedInDraftHydration](app/create/SignedInDraftHydration.tsx) + [messages/en/create/draftHydration.json](messages/en/create/draftHydration.json); skips `?syncDraft=1` / transfer-pending (PostLogin owns that). Wired in [layout](app/create/layout.tsx).
+2. **Conflict:** **Done:** If `create-flow-anonymous` and server draft are both non-empty, `window.confirm` (OK = account draft, Cancel = browser copy); documented on [anonymousDraftStorage](app/create/anonymousDraftStorage.ts). Newer-`updatedAt` client compare remains optional.
+3. **Save failures (API surface):** **Done (CR-76):** [saveDraftToServer](lib/create/api.ts) returns `SaveDraftResult` with parsed API `message`; wired in [useCreateFlowExit](app/create/hooks/useCreateFlowExit.ts) and [PostLoginDraftTransfer](app/create/PostLoginDraftTransfer.tsx).
+4. **Save failures (UX):** **Done (CR-76):** Dismissible banner with server `message` (no second confirm to leave); post-login transfer shows reason; unit tests in `tests/unit/saveDraftToServer.test.ts`. Retry/backoff remains optional.
+5. **Tests:** `saveDraftToServer` unit tests; [draftHydrationUtils](lib/create/draftHydrationUtils.ts) unit tests. Playwright against Next standalone + route mocks for `/api/auth/session` was flaky here; cover hydration with **manual QA** (signed in + sync on + server draft) or add a future E2E with a dedicated auth fixture.
 
 **Acceptance criteria:**
 
-- [ ] No silent data loss when server save fails.
-- [ ] User understands when server draft replaced local state (if applicable).
+- [x] No silent data loss when server save fails (user sees reason in banner; stays in flow to retry Save & Exit or leave via e.g. logo).
+- [x] User understands when server draft replaced local state (if applicable) — conflict `window.confirm` when both browser anonymous draft and account draft exist; otherwise silent apply of single source.
 
-**Files:** [lib/create/api.ts](lib/create/api.ts), [app/create/hooks/useCreateFlowExit.ts](app/create/hooks/useCreateFlowExit.ts), [app/create/PostLoginDraftTransfer.tsx](app/create/PostLoginDraftTransfer.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
+**Files:** [lib/create/api.ts](lib/create/api.ts), [app/create/hooks/useCreateFlowExit.ts](app/create/hooks/useCreateFlowExit.ts), [app/create/PostLoginDraftTransfer.tsx](app/create/PostLoginDraftTransfer.tsx), [app/create/SignedInDraftHydration.tsx](app/create/SignedInDraftHydration.tsx), [app/create/layout.tsx](app/create/layout.tsx), [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
 
 ---
 
@@ -508,7 +508,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    13 | 13     | API errors + request-id logging   |
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
-|    16 | 16     | Template matrix + xlsx ingestion     |
+|    16 | 16     | Template matrix + xlsx ingestion  |
 
 Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
 
@@ -518,24 +518,24 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 **Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), not in the CR-72–83 sequence.
 
-| Doc ticket | Linear                                                                                                                      | Title (short)                          |
-| ---------: | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-|          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap                  |
-|          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation       |
-|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)                  | Magic-link sign-in UI (Ticket 3; Done) |
-|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                 | Create flow session UI (Ticket 4; Done)|
-|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors) |
-|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring                         |
-|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed                          |
-|          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                        |
-|          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)           |
-|         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)          |
-|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | CI migrate smoke (optional)            |
-|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops runbook / admin handoff            |
-|         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging        |
-|         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup            |
-|         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069) |
-|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion       |
+| Doc ticket | Linear                                                                                                                      | Title (short)                           |
+| ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+|          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap                   |
+|          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation        |
+|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)               | Magic-link sign-in UI (Ticket 3; Done)  |
+|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                | Create flow session UI (Ticket 4; Done) |
+|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors)  |
+|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring                          |
+|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed                           |
+|          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                         |
+|          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            |
+|         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           |
+|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | CI migrate smoke (optional)             |
+|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops runbook / admin handoff             |
+|         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         |
+|         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup             |
+|         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |
+|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion        |
 
 ---
 

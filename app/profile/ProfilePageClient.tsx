@@ -7,9 +7,7 @@ import { fetchAuthSession, logout } from "../../lib/create/api";
 
 export default function ProfilePageClient() {
   const t = useTranslation("pages.profile");
-  const [user, setUser] = useState<{ id: string; email: string } | null>(
-    null,
-  );
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {

@@ -23,6 +23,7 @@ export default function TextPage() {
   useEffect(() => {
     const incoming = state.title;
     if (typeof incoming !== "string" || incoming.length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync controlled field when context hydrates from server/local
     setValue((prev) => (prev === "" ? incoming : prev));
   }, [state.title]);
 

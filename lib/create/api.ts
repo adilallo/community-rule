@@ -80,16 +80,51 @@ export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   return data.draft.payload as CreateFlowState;
 }
 
+const DRAFT_SAVE_NETWORK_ERROR =
+  "Something went wrong. Check your connection and try again.";
+
+export type SaveDraftResult =
+  | { ok: true }
+  | { ok: false; message: string; status?: number };
+
+async function errorBodyMessage(res: Response): Promise<string> {
+  try {
+    const data: unknown = await res.json();
+    const msg = readApiErrorMessage(data);
+    if (msg !== "Request failed") return msg;
+  } catch {
+    /* non-JSON body */
+  }
+  const statusText = res.statusText?.trim();
+  if (statusText) return statusText;
+  return "Save failed";
+}
+
 export async function saveDraftToServer(
   state: CreateFlowState,
-): Promise<boolean> {
-  const res = await fetch("/api/drafts/me", {
-    method: "PUT",
-    credentials: "include",
-    headers: jsonHeaders,
-    body: JSON.stringify({ payload: state }),
-  });
-  return res.ok;
+): Promise<SaveDraftResult> {
+  try {
+    const res = await fetch("/api/drafts/me", {
+      method: "PUT",
+      credentials: "include",
+      headers: jsonHeaders,
+      body: JSON.stringify({ payload: state }),
+    });
+    if (res.ok) {
+      return { ok: true as const };
+    }
+    const message = await errorBodyMessage(res);
+    return {
+      ok: false as const,
+      message,
+      status: res.status,
+    };
+  } catch {
+    return {
+      ok: false as const,
+      message: DRAFT_SAVE_NETWORK_ERROR,
+    };
+  }
 }
 
 export async function publishRule(input: {

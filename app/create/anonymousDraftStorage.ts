@@ -10,6 +10,11 @@ export const CREATE_FLOW_ANONYMOUS_KEY = "create-flow-anonymous" as const;
 export const CREATE_FLOW_TRANSFER_PENDING_KEY =
   "create-flow-transfer-pending" as const;
 
+/**
+ * When signed-in + sync, {@link SignedInDraftHydration} resolves server vs this key via `window.confirm`
+ * if both are non-empty; see `messages/en/create/draftHydration.json`.
+ */
+
 const LEGACY_LIVE_KEY = "create-flow-state";
 const LEGACY_DRAFT_KEY = "create-flow-draft";
 

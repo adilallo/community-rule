@@ -2,5 +2,6 @@
   "saveAndExit": "Save & Exit",
   "exit": "Exit",
   "leaveConfirmLoss": "Leave create flow? Your progress will be lost.",
-  "leaveConfirmSaveFailed": "Could not save to your account. Leave anyway?"
+  "draftSaveBannerTitle": "Couldn't save draft",
+  "postLoginSaveFailedWithReason": "Could not save your draft to your account. Your progress is still stored on this device.\n\n{reason}"
 }

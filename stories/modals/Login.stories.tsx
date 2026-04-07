@@ -48,8 +48,8 @@ function FakeMarketingPageBehindOverlay({
       />
       <div className="relative z-0 px-8 py-16">
         <p className="font-inter max-w-md text-lg text-neutral-800">
-          Placeholder page content — the login overlay portals above this and uses
-          backdrop blur (`blurredYellow`).
+          Placeholder page content — the login overlay portals above this and
+          uses backdrop blur (`blurredYellow`).
         </p>
       </div>
       {children}
@@ -71,7 +71,7 @@ export default {
     docs: {
       description: {
         component:
-          "**Primary UX:** `AuthModalProvider` opens this as a **popup overlay** on top of the current page — `backdropVariant=\"blurredYellow\"`, `usePortal` (default). **`/login`** is a thin full-page shell: yellow **solid** backdrop, `usePortal={false}`, same `LoginForm` inside.",
+          '**Primary UX:** `AuthModalProvider` opens this as a **popup overlay** on top of the current page — `backdropVariant="blurredYellow"`, `usePortal` (default). **`/login`** is a thin full-page shell: yellow **solid** backdrop, `usePortal={false}`, same `LoginForm` inside.',
       },
     },
   },
@@ -92,7 +92,7 @@ export const HeaderOverlayBlurred = {
     docs: {
       description: {
         story:
-          "Same as **Log in** from the site header: `backdropVariant=\"blurredYellow\"`, `usePortal`, card + “Back to home” below.",
+          'Same as **Log in** from the site header: `backdropVariant="blurredYellow"`, `usePortal`, card + “Back to home” below.',
       },
     },
   },

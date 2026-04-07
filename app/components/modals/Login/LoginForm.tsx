@@ -113,14 +113,7 @@ export default function LoginForm({
     } finally {
       setSubmitting(false);
     }
-  }, [
-    email,
-    isSaveProgress,
-    magicLinkNextPath,
-    nextParam,
-    stripErrorQuery,
-    t,
-  ]);
+  }, [email, isSaveProgress, magicLinkNextPath, nextParam, stripErrorQuery, t]);
 
   const urlErrorMessage =
     errorParam === "expired_link"

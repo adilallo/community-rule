@@ -5,8 +5,7 @@ import ModalHeader from "../../utility/ModalHeader";
 import type { LoginBackdropVariant, LoginViewProps } from "./Login.types";
 
 const backdropClasses: Record<LoginBackdropVariant, string> = {
-  solid:
-    "bg-[var(--color-surface-inverse-brand-primary)]",
+  solid: "bg-[var(--color-surface-inverse-brand-primary)]",
   blurredYellow:
     "bg-[var(--color-surface-inverse-brand-primary)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-surface-inverse-brand-primary)]/75",
 };

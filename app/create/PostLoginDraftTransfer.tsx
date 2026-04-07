@@ -10,6 +10,7 @@ import {
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { isValidStep } from "./utils/flowSteps";
 import { saveDraftToServer } from "../../lib/create/api";
+import messages from "../../messages/en/index";
 
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
@@ -32,14 +33,14 @@ export function PostLoginDraftTransfer({
 
   useEffect(() => {
     if (sessionUser == null || sessionUser === undefined) return;
-    const wantsTransfer =
-      syncDraft === "1" || hasTransferPendingFlag();
+    const wantsTransfer = syncDraft === "1" || hasTransferPendingFlag();
     if (!wantsTransfer) return;
     if (attemptedRef.current) return;
 
     if (!SYNC_ENABLED) {
       if (attemptedRef.current) return;
       attemptedRef.current = true;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync-off path: show one-shot error then strip query
       setTransferError(
         "Saving to your account is not available (server sync is disabled). Your progress stays on this device.",
       );
@@ -78,12 +79,15 @@ export function PostLoginDraftTransfer({
         ...(step ? { currentStep: step } : {}),
       };
 
-      const ok = await saveDraftToServer(payload);
+      const saveResult = await saveDraftToServer(payload);
       if (cancelled) return;
 
-      if (!ok) {
+      if (saveResult.ok === false) {
         setTransferError(
-          "Could not save your draft to your account. Your progress is still stored on this device.",
+          messages.create.topNav.postLoginSaveFailedWithReason.replace(
+            "{reason}",
+            saveResult.message,
+          ),
         );
         attemptedRef.current = false;
         return;
@@ -103,14 +107,7 @@ export function PostLoginDraftTransfer({
     return () => {
       cancelled = true;
     };
-  }, [
-    sessionUser,
-    pathname,
-    syncDraft,
-    replaceState,
-    router,
-    searchParams,
-  ]);
+  }, [sessionUser, pathname, syncDraft, replaceState, router, searchParams]);
 
   if (!transferError) return null;
 

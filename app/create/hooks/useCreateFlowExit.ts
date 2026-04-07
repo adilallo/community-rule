@@ -20,13 +20,16 @@ export function useCreateFlowExit({
   clearState,
   router,
   user,
+  setDraftSaveBannerMessage,
 }: {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
   clearState: CreateFlowExitClearState;
   router: AppRouterLike;
   user: { id: string; email: string } | null;
-}): (options?: { saveDraft?: boolean }) => Promise<void> {
+  /** When save fails, surface the server message in the create shell banner (no leave confirm). */
+  setDraftSaveBannerMessage?: (_message: string | null) => void;
+}): (_options?: { saveDraft?: boolean }) => Promise<void> {
   return useCallback(
     async (options?: { saveDraft?: boolean }) => {
       if (!user) return;
@@ -45,18 +48,18 @@ export function useCreateFlowExit({
           ...state,
           ...(currentStep ? { currentStep } : {}),
         };
-        const ok = await saveDraftToServer(payload);
-        if (!ok && typeof window !== "undefined") {
-          const leave = window.confirm(
-            messages.create.topNav.leaveConfirmSaveFailed,
-          );
-          if (!leave) return;
+        const result = await saveDraftToServer(payload);
+        if (result.ok === true) {
+          setDraftSaveBannerMessage?.(null);
+        } else {
+          setDraftSaveBannerMessage?.(result.message);
+          return;
         }
       }
 
       clearState();
       router.push("/");
     },
-    [state, currentStep, clearState, router, user],
+    [state, currentStep, clearState, router, user, setDraftSaveBannerMessage],
   );
 }
