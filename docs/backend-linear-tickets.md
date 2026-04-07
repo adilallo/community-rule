@@ -234,6 +234,8 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Curated templates exist in DB for recommendations (v1 = static curated list, no ML).
 
+**Not in v1 (this ticket):** **Spreadsheet-authored matrices**, multi-axis **facet filtering**, or **ranked** recommendations from user answers — that is **Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)** after the flat list ships.
+
 **Implementation:**
 
 1. Add [Prisma seed](https://www.prisma.io/docs/guides/migrate/seed-database): `prisma/seed.ts` with `upsert` on `slug` for idempotent runs.
@@ -270,6 +272,36 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [ ] No layout shift regression on LCP-critical pages (use skeletons).
 
 **Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), [app/create/[step]/page.tsx](app/create/[step]/page.tsx) or related, possibly new `lib/templates/fetchTemplates.ts`.
+
+**Follow-up:** **Ticket 16** — dynamic recommendations from authoring spreadsheets and create-flow answers.
+
+---
+
+## Ticket 16 — Template recommendation matrix + spreadsheet ingestion
+
+**Depends on:** Tickets 7–8 (templates exist in DB and UI can fetch them). Can overlap **Ticket 6** (create flow) for wizard steps that POST answers.
+
+**Goal:** Support **dynamic** template selection driven by **authoring spreadsheets** (e.g. Excel / Google Sheets exported to `.xlsx`): each **row** is a template variant with long-form copy (title, description, principles, steps, objections); **columns** encode **matching dimensions** (group size bands, organization type, location, maturity, etc.) with symbols or weights (✓/✗, 0–1 scores). The create flow (or home) should **narrow or rank** options from **user-supplied facets** or a short questionnaire.
+
+**Context:** The current [`RuleTemplate`](prisma/schema.prisma) model is a **flat** list (`slug`, `title`, `category`, `description`, `body` JSON). It does **not** model dimension columns, matrix versioning, or import from sheets. Example product shape: a “Decision-making” workbook → many governance patterns, each row tied to applicability across org context.
+
+**Implementation (phased — product can stop after any phase):**
+
+1. **Authoring contract:** Document required columns / sheet tabs (per domain: decision-making, meetings, etc.), validation rules, and how ✓/✗ or numeric cells map to API filters or scores.
+2. **Storage:** Either extend `RuleTemplate` / `body` with a structured `recommendationMatrix` blob **or** add normalized tables (`TemplateDimension`, `TemplateFacetValue`, `TemplateApplicability`) — pick based on query needs and reporting.
+3. **Import:** Script or internal admin path: `.xlsx` → parse (e.g. `xlsx` / SheetJS) → validate → upsert DB rows or generate seed JSON checked into repo. **Default:** batch job on export, **not** live Sheets API in prod unless explicitly required.
+4. **API:** Extend `GET /api/templates` with optional query params (`?facet.orgType=nonprofit&facet.size=6-12`) **or** add `POST /api/templates/recommend` with a JSON body of answers; return ranked `templates` + optional `scores` / `reasons` for UI.
+5. **UI:** Create-flow step(s) collect facets; call API; prefill `CreateFlowState` or document JSON from chosen row’s `body`.
+
+**Acceptance criteria:**
+
+- [ ] Importing an updated workbook (or running the importer) changes recommendations without hand-editing Prisma rows in Studio.
+- [ ] API behavior is documented (params or POST body) and covered by tests for at least one reference matrix.
+- [ ] Invalid / partial facet combinations degrade gracefully (empty list vs fallback featured templates).
+
+**Files (expected):** `prisma/schema.prisma`, `lib/templates/*` or `scripts/import-templates-xlsx.ts`, `app/api/templates/*`, create-flow pages, tests.
+
+**Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) (**Backlog**). **Parallel** to much of the core chain; **blocked** only by having **CR-78**/**CR-79** far enough along that a template list exists (or stub rows).
 
 ---
 
@@ -476,14 +508,15 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    13 | 13     | API errors + request-id logging   |
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
+|    16 | 16     | Template matrix + xlsx ingestion     |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), not in the CR-72–83 sequence.
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), not in the CR-72–83 sequence.
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                          |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
@@ -502,6 +535,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging        |
 |         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup            |
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069) |
+|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion       |
 
 ---
 

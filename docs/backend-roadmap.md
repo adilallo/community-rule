@@ -80,7 +80,9 @@ Plain-English entities (names can evolve):
 | **MagicLinkToken** | Short-lived **hashed** token for email sign-in links; optional `nextPath` for post-login redirect.                                                                                                                                                           |
 | **RuleDraft**      | **One** JSON blob per user (create-flow state). Schema already has **`updatedAt`**; no draft **versioning** or **multiple named drafts** in v1.                                                                                                              |
 | **PublishedRule**  | Saved rule after publish (title, summary, document JSON). Profile UI badges such as **IN PROGRESS** may be **derived from `document` JSON**, a future `status` column, or UI-only—product decision when implementing Ticket 15.                              |
-| **RuleTemplate**   | Curated templates (slug, category, ordering).                                                                                                                                                                                                                |
+| **RuleTemplate**   | Curated templates (slug, category, ordering, `body` JSON). **v1 API** lists rows for cards / create entry; **not** yet a recommendation engine (see below).                                                                                                                                                                 |
+
+**RuleTemplate — recommendation matrix (after v1 list):** Product may author templates in **spreadsheets** (e.g. one row per governance pattern, columns for **matching dimensions** such as group size, organization type, location, maturity, plus long-form fields for create-flow prefill). That implies: **normalized schema or versioned JSON** for dimensions × template fit (✓/✗, weights, or scores), an **import path** (export `.xlsx` / Sheets → validate → DB or build-time artifact), and **`GET /api/templates` (or a sibling route)** that accepts **user- or wizard-selected facets** and returns a **ranked or filtered** set. **Out of scope for first ship** of Tickets 7–8 (seed + display list); tracked as **Ticket 16** in [docs/backend-linear-tickets.md](backend-linear-tickets.md) and Linear **[CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)**. Prefer **batch import** over live Google Sheets API in production unless ops explicitly wants sync.
 
 **Session follow-ups to implement or decide:** token **rotation** on sensitive events, whether **new login invalidates other sessions**, and **cleanup** of expired `Session` rows (job or lazy delete). Revisit a small auth library (e.g. Auth.js, Lucia) only if maintaining custom code becomes costly.
 
@@ -136,7 +138,7 @@ Match the current API behavior; tighten as product evolves:
 
 **Backend behavior already in the repo:** Steps **5–10** match implemented Route Handlers and middleware (`lib/server/*`). **Step 11** (web vitals) is **not** production-ready (files under `.next`); treat as follow-up work aligned with §7.
 
-**Product / frontend still open (not only “backend exists”):** Sign-in UI, wiring publish from the create flow, template seed + UI consumption, **profile / my rules dashboard** (Ticket 15)—see §12 and [docs/backend-linear-tickets.md](backend-linear-tickets.md).
+**Product / frontend still open (not only “backend exists”):** Sign-in UI, wiring publish from the create flow, template seed + UI consumption (flat list first), **spreadsheet-driven template recommendations** (Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) — after v1 templates), **profile / my rules dashboard** (Ticket 15)—see §12 and [docs/backend-linear-tickets.md](backend-linear-tickets.md).
 
 ---
 
@@ -226,10 +228,13 @@ npm run dev
 
 **Step 5.** **Profile / dashboard** (`/profile` or agreed path): signed-in hub for **my rules** (after Ticket 15 APIs exist), **duplicate** / **delete** rule actions, **logout**, **delete account**—aligned with [Figma profile](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22143-900069). **Change email** in design is **deferred** (hide, “coming soon,” or backlog) until a future account ticket; greeting copy can stay **static** or use **email local-part in UI only**—no `displayName` field required for MVP.
 
+**Step 6.** **Templates:** **Tickets 7–8** — seed `RuleTemplate` and load **`GET /api/templates`** in home / create surfaces (flat list, optional `featured`). **Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)** — add **facet-based recommendations** and **spreadsheet ingestion** when product is ready (matrix rows + dimension columns like the decision-making workbook).
+
 ---
 
 ## 13. Optional later
 
+- **Template recommendation matrix** + `.xlsx` / Sheets import pipeline — see **Ticket 16** / **[CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)** (also §4 `RuleTemplate` note); not bundled into v1 template list work.
 - **Session library** spike (Auth.js, Lucia) if custom lifecycle cost grows.
 - **Redis** (or similar) for **shared magic-link rate limits** and horizontal scale.
 - **RuleDraft** versioning or multiple drafts per user.
