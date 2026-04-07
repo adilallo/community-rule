@@ -39,7 +39,7 @@ Use `npx prisma studio` to inspect the database.
 
 ### Optional draft sync
 
-Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so the create flow saves drafts to the server when a user is logged in.
+Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so **signed-in** users can persist create-flow drafts to Postgres via **Save & Exit** and so **anonymous** progress can be **uploaded after magic-link sign-in** from the save-progress exit modal. Without it, server **PUT** `/api/drafts/me` is skipped; anonymous work stays in **browser `localStorage`** only.
 
 ## Frontend / tests
 

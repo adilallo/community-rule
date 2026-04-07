@@ -14,7 +14,7 @@ const Footer = dynamic(() => import("./Footer"), {
 
 /**
  * Conditionally renders Footer based on pathname.
- * Hides footer for /create/* and /login (full-screen flows; login uses a body portal).
+ * Hides footer for /create/* and /login (full-screen flows; no site chrome).
  */
 const ConditionalFooter = memo(() => {
   const pathname = usePathname();

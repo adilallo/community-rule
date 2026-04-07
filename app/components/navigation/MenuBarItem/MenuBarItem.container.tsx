@@ -12,6 +12,7 @@ import {
 const MenuBarItemContainer = memo<MenuBarItemProps>(
   ({
     href = "#",
+    buttonOnClick,
     children,
     state: stateProp,
     mode: modeProp,
@@ -112,6 +113,7 @@ const MenuBarItemContainer = memo<MenuBarItemProps>(
     return (
       <MenuBarItemView
         href={href}
+        buttonOnClick={buttonOnClick}
         disabled={disabled}
         className={className}
         combinedStyles={combinedStyles}

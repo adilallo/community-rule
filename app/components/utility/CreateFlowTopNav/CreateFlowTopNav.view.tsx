@@ -1,12 +1,18 @@
+"use client";
+
 import Logo from "../../asset/logo";
 import Button from "../../buttons/Button";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import type { CreateFlowTopNavProps } from "./CreateFlowTopNav.types";
+
+const exitButtonFigmaClass =
+  "!rounded-[var(--radius-measures-radius-full,9999px)] !border-[1.25px] !px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!text-[12px] md:!leading-[14px]";
 
 export function CreateFlowTopNavView({
   hasShare = false,
   hasExport = false,
   hasEdit = false,
-  loggedIn = false,
+  saveDraftOnExit = false,
   onShare,
   onExport,
   onEdit,
@@ -14,7 +20,8 @@ export function CreateFlowTopNavView({
   buttonPalette = "default",
   className = "",
 }: CreateFlowTopNavProps) {
-  const exitButtonText = loggedIn ? "Save & Exit" : "Exit";
+  const t = useTranslation("create.topNav");
+  const exitButtonText = saveDraftOnExit ? t("saveAndExit") : t("exit");
 
   return (
     <header
@@ -27,11 +34,9 @@ export function CreateFlowTopNavView({
         role="navigation"
         aria-label="Create Flow Navigation"
       >
-        {/* Logo - Left */}
         <Logo size="createFlow" wordmark palette={buttonPalette} />
 
-        {/* Button Group - Right */}
-        <div className="flex items-center gap-[var(--spacing-scale-012,12px)]">
+        <div className="flex flex-wrap items-center justify-end gap-[var(--spacing-scale-012,12px)]">
           {hasShare && (
             <Button
               buttonType="outline"
@@ -89,9 +94,10 @@ export function CreateFlowTopNavView({
             buttonType="outline"
             palette={buttonPalette}
             size="xsmall"
-            onClick={() => onExit?.({ saveDraft: loggedIn })}
+            type="button"
+            onClick={() => void onExit?.({ saveDraft: saveDraftOnExit })}
             ariaLabel={exitButtonText}
-            className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
+            className={`md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !py-[6px] md:!py-[8px] shrink-0 ${exitButtonFigmaClass}`}
           >
             {exitButtonText}
           </Button>

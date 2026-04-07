@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { renderWithProviders as render, screen } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import CreateFlowTopNav from "../../app/components/utility/CreateFlowTopNav";
@@ -34,7 +34,7 @@ const config: ComponentTestSuiteConfig<CreateFlowTopNavProps> = {
     hasShare: true,
     hasExport: true,
     hasEdit: true,
-    loggedIn: true,
+    saveDraftOnExit: true,
     onShare: vi.fn(),
     onExport: vi.fn(),
     onEdit: vi.fn(),
@@ -60,14 +60,14 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
     expect(exitButton).toBeInTheDocument();
   });
 
-  it("shows Save & Exit when loggedIn is true", () => {
-    render(<CreateFlowTopNav loggedIn={true} />);
+  it("shows Save & Exit when saveDraftOnExit is true", () => {
+    render(<CreateFlowTopNav saveDraftOnExit={true} />);
     const exitButton = screen.getByRole("button", { name: "Save & Exit" });
     expect(exitButton).toBeInTheDocument();
   });
 
-  it("shows Exit when loggedIn is false", () => {
-    render(<CreateFlowTopNav loggedIn={false} />);
+  it("shows Exit when saveDraftOnExit is false", () => {
+    render(<CreateFlowTopNav saveDraftOnExit={false} />);
     const exitButton = screen.getByRole("button", { name: "Exit" });
     expect(exitButton).toBeInTheDocument();
   });

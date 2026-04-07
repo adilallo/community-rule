@@ -2,11 +2,11 @@
 
 Copy each block into Linear (or your tracker) as a separate issue, **in order**. Earlier tickets are prerequisites for later ones.
 
-**Foundation already in the repo (no ticket needed unless you are onboarding a greenfield clone):** Prisma schema ([prisma/schema.prisma](prisma/schema.prisma)), migrations, `lib/server/*`, Route Handlers under `app/api/*`, [docker-compose.yml](docker-compose.yml), [Dockerfile](Dockerfile), [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example), [lib/create/api.ts](lib/create/api.ts), [CreateFlowBackendSync](app/create/context/CreateFlowBackendSync.tsx) behind `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`.
+**Foundation already in the repo (no ticket needed unless you are onboarding a greenfield clone):** Prisma schema ([prisma/schema.prisma](prisma/schema.prisma)), migrations, `lib/server/*`, Route Handlers under `app/api/*`, [docker-compose.yml](docker-compose.yml), [Dockerfile](Dockerfile), [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example), [lib/create/api.ts](lib/create/api.ts), create-flow draft **PUT** via `useCreateFlowExit` / `PostLoginDraftTransfer` when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`.
 
 ### Review sync (relevant feedback only)
 
-A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), **passwordless email (magic-link request)** rate limits in-memory until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**, **profile / my rules / account** scope from Figma profile (`22143:900069`) as **Ticket 15** (change email deferred). **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors, blocked by CR-73), **CR-85** (session lifecycle, blocked by CR-75)—see **Linear** table at the end of this doc.
+A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), **passwordless email (magic-link request)** rate limits in-memory until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**, **profile / my rules / account** scope from Figma profile (`22143:900069`) as **Ticket 15** (change email deferred). **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors — **unblocked** now that **CR-73** is Done), **CR-85** (session lifecycle — **unblocked** now that **CR-75** is Done)—see **Linear** table at the end of this doc.
 
 ---
 
@@ -67,8 +67,8 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Implementation:**
 
-1. Rewrite **§1 Where we are** to list: Prisma + Postgres, existing `app/api/*` routes, `localStorage` + optional server draft sync, web-vitals still file-based.
-2. In **§9 Build order** (build steps were renumbered from old §5), mark what is **operator/manual**, what is **already shipped in the repo**, and what is **still product/frontend** (sign-in UI, publish wiring, etc.).
+1. Rewrite **§1 Where we are** to list: Prisma + Postgres, existing `app/api/*` routes, create-flow persistence (anonymous `localStorage` + optional server draft PUT when sync is on), web-vitals still file-based.
+2. In **§9 Build order** (build steps were renumbered from old §5), mark what is **operator/manual**, what is **already shipped in the repo**, and what is **still product/frontend** (publish wiring, templates in UI, etc.).
 3. Add **HTTP API (implemented in repo)** — table mirroring [CONTRIBUTING.md](CONTRIBUTING.md), plus note for `/api/web-vitals`.
 
 **Acceptance criteria:**
@@ -125,7 +125,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Implementation (shipped):**
 
-1. **`/login`** route and/or **modal** from the header (designer-approved)—[app/login/page.tsx](app/login/page.tsx), [app/login/LoginPageClient.tsx](app/login/LoginPageClient.tsx), [app/components/modals/Login/](app/components/modals/Login/) (`LoginForm.tsx`, container/view).
+1. **`/login`** route **and** **header modal** — primary **Log in** entry is [`AuthModalProvider`](app/contexts/AuthModalContext.tsx) + [app/components/modals/Login/](app/components/modals/Login/); [app/login/page.tsx](app/login/page.tsx) (solid shell, `usePortal={false}`) remains for verify **error** redirects and bookmarks.
 2. Flow: email → “Send link” → user opens link (email, Mailhog, or dev log) → `GET /api/auth/magic-link/verify?token=...` sets session and redirects; optional `next` for post-login path.
 3. Surface API errors: invalid email, 429 `retryAfterMs`, expired/invalid token, network failure (accessible copy).
 4. Ensure `fetch` calls use `credentials: "include"` where needed (see [lib/create/api.ts](lib/create/api.ts)).
@@ -137,9 +137,9 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [x] Happy path: user completes magic-link verify and `GET /api/auth/session` returns `user` in the same browser session.
 - [x] Keyboard + screen-reader friendly forms (labels, errors associated with fields).
 - [x] No secrets in client bundle.
-- [x] Header shows **Profile** → placeholder `/profile` when session present; **Log in** when anonymous.
+- [x] Header shows **Profile** → placeholder `/profile` when session present; **Log in** when anonymous (opens modal, not only `/login`).
 
-**Status:** [CR-74](https://linear.app/community-rule/issue/CR-74/backend-email-otp-sign-in-ui-existing-apis) **Done** for shipped UI/APIs. **Residual checklist** below: repo doc items are **done**; use Linear (CR-74 or child issue) to track **per-environment** staging URL checks.
+**Status:** [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done) **Done** for shipped UI/APIs. **Residual checklist** below: repo doc items are **done**; use Linear (CR-74 or child issue) to track **per-environment** staging URL checks.
 
 **Files:** [app/login/](app/login/), [app/profile/](app/profile/) (placeholder), [app/components/modals/Login/](app/components/modals/Login/), [messages/en/pages/login.json](messages/en/pages/login.json), [messages/en/pages/profile.json](messages/en/pages/profile.json), [messages/en/components/header.json](messages/en/components/header.json), [app/components/navigation/TopNav/TopNav.container.tsx](app/components/navigation/TopNav/TopNav.container.tsx), [app/components/navigation/TopNav/TopNavWithPathname.tsx](app/components/navigation/TopNav/TopNavWithPathname.tsx), [lib/create/api.ts](lib/create/api.ts), [app/api/auth/magic-link/request/route.ts](app/api/auth/magic-link/request/route.ts), [app/api/auth/magic-link/verify/route.ts](app/api/auth/magic-link/verify/route.ts), [prisma/schema.prisma](prisma/schema.prisma) (`MagicLinkToken`), [lib/server/mail.ts](lib/server/mail.ts). Onboarding: [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example).
 
@@ -158,23 +158,24 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Depends on:** Ticket 3.
 
-**Goal:** While in `/create/*`, users see whether they are signed in and can sign out without leaving the flow awkwardly.
+**Goal:** In `/create/*`, **Exit** / **Save & Exit** (from `select` onward for signed-in users) is the only top-nav chrome—no email or Sign out in the create shell. **Anonymous:** progress in **`create-flow-anonymous`** localStorage; **Exit** opens the global **Save your progress?** auth modal (magic link + `?syncDraft=1` return); after verify, [`PostLoginDraftTransfer`](app/create/PostLoginDraftTransfer.tsx) **PUT**s to `/api/drafts/me` when sync is on. **Signed-in:** **Save & Exit** **PUT**s via [`useCreateFlowExit`](app/create/hooks/useCreateFlowExit.ts) when **`NEXT_PUBLIC_ENABLE_BACKEND_SYNC`**. **Sign out** for QA lives on **[ProfilePageClient](app/profile/ProfilePageClient.tsx)**. Site **Log in** opens the same modal overlay ([`AuthModalProvider`](app/contexts/AuthModalContext.tsx)), not only `/login`.
 
-**Context:** [CreateFlowTopNav](app/components/utility/CreateFlowTopNav/) has props like `loggedIn` currently tied to step UI in [app/create/layout.tsx](app/create/layout.tsx) (`isCompletedStep`). Decouple **auth session** from **step**.
+**Context:** **`saveDraftOnExit`** is gated on **session + step ≥ select**. Layout **`fetchAuthSession`** drives anonymous vs authenticated persistence and exit behavior. **Save & Exit** styling: Figma [20907:212637](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=20907-212637). Save-progress exit modal: Figma `22398:23743`.
 
-**Implementation:**
+**Implementation (repo):**
 
-1. On create layout mount (or a small wrapper provider), call `fetchAuthSession()` and store `{ user }` in React state or a tiny `AuthSessionContext`.
-2. Pass **real** `loggedIn={Boolean(user)}` (or rename prop to `isAuthenticated` if clearer) and show **email** (truncated) per design.
-3. Wire **Sign out** to `logout()` from [lib/create/api.ts](lib/create/api.ts), clear client state as needed, refresh session.
-4. Optionally: if `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` and user is anonymous, show one-line CTA “Sign in to save progress to your account” linking to login.
+1. [app/create/layout.tsx](app/create/layout.tsx): session + `enableAnonymousPersistence`; anonymous exit → `openLogin({ variant: 'saveProgress', nextPath })`; signed-in exit → `useCreateFlowExit`.
+2. [CreateFlowTopNav](app/components/utility/CreateFlowTopNav/): i18n [`messages/en/create/topNav.json`](messages/en/create/topNav.json); logo + Share/Export/Edit (completed) + Exit/Save & Exit only.
+3. [useCreateFlowExit](app/create/hooks/useCreateFlowExit.ts): `saveDraftToServer` when sync + signed in; `clearState` + home.
+4. [CreateFlowContext](app/create/context/CreateFlowContext.tsx): optional anonymous localStorage mirror via `enableAnonymousPersistence`.
+5. **QA:** [ProfilePageClient](app/profile/ProfilePageClient.tsx) Sign out when session present.
 
 **Acceptance criteria:**
 
-- [ ] Completed step still works; auth state is independent of `completed` step.
-- [ ] Sign out clears httpOnly session server-side and UI updates.
+- [x] Completed step still works; **Save & Exit** gating uses session + step (not conflated with `completed` only).
+- [x] Signed in + sync: Save & Exit persists server-side; anonymous: localStorage + exit modal + transfer after magic link. Sign out on profile clears session. *(Re-verify on staging/prod as needed.)*
 
-**Files:** [app/create/layout.tsx](app/create/layout.tsx), [app/components/utility/CreateFlowTopNav/](app/components/utility/CreateFlowTopNav/), optional new `app/create/context/AuthSessionContext.tsx`.
+**Files:** [app/create/layout.tsx](app/create/layout.tsx), [app/create/hooks/useCreateFlowExit.ts](app/create/hooks/useCreateFlowExit.ts), [app/components/utility/CreateFlowTopNav/](app/components/utility/CreateFlowTopNav/), [app/create/context/CreateFlowContext.tsx](app/create/context/CreateFlowContext.tsx), [messages/en/create/topNav.json](messages/en/create/topNav.json), [app/profile/ProfilePageClient.tsx](app/profile/ProfilePageClient.tsx).
 
 ---
 
@@ -182,15 +183,15 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Depends on:** Tickets 2–4.
 
-**Goal:** `CreateFlowBackendSync` is production-grade when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`.
+**Goal:** Server draft **PUT** path is production-grade when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` (Save & Exit, post-login transfer from anonymous draft).
 
-**Context:** [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx) hydrates from server and debounces saves; today it can race with localStorage-first paint and silently fail saves.
+**Context:** Auto-hydrate / debounced autosave component was removed; create flow starts fresh for signed-in users until profile “open draft” (future). Residual risks: silent **PUT** failure (confirm on exit today), richer error surfaces.
 
 **Implementation:**
 
 1. **Hydration:** Show a non-blocking “Loading your saved progress…” until first session + draft fetch completes (only when sync enabled).
 2. **Conflict:** If `localStorage` has non-empty state and server returns non-empty draft, pick a policy: prefer server with confirm modal, or prefer newer `updatedAt` (requires storing timestamp client-side). Document choice in code comment.
-3. **Save failures (API surface):** Change [saveDraftToServer](lib/create/api.ts) from `Promise<boolean>` to a result type such as `{ ok: true } | { ok: false; message: string; status?: number }`, parsing the response body with [readApiErrorMessage](lib/create/api.ts) so both legacy `{ error: string }` and CR-73 validation `{ error: { message } }` (and 413 `payload_too_large`) produce a useful `message`. Update [CreateFlowBackendSync](app/create/context/CreateFlowBackendSync.tsx) to branch on that result.
+3. **Save failures (API surface):** Change [saveDraftToServer](lib/create/api.ts) from `Promise<boolean>` to a result type such as `{ ok: true } | { ok: false; message: string; status?: number }`, parsing the response body with [readApiErrorMessage](lib/create/api.ts) so both legacy `{ error: string }` and CR-73 validation `{ error: { message } }` (and 413 `payload_too_large`) produce a useful `message`. Use that result in [useCreateFlowExit](app/create/hooks/useCreateFlowExit.ts) and [PostLoginDraftTransfer](app/create/PostLoginDraftTransfer.tsx).
 4. **Save failures (UX):** On `ok: false`, show toast/banner (include `message`); optionally retry with backoff.
 5. **Tests:** Component test or Playwright scenario with sync flag on (may require test DB or route mocks).
 
@@ -199,7 +200,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [ ] No silent data loss when server save fails.
 - [ ] User understands when server draft replaced local state (if applicable).
 
-**Files:** [lib/create/api.ts](lib/create/api.ts), [app/create/context/CreateFlowBackendSync.tsx](app/create/context/CreateFlowBackendSync.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
+**Files:** [lib/create/api.ts](lib/create/api.ts), [app/create/hooks/useCreateFlowExit.ts](app/create/hooks/useCreateFlowExit.ts), [app/create/PostLoginDraftTransfer.tsx](app/create/PostLoginDraftTransfer.tsx), possibly [CreateFlowContext](app/create/context/CreateFlowContext.tsx), tests under `tests/`.
 
 ---
 
@@ -392,7 +393,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Files:** `lib/server/` (new helper), selected `app/api/**/route.ts`, optional tests.
 
-**Linear:** [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging) (blocked by **CR-73**).
+**Linear:** [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging) (**CR-73** Done — ready to pick up).
 
 ---
 
@@ -418,7 +419,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Files:** [lib/server/session.ts](lib/server/session.ts), [app/api/auth/magic-link/verify/route.ts](app/api/auth/magic-link/verify/route.ts), optional `prisma` migration if new columns (unlikely).
 
-**Linear:** [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy) (blocked by **CR-75**).
+**Linear:** [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy) (**unblocked** — **CR-75** Done).
 
 ---
 
@@ -452,7 +453,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Files:** new `app/` routes and components, `app/api/rules/...` (or new segment handlers), [lib/create/api.ts](lib/create/api.ts) as needed, [prisma/schema.prisma](prisma/schema.prisma) only if account-delete policy requires schema tweaks, [messages/en/](messages/en/) for copy.
 
-**Linear:** [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile) (**Backlog**). **Blocked by** **CR-75** + **CR-77**. **Related:** [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional) (public rule detail for deep links from profile cards). **Not** part of the sequential **CR-72 → CR-83** chain—parallel after publish + session, similar to CR-84/CR-85.
+**Linear:** [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile) (**Backlog**). **Blocked by** **CR-77** (publish) only — **CR-75** Done. **Related:** [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional) (public rule detail for deep links from profile cards). **Not** part of the sequential **CR-72 → CR-83** chain—parallel after publish + session, similar to CR-84/CR-85.
 
 ---
 
@@ -476,21 +477,21 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Tickets 13–14** are parallel to that chain (blocked by **CR-73** and **CR-75** respectively), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by auth + session + publish—not by the ops runbook); Linear: **CR-86**.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (blocked by CR-73), **CR-85** (blocked by CR-75), **CR-86** / Ticket 15 (blocked by CR-75 + CR-77, not in the CR-72–83 sequence).
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), not in the CR-72–83 sequence.
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                          |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
 |          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap                  |
 |          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation       |
-|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-email-otp-sign-in-ui-existing-apis)                           | Magic-link sign-in UI + CR-75 prep     |
-|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out)                              | Create flow session UI                 |
-|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-createflowbackendsync)               | Draft sync hardening                   |
+|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)                  | Magic-link sign-in UI (Ticket 3; Done) |
+|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                 | Create flow session UI (Ticket 4; Done)|
+|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors) |
 |          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring                         |
 |          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed                          |
 |          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                        |
@@ -504,13 +505,8 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 ---
 
-## Updating Linear issue CR-74 (manual)
+## Linear sync notes (CR-74 / CR-75)
 
-Keep **[CR-74](https://linear.app/community-rule/issue/CR-74/backend-email-otp-sign-in-ui-existing-apis)** aligned with **Ticket 3** (Linear UI or MCP). If Linear still describes an old sign-in approach, update it so it matches **Ticket 3** above (magic link only):
+**[CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)** and **[CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)** are kept in sync with **Ticket 3** / **Ticket 4** above (magic link, `AuthModalProvider`, anonymous draft + transfer, etc.). **Residual:** staging/prod `Host` / magic-link URL verification (per-environment).
 
-- **Title (examples):** `Magic-link sign-in UI + APIs; prep for CR-75` or `Email magic-link sign-in (UI + routes) — residuals for create-flow auth`.
-- **Description — Shipped:** Magic link: `POST /api/auth/magic-link/request`, `GET /api/auth/magic-link/verify`, `MagicLinkToken`, `/login` + modal UI, `requestMagicLink`, session cookie.
-- **Description — Residual / before CR-75:** Use the checklist under **Residual / before CR-75** (Ticket 3 above). Mark **done** for items 1, 2, and 4 (repo docs). Keep **open** until verified: **(3)** staging/prod `Host` / link URLs on your real hosts.
-- **Comment (optional):** Start **CR-75** only after residuals are done **or** the team defers specific lines (e.g. CONTRIBUTING in a separate PR).
-
-**Status:** CR-74 can stay **Done** with a **child issue** (e.g. “CR-74 follow-ups: auth docs + smoke”) if you prefer not to reopen the parent.
+To refresh other issues from this doc, use Linear MCP `save_issue` or paste the matching **Ticket N** section into the issue body.

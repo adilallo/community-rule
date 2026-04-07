@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import HeaderLockup from "../../components/type/HeaderLockup";
+import { useCreateFlow } from "../context/CreateFlowContext";
 import CardStack from "../../components/utility/CardStack";
 import Create from "../../components/modals/Create";
 import TextArea from "../../components/controls/TextArea";
@@ -130,6 +131,7 @@ function AddPlatformModalContent({
 }: {
   platformCardId: string;
 }) {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const defaults = ADD_PLATFORM_SECTION_DEFAULTS[platformCardId];
   const [sectionValues, setSectionValues] = useState<
     Record<SectionKey, string>
@@ -141,9 +143,13 @@ function AddPlatformModalContent({
     },
   );
 
-  const updateSection = useCallback((key: SectionKey, value: string) => {
-    setSectionValues((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  const updateSection = useCallback(
+    (key: SectionKey, value: string) => {
+      markCreateFlowInteraction();
+      setSectionValues((prev) => ({ ...prev, [key]: value }));
+    },
+    [markCreateFlowInteraction],
+  );
 
   if (!defaults) return null;
 
@@ -230,6 +236,7 @@ function getCreateModalConfig(pendingCardId: string | null) {
 
 /** Create flow card stack step: compact grid with optional expand to full list. */
 export default function CardsPage() {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const [expanded, setExpanded] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -239,10 +246,14 @@ export default function CardsPage() {
   const description = expanded ? EXPANDED_DESCRIPTION : COMPACT_DESCRIPTION;
   const modalConfig = getCreateModalConfig(pendingCardId);
 
-  const handleCardClick = useCallback((id: string) => {
-    setPendingCardId(id);
-    setCreateModalOpen(true);
-  }, []);
+  const handleCardClick = useCallback(
+    (id: string) => {
+      markCreateFlowInteraction();
+      setPendingCardId(id);
+      setCreateModalOpen(true);
+    },
+    [markCreateFlowInteraction],
+  );
 
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
@@ -250,6 +261,7 @@ export default function CardsPage() {
   }, []);
 
   const handleCreateModalConfirm = useCallback(() => {
+    markCreateFlowInteraction();
     if (pendingCardId) {
       setSelectedIds((prev) =>
         prev.includes(pendingCardId) ? prev : [...prev, pendingCardId],
@@ -257,7 +269,7 @@ export default function CardsPage() {
     }
     setCreateModalOpen(false);
     setPendingCardId(null);
-  }, [pendingCardId]);
+  }, [markCreateFlowInteraction, pendingCardId]);
 
   return (
     <div className="w-full max-w-[1280px] shrink-0 px-5 md:px-16">
@@ -276,7 +288,10 @@ export default function CardsPage() {
             selectedIds={selectedIds}
             onCardSelect={handleCardClick}
             expanded={expanded}
-            onToggleExpand={() => setExpanded((prev) => !prev)}
+            onToggleExpand={() => {
+              markCreateFlowInteraction();
+              setExpanded((prev) => !prev);
+            }}
             hasMore={true}
           />
         </div>

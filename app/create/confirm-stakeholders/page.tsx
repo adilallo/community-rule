@@ -6,6 +6,7 @@ import HeaderLockup from "../../components/type/HeaderLockup";
 import MultiSelect from "../../components/controls/MultiSelect";
 import Alert from "../../components/modals/Alert";
 import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
+import { useCreateFlow } from "../context/CreateFlowContext";
 
 const TITLE =
   "Do other stakeholders need to be involved in creating your community?";
@@ -20,6 +21,7 @@ const DRAFT_TOAST_TITLE = "Congratulations! You've drafted your CommunityRule!";
  * Figma: 21104-46594.
  */
 export default function ConfirmStakeholdersPage() {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const [isMounted, setIsMounted] = useState(false);
   const [toastDismissed, setToastDismissed] = useState(false);
   const [stakeholderOptions, setStakeholderOptions] = useState<ChipOption[]>(
@@ -35,6 +37,7 @@ export default function ConfirmStakeholdersPage() {
   const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   const handleAddStakeholder = () => {
+    markCreateFlowInteraction();
     setStakeholderOptions((prev) => [
       ...prev,
       { id: crypto.randomUUID(), label: "", state: "Custom" },
@@ -42,6 +45,7 @@ export default function ConfirmStakeholdersPage() {
   };
 
   const handleCustomChipConfirm = (chipId: string, value: string) => {
+    markCreateFlowInteraction();
     setStakeholderOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId ? { ...opt, label: value, state: "Selected" } : opt,
@@ -50,10 +54,12 @@ export default function ConfirmStakeholdersPage() {
   };
 
   const handleCustomChipClose = (chipId: string) => {
+    markCreateFlowInteraction();
     setStakeholderOptions((prev) => prev.filter((opt) => opt.id !== chipId));
   };
 
   const handleChipClick = (chipId: string) => {
+    markCreateFlowInteraction();
     setStakeholderOptions((prev) => prev.filter((opt) => opt.id !== chipId));
   };
 

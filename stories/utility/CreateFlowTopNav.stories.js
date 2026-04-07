@@ -25,9 +25,10 @@ export default {
       control: "boolean",
       description: "Whether to show the Edit button",
     },
-    loggedIn: {
+    saveDraftOnExit: {
       control: "boolean",
-      description: "Whether the user is logged in (affects Exit button text)",
+      description:
+        "After user input (or completed step), use Save & Exit and pass saveDraft: true to onExit",
     },
     onShare: { action: "share clicked" },
     onExport: { action: "export clicked" },
@@ -42,7 +43,7 @@ export const Default = {
     hasShare: false,
     hasExport: false,
     hasEdit: false,
-    loggedIn: false,
+    saveDraftOnExit: false,
   },
 };
 
@@ -51,15 +52,15 @@ export const AllButtons = {
     hasShare: true,
     hasExport: true,
     hasEdit: true,
-    loggedIn: false,
+    saveDraftOnExit: false,
   },
 };
 
-export const LoggedIn = {
+export const SaveDraftOnExit = {
   args: {
     hasShare: true,
     hasExport: true,
     hasEdit: true,
-    loggedIn: true,
+    saveDraftOnExit: true,
   },
 };

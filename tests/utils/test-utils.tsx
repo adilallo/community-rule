@@ -1,19 +1,25 @@
 import React, { type ReactElement } from "react";
 import { render, type RenderOptions } from "@testing-library/react";
+import { AuthModalProvider } from "../../app/contexts/AuthModalContext";
 import { MessagesProvider } from "../../app/contexts/MessagesContext";
+import { CreateFlowProvider } from "../../app/create/context/CreateFlowContext";
 import messages from "../../messages/en/index";
 
 /**
- * Custom render function that wraps components with MessagesProvider
- * Use this instead of the default render from @testing-library/react
- * for components that use useTranslation hook
+ * Custom render function: MessagesProvider, AuthModalProvider (TopNav login), CreateFlowProvider.
  */
 export function renderWithProviders(
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper">,
 ) {
   function Wrapper({ children }: { children: React.ReactNode }) {
-    return <MessagesProvider messages={messages}>{children}</MessagesProvider>;
+    return (
+      <MessagesProvider messages={messages}>
+        <AuthModalProvider>
+          <CreateFlowProvider>{children}</CreateFlowProvider>
+        </AuthModalProvider>
+      </MessagesProvider>
+    );
   }
 
   return render(ui, { wrapper: Wrapper, ...options });

@@ -14,6 +14,7 @@ const LoginContainer = memo<LoginProps>(
     ariaLabel,
     ariaLabelledBy,
     usePortal = true,
+    backdropVariant = "blurredYellow",
   }) => {
     const dialogRef = useRef<HTMLDivElement>(null);
     const backdropRef = useRef<HTMLDivElement>(null);
@@ -126,6 +127,7 @@ const LoginContainer = memo<LoginProps>(
         backdropRef={backdropRef}
         portalReady={portalReady}
         usePortal={usePortal}
+        backdropVariant={backdropVariant}
       >
         {children}
       </LoginView>

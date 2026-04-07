@@ -22,10 +22,11 @@ export interface CreateFlowTopNavProps {
    */
   hasEdit?: boolean;
   /**
-   * Whether the user is logged in
+   * When true, exit control is "Save & Exit" and `onExit` receives `{ saveDraft: true }`.
+   * When false, shows "Exit" and `{ saveDraft: false }` (caller may confirm data loss).
    * @default false
    */
-  loggedIn?: boolean;
+  saveDraftOnExit?: boolean;
   /**
    * Callback when Share button is clicked
    */
@@ -40,7 +41,7 @@ export interface CreateFlowTopNavProps {
   onEdit?: () => void;
   /**
    * Callback when Exit/Save & Exit button is clicked.
-   * When user is logged in, called with { saveDraft: true } to stub "Save & Exit".
+   * When `saveDraftOnExit` is true, called with `{ saveDraft: true }`.
    */
   onExit?: (options?: { saveDraft?: boolean }) => void;
   /**

@@ -8,6 +8,8 @@ import LoginForm from "../../app/components/modals/Login/LoginForm";
 
 const { navMock } = vi.hoisted(() => ({
   navMock: {
+    /** Default: marketing route — header modal is the primary entry (not `/login`). */
+    pathname: "/",
     searchParams: new URLSearchParams(),
     replace: vi.fn(),
   },
@@ -22,7 +24,7 @@ vi.mock("next/navigation", () => ({
     back: vi.fn(),
     forward: vi.fn(),
   }),
-  usePathname: () => "/login",
+  usePathname: () => navMock.pathname,
   useSearchParams: () => navMock.searchParams,
 }));
 
@@ -30,7 +32,19 @@ vi.mock("../../lib/create/api", () => ({
   requestMagicLink: vi.fn(),
 }));
 
+vi.mock("../../app/create/anonymousDraftStorage", async (importOriginal) => {
+  const actual =
+    await importOriginal<
+      typeof import("../../app/create/anonymousDraftStorage")
+    >();
+  return {
+    ...actual,
+    setTransferPendingFlag: vi.fn(),
+  };
+});
+
 import { requestMagicLink } from "../../lib/create/api";
+import { setTransferPendingFlag } from "../../app/create/anonymousDraftStorage";
 
 function renderLoginForm() {
   return renderWithProviders(
@@ -43,7 +57,9 @@ function renderLoginForm() {
 describe("LoginForm", () => {
   beforeEach(() => {
     vi.mocked(requestMagicLink).mockReset();
+    vi.mocked(setTransferPendingFlag).mockReset();
     navMock.replace.mockReset();
+    navMock.pathname = "/";
     navMock.searchParams = new URLSearchParams();
   });
 
@@ -94,6 +110,33 @@ describe("LoginForm", () => {
       await screen.findByRole("heading", { name: /check your email/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/we sent a sign-in link/i)).toBeInTheDocument();
+  });
+
+  it("saveProgress variant uses magicLinkNextPath and sets transfer pending on success", async () => {
+    const user = userEvent.setup();
+    vi.mocked(requestMagicLink).mockResolvedValue({ ok: true });
+    renderWithProviders(
+      <Suspense fallback={null}>
+        <LoginForm
+          variant="saveProgress"
+          magicLinkNextPath="/create/select?syncDraft=1"
+        />
+      </Suspense>,
+    );
+    await user.type(
+      screen.getByRole("textbox", { name: /email address/i }),
+      "save@example.com",
+    );
+    await user.click(
+      screen.getByRole("button", { name: /send me a magic link/i }),
+    );
+    await waitFor(() => {
+      expect(requestMagicLink).toHaveBeenCalledWith(
+        "save@example.com",
+        "/create/select?syncDraft=1",
+      );
+    });
+    expect(setTransferPendingFlag).toHaveBeenCalled();
   });
 
   it("passes safe next path when next query param is set", async () => {
@@ -158,8 +201,9 @@ describe("LoginForm", () => {
     ).toBeInTheDocument();
   });
 
-  it("calls router.replace to clear error query when user types", async () => {
+  it("calls router.replace to clear error query when user types (full-page /login)", async () => {
     const user = userEvent.setup();
+    navMock.pathname = "/login";
     navMock.searchParams = new URLSearchParams("error=expired_link");
     renderLoginForm();
     await user.type(
@@ -167,6 +211,18 @@ describe("LoginForm", () => {
       "x",
     );
     expect(navMock.replace).toHaveBeenCalledWith("/login", { scroll: false });
+  });
+
+  it("clears error query using current pathname when not on /login", async () => {
+    const user = userEvent.setup();
+    navMock.pathname = "/learn";
+    navMock.searchParams = new URLSearchParams("error=expired_link");
+    renderLoginForm();
+    await user.type(
+      screen.getByRole("textbox", { name: /email address/i }),
+      "x",
+    );
+    expect(navMock.replace).toHaveBeenCalledWith("/learn", { scroll: false });
   });
 
   it("shows network error when request throws", async () => {

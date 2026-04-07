@@ -47,8 +47,14 @@ export interface CreateFlowContextValue {
   updateState: (_updates: Partial<CreateFlowState>) => void;
   /** Replace entire flow state (e.g. hydrate from server draft). */
   replaceState: (_next: CreateFlowState) => void;
-  /** Clear all flow state (e.g. on exit). Also clears persisted draft. */
+  /** Reset flow state and clear anonymous localStorage draft keys when present. */
   clearState: () => void;
+  /**
+   * True after the user edits any template control (pages use local state until wired to `state`).
+   * Drives Save & Exit visibility together with `hasCreateFlowUserInput(state)`.
+   */
+  interactionTouched: boolean;
+  markCreateFlowInteraction: () => void;
 }
 
 /**

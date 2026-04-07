@@ -1,27 +1,71 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useRouter } from "next/navigation";
-import { CreateFlowBackendSync } from "./context/CreateFlowBackendSync";
 import {
-  CreateFlowProvider,
-  useCreateFlow,
-  saveCreateFlowDraft,
-} from "./context/CreateFlowContext";
+  Suspense,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
+import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import CreateFlowTopNav from "../components/utility/CreateFlowTopNav";
+import { getStepIndex } from "./utils/flowSteps";
 import CreateFlowFooter from "../components/utility/CreateFlowFooter";
 import Button from "../components/buttons/Button";
+import { fetchAuthSession } from "../../lib/create/api";
+import { useAuthModal } from "../contexts/AuthModalContext";
+import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 
-/**
- * Layout for the Create Rule Flow
- *
- * Provides a full-screen layout without the root layout's TopNav/Footer.
- * This layout wraps all create flow pages and provides the CreateFlowContext.
- * Includes the create flow-specific TopNav and Footer components.
- */
-function CreateFlowLayoutContent({ children }: { children: ReactNode }) {
+/** First step where Save & Exit is offered (after informational + name / `text`). */
+const SAVE_EXIT_FROM_STEP_INDEX = getStepIndex("select");
+
+function CreateFlowSessionShell({ children }: { children: ReactNode }) {
+  const [sessionUser, setSessionUser] = useState<
+    { id: string; email: string } | null | undefined
+  >(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAuthSession().then(({ user }) => {
+      if (!cancelled) setSessionUser(user);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const sessionResolved = sessionUser !== undefined;
+  const enableAnonymousPersistence =
+    sessionResolved && sessionUser === null;
+
+  return (
+    <CreateFlowProvider
+      enableAnonymousPersistence={enableAnonymousPersistence}
+    >
+      <CreateFlowLayoutContent
+        sessionUser={sessionUser}
+        sessionResolved={sessionResolved}
+      >
+        {children}
+      </CreateFlowLayoutContent>
+    </CreateFlowProvider>
+  );
+}
+
+function CreateFlowLayoutContent({
+  children,
+  sessionUser,
+  sessionResolved,
+}: {
+  children: ReactNode;
+  sessionUser: { id: string; email: string } | null | undefined;
+  sessionResolved: boolean;
+}) {
   const router = useRouter();
+  const pathname = usePathname();
+  const { openLogin } = useAuthModal();
   const {
     currentStep,
     nextStep,
@@ -31,40 +75,58 @@ function CreateFlowLayoutContent({ children }: { children: ReactNode }) {
   } = useCreateFlowNavigation();
   const { state, clearState } = useCreateFlow();
 
-  const handleExit = (options?: { saveDraft?: boolean }) => {
-    const saveDraft = options?.saveDraft ?? false;
-    if (!saveDraft && typeof window !== "undefined") {
-      const confirmed = window.confirm(
-        "Leave create flow? Your progress will be lost.",
-      );
-      if (!confirmed) return;
+  const runAuthenticatedExit = useCreateFlowExit({
+    state,
+    currentStep,
+    clearState,
+    router,
+    user: sessionUser ?? null,
+  });
+
+  const handleExit = async (opts?: { saveDraft?: boolean }) => {
+    const saveDraft = opts?.saveDraft ?? false;
+    if (!sessionResolved) return;
+
+    if (sessionUser === null) {
+      if (saveDraft) return;
+      openLogin({
+        variant: "saveProgress",
+        nextPath: `${pathname ?? "/create/informational"}?syncDraft=1`,
+        backdropVariant: "blurredYellow",
+      });
+      return;
     }
-    if (saveDraft) {
-      saveCreateFlowDraft(state);
-    }
-    clearState();
-    router.push("/");
+
+    if (!sessionUser) return;
+    await runAuthenticatedExit(opts);
   };
 
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "right-rail";
   const useFullHeightMain = isCompletedStep || isRightRailStep;
+  const stepIdx =
+    currentStep != null ? getStepIndex(currentStep) : -1;
+  const saveDraftOnExit =
+    Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
 
   return (
     <div
       className={`bg-black flex flex-col ${useFullHeightMain ? "h-screen overflow-hidden" : "min-h-screen"}`}
     >
+      <Suspense fallback={null}>
+        <PostLoginDraftTransfer sessionUser={sessionUser} />
+      </Suspense>
       <CreateFlowTopNav
         hasShare={isCompletedStep}
         hasExport={isCompletedStep}
         hasEdit={isCompletedStep}
-        loggedIn={isCompletedStep}
+        saveDraftOnExit={saveDraftOnExit}
         onEdit={
           isCompletedStep
             ? () => router.push("/create/final-review")
             : undefined
         }
-        onExit={handleExit}
+        onExit={(opts) => void handleExit(opts)}
         buttonPalette={isCompletedStep ? "inverse" : undefined}
         className={
           isCompletedStep ? "!bg-[var(--color-teal-teal50,#c9fef9)]" : undefined
@@ -106,10 +168,5 @@ export default function CreateFlowLayout({
 }: {
   children: ReactNode;
 }) {
-  return (
-    <CreateFlowProvider>
-      <CreateFlowBackendSync />
-      <CreateFlowLayoutContent>{children}</CreateFlowLayoutContent>
-    </CreateFlowProvider>
-  );
+  return <CreateFlowSessionShell>{children}</CreateFlowSessionShell>;
 }

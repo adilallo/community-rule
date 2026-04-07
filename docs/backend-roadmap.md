@@ -9,7 +9,7 @@ Temporary working notes for building the backend. Safe to delete once the stack 
 - **Next.js 16** single repo ([`package.json`](package.json)).
 - **PostgreSQL + Prisma**: schema and migrations under `prisma/`; product APIs under `app/api/*` (health, auth/magic-link, session, drafts, rules, templates, web-vitals).
 - **Server modules** in `lib/server/` (db, session, mail, rate limiting, etc.).
-- **Create flow** persists in the browser (`localStorage`); optional **server draft sync** when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` and the user is signed in ([`app/create/context/CreateFlowBackendSync.tsx`](app/create/context/CreateFlowBackendSync.tsx)).
+- **Create flow:** **Anonymous** users mirror in-progress state to **`create-flow-anonymous`** in `localStorage`; **Exit** opens the save-progress magic-link modal; after verify, [`PostLoginDraftTransfer`](app/create/PostLoginDraftTransfer.tsx) can **PUT** `/api/drafts/me` when **`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`**. **Signed-in** users start a **fresh** in-memory session per “Create rule”; **Save & Exit** (from `select` onward) **PUT**s when sync is on. **Log in** from the marketing header uses the global modal ([`AuthModalProvider`](app/contexts/AuthModalContext.tsx)); **`/login`** remains for verify errors and deep links.
 - **Web vitals** [`app/api/web-vitals/route.ts`](app/api/web-vitals/route.ts) still use **file-based** storage under `.next` (not suitable for multi-instance production).
 - **CI:** [`.gitea/workflows/ci.yaml`](.gitea/workflows/ci.yaml) (build, test, lint, `prisma validate`); no in-repo production deploy definition.
 
@@ -178,7 +178,7 @@ npm run dev
 
 **Step 9.** **Templates** (when ready): seed `RuleTemplate` rows; `GET /api/templates` is implemented.
 
-**Step 10.** **Frontend sync**: Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` for server drafts when logged in; `localStorage` remains fallback when off or anonymous.
+**Step 10.** **Frontend draft sync:** Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so **Save & Exit** and **post-login anonymous → account transfer** can **PUT** `/api/drafts/me`. Without sync, drafts are **not** written to the server (anonymous progress still lives in `localStorage` only).
 
 **Step 11.** **Web vitals:** Move off `.next` files—**prefer an external analytics or logging pipeline** (see §7). Use Postgres for vitals only as a deliberate ops choice.
 
@@ -216,11 +216,11 @@ npm run dev
 
 ## 12. Frontend hook-up
 
-**Step 1.** Keep default behavior: **no env flag** → create flow uses **only** `localStorage` (current behavior).
+**Step 1.** **Anonymous** create flow: in-progress state is stored in **`create-flow-anonymous`** (`localStorage`). **Signed-in** “Create rule” does **not** auto-load server drafts yet (profile “open draft” is future).
 
-**Step 2.** Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` to opt in to server drafts when logged in.
+**Step 2.** Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` to enable **PUT** on **Save & Exit** and after **magic-link transfer** from the save-progress exit modal.
 
-**Step 3.** Sign-in UI: **`/login`** (and **Log in** in the site header) uses **magic link** (modal / page flow: request link → open verify URL); after verify, rely on the browser cookie for `/api/drafts/me`.
+**Step 3.** Sign-in: **Log in** in the header opens the **modal** ([`AuthModalProvider`](app/contexts/AuthModalContext.tsx)); **`/login`** is still used for verify **error** redirects and bookmarks. Flow: request magic link → open verify URL → session cookie → `GET /api/auth/session` / `/api/drafts/me` as needed.
 
 **Step 4.** On publish, call `POST /api/rules` from the completed step when the backend is required (wire when the final review UI is ready).
 
