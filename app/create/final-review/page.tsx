@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import RuleCard from "../../components/cards/RuleCard";
 import type { Category } from "../../components/cards/RuleCard/RuleCard.types";
+import { useCreateFlow } from "../context/CreateFlowContext";
 
 const TITLE = "Review your CommunityRule";
 const DESCRIPTION =
   "Here's what other people will see. Make sure everything looks good before you finalize everything. Once the rule is finalized, you must use one of your decision-making mechanisms to edit it again.";
 
-const RULE_CARD_TITLE = "Mutual Aid Mondays";
-const RULE_CARD_DESCRIPTION =
-  "Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness.";
+const RULE_CARD_TITLE_FALLBACK = "Your community";
+const RULE_CARD_DESCRIPTION_FALLBACK =
+  "Add a short description of your community on earlier steps when that field is available. For now, this card shows your community name.";
 
 /** Static categories for final review (read-only display). */
 const FINAL_REVIEW_CATEGORIES: Category[] = [
@@ -55,8 +56,19 @@ const FINAL_REVIEW_CATEGORIES: Category[] = [
  * Figma: 20907-212767 (full-size), 20976-220705 (small breakpoint).
  */
 export default function FinalReviewPage() {
+  const { state } = useCreateFlow();
   const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
+
+  const ruleCardTitle = useMemo(() => {
+    const t = typeof state.title === "string" ? state.title.trim() : "";
+    return t.length > 0 ? t : RULE_CARD_TITLE_FALLBACK;
+  }, [state.title]);
+
+  const ruleCardDescription = useMemo(() => {
+    const s = typeof state.summary === "string" ? state.summary.trim() : "";
+    return s.length > 0 ? s : RULE_CARD_DESCRIPTION_FALLBACK;
+  }, [state.summary]);
 
   // Avoid flash: only use breakpoint after mount so SSR and first paint use same layout (desktop).
   useEffect(() => {
@@ -80,13 +92,13 @@ export default function FinalReviewPage() {
           </div>
           <div className="min-w-0 w-full flex flex-col items-stretch">
             <RuleCard
-              title={RULE_CARD_TITLE}
-              description={RULE_CARD_DESCRIPTION}
+              title={ruleCardTitle}
+              description={ruleCardDescription}
               size="L"
               expanded={true}
               backgroundColor="bg-[#c9fef9]"
               logoUrl="/assets/Vector_MutualAid.svg"
-              logoAlt={RULE_CARD_TITLE}
+              logoAlt={ruleCardTitle}
               categories={FINAL_REVIEW_CATEGORIES}
               className="rounded-[24px] !max-w-full !w-full min-w-0"
               onClick={() => {}}
@@ -107,13 +119,13 @@ export default function FinalReviewPage() {
           size="M"
         />
         <RuleCard
-          title={RULE_CARD_TITLE}
-          description={RULE_CARD_DESCRIPTION}
+          title={ruleCardTitle}
+          description={ruleCardDescription}
           size="L"
           expanded={true}
           backgroundColor="bg-[#c9fef9]"
           logoUrl="/assets/Vector_MutualAid.svg"
-          logoAlt={RULE_CARD_TITLE}
+          logoAlt={ruleCardTitle}
           categories={FINAL_REVIEW_CATEGORIES}
           className="w-full rounded-[12px] p-4"
           onClick={() => {}}

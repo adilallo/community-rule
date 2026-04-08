@@ -103,7 +103,7 @@ export default function LoginForm({
         }
         return;
       }
-      if (isSaveProgress) {
+      if (isSaveProgress || nextPath.includes("syncDraft=1")) {
         setTransferPendingFlag();
       }
       setEmail(trimmed);
@@ -113,7 +113,14 @@ export default function LoginForm({
     } finally {
       setSubmitting(false);
     }
-  }, [email, isSaveProgress, magicLinkNextPath, nextParam, stripErrorQuery, t]);
+  }, [
+    email,
+    isSaveProgress,
+    magicLinkNextPath,
+    nextParam,
+    stripErrorQuery,
+    t,
+  ]);
 
   const urlErrorMessage =
     errorParam === "expired_link"

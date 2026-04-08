@@ -16,7 +16,8 @@ const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
 /**
  * After magic-link verify, redirects to `/create/...?syncDraft=1` with session cookie.
- * Uploads anonymous localStorage draft to `RuleDraft` once, then hydrates context.
+ * With backend sync: PUT draft once then hydrates context. Without sync: hydrates from
+ * `create-flow-anonymous` localStorage only (no server write).
  */
 export function PostLoginDraftTransfer({
   sessionUser,
@@ -38,19 +39,46 @@ export function PostLoginDraftTransfer({
     if (attemptedRef.current) return;
 
     if (!SYNC_ENABLED) {
-      if (attemptedRef.current) return;
       attemptedRef.current = true;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync-off path: show one-shot error then strip query
-      setTransferError(
-        "Saving to your account is not available (server sync is disabled). Your progress stays on this device.",
-      );
-      if (pathname) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete("syncDraft");
-        const q = params.toString();
-        router.replace(q ? `${pathname}?${q}` : pathname);
-      }
-      return;
+      let cancelled = false;
+      void (async () => {
+        const local = readAnonymousCreateFlowState();
+        const pending = hasTransferPendingFlag();
+
+        if (Object.keys(local).length === 0 && !pending) {
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete("syncDraft");
+          const q = params.toString();
+          if (pathname) {
+            router.replace(q ? `${pathname}?${q}` : pathname);
+          }
+          attemptedRef.current = false;
+          return;
+        }
+
+        const segment = pathname?.split("/").pop() ?? "";
+        const step = isValidStep(segment) ? segment : undefined;
+        const payload = {
+          ...local,
+          ...(step ? { currentStep: step } : {}),
+        };
+
+        if (cancelled) return;
+        clearAnonymousCreateFlowStorage();
+        replaceState(payload);
+
+        if (cancelled) return;
+        if (pathname) {
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete("syncDraft");
+          const q = params.toString();
+          router.replace(q ? `${pathname}?${q}` : pathname);
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
     }
 
     attemptedRef.current = true;

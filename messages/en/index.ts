@@ -20,6 +20,7 @@ import metadata from "./metadata.json";
 import communication from "./create/communication.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
+import createPublish from "./create/publish.json";
 
 export default {
   common,
@@ -45,6 +46,7 @@ export default {
     communication,
     topNav: createTopNav,
     draftHydration: createDraftHydration,
+    publish: createPublish,
   },
   navigation,
   metadata,
