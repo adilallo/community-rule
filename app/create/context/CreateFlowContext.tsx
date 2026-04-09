@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -13,64 +14,67 @@ import type {
   CreateFlowContextValue,
   CreateFlowStep,
 } from "../types";
+import {
+  clearAnonymousCreateFlowStorage,
+  clearLegacyCreateFlowKeysOnce,
+  readAnonymousCreateFlowState,
+  writeAnonymousCreateFlowState,
+} from "../anonymousDraftStorage";
 
 const CreateFlowContext = createContext<CreateFlowContextValue | null>(null);
-
-const STORAGE_KEY = "create-flow-state";
-const DRAFT_STORAGE_KEY = "create-flow-draft";
-
-function readStateFromStorage(key: string): CreateFlowState {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = window.localStorage.getItem(key);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw) as CreateFlowState;
-    return typeof parsed === "object" && parsed !== null ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeStateToStorage(key: string, value: CreateFlowState): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // Ignore storage errors (e.g. quota, private mode)
-  }
-}
-
-function removeFromStorage(key: string): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(key);
-  } catch {
-    // Ignore
-  }
-}
 
 interface CreateFlowProviderProps {
   children: ReactNode;
   initialStep?: CreateFlowStep | null;
+  /**
+   * When true (signed-out, session resolved), load/sync `create-flow-anonymous` in localStorage.
+   * When false, in-memory only (authenticated fresh create).
+   */
+  enableAnonymousPersistence?: boolean;
 }
 
 /**
- * Provider component for Create Flow state management
- *
- * Manages flow state with optional localStorage persistence and draft support.
+ * Create flow state. Anonymous users mirror state to localStorage; authenticated users stay in memory.
  */
 export function CreateFlowProvider({
   children,
   initialStep = null,
+  enableAnonymousPersistence = false,
 }: CreateFlowProviderProps) {
   const [state, setState] = useState<CreateFlowState>(() =>
-    readStateFromStorage(STORAGE_KEY),
+    enableAnonymousPersistence ? readAnonymousCreateFlowState() : {},
   );
+  const [interactionTouched, setInteractionTouched] = useState(false);
   const [currentStep] = useState<CreateFlowStep | null>(initialStep);
+  const prevPersistRef = useRef(enableAnonymousPersistence);
 
   useEffect(() => {
-    writeStateToStorage(STORAGE_KEY, state);
-  }, [state]);
+    clearLegacyCreateFlowKeysOnce();
+  }, []);
+
+  // Session resolved as guest after initial paint: hydrate from localStorage if still empty.
+  useEffect(() => {
+    if (!enableAnonymousPersistence) {
+      prevPersistRef.current = false;
+      return;
+    }
+    const wasOff = !prevPersistRef.current;
+    prevPersistRef.current = true;
+    if (!wasOff) return;
+    const from = readAnonymousCreateFlowState();
+    if (Object.keys(from).length === 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate anonymous draft when guest persistence turns on
+    setState((prev) => (Object.keys(prev).length > 0 ? prev : { ...from }));
+  }, [enableAnonymousPersistence]);
+
+  useEffect(() => {
+    if (!enableAnonymousPersistence) return;
+    writeAnonymousCreateFlowState(state);
+  }, [state, enableAnonymousPersistence]);
+
+  const markCreateFlowInteraction = useCallback(() => {
+    setInteractionTouched(true);
+  }, []);
 
   const updateState = useCallback((updates: Partial<CreateFlowState>) => {
     setState((prevState) => ({
@@ -81,13 +85,12 @@ export function CreateFlowProvider({
 
   const replaceState = useCallback((next: CreateFlowState) => {
     setState(next);
-    writeStateToStorage(STORAGE_KEY, next);
   }, []);
 
   const clearState = useCallback(() => {
     setState({});
-    removeFromStorage(STORAGE_KEY);
-    removeFromStorage(DRAFT_STORAGE_KEY);
+    setInteractionTouched(false);
+    clearAnonymousCreateFlowStorage();
   }, []);
 
   const contextValue: CreateFlowContextValue = {
@@ -96,6 +99,8 @@ export function CreateFlowProvider({
     updateState,
     replaceState,
     clearState,
+    interactionTouched,
+    markCreateFlowInteraction,
   };
 
   return (
@@ -105,22 +110,6 @@ export function CreateFlowProvider({
   );
 }
 
-/** Save current state as draft (e.g. on "Save & Exit"). Stub for CR-57. */
-export function saveCreateFlowDraft(state: CreateFlowState): void {
-  writeStateToStorage(DRAFT_STORAGE_KEY, state);
-}
-
-/** Load draft state if present. Caller can merge into initial state when entering flow. */
-export function loadCreateFlowDraft(): CreateFlowState {
-  return readStateFromStorage(DRAFT_STORAGE_KEY);
-}
-
-/**
- * Hook to access Create Flow context
- *
- * @throws Error if used outside CreateFlowProvider
- * @returns CreateFlowContextValue
- */
 export function useCreateFlow(): CreateFlowContextValue {
   const context = useContext(CreateFlowContext);
   if (!context) {

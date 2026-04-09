@@ -1,3 +1,5 @@
+export type LoginBackdropVariant = "solid" | "blurredYellow";
+
 export interface LoginProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,6 +15,8 @@ export interface LoginProps {
    * without waiting for a portal gate (more reliable across engines).
    */
   usePortal?: boolean;
+  /** `solid` = full-page marketing yellow; `blurredYellow` = blur + translucent yellow over underlying UI */
+  backdropVariant?: LoginBackdropVariant;
 }
 
 export interface LoginViewProps {
@@ -28,4 +32,5 @@ export interface LoginViewProps {
   /** False until client mount — avoids SSR/client HTML mismatch for createPortal. */
   portalReady: boolean;
   usePortal: boolean;
+  backdropVariant: LoginBackdropVariant;
 }

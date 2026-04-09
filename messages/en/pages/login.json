@@ -1,6 +1,8 @@
 {
   "title": "Log in to CommunityRule",
   "subtitle": "Enter your email and we'll send you a magic link to sign in. No password needed!",
+  "saveProgressTitle": "Save your progress?",
+  "saveProgressSubtitle": "We need your email to save, and we'll send you a magic link to sign in. If you don't save now you could lose your progress.",
   "emailLabel": "Email address",
   "emailPlaceholder": "you@example.com",
   "sendMagicLink": "Send me a magic link",

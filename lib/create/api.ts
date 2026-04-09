@@ -80,39 +80,110 @@ export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   return data.draft.payload as CreateFlowState;
 }
 
+const DRAFT_SAVE_NETWORK_ERROR =
+  "Something went wrong. Check your connection and try again.";
+
+const PUBLISH_FAILED_FALLBACK =
+  "Something went wrong. Check your connection or try again.";
+
+/** Parse JSON body; empty or invalid bodies return `null` (avoids `response.json()` throws). */
+async function safeParseJsonResponse(res: Response): Promise<unknown> {
+  const text = await res.text();
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+  try {
+    return JSON.parse(trimmed) as unknown;
+  } catch {
+    return null;
+  }
+}
+
+export type SaveDraftResult =
+  | { ok: true }
+  | { ok: false; message: string; status?: number };
+
+async function errorBodyMessage(res: Response): Promise<string> {
+  try {
+    const data: unknown = await res.json();
+    const msg = readApiErrorMessage(data);
+    if (msg !== "Request failed") return msg;
+  } catch {
+    /* non-JSON body */
+  }
+  const statusText = res.statusText?.trim();
+  if (statusText) return statusText;
+  return "Save failed";
+}
+
 export async function saveDraftToServer(
   state: CreateFlowState,
-): Promise<boolean> {
-  const res = await fetch("/api/drafts/me", {
-    method: "PUT",
-    credentials: "include",
-    headers: jsonHeaders,
-    body: JSON.stringify({ payload: state }),
-  });
-  return res.ok;
+): Promise<SaveDraftResult> {
+  try {
+    const res = await fetch("/api/drafts/me", {
+      method: "PUT",
+      credentials: "include",
+      headers: jsonHeaders,
+      body: JSON.stringify({ payload: state }),
+    });
+    if (res.ok) {
+      return { ok: true as const };
+    }
+    const message = await errorBodyMessage(res);
+    return {
+      ok: false as const,
+      message,
+      status: res.status,
+    };
+  } catch {
+    return {
+      ok: false as const,
+      message: DRAFT_SAVE_NETWORK_ERROR,
+    };
+  }
 }
 
 export async function publishRule(input: {
   title: string;
   summary?: string;
   document: Record<string, unknown>;
-}): Promise<{ ok: true; id: string; title: string } | { error: string }> {
-  const res = await fetch("/api/rules", {
-    method: "POST",
-    credentials: "include",
-    headers: jsonHeaders,
-    body: JSON.stringify({
-      title: input.title,
-      summary: input.summary,
-      document: input.document,
-    }),
-  });
-  const data = await parseJson<{
-    error?: string;
-    rule?: { id: string; title: string };
-  }>(res);
-  if (!res.ok || !data.rule) {
-    return { error: readApiErrorMessage(data) };
+}): Promise<
+  | { ok: true; id: string; title: string }
+  | { ok: false; error: string; status?: number }
+> {
+  try {
+    const res = await fetch("/api/rules", {
+      method: "POST",
+      credentials: "include",
+      headers: jsonHeaders,
+      body: JSON.stringify({
+        title: input.title,
+        summary: input.summary,
+        document: input.document,
+      }),
+    });
+    const data = (await safeParseJsonResponse(res)) as {
+      error?: string | { message?: string };
+      rule?: { id: string; title: string };
+    } | null;
+    const rule = data && typeof data === "object" ? data.rule : undefined;
+    if (!res.ok || !rule) {
+      const fromBody =
+        data && typeof data === "object" ? readApiErrorMessage(data) : null;
+      const msg =
+        fromBody && fromBody !== "Request failed"
+          ? fromBody
+          : res.statusText?.trim() || PUBLISH_FAILED_FALLBACK;
+      return {
+        ok: false as const,
+        error: msg,
+        status: res.status,
+      };
+    }
+    return { ok: true, id: rule.id, title: rule.title };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+    };
   }
-  return { ok: true, id: data.rule.id, title: data.rule.title };
 }

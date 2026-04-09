@@ -1,4 +1,3 @@
-import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
@@ -8,6 +7,37 @@ import Login from "../../app/components/modals/Login";
 describe("Login", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("uses blurredYellow backdrop by default (header overlay)", async () => {
+    renderWithProviders(
+      <Login isOpen onClose={vi.fn()} ariaLabelledBy="login-modal-heading">
+        <p id="login-modal-heading">Login content</p>
+      </Login>,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
+    const backdrop = screen.getByRole("dialog").parentElement;
+    expect(backdrop).toHaveClass("backdrop-blur-md");
+  });
+
+  it("uses solid backdrop when backdropVariant is solid (/login page)", async () => {
+    renderWithProviders(
+      <Login
+        isOpen
+        onClose={vi.fn()}
+        ariaLabelledBy="login-modal-heading"
+        backdropVariant="solid"
+      >
+        <p id="login-modal-heading">Login content</p>
+      </Login>,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
+    const backdrop = screen.getByRole("dialog").parentElement;
+    expect(backdrop).not.toHaveClass("backdrop-blur-md");
   });
 
   it("renders dialog when open and portal is ready", async () => {
@@ -33,6 +63,23 @@ describe("Login", () => {
       </Login>,
     );
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("portals overlay outside the rendered subtree by default", async () => {
+    const { container } = renderWithProviders(
+      <div data-testid="inline-root">
+        <Login isOpen onClose={vi.fn()} ariaLabelledBy="login-modal-heading">
+          <p id="login-modal-heading">Portaled</p>
+        </Login>
+      </div>,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
+    const dialog = screen.getByRole("dialog");
+    expect(
+      container.querySelector('[data-testid="inline-root"]')?.contains(dialog),
+    ).toBe(false);
   });
 
   it("calls onClose when close button is clicked", async () => {

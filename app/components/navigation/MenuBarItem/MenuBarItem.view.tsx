@@ -3,6 +3,7 @@ import type { MenuBarItemViewProps } from "./MenuBarItem.types";
 
 function MenuBarItemView({
   href,
+  buttonOnClick,
   children,
   disabled,
   combinedStyles,
@@ -13,6 +14,19 @@ function MenuBarItemView({
       <span className={combinedStyles} {...accessibilityProps}>
         {children}
       </span>
+    );
+  }
+
+  if (buttonOnClick) {
+    return (
+      <button
+        type="button"
+        className={combinedStyles}
+        onClick={buttonOnClick}
+        {...accessibilityProps}
+      >
+        {children}
+      </button>
     );
   }
 

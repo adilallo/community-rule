@@ -6,9 +6,12 @@ import HeaderLockup from "../../components/type/HeaderLockup";
 import CommunityRuleDocument from "../../components/sections/CommunityRuleDocument";
 import type { CommunityRuleDocumentSection } from "../../components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
 import Alert from "../../components/modals/Alert";
+import { parseDocumentSectionsForDisplay } from "../../../lib/create/buildPublishPayload";
+import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
 
-const TITLE = "Mutual Aid Mondays";
-const DESCRIPTION =
+/** Demo copy when `/create/completed` is opened without a prior publish in this tab. */
+const FALLBACK_TITLE = "Mutual Aid Mondays";
+const FALLBACK_DESCRIPTION =
   "Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness.";
 
 const TOAST_TITLE = "This is what folks see when you share your CommunityRule";
@@ -91,11 +94,29 @@ const COMPLETED_RULE_SECTIONS: CommunityRuleDocumentSection[] = [
 export default function CompletedPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [toastDismissed, setToastDismissed] = useState(false);
+  const [headerTitle, setHeaderTitle] = useState(FALLBACK_TITLE);
+  const [headerDescription, setHeaderDescription] = useState<
+    string | undefined
+  >(FALLBACK_DESCRIPTION);
+  const [documentSections, setDocumentSections] =
+    useState<CommunityRuleDocumentSection[]>(COMPLETED_RULE_SECTIONS);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const stored = readLastPublishedRule();
+    if (!stored) return;
+    const parsed = parseDocumentSectionsForDisplay(stored.document);
+    if (parsed.length === 0) return;
+    setDocumentSections(parsed);
+    setHeaderTitle(stored.title);
+    const sum =
+      typeof stored.summary === "string" ? stored.summary.trim() : "";
+    setHeaderDescription(sum.length > 0 ? sum : undefined);
   }, []);
 
   const showDesktopLayout = !isMounted || isMdOrLarger;
@@ -108,8 +129,8 @@ export default function CompletedPage() {
             {/* Left column: community title + header, centered, does not scroll */}
             <div className="flex min-w-0 flex-col justify-center overflow-hidden py-8">
               <HeaderLockup
-                title={TITLE}
-                description={DESCRIPTION}
+                title={headerTitle}
+                description={headerDescription}
                 justification="left"
                 size="L"
                 palette="inverse"
@@ -124,7 +145,7 @@ export default function CompletedPage() {
               />
               <div className="py-8 min-w-0">
                 <CommunityRuleDocument
-                  sections={COMPLETED_RULE_SECTIONS}
+                  sections={documentSections}
                   className="min-w-0"
                 />
               </div>
@@ -159,14 +180,14 @@ export default function CompletedPage() {
       <div className="w-full flex flex-col items-center px-5 min-w-0 bg-[var(--color-teal-teal50,#c9fef9)] py-8">
         <div className="flex flex-col gap-4 w-full max-w-[639px]">
           <HeaderLockup
-            title={TITLE}
-            description={DESCRIPTION}
+            title={headerTitle}
+            description={headerDescription}
             justification="left"
             size="M"
             palette="inverse"
           />
           <CommunityRuleDocument
-            sections={COMPLETED_RULE_SECTIONS}
+            sections={documentSections}
             useCardStyle
             className="w-full p-4"
           />

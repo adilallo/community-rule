@@ -1,6 +1,7 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { AuthModalProvider } from "./contexts/AuthModalContext";
 import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import "./globals.css";
@@ -101,11 +102,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         className={`${inter.variable} ${bricolageGrotesque.variable} ${spaceGrotesk.variable}`}
       >
         <MessagesProvider messages={messages}>
-          <div className="min-h-screen flex flex-col">
-            <ConditionalNavigation />
-            <main className="flex-1">{children}</main>
-            <ConditionalFooter />
-          </div>
+          <AuthModalProvider>
+            <div className="min-h-screen flex flex-col">
+              <ConditionalNavigation />
+              <main className="flex-1">{children}</main>
+              <ConditionalFooter />
+            </div>
+          </AuthModalProvider>
         </MessagesProvider>
       </body>
     </html>

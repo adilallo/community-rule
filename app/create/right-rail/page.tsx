@@ -6,6 +6,7 @@ import DecisionMakingSidebar from "../../components/utility/DecisionMakingSideba
 import CardStack from "../../components/utility/CardStack";
 import type { InfoMessageBoxItem } from "../../components/utility/InfoMessageBox/InfoMessageBox.types";
 import type { CardStackItem } from "../../components/utility/CardStack/CardStack.types";
+import { useCreateFlow } from "../context/CreateFlowContext";
 
 const SIDEBAR_TITLE = "How should conflicts be resolved?";
 
@@ -78,6 +79,7 @@ const SAMPLE_CARDS: CardStackItem[] = [
  * Two-column layout (sidebar + card stack) at 640+, single column at 320-639.
  */
 export default function RightRailPage() {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
   const [messageBoxCheckedIds, setMessageBoxCheckedIds] = useState<string[]>(
@@ -96,22 +98,28 @@ export default function RightRailPage() {
 
   const handleMessageBoxCheckboxChange = useCallback(
     (id: string, checked: boolean) => {
+      markCreateFlowInteraction();
       setMessageBoxCheckedIds((prev) =>
         checked ? [...prev, id] : prev.filter((x) => x !== id),
       );
     },
-    [],
+    [markCreateFlowInteraction],
   );
 
-  const handleCardSelect = useCallback((id: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
-  }, []);
+  const handleCardSelect = useCallback(
+    (id: string) => {
+      markCreateFlowInteraction();
+      setSelectedIds((prev) =>
+        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      );
+    },
+    [markCreateFlowInteraction],
+  );
 
   const handleToggleExpand = useCallback(() => {
+    markCreateFlowInteraction();
     setExpanded((prev) => !prev);
-  }, []);
+  }, [markCreateFlowInteraction]);
 
   if (showDesktopLayout) {
     return (

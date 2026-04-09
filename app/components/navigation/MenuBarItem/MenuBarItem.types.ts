@@ -11,6 +11,8 @@ export type MenuBarItemModeValue = "default" | "inverse";
 
 export interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
+  /** When set, renders a `<button type="button">` instead of a link (e.g. open login modal). */
+  buttonOnClick?: () => void;
   children?: React.ReactNode;
   /**
    * Menu bar item state: "default", "hover", or "selected".
@@ -45,9 +47,12 @@ export interface MenuBarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorE
 
 export interface MenuBarItemViewProps {
   href: string;
+  buttonOnClick?: () => void;
   children?: React.ReactNode;
   disabled: boolean;
   className: string;
   combinedStyles: string;
-  accessibilityProps: React.HTMLAttributes<HTMLAnchorElement | HTMLSpanElement>;
+  accessibilityProps: React.HTMLAttributes<
+    HTMLAnchorElement | HTMLSpanElement | HTMLButtonElement
+  >;
 }

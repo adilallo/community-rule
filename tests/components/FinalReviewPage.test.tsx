@@ -1,7 +1,31 @@
+import { useLayoutEffect } from "react";
 import { describe, it, expect } from "vitest";
-import { renderWithProviders as render, screen } from "../utils/test-utils";
+import {
+  renderWithProviders as render,
+  screen,
+  waitFor,
+} from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
 import FinalReviewPage from "../../app/create/final-review/page";
+import { useCreateFlow } from "../../app/create/context/CreateFlowContext";
+
+const FALLBACK_CARD_TITLE = "Your community";
+const FALLBACK_CARD_DESCRIPTION_SNIPPET =
+  "Add a short description of your community";
+
+function FinalReviewWithFlowState({
+  title,
+  summary,
+}: {
+  title: string;
+  summary?: string;
+}) {
+  const { replaceState } = useCreateFlow();
+  useLayoutEffect(() => {
+    replaceState({ title, ...(summary !== undefined ? { summary } : {}) });
+  }, [replaceState, title, summary]);
+  return <FinalReviewPage />;
+}
 
 describe("FinalReviewPage", () => {
   it("renders without crashing", () => {
@@ -27,17 +51,27 @@ describe("FinalReviewPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RuleCard with title", () => {
+  it("renders RuleCard with fallback title when context has no name", () => {
     render(<FinalReviewPage />);
-    expect(screen.getByText("Mutual Aid Mondays")).toBeInTheDocument();
+    expect(screen.getByText(FALLBACK_CARD_TITLE)).toBeInTheDocument();
   });
 
-  it("renders RuleCard with description", () => {
+  it("renders RuleCard with fallback description when context has no summary", () => {
     render(<FinalReviewPage />);
     expect(
-      screen.getByText(
-        /Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness./i,
-      ),
+      screen.getByText(new RegExp(FALLBACK_CARD_DESCRIPTION_SNIPPET, "i")),
+    ).toBeInTheDocument();
+  });
+
+  it("renders RuleCard title from create flow state", async () => {
+    render(
+      <FinalReviewWithFlowState title="Oak Park Commons" summary="Local mutual aid." />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Oak Park Commons")).toBeInTheDocument();
+    });
+    expect(
+      screen.getByText(/Local mutual aid\./i),
     ).toBeInTheDocument();
   });
 
@@ -46,7 +80,7 @@ describe("FinalReviewPage", () => {
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);
     expect(
-      buttons.some((el) => el.textContent?.includes("Mutual Aid Mondays")),
+      buttons.some((el) => el.textContent?.includes(FALLBACK_CARD_TITLE)),
     ).toBe(true);
   });
 

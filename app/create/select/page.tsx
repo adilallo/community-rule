@@ -11,27 +11,36 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import MultiSelect from "../../components/controls/MultiSelect";
 import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
+import { useCreateFlow } from "../context/CreateFlowContext";
 
 function createListCustomHandlers(
   setList: Dispatch<SetStateAction<ChipOption[]>>,
   confirmState: "Unselected" | "Selected",
+  onInteraction?: () => void,
 ) {
+  const touch = () => onInteraction?.();
   return {
-    onAddClick: () =>
+    onAddClick: () => {
+      touch();
       setList((prev) => [
         ...prev,
         { id: crypto.randomUUID(), label: "", state: "Custom" },
-      ]),
-    onCustomChipConfirm: (chipId: string, value: string) =>
+      ]);
+    },
+    onCustomChipConfirm: (chipId: string, value: string) => {
+      touch();
       setList((prev) =>
         prev.map((opt) =>
           opt.id === chipId
             ? { ...opt, label: value, state: confirmState }
             : opt,
         ),
-      ),
-    onCustomChipClose: (chipId: string) =>
-      setList((prev) => prev.filter((o) => o.id !== chipId)),
+      );
+    },
+    onCustomChipClose: (chipId: string) => {
+      touch();
+      setList((prev) => prev.filter((o) => o.id !== chipId));
+    },
   };
 }
 
@@ -43,6 +52,7 @@ function createListCustomHandlers(
  * Responsive sizing: uses L/M for HeaderLockup and S for MultiSelect based on 640px breakpoint.
  */
 export default function SelectPage() {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
 
@@ -85,19 +95,35 @@ export default function SelectPage() {
   ]);
 
   const communityCustomHandlers = useMemo(
-    () => createListCustomHandlers(setCommunitySizeOptions, "Unselected"),
-    [],
+    () =>
+      createListCustomHandlers(
+        setCommunitySizeOptions,
+        "Unselected",
+        markCreateFlowInteraction,
+      ),
+    [markCreateFlowInteraction],
   );
   const organizationCustomHandlers = useMemo(
-    () => createListCustomHandlers(setOrganizationTypeOptions, "Unselected"),
-    [],
+    () =>
+      createListCustomHandlers(
+        setOrganizationTypeOptions,
+        "Unselected",
+        markCreateFlowInteraction,
+      ),
+    [markCreateFlowInteraction],
   );
   const governanceCustomHandlers = useMemo(
-    () => createListCustomHandlers(setGovernanceStyleOptions, "Unselected"),
-    [],
+    () =>
+      createListCustomHandlers(
+        setGovernanceStyleOptions,
+        "Unselected",
+        markCreateFlowInteraction,
+      ),
+    [markCreateFlowInteraction],
   );
 
   const handleCommunitySizeClick = (chipId: string) => {
+    markCreateFlowInteraction();
     setCommunitySizeOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
@@ -111,6 +137,7 @@ export default function SelectPage() {
   };
 
   const handleOrganizationTypeClick = (chipId: string) => {
+    markCreateFlowInteraction();
     setOrganizationTypeOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
@@ -124,6 +151,7 @@ export default function SelectPage() {
   };
 
   const handleGovernanceStyleClick = (chipId: string) => {
+    markCreateFlowInteraction();
     setGovernanceStyleOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId

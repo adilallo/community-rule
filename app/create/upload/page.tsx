@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import Upload from "../../components/controls/Upload";
+import { useCreateFlow } from "../context/CreateFlowContext";
 
 /**
  * Upload page for the create flow
@@ -13,6 +14,7 @@ import Upload from "../../components/controls/Upload";
  * Responsive sizing: uses L/M for HeaderLockup based on 640px breakpoint.
  */
 export default function UploadPage() {
+  const { markCreateFlowInteraction } = useCreateFlow();
   const [isMounted, setIsMounted] = useState(false);
   const isMdOrLarger = useMediaQuery("(min-width: 640px)");
 
@@ -25,6 +27,7 @@ export default function UploadPage() {
   const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   const handleUploadClick = () => {
+    markCreateFlowInteraction();
     // TODO: Handle upload button click (e.g. open file picker)
   };
 

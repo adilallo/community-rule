@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuthModal } from "../../../contexts/AuthModalContext";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import MenuBarItem from "../MenuBarItem";
 import Button from "../../buttons/Button";
@@ -21,6 +22,7 @@ const TopNavContainer = memo<TopNavProps>(
   ({ folderTop = false, loggedIn = false, profile = false, logIn = true }) => {
     const pathname = usePathname();
     const router = useRouter();
+    const { openLogin } = useAuthModal();
     const t = useTranslation("header");
 
     // Schema markup for site navigation
@@ -139,7 +141,6 @@ const TopNavContainer = memo<TopNavProps>(
       const isSmallBreakpoint = size === "xsmall" || size === "home";
       const mode = folderTop && isSmallBreakpoint ? "inverse" : "default";
 
-      const href = loggedIn ? "/profile" : "/login";
       const label = loggedIn ? t("buttons.profile") : t("buttons.logIn");
       const ariaLabel = loggedIn
         ? t("ariaLabels.goToProfile")
@@ -148,9 +149,30 @@ const TopNavContainer = memo<TopNavProps>(
         (loggedIn && pathname === "/profile") ||
         (!loggedIn && pathname === "/login");
 
+      if (loggedIn) {
+        return (
+          <MenuBarItem
+            href="/profile"
+            size={sizeMap[size] || "Small"}
+            mode={mode}
+            state={navSelected ? "selected" : "default"}
+            ariaLabel={ariaLabel}
+          >
+            {label}
+          </MenuBarItem>
+        );
+      }
+
       return (
         <MenuBarItem
-          href={href}
+          buttonOnClick={() =>
+            openLogin({
+              variant: "default",
+              backdropVariant: "blurredYellow",
+              nextPath: pathname || "/",
+            })
+          }
+          href="/login"
           size={sizeMap[size] || "Small"}
           mode={mode}
           state={navSelected ? "selected" : "default"}

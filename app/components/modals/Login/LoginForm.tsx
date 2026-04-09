@@ -9,6 +9,7 @@ import TextInput from "../../controls/TextInput";
 import ContentLockup from "../../type/ContentLockup";
 import { requestMagicLink } from "../../../../lib/create/api";
 import { safeInternalPath } from "../../../../lib/safeInternalPath";
+import { setTransferPendingFlag } from "../../../create/anonymousDraftStorage";
 
 /** Mail icon for login modal (inline SVG; same pattern as InfoMessageBox ExclamationIconInline). */
 function MailIconInline() {
@@ -37,7 +38,18 @@ function MailIconInline() {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function LoginForm() {
+export type LoginFormVariant = "default" | "saveProgress";
+
+export type LoginFormProps = {
+  variant?: LoginFormVariant;
+  /** Overrides URL `next` for `requestMagicLink` (e.g. create-flow exit modal). */
+  magicLinkNextPath?: string;
+};
+
+export default function LoginForm({
+  variant = "default",
+  magicLinkNextPath,
+}: LoginFormProps) {
   const t = useTranslation("pages.login");
   const tFooter = useTranslation("footer");
   const router = useRouter();
@@ -54,6 +66,8 @@ export default function LoginForm() {
 
   const nextParam = searchParams.get("next");
   const errorParam = searchParams.get("error");
+
+  const isSaveProgress = variant === "saveProgress";
 
   /** Drop `error` from the URL so URL-driven messages don’t linger after a new attempt. */
   const stripErrorQuery = useCallback(() => {
@@ -75,7 +89,8 @@ export default function LoginForm() {
     }
     setSubmitting(true);
     try {
-      const nextPath = safeInternalPath(nextParam);
+      const rawNext = magicLinkNextPath ?? nextParam;
+      const nextPath = safeInternalPath(rawNext);
       const result = await requestMagicLink(trimmed, nextPath);
       if (result.ok === false) {
         if (result.retryAfterMs != null && result.retryAfterMs > 0) {
@@ -88,6 +103,9 @@ export default function LoginForm() {
         }
         return;
       }
+      if (isSaveProgress || nextPath.includes("syncDraft=1")) {
+        setTransferPendingFlag();
+      }
       setEmail(trimmed);
       setSent(true);
     } catch {
@@ -95,7 +113,14 @@ export default function LoginForm() {
     } finally {
       setSubmitting(false);
     }
-  }, [email, nextParam, stripErrorQuery, t]);
+  }, [
+    email,
+    isSaveProgress,
+    magicLinkNextPath,
+    nextParam,
+    stripErrorQuery,
+    t,
+  ]);
 
   const urlErrorMessage =
     errorParam === "expired_link"
@@ -106,16 +131,36 @@ export default function LoginForm() {
           : t("errors.invalidLink")
         : "";
 
+  const titleId = "login-modal-heading";
+
   return (
     <div className="flex flex-col gap-6 pt-2">
       <div className="flex flex-col gap-3">
-        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-inverse-brand-primary)]">
+        <div
+          className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${
+            isSaveProgress
+              ? "bg-[#fefcc9]"
+              : "bg-[var(--color-surface-inverse-brand-primary)]"
+          }`}
+        >
           <MailIconInline />
         </div>
         <ContentLockup
-          titleId="login-modal-heading"
-          title={sent ? t("successTitle") : t("title")}
-          description={sent ? t("successBody") : t("subtitle")}
+          titleId={titleId}
+          title={
+            sent
+              ? t("successTitle")
+              : isSaveProgress
+                ? t("saveProgressTitle")
+                : t("title")
+          }
+          description={
+            sent
+              ? t("successBody")
+              : isSaveProgress
+                ? t("saveProgressSubtitle")
+                : t("subtitle")
+          }
           variant="login"
           alignment="left"
         />

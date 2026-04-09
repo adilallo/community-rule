@@ -2,7 +2,13 @@
 
 import { createPortal } from "react-dom";
 import ModalHeader from "../../utility/ModalHeader";
-import type { LoginViewProps } from "./Login.types";
+import type { LoginBackdropVariant, LoginViewProps } from "./Login.types";
+
+const backdropClasses: Record<LoginBackdropVariant, string> = {
+  solid: "bg-[var(--color-surface-inverse-brand-primary)]",
+  blurredYellow:
+    "bg-[var(--color-surface-inverse-brand-primary)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-surface-inverse-brand-primary)]/75",
+};
 
 export function LoginView({
   isOpen,
@@ -16,6 +22,7 @@ export function LoginView({
   backdropRef,
   portalReady,
   usePortal,
+  backdropVariant,
 }: LoginViewProps) {
   if (!isOpen) return null;
   if (usePortal && !portalReady) return null;
@@ -23,7 +30,7 @@ export function LoginView({
   const content = (
     <div
       ref={backdropRef}
-      className="fixed inset-0 z-[9998] flex flex-col items-center justify-center gap-6 overflow-y-auto bg-[var(--color-surface-inverse-brand-primary)] px-4 py-8"
+      className={`fixed inset-0 z-[9998] flex flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8 ${backdropClasses[backdropVariant]}`}
       onClick={onClose}
       role="presentation"
     >

@@ -10,7 +10,7 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
     hasShare = false,
     hasExport = false,
     hasEdit = false,
-    loggedIn = false,
+    saveDraftOnExit = false,
     onShare,
     onExport,
     onEdit,
@@ -34,7 +34,7 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         hasShare={hasShare}
         hasExport={hasExport}
         hasEdit={hasEdit}
-        loggedIn={loggedIn}
+        saveDraftOnExit={saveDraftOnExit}
         onShare={onShare}
         onExport={onExport}
         onEdit={onEdit}
