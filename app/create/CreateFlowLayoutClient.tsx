@@ -18,6 +18,10 @@ import Button from "../components/buttons/Button";
 import { buildPublishPayload } from "../../lib/create/buildPublishPayload";
 import { fetchAuthSession, publishRule } from "../../lib/create/api";
 import { writeLastPublishedRule } from "../../lib/create/lastPublishedRule";
+import {
+  fetchTemplateBySlug,
+  type RuleTemplateDto,
+} from "../../lib/create/fetchTemplates";
 import messages from "../../messages/en/index";
 import { useAuthModal } from "../contexts/AuthModalContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
@@ -89,6 +93,18 @@ function CreateFlowLayoutContent({
     string | null
   >(null);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [templateReviewApplyError, setTemplateReviewApplyError] = useState<
+    string | null
+  >(null);
+  const [isApplyingTemplate, setIsApplyingTemplate] = useState(false);
+
+  const templateReviewMatch = pathname?.match(
+    /^\/create\/review-template\/([^/]+)$/,
+  );
+  const templateReviewSlug = templateReviewMatch?.[1]
+    ? decodeURIComponent(templateReviewMatch[1])
+    : null;
+  const isTemplateReviewRoute = Boolean(templateReviewSlug);
 
   const handleFinalize = useCallback(async () => {
     setPublishBannerMessage(null);
@@ -134,6 +150,39 @@ function CreateFlowLayoutContent({
     );
   }, [state, router, openLogin]);
 
+  const handleUseTemplateWithoutChanges = useCallback(async () => {
+    if (!templateReviewSlug) return;
+    setTemplateReviewApplyError(null);
+    setIsApplyingTemplate(true);
+    const result = await fetchTemplateBySlug(templateReviewSlug);
+    setIsApplyingTemplate(false);
+    if (result === null) {
+      setTemplateReviewApplyError(messages.create.templateReview.errors.notFound);
+      return;
+    }
+    if ("error" in result) {
+      setTemplateReviewApplyError(result.error);
+      return;
+    }
+    const template: RuleTemplateDto = result;
+    const doc = template.body;
+    if (!doc || typeof doc !== "object" || Array.isArray(doc)) {
+      setTemplateReviewApplyError(messages.create.templateReview.errors.applyFailed);
+      return;
+    }
+    const summaryRaw =
+      typeof template.description === "string"
+        ? template.description.trim()
+        : "";
+    writeLastPublishedRule({
+      id: `template:${template.slug}`,
+      title: template.title,
+      summary: summaryRaw.length > 0 ? summaryRaw : null,
+      document: doc as Record<string, unknown>,
+    });
+    router.push("/create/completed");
+  }, [router, templateReviewSlug]);
+
   const runAuthenticatedExit = useCreateFlowExit({
     state,
     currentStep,
@@ -149,9 +198,15 @@ function CreateFlowLayoutContent({
 
     if (sessionUser === null) {
       if (saveDraft) return;
+      const returnToTemplateReview =
+        templateReviewSlug != null
+          ? `/create/review-template/${encodeURIComponent(templateReviewSlug)}?syncDraft=1`
+          : null;
       openLogin({
         variant: "saveProgress",
-        nextPath: `${pathname ?? "/create/informational"}?syncDraft=1`,
+        nextPath:
+          returnToTemplateReview ??
+          `${pathname ?? "/create/informational"}?syncDraft=1`,
         backdropVariant: "blurredYellow",
       });
       return;
@@ -169,7 +224,9 @@ function CreateFlowLayoutContent({
     Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
 
   const hasErrorOverlays =
-    Boolean(draftSaveBannerMessage) || Boolean(publishBannerMessage);
+    Boolean(draftSaveBannerMessage) ||
+    Boolean(publishBannerMessage) ||
+    Boolean(templateReviewApplyError);
 
   return (
     <div className="relative flex h-screen min-h-0 flex-col overflow-hidden bg-black">
@@ -198,6 +255,18 @@ function CreateFlowLayoutContent({
                 title={messages.create.publish.finalizeBannerTitle}
                 description={publishBannerMessage}
                 onClose={() => setPublishBannerMessage(null)}
+                className="w-full"
+              />
+            </div>
+          ) : null}
+          {templateReviewApplyError ? (
+            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
+              <Alert
+                type="banner"
+                status="danger"
+                title={messages.create.templateReview.errors.applyFailed}
+                description={templateReviewApplyError}
+                onClose={() => setTemplateReviewApplyError(null)}
                 className="w-full"
               />
             </div>
@@ -243,8 +312,41 @@ function CreateFlowLayoutContent({
       {!isCompletedStep && (
         <CreateFlowFooter
           className="shrink-0"
+          progressBar={!isTemplateReviewRoute}
           secondButton={
-            nextStep ? (
+            isTemplateReviewRoute ? (
+              <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
+                <Button
+                  buttonType="ghost"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isApplyingTemplate}
+                  className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)] !text-white"
+                  onClick={() => void handleUseTemplateWithoutChanges()}
+                >
+                  {messages.create.templateReview.footer.useWithoutChanges}
+                </Button>
+                <Button
+                  buttonType="filled"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isApplyingTemplate}
+                  title={
+                    messages.create.templateReview.footer.customizeAriaHint
+                  }
+                  className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]"
+                  onClick={() => {
+                    if (!templateReviewSlug) return;
+                    // Preserve template slug for a future customize / prefill ticket (informational does not read it yet).
+                    router.push(
+                      `/create/informational?template=${encodeURIComponent(templateReviewSlug)}`,
+                    );
+                  }}
+                >
+                  {messages.create.templateReview.footer.customize}
+                </Button>
+              </div>
+            ) : nextStep ? (
               <Button
                 buttonType="filled"
                 palette="default"
@@ -269,7 +371,13 @@ function CreateFlowLayoutContent({
               </Button>
             ) : null
           }
-          onBackClick={previousStep ? goToPreviousStep : undefined}
+          onBackClick={
+            isTemplateReviewRoute
+              ? () => router.push("/")
+              : previousStep
+                ? goToPreviousStep
+                : undefined
+          }
         />
       )}
     </div>

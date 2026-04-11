@@ -6,7 +6,8 @@
 2. `docker compose up -d postgres mailhog` — omit `mailhog` if you only need Postgres; with `SMTP_URL` unset, the **magic-link verify URL** is printed in the dev server log (see `.env.example`).
 3. Install dependencies: `npm ci`
 4. Apply migrations: `npx prisma migrate dev`
-5. Run the app: `npm run dev`
+5. (Optional) Seed curated rule templates: `npx prisma db seed` — requires `DATABASE_URL` and applied migrations. Safe to re-run; rows are upserted by `slug` so duplicates are not created.
+6. Run the app: `npm run dev`
 
 Use `npx prisma studio` to inspect the database.
 

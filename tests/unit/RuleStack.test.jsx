@@ -4,22 +4,38 @@ import {
   cleanup,
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
-import { vi, describe, test, expect, afterEach } from "vitest";
+import { vi, describe, test, expect, afterEach, beforeEach } from "vitest";
 import { logger } from "../../lib/logger";
 import RuleStack from "../../app/components/sections/RuleStack";
+import { testRouter } from "../mocks/navigation";
+import {
+  GOVERNANCE_TEMPLATE_CATALOG,
+  getGovernanceTemplatesForHome,
+} from "../../lib/templates/governanceTemplateCatalog";
+
+const homeFeatured = getGovernanceTemplatesForHome();
+
+beforeEach(() => {
+  testRouter.push.mockClear();
+});
 
 afterEach(() => {
   cleanup();
 });
 
 describe("RuleStack Component", () => {
-  test("renders all four rule cards", () => {
+  test("renders four featured governance template cards on the home row", () => {
     render(<RuleStack />);
 
-    expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
-    expect(screen.getByText("Consensus")).toBeInTheDocument();
-    expect(screen.getByText("Elected Board")).toBeInTheDocument();
-    expect(screen.getByText("Petition")).toBeInTheDocument();
+    for (const entry of homeFeatured) {
+      expect(screen.getByText(entry.title)).toBeInTheDocument();
+    }
+    expect(GOVERNANCE_TEMPLATE_CATALOG.length).toBeGreaterThan(
+      homeFeatured.length,
+    );
+    expect(
+      screen.queryByText("Solidarity Network"),
+    ).not.toBeInTheDocument();
   });
 
   test("renders with custom className", () => {
@@ -29,38 +45,57 @@ describe("RuleStack Component", () => {
     expect(section).toHaveClass("custom-class");
   });
 
-  test("renders rule card descriptions", () => {
+  test("renders sample rule card descriptions from featured catalog", () => {
     render(<RuleStack />);
 
     expect(
       screen.getByText(/Units called Circles have the ability to decide/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Decisions that affect the group collectively/),
+      screen.getByText(
+        /Important decisions require unanimous agreement\. Proposals pass only if no serious objections remain\./,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/An elected board determines policies/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/All participants can propose and vote/),
+      screen.getByText(
+        /Any participant can propose a rule change\. If enough sign it/,
+      ),
     ).toBeInTheDocument();
   });
 
-  test("renders rule card icons", () => {
-    render(<RuleStack />);
+  test("renders rule card icons with image assets", () => {
+    const { container } = render(<RuleStack />);
 
-    expect(screen.getByAltText("Sociocracy")).toBeInTheDocument();
-    expect(screen.getByAltText("Consensus")).toBeInTheDocument();
-    expect(screen.getByAltText("Elected Board")).toBeInTheDocument();
-    expect(screen.getByAltText("Petition")).toBeInTheDocument();
+    const imgs = container.querySelectorAll("img");
+    const circles = [...imgs].find((el) => {
+      const s = el.getAttribute("src") ?? "";
+      return (
+        s.includes("template-mark/consensus-clusters") ||
+        s.includes("template-mark%2Fconsensus-clusters")
+      );
+    });
+    const consensus = [...imgs].find((el) => {
+      const s = el.getAttribute("src") ?? "";
+      return (
+        s.includes("consensus") &&
+        !s.includes("consensus-clusters") &&
+        !s.includes("elected") &&
+        !s.includes("petition")
+      );
+    });
+    expect(circles).toBeTruthy();
+    expect(consensus).toBeTruthy();
   });
 
-  test("renders call-to-action button", () => {
+  test("renders see-all-templates link to full templates page", () => {
     render(<RuleStack />);
 
-    expect(
-      screen.getByRole("button", { name: "See all templates" }),
-    ).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "See all templates" });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", "/templates");
   });
 
   test("applies correct CSS classes", () => {
@@ -74,7 +109,6 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
 
     const section = document.querySelector("section");
-    // Check for responsive padding classes
     expect(section).toHaveClass("px-[20px]", "py-[32px]");
     expect(section?.className).toMatch(/min-\[640px\]:px-\[32px\]/);
     expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
@@ -87,22 +121,21 @@ describe("RuleStack Component", () => {
     expect(grid).toHaveClass("min-[768px]:grid", "min-[768px]:grid-cols-2");
   });
 
-  test("renders RuleCard components with correct props", () => {
+  test("renders RuleCard components with catalog surface colors", () => {
     render(<RuleStack />);
 
-    // Check that RuleCard components receive correct props
-    const consensusClustersCard = screen
-      .getByText("Consensus clusters")
-      .closest('[class*="bg-[var(--color-surface-default-brand-lime)]"]');
-    expect(consensusClustersCard).toBeInTheDocument();
+    const circlesCard = screen
+      .getByText("Circles")
+      .closest('[class*="bg-[var(--color-surface-invert-brand-teal)]"]');
+    expect(circlesCard).toBeInTheDocument();
 
     const consensusCard = screen
       .getByText("Consensus")
-      .closest('[class*="bg-[var(--color-surface-default-brand-rust)]"]');
+      .closest('[class*="bg-[var(--color-surface-invert-positive-secondary)]"]');
     expect(consensusCard).toBeInTheDocument();
   });
 
-  test("handles template click events", async () => {
+  test("handles template click events for featured templates", async () => {
     const user = userEvent.setup();
     const debugSpy = vi
       .spyOn(logger, "debug")
@@ -113,7 +146,10 @@ describe("RuleStack Component", () => {
     const consensusCard = screen.getByText("Consensus").closest("div");
     await user.click(consensusCard);
 
-    expect(debugSpy).toHaveBeenCalledWith("Consensus template clicked");
+    expect(debugSpy).toHaveBeenCalledWith("consensus template clicked");
+    expect(testRouter.push).toHaveBeenCalledWith(
+      "/create/review-template/consensus",
+    );
 
     debugSpy.mockRestore();
   });
@@ -124,70 +160,68 @@ describe("RuleStack Component", () => {
     const section = document.querySelector("section");
     expect(section).toBeInTheDocument();
 
-    // Check for proper heading structure: 1 from SectionHeader + 4 from RuleCards
     const headings = screen.getAllByRole("heading");
-    expect(headings).toHaveLength(5); // One section header + four rule cards
+    expect(headings).toHaveLength(1 + homeFeatured.length);
   });
 
   test("applies responsive spacing", () => {
     render(<RuleStack />);
 
     const section = document.querySelector("section");
-    // Check for responsive padding classes
     expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
     expect(section?.className).toMatch(/min-\[1024px\]:py-\[64px\]/);
   });
 
   test("renders icons with correct attributes", () => {
-    render(<RuleStack />);
+    const { container } = render(<RuleStack />);
 
-    const sociocracyIcon = screen.getByAltText("Sociocracy");
-    expect(sociocracyIcon).toHaveAttribute(
-      "src",
-      "/assets/Icon_Sociocracy.svg",
-    );
-    // Check for responsive icon size classes
-    expect(sociocracyIcon?.className).toMatch(
-      /min-\[640px\]:max-\[1023px\]:w-\[56px\]/,
-    );
-    expect(sociocracyIcon?.className).toMatch(
-      /min-\[640px\]:max-\[1023px\]:h-\[56px\]/,
-    );
-    expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
-    expect(sociocracyIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
-  });
-
-  test("applies different background colors to cards", () => {
-    render(<RuleStack />);
-
-    // Look for RuleCard elements with background color classes
-    const cards = document.querySelectorAll('[role="button"]');
-    expect(cards.length).toBeGreaterThan(0);
-
-    // Verify that cards have background color classes
-    cards.forEach((card) => {
-      expect(card.className).toMatch(
-        /bg-\[var\(--color-surface-default-brand-/,
+    const imgs = container.querySelectorAll("img");
+    const circlesIcon = [...imgs].find((el) => {
+      const s = el.getAttribute("src") ?? "";
+      return (
+        s.includes("template-mark/consensus-clusters") ||
+        s.includes("template-mark%2Fconsensus-clusters")
       );
     });
+    expect(circlesIcon).toBeTruthy();
+    expect(circlesIcon?.getAttribute("src")).toMatch(
+      /template-mark(?:%2F|\/)consensus-clusters/,
+    );
+    expect(circlesIcon?.className).toMatch(
+      /min-\[640px\]:max-\[1023px\]:w-\[56px\]/,
+    );
+    expect(circlesIcon?.className).toMatch(
+      /min-\[640px\]:max-\[1023px\]:h-\[56px\]/,
+    );
+    expect(circlesIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
+    expect(circlesIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
   });
 
-  test("renders with proper button styling", () => {
+  test("applies different background colors to featured cards", () => {
     render(<RuleStack />);
 
-    const button = screen.getByRole("button", { name: "See all templates" });
-    // Button component uses outline variant which has bg-transparent and border
-    expect(button?.className).toMatch(/bg-transparent/);
-    expect(button?.className).toMatch(/border/);
+    const buttons = document.querySelectorAll('[role="button"]');
+    const templateSurfaces = [...buttons].filter((el) =>
+      el.className.includes("--color-surface-invert"),
+    );
+    expect(templateSurfaces.length).toBe(homeFeatured.length);
   });
 
-  test("applies flex layout for button container", () => {
+  test("renders with proper see-all link styling", () => {
     render(<RuleStack />);
 
-    const buttonContainer = screen
-      .getByRole("button", { name: "See all templates" })
+    const link = screen.getByRole("link", { name: "See all templates" });
+    expect(link?.className).toMatch(/bg-transparent/);
+    expect(link?.className).toMatch(/border/);
+  });
+
+  test("applies flex layout for see-all link container", () => {
+    render(<RuleStack />);
+
+    const linkContainer = screen
+      .getByRole("link", { name: "See all templates" })
       .closest("div");
-    expect(buttonContainer).toHaveClass("flex", "justify-center");
+    expect(linkContainer).toHaveClass("flex", "justify-center");
   });
 
   test("handles analytics tracking", async () => {
@@ -195,7 +229,6 @@ describe("RuleStack Component", () => {
     const gtagSpy = vi.fn();
     const analyticsSpy = vi.fn();
 
-    // Mock window.gtag and window.analytics
     Object.defineProperty(window, "gtag", {
       value: gtagSpy,
       writable: true,
@@ -211,10 +244,10 @@ describe("RuleStack Component", () => {
     await user.click(electedBoardCard);
 
     expect(gtagSpy).toHaveBeenCalledWith("event", "template_click", {
-      template_name: "Elected Board",
+      template_slug: "elected-board",
     });
     expect(analyticsSpy).toHaveBeenCalledWith("Template Clicked", {
-      templateName: "Elected Board",
+      templateSlug: "elected-board",
     });
   });
 });

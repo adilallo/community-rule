@@ -1,0 +1,17 @@
+{
+  "intro": {
+    "title": "CommunityRule Template",
+    "description": "These templates can get you started with a proven approach to governance and decision-making. As useful as these templates are, they are not one size fit all solutions though. We recommend that you use them as a starting place for your community to adapt and customize according to your group's specific needs."
+  },
+  "footer": {
+    "useWithoutChanges": "Use without changes",
+    "customize": "Customize",
+    "customizeAriaHint": "Customize flow coming soon; for now this continues to the create flow entry."
+  },
+  "errors": {
+    "loadFailed": "We could not load this template. Try again or pick another template from the home page.",
+    "notFound": "This template was not found.",
+    "applyFailed": "Something went wrong. Please try again."
+  },
+  "loading": "Loading template…"
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useRouter } from "next/navigation";
 import { logger } from "../../../../lib/logger";
 import { RuleStackView } from "./RuleStack.view";
 import type { RuleStackProps } from "./RuleStack.types";
@@ -19,21 +20,24 @@ declare global {
 }
 
 const RuleStackContainer = memo<RuleStackProps>(({ className = "" }) => {
-  const handleTemplateClick = (templateName: string) => {
+  const router = useRouter();
+
+  const handleTemplateClick = (slug: string) => {
     // Basic analytics tracking
     if (typeof window !== "undefined") {
       if (window.gtag) {
         window.gtag("event", "template_click", {
-          template_name: templateName,
+          template_slug: slug,
         });
       }
       if (window.analytics) {
         window.analytics.track("Template Clicked", {
-          templateName: templateName,
+          templateSlug: slug,
         });
       }
     }
-    logger.debug(`${templateName} template clicked`);
+    logger.debug(`${slug} template clicked`);
+    router.push(`/create/review-template/${encodeURIComponent(slug)}`);
   };
 
   return (

@@ -4,5 +4,5 @@ export interface RuleStackProps {
 
 export interface RuleStackViewProps {
   className: string;
-  onTemplateClick: (_templateName: string) => void;
+  onTemplateClick: (_slug: string) => void;
 }

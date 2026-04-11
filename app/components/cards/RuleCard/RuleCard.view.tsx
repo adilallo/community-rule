@@ -184,7 +184,7 @@ export function RuleCardView({
       {/* Outermost container with bottom border - taller to match Figma */}
       <div
         className={`
-        border-b border-black border-solid flex items-center relative shrink-0 w-full
+        border-b border-solid border-[var(--color-content-invert-primary)] flex items-center relative shrink-0 w-full
         max-[639px]:h-[72px]
         min-[640px]:max-[1023px]:h-[80px]
         min-[1024px]:max-[1439px]:h-[88px]
@@ -196,8 +196,8 @@ export function RuleCardView({
           <div
             className={`
             flex items-center justify-center shrink-0
-            max-[639px]:w-[72px] max-[639px]:h-[72px] max-[639px]:border-r max-[639px]:border-black max-[639px]:border-solid
-            min-[640px]:max-[1023px]:w-[80px] min-[640px]:max-[1023px]:h-[80px] min-[640px]:max-[1023px]:border-r min-[640px]:max-[1023px]:border-black min-[640px]:max-[1023px]:border-solid
+            max-[639px]:w-[72px] max-[639px]:h-[72px] max-[639px]:border-r max-[639px]:border-solid max-[639px]:border-[var(--color-content-invert-primary)]
+            min-[640px]:max-[1023px]:w-[80px] min-[640px]:max-[1023px]:h-[80px] min-[640px]:max-[1023px]:border-r min-[640px]:max-[1023px]:border-solid min-[640px]:max-[1023px]:border-[var(--color-content-invert-primary)]
             min-[1024px]:max-[1439px]:w-[56px] min-[1024px]:max-[1439px]:h-[56px]
             min-[1440px]:w-[103px] min-[1440px]:h-[103px]
           `}
@@ -218,7 +218,7 @@ export function RuleCardView({
             className={`
             flex-1 min-w-0 h-full flex
             max-[1023px]:border-0
-            min-[1024px]:border-l min-[1024px]:border-black min-[1024px]:border-solid
+            min-[1024px]:border-l min-[1024px]:border-solid min-[1024px]:border-[var(--color-content-invert-primary)]
           `}
           >
             {/* Inner container for header text with padding */}
@@ -232,7 +232,7 @@ export function RuleCardView({
             `}
             >
               <h3
-                className={`${titleClass} text-black overflow-hidden text-ellipsis w-full`}
+                className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
               >
                 {title}
               </h3>
@@ -279,8 +279,12 @@ export function RuleCardView({
           )}
           {/* Footer: Description */}
           {description && (
-            <div className="border-t border-black border-solid pt-[16px] relative shrink-0 w-full">
-              <p className={`${descriptionClass} text-black`}>{description}</p>
+            <div className="border-t border-solid border-[var(--color-content-invert-primary)] pt-[16px] relative shrink-0 w-full">
+              <p
+                className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)]`}
+              >
+                {description}
+              </p>
             </div>
           )}
         </>
@@ -288,7 +292,9 @@ export function RuleCardView({
         /* Collapsed State: Description */
         description && (
           <div className="flex items-center justify-center relative shrink-0 w-full">
-            <p className={`${descriptionClass} text-black flex-1`}>
+            <p
+              className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)] flex-1`}
+            >
               {description}
             </p>
           </div>

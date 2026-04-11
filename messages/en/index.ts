@@ -12,6 +12,7 @@ import quoteBlock from "./components/quoteBlock.json";
 import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
 import home from "./pages/home.json";
+import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
@@ -21,6 +22,7 @@ import communication from "./create/communication.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
 import createPublish from "./create/publish.json";
+import createTemplateReview from "./create/templateReview.json";
 
 export default {
   common,
@@ -38,6 +40,7 @@ export default {
   ruleStack,
   pages: {
     home,
+    templates,
     learn,
     login,
     profile,
@@ -47,6 +50,7 @@ export default {
     topNav: createTopNav,
     draftHydration: createDraftHydration,
     publish: createPublish,
+    templateReview: createTemplateReview,
   },
   navigation,
   metadata,
