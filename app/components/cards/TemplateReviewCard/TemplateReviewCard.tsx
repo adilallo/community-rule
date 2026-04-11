@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import RuleCard from "../RuleCard";
+import type { RuleCardProps } from "../RuleCard/RuleCard.types";
 import { getAssetPath } from "../../../../lib/assetUtils";
 import type { RuleTemplateDto } from "../../../../lib/create/fetchTemplates";
 import {
@@ -22,6 +23,8 @@ export interface TemplateReviewCardProps {
   template: RuleTemplateDto;
   /** Merged onto RuleCard `className` (e.g. final-review desktop vs mobile radius/padding). */
   ruleCardClassName?: string;
+  /** RuleCard size; create-flow passes `L` at/above `md`, `M` below (640px). */
+  size?: RuleCardProps["size"];
 }
 
 /**
@@ -31,6 +34,7 @@ export interface TemplateReviewCardProps {
 export function TemplateReviewCard({
   template,
   ruleCardClassName = "",
+  size = "L",
 }: TemplateReviewCardProps) {
   const catalog = getGovernanceTemplateCatalogEntry(template.slug);
   const pres = catalog ?? FALLBACK_PRESENTATION;
@@ -42,7 +46,7 @@ export function TemplateReviewCard({
       title={template.title}
       description={summary}
       expanded
-      size="L"
+      size={size}
       categories={categories}
       backgroundColor={pres.backgroundColor}
       className={ruleCardClassName}

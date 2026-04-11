@@ -14,6 +14,7 @@ import {
   CreateFlowLockupCardStepShell,
 } from "../../components/CreateFlowLockupCardStepShell";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -26,6 +27,7 @@ interface PageProps {
 export default function ReviewTemplatePage({ params }: PageProps) {
   const { slug: rawSlug } = use(params);
   const slug = decodeURIComponent(rawSlug);
+  const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.templateReview");
 
   const [template, setTemplate] = useState<RuleTemplateDto | null>(null);
@@ -94,6 +96,7 @@ export default function ReviewTemplatePage({ params }: PageProps) {
       <TemplateReviewCard
         template={template}
         ruleCardClassName={CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS}
+        size={mdUp ? "L" : "M"}
       />
     </CreateFlowLockupCardStepShell>
   );

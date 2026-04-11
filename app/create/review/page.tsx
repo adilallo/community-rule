@@ -3,10 +3,12 @@
 import RuleCard from "../../components/cards/RuleCard";
 import { useTranslation } from "../../contexts/MessagesContext";
 import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
+import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
 import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
 
 /** Mid-flow review step (after upload, before cards). */
 export default function ReviewPage() {
+  const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.review");
 
   return (
@@ -26,7 +28,7 @@ export default function ReviewPage() {
           <RuleCard
             title={t("ruleCard.title")}
             description={t("ruleCard.description")}
-            size="L"
+            size={mdUp ? "L" : "M"}
             expanded={false}
             backgroundColor="bg-[#c9fef9]"
             logoUrl="/assets/Vector_MutualAid.svg"

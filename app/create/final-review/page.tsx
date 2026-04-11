@@ -5,6 +5,7 @@ import RuleCard from "../../components/cards/RuleCard";
 import type { Category } from "../../components/cards/RuleCard/RuleCard.types";
 import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { useCreateFlow } from "../context/CreateFlowContext";
+import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
 import {
   CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS,
   CreateFlowLockupCardStepShell,
@@ -29,6 +30,7 @@ function buildFinalReviewCategories(
  */
 export default function FinalReviewPage() {
   const { state } = useCreateFlow();
+  const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.finalReview");
   const m = useMessages();
 
@@ -56,7 +58,7 @@ export default function FinalReviewPage() {
       <RuleCard
         title={ruleCardTitle}
         description={ruleCardDescription}
-        size="L"
+        size={mdUp ? "L" : "M"}
         expanded={true}
         backgroundColor="bg-[#c9fef9]"
         logoUrl="/assets/Vector_MutualAid.svg"

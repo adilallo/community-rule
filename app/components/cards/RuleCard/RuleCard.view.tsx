@@ -39,13 +39,19 @@ export function RuleCardView({
     className?.includes("pb-[");
   const hasResponsiveGap = className?.includes("gap-[");
 
-  const cardPadding = hasResponsivePadding
-    ? "" // If className has responsive padding, don't add size-based padding
-    : isLarge || isSmall
-      ? "p-[24px]"
-      : isMedium
-        ? "p-[16px]"
-        : "pb-[24px] pt-[12px] px-[12px]"; // XS: asymmetric padding
+  // Expanded + size: uniform padding on all sides (overrides conflicting utilities from `className`).
+  const cardPadding =
+    expanded && isLarge
+      ? "!p-[24px]"
+      : expanded && isMedium
+        ? "!p-[16px]"
+        : hasResponsivePadding
+          ? ""
+          : isLarge || isSmall
+            ? "p-[24px]"
+            : isMedium
+              ? "p-[16px]"
+              : "pb-[24px] pt-[12px] px-[12px]"; // XS: asymmetric padding
   const cardGap = expanded
     ? "gap-[16px]"
     : hasResponsiveGap
@@ -245,7 +251,11 @@ export function RuleCardView({
         <>
           {/* Categories Section - Using MultiSelect */}
           {categories && categories.length > 0 && (
-            <div className="flex flex-col gap-[16px] items-start px-[12px] relative shrink-0 w-full">
+            <div
+              className={`flex flex-col gap-[16px] items-start relative shrink-0 w-full ${
+                expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"
+              }`}
+            >
               {categories.map((category, categoryIndex) => (
                 <MultiSelect
                   key={categoryIndex}

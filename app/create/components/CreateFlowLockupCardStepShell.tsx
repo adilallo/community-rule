@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { CreateFlowHeaderLockup } from "./CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "./CreateFlowStepShell";
 
-/** Shared `RuleCard` / template card chrome: matches final-review desktop + mobile padding and radius. */
+/** Shared `RuleCard` / template card chrome: width + radius; padding comes from `RuleCard` (L+expanded = 24px). */
 export const CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS =
-  "w-full min-w-0 rounded-[12px] p-4 md:rounded-[24px] md:!max-w-full md:!w-full md:p-0";
+  "w-full min-w-0 rounded-[12px] md:rounded-[24px] md:!max-w-full md:!w-full";
 
 type CreateFlowLockupCardStepShellProps = {
   lockupTitle: string;
