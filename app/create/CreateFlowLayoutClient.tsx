@@ -24,6 +24,7 @@ import {
 } from "../../lib/create/fetchTemplates";
 import messages from "../../messages/en/index";
 import { useAuthModal } from "../contexts/AuthModalContext";
+import { useTranslation } from "../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
 import Alert from "../components/modals/Alert";
@@ -76,6 +77,7 @@ function CreateFlowLayoutContent({
   sessionUser: { id: string; email: string } | null | undefined;
   sessionResolved: boolean;
 }) {
+  const tFooter = useTranslation("create.footer");
   const router = useRouter();
   const pathname = usePathname();
   const { openLogin } = useAuthModal();
@@ -99,12 +101,15 @@ function CreateFlowLayoutContent({
   const [isApplyingTemplate, setIsApplyingTemplate] = useState(false);
 
   const templateReviewMatch = pathname?.match(
-    /^\/create\/review-template\/([^/]+)$/,
+    /\/create\/review-template\/([^/?#]+)/,
   );
   const templateReviewSlug = templateReviewMatch?.[1]
     ? decodeURIComponent(templateReviewMatch[1])
     : null;
-  const isTemplateReviewRoute = Boolean(templateReviewSlug);
+  /** Match anywhere in path so locale/basePath variants still get template footer + layout. */
+  const isTemplateReviewRoute = Boolean(
+    pathname?.includes("/create/review-template/"),
+  );
 
   const handleFinalize = useCallback(async () => {
     setPublishBannerMessage(null);
@@ -218,8 +223,29 @@ function CreateFlowLayoutContent({
 
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "right-rail";
-  const useFullHeightMain = isCompletedStep || isRightRailStep;
+  const isFinalReviewStep = currentStep === "final-review";
+  const isCardsStep = currentStep === "cards";
   const stepIdx = currentStep != null ? getStepIndex(currentStep) : -1;
+
+  /** At `md+`, main cross-axis: center by default; exceptions stay top-aligned (see product spec). */
+  const mainContentClass = isCompletedStep
+    ? "items-stretch overflow-y-auto md:overflow-hidden"
+    : isRightRailStep
+      ? "items-stretch overflow-hidden"
+      : isFinalReviewStep || isCardsStep || isTemplateReviewRoute
+        ? "items-start justify-center overflow-y-auto"
+        : "items-start justify-center overflow-y-auto md:items-center";
+
+  const isTextStep = currentStep === "text";
+  const mainMaxMdJustify =
+    isTextStep && !isCompletedStep && !isRightRailStep
+      ? "max-md:justify-center"
+      : "max-md:justify-start";
+  const mainMaxMdCross =
+    isCompletedStep || isRightRailStep
+      ? "max-md:flex-col max-md:items-stretch"
+      : "max-md:flex-col max-md:items-center";
+  const mainResponsiveLayout = `${mainMaxMdCross} ${mainMaxMdJustify} md:flex-row md:justify-center`;
   const saveDraftOnExit =
     Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
 
@@ -299,20 +325,14 @@ function CreateFlowLayoutContent({
         }`.trim()}
       />
       <main
-        className={`flex min-h-0 flex-1 justify-center ${
-          useFullHeightMain
-            ? isCompletedStep
-              ? "items-stretch overflow-y-auto sm:overflow-hidden"
-              : "items-stretch overflow-hidden"
-            : "flex-row items-center justify-center overflow-y-auto"
-        }`}
+        className={`flex min-h-0 flex-1 w-full ${mainContentClass} ${mainResponsiveLayout}`}
       >
         {children}
       </main>
       {!isCompletedStep && (
         <CreateFlowFooter
           className="shrink-0"
-          progressBar={!isTemplateReviewRoute}
+          progressBar={!isTemplateReviewRoute && !isFinalReviewStep}
           secondButton={
             isTemplateReviewRoute ? (
               <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
@@ -364,10 +384,10 @@ function CreateFlowLayoutContent({
                 {currentStep === "final-review"
                   ? isPublishing
                     ? messages.create.publish.finalizeButtonPublishing
-                    : "Finalize CommunityRule"
+                    : tFooter("finalizeCommunityRule")
                   : currentStep === "confirm-stakeholders"
-                    ? "Confirm Stakeholders"
-                    : "Next"}
+                    ? tFooter("confirmStakeholders")
+                    : tFooter("next")}
               </Button>
             ) : null
           }

@@ -1,3 +1,5 @@
+import type { HeaderLockupSizeValue } from "../../type/HeaderLockup/HeaderLockup.types";
+
 export interface CardStackItem {
   id: string;
   label: string;
@@ -19,6 +21,8 @@ export interface CardStackProps {
   description?: string;
   /** "default" = compact grid/column + expanded grid; "singleStack" = always one column, expand shows more in same stack */
   layout?: "default" | "singleStack";
+  /** Optional title/description lockup size (create-flow passes `md`-matched `L`/`M`). Defaults to `L`. */
+  headerLockupSize?: HeaderLockupSizeValue;
   className?: string;
 }
 
@@ -34,5 +38,6 @@ export interface CardStackViewProps {
   title: string;
   description: string;
   layout: "default" | "singleStack";
+  headerLockupSize: HeaderLockupSizeValue | undefined;
   className: string;
 }

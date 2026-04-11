@@ -1,0 +1,31 @@
+{
+  "header": {
+    "title": "What is your community called?",
+    "description": "This will be the name of your community"
+  },
+  "multiSelect": {
+    "label": "Label",
+    "addButtonText": "Add organization type"
+  },
+  "communitySizes": [
+    { "label": "1 member" },
+    { "label": "2-10 members" },
+    { "label": "10-24 members" },
+    { "label": "24-64 members" },
+    { "label": "64-128 members" },
+    { "label": "125-1000 members" },
+    { "label": "1000+ members" }
+  ],
+  "organizationTypes": [
+    { "label": "Non-profit" },
+    { "label": "For-profit" },
+    { "label": "Community" },
+    { "label": "Educational" }
+  ],
+  "governanceStyles": [
+    { "label": "Democratic" },
+    { "label": "Consensus" },
+    { "label": "Hierarchical" },
+    { "label": "Flat" }
+  ]
+}

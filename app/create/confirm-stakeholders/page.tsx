@@ -1,20 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
-import HeaderLockup from "../../components/type/HeaderLockup";
+import { useState } from "react";
 import MultiSelect from "../../components/controls/MultiSelect";
 import Alert from "../../components/modals/Alert";
 import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
+import { useTranslation } from "../../contexts/MessagesContext";
 import { useCreateFlow } from "../context/CreateFlowContext";
-
-const TITLE =
-  "Do other stakeholders need to be involved in creating your community?";
-
-const DESCRIPTION =
-  "Adding people at this step will invite them to see your proposed CommunityRule and make their own proposals.";
-
-const DRAFT_TOAST_TITLE = "Congratulations! You've drafted your CommunityRule!";
+import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
+import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
 
 /**
  * Confirm stakeholders step — stacked lockup + MultiSelect (not split columns).
@@ -22,19 +15,11 @@ const DRAFT_TOAST_TITLE = "Congratulations! You've drafted your CommunityRule!";
  */
 export default function ConfirmStakeholdersPage() {
   const { markCreateFlowInteraction } = useCreateFlow();
-  const [isMounted, setIsMounted] = useState(false);
+  const t = useTranslation("create.confirmStakeholders");
   const [toastDismissed, setToastDismissed] = useState(false);
   const [stakeholderOptions, setStakeholderOptions] = useState<ChipOption[]>(
     [],
   );
-  const isMdOrLarger = useMediaQuery("(min-width: 640px)");
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
-    setIsMounted(true);
-  }, []);
-
-  const effectiveMdOrLarger = !isMounted || isMdOrLarger;
 
   const handleAddStakeholder = () => {
     markCreateFlowInteraction();
@@ -65,14 +50,16 @@ export default function ConfirmStakeholdersPage() {
 
   return (
     <>
-      <div className="w-full flex flex-col items-center px-[var(--spacing-measures-spacing-500,20px)] md:px-[var(--measures-spacing-1800,64px)] pb-28 md:pb-32">
-        <div className="flex w-full max-w-[640px] flex-col gap-[var(--measures-spacing-300,12px)] items-start">
+      <CreateFlowStepShell
+        variant="centeredNarrowBottomPad"
+        contentTopBelowMd="space-1400"
+      >
+        <div className="flex w-full max-w-[640px] flex-col items-start gap-[var(--measures-spacing-300,12px)]">
           <div className="flex w-full flex-col gap-[var(--measures-spacing-200,8px)] py-[12px]">
-            <HeaderLockup
-              title={TITLE}
-              description={DESCRIPTION}
+            <CreateFlowHeaderLockup
+              title={t("title")}
+              description={t("description")}
               justification="left"
-              size={effectiveMdOrLarger ? "L" : "M"}
             />
           </div>
           <MultiSelect
@@ -85,21 +72,21 @@ export default function ConfirmStakeholdersPage() {
             onCustomChipConfirm={handleCustomChipConfirm}
             onCustomChipClose={handleCustomChipClose}
             addButton
-            addButtonText="Add stakeholder"
+            addButtonText={t("addStakeholder")}
           />
         </div>
-      </div>
+      </CreateFlowStepShell>
 
       {!toastDismissed && (
         <div
-          className="fixed left-1/2 z-10 w-[min(640px,calc(100%-2.5rem))] max-w-[640px] -translate-x-1/2 bottom-[5.25rem] md:bottom-[5.5rem]"
+          className="fixed bottom-[5.25rem] left-1/2 z-10 w-[min(640px,calc(100%-2.5rem))] max-w-[640px] -translate-x-1/2 md:bottom-[5.5rem]"
           role="status"
           aria-live="polite"
         >
           <Alert
             type="banner"
             status="positive"
-            title={DRAFT_TOAST_TITLE}
+            title={t("draftToastTitle")}
             hasLeadingIcon={false}
             hasBodyText={false}
             onClose={() => setToastDismissed(true)}

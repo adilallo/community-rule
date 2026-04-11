@@ -19,6 +19,16 @@ import profile from "./pages/profile.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import communication from "./create/communication.json";
+import createInformational from "./create/informational.json";
+import createText from "./create/text.json";
+import createSelect from "./create/select.json";
+import createUpload from "./create/upload.json";
+import createReview from "./create/review.json";
+import createConfirmStakeholders from "./create/confirmStakeholders.json";
+import createFinalReview from "./create/finalReview.json";
+import createCompleted from "./create/completed.json";
+import createRightRail from "./create/rightRail.json";
+import createFooter from "./create/footer.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
 import createPublish from "./create/publish.json";
@@ -47,6 +57,16 @@ export default {
   },
   create: {
     communication,
+    informational: createInformational,
+    text: createText,
+    select: createSelect,
+    upload: createUpload,
+    review: createReview,
+    confirmStakeholders: createConfirmStakeholders,
+    finalReview: createFinalReview,
+    completed: createCompleted,
+    rightRail: createRightRail,
+    footer: createFooter,
     topNav: createTopNav,
     draftHydration: createDraftHydration,
     publish: createPublish,

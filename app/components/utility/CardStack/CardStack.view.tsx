@@ -16,8 +16,10 @@ export function CardStackView({
   title,
   description,
   layout,
+  headerLockupSize,
   className,
 }: CardStackViewProps) {
+  const lockupSize = headerLockupSize ?? "L";
   const isSelected = (id: string) => selectedIds.includes(id);
   // Compact: recommended only (up to 5). Expanded: all cards.
   const compactCards = cards.filter((c) => c.recommended ?? false).slice(0, 5);
@@ -33,7 +35,7 @@ export function CardStackView({
               title={title}
               description={description}
               justification="center"
-              size="L"
+              size={lockupSize}
             />
           </div>
         ) : null}
@@ -73,7 +75,7 @@ export function CardStackView({
             title={title}
             description={description}
             justification="center"
-            size="L"
+            size={lockupSize}
           />
         </div>
       ) : null}

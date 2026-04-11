@@ -1,0 +1,73 @@
+{
+  "fallbackTitle": "Mutual Aid Mondays",
+  "fallbackDescription": "Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness.",
+  "toastTitle": "This is what folks see when you share your CommunityRule",
+  "toastDescription": "Your group can use this document as an operating manual.",
+  "fallbackDocumentSections": [
+    {
+      "categoryName": "Values",
+      "entries": [
+        {
+          "title": "Solidarity Forever",
+          "body": "Food Not Bombs is not a charity. It is a project of solidarity. Charity is vertical. It moves from those who have to those who have not and maintains the hierarchy between them. Solidarity is horizontal. It moves between equals who recognize that our liberation is bound together. We do not help the poor. We share resources among community members because access to food is a human right rather than a privilege of wealth."
+        },
+        {
+          "title": "Shared Leadership",
+          "body": "We operate without bosses or managers. This does not mean we are disorganized. It means we are self-organized. Authority in this chapter is temporary and task-specific rather than permanent or personal. We believe the people doing the work should make the decisions about that work. By distributing responsibility we prevent burnout and ensure the movement survives beyond any single leader."
+        },
+        {
+          "title": "Organizing Offline",
+          "body": "We use digital tools to coordinate but we build power in the physical world. An algorithm cannot cook a meal and a group chat cannot look someone in the eye. We prioritize face-to-face connection and resist the pull of digital metrics."
+        },
+        {
+          "title": "Circular Food Systems",
+          "body": "We intervene in the ecological crisis by addressing food waste and food recovery. We redirect surplus food to where it is needed and model a circular economy at the scale of our communities."
+        }
+      ]
+    },
+    {
+      "categoryName": "Communication",
+      "entries": [
+        {
+          "title": "Signal",
+          "body": "We use Signal for sensitive coordination. Encrypted messaging helps protect our members and our plans from surveillance."
+        }
+      ]
+    },
+    {
+      "categoryName": "Membership",
+      "entries": [
+        {
+          "title": "Open Admission",
+          "body": "Anyone who shares our values and is willing to contribute is welcome. We do not require applications or approval processes for general participation."
+        }
+      ]
+    },
+    {
+      "categoryName": "Decision-making",
+      "entries": [
+        {
+          "title": "Lazy Consensus",
+          "body": "We use lazy consensus for most decisions: proposals move forward unless someone raises a blocking concern. This keeps us moving without requiring everyone to approve every detail."
+        },
+        {
+          "title": "Modified Consensus",
+          "body": "For larger or more consequential decisions we use modified consensus, with clear timelines and a fallback to a supermajority vote if needed."
+        }
+      ]
+    },
+    {
+      "categoryName": "Conflict management",
+      "entries": [
+        {
+          "title": "Code of Conduct",
+          "body": "We have a code of conduct that sets expectations for behavior and outlines how we address harm."
+        },
+        {
+          "title": "Restorative Justice",
+          "body": "When conflict arises we prioritize restoration and learning over punishment. We use facilitated circles and other restorative practices where appropriate."
+        }
+      ]
+    }
+  ]
+}

@@ -1,100 +1,56 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
+import { useState, useCallback, useMemo } from "react";
 import DecisionMakingSidebar from "../../components/utility/DecisionMakingSidebar";
 import CardStack from "../../components/utility/CardStack";
 import type { InfoMessageBoxItem } from "../../components/utility/InfoMessageBox/InfoMessageBox.types";
 import type { CardStackItem } from "../../components/utility/CardStack/CardStack.types";
+import { useMessages } from "../../contexts/MessagesContext";
 import { useCreateFlow } from "../context/CreateFlowContext";
-
-const SIDEBAR_TITLE = "How should conflicts be resolved?";
-
-const SIDEBAR_DESCRIPTION = (
-  <>
-    You can also combine or <span className="underline">add</span> new
-    approaches to the list
-  </>
-);
-
-const MESSAGE_BOX_TITLE =
-  "Consider defining approaches to steward key resources:";
-
-const MESSAGE_BOX_ITEMS: InfoMessageBoxItem[] = [
-  { id: "amend", label: "Amend your CommunityRule" },
-  { id: "finances", label: "Steward finances" },
-  { id: "project", label: "Project level decisions" },
-  { id: "discipline", label: "Discipline and member termination" },
-];
-
-const SAMPLE_CARDS: CardStackItem[] = [
-  {
-    id: "mediation",
-    label: "Mediation",
-    supportText:
-      "Collaborative work to reach a resolution that all parties can agree upon.",
-    recommended: true,
-  },
-  {
-    id: "facilitation",
-    label: "Facilitated dialogue",
-    supportText:
-      "Structured sessions where parties collaboratively resolve disputes.",
-    recommended: true,
-  },
-  {
-    id: "invite-only",
-    label: "Invite-only",
-    supportText: "Private discussions with selected participants.",
-    recommended: true,
-  },
-  {
-    id: "arbitration",
-    label: "Arbitration",
-    supportText: "Arbitrators are chosen specifically for a particular case.",
-    recommended: true,
-  },
-  {
-    id: "direct-dialogue",
-    label: "Direct dialogue",
-    supportText:
-      "Encouraging direct, respectful dialogue between those involved.",
-    recommended: true,
-  },
-  // Extra cards to test scrolling (only visible when "See all" is expanded)
-  { id: "label-1", label: "Label", supportText: "", recommended: false },
-  { id: "label-2", label: "Label", supportText: "", recommended: false },
-  { id: "label-3", label: "Label", supportText: "", recommended: false },
-  { id: "label-4", label: "Label", supportText: "", recommended: false },
-  { id: "label-5", label: "Label", supportText: "", recommended: false },
-  { id: "label-6", label: "Label", supportText: "", recommended: false },
-  { id: "label-7", label: "Label", supportText: "", recommended: false },
-  { id: "label-8", label: "Label", supportText: "", recommended: false },
-  { id: "label-9", label: "Label", supportText: "", recommended: false },
-  { id: "label-10", label: "Label", supportText: "", recommended: false },
-];
+import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
 
 /**
  * Right Rail step of the create flow.
  * Two-column layout (sidebar + card stack) at 640+, single column at 320-639.
  */
 export default function RightRailPage() {
+  const m = useMessages();
+  const rr = m.create.rightRail;
+  const mdUp = useCreateFlowMdUp();
   const { markCreateFlowInteraction } = useCreateFlow();
-  const [isMounted, setIsMounted] = useState(false);
-  const isMdOrLarger = useMediaQuery("(min-width: 640px)");
   const [messageBoxCheckedIds, setMessageBoxCheckedIds] = useState<string[]>(
     [],
   );
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
 
-  // Avoid flash: only use breakpoint after mount so SSR and first paint use same layout (desktop).
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: defer layout breakpoint until after mount to prevent flash
-    setIsMounted(true);
-  }, []);
+  const messageBoxItems: InfoMessageBoxItem[] = useMemo(
+    () =>
+      rr.messageBox.items.map((item) => ({
+        id: item.id,
+        label: item.label,
+      })),
+    [rr.messageBox.items],
+  );
 
-  const showDesktopLayout = !isMounted || isMdOrLarger;
+  const sampleCards: CardStackItem[] = useMemo(
+    () =>
+      rr.cards.map((c) => ({
+        id: c.id,
+        label: c.label,
+        supportText: c.supportText,
+        recommended: c.recommended,
+      })),
+    [rr.cards],
+  );
+
+  const sidebarDescription = (
+    <>
+      {rr.sidebar.descriptionBefore}
+      <span className="underline">{rr.sidebar.descriptionLink}</span>
+      {rr.sidebar.descriptionAfter}
+    </>
+  );
 
   const handleMessageBoxCheckboxChange = useCallback(
     (id: string, checked: boolean) => {
@@ -121,77 +77,43 @@ export default function RightRailPage() {
     setExpanded((prev) => !prev);
   }, [markCreateFlowInteraction]);
 
-  if (showDesktopLayout) {
-    return (
-      <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
-        <div className="flex min-h-0 flex-1 overflow-hidden px-5 md:px-12">
-          <div className="grid h-full max-w-[1280px] grid-cols-2 shrink-0 gap-12 min-h-0 min-w-0 w-full">
-            {/* Left column: sidebar stays put, does not scroll */}
-            <div className="flex min-w-0 flex-col justify-center overflow-hidden py-8">
-              <DecisionMakingSidebar
-                title={SIDEBAR_TITLE}
-                description={SIDEBAR_DESCRIPTION}
-                messageBoxTitle={MESSAGE_BOX_TITLE}
-                messageBoxItems={MESSAGE_BOX_ITEMS}
-                messageBoxCheckedIds={messageBoxCheckedIds}
-                onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
-                size="L"
-                justification="left"
+  return (
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden md:h-full">
+      <div className="flex min-h-0 flex-1 overflow-hidden px-5 max-md:overflow-y-auto md:px-12">
+        <div className="mx-auto grid h-auto min-h-0 w-full max-w-[1280px] shrink-0 grid-cols-1 gap-6 min-w-0 max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:gap-12 md:pb-8">
+          <div
+            className="flex min-w-0 flex-col items-stretch justify-start overflow-hidden md:justify-center"
+          >
+            <DecisionMakingSidebar
+              title={rr.sidebar.title}
+              description={sidebarDescription}
+              messageBoxTitle={rr.messageBox.title}
+              messageBoxItems={messageBoxItems}
+              messageBoxCheckedIds={messageBoxCheckedIds}
+              onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
+              size={mdUp ? "L" : "M"}
+              justification={mdUp ? "left" : "center"}
+            />
+          </div>
+          <div className="scrollbar-hide relative flex min-h-0 min-w-0 flex-col overflow-x-hidden max-md:overflow-visible md:overflow-y-auto">
+            <div className="flex min-w-0 flex-col items-center gap-6 py-0 md:pb-8">
+              <CardStack
+                cards={sampleCards}
+                selectedIds={selectedIds}
+                onCardSelect={handleCardSelect}
+                expanded={expanded}
+                onToggleExpand={handleToggleExpand}
+                hasMore={true}
+                toggleLabel={rr.cardStack.toggleSeeAll}
+                showLessLabel={rr.cardStack.toggleShowLess}
+                title={rr.cardStack.emptyTitle}
+                description={rr.cardStack.emptyDescription}
+                layout="singleStack"
+                className="w-full"
+                headerLockupSize={mdUp ? "L" : "M"}
               />
             </div>
-            {/* Right column: card stack — this column scrolls independently */}
-            <div className="scrollbar-hide relative flex min-h-0 min-w-0 flex-col overflow-x-hidden overflow-y-auto">
-              <div className="py-8 flex flex-col gap-6 items-center min-w-0">
-                <CardStack
-                  cards={SAMPLE_CARDS}
-                  selectedIds={selectedIds}
-                  onCardSelect={handleCardSelect}
-                  expanded={expanded}
-                  onToggleExpand={handleToggleExpand}
-                  hasMore={true}
-                  toggleLabel="See all decision approaches"
-                  showLessLabel="Show less"
-                  title=""
-                  description=""
-                  layout="singleStack"
-                  className="w-full"
-                />
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full h-full min-h-0 overflow-y-auto flex flex-col items-center px-5">
-      <div className="flex flex-col gap-6 w-full min-w-0 py-8">
-        <DecisionMakingSidebar
-          title={SIDEBAR_TITLE}
-          description={SIDEBAR_DESCRIPTION}
-          messageBoxTitle={MESSAGE_BOX_TITLE}
-          messageBoxItems={MESSAGE_BOX_ITEMS}
-          messageBoxCheckedIds={messageBoxCheckedIds}
-          onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
-          size="M"
-          justification="center"
-        />
-        <div className="flex flex-col gap-6 items-center w-full">
-          <CardStack
-            cards={SAMPLE_CARDS}
-            selectedIds={selectedIds}
-            onCardSelect={handleCardSelect}
-            expanded={expanded}
-            onToggleExpand={handleToggleExpand}
-            hasMore={true}
-            toggleLabel="See all decision approaches"
-            showLessLabel="Show less"
-            title=""
-            description=""
-            layout="singleStack"
-            className="w-full"
-          />
         </div>
       </div>
     </div>

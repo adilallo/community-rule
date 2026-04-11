@@ -24,7 +24,7 @@ export default function CreateFlowStepPage({ params }: PageProps) {
 
   // Placeholder content - templates will be implemented in CR-51-55
   return (
-    <div className="flex-1 flex items-center justify-center">
+    <div className="flex flex-1 max-md:items-start max-md:justify-start md:items-center md:justify-center">
       <div className="text-center">
         <h1 className="text-white text-2xl font-bold mb-4">
           Create Flow Step: {step}
