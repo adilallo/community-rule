@@ -85,9 +85,15 @@ function AddPlatformModalContent({
   const m = useMessages();
   const comm = m.create.communication;
   const modal = comm.modals[platformCardId as keyof typeof comm.modals];
-  if (!modal || !("sections" in modal)) return null;
+  const defaults =
+    modal && "sections" in modal
+      ? modal.sections
+      : {
+          corePrinciple: "",
+          logisticsAdmin: "",
+          codeOfConduct: "",
+        };
 
-  const defaults = modal.sections;
   const [sectionValues, setSectionValues] = useState<
     Record<SectionField, string>
   >(() => ({
@@ -103,6 +109,8 @@ function AddPlatformModalContent({
     },
     [markCreateFlowInteraction],
   );
+
+  if (!modal || !("sections" in modal)) return null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -147,7 +155,7 @@ export default function CardsPage() {
           recommended: true,
         };
       }),
-    [comm.cards],
+    [comm],
   );
 
   const title = expanded ? comm.page.expandedTitle : comm.page.compactTitle;

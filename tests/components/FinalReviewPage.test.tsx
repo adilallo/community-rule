@@ -33,7 +33,7 @@ describe("FinalReviewPage", () => {
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 
-  it("renders HeaderLockup with expected title", () => {
+  it("renders lockup title", () => {
     render(<FinalReviewPage />);
     expect(
       screen.getByRole("heading", {
@@ -42,7 +42,7 @@ describe("FinalReviewPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders HeaderLockup with expected description", () => {
+  it("renders lockup description", () => {
     render(<FinalReviewPage />);
     expect(
       screen.getByText(

@@ -40,11 +40,14 @@ export default function CompletedPage() {
     if (!stored) return;
     const parsed = parseDocumentSectionsForDisplay(stored.document);
     if (parsed.length === 0) return;
-    setDocumentSections(parsed);
-    setHeaderTitle(stored.title);
-    const sum =
-      typeof stored.summary === "string" ? stored.summary.trim() : "";
-    setHeaderDescription(sum.length > 0 ? sum : undefined);
+    // One-shot hydration from client-only storage after mount.
+    queueMicrotask(() => {
+      setDocumentSections(parsed);
+      setHeaderTitle(stored.title);
+      const sum =
+        typeof stored.summary === "string" ? stored.summary.trim() : "";
+      setHeaderDescription(sum.length > 0 ? sum : undefined);
+    });
   }, []);
 
   const toast = !toastDismissed ? (
