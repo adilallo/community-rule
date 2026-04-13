@@ -4,14 +4,13 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 import SectionHeader from "../SectionHeader";
 import Button from "../../buttons/Button";
 import { GovernanceTemplateGrid } from "../GovernanceTemplateGrid";
-import { getGovernanceTemplatesForHome } from "../../../../lib/templates/governanceTemplateCatalog";
+import { GovernanceTemplateGridSkeleton } from "../GovernanceTemplateGrid/GovernanceTemplateGridSkeleton";
 import type { RuleStackViewProps } from "./RuleStack.types";
-
-const homeFeaturedTemplates = getGovernanceTemplatesForHome();
 
 export function RuleStackView({
   className,
   onTemplateClick,
+  gridEntries,
 }: RuleStackViewProps) {
   const t = useTranslation("pages.home.ruleStack");
   const buttonText = t("button.seeAllTemplates");
@@ -37,10 +36,14 @@ export function RuleStackView({
         variant="multi-line"
       />
 
-      <GovernanceTemplateGrid
-        entries={homeFeaturedTemplates}
-        onTemplateClick={onTemplateClick}
-      />
+      {gridEntries === null ? (
+        <GovernanceTemplateGridSkeleton count={4} />
+      ) : (
+        <GovernanceTemplateGrid
+          entries={gridEntries}
+          onTemplateClick={onTemplateClick}
+        />
+      )}
 
       <div
         className="

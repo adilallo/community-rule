@@ -11,13 +11,8 @@ import {
 } from "../../../../lib/create/templateReviewMapping";
 import {
   getGovernanceTemplateCatalogEntry,
-  governanceTemplateIconPath,
 } from "../../../../lib/templates/governanceTemplateCatalog";
-
-const FALLBACK_PRESENTATION = {
-  iconPath: governanceTemplateIconPath("consensus"),
-  backgroundColor: "bg-[var(--color-surface-invert-brand-teal)]",
-};
+import { TEMPLATE_GRID_FALLBACK_PRESENTATION } from "../../../../lib/templates/templateGridPresentation";
 
 export interface TemplateReviewCardProps {
   template: RuleTemplateDto;
@@ -37,7 +32,7 @@ export function TemplateReviewCard({
   size = "L",
 }: TemplateReviewCardProps) {
   const catalog = getGovernanceTemplateCatalogEntry(template.slug);
-  const pres = catalog ?? FALLBACK_PRESENTATION;
+  const pres = catalog ?? TEMPLATE_GRID_FALLBACK_PRESENTATION;
   const categories = templateBodyToCategories(template.body);
   const summary = templateSummaryFromBody(template.description, template.body);
 

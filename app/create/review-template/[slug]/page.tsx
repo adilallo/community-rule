@@ -5,6 +5,7 @@ import { TemplateReviewCard } from "../../../components/cards/TemplateReviewCard
 import { useTranslation } from "../../../contexts/MessagesContext";
 import {
   fetchTemplateBySlug,
+  isTemplatesFetchAborted,
   type RuleTemplateDto,
 } from "../../../../lib/create/fetchTemplates";
 import messages from "../../../../messages/en/index";
@@ -35,28 +36,39 @@ export default function ReviewTemplatePage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const ac = new AbortController();
     let cancelled = false;
     void (async () => {
       if (!cancelled) {
         setLoading(true);
         setError(null);
       }
-      const result = await fetchTemplateBySlug(slug);
-      if (cancelled) return;
-      if (result === null) {
-        setError(messages.create.templateReview.errors.notFound);
+      try {
+        const result = await fetchTemplateBySlug(slug, {
+          signal: ac.signal,
+        });
+        if (cancelled) return;
+        if (result === null) {
+          setError(messages.create.templateReview.errors.notFound);
+          setTemplate(null);
+        } else if ("error" in result) {
+          setError(result.error);
+          setTemplate(null);
+        } else {
+          setTemplate(result);
+          setError(null);
+        }
+      } catch (e) {
+        if (cancelled || isTemplatesFetchAborted(e)) return;
+        setError(messages.create.templateReview.errors.loadFailed);
         setTemplate(null);
-      } else if ("error" in result) {
-        setError(result.error);
-        setTemplate(null);
-      } else {
-        setTemplate(result);
-        setError(null);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      setLoading(false);
     })();
     return () => {
       cancelled = true;
+      ac.abort();
     };
   }, [slug]);
 

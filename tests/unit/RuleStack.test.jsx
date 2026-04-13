@@ -2,6 +2,7 @@ import {
   renderWithProviders as render,
   screen,
   cleanup,
+  waitFor,
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach, beforeEach } from "vitest";
@@ -10,22 +11,70 @@ import RuleStack from "../../app/components/sections/RuleStack";
 import { testRouter } from "../mocks/navigation";
 import {
   GOVERNANCE_TEMPLATE_CATALOG,
+  GOVERNANCE_TEMPLATE_HOME_SLUGS,
   getGovernanceTemplatesForHome,
 } from "../../lib/templates/governanceTemplateCatalog";
 
 const homeFeatured = getGovernanceTemplatesForHome();
 
+function mockTemplatesApiSuccess() {
+  const templatesPayload = GOVERNANCE_TEMPLATE_HOME_SLUGS.map((slug, i) => {
+    const cat = GOVERNANCE_TEMPLATE_CATALOG.find((e) => e.slug === slug);
+    if (!cat) throw new Error(`missing catalog slug ${slug}`);
+    return {
+      id: `test-${slug}`,
+      slug,
+      title: cat.title,
+      category: "Governance pattern",
+      description: cat.description,
+      body: { sections: [] },
+      sortOrder: i,
+      featured: true,
+    };
+  });
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input) => {
+      const url = typeof input === "string" ? input : input.url;
+      if (url.endsWith("/api/templates")) {
+        return new Response(JSON.stringify({ templates: templatesPayload }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      return new Response("Not Found", { status: 404 });
+    }),
+  );
+}
+
 beforeEach(() => {
   testRouter.push.mockClear();
+  mockTemplatesApiSuccess();
 });
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   cleanup();
 });
 
+async function waitForRuleStackCards() {
+  await waitFor(() => {
+    expect(screen.getByText("Circles")).toBeInTheDocument();
+  });
+}
+
 describe("RuleStack Component", () => {
-  test("renders four featured governance template cards on the home row", () => {
+  test("skips client fetch when initialGridEntries is provided (SSR path)", () => {
+    const fetchMock = vi.mocked(global.fetch);
+    const callsBefore = fetchMock.mock.calls.length;
+    render(<RuleStack initialGridEntries={homeFeatured} />);
+    expect(screen.getByText("Circles")).toBeInTheDocument();
+    expect(fetchMock.mock.calls.length).toBe(callsBefore);
+  });
+
+  test("renders four featured governance template cards on the home row", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     for (const entry of homeFeatured) {
       expect(screen.getByText(entry.title)).toBeInTheDocument();
@@ -38,15 +87,17 @@ describe("RuleStack Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("renders with custom className", () => {
+  test("renders with custom className", async () => {
     render(<RuleStack className="custom-class" />);
+    await waitForRuleStackCards();
 
     const section = document.querySelector("section");
     expect(section).toHaveClass("custom-class");
   });
 
-  test("renders sample rule card descriptions from featured catalog", () => {
+  test("renders sample rule card descriptions from featured catalog", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     expect(
       screen.getByText(/Units called Circles have the ability to decide/),
@@ -66,8 +117,9 @@ describe("RuleStack Component", () => {
     ).toBeInTheDocument();
   });
 
-  test("renders rule card icons with image assets", () => {
+  test("renders rule card icons with image assets", async () => {
     const { container } = render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const imgs = container.querySelectorAll("img");
     const circles = [...imgs].find((el) => {
@@ -90,23 +142,26 @@ describe("RuleStack Component", () => {
     expect(consensus).toBeTruthy();
   });
 
-  test("renders see-all-templates link to full templates page", () => {
+  test("renders see-all-templates link to full templates page", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const link = screen.getByRole("link", { name: "See all templates" });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/templates");
   });
 
-  test("applies correct CSS classes", () => {
+  test("applies correct CSS classes", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const section = document.querySelector("section");
     expect(section).toHaveClass("w-full", "bg-transparent");
   });
 
-  test("renders with design tokens", () => {
+  test("renders with design tokens", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const section = document.querySelector("section");
     expect(section).toHaveClass("px-[20px]", "py-[32px]");
@@ -114,15 +169,17 @@ describe("RuleStack Component", () => {
     expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
   });
 
-  test("applies responsive grid layout", () => {
+  test("applies responsive grid layout", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const grid = document.querySelector('[class*="flex flex-col gap-[18px]"]');
     expect(grid).toHaveClass("min-[768px]:grid", "min-[768px]:grid-cols-2");
   });
 
-  test("renders RuleCard components with catalog surface colors", () => {
+  test("renders RuleCard components with catalog surface colors", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const circlesCard = screen
       .getByText("Circles")
@@ -142,6 +199,7 @@ describe("RuleStack Component", () => {
       .mockImplementation(() => undefined);
 
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const consensusCard = screen.getByText("Consensus").closest("div");
     await user.click(consensusCard);
@@ -154,8 +212,9 @@ describe("RuleStack Component", () => {
     debugSpy.mockRestore();
   });
 
-  test("renders with proper semantic structure", () => {
+  test("renders with proper semantic structure", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const section = document.querySelector("section");
     expect(section).toBeInTheDocument();
@@ -164,16 +223,18 @@ describe("RuleStack Component", () => {
     expect(headings).toHaveLength(1 + homeFeatured.length);
   });
 
-  test("applies responsive spacing", () => {
+  test("applies responsive spacing", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const section = document.querySelector("section");
     expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
     expect(section?.className).toMatch(/min-\[1024px\]:py-\[64px\]/);
   });
 
-  test("renders icons with correct attributes", () => {
+  test("renders icons with correct attributes", async () => {
     const { container } = render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const imgs = container.querySelectorAll("img");
     const circlesIcon = [...imgs].find((el) => {
@@ -197,8 +258,9 @@ describe("RuleStack Component", () => {
     expect(circlesIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
   });
 
-  test("applies different background colors to featured cards", () => {
+  test("applies different background colors to featured cards", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const buttons = document.querySelectorAll('[role="button"]');
     const templateSurfaces = [...buttons].filter((el) =>
@@ -207,21 +269,35 @@ describe("RuleStack Component", () => {
     expect(templateSurfaces.length).toBe(homeFeatured.length);
   });
 
-  test("renders with proper see-all link styling", () => {
+  test("renders with proper see-all link styling", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const link = screen.getByRole("link", { name: "See all templates" });
     expect(link?.className).toMatch(/bg-transparent/);
     expect(link?.className).toMatch(/border/);
   });
 
-  test("applies flex layout for see-all link container", () => {
+  test("applies flex layout for see-all link container", async () => {
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const linkContainer = screen
       .getByRole("link", { name: "See all templates" })
       .closest("div");
     expect(linkContainer).toHaveClass("flex", "justify-center");
+  });
+
+  test("falls back to static catalog when templates API errors", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("Server error", { status: 500 })),
+    );
+    render(<RuleStack />);
+    await waitForRuleStackCards();
+    for (const entry of homeFeatured) {
+      expect(screen.getByText(entry.title)).toBeInTheDocument();
+    }
   });
 
   test("handles analytics tracking", async () => {
@@ -239,6 +315,7 @@ describe("RuleStack Component", () => {
     });
 
     render(<RuleStack />);
+    await waitForRuleStackCards();
 
     const electedBoardCard = screen.getByText("Elected Board").closest("div");
     await user.click(electedBoardCard);

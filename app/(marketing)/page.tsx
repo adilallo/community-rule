@@ -1,8 +1,10 @@
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import messages from "../../messages/en/index";
 import { getTranslation } from "../../lib/i18n/getTranslation";
 import HeroBanner from "../components/sections/HeroBanner";
 import AskOrganizer from "../components/sections/AskOrganizer";
+import { MarketingRuleStackSection } from "./MarketingRuleStackSection";
 
 // Code split below-the-fold components to reduce initial bundle size
 const LogoWall = dynamic(() => import("../components/sections/LogoWall"), {
@@ -21,13 +23,6 @@ const NumberedCards = dynamic(
     ssr: true,
   },
 );
-
-const RuleStack = dynamic(() => import("../components/sections/RuleStack"), {
-  loading: () => (
-    <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />
-  ),
-  ssr: true,
-});
 
 const FeatureGrid = dynamic(
   () => import("../components/sections/FeatureGrid"),
@@ -98,7 +93,13 @@ export default function Page() {
       <HeroBanner {...heroBannerData} />
       <LogoWall />
       <NumberedCards {...numberedCardsData} />
-      <RuleStack />
+      <Suspense
+        fallback={
+          <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />
+        }
+      >
+        <MarketingRuleStackSection />
+      </Suspense>
       <FeatureGrid {...featureGridData} />
       <QuoteBlock />
       <AskOrganizer {...askOrganizerData} />

@@ -6,7 +6,10 @@ import { PrismaClient, type Prisma } from "@prisma/client";
  * DB titles/descriptions should stay aligned with `governanceTemplateCatalog.ts`.
  * `body.sections` use the same category row labels as the final-review RuleCard
  * (Values, Communication, Membership, Decision-making, Conflict management) so
- * template review matches that layout; `entries[].title` = chip labels, `body` = long text for documents.
+ * template review matches that layout; `entries[].title` = chip labels, `body` = supporting text.
+ * Chip titles per template are sourced from the product **Template Composition** workbook (xlsx column
+ * layout: Decision-making, Membership Policies, Values, Communication, Conflict Management), mapped in
+ * `COMPOSITION_BY_SLUG` below.
  */
 
 /** Starter `body` for catalog templates — five category rows match template review / final-review layout. */
@@ -57,6 +60,165 @@ function governancePatternBody(coreValues: string): Prisma.InputJsonValue {
   };
 }
 
+/** Chip copy from Template Composition.xlsx (Decision-making, Membership, Values, Communication, Conflict). */
+const COMPOSITION_CHIP_BODY =
+  "Suggested focus for this governance area. Replace with your own language in the create flow.";
+
+function entriesFromCompositionCell(cell: string): { title: string; body: string }[] {
+  const trimmed = cell.trim();
+  if (!trimmed) return [];
+  return trimmed
+    .split(/,\s*/)
+    .map((title) => title.trim())
+    .filter(Boolean)
+    .map((title) => ({ title, body: COMPOSITION_CHIP_BODY }));
+}
+
+function bodyFromXlsxComposition(row: {
+  decisionMaking: string;
+  membership: string;
+  values: string;
+  communication: string;
+  conflict: string;
+}): Prisma.InputJsonValue {
+  return {
+    sections: [
+      { categoryName: "Values", entries: entriesFromCompositionCell(row.values) },
+      {
+        categoryName: "Communication",
+        entries: entriesFromCompositionCell(row.communication),
+      },
+      {
+        categoryName: "Membership",
+        entries: entriesFromCompositionCell(row.membership),
+      },
+      {
+        categoryName: "Decision-making",
+        entries: entriesFromCompositionCell(row.decisionMaking),
+      },
+      {
+        categoryName: "Conflict management",
+        entries: entriesFromCompositionCell(row.conflict),
+      },
+    ],
+  };
+}
+
+/**
+ * Curated template chip rows — sourced from product Template Composition.xlsx
+ * (Governance Template × category columns).
+ */
+const COMPOSITION_BY_SLUG: Record<
+  string,
+  {
+    decisionMaking: string;
+    membership: string;
+    values: string;
+    communication: string;
+    conflict: string;
+  }
+> = {
+  consensus: {
+    decisionMaking: "Consensus Decision-Making, Modified Consensus",
+    membership: "Consensus or Vote-Based Approval, Peer Sponsorship",
+    values: "Consensus, Community Care, Horizontalism",
+    communication: "In-Person Meetings, Loomio",
+    conflict: "Consensus Building, Facilitated Negotiation",
+  },
+  "consensus-clusters": {
+    decisionMaking: "Sociocracy, Holacracy",
+    membership: "Contribution Based, Orientation Required",
+    values: "Decentralization, Adaptability, Autonomy",
+    communication: "Slack, Matrix / Element",
+    conflict: "Circle Processes, Restorative Practices",
+  },
+  "solidarity-network": {
+    decisionMaking: "Do-ocracy, Modified Consensus",
+    membership: "Open Access, Peer Sponsorship",
+    values: "Solidarity, Mutual Aid, Anti-oppression",
+    communication: "Signal, Matrix / Element",
+    conflict: "Peer Mediation, Restorative Practices",
+  },
+  "sortition-jury": {
+    decisionMaking: "Lottery/Sortition, Deliberative Polling",
+    membership: "Lottery / Sortition",
+    values: "Fairness, Equity, Transparency",
+    communication: "In-Person Meetings, Video Meetings",
+    conflict: "Lottery/Sortition, Rotational Judging",
+  },
+  "liquid-democracy": {
+    decisionMaking: "Delegated Decision-Making, Continuous Voting",
+    membership: "Identity Verification, Open Access",
+    values: "Agency, Flexibility, Transparency",
+    communication: "Loomio, Discourse (Forum)",
+    conflict: "Ad Hoc Arbitration, Peer Mediation",
+  },
+  "do-ocracy": {
+    decisionMaking: "Do-ocracy, Lazy Consensus",
+    membership: "Contribution Based, Skill-Based Contribution",
+    values: "Agency, Autonomy, Voluntarism",
+    communication: "GitHub / GitLab, Discord",
+    conflict: "Peer Mediation, Facilitated Negotiation",
+  },
+  "quadratic-governance": {
+    decisionMaking: "Quadratic Voting",
+    membership: "Identity Verification, Pay-to-Join",
+    values: "Fairness, Innovation, Independence",
+    communication: "Discourse (Forum), Discord",
+    conflict: "Supermajority Vote, Conflict Resolution Council",
+  },
+  "federated-clusters": {
+    decisionMaking: "Consensus Seeking with Delegates",
+    membership: "Hybrid Approval Process, Membership Agreement or Pledge",
+    values: "Interoperability, Localism, Interdependence",
+    communication: "Matrix / Element, Discourse (Forum)",
+    conflict: "Internal Tribunal, Ad Hoc Arbitration",
+  },
+  devolution: {
+    decisionMaking: "Autocratic Decision-Making, Delegated Decision-Making",
+    membership: "Invitation Only, Open Access",
+    values: "Capacity Building, Education, Maintenance",
+    communication: "Discord, GitHub / GitLab",
+    conflict: "Conflict Workshops, Managerial Decision",
+  },
+  "benevolent-dictator": {
+    decisionMaking: "Autocratic Decision-Making, Hierarchical Decision-Making",
+    membership: "Invitation Only, Mentorship",
+    values: "Reliability, Stewardship, Leadership",
+    communication: "Email Distribution List, GitHub / GitLab",
+    conflict: "Managerial Decision, Binding Contracts",
+  },
+  petition: {
+    decisionMaking: "Ranked Choice Voting, Majority Rule",
+    membership: "Open Access, Identity Verification",
+    values: "Freedom of Information, Accountability, Participation",
+    communication: "Loomio, Discourse (Forum)",
+    conflict: "Supermajority Vote, Binding Arbitration",
+  },
+  "self-appointed-board": {
+    decisionMaking: "Advisory Committees, Executive Committees",
+    membership: "Invitation Only, Application & Review",
+    values: "Stewardship, Resilience, Reliability",
+    communication: "Video Meetings, Email Distribution List",
+    conflict: "Judicial Committees, Internal Tribunal",
+  },
+  "elected-board": {
+    decisionMaking: "Elected Board of Directors, Majority Rule",
+    membership: "Application & Review, Membership Agreement or Pledge",
+    values: "Accountability, Transparency, Trust",
+    communication: "Email Distribution List, Slack",
+    conflict: "Conflict Resolution Council, Mediation",
+  },
+};
+
+function bodyFromSlugComposition(slug: string): Prisma.InputJsonValue {
+  const row = COMPOSITION_BY_SLUG[slug];
+  if (!row) {
+    return governancePatternBody("Template composition pending.");
+  }
+  return bodyFromXlsxComposition(row);
+}
+
 const TEMPLATES: {
   slug: string;
   title: string;
@@ -74,239 +236,27 @@ const TEMPLATES: {
       "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
     sortOrder: 0,
     featured: true,
-    body: {
-      sections: [
-        {
-          categoryName: "Values",
-          entries: [
-            {
-              title: "Distributed authority",
-              body: "Authority lives in Circles close to the work. Domains are explicit so power is visible and negotiable.",
-            },
-            {
-              title: "Transparency",
-              body: "Decisions, roles, and metrics that affect members are easy to find and updated regularly.",
-            },
-            {
-              title: "Equivalence",
-              body: "Policy affects people in proportion to their stake; no silent vetoes from outside a domain.",
-            },
-          ],
-        },
-        {
-          categoryName: "Communication",
-          entries: [
-            {
-              title: "Circle channels",
-              body: "Each Circle maintains channels for async updates and synchronous sense-making.",
-            },
-            {
-              title: "Council cadence",
-              body: "The Council meets on a fixed rhythm to align strategy, resolve overlaps, and hear escalations.",
-            },
-          ],
-        },
-        {
-          categoryName: "Membership",
-          entries: [
-            {
-              title: "Circle membership",
-              body: "People join Circles by agreement of that Circle and clarity on domain contribution.",
-            },
-            {
-              title: "Link roles",
-              body: "Members link Circles as delegates or representatives when decisions span domains.",
-            },
-          ],
-        },
-        {
-          categoryName: "Decision-making",
-          entries: [
-            {
-              title: "Consent within Circles",
-              body: "Circles act when there is no reasoned objection from anyone in the Circle with a stake.",
-            },
-            {
-              title: "Cross-domain consent",
-              body: "When work spans Circles, proposals include impacted domains and integrate their concerns.",
-            },
-          ],
-        },
-        {
-          categoryName: "Conflict management",
-          entries: [
-            {
-              title: "Objection testing",
-              body: "Objections must show how a proposal fails the aim or creates harm; the group integrates or adapts.",
-            },
-            {
-              title: "Mediation",
-              body: "Facilitators help parties hear each other before escalating to Council or broader processes.",
-            },
-          ],
-        },
-      ],
-    },
+    body: bodyFromSlugComposition("consensus-clusters"),
   },
   {
     slug: "consensus",
     title: "Consensus",
     category: "Governance pattern",
     description:
-      "Important decisions require broad agreement. Proposals move forward when serious objections are resolved and the group can stand behind the outcome.",
+      "Important decisions require unanimous agreement. Proposals pass only if no serious objections remain.",
     sortOrder: 1,
     featured: true,
-    body: {
-      sections: [
-        {
-          categoryName: "Values",
-          entries: [
-            {
-              title: "Consciousness",
-              body: "We make decisions with awareness of impact on people, ecosystems, and future generations.",
-            },
-            {
-              title: "Ecology",
-              body: "We design governance to reduce harm and regenerate the systems we depend on.",
-            },
-            {
-              title: "Abundance",
-              body: "We assume enough for needs when resources are shared fairly and waste is reduced.",
-            },
-            {
-              title: "Art",
-              body: "We leave room for creativity, culture, and expression in how we organize.",
-            },
-            {
-              title: "Decisiveness",
-              body: "We balance care with forward motion—clear timelines and roles prevent endless loops.",
-            },
-          ],
-        },
-        {
-          categoryName: "Communication",
-          entries: [
-            {
-              title: "Signal",
-              body: "We use Signal (or equivalent) for sensitive coordination and timely member updates.",
-            },
-          ],
-        },
-        {
-          categoryName: "Membership",
-          entries: [
-            {
-              title: "Open Admission",
-              body: "People who share our values and agree to practices can participate without unnecessary gatekeeping.",
-            },
-          ],
-        },
-        {
-          categoryName: "Decision-making",
-          entries: [
-            {
-              title: "Lazy Consensus",
-              body: "Proposals advance if no blocking concern is raised within the discussion window.",
-            },
-            {
-              title: "Modified Consensus",
-              body: "For larger decisions we use structured consensus with documented objections and integration steps.",
-            },
-          ],
-        },
-        {
-          categoryName: "Conflict management",
-          entries: [
-            {
-              title: "Code of Conduct",
-              body: "We uphold a code of conduct that sets expectations and pathways for accountability.",
-            },
-            {
-              title: "Restorative Justice",
-              body: "When harm occurs we prioritize repair, learning, and changed conditions over punishment.",
-            },
-          ],
-        },
-      ],
-    },
+    body: bodyFromSlugComposition("consensus"),
   },
   {
     slug: "elected-board",
     title: "Elected Board",
     category: "Governance pattern",
     description:
-      "Members elect a board to steward policy and operations. The board coordinates implementation and remains accountable through transparent reporting and elections.",
+      "An elected board determines policies and organizes their implementation.",
     sortOrder: 2,
     featured: true,
-    body: {
-      sections: [
-        {
-          categoryName: "Values",
-          entries: [
-            {
-              title: "Accountability",
-              body: "The board answers to the membership through elections, published decisions, and recall where applicable.",
-            },
-            {
-              title: "Service",
-              body: "Board service is a temporary duty with term limits and clarity on scope of authority.",
-            },
-          ],
-        },
-        {
-          categoryName: "Communication",
-          entries: [
-            {
-              title: "Board minutes",
-              body: "Minutes summarize decisions, rationales, and next steps; members can access them on a regular cadence.",
-            },
-            {
-              title: "Member forums",
-              body: "The board hosts open sessions for questions, priorities, and feedback from the membership.",
-            },
-          ],
-        },
-        {
-          categoryName: "Membership",
-          entries: [
-            {
-              title: "Eligibility to vote",
-              body: "Voting members are defined clearly; associate or advisory roles are distinguished from full votes.",
-            },
-            {
-              title: "Board terms",
-              body: "Staggered terms keep continuity while refreshing leadership on a predictable schedule.",
-            },
-          ],
-        },
-        {
-          categoryName: "Decision-making",
-          entries: [
-            {
-              title: "Board vote",
-              body: "The board decides matters in its charter by majority or supermajority as specified.",
-            },
-            {
-              title: "Member ratification",
-              body: "Major structural changes require member approval according to your bylaws.",
-            },
-          ],
-        },
-        {
-          categoryName: "Conflict management",
-          entries: [
-            {
-              title: "Recusal",
-              body: "Directors recuse themselves when personal or financial conflicts appear.",
-            },
-            {
-              title: "Appeals",
-              body: "Members can appeal board decisions through a defined, fair process.",
-            },
-          ],
-        },
-      ],
-    },
+    body: bodyFromSlugComposition("elected-board"),
   },
   {
     slug: "petition",
@@ -316,75 +266,7 @@ const TEMPLATES: {
       "Any participant can propose a rule change. If enough sign it, it goes to a general vote.",
     sortOrder: 3,
     featured: true,
-    body: {
-      sections: [
-        {
-          categoryName: "Values",
-          entries: [
-            {
-              title: "Open participation",
-              body: "Legitimate voices can bring proposals without needing informal gatekeepers.",
-            },
-            {
-              title: "Legitimacy",
-              body: "Outcomes are trusted when process, quorum, and notice rules are followed consistently.",
-            },
-          ],
-        },
-        {
-          categoryName: "Communication",
-          entries: [
-            {
-              title: "Discussion period",
-              body: "Every proposal has a visible discussion window before voting closes.",
-            },
-            {
-              title: "Announcements",
-              body: "Calls to vote and results are posted where all participants can see them.",
-            },
-          ],
-        },
-        {
-          categoryName: "Membership",
-          entries: [
-            {
-              title: "Voting pool",
-              body: "Who may vote is explicit (e.g. members in good standing for 30 days).",
-            },
-            {
-              title: "Quorum",
-              body: "Votes count only when quorum is met so decisions reflect an engaged subset.",
-            },
-          ],
-        },
-        {
-          categoryName: "Decision-making",
-          entries: [
-            {
-              title: "Petition threshold",
-              body: "Sponsors or seconders may be required so proposals show a minimal base of support.",
-            },
-            {
-              title: "Majority rules",
-              body: "Adoption thresholds (simple majority, supermajority) are defined per decision type.",
-            },
-          ],
-        },
-        {
-          categoryName: "Conflict management",
-          entries: [
-            {
-              title: "Good faith",
-              body: "Debate focuses on substance; harassment or bad-faith tactics are addressed under conduct policies.",
-            },
-            {
-              title: "Ombuds",
-              body: "A neutral contact helps people navigate disputes about process or interpretation.",
-            },
-          ],
-        },
-      ],
-    },
+    body: bodyFromSlugComposition("petition"),
   },
   {
     slug: "solidarity-network",
@@ -394,9 +276,7 @@ const TEMPLATES: {
       'Power is held by autonomous "cells." A central hub acts as a switchboard for resources but cannot dictate cell activities.',
     sortOrder: 4,
     featured: false,
-    body: governancePatternBody(
-      'Power is held by autonomous "cells." A central hub acts as a switchboard for resources but cannot dictate cell activities.',
-    ),
+    body: bodyFromSlugComposition("solidarity-network"),
   },
   {
     slug: "sortition-jury",
@@ -406,9 +286,7 @@ const TEMPLATES: {
       "A representative sample of the community is chosen by lottery to form a temporary council.",
     sortOrder: 5,
     featured: false,
-    body: governancePatternBody(
-      "A representative sample of the community is chosen by lottery to form a temporary council.",
-    ),
+    body: bodyFromSlugComposition("sortition-jury"),
   },
   {
     slug: "liquid-democracy",
@@ -418,9 +296,7 @@ const TEMPLATES: {
       "Members can vote directly or delegate their vote to a trusted peer on a per-topic basis.",
     sortOrder: 6,
     featured: false,
-    body: governancePatternBody(
-      "Members can vote directly or delegate their vote to a trusted peer on a per-topic basis.",
-    ),
+    body: bodyFromSlugComposition("liquid-democracy"),
   },
   {
     slug: "do-ocracy",
@@ -430,9 +306,7 @@ const TEMPLATES: {
       "Authority is granted to those doing the work. If you do the task, you decide how it gets done.",
     sortOrder: 7,
     featured: false,
-    body: governancePatternBody(
-      "Authority is granted to those doing the work. If you do the task, you decide how it gets done.",
-    ),
+    body: bodyFromSlugComposition("do-ocracy"),
   },
   {
     slug: "quadratic-governance",
@@ -442,9 +316,7 @@ const TEMPLATES: {
       "Voting cost is squared (V²), preventing a majority from steamrolling a passionate minority.",
     sortOrder: 8,
     featured: false,
-    body: governancePatternBody(
-      "Voting cost is squared (V²), preventing a majority from steamrolling a passionate minority.",
-    ),
+    body: bodyFromSlugComposition("quadratic-governance"),
   },
   {
     slug: "federated-clusters",
@@ -454,9 +326,7 @@ const TEMPLATES: {
       "Independent groups share a central brand/charter but have total autonomy over internal rules.",
     sortOrder: 9,
     featured: false,
-    body: governancePatternBody(
-      "Independent groups share a central brand/charter but have total autonomy over internal rules.",
-    ),
+    body: bodyFromSlugComposition("federated-clusters"),
   },
   {
     slug: "devolution",
@@ -466,9 +336,7 @@ const TEMPLATES: {
       "Starts as a Dictatorship for speed, moving to a Board, and finally to full community ownership.",
     sortOrder: 10,
     featured: false,
-    body: governancePatternBody(
-      "Starts as a Dictatorship for speed, moving to a Board, and finally to full community ownership.",
-    ),
+    body: bodyFromSlugComposition("devolution"),
   },
   {
     slug: "benevolent-dictator",
@@ -478,9 +346,7 @@ const TEMPLATES: {
       "A single individual holds ultimate power, usually intended as a temporary state until the project is stable.",
     sortOrder: 11,
     featured: false,
-    body: governancePatternBody(
-      "A single individual holds ultimate power, usually intended as a temporary state until the project is stable.",
-    ),
+    body: bodyFromSlugComposition("benevolent-dictator"),
   },
   {
     slug: "self-appointed-board",
@@ -490,9 +356,7 @@ const TEMPLATES: {
       "An existing board selects its own successors to preserve a specific mission over time.",
     sortOrder: 12,
     featured: false,
-    body: governancePatternBody(
-      "An existing board selects its own successors to preserve a specific mission over time.",
-    ),
+    body: bodyFromSlugComposition("self-appointed-board"),
   },
 ];
 

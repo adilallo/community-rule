@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../lib/server/env";
+import { listRuleTemplatesFromDb } from "../../../lib/server/ruleTemplates";
 import { dbUnavailable } from "../../../lib/server/responses";
 
 /**
@@ -11,18 +11,7 @@ export async function GET() {
     return dbUnavailable();
   }
 
-  const templates = await prisma.ruleTemplate.findMany({
-    orderBy: [{ featured: "desc" }, { sortOrder: "asc" }, { title: "asc" }],
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      category: true,
-      description: true,
-      body: true,
-      featured: true,
-    },
-  });
+  const templates = await listRuleTemplatesFromDb();
 
   return NextResponse.json({ templates });
 }
