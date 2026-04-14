@@ -9,7 +9,7 @@ import TextInput from "../../controls/TextInput";
 import ContentLockup from "../../type/ContentLockup";
 import { requestMagicLink } from "../../../../lib/create/api";
 import { safeInternalPath } from "../../../../lib/safeInternalPath";
-import { setTransferPendingFlag } from "../../../create/anonymousDraftStorage";
+import { setTransferPendingFlag } from "../../../create/utils/anonymousDraftStorage";
 
 /** Mail icon for login modal (inline SVG; same pattern as InfoMessageBox ExclamationIconInline). */
 function MailIconInline() {

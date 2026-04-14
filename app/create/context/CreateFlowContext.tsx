@@ -19,7 +19,7 @@ import {
   clearLegacyCreateFlowKeysOnce,
   readAnonymousCreateFlowState,
   writeAnonymousCreateFlowState,
-} from "../anonymousDraftStorage";
+} from "../utils/anonymousDraftStorage";
 
 const CreateFlowContext = createContext<CreateFlowContextValue | null>(null);
 

@@ -6,7 +6,7 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach } from "vitest";
-import CardsPage from "../../app/create/cards/page";
+import { CardsScreen } from "../../app/create/screens/card/CardsScreen";
 
 afterEach(() => {
   cleanup();
@@ -15,7 +15,7 @@ afterEach(() => {
 describe("Create flow cards page", () => {
   test("clicking a card opens the Create modal", async () => {
     const user = userEvent.setup();
-    render(<CardsPage />);
+    render(<CardsScreen />);
 
     const signalCards = screen.getAllByRole("button", {
       name: /Signal: Encrypted messaging/,
@@ -29,7 +29,7 @@ describe("Create flow cards page", () => {
   });
 
   test("renders without error", () => {
-    render(<CardsPage />);
+    render(<CardsScreen />);
 
     expect(
       screen.getByText(
@@ -39,7 +39,7 @@ describe("Create flow cards page", () => {
   });
 
   test("renders HeaderLockup and CardStack content", () => {
-    render(<CardsPage />);
+    render(<CardsScreen />);
 
     expect(
       screen.getByText(
@@ -53,7 +53,7 @@ describe("Create flow cards page", () => {
 
   test("toggle expands and shows Show less", async () => {
     const user = userEvent.setup();
-    render(<CardsPage />);
+    render(<CardsScreen />);
 
     const toggle = screen.getByRole("button", {
       name: "See all communication approaches",

@@ -1,0 +1,6 @@
+{
+  "title": "Anything else we should know?",
+  "description": "Optional details before you review your progress.",
+  "placeholder": "Add notes (optional)",
+  "characterCountTemplate": "{current}/{max}"
+}

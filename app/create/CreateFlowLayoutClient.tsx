@@ -13,6 +13,7 @@ import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import CreateFlowTopNav from "../components/utility/CreateFlowTopNav";
 import { getStepIndex } from "./utils/flowSteps";
+import { createFlowStepUsesCenteredTextLayout } from "./utils/createFlowScreenRegistry";
 import CreateFlowFooter from "../components/utility/CreateFlowFooter";
 import Button from "../components/buttons/Button";
 import { buildPublishPayload } from "../../lib/create/buildPublishPayload";
@@ -33,8 +34,8 @@ import {
   useCreateFlowDraftSaveBanner,
 } from "./context/CreateFlowDraftSaveBannerContext";
 
-/** First step where Save & Exit is offered (after informational + name / `text`). */
-const SAVE_EXIT_FROM_STEP_INDEX = getStepIndex("select");
+/** First step where Save & Exit is offered (first Create Community select per Figma). */
+const SAVE_EXIT_FROM_STEP_INDEX = getStepIndex("community-size");
 
 function CreateFlowSessionShell({ children }: { children: ReactNode }) {
   const [sessionUser, setSessionUser] = useState<
@@ -211,7 +212,7 @@ function CreateFlowLayoutContent({
         variant: "saveProgress",
         nextPath:
           returnToTemplateReview ??
-          `${pathname ?? "/create/informational"}?syncDraft=1`,
+          `${pathname ?? "/create"}?syncDraft=1`,
         backdropVariant: "blurredYellow",
       });
       return;
@@ -236,7 +237,7 @@ function CreateFlowLayoutContent({
         ? "items-start justify-center overflow-y-auto"
         : "items-start justify-center overflow-y-auto md:items-center";
 
-  const isTextStep = currentStep === "text";
+  const isTextStep = createFlowStepUsesCenteredTextLayout(currentStep);
   const mainMaxMdJustify =
     isTextStep && !isCompletedStep && !isRightRailStep
       ? "max-md:justify-center"

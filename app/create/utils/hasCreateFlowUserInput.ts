@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "./types";
+import type { CreateFlowState } from "../types";
 
 const IGNORED_KEYS = new Set<string>(["currentStep"]);
 

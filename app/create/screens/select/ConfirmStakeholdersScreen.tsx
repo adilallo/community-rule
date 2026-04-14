@@ -1,19 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import MultiSelect from "../../components/controls/MultiSelect";
-import Alert from "../../components/modals/Alert";
-import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
-import { useTranslation } from "../../contexts/MessagesContext";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
-import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
+import MultiSelect from "../../../components/controls/MultiSelect";
+import Alert from "../../../components/modals/Alert";
+import type { ChipOption } from "../../../components/controls/MultiSelect/MultiSelect.types";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import { useCreateFlow } from "../../context/CreateFlowContext";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 
-/**
- * Confirm stakeholders step — stacked lockup + MultiSelect (not split columns).
- * Figma: 21104-46594.
- */
-export default function ConfirmStakeholdersPage() {
+export function ConfirmStakeholdersScreen() {
   const { markCreateFlowInteraction } = useCreateFlow();
   const t = useTranslation("create.confirmStakeholders");
   const [toastDismissed, setToastDismissed] = useState(false);

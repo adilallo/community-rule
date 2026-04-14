@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { hasCreateFlowUserInput } from "../../app/create/hasCreateFlowUserInput";
+import { hasCreateFlowUserInput } from "../../app/create/utils/hasCreateFlowUserInput";
 
 describe("hasCreateFlowUserInput", () => {
   it("returns false for empty state", () => {
@@ -7,7 +7,9 @@ describe("hasCreateFlowUserInput", () => {
   });
 
   it("ignores currentStep alone", () => {
-    expect(hasCreateFlowUserInput({ currentStep: "text" })).toBe(false);
+    expect(hasCreateFlowUserInput({ currentStep: "informational" })).toBe(
+      false,
+    );
   });
 
   it("returns true for non-empty title", () => {

@@ -42,6 +42,10 @@ Use `npx prisma studio` to inspect the database.
 
 Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so **signed-in** users can persist create-flow drafts to Postgres via **Save & Exit** and so **anonymous** progress can be **uploaded after magic-link sign-in** from the save-progress exit modal. Without it, server **PUT** `/api/drafts/me` is skipped; anonymous work stays in **browser `localStorage`**, but after sign-in with a `?syncDraft=1` return URL the app still **merges that local draft into the in-memory create flow** (no server write) so you can continue and publish.
 
+### Create flow URLs (custom wizard)
+
+The **custom** create-rule wizard lives under **`/create/…`**. The header links to **`/create`**, which redirects to the first step. **Semantic** URL segments (e.g. `community-name`, `community-size`) match Figma intent; order is **`FLOW_STEP_ORDER`** in `app/create/utils/flowSteps.ts`, with UI from **`app/create/[screenId]/page.tsx`** and **`CREATE_FLOW_SCREEN_REGISTRY`** for Figma traceability. **Figma** stages: **Create Community** (through `review`), **Create Custom CommunityRule** (`cards`–`right-rail`), **Review and complete** (`confirm-stakeholders`–`completed`). **`/create/review-template/[slug]`** is a template **preview** only. Full tables and persistence are in **[docs/create-flow.md](docs/create-flow.md)**; engineering tracking: Linear **CR-89** / Ticket 17 in [docs/backend-linear-tickets.md](docs/backend-linear-tickets.md).
+
 ## Frontend / tests
 
 See [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md) and the root [README.md](README.md).

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { useMessages } from "../../contexts/MessagesContext";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
-import CardStack from "../../components/utility/CardStack";
-import Create from "../../components/modals/Create";
-import TextArea from "../../components/controls/TextArea";
-import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
+import { useMessages } from "../../../contexts/MessagesContext";
+import { useCreateFlow } from "../../context/CreateFlowContext";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import CardStack from "../../../components/utility/CardStack";
+import Create from "../../../components/modals/Create";
+import TextArea from "../../../components/controls/TextArea";
+import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 
 const IN_PERSON_CARD_ID = "in-person-meetings";
 const SIGNAL_CARD_ID = "signal";
@@ -37,10 +37,6 @@ const COMMUNICATION_CARD_ORDER = [
   "7",
 ] as const;
 
-/**
- * Section with heading + info icon and an editable TextArea.
- * This variant uses TextArea only (no TextInput); design is "Add Signal" / "Add Video Meetings".
- */
 function CreateModalSection({
   title,
   value: _value,
@@ -75,7 +71,6 @@ function CreateModalSection({
   );
 }
 
-/** Body for any "Add platform" modal: three editable sections (TextArea only). */
 function AddPlatformModalContent({
   platformCardId,
 }: {
@@ -133,8 +128,7 @@ function isAddPlatformCard(cardId: string | null): boolean {
   );
 }
 
-/** Create flow card stack step: compact grid with optional expand to full list. */
-export default function CardsPage() {
+export function CardsScreen() {
   const m = useMessages();
   const comm = m.create.communication;
   const mdUp = useCreateFlowMdUp();

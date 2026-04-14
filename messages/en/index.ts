@@ -20,9 +20,12 @@ import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import communication from "./create/communication.json";
 import createInformational from "./create/informational.json";
-import createText from "./create/text.json";
-import createSelect from "./create/select.json";
-import createUpload from "./create/upload.json";
+import createCommunityName from "./create/communityName.json";
+import createCommunitySize from "./create/communitySize.json";
+import createCommunityContext from "./create/communityContext.json";
+import createCommunityStructure from "./create/communityStructure.json";
+import createCommunityUpload from "./create/communityUpload.json";
+import createCommunityReflection from "./create/communityReflection.json";
 import createReview from "./create/review.json";
 import createConfirmStakeholders from "./create/confirmStakeholders.json";
 import createFinalReview from "./create/finalReview.json";
@@ -58,9 +61,12 @@ export default {
   create: {
     communication,
     informational: createInformational,
-    text: createText,
-    select: createSelect,
-    upload: createUpload,
+    communityName: createCommunityName,
+    communitySize: createCommunitySize,
+    communityContext: createCommunityContext,
+    communityStructure: createCommunityStructure,
+    communityUpload: createCommunityUpload,
+    communityReflection: createCommunityReflection,
     review: createReview,
     confirmStakeholders: createConfirmStakeholders,
     finalReview: createFinalReview,

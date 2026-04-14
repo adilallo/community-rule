@@ -1,0 +1,6 @@
+{
+  "title": "Tell us more about your community",
+  "description": "Share context that will help shape your CommunityRule.",
+  "placeholder": "Describe your community",
+  "characterCountTemplate": "{current}/{max}"
+}

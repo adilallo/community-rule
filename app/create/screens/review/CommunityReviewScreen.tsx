@@ -1,13 +1,13 @@
 "use client";
 
-import RuleCard from "../../components/cards/RuleCard";
-import { useTranslation } from "../../contexts/MessagesContext";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
-import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
+import RuleCard from "../../../components/cards/RuleCard";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 
-/** Mid-flow review step (after upload, before cards). */
-export default function ReviewPage() {
+/** Create Community — frame 8 (Figma 19706-12135); URL segment `review`. */
+export function CommunityReviewScreen() {
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.review");
 

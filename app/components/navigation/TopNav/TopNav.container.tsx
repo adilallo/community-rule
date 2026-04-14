@@ -197,7 +197,7 @@ const TopNavContainer = memo<TopNavProps>(
           size={buttonSize}
           buttonType={buttonType}
           palette={palette}
-          onClick={() => router.push("/create/informational")}
+          onClick={() => router.push("/create")}
           ariaLabel={t("ariaLabels.createNewRule")}
         >
           {renderAvatarGroup(containerSize, avatarSize)}

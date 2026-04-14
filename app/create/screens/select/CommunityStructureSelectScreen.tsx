@@ -3,16 +3,17 @@
 import {
   useState,
   useMemo,
+  useEffect,
   type Dispatch,
   type SetStateAction,
 } from "react";
-import MultiSelect from "../../components/controls/MultiSelect";
-import type { ChipOption } from "../../components/controls/MultiSelect/MultiSelect.types";
-import { useMessages, useTranslation } from "../../contexts/MessagesContext";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
-import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
+import MultiSelect from "../../../components/controls/MultiSelect";
+import type { ChipOption } from "../../../components/controls/MultiSelect/MultiSelect.types";
+import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
+import { useCreateFlow } from "../../context/CreateFlowContext";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 
 function createListCustomHandlers(
   setList: Dispatch<SetStateAction<ChipOption[]>>,
@@ -55,40 +56,60 @@ function chipRowsFromLabels(
   }));
 }
 
-/**
- * Select page for the create flow
- *
- * Displays selection options using HeaderLockup and MultiSelect components.
- * Responsive layout: two-column at `md` and up, single column below (see `--breakpoint-md` in `app/tailwind.css`).
- * Lockup sizing via `CreateFlowHeaderLockup`. MultiSelect stays `S`.
- */
-export default function SelectPage() {
-  const m = useMessages();
-  const { markCreateFlowInteraction } = useCreateFlow();
-  const mdUp = useCreateFlowMdUp();
-  const t = useTranslation("create.select");
+function applySavedSelection(
+  options: ChipOption[],
+  saved: string[] | undefined,
+): ChipOption[] {
+  const selected = new Set(saved ?? []);
+  return options.map((opt) =>
+    opt.state === "Custom"
+      ? opt
+      : {
+          ...opt,
+          state: selected.has(opt.id)
+            ? ("Selected" as const)
+            : ("Unselected" as const),
+        },
+  );
+}
 
-  const [communitySizeOptions, setCommunitySizeOptions] = useState<
-    ChipOption[]
-  >(() => chipRowsFromLabels(m.create.select.communitySizes));
+/** Create Community — frame 5 (Figma 20094-41317). */
+export function CommunityStructureSelectScreen() {
+  const m = useMessages();
+  const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
+  const mdUp = useCreateFlowMdUp();
+  const t = useTranslation("create.communityStructure");
 
   const [organizationTypeOptions, setOrganizationTypeOptions] = useState<
     ChipOption[]
-  >(() => chipRowsFromLabels(m.create.select.organizationTypes));
+  >(() =>
+    applySavedSelection(
+      chipRowsFromLabels(m.create.communityStructure.organizationTypes),
+      state.selectedOrganizationTypeIds,
+    ),
+  );
 
   const [governanceStyleOptions, setGovernanceStyleOptions] = useState<
     ChipOption[]
-  >(() => chipRowsFromLabels(m.create.select.governanceStyles));
-
-  const communityCustomHandlers = useMemo(
-    () =>
-      createListCustomHandlers(
-        setCommunitySizeOptions,
-        "Unselected",
-        markCreateFlowInteraction,
-      ),
-    [markCreateFlowInteraction],
+  >(() =>
+    applySavedSelection(
+      chipRowsFromLabels(m.create.communityStructure.governanceStyles),
+      state.selectedGovernanceStyleIds,
+    ),
   );
+
+  useEffect(() => {
+    setOrganizationTypeOptions((prev) =>
+      applySavedSelection(prev, state.selectedOrganizationTypeIds),
+    );
+  }, [state.selectedOrganizationTypeIds]);
+
+  useEffect(() => {
+    setGovernanceStyleOptions((prev) =>
+      applySavedSelection(prev, state.selectedGovernanceStyleIds),
+    );
+  }, [state.selectedGovernanceStyleIds]);
+
   const organizationCustomHandlers = useMemo(
     () =>
       createListCustomHandlers(
@@ -108,46 +129,54 @@ export default function SelectPage() {
     [markCreateFlowInteraction],
   );
 
-  const handleCommunitySizeClick = (chipId: string) => {
+  const persistOrg = (next: ChipOption[]) => {
     markCreateFlowInteraction();
-    setCommunitySizeOptions((prev) =>
-      prev.map((opt) =>
-        opt.id === chipId
-          ? {
-              ...opt,
-              state: opt.state === "Selected" ? "Unselected" : "Selected",
-            }
-          : opt,
-      ),
-    );
+    setOrganizationTypeOptions(next);
+    updateState({
+      selectedOrganizationTypeIds: next
+        .filter((o) => o.state === "Selected")
+        .map((o) => o.id),
+    });
+  };
+
+  const persistGov = (next: ChipOption[]) => {
+    markCreateFlowInteraction();
+    setGovernanceStyleOptions(next);
+    updateState({
+      selectedGovernanceStyleIds: next
+        .filter((o) => o.state === "Selected")
+        .map((o) => o.id),
+    });
   };
 
   const handleOrganizationTypeClick = (chipId: string) => {
-    markCreateFlowInteraction();
-    setOrganizationTypeOptions((prev) =>
-      prev.map((opt) =>
-        opt.id === chipId
-          ? {
-              ...opt,
-              state: opt.state === "Selected" ? "Unselected" : "Selected",
-            }
-          : opt,
-      ),
+    const next: ChipOption[] = organizationTypeOptions.map((opt) =>
+      opt.id === chipId
+        ? {
+            ...opt,
+            state:
+              opt.state === "Selected"
+                ? ("Unselected" as const)
+                : ("Selected" as const),
+          }
+        : opt,
     );
+    persistOrg(next);
   };
 
   const handleGovernanceStyleClick = (chipId: string) => {
-    markCreateFlowInteraction();
-    setGovernanceStyleOptions((prev) =>
-      prev.map((opt) =>
-        opt.id === chipId
-          ? {
-              ...opt,
-              state: opt.state === "Selected" ? "Unselected" : "Selected",
-            }
-          : opt,
-      ),
+    const next: ChipOption[] = governanceStyleOptions.map((opt) =>
+      opt.id === chipId
+        ? {
+            ...opt,
+            state:
+              opt.state === "Selected"
+                ? ("Unselected" as const)
+                : ("Selected" as const),
+          }
+        : opt,
     );
+    persistGov(next);
   };
 
   const multiLabel = t("multiSelect.label");
@@ -155,15 +184,6 @@ export default function SelectPage() {
 
   const multiSelectBlock = (
     <>
-      <MultiSelect
-        label={multiLabel}
-        size="S"
-        options={communitySizeOptions}
-        onChipClick={handleCommunitySizeClick}
-        {...communityCustomHandlers}
-        addButton={true}
-        addButtonText={addText}
-      />
       <MultiSelect
         label={multiLabel}
         size="S"

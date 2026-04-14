@@ -1,8 +1,8 @@
-import RightRailPage from "../../app/create/right-rail/page";
+import { RightRailScreen } from "../../app/create/screens/right-rail/RightRailScreen";
 
 export default {
   title: "Pages/Create Flow/Right rail",
-  component: RightRailPage,
+  component: RightRailScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "./types";
+import type { CreateFlowState } from "../types";
 
 /** Anonymous in-progress create flow (local only until magic-link transfer). */
 export const CREATE_FLOW_ANONYMOUS_KEY = "create-flow-anonymous" as const;

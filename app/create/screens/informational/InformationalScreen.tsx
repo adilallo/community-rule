@@ -1,18 +1,13 @@
 "use client";
 
-import NumberedList from "../../components/type/NumberedList";
-import { useTranslation } from "../../contexts/MessagesContext";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
-import { CreateFlowStepShell } from "../components/CreateFlowStepShell";
+import NumberedList from "../../../components/type/NumberedList";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 
-/**
- * Informational page for the create flow
- *
- * Displays information about the create flow process using HeaderLockup and NumberedList components.
- * Lockup sizing via `CreateFlowHeaderLockup`. NumberedList: S / M by breakpoint.
- */
-export default function InformationalPage() {
+/** Create Community — frame 1 (Figma 20094-16005). */
+export function InformationalScreen() {
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.informational");
 

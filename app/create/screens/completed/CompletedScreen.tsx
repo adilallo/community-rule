@@ -1,20 +1,16 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import CommunityRuleDocument from "../../components/sections/CommunityRuleDocument";
-import type { CommunityRuleDocumentSection } from "../../components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
-import Alert from "../../components/modals/Alert";
-import { useMessages } from "../../contexts/MessagesContext";
-import { parseDocumentSectionsForDisplay } from "../../../lib/create/buildPublishPayload";
-import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
-import { CreateFlowHeaderLockup } from "../components/CreateFlowHeaderLockup";
+import CommunityRuleDocument from "../../../components/sections/CommunityRuleDocument";
+import type { CommunityRuleDocumentSection } from "../../../components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
+import Alert from "../../../components/modals/Alert";
+import { useMessages } from "../../../contexts/MessagesContext";
+import { parseDocumentSectionsForDisplay } from "../../../../lib/create/buildPublishPayload";
+import { readLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 
-/**
- * Completed create flow page.
- * Figma: 20907-213286 (main), 18002-28017 (toast).
- */
-export default function CompletedPage() {
+export function CompletedScreen() {
   const mdUp = useCreateFlowMdUp();
   const m = useMessages();
   const completed = m.create.completed;
@@ -40,7 +36,6 @@ export default function CompletedPage() {
     if (!stored) return;
     const parsed = parseDocumentSectionsForDisplay(stored.document);
     if (parsed.length === 0) return;
-    // One-shot hydration from client-only storage after mount.
     queueMicrotask(() => {
       setDocumentSections(parsed);
       setHeaderTitle(stored.title);

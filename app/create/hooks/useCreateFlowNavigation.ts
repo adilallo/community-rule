@@ -3,7 +3,11 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback } from "react";
 import type { CreateFlowStep } from "../types";
-import { getNextStep, getPreviousStep, isValidStep } from "../utils/flowSteps";
+import {
+  getNextStep,
+  getPreviousStep,
+  parseCreateFlowScreenFromPathname,
+} from "../utils/flowSteps";
 
 /**
  * Options passed to navigation handlers (e.g. for blur before navigate)
@@ -20,8 +24,7 @@ const blurActiveElement = (): void => {
 /**
  * Hook for Create Rule Flow navigation.
  *
- * Must be used within the create flow (pathname like /create/[step]).
- * Uses the current step from the URL and provides type-safe navigation.
+ * Resolves the active step from `/create/{screenId}` via {@link parseCreateFlowScreenFromPathname} (flowSteps).
  */
 export function useCreateFlowNavigation(): {
   currentStep: CreateFlowStep | null;
@@ -36,9 +39,7 @@ export function useCreateFlowNavigation(): {
   const pathname = usePathname();
   const router = useRouter();
 
-  const currentStep = (pathname?.split("/").pop() ??
-    null) as CreateFlowStep | null;
-  const validStep = isValidStep(currentStep) ? currentStep : null;
+  const validStep = parseCreateFlowScreenFromPathname(pathname ?? null);
 
   const nextStep = getNextStep(validStep);
   const previousStep = getPreviousStep(validStep);

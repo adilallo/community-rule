@@ -1,15 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import RuleCard from "../../components/cards/RuleCard";
-import type { Category } from "../../components/cards/RuleCard/RuleCard.types";
-import { useMessages, useTranslation } from "../../contexts/MessagesContext";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
+import RuleCard from "../../../components/cards/RuleCard";
+import type { Category } from "../../../components/cards/RuleCard/RuleCard.types";
+import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
+import { useCreateFlow } from "../../context/CreateFlowContext";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import {
   CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS,
   CreateFlowLockupCardStepShell,
-} from "../components/CreateFlowLockupCardStepShell";
+} from "../../components/CreateFlowLockupCardStepShell";
 
 function buildFinalReviewCategories(
   rows: { name: string; chips: string[] }[],
@@ -24,11 +24,7 @@ function buildFinalReviewCategories(
   }));
 }
 
-/**
- * Final review step (right before completed).
- * Figma: 20907-212767 (full-size), 20976-220705 (below `md`).
- */
-export default function FinalReviewPage() {
+export function FinalReviewScreen() {
   const { state } = useCreateFlow();
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.finalReview");

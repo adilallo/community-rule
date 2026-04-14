@@ -1,8 +1,8 @@
-import CardsPage from "../../app/create/cards/page";
+import { CardsScreen } from "../../app/create/screens/card/CardsScreen";
 
 export default {
   title: "Pages/Create Flow/Cards",
-  component: CardsPage,
+  component: CardsScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

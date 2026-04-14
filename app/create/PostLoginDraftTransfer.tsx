@@ -6,9 +6,9 @@ import {
   clearAnonymousCreateFlowStorage,
   hasTransferPendingFlag,
   readAnonymousCreateFlowState,
-} from "./anonymousDraftStorage";
+} from "./utils/anonymousDraftStorage";
 import { useCreateFlow } from "./context/CreateFlowContext";
-import { isValidStep } from "./utils/flowSteps";
+import { parseCreateFlowScreenFromPathname } from "./utils/flowSteps";
 import { saveDraftToServer } from "../../lib/create/api";
 import messages from "../../messages/en/index";
 
@@ -56,8 +56,8 @@ export function PostLoginDraftTransfer({
           return;
         }
 
-        const segment = pathname?.split("/").pop() ?? "";
-        const step = isValidStep(segment) ? segment : undefined;
+        const step =
+          parseCreateFlowScreenFromPathname(pathname ?? null) ?? undefined;
         const payload = {
           ...local,
           ...(step ? { currentStep: step } : {}),
@@ -100,8 +100,8 @@ export function PostLoginDraftTransfer({
         return;
       }
 
-      const segment = pathname?.split("/").pop() ?? "";
-      const step = isValidStep(segment) ? segment : undefined;
+      const step =
+        parseCreateFlowScreenFromPathname(pathname ?? null) ?? undefined;
       const payload = {
         ...local,
         ...(step ? { currentStep: step } : {}),

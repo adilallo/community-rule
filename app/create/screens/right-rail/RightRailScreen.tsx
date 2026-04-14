@@ -1,19 +1,15 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import DecisionMakingSidebar from "../../components/utility/DecisionMakingSidebar";
-import CardStack from "../../components/utility/CardStack";
-import type { InfoMessageBoxItem } from "../../components/utility/InfoMessageBox/InfoMessageBox.types";
-import type { CardStackItem } from "../../components/utility/CardStack/CardStack.types";
-import { useMessages } from "../../contexts/MessagesContext";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../hooks/useCreateFlowMdUp";
+import DecisionMakingSidebar from "../../../components/utility/DecisionMakingSidebar";
+import CardStack from "../../../components/utility/CardStack";
+import type { InfoMessageBoxItem } from "../../../components/utility/InfoMessageBox/InfoMessageBox.types";
+import type { CardStackItem } from "../../../components/utility/CardStack/CardStack.types";
+import { useMessages } from "../../../contexts/MessagesContext";
+import { useCreateFlow } from "../../context/CreateFlowContext";
+import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 
-/**
- * Right Rail step of the create flow.
- * Two-column layout (sidebar + card stack) at 640+, single column at 320-639.
- */
-export default function RightRailPage() {
+export function RightRailScreen() {
   const m = useMessages();
   const rr = m.create.rightRail;
   const mdUp = useCreateFlowMdUp();
@@ -81,9 +77,7 @@ export default function RightRailPage() {
     <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden md:h-full">
       <div className="flex min-h-0 flex-1 overflow-hidden px-5 max-md:overflow-y-auto md:px-12">
         <div className="mx-auto grid h-auto min-h-0 w-full max-w-[1280px] shrink-0 grid-cols-1 gap-6 min-w-0 max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:gap-12 md:pb-8">
-          <div
-            className="flex min-w-0 flex-col items-stretch justify-start overflow-hidden md:justify-center"
-          >
+          <div className="flex min-w-0 flex-col items-stretch justify-start overflow-hidden md:justify-center">
             <DecisionMakingSidebar
               title={rr.sidebar.title}
               description={sidebarDescription}

@@ -29,6 +29,11 @@ export const createFlowStateSchema = z
   .object({
     title: z.string().max(500).optional(),
     summary: z.string().max(8000).optional(),
+    communityContext: z.string().max(8000).optional(),
+    communityReflection: z.string().max(8000).optional(),
+    selectedCommunitySizeIds: z.array(z.string()).optional(),
+    selectedOrganizationTypeIds: z.array(z.string()).optional(),
+    selectedGovernanceStyleIds: z.array(z.string()).optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

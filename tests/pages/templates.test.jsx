@@ -5,7 +5,7 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach, beforeEach } from "vitest";
-import TemplatesPage from "../../app/(marketing)/templates/page";
+import TemplatesPageClient from "../../app/(marketing)/templates/TemplatesPageClient";
 import { testRouter } from "../mocks/navigation";
 import { GOVERNANCE_TEMPLATE_CATALOG } from "../../lib/templates/governanceTemplateCatalog";
 
@@ -19,7 +19,9 @@ afterEach(() => {
 
 describe("Templates page (/templates)", () => {
   test("renders title, intro, and full catalog", () => {
-    render(<TemplatesPage />);
+    render(
+      <TemplatesPageClient initialGridEntries={GOVERNANCE_TEMPLATE_CATALOG} />,
+    );
 
     expect(
       screen.getByRole("heading", { name: "Templates", level: 1 }),
@@ -35,7 +37,9 @@ describe("Templates page (/templates)", () => {
 
   test("each template card navigates to review flow for its slug", async () => {
     const user = userEvent.setup();
-    render(<TemplatesPage />);
+    render(
+      <TemplatesPageClient initialGridEntries={GOVERNANCE_TEMPLATE_CATALOG} />,
+    );
 
     const consensusCard = screen.getByText("Consensus").closest("div");
     await user.click(consensusCard);

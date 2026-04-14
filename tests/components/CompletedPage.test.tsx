@@ -1,16 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import CompletedPage from "../../app/create/completed/page";
+import { CompletedScreen } from "../../app/create/screens/completed/CompletedScreen";
 
-describe("CompletedPage", () => {
+describe("CompletedScreen", () => {
   it("renders without crashing", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 
   it("renders HeaderLockup with expected title", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(
       screen.getByRole("heading", {
         name: "Mutual Aid Mondays",
@@ -19,7 +19,7 @@ describe("CompletedPage", () => {
   });
 
   it("renders HeaderLockup with expected description", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(
       screen.getByText(
         /Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness./i,
@@ -28,7 +28,7 @@ describe("CompletedPage", () => {
   });
 
   it("renders Community Rule document with section labels", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(screen.getByText("Values")).toBeInTheDocument();
     expect(screen.getByText("Communication")).toBeInTheDocument();
     expect(screen.getByText("Membership")).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("CompletedPage", () => {
   });
 
   it("renders document entry titles", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(screen.getByText("Solidarity Forever")).toBeInTheDocument();
     expect(screen.getByText("Shared Leadership")).toBeInTheDocument();
     expect(screen.getByText("Organizing Offline")).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("CompletedPage", () => {
   });
 
   it("renders toast alert when page loads", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     expect(
       screen.getByText(
         "This is what folks see when you share your CommunityRule",
@@ -59,7 +59,7 @@ describe("CompletedPage", () => {
   });
 
   it("renders toast with role status", () => {
-    render(<CompletedPage />);
+    render(<CompletedScreen />);
     const statusRegions = screen.getAllByRole("status");
     expect(statusRegions.length).toBeGreaterThanOrEqual(1);
     expect(

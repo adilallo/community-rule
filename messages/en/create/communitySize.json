@@ -1,0 +1,19 @@
+{
+  "header": {
+    "title": "How large is your community?",
+    "description": "Choose the size that best matches your group."
+  },
+  "multiSelect": {
+    "label": "Label",
+    "addButtonText": "Add organization type"
+  },
+  "communitySizes": [
+    { "label": "1 member" },
+    { "label": "2-10 members" },
+    { "label": "10-24 members" },
+    { "label": "24-64 members" },
+    { "label": "64-128 members" },
+    { "label": "125-1000 members" },
+    { "label": "1000+ members" }
+  ]
+}

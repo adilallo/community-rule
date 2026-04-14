@@ -34,7 +34,7 @@ describe("flowSteps", () => {
   });
 
   it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
-    expect(isValidStep("select")).toBe(true);
+    expect(isValidStep("community-size")).toBe(true);
     expect(isValidStep("confirm-stakeholders")).toBe(true);
     expect(isValidStep("nope")).toBe(false);
     expect(isValidStep(null)).toBe(false);

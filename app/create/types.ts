@@ -6,19 +6,30 @@
  */
 
 /**
- * Valid step IDs for the create rule flow
+ * Valid step IDs for the create rule flow (URL segment after `/create/`).
+ * Create Community order matches Figma; `review` closes that stage per design.
  */
 export type CreateFlowStep =
   | "informational"
-  | "text"
-  | "select"
-  | "upload"
+  | "community-name"
+  | "community-size"
+  | "community-context"
+  | "community-structure"
+  | "community-upload"
+  | "community-reflection"
   | "review"
   | "cards"
   | "right-rail"
   | "confirm-stakeholders"
   | "final-review"
   | "completed";
+
+/** String keys used by generic text-field steps for `CreateFlowState`. */
+export type CreateFlowTextStateField =
+  | "title"
+  | "summary"
+  | "communityContext"
+  | "communityReflection";
 
 /**
  * Flow state for inputs across create-flow steps.
@@ -28,6 +39,15 @@ export type CreateFlowStep =
 export interface CreateFlowState {
   title?: string;
   summary?: string;
+  /** Additional copy fields for multi-step Create Community text frames (Figma). */
+  communityContext?: string;
+  communityReflection?: string;
+  /** Selected chip ids from `community-size` (MultiSelect). */
+  selectedCommunitySizeIds?: string[];
+  /** Selected chip ids from `community-structure` (organization types). */
+  selectedOrganizationTypeIds?: string[];
+  /** Selected chip ids from `community-structure` (governance styles). */
+  selectedGovernanceStyleIds?: string[];
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];
@@ -51,7 +71,7 @@ export interface CreateFlowContextValue {
   clearState: () => void;
   /**
    * True after the user edits any template control (pages use local state until wired to `state`).
-   * Drives Save & Exit visibility together with `hasCreateFlowUserInput(state)`.
+   * Drives Save & Exit visibility together with hasCreateFlowUserInput (utils/hasCreateFlowUserInput.ts).
    */
   interactionTouched: boolean;
   markCreateFlowInteraction: () => void;
