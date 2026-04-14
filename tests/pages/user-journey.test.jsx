@@ -70,7 +70,7 @@ describe("User Journey Integration", () => {
 
     // Wait for dynamically imported RuleStack component
     await waitFor(() => {
-      expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
+      expect(screen.getByText("Circles")).toBeInTheDocument();
     });
     expect(screen.getByText("Elected Board")).toBeInTheDocument();
     expect(screen.getByText("Consensus")).toBeInTheDocument();
@@ -250,7 +250,7 @@ describe("User Journey Integration", () => {
         () => {
           // Check for any of the governance card titles
           const hasGovernanceContent =
-            screen.queryByText(/Consensus clusters/i) ||
+            screen.queryByText(/Circles/i) ||
             screen.queryByText(/Elected Board/i) ||
             screen.queryByText(/Petition/i);
           expect(hasGovernanceContent).toBeTruthy();

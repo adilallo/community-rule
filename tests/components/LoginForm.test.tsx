@@ -32,10 +32,10 @@ vi.mock("../../lib/create/api", () => ({
   requestMagicLink: vi.fn(),
 }));
 
-vi.mock("../../app/create/anonymousDraftStorage", async (importOriginal) => {
+vi.mock("../../app/create/utils/anonymousDraftStorage", async (importOriginal) => {
   const actual =
     await importOriginal<
-      typeof import("../../app/create/anonymousDraftStorage")
+      typeof import("../../app/create/utils/anonymousDraftStorage")
     >();
   return {
     ...actual,
@@ -44,7 +44,7 @@ vi.mock("../../app/create/anonymousDraftStorage", async (importOriginal) => {
 });
 
 import { requestMagicLink } from "../../lib/create/api";
-import { setTransferPendingFlag } from "../../app/create/anonymousDraftStorage";
+import { setTransferPendingFlag } from "../../app/create/utils/anonymousDraftStorage";
 
 function renderLoginForm() {
   return renderWithProviders(
@@ -119,7 +119,7 @@ describe("LoginForm", () => {
       <Suspense fallback={null}>
         <LoginForm
           variant="saveProgress"
-          magicLinkNextPath="/create/select?syncDraft=1"
+          magicLinkNextPath="/create/community-structure?syncDraft=1"
         />
       </Suspense>,
     );
@@ -133,7 +133,7 @@ describe("LoginForm", () => {
     await waitFor(() => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "save@example.com",
-        "/create/select?syncDraft=1",
+        "/create/community-structure?syncDraft=1",
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();

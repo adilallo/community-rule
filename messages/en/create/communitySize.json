@@ -1,0 +1,13 @@
+{
+  "header": {
+    "title": "How many people will be in your community in the near term?",
+    "description": "Choose how many people you think will be in your community in the next year or two. Your selection here will determine what governance patterns are recommended later in the process."
+  },
+  "communitySizes": [
+    { "label": "1 member" },
+    { "label": "2-5 members" },
+    { "label": "6-12 members" },
+    { "label": "13-100 members" },
+    { "label": "100-100,000 members" }
+  ]
+}

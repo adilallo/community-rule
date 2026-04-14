@@ -1,0 +1,20 @@
+{
+  "title": "How CommunityRule helps groups like yours",
+  "descriptionLead": "This flow will give you recommendations to improve your community and help you put together a proposal for your group to consider. Alternatively, there is a",
+  "workshopLabel": "workshop",
+  "descriptionTrail": "that your group can use to go through the process it together.",
+  "steps": {
+    "0": {
+      "title": "Tell us about your organization",
+      "description": "Start by providing your group's name, description, and profile image."
+    },
+    "1": {
+      "title": "Define your group's CommunityRule.",
+      "description": "Outline decision-making processes, conflict resolution methods, and membership practices. Get recommendations."
+    },
+    "2": {
+      "title": "Share and evolve over time",
+      "description": "Review and refine your community framework before putting it into action and adapting it over time."
+    }
+  }
+}

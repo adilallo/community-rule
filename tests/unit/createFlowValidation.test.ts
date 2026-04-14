@@ -71,6 +71,13 @@ describe("createFlowStateSchema", () => {
     const r = createFlowStateSchema.safeParse({ title: "x".repeat(600) });
     expect(r.success).toBe(false);
   });
+
+  it("rejects communitySaveEmail longer than 320 chars", () => {
+    const r = createFlowStateSchema.safeParse({
+      communitySaveEmail: "x".repeat(321),
+    });
+    expect(r.success).toBe(false);
+  });
 });
 
 describe("putDraftBodySchema", () => {

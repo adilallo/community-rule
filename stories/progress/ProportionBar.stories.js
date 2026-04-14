@@ -13,6 +13,12 @@ export default {
     },
   },
   argTypes: {
+    variant: {
+      control: { type: "select" },
+      options: ["default", "segmented", "Default", "Segmented"],
+      description:
+        "Segmented: pill-shaped partial fills (create-flow footer / Figma).",
+    },
     progress: {
       control: { type: "select" },
       options: [
@@ -44,6 +50,27 @@ export const Default = {
       <ProportionBar {...args} />
     </div>
   ),
+};
+
+export const SegmentedCreateFlow = {
+  args: {
+    progress: "1-1",
+    variant: "segmented",
+  },
+  render: (args) => (
+    <div className="w-full max-w-[640px] bg-black p-4">
+      <ProportionBar {...args} />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Matches the create-flow footer: three segments with partial fill in the first segment (`1-1` on community name).",
+      },
+    },
+    backgrounds: { default: "dark" },
+  },
 };
 
 export const AllStates = {

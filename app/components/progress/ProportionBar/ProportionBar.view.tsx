@@ -4,9 +4,11 @@ export function ProportionBarView({
   progress,
   className,
   barClasses,
+  variant,
 }: ProportionBarViewProps) {
   // Proportion bar type
   const [fullSegments, partialSegment] = progress.split("-").map(Number);
+  const segmented = variant === "segmented";
   // Calculate total progress:
   // - For 1-X: first section is (X+1)/6 filled
   // - For 2-X: first section full, second section X/3 filled
@@ -58,7 +60,11 @@ export function ProportionBarView({
         <div className="flex-1 h-full relative">
           {fullSegments === 1 ? (
             <div
-              className="absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] rounded-l-[var(--radius-full)]"
+              className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] rounded-l-[var(--radius-full)] ${
+                segmented && partialSegment < 5
+                  ? "rounded-r-[var(--radius-full)]"
+                  : ""
+              }`.trim()}
               style={{ width: `${((partialSegment + 1) / 6) * 100}%` }}
             />
           ) : fullSegments >= 2 ? (
@@ -70,7 +76,11 @@ export function ProportionBarView({
           {fullSegments === 2 ? (
             partialSegment > 0 ? (
               <div
-                className="absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)]"
+                className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] ${
+                  segmented
+                    ? "rounded-l-[var(--radius-full)] rounded-r-[var(--radius-full)]"
+                    : ""
+                }`.trim()}
                 style={{ width: `${(partialSegment / 3) * 100}%` }}
               />
             ) : null
@@ -84,8 +94,12 @@ export function ProportionBarView({
           {fullSegments === 3 && partialSegment > 0 ? (
             <div
               className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] ${
-                partialSegment >= 3 ? "rounded-r-[var(--radius-full)]" : ""
-              }`}
+                segmented
+                  ? "rounded-l-[var(--radius-full)] rounded-r-[var(--radius-full)]"
+                  : partialSegment >= 3
+                    ? "rounded-r-[var(--radius-full)]"
+                    : ""
+              }`.trim()}
               style={{ width: `${Math.min((partialSegment / 3) * 100, 100)}%` }}
             />
           ) : null}

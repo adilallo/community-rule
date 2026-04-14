@@ -43,7 +43,7 @@ test.describe("Critical User Journeys", () => {
     ).toBeVisible();
 
     // 6. User explores rule templates
-    await page.locator("text=Consensus clusters").first().click();
+    await page.locator("text=Circles").first().click();
     await page.locator("text=Consensus").nth(1).click();
     await page.locator("text=Elected Board").first().click();
     await page.locator("text=Petition").first().click();

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export type HeaderLockupJustificationValue =
   | "left"
   | "center"
@@ -16,9 +18,9 @@ export interface HeaderLockupProps {
    */
   title: string;
   /**
-   * Description text (optional)
+   * Description (optional). String for plain copy, or ReactNode for rich inline content (e.g. linked words).
    */
-  description?: string;
+  description?: ReactNode;
   /**
    * Text justification. Accepts both PascalCase (Figma) and lowercase (codebase).
    * Figma uses PascalCase, codebase uses lowercase - both are supported.
@@ -38,7 +40,7 @@ export interface HeaderLockupProps {
 
 export interface HeaderLockupViewProps {
   title: string;
-  description?: string;
+  description?: ReactNode;
   justification: "left" | "center";
   size: "L" | "M";
   palette: "default" | "inverse";

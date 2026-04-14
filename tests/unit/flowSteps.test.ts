@@ -34,7 +34,7 @@ describe("flowSteps", () => {
   });
 
   it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
-    expect(isValidStep("select")).toBe(true);
+    expect(isValidStep("community-size")).toBe(true);
     expect(isValidStep("confirm-stakeholders")).toBe(true);
     expect(isValidStep("nope")).toBe(false);
     expect(isValidStep(null)).toBe(false);
@@ -45,5 +45,14 @@ describe("flowSteps", () => {
     expect(getStepIndex("completed")).toBe(FLOW_STEP_ORDER.length - 1);
     // @ts-expect-error — invalid step id
     expect(getStepIndex("bogus")).toBe(-1);
+  });
+
+  it("places community-structure before community-context and community-size (Figma order)", () => {
+    expect(getStepIndex("community-structure")).toBe(2);
+    expect(getStepIndex("community-context")).toBe(3);
+    expect(getStepIndex("community-size")).toBe(4);
+    expect(getNextStep("community-name")).toBe("community-structure");
+    expect(getNextStep("community-structure")).toBe("community-context");
+    expect(getNextStep("community-context")).toBe("community-size");
   });
 });

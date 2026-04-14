@@ -49,6 +49,22 @@ describe("HeaderLockup (behavioral tests)", () => {
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
+  it("renders ReactNode description (rich inline)", () => {
+    render(
+      <HeaderLockup
+        title="Test Title"
+        description={
+          <>
+            Before <span className="underline">link</span> after
+          </>
+        }
+      />,
+    );
+    expect(screen.getByText(/Before/)).toBeInTheDocument();
+    expect(screen.getByText("link")).toBeInTheDocument();
+    expect(screen.getByText(/after/)).toBeInTheDocument();
+  });
+
   it("does not render description when not provided", () => {
     const { container } = render(<HeaderLockup title="Test Title" />);
     const description = container.querySelector("p");

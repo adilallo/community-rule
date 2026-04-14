@@ -49,10 +49,10 @@ export interface TextAreaProps extends Omit<
   className?: string;
   rows?: number;
   /**
-   * Whether to show hint text below textarea (Figma prop).
+   * Hint below the textarea: `true` shows placeholder copy, or pass a string (e.g. character count).
    * @default false
    */
-  textHint?: boolean;
+  textHint?: boolean | string;
   /**
    * Whether to show form header (label and help icon) above textarea (Figma prop).
    * @default true
@@ -92,7 +92,7 @@ export interface TextAreaViewProps {
   handleChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleFocus: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
   handleBlur: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
-  textHint?: boolean;
+  textHint?: boolean | string;
   formHeader?: boolean;
   showHelpIcon?: boolean;
   appearance?: "default" | "embedded";

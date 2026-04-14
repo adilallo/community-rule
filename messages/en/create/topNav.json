@@ -1,6 +1,12 @@
 {
   "saveAndExit": "Save & Exit",
   "exit": "Exit",
+  "share": "Share",
+  "export": "Export",
+  "edit": "Edit",
+  "shareAriaLabel": "Share",
+  "exportAriaLabel": "Export",
+  "editAriaLabel": "Edit",
   "leaveConfirmLoss": "Leave create flow? Your progress will be lost.",
   "draftSaveBannerTitle": "Couldn't save draft",
   "postLoginSaveFailedWithReason": "Could not save your draft to your account. Your progress is still stored on this device.\n\n{reason}"

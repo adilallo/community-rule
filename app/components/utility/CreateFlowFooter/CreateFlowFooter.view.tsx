@@ -1,3 +1,4 @@
+import { normalizeProportionBarVariant } from "../../../../lib/propNormalization";
 import ProportionBar from "../../progress/ProportionBar";
 import Button from "../../buttons/Button";
 import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
@@ -5,9 +6,14 @@ import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
 export function CreateFlowFooterView({
   secondButton,
   progressBar = true,
+  proportionBarProgress = "1-0",
+  proportionBarVariant: proportionBarVariantProp,
   onBackClick,
   className = "",
 }: CreateFlowFooterProps) {
+  const proportionBarVariant = normalizeProportionBarVariant(
+    proportionBarVariantProp,
+  );
   return (
     <footer
       className={`bg-black w-full ${className}`}
@@ -17,7 +23,10 @@ export function CreateFlowFooterView({
       {/* Progress Bar - Top */}
       {progressBar && (
         <div className="px-[var(--spacing-measures-spacing-500,20px)] md:px-[var(--spacing-measures-spacing-1200,48px)] pt-[var(--spacing-measures-spacing-300,12px)]">
-          <ProportionBar progress="1-0" />
+          <ProportionBar
+            progress={proportionBarProgress}
+            variant={proportionBarVariant}
+          />
         </div>
       )}
 

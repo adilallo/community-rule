@@ -1,8 +1,8 @@
-import FinalReviewPage from "../../app/create/final-review/page";
+import { FinalReviewScreen } from "../../app/create/screens/review/FinalReviewScreen";
 
 export default {
   title: "Pages/Create Flow/Final review",
-  component: FinalReviewPage,
+  component: FinalReviewScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

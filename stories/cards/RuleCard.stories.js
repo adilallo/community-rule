@@ -57,7 +57,7 @@ export const Default = {
     size: "L",
     icon: (
       <Image
-        src="assets/Icon_Sociocracy.svg"
+        src="assets/template-mark/consensus-clusters.svg"
         alt="Sociocracy"
         width={40}
         height={40}
@@ -165,7 +165,7 @@ export const SizeLarge = {
     size: "L",
     icon: (
       <Image
-        src="assets/Icon_Sociocracy.svg"
+        src="assets/template-mark/consensus-clusters.svg"
         alt="Sociocracy"
         width={103}
         height={103}
@@ -184,7 +184,7 @@ export const SizeMedium = {
     size: "M",
     icon: (
       <Image
-        src="assets/Icon_Sociocracy.svg"
+        src="assets/template-mark/consensus-clusters.svg"
         alt="Sociocracy"
         width={56}
         height={56}
@@ -203,7 +203,7 @@ export const SizeSmall = {
     size: "S",
     icon: (
       <Image
-        src="assets/Icon_Sociocracy.svg"
+        src="assets/template-mark/consensus-clusters.svg"
         alt="Sociocracy"
         width={56}
         height={56}
@@ -222,7 +222,7 @@ export const SizeExtraSmall = {
     size: "XS",
     icon: (
       <Image
-        src="assets/Icon_Sociocracy.svg"
+        src="assets/template-mark/consensus-clusters.svg"
         alt="Sociocracy"
         width={8}
         height={8}
@@ -311,7 +311,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
         icon={
           <Image
-            src="assets/Icon_Sociocracy.svg"
+            src="assets/template-mark/consensus-clusters.svg"
             alt="Sociocracy"
             width={40}
             height={40}
@@ -326,7 +326,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
         icon={
           <Image
-            src="assets/Icon_Consensus.svg"
+            src="assets/template-mark/consensus.svg"
             alt="Consensus"
             width={40}
             height={40}
@@ -341,7 +341,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-red)]"
         icon={
           <Image
-            src="assets/Icon_ElectedBoard.svg"
+            src="assets/template-mark/elected-board.svg"
             alt="Elected Board"
             width={40}
             height={40}
@@ -356,7 +356,7 @@ export const AllVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
         icon={
           <Image
-            src="assets/Icon_Petition.svg"
+            src="assets/template-mark/petition.svg"
             alt="Petition"
             width={40}
             height={40}

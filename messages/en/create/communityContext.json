@@ -1,0 +1,6 @@
+{
+  "title": "Why does your community exist?",
+  "description": "Edit or change the description to match how you’d like the organization to be described to other users. Try and describe your mission, goals, and scope.",
+  "placeholder": "Describe your community",
+  "characterCountTemplate": "{current}/{max}"
+}

@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import InformationalPage from "../../app/create/informational/page";
+import { InformationalScreen } from "../../app/create/screens/informational/InformationalScreen";
 
-describe("InformationalPage", () => {
+describe("InformationalScreen", () => {
   it("renders without crashing", () => {
-    render(<InformationalPage />);
+    render(<InformationalScreen />);
     expect(
       screen.getByRole("heading", {
         name: "How CommunityRule helps groups like yours",
@@ -14,7 +14,7 @@ describe("InformationalPage", () => {
   });
 
   it("renders lockup description", () => {
-    render(<InformationalPage />);
+    render(<InformationalScreen />);
     expect(
       screen.getByText(
         /This flow will give you recommendations to improve your community/i,
@@ -22,8 +22,15 @@ describe("InformationalPage", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders workshop as a link (URL TBD) with underline per Figma", () => {
+    render(<InformationalScreen />);
+    const workshop = screen.getByRole("link", { name: "workshop" });
+    expect(workshop).toHaveAttribute("href", "#");
+    expect(workshop.className).toMatch(/underline/);
+  });
+
   it("renders first numbered list item title", () => {
-    render(<InformationalPage />);
+    render(<InformationalScreen />);
     expect(
       screen.getByText("Tell us about your organization"),
     ).toBeInTheDocument();

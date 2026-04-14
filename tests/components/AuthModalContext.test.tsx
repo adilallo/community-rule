@@ -31,10 +31,10 @@ vi.mock("../../lib/create/api", () => ({
   requestMagicLink: vi.fn(),
 }));
 
-vi.mock("../../app/create/anonymousDraftStorage", async (importOriginal) => {
+vi.mock("../../app/create/utils/anonymousDraftStorage", async (importOriginal) => {
   const actual =
     await importOriginal<
-      typeof import("../../app/create/anonymousDraftStorage")
+      typeof import("../../app/create/utils/anonymousDraftStorage")
     >();
   return {
     ...actual,
@@ -43,7 +43,7 @@ vi.mock("../../app/create/anonymousDraftStorage", async (importOriginal) => {
 });
 
 import { requestMagicLink } from "../../lib/create/api";
-import { setTransferPendingFlag } from "../../app/create/anonymousDraftStorage";
+import { setTransferPendingFlag } from "../../app/create/utils/anonymousDraftStorage";
 
 function LoginTrigger() {
   const { openLogin, closeLogin } = useAuthModal();
@@ -57,7 +57,7 @@ function LoginTrigger() {
         onClick={() =>
           openLogin({
             variant: "saveProgress",
-            nextPath: "/create/select?syncDraft=1",
+            nextPath: "/create/community-structure?syncDraft=1",
           })
         }
       >
@@ -143,7 +143,7 @@ describe("AuthModalProvider (header overlay)", () => {
     await waitFor(() => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "guest@example.com",
-        "/create/select?syncDraft=1",
+        "/create/community-structure?syncDraft=1",
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();

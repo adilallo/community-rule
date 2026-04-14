@@ -904,7 +904,7 @@ export default function ComponentsPreview() {
                 className="w-[525px]"
                 icon={
                   <Image
-                    src={getAssetPath("assets/Icon_Sociocracy.svg")}
+                    src={getAssetPath("assets/template-mark/consensus-clusters.svg")}
                     alt="Sociocracy"
                     width={103}
                     height={103}
@@ -921,7 +921,7 @@ export default function ComponentsPreview() {
                 className="w-[525px]"
                 icon={
                   <Image
-                    src={getAssetPath("assets/Icon_Consensus.svg")}
+                    src={getAssetPath("assets/template-mark/consensus.svg")}
                     alt="Consensus"
                     width={103}
                     height={103}

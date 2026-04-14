@@ -21,6 +21,7 @@ const CardStackContainer = memo<CardStackProps>(
     title = "",
     description = "",
     layout = "default",
+    headerLockupSize,
     className = "",
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
@@ -74,6 +75,7 @@ const CardStackContainer = memo<CardStackProps>(
         title={title}
         description={description}
         layout={layout}
+        headerLockupSize={headerLockupSize}
         className={className}
       />
     );

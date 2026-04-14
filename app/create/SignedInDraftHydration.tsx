@@ -8,7 +8,7 @@ import {
   clearAnonymousCreateFlowStorage,
   hasTransferPendingFlag,
   readAnonymousCreateFlowState,
-} from "./anonymousDraftStorage";
+} from "./utils/anonymousDraftStorage";
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { fetchDraftFromServer } from "../../lib/create/api";
 import messages from "../../messages/en/index";

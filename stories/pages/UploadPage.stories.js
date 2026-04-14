@@ -1,35 +1,9 @@
-import UploadPage from "../../app/create/upload/page";
+import { CommunityUploadScreen } from "../../app/create/screens/upload/CommunityUploadScreen";
 
 export default {
-  title: "Pages/Create Flow/Upload",
-  component: UploadPage,
-  parameters: {
-    layout: "fullscreen",
-    docs: {
-      description: {
-        component:
-          "Upload step: HeaderLockup + Upload control. Centered lockup at 640px+.",
-      },
-    },
-  },
-  decorators: [
-    (Story) => (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Story />
-      </div>
-    ),
-  ],
-  tags: ["autodocs"],
+  title: "Pages/Create/CommunityUpload",
+  component: CommunityUploadScreen,
+  parameters: { layout: "fullscreen" },
 };
 
-export const Desktop = {
-  parameters: {
-    viewport: { defaultViewport: "desktop" },
-  },
-};
-
-export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: "mobile1" },
-  },
-};
+export const Default = {};

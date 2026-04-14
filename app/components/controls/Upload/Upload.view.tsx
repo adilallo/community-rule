@@ -8,6 +8,7 @@ function UploadView({
   active = true,
   label,
   showHelpIcon = true,
+  hintText,
   onClick,
   className = "",
 }: UploadViewProps) {
@@ -54,7 +55,7 @@ function UploadView({
         <button
           type="button"
           onClick={onClick}
-          className={`${buttonBgClass} flex gap-[var(--measures-spacing-150,6px)] items-center justify-center overflow-clip p-[var(--measures-spacing-300,12px)] rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity`}
+          className={`${buttonBgClass} flex gap-[var(--measures-spacing-150,6px)] items-center justify-center overflow-clip px-[var(--space-400,16px)] py-[var(--measures-spacing-300,12px)] rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity`}
           aria-label="Upload"
         >
           {/* Upload icon */}
@@ -105,9 +106,7 @@ function UploadView({
         <div
           className={`flex flex-[1_0_0] flex-col font-inter font-normal h-[32px] justify-center leading-[0] min-h-px min-w-px relative text-[length:var(--sizing-350,14px)] ${descriptionTextColor}`}
         >
-          <p className="leading-[20px] whitespace-pre-wrap">
-            Add images, PDFs, and other files to the policy
-          </p>
+          <p className="leading-[20px] whitespace-pre-wrap">{hintText}</p>
         </div>
       </div>
     </div>

@@ -50,11 +50,16 @@ export function buildPublishPayload(
     return { ok: false, error: "missingCommunityName" };
   }
 
-  let summary: string | undefined;
-  if (typeof state.summary === "string") {
-    const t = state.summary.trim();
-    if (t.length > 0) summary = t;
-  }
+  const firstNonEmpty = (...candidates: unknown[]): string | undefined => {
+    for (const c of candidates) {
+      if (typeof c !== "string") continue;
+      const t = c.trim();
+      if (t.length > 0) return t;
+    }
+    return undefined;
+  };
+
+  let summary = firstNonEmpty(state.summary, state.communityContext);
 
   let sections = parseSectionsFromCreateFlowState(state);
   if (sections.length === 0) {

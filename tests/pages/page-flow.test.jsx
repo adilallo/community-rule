@@ -94,9 +94,7 @@ describe("Page Flow Integration", () => {
     ).toBeInTheDocument();
 
     // Rule Stack section
-    expect(
-      screen.getByRole("heading", { name: "Consensus clusters" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Circles" })).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Elected Board" }),
     ).toBeInTheDocument();
@@ -177,16 +175,19 @@ describe("Page Flow Integration", () => {
     expect(sectionNumbers.length).toBeGreaterThan(0);
   });
 
-  test("rule stack displays all four governance types", async () => {
+  test("rule stack shows four featured templates and link to full catalog", async () => {
     render(<Page />);
 
-    // Wait for dynamically imported RuleStack component
     await waitFor(() => {
-      expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
+      expect(screen.getByText("Circles")).toBeInTheDocument();
     });
+    expect(screen.queryByText("Solidarity Network")).not.toBeInTheDocument();
     expect(screen.getByText("Elected Board")).toBeInTheDocument();
     expect(screen.getByText("Consensus")).toBeInTheDocument();
     expect(screen.getByText("Petition")).toBeInTheDocument();
+
+    const seeAll = screen.getByRole("link", { name: "See all templates" });
+    expect(seeAll).toHaveAttribute("href", "/templates");
 
     // Check that create rule button is present
     const createButton = screen.getByRole("button", {
@@ -253,7 +254,7 @@ describe("Page Flow Integration", () => {
     expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
 
     // 3. Rule types show different governance options
-    expect(screen.getByText("Consensus clusters")).toBeInTheDocument();
+    expect(screen.getByText("Circles")).toBeInTheDocument();
 
     // 4. Features highlight benefits
     expect(

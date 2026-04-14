@@ -190,7 +190,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 **Implementation:**
 
 1. **Hydration:** **Done:** [SignedInDraftHydration](app/create/SignedInDraftHydration.tsx) + [messages/en/create/draftHydration.json](messages/en/create/draftHydration.json); skips `?syncDraft=1` / transfer-pending (PostLogin owns that). Wired in [layout](app/create/layout.tsx).
-2. **Conflict:** **Done:** If `create-flow-anonymous` and server draft are both non-empty, `window.confirm` (OK = account draft, Cancel = browser copy); documented on [anonymousDraftStorage](app/create/anonymousDraftStorage.ts). Newer-`updatedAt` client compare remains optional.
+2. **Conflict:** **Done:** If `create-flow-anonymous` and server draft are both non-empty, `window.confirm` (OK = account draft, Cancel = browser copy); documented on [anonymousDraftStorage](app/create/utils/anonymousDraftStorage.ts). Newer-`updatedAt` client compare remains optional.
 3. **Save failures (API surface):** **Done (CR-76):** [saveDraftToServer](lib/create/api.ts) returns `SaveDraftResult` with parsed API `message`; wired in [useCreateFlowExit](app/create/hooks/useCreateFlowExit.ts) and [PostLoginDraftTransfer](app/create/PostLoginDraftTransfer.tsx).
 4. **Save failures (UX):** **Done (CR-76):** Dismissible banner with server `message` (no second confirm to leave); post-login transfer shows reason; unit tests in `tests/unit/saveDraftToServer.test.ts`. Retry/backoff remains optional.
 5. **Tests:** `saveDraftToServer` unit tests; [draftHydrationUtils](lib/create/draftHydrationUtils.ts) unit tests. Playwright against Next standalone + route mocks for `/api/auth/session` was flaky here; cover hydration with **manual QA** (signed in + sync on + server draft) or add a future E2E with a dedicated auth fixture.
@@ -210,7 +210,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Completing the flow persists a **PublishedRule** via existing [publishRule](lib/create/api.ts).
 
-**Context:** [lib/create/api.ts](lib/create/api.ts) already wraps `POST /api/rules`. UI on [app/create/final-review/page.tsx](app/create/final-review/page.tsx) or [completed/page.tsx](app/create/completed/page.tsx) must call it with `{ title, summary?, document }` derived from `CreateFlowState`.
+**Context:** [lib/create/api.ts](lib/create/api.ts) already wraps `POST /api/rules`. UI on the `final-review` / `completed` steps (see [app/create/screens/CreateFlowScreenView.tsx](app/create/screens/CreateFlowScreenView.tsx) and `app/create/screens/`) must call it with `{ title, summary?, document }` derived from `CreateFlowState`.
 
 **Implementation:**
 
@@ -258,7 +258,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Home or create entry surfaces use live template data instead of only static i18n JSON.
 
-**Context:** [RuleStack.view.tsx](app/components/sections/RuleStack/RuleStack.view.tsx) and [app/create/[step]/page.tsx](app/create/[step]/page.tsx) placeholders reference future template work (CR-51–55).
+**Context:** [RuleStack.view.tsx](app/components/sections/RuleStack/RuleStack.view.tsx) and create entry surfaces reference future template work. Wizard URLs are static segments under `app/create/`; see [`docs/create-flow.md`](create-flow.md) and **Ticket 17** for the canonical custom flow.
 
 **Implementation:**
 
@@ -271,7 +271,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [ ] Changing a template row in Prisma Studio reflects after refresh (or revalidate).
 - [ ] No layout shift regression on LCP-critical pages (use skeletons).
 
-**Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), [app/create/[step]/page.tsx](app/create/[step]/page.tsx) or related, possibly new `lib/templates/fetchTemplates.ts`.
+**Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), create-flow entry routes under [app/create/](app/create/), possibly new `lib/templates/fetchTemplates.ts`.
 
 **Follow-up:** **Ticket 16** — dynamic recommendations from authoring spreadsheets and create-flow answers.
 
@@ -302,6 +302,37 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 **Files (expected):** `prisma/schema.prisma`, `lib/templates/*` or `scripts/import-templates-xlsx.ts`, `app/api/templates/*`, create-flow pages, tests.
 
 **Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) (**Backlog**). **Parallel** to much of the core chain; **blocked** only by having **CR-78**/**CR-79** far enough along that a template list exists (or stub rows).
+
+---
+
+## Ticket 17 — Canon custom create-rule wizard (routes, resume, progress) + docs
+
+**Depends on:** none for documentation; soft optional **CR-73**, **CR-76**, **CR-77** for payload/resume/publish alignment.
+
+**Goal:** Establish the **official custom** create-rule flow (ordered steps, URLs, persistence, entry points, **Figma three-stage framing**) in repo docs and close gaps between that spec and the implementation (routing clutter, progress UI, step source of truth, resume vs URL).
+
+**Context:** Step order lives in [`app/create/utils/flowSteps.ts`](app/create/utils/flowSteps.ts). Wizard screens render from [`app/create/[screenId]/page.tsx`](app/create/[screenId]/page.tsx) plus [`CREATE_FLOW_SCREEN_REGISTRY`](app/create/utils/createFlowScreenRegistry.ts) (Figma node + layout family per slug). [`docs/create-flow.md`](create-flow.md) is the **canonical** URL/persistence summary: **Create Community** (eight semantic steps ending at `review`) → **Create Custom CommunityRule** → **Review and complete**. **Full create-from-template** will likely use **additional route(s)** when product defines it; **`/create/review-template/[slug]`** remains auxiliary preview only. **Template → `final-review` or mid-wizard prefill** is **out of scope** here (future ticket); `/create/informational?template=` is a **no-op** until then.
+
+**Implementation:**
+
+1. Keep [`docs/create-flow.md`](create-flow.md) in sync with product/Figma (stage ↔ step mapping, future template routes).
+2. ~~Remove legacy [`app/create/[step]/page.tsx`](app/create/[step]/page.tsx)~~ — replaced by [`app/create/[screenId]/page.tsx`](app/create/[screenId]/page.tsx) with real screens; unknown slugs `notFound()`.
+3. Unify **step source of truth**: URL via [`useCreateFlowNavigation`](app/create/hooks/useCreateFlowNavigation.ts) vs unused [`CreateFlowContext`](app/create/context/CreateFlowContext.tsx) `currentStep` — pick one model; align [`useCreateFlowExit`](app/create/hooks/useCreateFlowExit.ts) / draft payload if needed.
+4. **Resume:** After [`SignedInDraftHydration`](app/create/SignedInDraftHydration.tsx), decide redirect to `/create/${state.currentStep}` vs stay on current URL; test or document.
+5. Wire [`CreateFlowFooter`](app/components/utility/CreateFlowFooter/) `ProportionBar` to step progress from `FLOW_STEP_ORDER` (and `review-template` / `completed` exceptions per design); optional **two-level progress** (stage + step within stage) when design specifies.
+6. When Figma hands off, surface **stage labels** in create shell (top nav, footer, or step chrome) using the mapping in `create-flow.md`.
+
+**Acceptance criteria:**
+
+- [ ] [`docs/create-flow.md`](create-flow.md) matches shipped behavior or lists known gaps, including **Figma three-stage** mapping and **future template route** note.
+- [ ] No misleading dynamic step placeholder for valid wizard URLs.
+- [ ] Footer progress reflects step index **or** doc/issue records a deliberate deferral with design sign-off.
+- [ ] Hydration + `currentStep` behavior is verified (redirect vs stay).
+- [ ] `?template=` documented as deferred; no implied “template customize → full wizard” parity.
+
+**Files:** [`docs/create-flow.md`](create-flow.md), [`app/create/`](app/create/), [`app/components/utility/CreateFlowFooter/`](app/components/utility/CreateFlowFooter/), optionally [`docs/backend-roadmap.md`](backend-roadmap.md) §12 cross-links.
+
+**Linear:** [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) (**Backlog**). **Parallel** to templates (7–8) and publish (6); not part of **CR-72 → CR-83**.
 
 ---
 
@@ -509,14 +540,15 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
 |    16 | 16     | Template matrix + xlsx ingestion  |
+|    17 | 17     | Canon create-flow (custom path)     |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), not in the CR-72–83 sequence.
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), not in the CR-72–83 sequence.
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -536,6 +568,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup             |
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |
 |         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion        |
+|         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) |
 
 ---
 

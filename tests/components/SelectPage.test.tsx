@@ -1,29 +1,21 @@
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import SelectPage from "../../app/create/select/page";
+import { CommunitySizeSelectScreen } from "../../app/create/screens/select/CommunitySizeSelectScreen";
 
-describe("SelectPage", () => {
+describe("CommunitySizeSelectScreen", () => {
   it("renders HeaderLockup title", () => {
-    render(<SelectPage />);
+    render(<CommunitySizeSelectScreen />);
     expect(
       screen.getByRole("heading", {
-        name: "What is your community called?",
+        name: "How many people will be in your community in the near term?",
       }),
     ).toBeInTheDocument();
   });
 
-  it("renders MultiSelect add control", () => {
-    render(<SelectPage />);
-    const addButtons = screen.getAllByRole("button", {
-      name: "Add organization type",
-    });
-    expect(addButtons.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("renders preset chip labels", () => {
-    render(<SelectPage />);
+  it("renders preset size chips", () => {
+    render(<CommunitySizeSelectScreen />);
     expect(screen.getByText("1 member")).toBeInTheDocument();
-    expect(screen.getByText("Non-profit")).toBeInTheDocument();
+    expect(screen.getByText("2-5 members")).toBeInTheDocument();
   });
 });

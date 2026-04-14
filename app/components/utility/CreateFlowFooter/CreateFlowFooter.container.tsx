@@ -5,11 +5,20 @@ import { CreateFlowFooterView } from "./CreateFlowFooter.view";
 import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
 
 const CreateFlowFooterContainer = memo<CreateFlowFooterProps>(
-  ({ secondButton, progressBar = true, onBackClick, className = "" }) => {
+  ({
+    secondButton,
+    progressBar = true,
+    proportionBarProgress,
+    proportionBarVariant,
+    onBackClick,
+    className = "",
+  }) => {
     return (
       <CreateFlowFooterView
         secondButton={secondButton}
         progressBar={progressBar}
+        proportionBarProgress={proportionBarProgress}
+        proportionBarVariant={proportionBarVariant}
         onBackClick={onBackClick}
         className={className}
       />

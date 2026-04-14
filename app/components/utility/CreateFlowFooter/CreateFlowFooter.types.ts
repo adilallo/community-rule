@@ -1,3 +1,8 @@
+import type {
+  ProportionBarState,
+  ProportionBarVariant,
+} from "../../progress/ProportionBar/ProportionBar.types";
+
 /**
  * Type definitions for CreateFlowFooter component
  *
@@ -13,6 +18,16 @@ export interface CreateFlowFooterProps {
    * @default true
    */
   progressBar?: boolean;
+  /**
+   * `ProportionBar` state when the bar is shown (driven by create-flow step).
+   * @default "1-0"
+   */
+  proportionBarProgress?: ProportionBarState;
+  /**
+   * `ProportionBar` layout variant (Figma create-flow footer uses `segmented`).
+   * @default "default"
+   */
+  proportionBarVariant?: ProportionBarVariant;
   /**
    * Callback function for Back button click
    */

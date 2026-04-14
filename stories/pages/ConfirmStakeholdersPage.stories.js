@@ -1,8 +1,8 @@
-import ConfirmStakeholdersPage from "../../app/create/confirm-stakeholders/page";
+import { ConfirmStakeholdersScreen } from "../../app/create/screens/select/ConfirmStakeholdersScreen";
 
 export default {
   title: "Pages/Create Flow/Confirm stakeholders",
-  component: ConfirmStakeholdersPage,
+  component: ConfirmStakeholdersScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

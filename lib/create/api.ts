@@ -1,4 +1,5 @@
 import type { CreateFlowState } from "../../app/create/types";
+import { migrateLegacyCreateFlowState } from "./migrateLegacyCreateFlowState";
 
 const jsonHeaders = { "Content-Type": "application/json" };
 
@@ -77,7 +78,9 @@ export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   if (!data.draft?.payload || typeof data.draft.payload !== "object") {
     return null;
   }
-  return data.draft.payload as CreateFlowState;
+  return migrateLegacyCreateFlowState(
+    data.draft.payload as Record<string, unknown>,
+  );
 }
 
 const DRAFT_SAVE_NETWORK_ERROR =

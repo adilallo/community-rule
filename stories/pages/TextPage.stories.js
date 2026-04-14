@@ -1,35 +1,15 @@
-import TextPage from "../../app/create/text/page";
+import { CreateFlowTextFieldScreen } from "../../app/create/screens/text/CreateFlowTextFieldScreen";
 
 export default {
-  title: "Pages/Create Flow/Text",
-  component: TextPage,
-  parameters: {
-    layout: "fullscreen",
-    docs: {
-      description: {
-        component:
-          "Community name step: HeaderLockup + TextInput. Responsive sizing at 640px.",
-      },
-    },
-  },
-  decorators: [
-    (Story) => (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Story />
-      </div>
-    ),
-  ],
-  tags: ["autodocs"],
+  title: "Pages/Create/CommunityName",
+  component: CreateFlowTextFieldScreen,
+  parameters: { layout: "fullscreen" },
 };
 
-export const Desktop = {
-  parameters: {
-    viewport: { defaultViewport: "desktop" },
-  },
-};
-
-export const Mobile = {
-  parameters: {
-    viewport: { defaultViewport: "mobile1" },
+export const Default = {
+  args: {
+    messageNamespace: "create.communityName",
+    stateField: "title",
+    maxLength: 48,
   },
 };

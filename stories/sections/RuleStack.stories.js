@@ -1,8 +1,44 @@
+import React from "react";
 import RuleStack from "../../app/components/sections/RuleStack";
+import { GOVERNANCE_TEMPLATE_CATALOG } from "../../lib/templates/governanceTemplateCatalog";
+
+function buildStoryTemplatesPayload() {
+  return GOVERNANCE_TEMPLATE_CATALOG.map((c, i) => ({
+    id: `story-${c.slug}`,
+    slug: c.slug,
+    title: c.title,
+    category: "Governance pattern",
+    description: c.description,
+    body: { sections: [] },
+    sortOrder: i,
+    featured: i < 4,
+  }));
+}
+
+function withMockTemplatesApi(Story) {
+  React.useLayoutEffect(() => {
+    const prev = global.fetch;
+    global.fetch = async (input, init) => {
+      const url = typeof input === "string" ? input : input.url;
+      if (String(url).includes("/api/templates")) {
+        return new Response(
+          JSON.stringify({ templates: buildStoryTemplatesPayload() }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }
+      return prev(input, init);
+    };
+    return () => {
+      global.fetch = prev;
+    };
+  }, []);
+  return <Story />;
+}
 
 export default {
   title: "Components/Sections/RuleStack",
   component: RuleStack,
+  decorators: [withMockTemplatesApi],
   parameters: {
     layout: "fullscreen",
     docs: {

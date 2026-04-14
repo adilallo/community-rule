@@ -1,8 +1,8 @@
-import CompletedPage from "../../app/create/completed/page";
+import { CompletedScreen } from "../../app/create/screens/completed/CompletedScreen";
 
 export default {
   title: "Pages/Create Flow/Completed",
-  component: CompletedPage,
+  component: CompletedScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

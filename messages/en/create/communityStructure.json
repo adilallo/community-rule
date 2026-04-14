@@ -1,0 +1,38 @@
+{
+  "header": {
+    "title": "What kind of community would you like to improve?",
+    "description": "Choose tags the describe your community. You can also combine or add new values to the list."
+  },
+  "organizationMultiSelect": {
+    "label": "Organization Type",
+    "addButtonText": "Add organization type"
+  },
+  "scaleMultiSelect": {
+    "label": "Scale",
+    "addButtonText": "Add scale"
+  },
+  "maturityMultiSelect": {
+    "label": "Maturity",
+    "addButtonText": "Add maturity"
+  },
+  "organizationTypes": [
+    { "label": "Worker’s coop" },
+    { "label": "Mutual aid" },
+    { "label": "Open source project" },
+    { "label": "Nonprofit" },
+    { "label": "For profit business" },
+    { "label": "DAO" }
+  ],
+  "scaleOptions": [
+    { "label": "Local" },
+    { "label": "Regional" },
+    { "label": "National" },
+    { "label": "Global" }
+  ],
+  "maturityOptions": [
+    { "label": "Early stage" },
+    { "label": "Growth stage" },
+    { "label": "Established" },
+    { "label": "Enterprise" }
+  ]
+}

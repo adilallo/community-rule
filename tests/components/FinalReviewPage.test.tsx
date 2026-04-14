@@ -6,7 +6,7 @@ import {
   waitFor,
 } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import FinalReviewPage from "../../app/create/final-review/page";
+import { FinalReviewScreen } from "../../app/create/screens/review/FinalReviewScreen";
 import { useCreateFlow } from "../../app/create/context/CreateFlowContext";
 
 const FALLBACK_CARD_TITLE = "Your community";
@@ -24,17 +24,17 @@ function FinalReviewWithFlowState({
   useLayoutEffect(() => {
     replaceState({ title, ...(summary !== undefined ? { summary } : {}) });
   }, [replaceState, title, summary]);
-  return <FinalReviewPage />;
+  return <FinalReviewScreen />;
 }
 
-describe("FinalReviewPage", () => {
+describe("FinalReviewScreen", () => {
   it("renders without crashing", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 
-  it("renders HeaderLockup with expected title", () => {
-    render(<FinalReviewPage />);
+  it("renders lockup title", () => {
+    render(<FinalReviewScreen />);
     expect(
       screen.getByRole("heading", {
         name: "Review your CommunityRule",
@@ -42,8 +42,8 @@ describe("FinalReviewPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders HeaderLockup with expected description", () => {
-    render(<FinalReviewPage />);
+  it("renders lockup description", () => {
+    render(<FinalReviewScreen />);
     expect(
       screen.getByText(
         /Here's what other people will see. Make sure everything looks good before you finalize everything. Once the rule is finalized, you must use one of your decision-making mechanisms to edit it again./i,
@@ -52,12 +52,12 @@ describe("FinalReviewPage", () => {
   });
 
   it("renders RuleCard with fallback title when context has no name", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     expect(screen.getByText(FALLBACK_CARD_TITLE)).toBeInTheDocument();
   });
 
   it("renders RuleCard with fallback description when context has no summary", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     expect(
       screen.getByText(new RegExp(FALLBACK_CARD_DESCRIPTION_SNIPPET, "i")),
     ).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe("FinalReviewPage", () => {
   });
 
   it("renders RuleCard as a button (card is interactive)", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);
     expect(
@@ -85,7 +85,7 @@ describe("FinalReviewPage", () => {
   });
 
   it("renders expanded RuleCard with category labels", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     expect(screen.getByText("Values")).toBeInTheDocument();
     expect(screen.getByText("Communication")).toBeInTheDocument();
     expect(screen.getByText("Membership")).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe("FinalReviewPage", () => {
   });
 
   it("renders category chips", () => {
-    render(<FinalReviewPage />);
+    render(<FinalReviewScreen />);
     expect(screen.getByText("Consciousness")).toBeInTheDocument();
     expect(screen.getByText("Signal")).toBeInTheDocument();
     expect(screen.getByText("Open Admission")).toBeInTheDocument();

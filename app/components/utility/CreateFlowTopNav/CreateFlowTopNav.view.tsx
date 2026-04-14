@@ -43,10 +43,10 @@ export function CreateFlowTopNavView({
               palette={buttonPalette}
               size="xsmall"
               onClick={onShare}
-              ariaLabel="Share"
+              ariaLabel={t("shareAriaLabel")}
               className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
             >
-              Share
+              {t("share")}
             </Button>
           )}
 
@@ -56,10 +56,10 @@ export function CreateFlowTopNavView({
               palette={buttonPalette}
               size="xsmall"
               onClick={onExport}
-              ariaLabel="Export"
+              ariaLabel={t("exportAriaLabel")}
               className="justify-center gap-[var(--spacing-scale-002,2px)] !pl-[var(--spacing-scale-012,12px)] !pr-[var(--spacing-scale-006,6px)] md:!pr-[var(--spacing-scale-006,6px)] !text-[10px] md:!text-[12px] !leading-[12px] md:!leading-[14px] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
             >
-              <span>Export</span>
+              <span>{t("export")}</span>
               <svg
                 width="12"
                 height="12"
@@ -83,10 +83,10 @@ export function CreateFlowTopNavView({
               palette={buttonPalette}
               size="xsmall"
               onClick={onEdit}
-              ariaLabel="Edit"
+              ariaLabel={t("editAriaLabel")}
               className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
             >
-              Edit
+              {t("edit")}
             </Button>
           )}
 

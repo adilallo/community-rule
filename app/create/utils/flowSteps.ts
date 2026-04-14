@@ -2,6 +2,8 @@
  * Step definitions and helpers for the Create Rule Flow
  *
  * Single source of truth for step order and navigation helpers.
+ * Order matches Figma Create Community (frames 1–8) then later stages.
+ * `community-structure` precedes `community-context` and `community-size` (Figma frame 3 vs 5 swap).
  */
 
 import type { CreateFlowStep } from "../types";
@@ -11,9 +13,12 @@ import type { CreateFlowStep } from "../types";
  */
 export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
   "informational",
-  "text",
-  "select",
-  "upload",
+  "community-name",
+  "community-structure",
+  "community-context",
+  "community-size",
+  "community-upload",
+  "community-save",
   "review",
   "cards",
   "right-rail",
@@ -74,4 +79,24 @@ export function isValidStep(
     typeof step === "string" &&
     (VALID_STEPS as readonly string[]).includes(step)
   );
+}
+
+/**
+ * Parses `/create/{screenId}` (and optional trailing segments) from pathname.
+ * Returns null for non-wizard paths (e.g. `/create/review-template/...`).
+ */
+export function parseCreateFlowScreenFromPathname(
+  pathname: string | null,
+): CreateFlowStep | null {
+  if (!pathname || pathname.length === 0) return null;
+  if (pathname.includes("/create/review-template/")) return null;
+
+  const parts = pathname.split("/").filter(Boolean);
+  const createIdx = parts.indexOf("create");
+  if (createIdx === -1 || createIdx >= parts.length - 1) return null;
+
+  const segment = parts[createIdx + 1];
+  if (segment === "review-template") return null;
+
+  return isValidStep(segment) ? segment : null;
 }
