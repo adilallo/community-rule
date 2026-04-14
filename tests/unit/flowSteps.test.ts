@@ -46,4 +46,13 @@ describe("flowSteps", () => {
     // @ts-expect-error — invalid step id
     expect(getStepIndex("bogus")).toBe(-1);
   });
+
+  it("places community-structure before community-context and community-size (Figma order)", () => {
+    expect(getStepIndex("community-structure")).toBe(2);
+    expect(getStepIndex("community-context")).toBe(3);
+    expect(getStepIndex("community-size")).toBe(4);
+    expect(getNextStep("community-name")).toBe("community-structure");
+    expect(getNextStep("community-structure")).toBe("community-context");
+    expect(getNextStep("community-context")).toBe("community-size");
+  });
 });

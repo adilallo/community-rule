@@ -1,22 +1,38 @@
 {
   "header": {
-    "title": "How is your community organized?",
-    "description": "Select the options that best describe your group."
+    "title": "What kind of community would you like to improve?",
+    "description": "Choose tags the describe your community. You can also combine or add new values to the list."
   },
-  "multiSelect": {
-    "label": "Label",
+  "organizationMultiSelect": {
+    "label": "Organization Type",
     "addButtonText": "Add organization type"
   },
+  "scaleMultiSelect": {
+    "label": "Scale",
+    "addButtonText": "Add scale"
+  },
+  "maturityMultiSelect": {
+    "label": "Maturity",
+    "addButtonText": "Add maturity"
+  },
   "organizationTypes": [
-    { "label": "Non-profit" },
-    { "label": "For-profit" },
-    { "label": "Community" },
-    { "label": "Educational" }
+    { "label": "Worker’s coop" },
+    { "label": "Mutual aid" },
+    { "label": "Open source project" },
+    { "label": "Nonprofit" },
+    { "label": "For profit business" },
+    { "label": "DAO" }
   ],
-  "governanceStyles": [
-    { "label": "Democratic" },
-    { "label": "Consensus" },
-    { "label": "Hierarchical" },
-    { "label": "Flat" }
+  "scaleOptions": [
+    { "label": "Local" },
+    { "label": "Regional" },
+    { "label": "National" },
+    { "label": "Global" }
+  ],
+  "maturityOptions": [
+    { "label": "Early stage" },
+    { "label": "Growth stage" },
+    { "label": "Established" },
+    { "label": "Enterprise" }
   ]
 }

@@ -3,6 +3,7 @@
  *
  * Single source of truth for step order and navigation helpers.
  * Order matches Figma Create Community (frames 1–8) then later stages.
+ * `community-structure` precedes `community-context` and `community-size` (Figma frame 3 vs 5 swap).
  */
 
 import type { CreateFlowStep } from "../types";
@@ -13,11 +14,11 @@ import type { CreateFlowStep } from "../types";
 export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
   "informational",
   "community-name",
-  "community-size",
-  "community-context",
   "community-structure",
+  "community-context",
+  "community-size",
   "community-upload",
-  "community-reflection",
+  "community-save",
   "review",
   "cards",
   "right-rail",

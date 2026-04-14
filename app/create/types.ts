@@ -16,7 +16,7 @@ export type CreateFlowStep =
   | "community-context"
   | "community-structure"
   | "community-upload"
-  | "community-reflection"
+  | "community-save"
   | "review"
   | "cards"
   | "right-rail"
@@ -29,7 +29,7 @@ export type CreateFlowTextStateField =
   | "title"
   | "summary"
   | "communityContext"
-  | "communityReflection";
+  | "communitySaveEmail";
 
 /**
  * Flow state for inputs across create-flow steps.
@@ -41,13 +41,16 @@ export interface CreateFlowState {
   summary?: string;
   /** Additional copy fields for multi-step Create Community text frames (Figma). */
   communityContext?: string;
-  communityReflection?: string;
+  /** Email collected on the “Save your progress” step (Figma Flow — Text `20097:14948`). */
+  communitySaveEmail?: string;
   /** Selected chip ids from `community-size` (MultiSelect). */
   selectedCommunitySizeIds?: string[];
   /** Selected chip ids from `community-structure` (organization types). */
   selectedOrganizationTypeIds?: string[];
-  /** Selected chip ids from `community-structure` (governance styles). */
-  selectedGovernanceStyleIds?: string[];
+  /** Selected chip ids from `community-structure` (scale). */
+  selectedScaleIds?: string[];
+  /** Selected chip ids from `community-structure` (maturity). */
+  selectedMaturityIds?: string[];
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

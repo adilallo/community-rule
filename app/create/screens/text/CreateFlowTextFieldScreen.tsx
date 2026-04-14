@@ -1,18 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type HTMLInputTypeAttribute } from "react";
 import TextInput from "../../../components/controls/TextInput";
+import type { HeaderLockupJustificationValue } from "../../../components/type/HeaderLockup/HeaderLockup.types";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
-import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import {
+  CreateFlowStepShell,
+  type CreateFlowContentTopBelowMd,
+} from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 import type { CreateFlowTextStateField } from "../../types";
 
 type Props = {
   messageNamespace: string;
   stateField: CreateFlowTextStateField;
   maxLength: number;
+  /** Figma Flow — Text (`20094:41243`): main column `items-center` + horizontal padding token. */
+  mainAlign?: "start" | "center";
+  inputType?: HTMLInputTypeAttribute;
+  showCharacterCount?: boolean;
+  headerJustification?: HeaderLockupJustificationValue;
+  /** Top spacing under top chrome (`CreateFlowStepShell` / `CreateFlowContentTopBelowMd`). */
+  contentTopBelowMd?: CreateFlowContentTopBelowMd;
 };
 
 /**
@@ -22,6 +34,11 @@ export function CreateFlowTextFieldScreen({
   messageNamespace,
   stateField,
   maxLength,
+  mainAlign = "start",
+  inputType = "text",
+  showCharacterCount = true,
+  headerJustification = "left",
+  contentTopBelowMd = "space-1400",
 }: Props) {
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
   const mdUp = useCreateFlowMdUp();
@@ -42,20 +59,35 @@ export function CreateFlowTextFieldScreen({
   }, [state, stateField]);
 
   const characterCount = value.length;
-  const hint = t("characterCountTemplate")
-    .replace("{current}", String(characterCount))
-    .replace("{max}", String(maxLength));
+  const hint =
+    showCharacterCount === false
+      ? false
+      : t("characterCountTemplate")
+          .replace("{current}", String(characterCount))
+          .replace("{max}", String(maxLength));
+
+  const mainItems =
+    mainAlign === "center" ? "items-center" : "items-start";
 
   return (
-    <CreateFlowStepShell variant="centeredNarrow">
-      <div className="flex w-full max-w-[640px] flex-col items-start gap-[18px]">
-        <CreateFlowHeaderLockup
-          title={t("title")}
-          description={t("description")}
-          justification="left"
-        />
+    <CreateFlowStepShell
+      variant="centeredNarrow"
+      contentTopBelowMd={contentTopBelowMd}
+    >
+      <div
+        className={`flex flex-col gap-[18px] ${mainItems} ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+      >
+        <div className="w-full">
+          <CreateFlowHeaderLockup
+            title={t("title")}
+            description={t("description")}
+            justification={headerJustification}
+          />
+        </div>
         <div className="w-full">
           <TextInput
+            className="!transition-none"
+            type={inputType}
             placeholder={t("placeholder")}
             value={value}
             onChange={(e) => {

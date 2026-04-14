@@ -20,6 +20,7 @@ componentTestSuite<UploadProps>({
     label: "Upload",
     active: true,
     showHelpIcon: true,
+    hintText: "Add image from your device",
   },
   primaryRole: "button",
   testCases: {
@@ -81,14 +82,14 @@ describe("Upload (behavioral tests)", () => {
   it("displays description text", () => {
     render(<Upload label="Upload" />);
     expect(
-      screen.getByText(/Add images, PDFs, and other files to the policy/i),
+      screen.getByText(/Add image from your device/i),
     ).toBeInTheDocument();
   });
 
   it("applies active state styles correctly", () => {
     render(<Upload label="Upload" active={true} />);
     const descriptionText = screen.getByText(
-      /Add images, PDFs, and other files to the policy/i,
+      /Add image from your device/i,
     );
     const descriptionContainer = descriptionText.parentElement;
     expect(descriptionContainer).toHaveClass(
@@ -99,7 +100,7 @@ describe("Upload (behavioral tests)", () => {
   it("applies inactive state styles correctly", () => {
     render(<Upload label="Upload" active={false} />);
     const descriptionText = screen.getByText(
-      /Add images, PDFs, and other files to the policy/i,
+      /Add image from your device/i,
     );
     const descriptionContainer = descriptionText.parentElement;
     expect(descriptionContainer).toHaveClass(

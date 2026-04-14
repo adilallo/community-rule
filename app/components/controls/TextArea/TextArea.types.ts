@@ -92,7 +92,7 @@ export interface TextAreaViewProps {
   handleChange: (_e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleFocus: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
   handleBlur: (_e: React.FocusEvent<HTMLTextAreaElement>) => void;
-  textHint?: boolean;
+  textHint?: boolean | string;
   formHeader?: boolean;
   showHelpIcon?: boolean;
   appearance?: "default" | "embedded";

@@ -35,6 +35,7 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
   CreateFlowStep,
   CreateFlowScreenDefinition
 > = {
+  /** Figma: Flow — Informational (node 20094-16005). */
   informational: {
     layoutKind: "informational",
     figmaNodeId: "20094-16005",
@@ -49,7 +50,7 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
   },
   "community-size": {
     layoutKind: "select",
-    figmaNodeId: "20094-18244",
+    figmaNodeId: "20094-41317",
     messageNamespace: "create.communitySize",
     centeredBodyBelowMd: false,
   },
@@ -61,7 +62,7 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
   },
   "community-structure": {
     layoutKind: "select",
-    figmaNodeId: "20094-41317",
+    figmaNodeId: "20094-18244",
     messageNamespace: "create.communityStructure",
     centeredBodyBelowMd: false,
   },
@@ -71,10 +72,10 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
     messageNamespace: "create.communityUpload",
     centeredBodyBelowMd: false,
   },
-  "community-reflection": {
+  "community-save": {
     layoutKind: "text",
     figmaNodeId: "20097-14948",
-    messageNamespace: "create.communityReflection",
+    messageNamespace: "create.communitySave",
     centeredBodyBelowMd: true,
   },
   review: {

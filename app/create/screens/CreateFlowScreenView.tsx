@@ -33,26 +33,31 @@ export function CreateFlowScreenView({
           maxLength={48}
         />
       );
-    case "community-size":
-      return <CommunitySizeSelectScreen />;
+    case "community-structure":
+      return <CommunityStructureSelectScreen />;
     case "community-context":
       return (
         <CreateFlowTextFieldScreen
           messageNamespace="create.communityContext"
           stateField="communityContext"
-          maxLength={2000}
+          maxLength={48}
+          mainAlign="center"
         />
       );
-    case "community-structure":
-      return <CommunityStructureSelectScreen />;
+    case "community-size":
+      return <CommunitySizeSelectScreen />;
     case "community-upload":
       return <CommunityUploadScreen />;
-    case "community-reflection":
+    case "community-save":
       return (
         <CreateFlowTextFieldScreen
-          messageNamespace="create.communityReflection"
-          stateField="communityReflection"
-          maxLength={2000}
+          messageNamespace="create.communitySave"
+          stateField="communitySaveEmail"
+          maxLength={254}
+          mainAlign="center"
+          inputType="email"
+          showCharacterCount={false}
+          headerJustification="center"
         />
       );
     case "review":

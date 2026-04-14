@@ -1,19 +1,13 @@
 {
   "header": {
-    "title": "How large is your community?",
-    "description": "Choose the size that best matches your group."
-  },
-  "multiSelect": {
-    "label": "Label",
-    "addButtonText": "Add organization type"
+    "title": "How many people will be in your community in the near term?",
+    "description": "Choose how many people you think will be in your community in the next year or two. Your selection here will determine what governance patterns are recommended later in the process."
   },
   "communitySizes": [
     { "label": "1 member" },
-    { "label": "2-10 members" },
-    { "label": "10-24 members" },
-    { "label": "24-64 members" },
-    { "label": "64-128 members" },
-    { "label": "125-1000 members" },
-    { "label": "1000+ members" }
+    { "label": "2-5 members" },
+    { "label": "6-12 members" },
+    { "label": "13-100 members" },
+    { "label": "100-100,000 members" }
   ]
 }

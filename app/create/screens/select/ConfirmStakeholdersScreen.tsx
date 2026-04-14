@@ -8,6 +8,7 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 
 export function ConfirmStakeholdersScreen() {
   const { markCreateFlowInteraction } = useCreateFlow();
@@ -50,7 +51,9 @@ export function ConfirmStakeholdersScreen() {
         variant="centeredNarrowBottomPad"
         contentTopBelowMd="space-1400"
       >
-        <div className="flex w-full max-w-[640px] flex-col items-start gap-[var(--measures-spacing-300,12px)]">
+        <div
+          className={`flex flex-col items-start gap-[var(--measures-spacing-300,12px)] ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           <div className="flex w-full flex-col gap-[var(--measures-spacing-200,8px)] py-[12px]">
             <CreateFlowHeaderLockup
               title={t("title")}

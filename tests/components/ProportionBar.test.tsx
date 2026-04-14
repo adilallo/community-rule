@@ -22,6 +22,7 @@ const config: ComponentTestSuiteConfig<ProportionBarProps> = {
   optionalProps: {
     progress: "3-2",
     className: "custom-class",
+    variant: "segmented",
   },
   primaryRole: "progressbar",
   testCases: {

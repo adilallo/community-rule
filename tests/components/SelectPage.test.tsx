@@ -8,22 +8,14 @@ describe("CommunitySizeSelectScreen", () => {
     render(<CommunitySizeSelectScreen />);
     expect(
       screen.getByRole("heading", {
-        name: "How large is your community?",
+        name: "How many people will be in your community in the near term?",
       }),
     ).toBeInTheDocument();
   });
 
-  it("renders MultiSelect add control", () => {
-    render(<CommunitySizeSelectScreen />);
-    const addButtons = screen.getAllByRole("button", {
-      name: "Add organization type",
-    });
-    expect(addButtons.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("renders preset chip labels", () => {
+  it("renders preset size chips", () => {
     render(<CommunitySizeSelectScreen />);
     expect(screen.getByText("1 member")).toBeInTheDocument();
-    expect(screen.getByText("2-10 members")).toBeInTheDocument();
+    expect(screen.getByText("2-5 members")).toBeInTheDocument();
   });
 });

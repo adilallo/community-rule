@@ -31,7 +31,7 @@ describe("CreateFlowTextFieldScreen (community name)", () => {
       screen.getByText("This will be the name of your community"),
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText("Enter your community name"),
+      screen.getByPlaceholderText("Enter community name"),
     ).toBeInTheDocument();
   });
 });

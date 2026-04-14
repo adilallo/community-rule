@@ -852,3 +852,27 @@ export type ButtonStateValue =
   | "Active"
   | "Hover"
   | "Disabled";
+
+/**
+ * ProportionBar layout variant (Figma uses a segmented track in the create-flow footer).
+ */
+export type ProportionBarVariantValue =
+  | "default"
+  | "segmented"
+  | "Default"
+  | "Segmented";
+
+/**
+ * Normalize ProportionBar variant (Figma PascalCase vs codebase lowercase).
+ */
+export function normalizeProportionBarVariant(
+  value: string | undefined,
+  defaultValue: "default" | "segmented" = "default",
+): "default" | "segmented" {
+  if (!value) return defaultValue;
+  const normalized = value.toLowerCase();
+  if (normalized === "default" || normalized === "segmented") {
+    return normalized;
+  }
+  return defaultValue;
+}

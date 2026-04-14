@@ -9,6 +9,7 @@ import CardStack from "../../../components/utility/CardStack";
 import Create from "../../../components/modals/Create";
 import TextArea from "../../../components/controls/TextArea";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 
 const IN_PERSON_CARD_ID = "in-person-meetings";
 const SIGNAL_CARD_ID = "signal";
@@ -210,15 +211,15 @@ export function CardsScreen() {
       variant="wideGridLoosePadding"
       contentTopBelowMd="space-800"
     >
-      <div className="flex w-full min-w-0 flex-col gap-6">
-        <div className="min-w-0">
+      <div className="flex w-full min-w-0 flex-col items-center gap-6">
+        <div className={CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}>
           <CreateFlowHeaderLockup
             title={title}
             description={description}
             justification="center"
           />
         </div>
-        <div className="min-w-0 w-full">
+        <div className={CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}>
           <CardStack
             cards={sampleCards}
             selectedIds={selectedIds}

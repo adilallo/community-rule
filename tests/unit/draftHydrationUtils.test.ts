@@ -8,6 +8,8 @@ describe("createFlowStateHasKeys", () => {
 
   it("returns true when any key is present", () => {
     expect(createFlowStateHasKeys({ title: "x" })).toBe(true);
-    expect(createFlowStateHasKeys({ currentStep: "text" })).toBe(true);
+    expect(createFlowStateHasKeys({ currentStep: "community-name" })).toBe(
+      true,
+    );
   });
 });

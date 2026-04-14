@@ -1,44 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect, type Dispatch, type SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import MultiSelect from "../../../components/controls/MultiSelect";
 import type { ChipOption } from "../../../components/controls/MultiSelect/MultiSelect.types";
-import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
+import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
-
-function createListCustomHandlers(
-  setList: Dispatch<SetStateAction<ChipOption[]>>,
-  confirmState: "Unselected" | "Selected",
-  onInteraction?: () => void,
-) {
-  const touch = () => onInteraction?.();
-  return {
-    onAddClick: () => {
-      touch();
-      setList((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), label: "", state: "Custom" },
-      ]);
-    },
-    onCustomChipConfirm: (chipId: string, value: string) => {
-      touch();
-      setList((prev) =>
-        prev.map((opt) =>
-          opt.id === chipId
-            ? { ...opt, label: value, state: confirmState }
-            : opt,
-        ),
-      );
-    },
-    onCustomChipClose: (chipId: string) => {
-      touch();
-      setList((prev) => prev.filter((o) => o.id !== chipId));
-    },
-  };
-}
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 
 function chipRowsFromLabels(
   rows: readonly { label: string }[],
@@ -56,17 +25,16 @@ function selectedIdsFromOptions(options: ChipOption[]): string[] {
     .map((o) => o.id);
 }
 
-/** Create Community — frame 3 (Figma 20094-18244). */
+/** Create Community — Figma `20094:41317`, chips only (layout tokens shared with structure select). */
 export function CommunitySizeSelectScreen() {
   const m = useMessages();
+  const cs = m.create.communitySize;
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
-  const mdUp = useCreateFlowMdUp();
-  const t = useTranslation("create.communitySize");
 
   const [communitySizeOptions, setCommunitySizeOptions] = useState<
     ChipOption[]
   >(() => {
-    const base = chipRowsFromLabels(m.create.communitySize.communitySizes);
+    const base = chipRowsFromLabels(cs.communitySizes);
     const selected = new Set(state.selectedCommunitySizeIds ?? []);
     return base.map((opt) => ({
       ...opt,
@@ -89,16 +57,6 @@ export function CommunitySizeSelectScreen() {
       ),
     );
   }, [state.selectedCommunitySizeIds]);
-
-  const communityCustomHandlers = useMemo(
-    () =>
-      createListCustomHandlers(
-        setCommunitySizeOptions,
-        "Unselected",
-        markCreateFlowInteraction,
-      ),
-    [markCreateFlowInteraction],
-  );
 
   const persistSelection = (next: ChipOption[]) => {
     markCreateFlowInteraction();
@@ -123,18 +81,13 @@ export function CommunitySizeSelectScreen() {
     persistSelection(next);
   };
 
-  const multiLabel = t("multiSelect.label");
-  const addText = t("multiSelect.addButtonText");
-
   const multiSelectBlock = (
     <MultiSelect
-      label={multiLabel}
-      size="S"
+      formHeader={false}
+      size="M"
       options={communitySizeOptions}
       onChipClick={handleCommunitySizeClick}
-      {...communityCustomHandlers}
-      addButton={true}
-      addButtonText={addText}
+      addButton={false}
     />
   );
 
@@ -143,29 +96,22 @@ export function CommunitySizeSelectScreen() {
       variant="centeredNarrow"
       contentTopBelowMd="space-1400"
     >
-      {mdUp ? (
-        <div className="flex w-full max-w-[1280px] items-center justify-center gap-[var(--measures-spacing-1200,48px)]">
-          <div className="flex max-w-[640px] min-h-px min-w-px flex-[1_0_0] flex-col items-start justify-center gap-[var(--measures-spacing-200,8px)] py-[12px]">
-            <CreateFlowHeaderLockup
-              title={t("header.title")}
-              description={t("header.description")}
-              justification="left"
-            />
-          </div>
-          <div className="flex max-w-[640px] min-h-px min-w-px flex-[1_0_0] flex-col items-start gap-[var(--measures-spacing-800,32px)]">
-            {multiSelectBlock}
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full max-w-[640px] flex-col items-start gap-[var(--measures-spacing-400,16px)]">
+      <div className="flex w-full min-w-0 flex-col items-start gap-[var(--measures-spacing-400,16px)] md:max-w-[640px] lg:max-w-[1328px] lg:flex-row lg:flex-nowrap lg:items-center lg:justify-center lg:gap-[var(--measures-spacing-1200,48px)]">
+        <div
+          className={`flex flex-col items-start gap-[var(--measures-spacing-200,8px)] lg:flex-1 lg:justify-center lg:py-[12px] ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           <CreateFlowHeaderLockup
-            title={t("header.title")}
-            description={t("header.description")}
+            title={cs.header.title}
+            description={cs.header.description}
             justification="left"
           />
+        </div>
+        <div
+          className={`flex flex-col items-start gap-[var(--measures-spacing-800,32px)] lg:flex-1 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           {multiSelectBlock}
         </div>
-      )}
+      </div>
     </CreateFlowStepShell>
   );
 }

@@ -9,6 +9,10 @@ import { parseDocumentSectionsForDisplay } from "../../../../lib/create/buildPub
 import { readLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
+import {
+  CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
+  CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
+} from "../../components/createFlowLayoutTokens";
 
 export function CompletedScreen() {
   const mdUp = useCreateFlowMdUp();
@@ -67,8 +71,12 @@ export function CompletedScreen() {
   return (
     <>
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[var(--color-teal-teal50,#c9fef9)] md:h-full">
-        <div className="mx-auto grid min-h-0 w-full max-w-[1280px] grid-cols-1 gap-4 px-5 max-md:max-w-[639px] max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:gap-[var(--measures-spacing-1200,48px)] md:overflow-hidden md:px-12 md:py-0">
-          <div className="flex min-w-0 flex-col justify-start overflow-hidden md:justify-center md:pb-8">
+        <div
+          className={`mx-auto grid min-h-0 w-full grid-cols-1 gap-4 px-5 max-md:max-w-[639px] max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:justify-items-center md:gap-[var(--measures-spacing-1200,48px)] md:overflow-hidden md:px-12 md:py-0 ${CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS}`}
+        >
+          <div
+            className={`flex flex-col justify-start overflow-hidden md:justify-center md:pb-8 ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
+          >
             <CreateFlowHeaderLockup
               title={headerTitle}
               description={headerDescription}
@@ -77,12 +85,14 @@ export function CompletedScreen() {
               palette="inverse"
             />
           </div>
-          <div className="scrollbar-hide relative flex min-h-0 min-w-0 flex-col overflow-x-hidden md:overflow-y-auto">
+          <div
+            className={`scrollbar-hide relative flex min-h-0 flex-col overflow-x-hidden md:overflow-y-auto ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
+          >
             <div
               className="pointer-events-none sticky top-0 z-10 hidden h-5 shrink-0 bg-gradient-to-b from-[var(--color-teal-teal50,#c9fef9)]/55 from-0% via-[var(--color-teal-teal50,#c9fef9)]/20 via-50% to-transparent md:block"
               aria-hidden
             />
-            <div className="min-w-0 py-0 md:pb-8">
+            <div className="w-full min-w-0 py-0 md:pb-8">
               <CommunityRuleDocument
                 sections={documentSections}
                 useCardStyle={!mdUp}

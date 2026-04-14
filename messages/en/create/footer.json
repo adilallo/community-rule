@@ -1,5 +1,14 @@
 {
   "next": "Next",
+  "saveLater": "Save Later",
+  "submitEmail": "Submit Email",
+  "submitEmailSending": "Sending link…",
+  "createCustom": "Create custom",
+  "createFromTemplate": "Create from template",
+  "confirmName": "Confirm name",
+  "confirmDetails": "Confirm details",
+  "confirmDescription": "Confirm description",
+  "confirmMembers": "Confirm members",
   "finalizeCommunityRule": "Finalize CommunityRule",
   "confirmStakeholders": "Confirm Stakeholders"
 }

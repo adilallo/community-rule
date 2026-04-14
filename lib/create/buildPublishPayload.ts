@@ -59,11 +59,7 @@ export function buildPublishPayload(
     return undefined;
   };
 
-  let summary = firstNonEmpty(
-    state.summary,
-    state.communityContext,
-    state.communityReflection,
-  );
+  let summary = firstNonEmpty(state.summary, state.communityContext);
 
   let sections = parseSectionsFromCreateFlowState(state);
   if (sections.length === 0) {

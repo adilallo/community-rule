@@ -43,17 +43,18 @@ function HeaderLockupView({
       </div>
 
       {/* Description */}
-      {description && (
-        <p
-          className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
-            isLeft ? "" : "text-center"
-          } ${
-            isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
-          }`}
-        >
-          {description}
-        </p>
-      )}
+      {description != null &&
+        !(typeof description === "string" && description.length === 0) && (
+          <p
+            className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
+              isLeft ? "" : "text-center"
+            } ${
+              isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
+            }`}
+          >
+            {description}
+          </p>
+        )}
     </div>
   );
 }

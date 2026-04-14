@@ -1,0 +1,9 @@
+{
+  "title": "Save your progress",
+  "description": "We need your email to save your CommunityRule progress\nand make it accessible to you later.",
+  "placeholder": "email@domain.com",
+  "characterCountTemplate": "{current}/{max}",
+  "magicLinkSuccessTitle": "Check your email to log in!",
+  "magicLinkSuccessDescription": "Your account is created, now just check your email for a magic link",
+  "magicLinkErrorTitle": "Could not send link"
+}

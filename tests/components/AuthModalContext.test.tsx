@@ -57,7 +57,7 @@ function LoginTrigger() {
         onClick={() =>
           openLogin({
             variant: "saveProgress",
-            nextPath: "/create/community-size?syncDraft=1",
+            nextPath: "/create/community-structure?syncDraft=1",
           })
         }
       >
@@ -143,7 +143,7 @@ describe("AuthModalProvider (header overlay)", () => {
     await waitFor(() => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "guest@example.com",
-        "/create/community-size?syncDraft=1",
+        "/create/community-structure?syncDraft=1",
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();

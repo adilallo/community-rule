@@ -25,7 +25,7 @@ import createCommunitySize from "./create/communitySize.json";
 import createCommunityContext from "./create/communityContext.json";
 import createCommunityStructure from "./create/communityStructure.json";
 import createCommunityUpload from "./create/communityUpload.json";
-import createCommunityReflection from "./create/communityReflection.json";
+import createCommunitySave from "./create/communitySave.json";
 import createReview from "./create/review.json";
 import createConfirmStakeholders from "./create/confirmStakeholders.json";
 import createFinalReview from "./create/finalReview.json";
@@ -66,7 +66,7 @@ export default {
     communityContext: createCommunityContext,
     communityStructure: createCommunityStructure,
     communityUpload: createCommunityUpload,
-    communityReflection: createCommunityReflection,
+    communitySave: createCommunitySave,
     review: createReview,
     confirmStakeholders: createConfirmStakeholders,
     finalReview: createFinalReview,

@@ -1,17 +1,17 @@
 "use client";
 
 import Upload from "../../../components/controls/Upload";
-import { useTranslation } from "../../../contexts/MessagesContext";
+import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 
-/** Create Community — frame 6 (Figma 20094-41524). */
+/** Create Community — Figma Flow — Upload `20094:41524`. */
 export function CommunityUploadScreen() {
+  const m = useMessages();
+  const u = m.create.communityUpload;
   const { markCreateFlowInteraction } = useCreateFlow();
-  const mdUp = useCreateFlowMdUp();
-  const t = useTranslation("create.communityUpload");
 
   const handleUploadClick = () => {
     markCreateFlowInteraction();
@@ -22,16 +22,21 @@ export function CommunityUploadScreen() {
       variant="centeredNarrow"
       contentTopBelowMd="space-1400"
     >
-      <div className="flex w-full max-w-[640px] flex-col items-center gap-[18px]">
-        <CreateFlowHeaderLockup
-          title={t("title")}
-          description={t("description")}
-          justification={mdUp ? "center" : "left"}
-        />
-        <div className="w-full max-w-[474px]">
+      <div
+        className={`flex flex-col items-center gap-[18px] ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+      >
+        <div className="w-full">
+          <CreateFlowHeaderLockup
+            title={u.title}
+            description={u.description}
+            justification="center"
+          />
+        </div>
+        <div className="w-full">
           <Upload
             active={true}
-            showHelpIcon={true}
+            showHelpIcon={false}
+            hintText={u.hintText}
             onClick={handleUploadClick}
           />
         </div>

@@ -15,16 +15,14 @@ import {
   CreateFlowLockupCardStepShell,
 } from "../../components/CreateFlowLockupCardStepShell";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/**
- * Template review: same responsive grid and RuleCard chrome as final-review;
- * copy from Figma 22142-898702 (intro + dynamic card from API).
- */
+/** Template review route — same shell/grid as final-review; Figma `22142-898702`. */
 export default function ReviewTemplatePage({ params }: PageProps) {
   const { slug: rawSlug } = use(params);
   const slug = decodeURIComponent(rawSlug);
@@ -75,7 +73,9 @@ export default function ReviewTemplatePage({ params }: PageProps) {
   if (loading) {
     return (
       <CreateFlowStepShell variant="wideGrid" contentTopBelowMd="space-800">
-        <div className="flex w-full shrink-0 items-center justify-start pb-16">
+        <div
+          className={`flex shrink-0 items-center justify-start pb-16 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           <p className="text-[var(--color-content-default-secondary,#a3a3a3)]">
             {t("loading")}
           </p>
@@ -87,7 +87,9 @@ export default function ReviewTemplatePage({ params }: PageProps) {
   if (error || !template) {
     return (
       <CreateFlowStepShell variant="wideGrid" contentTopBelowMd="space-800">
-        <div className="flex w-full max-w-[640px] shrink-0 flex-col gap-4 pb-8">
+        <div
+          className={`flex shrink-0 flex-col gap-4 pb-8 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           <Alert
             type="banner"
             status="danger"

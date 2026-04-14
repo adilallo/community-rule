@@ -1,4 +1,5 @@
 import type { CreateFlowState } from "../types";
+import { migrateLegacyCreateFlowState } from "../../../lib/create/migrateLegacyCreateFlowState";
 
 /** Anonymous in-progress create flow (local only until magic-link transfer). */
 export const CREATE_FLOW_ANONYMOUS_KEY = "create-flow-anonymous" as const;
@@ -23,8 +24,10 @@ export function readAnonymousCreateFlowState(): CreateFlowState {
   try {
     const raw = window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as CreateFlowState;
-    return typeof parsed === "object" && parsed !== null ? parsed : {};
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    return typeof parsed === "object" && parsed !== null
+      ? migrateLegacyCreateFlowState(parsed)
+      : {};
   } catch {
     return {};
   }

@@ -16,6 +16,11 @@ export interface UploadProps {
    */
   showHelpIcon?: boolean;
   /**
+   * Copy beside the upload button (Figma Flow — Upload `20094:41524`).
+   * @default "Add image from your device"
+   */
+  hintText?: string;
+  /**
    * Callback when upload button is clicked
    */
   onClick?: () => void;
@@ -29,6 +34,7 @@ export interface UploadViewProps {
   active: boolean;
   label?: string;
   showHelpIcon: boolean;
+  hintText: string;
   onClick?: () => void;
   className: string;
 }

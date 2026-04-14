@@ -48,6 +48,22 @@ describe("CreateFlowFooter (behavioral tests)", () => {
       name: "Create Flow Footer",
     });
     expect(footer).toBeInTheDocument();
+    const bar = screen.getByRole("progressbar");
+    expect(bar).toHaveAttribute("aria-valuenow", String(1 / 6));
+  });
+
+  it("passes proportionBarProgress to the progress bar", () => {
+    render(
+      <CreateFlowFooter
+        progressBar={true}
+        proportionBarProgress="1-1"
+        proportionBarVariant="segmented"
+      />,
+    );
+    expect(screen.getByRole("progressbar")).toHaveAttribute(
+      "aria-valuenow",
+      String(2 / 6),
+    );
   });
 
   it("does not render progress bar when progressBar is false", () => {

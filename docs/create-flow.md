@@ -10,7 +10,7 @@ The Figma **Create Community** sequence is the **source of truth** for the first
 
 | Stage (Figma) | Purpose (summary) | `CreateFlowStep` values (in order) |
 | --- | --- | --- |
-| **Create Community** | Intro, naming, size, context, structure, upload, reflection, then community review. | `informational` → `community-name` → `community-size` → `community-context` → `community-structure` → `community-upload` → `community-reflection` → `review` |
+| **Create Community** | Intro, naming, structure, context, size, upload, save progress (email), then community review. | `informational` → `community-name` → `community-structure` → `community-context` → `community-size` → `community-upload` → `community-save` → `review` |
 | **Create Custom CommunityRule** | Author the CommunityRule content and structure. | `cards` → `right-rail` |
 | **Review and complete** | Stakeholders, final card, publish, success. | `confirm-stakeholders` → `final-review` → `completed` |
 
@@ -28,11 +28,11 @@ Order is defined in code by [`FLOW_STEP_ORDER`](../app/create/utils/flowSteps.ts
 | ----: | ----------- | -------------------- | ---- |
 | 1 | Create Community | `informational` | `/create/informational` |
 | 2 | Create Community | `community-name` | `/create/community-name` |
-| 3 | Create Community | `community-size` | `/create/community-size` |
+| 3 | Create Community | `community-structure` | `/create/community-structure` |
 | 4 | Create Community | `community-context` | `/create/community-context` |
-| 5 | Create Community | `community-structure` | `/create/community-structure` |
+| 5 | Create Community | `community-size` | `/create/community-size` |
 | 6 | Create Community | `community-upload` | `/create/community-upload` |
-| 7 | Create Community | `community-reflection` | `/create/community-reflection` |
+| 7 | Create Community | `community-save` | `/create/community-save` |
 | 8 | Create Community (review frame) | `review` | `/create/review` |
 | 9 | Create Custom CommunityRule | `cards` | `/create/cards` |
 | 10 | Create Custom CommunityRule | `right-rail` | `/create/right-rail` |
@@ -61,7 +61,7 @@ From that page, **Customize** currently navigates to `/create/informational?temp
 | Mode | Where progress lives | Save & Exit / server draft |
 | --- | --- | --- |
 | **Anonymous** | `localStorage` key **`create-flow-anonymous`** | **Exit** opens save-progress magic link; after verify, optional **PUT** `/api/drafts/me` when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` (see Tickets 4–5 in [backend-linear-tickets.md](backend-linear-tickets.md)). |
-| **Signed-in** | In-memory React state in **`CreateFlowContext`** | **Save & Exit** from the **`community-size`** step onward (step index ≥ `community-size`) may **PUT** `/api/drafts/me` when sync is on. **Sign out** is on profile, not in the create top nav. |
+| **Signed-in** | In-memory React state in **`CreateFlowContext`** | **Save & Exit** from the **`community-structure`** step onward (step index ≥ `community-structure`) may **PUT** `/api/drafts/me` when sync is on. **Sign out** is on profile, not in the create top nav. |
 
 Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticket 4**, **Ticket 5**, and [`docs/backend-roadmap.md`](backend-roadmap.md) §12.
 
@@ -70,7 +70,6 @@ Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticke
 ## Known implementation gaps (tracked on CR-89)
 
 - **URL vs `currentStep` in saved draft:** hydration may merge server JSON without redirecting to `state.currentStep`; confirm product behavior and fix or document.
-- **Footer progress:** `ProportionBar` is not yet driven by step index vs `FLOW_STEP_ORDER`.
 - **Inner “text/select shells”:** deferred until Create Community is stable; screens use **`CreateFlowStepShell`** only for Stage 1.
 
 ---

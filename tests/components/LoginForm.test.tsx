@@ -119,7 +119,7 @@ describe("LoginForm", () => {
       <Suspense fallback={null}>
         <LoginForm
           variant="saveProgress"
-          magicLinkNextPath="/create/community-size?syncDraft=1"
+          magicLinkNextPath="/create/community-structure?syncDraft=1"
         />
       </Suspense>,
     );
@@ -133,7 +133,7 @@ describe("LoginForm", () => {
     await waitFor(() => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "save@example.com",
-        "/create/community-size?syncDraft=1",
+        "/create/community-structure?syncDraft=1",
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();

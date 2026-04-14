@@ -9,7 +9,7 @@ export type CreateFlowStepShellVariant =
   | "wideGridLoosePadding"
   | "bare";
 
-/** Top padding below `md` between top nav and step content (semantic space tokens). */
+/** Semantic top padding below create-flow top nav (applied at all breakpoints; name is legacy). */
 export type CreateFlowContentTopBelowMd = "none" | "space-1400" | "space-800";
 
 const outerByVariant: Record<CreateFlowStepShellVariant, string> = {
@@ -17,22 +17,24 @@ const outerByVariant: Record<CreateFlowStepShellVariant, string> = {
     "flex w-full min-w-0 flex-col items-center px-5 md:px-16",
   centeredNarrowBottomPad:
     "flex w-full min-w-0 flex-col items-center px-5 pb-28 md:px-[var(--measures-spacing-1800,64px)] md:pb-32",
-  wideGrid: "w-full min-w-0 max-w-[1280px] shrink-0 px-5 md:px-12",
+  /** Wide two-column steps; 1328px = two 640px columns + 48px gutter. */
+  wideGrid: "w-full min-w-0 max-w-[1328px] shrink-0 px-5 md:px-12",
+  /** Create Community review + card grid (Figma Flow — Review `19706:12135`): max width 1440. */
   wideGridLoosePadding:
-    "w-full min-w-0 max-w-[1280px] shrink-0 px-5 md:px-16",
+    "w-full min-w-0 max-w-[1440px] shrink-0 px-5 md:px-16",
   bare: "w-full min-w-0",
 };
 
 const contentTopBelowMdClass: Record<CreateFlowContentTopBelowMd, string> = {
   none: "",
-  "space-1400": "max-md:pt-[var(--space-1400)]",
-  "space-800": "max-md:pt-[var(--space-800)]",
+  "space-1400": "pt-[var(--space-1400)]",
+  "space-800": "pt-[var(--space-800)]",
 };
 
 interface CreateFlowStepShellProps {
   children: ReactNode;
   variant?: CreateFlowStepShellVariant;
-  /** Padding-top below `md` only; `text` step uses `none`. */
+  /** Top spacing below top chrome (`CreateFlowTextFieldScreen` defaults to `space-1400`). */
   contentTopBelowMd?: CreateFlowContentTopBelowMd;
   className?: string;
 }

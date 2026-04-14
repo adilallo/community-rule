@@ -12,12 +12,20 @@ import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import CreateFlowTopNav from "../components/utility/CreateFlowTopNav";
-import { getStepIndex } from "./utils/flowSteps";
+import { getNextStep, getStepIndex } from "./utils/flowSteps";
+import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import { createFlowStepUsesCenteredTextLayout } from "./utils/createFlowScreenRegistry";
 import CreateFlowFooter from "../components/utility/CreateFlowFooter";
 import Button from "../components/buttons/Button";
 import { buildPublishPayload } from "../../lib/create/buildPublishPayload";
-import { fetchAuthSession, publishRule } from "../../lib/create/api";
+import { isValidCreateFlowSaveEmail } from "../../lib/create/isValidCreateFlowSaveEmail";
+import {
+  fetchAuthSession,
+  publishRule,
+  requestMagicLink,
+} from "../../lib/create/api";
+import { safeInternalPath } from "../../lib/safeInternalPath";
+import { setTransferPendingFlag } from "./utils/anonymousDraftStorage";
 import { writeLastPublishedRule } from "../../lib/create/lastPublishedRule";
 import {
   fetchTemplateBySlug,
@@ -25,7 +33,7 @@ import {
 } from "../../lib/create/fetchTemplates";
 import messages from "../../messages/en/index";
 import { useAuthModal } from "../contexts/AuthModalContext";
-import { useTranslation } from "../contexts/MessagesContext";
+import { useMessages, useTranslation } from "../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
 import Alert from "../components/modals/Alert";
@@ -35,7 +43,7 @@ import {
 } from "./context/CreateFlowDraftSaveBannerContext";
 
 /** First step where Save & Exit is offered (first Create Community select per Figma). */
-const SAVE_EXIT_FROM_STEP_INDEX = getStepIndex("community-size");
+const SAVE_EXIT_FROM_STEP_INDEX = getStepIndex("community-structure");
 
 function CreateFlowSessionShell({ children }: { children: ReactNode }) {
   const [sessionUser, setSessionUser] = useState<
@@ -78,7 +86,10 @@ function CreateFlowLayoutContent({
   sessionUser: { id: string; email: string } | null | undefined;
   sessionResolved: boolean;
 }) {
-  const tFooter = useTranslation("create.footer");
+  const { create } = useMessages();
+  const footer = create.footer;
+  const communitySaveMessages = create.communitySave;
+  const tLogin = useTranslation("pages.login");
   const router = useRouter();
   const pathname = usePathname();
   const { openLogin } = useAuthModal();
@@ -89,7 +100,7 @@ function CreateFlowLayoutContent({
     goToNextStep,
     goToPreviousStep,
   } = useCreateFlowNavigation();
-  const { state, clearState } = useCreateFlow();
+  const { state, clearState, updateState } = useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
   const [publishBannerMessage, setPublishBannerMessage] = useState<
@@ -100,6 +111,13 @@ function CreateFlowLayoutContent({
     string | null
   >(null);
   const [isApplyingTemplate, setIsApplyingTemplate] = useState(false);
+  const [communitySaveMagicLinkSubmitting, setCommunitySaveMagicLinkSubmitting] =
+    useState(false);
+  const [communitySaveMagicLinkError, setCommunitySaveMagicLinkError] = useState<
+    string | null
+  >(null);
+  const [communitySaveMagicLinkSuccess, setCommunitySaveMagicLinkSuccess] =
+    useState(false);
 
   const templateReviewMatch = pathname?.match(
     /\/create\/review-template\/([^/?#]+)/,
@@ -222,6 +240,51 @@ function CreateFlowLayoutContent({
     await runAuthenticatedExit(opts);
   };
 
+  useEffect(() => {
+    if (currentStep !== "community-save") {
+      setCommunitySaveMagicLinkError(null);
+      setCommunitySaveMagicLinkSuccess(false);
+      setCommunitySaveMagicLinkSubmitting(false);
+    }
+  }, [currentStep]);
+
+  const handleCommunitySaveMagicLinkSubmit = useCallback(async () => {
+    setCommunitySaveMagicLinkError(null);
+    setCommunitySaveMagicLinkSuccess(false);
+    const raw = state.communitySaveEmail;
+    const trimmed = typeof raw === "string" ? raw.trim().toLowerCase() : "";
+    if (!isValidCreateFlowSaveEmail(trimmed)) return;
+
+    setCommunitySaveMagicLinkSubmitting(true);
+    try {
+      const stepAfterSave = getNextStep("community-save");
+      const segment = stepAfterSave ?? "review";
+      const rawNext = `/create/${segment}?syncDraft=1`;
+      const nextPath = safeInternalPath(rawNext);
+      const result = await requestMagicLink(trimmed, nextPath);
+      if (result.ok === false) {
+        if (result.retryAfterMs != null && result.retryAfterMs > 0) {
+          const seconds = Math.ceil(result.retryAfterMs / 1000);
+          setCommunitySaveMagicLinkError(
+            tLogin("errors.rateLimited").replace("{seconds}", String(seconds)),
+          );
+        } else {
+          setCommunitySaveMagicLinkError(
+            result.error || tLogin("errors.generic"),
+          );
+        }
+        return;
+      }
+      setTransferPendingFlag();
+      updateState({ communitySaveEmail: trimmed });
+      setCommunitySaveMagicLinkSuccess(true);
+    } catch {
+      setCommunitySaveMagicLinkError(tLogin("errors.network"));
+    } finally {
+      setCommunitySaveMagicLinkSubmitting(false);
+    }
+  }, [state.communitySaveEmail, tLogin, updateState]);
+
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "right-rail";
   const isFinalReviewStep = currentStep === "final-review";
@@ -250,14 +313,23 @@ function CreateFlowLayoutContent({
   const saveDraftOnExit =
     Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
 
-  const hasErrorOverlays =
+  const proportionBarProgress = getProportionBarProgressForCreateFlowStep(
+    currentStep,
+  );
+
+  const footerPrimaryButtonClass =
+    "md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]";
+
+  const hasTopOverlays =
     Boolean(draftSaveBannerMessage) ||
     Boolean(publishBannerMessage) ||
-    Boolean(templateReviewApplyError);
+    Boolean(templateReviewApplyError) ||
+    Boolean(communitySaveMagicLinkError) ||
+    Boolean(communitySaveMagicLinkSuccess);
 
   return (
     <div className="relative flex h-screen min-h-0 flex-col overflow-hidden bg-black">
-      {hasErrorOverlays ? (
+      {hasTopOverlays ? (
         <div
           className="pointer-events-none fixed left-0 right-0 top-0 z-[200] flex flex-col gap-2 px-[var(--spacing-measures-spacing-500,20px)] pt-[var(--spacing-measures-spacing-300,12px)] md:px-[var(--measures-spacing-1800,64px)]"
           aria-live="polite"
@@ -298,6 +370,30 @@ function CreateFlowLayoutContent({
               />
             </div>
           ) : null}
+          {communitySaveMagicLinkError ? (
+            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
+              <Alert
+                type="banner"
+                status="danger"
+                title={communitySaveMessages.magicLinkErrorTitle}
+                description={communitySaveMagicLinkError}
+                onClose={() => setCommunitySaveMagicLinkError(null)}
+                className="w-full"
+              />
+            </div>
+          ) : null}
+          {communitySaveMagicLinkSuccess ? (
+            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
+              <Alert
+                type="banner"
+                status="positive"
+                title={communitySaveMessages.magicLinkSuccessTitle}
+                description={communitySaveMessages.magicLinkSuccessDescription}
+                onClose={() => setCommunitySaveMagicLinkSuccess(false)}
+                className="w-full"
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
       <Suspense fallback={null}>
@@ -334,6 +430,8 @@ function CreateFlowLayoutContent({
         <CreateFlowFooter
           className="shrink-0"
           progressBar={!isTemplateReviewRoute && !isFinalReviewStep}
+          proportionBarProgress={proportionBarProgress}
+          proportionBarVariant="segmented"
           secondButton={
             isTemplateReviewRoute ? (
               <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
@@ -367,13 +465,101 @@ function CreateFlowLayoutContent({
                   {messages.create.templateReview.footer.customize}
                 </Button>
               </div>
+            ) : currentStep === "community-name" && nextStep ? (
+              <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
+                <Button
+                  buttonType="outline"
+                  palette="inverse"
+                  size="xsmall"
+                  disabled={isPublishing}
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    goToNextStep();
+                  }}
+                >
+                  {footer.next}
+                </Button>
+                <Button
+                  buttonType="filled"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isPublishing}
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    goToNextStep();
+                  }}
+                >
+                  {footer.confirmName}
+                </Button>
+              </div>
+            ) : currentStep === "community-save" && nextStep ? (
+              <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
+                <Button
+                  buttonType="outline"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isPublishing}
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    goToNextStep();
+                  }}
+                >
+                  {footer.saveLater}
+                </Button>
+                <Button
+                  buttonType="filled"
+                  palette="default"
+                  size="xsmall"
+                  disabled={
+                    isPublishing ||
+                    communitySaveMagicLinkSubmitting ||
+                    communitySaveMagicLinkSuccess ||
+                    !isValidCreateFlowSaveEmail(state.communitySaveEmail)
+                  }
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    void handleCommunitySaveMagicLinkSubmit();
+                  }}
+                >
+                  {communitySaveMagicLinkSubmitting
+                    ? footer.submitEmailSending
+                    : footer.submitEmail}
+                </Button>
+              </div>
+            ) : currentStep === "review" && nextStep ? (
+              <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
+                <Button
+                  buttonType="outline"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isPublishing}
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    goToNextStep();
+                  }}
+                >
+                  {footer.createCustom}
+                </Button>
+                <Button
+                  buttonType="filled"
+                  palette="default"
+                  size="xsmall"
+                  disabled={isPublishing}
+                  className={footerPrimaryButtonClass}
+                  onClick={() => {
+                    router.push("/templates");
+                  }}
+                >
+                  {footer.createFromTemplate}
+                </Button>
+              </div>
             ) : nextStep ? (
               <Button
                 buttonType="filled"
                 palette="default"
                 size="xsmall"
                 disabled={isPublishing}
-                className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]"
+                className={footerPrimaryButtonClass}
                 onClick={() => {
                   if (currentStep === "final-review") {
                     void handleFinalize();
@@ -385,10 +571,16 @@ function CreateFlowLayoutContent({
                 {currentStep === "final-review"
                   ? isPublishing
                     ? messages.create.publish.finalizeButtonPublishing
-                    : tFooter("finalizeCommunityRule")
+                    : footer.finalizeCommunityRule
                   : currentStep === "confirm-stakeholders"
-                    ? tFooter("confirmStakeholders")
-                    : tFooter("next")}
+                    ? footer.confirmStakeholders
+                    : currentStep === "community-context"
+                      ? footer.confirmDescription
+                      : currentStep === "community-structure"
+                        ? footer.confirmDetails
+                        : currentStep === "community-size"
+                          ? footer.confirmMembers
+                          : footer.next}
               </Button>
             ) : null
           }

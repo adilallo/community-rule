@@ -9,11 +9,11 @@ import {
 } from "react";
 import MultiSelect from "../../../components/controls/MultiSelect";
 import type { ChipOption } from "../../../components/controls/MultiSelect/MultiSelect.types";
-import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
+import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
-import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
+import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 
 function createListCustomHandlers(
   setList: Dispatch<SetStateAction<ChipOption[]>>,
@@ -73,28 +73,38 @@ function applySavedSelection(
   );
 }
 
-/** Create Community — frame 5 (Figma 20094-41317). */
+function selectedIdsFromOptions(options: ChipOption[]): string[] {
+  return options
+    .filter((o) => o.state === "Selected")
+    .map((o) => o.id);
+}
+
+/** Create Community step 3 — Figma `20094:18244` (responsive grid + column caps via `createFlowLayoutTokens`). */
 export function CommunityStructureSelectScreen() {
   const m = useMessages();
+  const cs = m.create.communityStructure;
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
-  const mdUp = useCreateFlowMdUp();
-  const t = useTranslation("create.communityStructure");
 
   const [organizationTypeOptions, setOrganizationTypeOptions] = useState<
     ChipOption[]
   >(() =>
     applySavedSelection(
-      chipRowsFromLabels(m.create.communityStructure.organizationTypes),
+      chipRowsFromLabels(cs.organizationTypes),
       state.selectedOrganizationTypeIds,
     ),
   );
 
-  const [governanceStyleOptions, setGovernanceStyleOptions] = useState<
-    ChipOption[]
-  >(() =>
+  const [scaleOptions, setScaleOptions] = useState<ChipOption[]>(() =>
     applySavedSelection(
-      chipRowsFromLabels(m.create.communityStructure.governanceStyles),
-      state.selectedGovernanceStyleIds,
+      chipRowsFromLabels(cs.scaleOptions),
+      state.selectedScaleIds,
+    ),
+  );
+
+  const [maturityOptions, setMaturityOptions] = useState<ChipOption[]>(() =>
+    applySavedSelection(
+      chipRowsFromLabels(cs.maturityOptions),
+      state.selectedMaturityIds,
     ),
   );
 
@@ -105,10 +115,14 @@ export function CommunityStructureSelectScreen() {
   }, [state.selectedOrganizationTypeIds]);
 
   useEffect(() => {
-    setGovernanceStyleOptions((prev) =>
-      applySavedSelection(prev, state.selectedGovernanceStyleIds),
+    setScaleOptions((prev) => applySavedSelection(prev, state.selectedScaleIds));
+  }, [state.selectedScaleIds]);
+
+  useEffect(() => {
+    setMaturityOptions((prev) =>
+      applySavedSelection(prev, state.selectedMaturityIds),
     );
-  }, [state.selectedGovernanceStyleIds]);
+  }, [state.selectedMaturityIds]);
 
   const organizationCustomHandlers = useMemo(
     () =>
@@ -119,10 +133,19 @@ export function CommunityStructureSelectScreen() {
       ),
     [markCreateFlowInteraction],
   );
-  const governanceCustomHandlers = useMemo(
+  const scaleCustomHandlers = useMemo(
     () =>
       createListCustomHandlers(
-        setGovernanceStyleOptions,
+        setScaleOptions,
+        "Unselected",
+        markCreateFlowInteraction,
+      ),
+    [markCreateFlowInteraction],
+  );
+  const maturityCustomHandlers = useMemo(
+    () =>
+      createListCustomHandlers(
+        setMaturityOptions,
         "Unselected",
         markCreateFlowInteraction,
       ),
@@ -132,75 +155,100 @@ export function CommunityStructureSelectScreen() {
   const persistOrg = (next: ChipOption[]) => {
     markCreateFlowInteraction();
     setOrganizationTypeOptions(next);
-    updateState({
-      selectedOrganizationTypeIds: next
-        .filter((o) => o.state === "Selected")
-        .map((o) => o.id),
-    });
+    updateState({ selectedOrganizationTypeIds: selectedIdsFromOptions(next) });
   };
 
-  const persistGov = (next: ChipOption[]) => {
+  const persistScale = (next: ChipOption[]) => {
     markCreateFlowInteraction();
-    setGovernanceStyleOptions(next);
-    updateState({
-      selectedGovernanceStyleIds: next
-        .filter((o) => o.state === "Selected")
-        .map((o) => o.id),
-    });
+    setScaleOptions(next);
+    updateState({ selectedScaleIds: selectedIdsFromOptions(next) });
+  };
+
+  const persistMaturity = (next: ChipOption[]) => {
+    markCreateFlowInteraction();
+    setMaturityOptions(next);
+    updateState({ selectedMaturityIds: selectedIdsFromOptions(next) });
   };
 
   const handleOrganizationTypeClick = (chipId: string) => {
-    const next: ChipOption[] = organizationTypeOptions.map((opt) =>
-      opt.id === chipId
-        ? {
-            ...opt,
-            state:
-              opt.state === "Selected"
-                ? ("Unselected" as const)
-                : ("Selected" as const),
-          }
-        : opt,
+    persistOrg(
+      organizationTypeOptions.map((opt) =>
+        opt.id === chipId
+          ? {
+              ...opt,
+              state:
+                opt.state === "Selected"
+                  ? ("Unselected" as const)
+                  : ("Selected" as const),
+            }
+          : opt,
+      ),
     );
-    persistOrg(next);
   };
 
-  const handleGovernanceStyleClick = (chipId: string) => {
-    const next: ChipOption[] = governanceStyleOptions.map((opt) =>
-      opt.id === chipId
-        ? {
-            ...opt,
-            state:
-              opt.state === "Selected"
-                ? ("Unselected" as const)
-                : ("Selected" as const),
-          }
-        : opt,
+  const handleScaleClick = (chipId: string) => {
+    persistScale(
+      scaleOptions.map((opt) =>
+        opt.id === chipId
+          ? {
+              ...opt,
+              state:
+                opt.state === "Selected"
+                  ? ("Unselected" as const)
+                  : ("Selected" as const),
+            }
+          : opt,
+      ),
     );
-    persistGov(next);
   };
 
-  const multiLabel = t("multiSelect.label");
-  const addText = t("multiSelect.addButtonText");
+  const handleMaturityClick = (chipId: string) => {
+    persistMaturity(
+      maturityOptions.map((opt) =>
+        opt.id === chipId
+          ? {
+              ...opt,
+              state:
+                opt.state === "Selected"
+                  ? ("Unselected" as const)
+                  : ("Selected" as const),
+            }
+          : opt,
+      ),
+    );
+  };
 
   const multiSelectBlock = (
     <>
       <MultiSelect
-        label={multiLabel}
+        label={cs.organizationMultiSelect.label}
+        showHelpIcon
         size="S"
         options={organizationTypeOptions}
         onChipClick={handleOrganizationTypeClick}
         {...organizationCustomHandlers}
-        addButton={true}
-        addButtonText={addText}
+        addButton
+        addButtonText={cs.organizationMultiSelect.addButtonText}
       />
       <MultiSelect
-        label={multiLabel}
+        label={cs.scaleMultiSelect.label}
+        showHelpIcon
         size="S"
-        options={governanceStyleOptions}
-        onChipClick={handleGovernanceStyleClick}
-        {...governanceCustomHandlers}
-        addButton={true}
-        addButtonText={addText}
+        options={scaleOptions}
+        onChipClick={handleScaleClick}
+        {...scaleCustomHandlers}
+        addButton
+        addButtonText={cs.scaleMultiSelect.addButtonText}
+      />
+      <MultiSelect
+        label={cs.maturityMultiSelect.label}
+        showHelpIcon
+        size="S"
+        options={maturityOptions}
+        onChipClick={handleMaturityClick}
+        {...maturityCustomHandlers}
+        addButton
+        addButtonText={cs.maturityMultiSelect.addButtonText}
       />
     </>
   );
@@ -210,29 +258,22 @@ export function CommunityStructureSelectScreen() {
       variant="centeredNarrow"
       contentTopBelowMd="space-1400"
     >
-      {mdUp ? (
-        <div className="flex w-full max-w-[1280px] items-center justify-center gap-[var(--measures-spacing-1200,48px)]">
-          <div className="flex max-w-[640px] min-h-px min-w-px flex-[1_0_0] flex-col items-start justify-center gap-[var(--measures-spacing-200,8px)] py-[12px]">
-            <CreateFlowHeaderLockup
-              title={t("header.title")}
-              description={t("header.description")}
-              justification="left"
-            />
-          </div>
-          <div className="flex max-w-[640px] min-h-px min-w-px flex-[1_0_0] flex-col items-start gap-[var(--measures-spacing-800,32px)]">
-            {multiSelectBlock}
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full max-w-[640px] flex-col items-start gap-[var(--measures-spacing-400,16px)]">
+      <div className="flex w-full min-w-0 flex-col items-start gap-[var(--measures-spacing-400,16px)] md:max-w-[640px] lg:max-w-[1328px] lg:flex-row lg:flex-nowrap lg:items-center lg:justify-center lg:gap-[var(--measures-spacing-1200,48px)]">
+        <div
+          className={`flex flex-col items-start gap-[var(--measures-spacing-200,8px)] lg:flex-1 lg:justify-center lg:py-[12px] ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           <CreateFlowHeaderLockup
-            title={t("header.title")}
-            description={t("header.description")}
+            title={cs.header.title}
+            description={cs.header.description}
             justification="left"
           />
+        </div>
+        <div
+          className={`flex flex-col items-start gap-[var(--measures-spacing-800,32px)] lg:flex-1 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+        >
           {multiSelectBlock}
         </div>
-      )}
+      </div>
     </CreateFlowStepShell>
   );
 }

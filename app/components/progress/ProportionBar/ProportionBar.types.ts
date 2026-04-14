@@ -1,3 +1,5 @@
+import type { ProportionBarVariantValue } from "../../../../lib/propNormalization";
+
 export type ProportionBarState =
   | "1-0"
   | "1-1"
@@ -12,13 +14,20 @@ export type ProportionBarState =
   | "3-1"
   | "3-2";
 
+export type ProportionBarVariant = ProportionBarVariantValue;
+
 export interface ProportionBarProps {
   progress?: ProportionBarState;
   className?: string;
+  /**
+   * `segmented` (Figma: create-flow footer): pill-shaped partial fills inside each segment.
+   */
+  variant?: ProportionBarVariant;
 }
 
 export interface ProportionBarViewProps {
   progress: ProportionBarState;
   className: string;
   barClasses: string;
+  variant: "default" | "segmented";
 }

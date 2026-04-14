@@ -22,6 +22,13 @@ describe("InformationalScreen", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders workshop as a link (URL TBD) with underline per Figma", () => {
+    render(<InformationalScreen />);
+    const workshop = screen.getByRole("link", { name: "workshop" });
+    expect(workshop).toHaveAttribute("href", "#");
+    expect(workshop.className).toMatch(/underline/);
+  });
+
   it("renders first numbered list item title", () => {
     render(<InformationalScreen />);
     expect(

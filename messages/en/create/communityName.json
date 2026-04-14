@@ -1,6 +1,6 @@
 {
   "title": "What is your community called?",
   "description": "This will be the name of your community",
-  "placeholder": "Enter your community name",
+  "placeholder": "Enter community name",
   "characterCountTemplate": "{current}/{max}"
 }
