@@ -15,6 +15,7 @@ const PROPORTION_BY_STEP_INDEX: readonly ProportionBarState[] = [
   "1-5", // community-upload
   "2-0", // community-save
   "2-0", // review (Figma Flow — Review `19706:12135`: same segment fill as end of Create Community)
+  "2-0", // core-values (same segment as review / end of Create Community)
   "2-2", // cards
   "3-0", // right-rail
   "3-1", // confirm-stakeholders

@@ -84,6 +84,12 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
     messageNamespace: "create.review",
     centeredBodyBelowMd: false,
   },
+  "core-values": {
+    layoutKind: "select",
+    figmaNodeId: "20264-68378",
+    messageNamespace: "create.coreValues",
+    centeredBodyBelowMd: false,
+  },
   cards: {
     layoutKind: "card",
     figmaNodeId: "TBD-cards",

@@ -36,6 +36,7 @@ describe("flowSteps", () => {
   it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
     expect(isValidStep("community-size")).toBe(true);
     expect(isValidStep("confirm-stakeholders")).toBe(true);
+    expect(isValidStep("core-values")).toBe(true);
     expect(isValidStep("nope")).toBe(false);
     expect(isValidStep(null)).toBe(false);
   });
@@ -65,7 +66,7 @@ describe("flowSteps", () => {
   it("skipCommunitySave does not change steps outside the save segment", () => {
     const opts = { skipCommunitySave: true } as const;
     expect(getNextStep("community-size", opts)).toBe("community-upload");
-    expect(getNextStep("review", opts)).toBe("cards");
-    expect(getPreviousStep("cards", opts)).toBe("review");
+    expect(getNextStep("review", opts)).toBe("core-values");
+    expect(getPreviousStep("cards", opts)).toBe("core-values");
   });
 });

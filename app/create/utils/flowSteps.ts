@@ -20,6 +20,7 @@ export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
   "community-upload",
   "community-save",
   "review",
+  "core-values",
   "cards",
   "right-rail",
   "confirm-stakeholders",

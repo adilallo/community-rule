@@ -27,6 +27,7 @@ import createCommunityStructure from "./create/communityStructure.json";
 import createCommunityUpload from "./create/communityUpload.json";
 import createCommunitySave from "./create/communitySave.json";
 import createReview from "./create/review.json";
+import createCoreValues from "./create/coreValues.json";
 import createConfirmStakeholders from "./create/confirmStakeholders.json";
 import createFinalReview from "./create/finalReview.json";
 import createCompleted from "./create/completed.json";
@@ -68,6 +69,7 @@ export default {
     communityUpload: createCommunityUpload,
     communitySave: createCommunitySave,
     review: createReview,
+    coreValues: createCoreValues,
     confirmStakeholders: createConfirmStakeholders,
     finalReview: createFinalReview,
     completed: createCompleted,

@@ -10,5 +10,6 @@
   "confirmDescription": "Confirm description",
   "confirmMembers": "Confirm members",
   "finalizeCommunityRule": "Finalize CommunityRule",
-  "confirmStakeholders": "Confirm Stakeholders"
+  "confirmStakeholders": "Confirm Stakeholders",
+  "confirmCoreValues": "Confirm values"
 }

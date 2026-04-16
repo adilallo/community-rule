@@ -51,6 +51,10 @@ export const createFlowStateSchema = z
     selectedMaturityIds: z.array(z.string()).optional(),
     communityStructureChipSnapshots:
       communityStructureChipSnapshotsSchema.optional(),
+    selectedCoreValueIds: z.array(z.string()).max(200).optional(),
+    coreValuesChipsSnapshot: z
+      .array(communityStructureChipSnapshotRowSchema)
+      .optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

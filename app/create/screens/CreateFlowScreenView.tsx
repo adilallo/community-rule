@@ -6,6 +6,7 @@ import { InformationalScreen } from "./informational/InformationalScreen";
 import { CreateFlowTextFieldScreen } from "./text/CreateFlowTextFieldScreen";
 import { CommunitySizeSelectScreen } from "./select/CommunitySizeSelectScreen";
 import { CommunityStructureSelectScreen } from "./select/CommunityStructureSelectScreen";
+import { CoreValuesSelectScreen } from "./select/CoreValuesSelectScreen";
 import { ConfirmStakeholdersScreen } from "./select/ConfirmStakeholdersScreen";
 import { CommunityUploadScreen } from "./upload/CommunityUploadScreen";
 import { CommunityReviewScreen } from "./review/CommunityReviewScreen";
@@ -62,6 +63,8 @@ export function CreateFlowScreenView({
       );
     case "review":
       return <CommunityReviewScreen />;
+    case "core-values":
+      return <CoreValuesSelectScreen />;
     case "cards":
       return <CardsScreen />;
     case "right-rail":

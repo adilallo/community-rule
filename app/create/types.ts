@@ -18,6 +18,7 @@ export type CreateFlowStep =
   | "community-upload"
   | "community-save"
   | "review"
+  | "core-values"
   | "cards"
   | "right-rail"
   | "confirm-stakeholders"
@@ -70,6 +71,10 @@ export interface CreateFlowState {
     scale?: CommunityStructureChipSnapshotRow[];
     maturity?: CommunityStructureChipSnapshotRow[];
   };
+  /** Create Custom — core values step (max five `selectedCoreValueIds`). */
+  selectedCoreValueIds?: string[];
+  /** Full chip rows for core values (custom labels). */
+  coreValuesChipsSnapshot?: CommunityStructureChipSnapshotRow[];
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

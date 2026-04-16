@@ -6,8 +6,7 @@ import type { ChipOption } from "../../../components/controls/MultiSelect/MultiS
 import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
-import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
-import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
+import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 
 function chipRowsFromLabels(
   rows: readonly { label: string }[],
@@ -92,26 +91,16 @@ export function CommunitySizeSelectScreen() {
   );
 
   return (
-    <CreateFlowStepShell
-      variant="centeredNarrow"
-      contentTopBelowMd="space-1400"
+    <CreateFlowTwoColumnSelectShell
+      header={
+        <CreateFlowHeaderLockup
+          title={cs.header.title}
+          description={cs.header.description}
+          justification="left"
+        />
+      }
     >
-      <div className="flex w-full min-w-0 flex-col items-start gap-[var(--measures-spacing-400,16px)] md:max-w-[640px] lg:max-w-[1328px] lg:flex-row lg:flex-nowrap lg:items-center lg:justify-center lg:gap-[var(--measures-spacing-1200,48px)]">
-        <div
-          className={`flex flex-col items-start gap-[var(--measures-spacing-200,8px)] lg:flex-1 lg:justify-center lg:py-[12px] ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
-        >
-          <CreateFlowHeaderLockup
-            title={cs.header.title}
-            description={cs.header.description}
-            justification="left"
-          />
-        </div>
-        <div
-          className={`flex flex-col items-start gap-[var(--measures-spacing-800,32px)] lg:flex-1 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
-        >
-          {multiSelectBlock}
-        </div>
-      </div>
-    </CreateFlowStepShell>
+      {multiSelectBlock}
+    </CreateFlowTwoColumnSelectShell>
   );
 }

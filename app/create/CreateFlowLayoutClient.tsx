@@ -302,6 +302,11 @@ function CreateFlowLayoutContent({
   const isRightRailStep = currentStep === "right-rail";
   const isFinalReviewStep = currentStep === "final-review";
   const isCardsStep = currentStep === "cards";
+  /** Two-column select steps: at `lg+` only the right column scrolls; main must not scroll the full page. */
+  const isSelectSplitScrollStep =
+    currentStep === "community-size" ||
+    currentStep === "community-structure" ||
+    currentStep === "core-values";
   const stepIdx = currentStep != null ? getStepIndex(currentStep) : -1;
 
   /** At `md+`, main cross-axis: center by default; exceptions stay top-aligned (see product spec). */
@@ -309,9 +314,11 @@ function CreateFlowLayoutContent({
     ? "items-stretch overflow-y-auto md:overflow-hidden"
     : isRightRailStep
       ? "items-stretch overflow-hidden"
-      : isFinalReviewStep || isCardsStep || isTemplateReviewRoute
-        ? "items-start justify-center overflow-y-auto"
-        : "items-start justify-center overflow-y-auto md:items-center";
+      : isSelectSplitScrollStep
+        ? "items-start justify-start overflow-y-auto max-lg:overflow-y-auto lg:min-h-0 lg:items-stretch lg:overflow-hidden"
+        : isFinalReviewStep || isCardsStep || isTemplateReviewRoute
+          ? "items-start justify-center overflow-y-auto"
+          : "items-start justify-center overflow-y-auto md:items-center";
 
   const isTextStep = createFlowStepUsesCenteredTextLayout(currentStep);
   const mainMaxMdJustify =
@@ -479,32 +486,18 @@ function CreateFlowLayoutContent({
                 </Button>
               </div>
             ) : currentStep === "community-name" && nextStep ? (
-              <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
-                <Button
-                  buttonType="outline"
-                  palette="inverse"
-                  size="xsmall"
-                  disabled={isPublishing}
-                  className={footerPrimaryButtonClass}
-                  onClick={() => {
-                    goToNextStep();
-                  }}
-                >
-                  {footer.next}
-                </Button>
-                <Button
-                  buttonType="filled"
-                  palette="default"
-                  size="xsmall"
-                  disabled={isPublishing}
-                  className={footerPrimaryButtonClass}
-                  onClick={() => {
-                    goToNextStep();
-                  }}
-                >
-                  {footer.confirmName}
-                </Button>
-              </div>
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={isPublishing}
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmName}
+              </Button>
             ) : currentStep === "community-save" && nextStep ? (
               <div className="flex flex-shrink-0 items-center gap-3 md:gap-4">
                 <Button
@@ -566,6 +559,22 @@ function CreateFlowLayoutContent({
                   {footer.createFromTemplate}
                 </Button>
               </div>
+            ) : currentStep === "core-values" && nextStep ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={
+                  isPublishing ||
+                  (state.selectedCoreValueIds?.length ?? 0) === 0
+                }
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmCoreValues}
+              </Button>
             ) : nextStep ? (
               <Button
                 buttonType="filled"
