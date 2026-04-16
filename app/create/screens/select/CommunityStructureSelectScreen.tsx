@@ -11,6 +11,7 @@ import MultiSelect from "../../../components/controls/MultiSelect";
 import type { ChipOption } from "../../../components/controls/MultiSelect/MultiSelect.types";
 import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
+import type { CommunityStructureChipSnapshotRow } from "../../types";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
@@ -79,6 +80,30 @@ function selectedIdsFromOptions(options: ChipOption[]): string[] {
     .map((o) => o.id);
 }
 
+function chipOptionsToSnapshotRows(
+  options: ChipOption[],
+): CommunityStructureChipSnapshotRow[] {
+  return options.map((o) => ({
+    id: o.id,
+    label: o.label,
+    ...(o.state !== undefined ? { state: o.state } : {}),
+  }));
+}
+
+/** Returns chips when a draft snapshot exists; otherwise null (use preset rows + selected ids). */
+function snapshotRowsToChipOptions(
+  rows: CommunityStructureChipSnapshotRow[] | undefined,
+): ChipOption[] | null {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  return rows.map((r) => ({
+    id: r.id,
+    label: r.label,
+    ...(r.state !== undefined
+      ? { state: r.state as ChipOption["state"] }
+      : {}),
+  }));
+}
+
 /** Create Community step 3 — Figma `20094:18244` (responsive grid + column caps via `createFlowLayoutTokens`). */
 export function CommunityStructureSelectScreen() {
   const m = useMessages();
@@ -87,42 +112,84 @@ export function CommunityStructureSelectScreen() {
 
   const [organizationTypeOptions, setOrganizationTypeOptions] = useState<
     ChipOption[]
-  >(() =>
-    applySavedSelection(
+  >(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.organizationTypes,
+    );
+    if (fromSnap) return fromSnap;
+    return applySavedSelection(
       chipRowsFromLabels(cs.organizationTypes),
       state.selectedOrganizationTypeIds,
-    ),
-  );
+    );
+  });
 
-  const [scaleOptions, setScaleOptions] = useState<ChipOption[]>(() =>
-    applySavedSelection(
+  const [scaleOptions, setScaleOptions] = useState<ChipOption[]>(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.scale,
+    );
+    if (fromSnap) return fromSnap;
+    return applySavedSelection(
       chipRowsFromLabels(cs.scaleOptions),
       state.selectedScaleIds,
-    ),
-  );
+    );
+  });
 
-  const [maturityOptions, setMaturityOptions] = useState<ChipOption[]>(() =>
-    applySavedSelection(
+  const [maturityOptions, setMaturityOptions] = useState<ChipOption[]>(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.maturity,
+    );
+    if (fromSnap) return fromSnap;
+    return applySavedSelection(
       chipRowsFromLabels(cs.maturityOptions),
       state.selectedMaturityIds,
-    ),
-  );
+    );
+  });
 
   useEffect(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.organizationTypes,
+    );
+    if (fromSnap) {
+      setOrganizationTypeOptions(fromSnap);
+      return;
+    }
     setOrganizationTypeOptions((prev) =>
       applySavedSelection(prev, state.selectedOrganizationTypeIds),
     );
-  }, [state.selectedOrganizationTypeIds]);
+  }, [
+    state.communityStructureChipSnapshots?.organizationTypes,
+    state.selectedOrganizationTypeIds,
+  ]);
 
   useEffect(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.scale,
+    );
+    if (fromSnap) {
+      setScaleOptions(fromSnap);
+      return;
+    }
     setScaleOptions((prev) => applySavedSelection(prev, state.selectedScaleIds));
-  }, [state.selectedScaleIds]);
+  }, [
+    state.communityStructureChipSnapshots?.scale,
+    state.selectedScaleIds,
+  ]);
 
   useEffect(() => {
+    const fromSnap = snapshotRowsToChipOptions(
+      state.communityStructureChipSnapshots?.maturity,
+    );
+    if (fromSnap) {
+      setMaturityOptions(fromSnap);
+      return;
+    }
     setMaturityOptions((prev) =>
       applySavedSelection(prev, state.selectedMaturityIds),
     );
-  }, [state.selectedMaturityIds]);
+  }, [
+    state.communityStructureChipSnapshots?.maturity,
+    state.selectedMaturityIds,
+  ]);
 
   const organizationCustomHandlers = useMemo(
     () =>
@@ -155,19 +222,34 @@ export function CommunityStructureSelectScreen() {
   const persistOrg = (next: ChipOption[]) => {
     markCreateFlowInteraction();
     setOrganizationTypeOptions(next);
-    updateState({ selectedOrganizationTypeIds: selectedIdsFromOptions(next) });
+    updateState({
+      selectedOrganizationTypeIds: selectedIdsFromOptions(next),
+      communityStructureChipSnapshots: {
+        organizationTypes: chipOptionsToSnapshotRows(next),
+      },
+    });
   };
 
   const persistScale = (next: ChipOption[]) => {
     markCreateFlowInteraction();
     setScaleOptions(next);
-    updateState({ selectedScaleIds: selectedIdsFromOptions(next) });
+    updateState({
+      selectedScaleIds: selectedIdsFromOptions(next),
+      communityStructureChipSnapshots: {
+        scale: chipOptionsToSnapshotRows(next),
+      },
+    });
   };
 
   const persistMaturity = (next: ChipOption[]) => {
     markCreateFlowInteraction();
     setMaturityOptions(next);
-    updateState({ selectedMaturityIds: selectedIdsFromOptions(next) });
+    updateState({
+      selectedMaturityIds: selectedIdsFromOptions(next),
+      communityStructureChipSnapshots: {
+        maturity: chipOptionsToSnapshotRows(next),
+      },
+    });
   };
 
   const handleOrganizationTypeClick = (chipId: string) => {

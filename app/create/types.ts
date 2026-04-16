@@ -32,6 +32,16 @@ export type CreateFlowTextStateField =
   | "communitySaveEmail";
 
 /**
+ * Serialized chip row for `community-structure` (preset + custom labels).
+ * Stored in drafts so custom chips survive refresh and server sync.
+ */
+export type CommunityStructureChipSnapshotRow = {
+  id: string;
+  label: string;
+  state?: string;
+};
+
+/**
  * Flow state for inputs across create-flow steps.
  * Validated on `PUT /api/drafts/me` via `createFlowStateSchema` (Zod + JSON safety checks).
  * Additional string keys are allowed at runtime for forward-compatible step data.
@@ -51,6 +61,15 @@ export interface CreateFlowState {
   selectedScaleIds?: string[];
   /** Selected chip ids from `community-structure` (maturity). */
   selectedMaturityIds?: string[];
+  /**
+   * Full chip lists for `community-structure` (needed so custom chips round-trip in drafts).
+   * IDs alone are insufficient because custom rows are not reconstructible from copy JSON.
+   */
+  communityStructureChipSnapshots?: {
+    organizationTypes?: CommunityStructureChipSnapshotRow[];
+    scale?: CommunityStructureChipSnapshotRow[];
+    maturity?: CommunityStructureChipSnapshotRow[];
+  };
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

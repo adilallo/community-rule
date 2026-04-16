@@ -77,10 +77,16 @@ export function CreateFlowProvider({
   }, []);
 
   const updateState = useCallback((updates: Partial<CreateFlowState>) => {
-    setState((prevState) => ({
-      ...prevState,
-      ...updates,
-    }));
+    setState((prevState) => {
+      const merged: CreateFlowState = { ...prevState, ...updates };
+      if (updates.communityStructureChipSnapshots !== undefined) {
+        merged.communityStructureChipSnapshots = {
+          ...(prevState.communityStructureChipSnapshots ?? {}),
+          ...updates.communityStructureChipSnapshots,
+        };
+      }
+      return merged;
+    });
   }, []);
 
   const replaceState = useCallback((next: CreateFlowState) => {

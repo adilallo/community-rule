@@ -78,6 +78,29 @@ describe("createFlowStateSchema", () => {
     });
     expect(r.success).toBe(false);
   });
+
+  it("accepts communityStructureChipSnapshots with custom chip rows", () => {
+    const r = createFlowStateSchema.safeParse({
+      communityStructureChipSnapshots: {
+        organizationTypes: [
+          { id: "1", label: "Co-op", state: "Selected" },
+          { id: "custom-uuid", label: "My type", state: "Selected" },
+        ],
+        scale: [{ id: "1", label: "Local" }],
+        maturity: [],
+      },
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("rejects invalid chip snapshot row types", () => {
+    const r = createFlowStateSchema.safeParse({
+      communityStructureChipSnapshots: {
+        organizationTypes: [{ id: "1", label: 123 }],
+      },
+    });
+    expect(r.success).toBe(false);
+  });
 });
 
 describe("putDraftBodySchema", () => {

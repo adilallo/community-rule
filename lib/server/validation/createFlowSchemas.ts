@@ -6,6 +6,20 @@ const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];
 
 const createFlowStepSchema = z.enum(flowStepTuple);
 
+const communityStructureChipSnapshotRowSchema = z.object({
+  id: z.string().max(200),
+  label: z.string().max(2000),
+  state: z.string().max(32).optional(),
+});
+
+const communityStructureChipSnapshotsSchema = z
+  .object({
+    organizationTypes: z.array(communityStructureChipSnapshotRowSchema).optional(),
+    scale: z.array(communityStructureChipSnapshotRowSchema).optional(),
+    maturity: z.array(communityStructureChipSnapshotRowSchema).optional(),
+  })
+  .strict();
+
 /**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
  */
@@ -35,6 +49,8 @@ export const createFlowStateSchema = z
     selectedOrganizationTypeIds: z.array(z.string()).optional(),
     selectedScaleIds: z.array(z.string()).optional(),
     selectedMaturityIds: z.array(z.string()).optional(),
+    communityStructureChipSnapshots:
+      communityStructureChipSnapshotsSchema.optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),
