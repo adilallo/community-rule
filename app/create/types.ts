@@ -42,6 +42,12 @@ export type CommunityStructureChipSnapshotRow = {
   state?: string;
 };
 
+/** Meaning + violation signals copy for a core value chip (draft + publish). */
+export type CoreValueDetailEntry = {
+  meaning: string;
+  signals: string;
+};
+
 /**
  * Flow state for inputs across create-flow steps.
  * Validated on `PUT /api/drafts/me` via `createFlowStateSchema` (Zod + JSON safety checks).
@@ -75,6 +81,8 @@ export interface CreateFlowState {
   selectedCoreValueIds?: string[];
   /** Full chip rows for core values (custom labels). */
   coreValuesChipsSnapshot?: CommunityStructureChipSnapshotRow[];
+  /** User-authored detail text keyed by chip id (preset ids or custom UUIDs). */
+  coreValueDetailsByChipId?: Record<string, CoreValueDetailEntry>;
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

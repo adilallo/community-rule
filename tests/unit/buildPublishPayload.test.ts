@@ -39,6 +39,7 @@ describe("buildPublishPayload", () => {
           ],
         },
       ],
+      coreValues: [],
     });
   });
 
@@ -58,6 +59,7 @@ describe("buildPublishPayload", () => {
           entries: [{ title: "Community", body: "We organize locally." }],
         },
       ],
+      coreValues: [],
     });
   });
 
@@ -71,7 +73,7 @@ describe("buildPublishPayload", () => {
     const r = buildPublishPayload({ title: "T", sections });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    expect(r.document).toEqual({ sections });
+    expect(r.document).toEqual({ sections, coreValues: [] });
   });
 
   it("filters invalid section entries from state.sections", () => {
@@ -86,7 +88,28 @@ describe("buildPublishPayload", () => {
     if (!r.ok) return;
     expect(r.document).toEqual({
       sections: [{ categoryName: "Values", entries: [{ title: "A", body: "B" }] }],
+      coreValues: [],
     });
+  });
+
+  it("includes coreValues from selected chips and detail text", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCoreValueIds: ["1", "2"],
+      coreValuesChipsSnapshot: [
+        { id: "1", label: "Alpha", state: "Selected" },
+        { id: "2", label: "Beta", state: "Selected" },
+      ],
+      coreValueDetailsByChipId: {
+        "1": { meaning: "m1", signals: "s1" },
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.document.coreValues).toEqual([
+      { chipId: "1", label: "Alpha", meaning: "m1", signals: "s1" },
+      { chipId: "2", label: "Beta", meaning: "", signals: "" },
+    ]);
   });
 });
 

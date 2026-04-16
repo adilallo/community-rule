@@ -27,6 +27,11 @@ export interface CreateProps {
   multiSelect?: boolean;
   upload?: boolean;
   proportion?: boolean;
+  /**
+   * Backdrop behind the dialog. `loginYellow` matches the Login modal’s blurred brand overlay.
+   * @default "default"
+   */
+  backdropVariant?: "default" | "loginYellow";
 }
 
 export interface CreateViewProps {
@@ -51,4 +56,5 @@ export interface CreateViewProps {
   ariaLabelledBy?: string;
   createRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
+  backdropVariant: "default" | "loginYellow";
 }

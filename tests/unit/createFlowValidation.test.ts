@@ -101,6 +101,25 @@ describe("createFlowStateSchema", () => {
     });
     expect(r.success).toBe(false);
   });
+
+  it("accepts coreValueDetailsByChipId", () => {
+    const r = createFlowStateSchema.safeParse({
+      coreValueDetailsByChipId: {
+        "1": { meaning: "We care about access.", signals: "Blocking access." },
+        "uuid-here": { meaning: "", signals: "" },
+      },
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("rejects core value detail strings that are too long", () => {
+    const r = createFlowStateSchema.safeParse({
+      coreValueDetailsByChipId: {
+        "1": { meaning: "x".repeat(8001), signals: "y" },
+      },
+    });
+    expect(r.success).toBe(false);
+  });
 });
 
 describe("putDraftBodySchema", () => {

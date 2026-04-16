@@ -20,6 +20,11 @@ const communityStructureChipSnapshotsSchema = z
   })
   .strict();
 
+const coreValueDetailEntrySchema = z.object({
+  meaning: z.string().max(8000),
+  signals: z.string().max(8000),
+});
+
 /**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
  */
@@ -54,6 +59,9 @@ export const createFlowStateSchema = z
     selectedCoreValueIds: z.array(z.string()).max(200).optional(),
     coreValuesChipsSnapshot: z
       .array(communityStructureChipSnapshotRowSchema)
+      .optional(),
+    coreValueDetailsByChipId: z
+      .record(coreValueDetailEntrySchema)
       .optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),

@@ -20,6 +20,11 @@ import {
   readAnonymousCreateFlowState,
   writeAnonymousCreateFlowState,
 } from "../utils/anonymousDraftStorage";
+import {
+  clearCoreValueDetailsLocalStorage,
+  readCoreValueDetailsFromLocalStorage,
+  writeCoreValueDetailsToLocalStorage,
+} from "../utils/coreValueDetailsLocalStorage";
 
 const CreateFlowContext = createContext<CreateFlowContextValue | null>(null);
 
@@ -41,9 +46,20 @@ export function CreateFlowProvider({
   initialStep = null,
   enableAnonymousPersistence = false,
 }: CreateFlowProviderProps) {
-  const [state, setState] = useState<CreateFlowState>(() =>
-    enableAnonymousPersistence ? readAnonymousCreateFlowState() : {},
-  );
+  const [state, setState] = useState<CreateFlowState>(() => {
+    const base = enableAnonymousPersistence
+      ? readAnonymousCreateFlowState()
+      : {};
+    const storedDetails = readCoreValueDetailsFromLocalStorage();
+    if (Object.keys(storedDetails).length === 0) return base;
+    return {
+      ...base,
+      coreValueDetailsByChipId: {
+        ...storedDetails,
+        ...(base.coreValueDetailsByChipId ?? {}),
+      },
+    };
+  });
   const [interactionTouched, setInteractionTouched] = useState(false);
   const [currentStep] = useState<CreateFlowStep | null>(initialStep);
   const prevPersistRef = useRef(enableAnonymousPersistence);
@@ -72,6 +88,11 @@ export function CreateFlowProvider({
     writeAnonymousCreateFlowState(state);
   }, [state, enableAnonymousPersistence]);
 
+  /** Meaning/signals for core values: survives refresh for signed-in users; merged with anonymous draft when both exist. */
+  useEffect(() => {
+    writeCoreValueDetailsToLocalStorage(state.coreValueDetailsByChipId);
+  }, [state.coreValueDetailsByChipId]);
+
   const markCreateFlowInteraction = useCallback(() => {
     setInteractionTouched(true);
   }, []);
@@ -83,6 +104,12 @@ export function CreateFlowProvider({
         merged.communityStructureChipSnapshots = {
           ...(prevState.communityStructureChipSnapshots ?? {}),
           ...updates.communityStructureChipSnapshots,
+        };
+      }
+      if (updates.coreValueDetailsByChipId !== undefined) {
+        merged.coreValueDetailsByChipId = {
+          ...(prevState.coreValueDetailsByChipId ?? {}),
+          ...updates.coreValueDetailsByChipId,
         };
       }
       return merged;
@@ -97,6 +124,7 @@ export function CreateFlowProvider({
     setState({});
     setInteractionTouched(false);
     clearAnonymousCreateFlowStorage();
+    clearCoreValueDetailsLocalStorage();
   }, []);
 
   const contextValue: CreateFlowContextValue = {

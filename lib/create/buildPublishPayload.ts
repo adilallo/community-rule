@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "../../app/create/types";
+import type { CoreValueDetailEntry, CreateFlowState } from "../../app/create/types";
 import type { CommunityRuleDocumentSection } from "../../app/components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
 
 function isDocumentEntry(x: unknown): x is { title: string; body: string } {
@@ -26,6 +26,30 @@ export function parseSectionsFromCreateFlowState(
     if (isDocumentSection(x)) out.push(x);
   }
   return out;
+}
+
+/** Core values selected in the flow with labels and detail text for the published document. */
+export function buildCoreValuesForDocument(state: CreateFlowState): Array<{
+  chipId: string;
+  label: string;
+  meaning: string;
+  signals: string;
+}> {
+  const snap = state.coreValuesChipsSnapshot;
+  const selected = new Set(state.selectedCoreValueIds ?? []);
+  const details = state.coreValueDetailsByChipId ?? {};
+  if (!snap?.length) return [];
+  return snap
+    .filter((r) => selected.has(r.id))
+    .map((r) => {
+      const d: CoreValueDetailEntry | undefined = details[r.id];
+      return {
+        chipId: r.id,
+        label: r.label,
+        meaning: d?.meaning ?? "",
+        signals: d?.signals ?? "",
+      };
+    });
 }
 
 export type BuildPublishPayloadResult =
@@ -72,10 +96,17 @@ export function buildPublishPayload(
     ];
   }
 
+  const coreValues = buildCoreValuesForDocument(state);
+
   if (summary !== undefined) {
-    return { ok: true, title, summary, document: { sections } };
+    return {
+      ok: true,
+      title,
+      summary,
+      document: { sections, coreValues },
+    };
   }
-  return { ok: true, title, document: { sections } };
+  return { ok: true, title, document: { sections, coreValues } };
 }
 
 /** Read `document.sections` from a stored published payload for display. */

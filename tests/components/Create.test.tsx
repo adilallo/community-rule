@@ -59,6 +59,18 @@ describe("Create", () => {
     }
   });
 
+  it("uses login yellow backdrop when backdropVariant is loginYellow", () => {
+    renderWithProviders(
+      <Create
+        {...defaultProps}
+        backdropVariant="loginYellow"
+        headerContent={<div>Header</div>}
+      />,
+    );
+    const overlay = document.querySelector(".backdrop-blur-md");
+    expect(overlay).toBeInTheDocument();
+  });
+
   it("renders footer buttons when provided", () => {
     const onBack = vi.fn();
     const onNext = vi.fn();
