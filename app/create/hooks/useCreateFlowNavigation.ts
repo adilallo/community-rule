@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback } from "react";
 import type { CreateFlowStep } from "../types";
 import {
+  type CreateFlowNavigationOptions,
   getNextStep,
   getPreviousStep,
   parseCreateFlowScreenFromPathname,
@@ -26,7 +27,9 @@ const blurActiveElement = (): void => {
  *
  * Resolves the active step from `/create/{screenId}` via {@link parseCreateFlowScreenFromPathname} (flowSteps).
  */
-export function useCreateFlowNavigation(): {
+export function useCreateFlowNavigation(
+  options?: CreateFlowNavigationOptions,
+): {
   currentStep: CreateFlowStep | null;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
@@ -41,8 +44,8 @@ export function useCreateFlowNavigation(): {
 
   const validStep = parseCreateFlowScreenFromPathname(pathname ?? null);
 
-  const nextStep = getNextStep(validStep);
-  const previousStep = getPreviousStep(validStep);
+  const nextStep = getNextStep(validStep, options);
+  const previousStep = getPreviousStep(validStep, options);
 
   const goToNextStep = useCallback(() => {
     blurActiveElement();

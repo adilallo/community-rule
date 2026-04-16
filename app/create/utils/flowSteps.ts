@@ -37,16 +37,26 @@ export const VALID_STEPS: readonly CreateFlowStep[] = FLOW_STEP_ORDER;
  */
 export const FIRST_STEP: CreateFlowStep = FLOW_STEP_ORDER[0];
 
+/** Options for navigation when the email / magic-link save step is not shown (signed-in users). */
+export type CreateFlowNavigationOptions = {
+  skipCommunitySave?: boolean;
+};
+
 /**
  * Returns the next step in the flow, or null if current is last/invalid
  */
 export function getNextStep(
   currentStep: CreateFlowStep | null | undefined,
+  options?: CreateFlowNavigationOptions,
 ): CreateFlowStep | null {
   if (!currentStep) return null;
   const index = FLOW_STEP_ORDER.indexOf(currentStep);
   if (index === -1 || index === FLOW_STEP_ORDER.length - 1) return null;
-  return FLOW_STEP_ORDER[index + 1] as CreateFlowStep;
+  const next = FLOW_STEP_ORDER[index + 1] as CreateFlowStep;
+  if (options?.skipCommunitySave && next === "community-save") {
+    return getNextStep("community-save", options);
+  }
+  return next;
 }
 
 /**
@@ -54,11 +64,16 @@ export function getNextStep(
  */
 export function getPreviousStep(
   currentStep: CreateFlowStep | null | undefined,
+  options?: CreateFlowNavigationOptions,
 ): CreateFlowStep | null {
   if (!currentStep) return null;
   const index = FLOW_STEP_ORDER.indexOf(currentStep);
   if (index <= 0) return null;
-  return FLOW_STEP_ORDER[index - 1] as CreateFlowStep;
+  const prev = FLOW_STEP_ORDER[index - 1] as CreateFlowStep;
+  if (options?.skipCommunitySave && prev === "community-save") {
+    return getPreviousStep("community-save", options);
+  }
+  return prev;
 }
 
 /**

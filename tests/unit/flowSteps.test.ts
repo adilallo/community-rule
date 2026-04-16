@@ -55,4 +55,17 @@ describe("flowSteps", () => {
     expect(getNextStep("community-structure")).toBe("community-context");
     expect(getNextStep("community-context")).toBe("community-size");
   });
+
+  it("skipCommunitySave bridges upload → review and review → upload", () => {
+    const opts = { skipCommunitySave: true } as const;
+    expect(getNextStep("community-upload", opts)).toBe("review");
+    expect(getPreviousStep("review", opts)).toBe("community-upload");
+  });
+
+  it("skipCommunitySave does not change steps outside the save segment", () => {
+    const opts = { skipCommunitySave: true } as const;
+    expect(getNextStep("community-size", opts)).toBe("community-upload");
+    expect(getNextStep("review", opts)).toBe("cards");
+    expect(getPreviousStep("cards", opts)).toBe("review");
+  });
 });

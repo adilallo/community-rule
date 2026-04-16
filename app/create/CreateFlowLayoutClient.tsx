@@ -93,13 +93,16 @@ function CreateFlowLayoutContent({
   const router = useRouter();
   const pathname = usePathname();
   const { openLogin } = useAuthModal();
+  const skipCommunitySave = sessionResolved && Boolean(sessionUser);
   const {
     currentStep,
     nextStep,
     previousStep,
     goToNextStep,
     goToPreviousStep,
-  } = useCreateFlowNavigation();
+  } = useCreateFlowNavigation(
+    skipCommunitySave ? { skipCommunitySave: true } : undefined,
+  );
   const { state, clearState, updateState } = useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
@@ -239,6 +242,16 @@ function CreateFlowLayoutContent({
     if (!sessionUser) return;
     await runAuthenticatedExit(opts);
   };
+
+  useEffect(() => {
+    if (
+      sessionResolved &&
+      sessionUser &&
+      currentStep === "community-save"
+    ) {
+      router.replace("/create/review");
+    }
+  }, [sessionResolved, sessionUser, currentStep, router]);
 
   useEffect(() => {
     if (currentStep !== "community-save") {
