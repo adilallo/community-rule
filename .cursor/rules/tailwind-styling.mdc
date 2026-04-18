@@ -1,0 +1,37 @@
+---
+description: Tailwind-first styling for all React components
+globs: app/**/*.{ts,tsx},stories/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Tailwind-first styling
+
+Tailwind v4 is the default styling layer. Reach for utility classes + design
+tokens **before** anything else.
+
+## Priority
+
+1. **Tailwind utilities** — `className="flex items-center gap-4 p-6 rounded-lg"`.
+   Use arbitrary values (`w-[200px]`) and responsive variants (`sm:`, `lg:`)
+   as needed. Design-token CSS variables go in arbitrary values:
+   `bg-[var(--color-surface-default-primary)]`.
+2. **`style` prop** — only for values that truly change at runtime
+   (`style={{ width: `${dynamicPx}px` }}`).
+3. **Custom / global CSS** — last resort. Justified for keyframes, third-party
+   overrides, dynamic-count CSS Grid, and similar cases Tailwind can't express.
+4. **CSS-in-JS / CSS Modules** — don't introduce.
+
+## Anti-patterns
+
+```tsx
+// ❌ Opaque class names bypass the design system
+<div className="custom-container">
+  <span className="custom-text">Hello</span>
+</div>
+
+// ❌ Inline style for a static value
+<div style={{ padding: 16, borderRadius: 8 }}>…</div>
+
+// ✅ Tailwind + token
+<div className="p-4 rounded-lg bg-[var(--color-surface-default-primary)]">…</div>
+```

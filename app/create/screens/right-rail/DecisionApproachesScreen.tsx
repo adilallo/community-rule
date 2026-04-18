@@ -17,7 +17,7 @@ import { useState, useCallback, useMemo } from "react";
 import DecisionMakingSidebar from "../../../components/utility/DecisionMakingSidebar";
 import CardStack from "../../../components/utility/CardStack";
 import Create from "../../../components/modals/Create";
-import { IncrementerBlock } from "../../../components/controls/Incrementer";
+import IncrementerBlock from "../../../components/controls/IncrementerBlock";
 import InlineTextButton from "../../../components/buttons/InlineTextButton";
 import type { InfoMessageBoxItem } from "../../../components/utility/InfoMessageBox/InfoMessageBox.types";
 import type { CardStackItem } from "../../../components/utility/CardStack/CardStack.types";

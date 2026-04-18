@@ -27,7 +27,7 @@ interface CreateFlowTwoColumnSelectShellProps {
 
 /**
  * Two-column layout for create-flow select steps (community size/structure, core values) and
- * {@link RightRailScreen} (decision approaches). Below `lg` (1024px), one column + main scrolls.
+ * {@link DecisionApproachesScreen} (decision approaches). Below `lg` (1024px), one column + main scrolls.
  * At `lg+`, mirrors {@link CompletedScreen}: static header column + scrollable controls column
  * (`min-h-0` + `overflow-y-auto` height chain; see completed page right rail).
  */

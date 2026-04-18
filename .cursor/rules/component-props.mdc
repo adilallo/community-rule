@@ -1,0 +1,59 @@
+---
+description: Figma ↔ codebase prop alignment & normalization for design-system components
+globs: app/components/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Component prop alignment
+
+Figma emits PascalCase enum values (`"Standard"`, `"Inverse"`); the codebase
+stores lowercase (`"standard"`, `"inverse"`). Components must accept **both**,
+normalize to lowercase internally, and never break existing consumer call
+sites.
+
+## Scope
+
+Applies to enum-like string props: `variant`, `size`, `state`, `mode`, `type`,
+`position`, `alignment`, `status`, `color`, `palette`. **Skip** for free-form
+strings (URLs, classNames), booleans, numbers, or internal-only props.
+
+## Pattern
+
+```typescript
+// Type accepts both formats
+export type ComponentSizeValue = "small" | "medium" | "Small" | "Medium";
+
+// Container normalizes via helpers from lib/propNormalization.ts
+import { normalizeSize } from "../../../lib/propNormalization";
+
+const ComponentContainer = ({ size: sizeProp = "small" }: Props) => {
+  const size = normalizeSize(sizeProp, SIZE_OPTIONS, "small");
+  return <ComponentView size={size} />;
+};
+```
+
+## Normalizers
+
+Use an existing helper from `lib/propNormalization.ts` before writing a new
+one. Generic: `normalizeMode`, `normalizeState`, `normalizeInputState`,
+`normalizeSize`, `normalizeAlignment`, `normalizeSmallMediumLargeSize`,
+`normalizeLabelVariant`. Component-specific variants are named
+`normalize<Component><Prop>` (e.g. `normalizeChipPalette`,
+`normalizeButtonState`) — add one there rather than inlining a switch in your
+container.
+
+## Figma traceability
+
+Every DS component's container docstring cites its Figma origin so designers
+and engineers can jump between the two. Format: `Figma: "<Component Path>"
+(<node-id>)`.
+
+```typescript
+/**
+ * Figma: "Control / Incrementer" (`17857:30943`). A compact [ - value + ]
+ * row used for numeric step inputs…
+ */
+```
+
+When the view renders a distinct Figma node, add `data-figma-node="<id>"` on
+the root element for quick DOM-to-design lookup.

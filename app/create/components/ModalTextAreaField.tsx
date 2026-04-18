@@ -6,7 +6,7 @@
  * appearance — matching the Figma "Control / Text Area" pattern.
  */
 
-import { memo } from "react";
+import { memo, useId } from "react";
 import TextArea from "../../components/controls/TextArea";
 import InputLabel from "../../components/utility/InputLabel";
 
@@ -38,9 +38,18 @@ function ModalTextAreaFieldComponent({
   disabled = false,
   className = "",
 }: ModalTextAreaFieldProps) {
+  const labelId = useId();
+
   return (
     <div className={`flex flex-col gap-2 ${className}`.trim()}>
-      <InputLabel label={label} helpIcon={helpIcon} size="s" palette="default" />
+      <div id={labelId}>
+        <InputLabel
+          label={label}
+          helpIcon={helpIcon}
+          size="s"
+          palette="default"
+        />
+      </div>
       <TextArea
         formHeader={false}
         value={value}
@@ -50,6 +59,7 @@ function ModalTextAreaFieldComponent({
         appearance="embedded"
         placeholder={placeholder}
         disabled={disabled}
+        aria-labelledby={labelId}
       />
     </div>
   );

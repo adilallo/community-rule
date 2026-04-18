@@ -1,0 +1,76 @@
+---
+description: App Router API handler conventions (Next.js + Prisma + Zod)
+globs: app/api/**/*.ts,lib/server/**/*.ts
+alwaysApply: false
+---
+
+# API route anatomy
+
+Every DB-touching handler in `app/api/**/route.ts` follows the same skeleton.
+Keep new routes within this shape so auth, config, and validation stay uniform.
+
+1. **Config guard (first line of the handler).**
+
+   ```typescript
+   if (!isDatabaseConfigured()) return dbUnavailable();
+   ```
+
+   From `lib/server/env` + `lib/server/responses`. Returns a consistent 503
+   when `DATABASE_URL` is missing (local dev, preview builds).
+
+2. **Auth (when the route requires a user).**
+
+   ```typescript
+   const user = await getSessionUser();
+   if (!user) {
+     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+   }
+   ```
+
+   From `lib/server/session`. Never read session cookies or tokens directly.
+
+3. **Body parsing + validation (POST/PUT/PATCH).**
+
+   ```typescript
+   const parsed = await readLimitedJson(request);
+   const result = mySchema.safeParse(parsed);
+   if (!result.success) return jsonFromZodError(result.error);
+   ```
+
+   Helpers live in `lib/server/validation/{requestBody,zodHttp}.ts`. All
+   payload schemas belong in `lib/server/validation/*.ts` (today:
+   `createFlowSchemas.ts`) — colocate new schemas there rather than inline in
+   the route.
+
+4. **Prisma access** via `import { prisma } from "lib/server/db"`. Do not
+   instantiate `PrismaClient` directly.
+
+5. **Responses** via `NextResponse.json(...)`. Shared shapes (`dbUnavailable`)
+   live in `lib/server/responses.ts`; add new shared responses there when a
+   pattern repeats in two routes.
+
+# Server-only isolation
+
+`lib/server/*` is the server boundary. Anything that:
+
+- imports `@prisma/client`,
+- reads secrets from `env`,
+- sends email, hashes tokens, or touches sessions
+
+…lives under `lib/server/`. Never import `lib/server/*` from client
+components, `app/components/**`, or any file marked `"use client"`. Shared
+logic safe for both sides goes in `lib/*`.
+
+# Deferred — follow existing code, don't invent
+
+These areas are still settling. Match whatever the nearest route already does
+instead of introducing new patterns:
+
+- **Rate limiting.** `lib/server/rateLimit.ts` is an in-memory stopgap marked
+  for replacement. Reuse `rateLimitKey()` where limiting is needed; don't
+  design a new limiter.
+- **Error response shape.** Currently `{ error: string }` + HTTP status. No
+  error codes yet — don't add a taxonomy until one is designed.
+- **Pagination / filtering.** Only `rules/route.ts` paginates (`take` capped
+  at 100). Mirror it if you add list endpoints; don't invent cursors or
+  offset contracts unilaterally.

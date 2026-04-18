@@ -1,0 +1,64 @@
+---
+description: File-structure conventions for design-system components
+globs: app/components/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Component file structure
+
+## Split-file pattern (default)
+
+Anything in `app/components/controls/**` and `app/components/utility/**` uses
+a **4-file split**, one folder per component:
+
+```
+app/components/controls/<Name>/
+  <Name>.types.ts        // Public Props + internal ViewProps
+  <Name>.view.tsx        // "use client"; pure render; exports memo(view)
+  <Name>.container.tsx   // "use client"; memo; prop normalization & logic
+  index.tsx              // re-exports default + public types
+```
+
+**Container** (`<Name>.container.tsx`):
+
+- Marked `"use client"`.
+- Receives `<Name>Props`; normalizes PascalCase enums via
+  `lib/propNormalization.ts`; computes derived state (clamps, ids, bounds).
+- Renders `<<Name>View />` with already-normalized `<Name>ViewProps`.
+- Default export: `memo(<Name>Container)` with `.displayName = "<Name>"`.
+
+**View** (`<Name>.view.tsx`):
+
+- Marked `"use client"`.
+- Pure render of `<Name>ViewProps`. No prop normalization, no data fetching,
+  no derived business logic.
+- Default export: `memo(<Name>View)` with
+  `.displayName = "<Name>View"`.
+
+**Types** (`<Name>.types.ts`):
+
+- Export `<Name>Props` (consumer-facing, accepts PascalCase + lowercase).
+- Export `<Name>ViewProps` (already-normalized shape the view consumes).
+- Export any locally-defined value types (`<Name>SizeValue`, etc.).
+
+**Index** (`index.tsx`):
+
+```typescript
+export { default } from "./<Name>.container";
+export type { <Name>Props } from "./<Name>.types";
+```
+
+## Single-file pattern (exception)
+
+`app/components/buttons/*.tsx` and other trivially-presentational components
+can stay as a single file when they have **no enum prop normalization and no
+derived state** (e.g. `Button.tsx`, `InlineTextButton.tsx`). If you find
+yourself adding state, enum normalization, or more than a handful of props,
+promote it to the split pattern.
+
+## Wrapper / group components
+
+Related composites live in a **sibling folder**, not inside the base
+component's folder — mirror `CheckboxGroup/` ↔ `Checkbox/`,
+`IncrementerBlock/` ↔ `Incrementer/`, etc. Each gets its own 4-file split.
+Consumers import from the folder's `index.tsx`.

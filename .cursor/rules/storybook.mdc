@@ -1,0 +1,105 @@
+---
+description: Storybook story conventions — location, naming, titles, decorators
+globs: stories/**/*.{js,jsx,ts,tsx,mdx},.storybook/**/*.{js,ts}
+alwaysApply: false
+---
+
+# Where stories live
+
+All stories live in the top-level `stories/` folder, mirroring the
+`app/components/` directory tree:
+
+| Source                            | Story location                         |
+| --------------------------------- | -------------------------------------- |
+| `app/components/controls/Chip`    | `stories/controls/Chip.stories.js`     |
+| `app/components/buttons/Button`   | `stories/buttons/Button.stories.js`    |
+| `app/create/screens/.../FooScreen`| `stories/pages/FooPage.stories.js`     |
+
+Do **not** colocate `*.stories.*` next to components. The Storybook config
+(`.storybook/main.js`) only globs `stories/**`.
+
+# File naming
+
+- `<ComponentName>.stories.js` — matches 69/70 existing files.
+- Use `.tsx` only when the story genuinely needs types (rare; prefer JS to
+  match the codebase convention).
+- Variants get a suffix: `Button.visual.stories.js`,
+  `Footer.responsive.stories.js`.
+
+# Default export shape (CSF2)
+
+```javascript
+import MyComponent from "../../app/components/<area>/MyComponent";
+
+export default {
+  title: "Components/<SubFolder>/MyComponent",
+  component: MyComponent,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: "Short description of what the component is for.",
+      },
+    },
+  },
+  argTypes: {
+    variant: {
+      control: { type: "select" },
+      options: ["filled", "outline"],
+      description: "The variant (Figma prop)",
+    },
+    onClick: { action: "clicked" },
+  },
+};
+
+export const Default = { args: { variant: "filled" } };
+```
+
+## Title hierarchy
+
+- Design-system components → `Components/<SubFolder>/<Name>` (e.g.
+  `Components/Controls/Checkbox`).
+- Pages → `Pages/<PageName>` (folder: `stories/pages/`).
+- Create flow shared pieces → `Create Flow/<Name>`.
+
+## `argTypes`
+
+For every Figma enum prop (`variant`, `size`, `state`, `mode`, `palette`,
+…) expose a `select` control listing the **lowercase** option set — even
+though the prop accepts PascalCase too. See `.cursor/rules/component-props.mdc`.
+
+# Rely on the global preview — don't re-wrap
+
+`.storybook/preview.js` already provides:
+
+- `MessagesProvider` with `messages/en` → access copy via `useMessages()`
+  inside stories exactly like app code. Never hard-code user-facing strings.
+- `app/globals.css` + `.font-inter` wrapper → design tokens and fonts are
+  already present.
+
+Do **not** add your own `MessagesProvider`, font wrapper, or token setup in a
+story. If you need a new global, update `preview.js`.
+
+# Interaction tests (`play`)
+
+Use `@storybook/test` for interaction assertions — not `@testing-library/*`
+directly. This matches `Checkbox.stories.js` and stays compatible with the
+Vitest portable-stories runner in `.storybook/vitest.setup.js`.
+
+```javascript
+import { within, userEvent, expect } from "@storybook/test";
+
+export const Interactive = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("checkbox"));
+    expect(canvas.getByRole("checkbox")).toHaveAttribute("aria-checked", "true");
+  },
+};
+```
+
+# Coverage expectation
+
+Every new component in `app/components/**` ships with a story. Screens in
+`app/create/screens/**` ship with a `stories/pages/<Name>Page.stories.js`
+entry. A new component without a story is considered incomplete.

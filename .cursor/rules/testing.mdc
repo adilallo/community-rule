@@ -1,0 +1,72 @@
+---
+description: Test file layout & shared harnesses (vitest + Playwright)
+globs: tests/**/*.{ts,tsx,js,jsx}
+alwaysApply: false
+---
+
+# Testing conventions
+
+## Runner split
+
+- **Vitest** for unit, component, and page-level tests (`tests/components`,
+  `tests/pages`, `tests/unit`, `tests/contexts`, `tests/accessibility`).
+  Run via `npm test` or `npx vitest run`.
+- **Playwright** for browser e2e and visual regression (`tests/e2e`).
+  Run via `npm run e2e`. Never put Playwright specs outside `tests/e2e/`.
+
+## File layout
+
+| Path | Use |
+| --- | --- |
+| `tests/components/<Name>.test.tsx` | Design-system component tests. |
+| `tests/pages/<step>.test.jsx` | Page / screen integration tests. |
+| `tests/unit/<fn>.test.{ts,js}` | Pure logic — utilities, reducers, hooks without DOM. |
+| `tests/contexts/<Ctx>.test.tsx` | Context provider tests. |
+| `tests/accessibility/` | `jest-axe` suites (unit) and `wcag-compliance.spec.ts` (e2e). |
+| `tests/e2e/` | Playwright specs (user journeys, visual, performance). |
+
+## Providers — always use `renderWithProviders`
+
+`render` from `@testing-library/react` **skips** Messages/AuthModal/CreateFlow
+providers. Import the wrapped version instead:
+
+```typescript
+import {
+  renderWithProviders as render,
+  screen,
+} from "../utils/test-utils";
+```
+
+Raw `render` is only acceptable for pure-presentational components that read
+none of those contexts.
+
+## DS component suites
+
+Reuse `componentTestSuite` for standard DS coverage (renders,
+`jest-axe` a11y, keyboard navigation, disabled/error states) instead of
+rewriting each check per component:
+
+```typescript
+import {
+  componentTestSuite,
+  type ComponentTestSuiteConfig,
+} from "../utils/componentTestSuite";
+
+const config: ComponentTestSuiteConfig<Props> = {
+  component: MyComponent,
+  name: "MyComponent",
+  props: baseProps,
+  primaryRole: "button",
+  testCases: { renders: true, accessibility: true, keyboardNavigation: true },
+};
+componentTestSuite(config);
+```
+
+Custom interaction tests live alongside the suite in the same file.
+
+## Required imports
+
+- `import "@testing-library/jest-dom/vitest";` — required for matcher types
+  (`toBeInTheDocument`, `toHaveAttribute`, etc.).
+- `afterEach(() => cleanup())` in page-level test files where multiple
+  `render` calls run sequentially.
