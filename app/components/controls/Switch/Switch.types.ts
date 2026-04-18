@@ -17,8 +17,7 @@ export interface SwitchProps extends Omit<
   onFocus?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   /**
-   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Visual state.
    */
   state?: StateValue;
   /**

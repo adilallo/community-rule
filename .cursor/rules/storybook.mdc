@@ -6,14 +6,22 @@ alwaysApply: false
 
 # Where stories live
 
-All stories live in the top-level `stories/` folder, mirroring the
-`app/components/` directory tree:
+All stories live in the top-level `stories/` folder. Two layout rules:
 
-| Source                            | Story location                         |
-| --------------------------------- | -------------------------------------- |
-| `app/components/controls/Chip`    | `stories/controls/Chip.stories.js`     |
-| `app/components/buttons/Button`   | `stories/buttons/Button.stories.js`    |
-| `app/create/screens/.../FooScreen`| `stories/pages/FooPage.stories.js`     |
+- **Design-system components** mirror `app/components/`. A component at
+  `app/components/<bucket>/<Name>` gets `stories/<bucket>/<Name>.stories.js`.
+- **Create-flow material** has two carve-outs:
+  - `stories/create-flow/` — shared create-flow pieces that aren't in
+    `app/components/` (e.g. composed wizard fragments).
+  - `stories/pages/` — integration stories that exercise an entire
+    `app/(app)/create/screens/<...>` screen as it appears in the wizard.
+
+| Source                            | Story location                          |
+| --------------------------------- | --------------------------------------- |
+| `app/components/controls/Chip`    | `stories/controls/Chip.stories.js`      |
+| `app/components/buttons/Button`   | `stories/buttons/Button.stories.js`     |
+| `app/(app)/create/screens/.../FooScreen`| `stories/pages/FooPage.stories.js`      |
+| Shared create-flow fragment       | `stories/create-flow/<Name>.stories.js` |
 
 Do **not** colocate `*.stories.*` next to components. The Storybook config
 (`.storybook/main.js`) only globs `stories/**`.
@@ -65,8 +73,9 @@ export const Default = { args: { variant: "filled" } };
 ## `argTypes`
 
 For every Figma enum prop (`variant`, `size`, `state`, `mode`, `palette`,
-…) expose a `select` control listing the **lowercase** option set — even
-though the prop accepts PascalCase too. See `.cursor/rules/component-props.mdc`.
+…) expose a `select` control listing the **lowercase** option set, sourced
+from the matching `*_OPTIONS` const in `lib/propNormalization.ts`. See
+`.cursor/rules/component-props.mdc`.
 
 # Rely on the global preview — don't re-wrap
 
@@ -101,5 +110,5 @@ export const Interactive = {
 # Coverage expectation
 
 Every new component in `app/components/**` ships with a story. Screens in
-`app/create/screens/**` ship with a `stories/pages/<Name>Page.stories.js`
+`app/(app)/create/screens/**` ship with a `stories/pages/<Name>Page.stories.js`
 entry. A new component without a story is considered incomplete.

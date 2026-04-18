@@ -1,11 +1,10 @@
-export type TooltipPositionValue = "top" | "bottom" | "Top" | "Bottom";
+export type TooltipPositionValue = "top" | "bottom";
 
 export interface TooltipProps {
   children: React.ReactNode;
   text: string;
   /**
-   * Tooltip position. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Tooltip position.
    */
   position?: TooltipPositionValue;
   className?: string;

@@ -5,16 +5,9 @@ export type ContentLockupVariantValue =
   | "ask"
   | "ask-inverse"
   | "modal"
-  | "login"
-  | "Hero"
-  | "Feature"
-  | "Learn"
-  | "Ask"
-  | "Ask-Inverse"
-  | "Modal"
-  | "Login";
+  | "login";
 
-export type ContentLockupAlignmentValue = "center" | "left" | "Center" | "Left";
+export type ContentLockupAlignmentValue = "center" | "left";
 
 export interface ContentLockupProps {
   title?: string;
@@ -24,15 +17,13 @@ export interface ContentLockupProps {
   ctaHref?: string;
   buttonClassName?: string;
   /**
-   * Content lockup variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Content lockup variant.
    */
   variant?: ContentLockupVariantValue;
   linkText?: string;
   linkHref?: string;
   /**
-   * Text alignment. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Text alignment.
    */
   alignment?: ContentLockupAlignmentValue;
   /**

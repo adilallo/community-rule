@@ -3,10 +3,6 @@
 import { memo, useCallback, useId } from "react";
 import { RadioButtonView } from "./RadioButton.view";
 import type { RadioButtonProps } from "./RadioButton.types";
-import {
-  normalizeMode,
-  normalizeState,
-} from "../../../../lib/propNormalization";
 
 const RadioButtonContainer = ({
   checked = false,
@@ -22,9 +18,8 @@ const RadioButtonContainer = ({
   ariaLabel,
   className = "",
 }: RadioButtonProps) => {
-  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-  const mode = normalizeMode(modeProp);
-  const state = normalizeState(stateProp);
+  const mode = modeProp;
+  const state = stateProp;
 
   // If state is "selected", it means checked in Figma terms
   const normalizedState = state === "selected" || checked ? "selected" : state;

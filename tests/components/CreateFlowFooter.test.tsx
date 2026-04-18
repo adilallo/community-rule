@@ -35,6 +35,7 @@ const config: ComponentTestSuiteConfig<CreateFlowFooterProps> = {
 
 componentTestSuite<CreateFlowFooterProps>(config);
 
+// Pure presentational; no provider context needed (no useMessages/useAuthModal/useCreateFlow consumers).
 describe("CreateFlowFooter (behavioral tests)", () => {
   it("renders Back button", () => {
     render(<CreateFlowFooter />);

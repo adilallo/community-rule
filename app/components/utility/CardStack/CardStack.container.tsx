@@ -7,6 +7,10 @@ import type { CardStackProps } from "./CardStack.types";
 const DEFAULT_TOGGLE_LABEL = "See all communication approaches";
 const DEFAULT_SHOW_LESS_LABEL = "Show less";
 
+/**
+ * Figma: "Utility / CardStack" (TODO(figma)). Selectable stack of cards with
+ * an optional "see all"/"show less" expand toggle.
+ */
 const CardStackContainer = memo<CardStackProps>(
   ({
     cards,

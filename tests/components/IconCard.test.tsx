@@ -38,6 +38,7 @@ const config: ComponentTestSuiteConfig<IconCardProps> = {
 
 componentTestSuite<IconCardProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("IconCard (behavioral tests)", () => {
   it("calls onClick when clicked", () => {
     const handleClick = vi.fn();

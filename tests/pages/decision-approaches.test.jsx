@@ -6,7 +6,7 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach } from "vitest";
-import { DecisionApproachesScreen } from "../../app/create/screens/right-rail/DecisionApproachesScreen";
+import { DecisionApproachesScreen } from "../../app/(app)/create/screens/right-rail/DecisionApproachesScreen";
 
 afterEach(() => {
   cleanup();

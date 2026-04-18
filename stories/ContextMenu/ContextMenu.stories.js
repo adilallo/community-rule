@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ContextMenu from "../../app/components/ContextMenu/ContextMenu";
-import ContextMenuItem from "../../app/components/ContextMenu/ContextMenuItem";
-import ContextMenuSection from "../../app/components/ContextMenu/ContextMenuSection";
-import ContextMenuDivider from "../../app/components/ContextMenu/ContextMenuDivider";
+import ContextMenu from "../../app/components/modals/ContextMenu/ContextMenu";
+import ContextMenuItem from "../../app/components/modals/ContextMenuItem";
+import ContextMenuSection from "../../app/components/modals/ContextMenu/ContextMenuSection";
+import ContextMenuDivider from "../../app/components/modals/ContextMenu/ContextMenuDivider";
 
 export default {
   title: "Components/ContextMenu/ContextMenu",

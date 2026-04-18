@@ -4,11 +4,11 @@ import { memo } from "react";
 import { useComponentId } from "../../../hooks";
 import { CheckboxView } from "./Checkbox.view";
 import type { CheckboxProps } from "./Checkbox.types";
-import {
-  normalizeMode,
-  normalizeState,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / Checkbox" (TODO(figma)). Single boolean checkbox with
+ * optional label, supporting standard and inverse modes.
+ */
 const CheckboxContainer = memo<CheckboxProps>(
   ({
     checked = false,
@@ -24,9 +24,8 @@ const CheckboxContainer = memo<CheckboxProps>(
     ariaLabel,
     ...props
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const mode = normalizeMode(modeProp);
-    const state = normalizeState(stateProp);
+    const mode = modeProp;
+    const state = stateProp;
 
     const isInverse = mode === "inverse";
     const isStandard = mode === "standard";

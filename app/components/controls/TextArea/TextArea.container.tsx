@@ -4,13 +4,11 @@ import { memo, forwardRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
 import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
-import {
-  normalizeInputState,
-  normalizeSmallMediumLargeSize,
-  normalizeLabelVariant,
-  normalizeTextAreaAppearance,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / TextArea" (TODO(figma)). Multi-line text input with size
+ * variants, an embedded appearance, and an optional label and help glyph.
+ */
 const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
@@ -37,11 +35,10 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref,
   ) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const size = normalizeSmallMediumLargeSize(sizeProp);
-    const labelVariant = normalizeLabelVariant(labelVariantProp);
-    const state = normalizeInputState(stateProp);
-    const appearance = normalizeTextAreaAppearance(appearanceProp);
+    const size = sizeProp;
+    const labelVariant = labelVariantProp;
+    const state = stateProp;
+    const appearance = appearanceProp;
     // Generate unique ID for accessibility if not provided
     const { id: textareaId, labelId } = useComponentId("textarea", id);
 

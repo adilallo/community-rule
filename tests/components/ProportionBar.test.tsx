@@ -36,6 +36,7 @@ const config: ComponentTestSuiteConfig<ProportionBarProps> = {
 
 componentTestSuite<ProportionBarProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("ProportionBar (behavioral tests)", () => {
   it("renders proportion bar with correct progress value", () => {
     render(<ProportionBar progress="2-1" />);

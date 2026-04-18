@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getProportionBarProgressForCreateFlowStep } from "../../app/create/utils/createFlowProportionProgress";
+import { getProportionBarProgressForCreateFlowStep } from "../../app/(app)/create/utils/createFlowProportionProgress";
 
 describe("getProportionBarProgressForCreateFlowStep", () => {
   it("uses 1-2 on community-structure (third Create Community step)", () => {

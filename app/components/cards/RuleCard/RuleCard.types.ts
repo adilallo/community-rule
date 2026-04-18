@@ -21,7 +21,7 @@ export interface RuleCardProps {
   className?: string;
   onClick?: () => void;
   expanded?: boolean;
-  size?: "XS" | "S" | "M" | "L" | "xs" | "s" | "m" | "l";
+  size?: "XS" | "S" | "M" | "L";
   categories?: Category[];
   logoUrl?: string;
   logoAlt?: string;

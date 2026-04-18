@@ -1,9 +1,5 @@
-export type InputLabelSizeValue = "S" | "M" | "s" | "m";
-export type InputLabelPaletteValue =
-  | "Default"
-  | "Inverse"
-  | "default"
-  | "inverse";
+export type InputLabelSizeValue = "s" | "m";
+export type InputLabelPaletteValue = "default" | "inverse";
 
 export interface InputLabelProps {
   /**
@@ -25,13 +21,11 @@ export interface InputLabelProps {
    */
   helperText?: boolean | string;
   /**
-   * Size variant: "S" (small) or "M" (medium)
-   * Accepts both uppercase (Figma) and lowercase values.
+   * Size variant: "s" (small) or "m" (medium)
    */
   size?: InputLabelSizeValue;
   /**
-   * Palette variant: "Default" or "Inverse"
-   * Accepts both PascalCase (Figma) and lowercase values.
+   * Palette variant: "default" or "inverse"
    */
   palette?: InputLabelPaletteValue;
   className?: string;

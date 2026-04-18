@@ -39,6 +39,7 @@ const config: ComponentTestSuiteConfig<ButtonProps> = {
 
 componentTestSuite<ButtonProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("Button (behavioral tests)", () => {
   it("calls onClick when clicked", async () => {
     const user = userEvent.setup();

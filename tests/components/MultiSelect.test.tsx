@@ -11,8 +11,8 @@ import {
 type Props = React.ComponentProps<typeof MultiSelect>;
 
 const defaultChipOptions = [
-  { id: "1", label: "Option 1", state: "Unselected" as const },
-  { id: "2", label: "Option 2", state: "Selected" as const },
+  { id: "1", label: "Option 1", state: "unselected" as const },
+  { id: "2", label: "Option 2", state: "selected" as const },
 ];
 
 const config: ComponentTestSuiteConfig<Props> = {
@@ -21,8 +21,8 @@ const config: ComponentTestSuiteConfig<Props> = {
   props: {
     label: "Test Label",
     showHelpIcon: false,
-    size: "S",
-    palette: "Default",
+    size: "s",
+    palette: "default",
     options: defaultChipOptions,
     addButton: true,
     addButtonText: "",
@@ -31,8 +31,8 @@ const config: ComponentTestSuiteConfig<Props> = {
   optionalProps: {
     label: "Optional Label",
     showHelpIcon: true,
-    size: "M",
-    palette: "Inverse",
+    size: "m",
+    palette: "inverse",
     onChipClick: vi.fn(),
     onAddClick: vi.fn(),
     addButton: false,
@@ -144,7 +144,7 @@ describe("MultiSelect – behaviour specifics", () => {
   it("handles custom chip confirm", async () => {
     const handleConfirm = vi.fn();
     const customOptions = [
-      { id: "custom-1", label: "", state: "Custom" as const },
+      { id: "custom-1", label: "", state: "custom" as const },
     ];
     render(
       <MultiSelect
@@ -169,7 +169,7 @@ describe("MultiSelect – behaviour specifics", () => {
   it("handles custom chip close", async () => {
     const handleClose = vi.fn();
     const customOptions = [
-      { id: "custom-1", label: "", state: "Custom" as const },
+      { id: "custom-1", label: "", state: "custom" as const },
     ];
     render(
       <MultiSelect options={customOptions} onCustomChipClose={handleClose} />,

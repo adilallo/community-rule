@@ -1,12 +1,6 @@
 import type { StateValue } from "../../../../lib/propNormalization";
 
-export type ToggleGroupPositionValue =
-  | "left"
-  | "middle"
-  | "right"
-  | "Left"
-  | "Middle"
-  | "Right";
+export type ToggleGroupPositionValue = "left" | "middle" | "right";
 
 export interface ToggleGroupProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -15,15 +9,13 @@ export interface ToggleGroupProps extends Omit<
   children?: React.ReactNode;
   className?: string;
   /**
-   * Toggle group position. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Toggle group position.
    */
   position?: ToggleGroupPositionValue;
   /**
-   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus", "selected"/"Selected" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Visual state.
    */
-  state?: StateValue | "selected" | "Selected";
+  state?: StateValue | "selected";
   showText?: boolean;
   ariaLabel?: string;
   onChange?: (

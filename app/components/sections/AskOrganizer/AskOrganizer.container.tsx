@@ -8,7 +8,6 @@ import type {
   AskOrganizerProps,
   AskOrganizerVariant,
 } from "./AskOrganizer.types";
-import { normalizeAskOrganizerVariant } from "../../../../lib/propNormalization";
 
 const VARIANT_STYLES: Record<
   "centered" | "left-aligned" | "compact" | "inverse",
@@ -43,10 +42,7 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     variant: variantProp = "centered",
     onContactClick,
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeAskOrganizerVariant(
-      variantProp,
-    ) as AskOrganizerVariant;
+    const variant = variantProp;
     const t = useTranslation();
     const defaultButtonText = buttonText ?? t("askOrganizer.buttonText");
     const defaultButtonHref = buttonHref ?? t("askOrganizer.buttonHref");

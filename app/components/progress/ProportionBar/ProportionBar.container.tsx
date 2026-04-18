@@ -1,13 +1,12 @@
 "use client";
 
 import { memo } from "react";
-import { normalizeProportionBarVariant } from "../../../../lib/propNormalization";
 import { ProportionBarView } from "./ProportionBar.view";
 import type { ProportionBarProps } from "./ProportionBar.types";
 
 const ProportionBarContainer = memo<ProportionBarProps>(
   ({ progress = "3-2", className = "", variant: variantProp }) => {
-    const variant = normalizeProportionBarVariant(variantProp);
+    const variant = variantProp ?? "default";
     const barClasses = `h-[8px] relative w-full`;
 
     return (

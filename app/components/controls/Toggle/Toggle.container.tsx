@@ -3,8 +3,11 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { ToggleView } from "./Toggle.view";
 import type { ToggleProps } from "./Toggle.types";
-import { normalizeState } from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / Toggle" (TODO(figma)). Pill-shaped toggle button with
+ * checked/unchecked states and optional leading icon and text.
+ */
 const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(
   (
     {
@@ -24,8 +27,7 @@ const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(
     },
     ref,
   ) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const state = normalizeState(stateProp);
+    const state = stateProp;
     const toggleId = useId();
     const labelId = useId();
 

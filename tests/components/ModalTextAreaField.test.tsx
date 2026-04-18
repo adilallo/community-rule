@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import ModalTextAreaField from "../../app/create/components/ModalTextAreaField";
+import ModalTextAreaField from "../../app/(app)/create/components/ModalTextAreaField";
 import { componentTestSuite } from "../utils/componentTestSuite";
 import { renderWithProviders } from "../utils/test-utils";
 

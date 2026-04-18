@@ -82,11 +82,11 @@ export const Expanded = {
       {
         name: "Values",
         chipOptions: [
-          { id: "values-1", label: "Consciousness", state: "Unselected" },
-          { id: "values-2", label: "Ecology", state: "Unselected" },
-          { id: "values-3", label: "Abundance", state: "Unselected" },
-          { id: "values-4", label: "Art", state: "Unselected" },
-          { id: "values-5", label: "Decisiveness", state: "Unselected" },
+          { id: "values-1", label: "Consciousness", state: "unselected" },
+          { id: "values-2", label: "Ecology", state: "unselected" },
+          { id: "values-3", label: "Abundance", state: "unselected" },
+          { id: "values-4", label: "Art", state: "unselected" },
+          { id: "values-5", label: "Decisiveness", state: "unselected" },
         ],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
@@ -97,7 +97,7 @@ export const Expanded = {
       },
       {
         name: "Communication",
-        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "unselected" }],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
         },
@@ -108,7 +108,7 @@ export const Expanded = {
       {
         name: "Membership",
         chipOptions: [
-          { id: "membership-1", label: "Open Admission", state: "Unselected" },
+          { id: "membership-1", label: "Open Admission", state: "unselected" },
         ],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
@@ -120,11 +120,11 @@ export const Expanded = {
       {
         name: "Decision-making",
         chipOptions: [
-          { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
+          { id: "decision-1", label: "Lazy Consensus", state: "unselected" },
           {
             id: "decision-2",
             label: "Modified Consensus",
-            state: "Unselected",
+            state: "unselected",
           },
         ],
         onChipClick: (categoryName, chipId) => {
@@ -137,11 +137,11 @@ export const Expanded = {
       {
         name: "Conflict management",
         chipOptions: [
-          { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
+          { id: "conflict-1", label: "Code of Conduct", state: "unselected" },
           {
             id: "conflict-2",
             label: "Restorative Justice",
-            state: "Unselected",
+            state: "unselected",
           },
         ],
         onChipClick: (categoryName, chipId) => {
@@ -246,42 +246,42 @@ export const ExpandedMedium = {
       {
         name: "Values",
         chipOptions: [
-          { id: "values-1", label: "Consciousness", state: "Unselected" },
-          { id: "values-2", label: "Ecology", state: "Unselected" },
-          { id: "values-3", label: "Abundance", state: "Unselected" },
-          { id: "values-4", label: "Art", state: "Unselected" },
-          { id: "values-5", label: "Decisiveness", state: "Unselected" },
+          { id: "values-1", label: "Consciousness", state: "unselected" },
+          { id: "values-2", label: "Ecology", state: "unselected" },
+          { id: "values-3", label: "Abundance", state: "unselected" },
+          { id: "values-4", label: "Art", state: "unselected" },
+          { id: "values-5", label: "Decisiveness", state: "unselected" },
         ],
       },
       {
         name: "Communication",
-        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "unselected" }],
       },
       {
         name: "Membership",
         chipOptions: [
-          { id: "membership-1", label: "Open Admission", state: "Unselected" },
+          { id: "membership-1", label: "Open Admission", state: "unselected" },
         ],
       },
       {
         name: "Decision-making",
         chipOptions: [
-          { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
+          { id: "decision-1", label: "Lazy Consensus", state: "unselected" },
           {
             id: "decision-2",
             label: "Modified Consensus",
-            state: "Unselected",
+            state: "unselected",
           },
         ],
       },
       {
         name: "Conflict management",
         chipOptions: [
-          { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
+          { id: "conflict-1", label: "Code of Conduct", state: "unselected" },
           {
             id: "conflict-2",
             label: "Restorative Justice",
-            state: "Unselected",
+            state: "unselected",
           },
         ],
       },
@@ -394,9 +394,9 @@ export const InteractiveStates = {
       {
         name: "Values",
         chipOptions: [
-          { id: "values-1", label: "Consciousness", state: "Unselected" },
-          { id: "values-2", label: "Ecology", state: "Unselected" },
-          { id: "values-3", label: "Abundance", state: "Unselected" },
+          { id: "values-1", label: "Consciousness", state: "unselected" },
+          { id: "values-2", label: "Ecology", state: "unselected" },
+          { id: "values-3", label: "Abundance", state: "unselected" },
         ],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
@@ -407,7 +407,7 @@ export const InteractiveStates = {
       },
       {
         name: "Communication",
-        chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
+        chipOptions: [{ id: "comm-1", label: "Signal", state: "unselected" }],
         onChipClick: (categoryName, chipId) => {
           console.log(`Chip clicked: ${categoryName} - ${chipId}`);
         },

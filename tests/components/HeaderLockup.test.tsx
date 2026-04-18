@@ -36,6 +36,7 @@ const config: ComponentTestSuiteConfig<HeaderLockupProps> = {
 
 componentTestSuite<HeaderLockupProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("HeaderLockup (behavioral tests)", () => {
   it("renders title", () => {
     render(<HeaderLockup title="Test Title" />);
@@ -84,8 +85,8 @@ describe("HeaderLockup (behavioral tests)", () => {
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 
-  it("accepts PascalCase props", () => {
-    render(<HeaderLockup title="Test Title" justification="Left" size="L" />);
+  it("accepts justification and size props", () => {
+    render(<HeaderLockup title="Test Title" justification="left" size="L" />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
 });

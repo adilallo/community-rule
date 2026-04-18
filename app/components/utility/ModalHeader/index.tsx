@@ -1,2 +1,2 @@
-export { ModalHeaderView as default } from "./ModalHeader.view";
+export { default } from "./ModalHeader.container";
 export type { ModalHeaderProps } from "./ModalHeader.types";

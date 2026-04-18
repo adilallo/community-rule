@@ -26,10 +26,10 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     include: [
       "tests/components/**/*.test.{js,jsx,ts,tsx}",
+      "tests/contexts/**/*.test.{js,jsx,ts,tsx}",
       "tests/pages/**/*.test.{js,jsx,ts,tsx}",
       "tests/utils/**/*.test.{js,jsx,ts,tsx}",
-      "tests/unit/**/*.test.{js,jsx,ts,tsx}", // Legacy - remaining non-component tests
-      "tests/e2e/**/*.e2e.test.{js,jsx,ts,tsx}",
+      "tests/unit/**/*.test.{js,jsx,ts,tsx}",
     ],
     exclude: ["tests/e2e/**/*.spec.{js,jsx,ts,tsx}"],
     // Disable CSS processing in tests to avoid jsdom parsing errors with Tailwind v4
@@ -40,7 +40,7 @@ export default defineConfig({
       reporter: ["text", "lcov"],
       include: [
         "app/**/*.{js,jsx,ts,tsx}",
-        "components/**/*.{js,jsx,ts,tsx}",
+        "lib/**/*.{js,jsx,ts,tsx}",
         "!**/*.test.{js,jsx,ts,tsx}",
         "!**/*.spec.{js,jsx,ts,tsx}",
         "!**/node_modules/**",

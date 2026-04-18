@@ -1,4 +1,4 @@
-import { CommunicationMethodsScreen } from "../../app/create/screens/card/CommunicationMethodsScreen";
+import { CommunicationMethodsScreen } from "../../app/(app)/create/screens/card/CommunicationMethodsScreen";
 
 export default {
   title: "Pages/Create Flow/Communication methods",

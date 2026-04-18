@@ -63,6 +63,7 @@ const mockPosts: BlogPost[] = [
   },
 ];
 
+// Pure presentational; no provider context needed (mocked thumbnail + useIsMobile).
 describe("RelatedArticles", () => {
   it("renders without crashing", () => {
     render(

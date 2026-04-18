@@ -6,8 +6,8 @@ import {
   waitFor,
 } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import { FinalReviewScreen } from "../../app/create/screens/review/FinalReviewScreen";
-import { useCreateFlow } from "../../app/create/context/CreateFlowContext";
+import { FinalReviewScreen } from "../../app/(app)/create/screens/review/FinalReviewScreen";
+import { useCreateFlow } from "../../app/(app)/create/context/CreateFlowContext";
 
 const FALLBACK_CARD_TITLE = "Your community";
 const FALLBACK_CARD_DESCRIPTION_SNIPPET =

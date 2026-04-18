@@ -1,59 +1,51 @@
 ---
-description: Figma ↔ codebase prop alignment & normalization for design-system components
+description: Component prop conventions — lowercase-canonical enums, Figma traceability
 globs: app/components/**/*.{ts,tsx}
 alwaysApply: false
 ---
 
 # Component prop alignment
 
-Figma emits PascalCase enum values (`"Standard"`, `"Inverse"`); the codebase
-stores lowercase (`"standard"`, `"inverse"`). Components must accept **both**,
-normalize to lowercase internally, and never break existing consumer call
-sites.
+Figma is the source of truth for component **design** (existence, variants,
+visual specification). The codebase implements those components using
+idiomatic TypeScript naming. Enum props are **lowercase** in code; PascalCase
+is a Figma-side concern only.
 
-## Scope
+## Enum prop convention
 
-Applies to enum-like string props: `variant`, `size`, `state`, `mode`, `type`,
-`position`, `alignment`, `status`, `color`, `palette`. **Skip** for free-form
-strings (URLs, classNames), booleans, numbers, or internal-only props.
-
-## Pattern
+- Types use lowercase string unions: `"small" | "medium" | "large"`.
+- Do NOT add PascalCase variants to type unions.
+- Do NOT call normalizers in containers. The container layer is for `memo`,
+  derived state, prop defaults, and bound logic — not for casing translation.
+- Each enum prop has a sibling `<COMPONENT>_<PROP>_OPTIONS as const` array
+  exported alongside the type. Storybook `argTypes` and any runtime guard
+  consume that array as the single source of valid values.
 
 ```typescript
-// Type accepts both formats
-export type ComponentSizeValue = "small" | "medium" | "Small" | "Medium";
-
-// Container normalizes via helpers from lib/propNormalization.ts
-import { normalizeSize } from "../../../lib/propNormalization";
-
-const ComponentContainer = ({ size: sizeProp = "small" }: Props) => {
-  const size = normalizeSize(sizeProp, SIZE_OPTIONS, "small");
-  return <ComponentView size={size} />;
-};
+export const CHIP_PALETTE_OPTIONS = ["primary", "secondary"] as const;
+export type ChipPaletteValue = (typeof CHIP_PALETTE_OPTIONS)[number];
 ```
-
-## Normalizers
-
-Use an existing helper from `lib/propNormalization.ts` before writing a new
-one. Generic: `normalizeMode`, `normalizeState`, `normalizeInputState`,
-`normalizeSize`, `normalizeAlignment`, `normalizeSmallMediumLargeSize`,
-`normalizeLabelVariant`. Component-specific variants are named
-`normalize<Component><Prop>` (e.g. `normalizeChipPalette`,
-`normalizeButtonState`) — add one there rather than inlining a switch in your
-container.
 
 ## Figma traceability
 
-Every DS component's container docstring cites its Figma origin so designers
-and engineers can jump between the two. Format: `Figma: "<Component Path>"
-(<node-id>)`.
+- Container docstring (required on every DS container): `Figma:
+  "<Component Path>" (<node-id>)`.
+- View root element: `data-figma-node="<id>"` when the view maps to a
+  distinct Figma node.
+- For create-flow screens, node ids come from `CREATE_FLOW_SCREEN_REGISTRY`
+  in `app/(app)/create/utils/createFlowScreenRegistry.ts`. For everything else,
+  pull the node id from the Figma file directly. Use `TODO(figma)` as a
+  placeholder rather than omitting the docstring entirely.
 
 ```typescript
 /**
- * Figma: "Control / Incrementer" (`17857:30943`). A compact [ - value + ]
- * row used for numeric step inputs…
+ * Figma: "Control / Incrementer" (17857:30943). A compact [ - value + ]
+ * row used for numeric step inputs.
  */
 ```
 
-When the view renders a distinct Figma node, add `data-figma-node="<id>"` on
-the root element for quick DOM-to-design lookup.
+## Pasting from Figma
+
+Figma's "Inspect → Code" output emits PascalCase. When importing a snippet,
+lowercase the enum values before committing — same pattern as removing
+inline pixel values in favor of design tokens.

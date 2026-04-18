@@ -4,7 +4,7 @@ import {
   parseDocumentSectionsForDisplay,
   parseSectionsFromCreateFlowState,
 } from "../../lib/create/buildPublishPayload";
-import type { CreateFlowState } from "../../app/create/types";
+import type { CreateFlowState } from "../../app/(app)/create/types";
 
 describe("buildPublishPayload", () => {
   it("returns error when title missing", () => {
@@ -97,8 +97,8 @@ describe("buildPublishPayload", () => {
       title: "T",
       selectedCoreValueIds: ["1", "2"],
       coreValuesChipsSnapshot: [
-        { id: "1", label: "Alpha", state: "Selected" },
-        { id: "2", label: "Beta", state: "Selected" },
+        { id: "1", label: "Alpha", state: "selected" },
+        { id: "2", label: "Beta", state: "selected" },
       ],
       coreValueDetailsByChipId: {
         "1": { meaning: "m1", signals: "s1" },

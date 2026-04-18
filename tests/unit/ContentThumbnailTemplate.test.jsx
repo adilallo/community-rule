@@ -35,6 +35,7 @@ const mockPost = {
   },
 };
 
+// Pure presentational; no provider context needed.
 describe("ContentThumbnailTemplate", () => {
   describe("Vertical Variant", () => {
     it("should render vertical variant with responsive dimensions", () => {

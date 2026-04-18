@@ -56,7 +56,7 @@ export const Small = {
   args: {
     number: 1,
     text: "Document how your community makes decisions",
-    size: "Small",
+    size: "small",
     iconShape: "blob",
     iconColor: "green",
   },
@@ -74,7 +74,7 @@ export const Medium = {
   args: {
     number: 1,
     text: "Document how your community makes decisions",
-    size: "Medium",
+    size: "medium",
     iconShape: "blob",
     iconColor: "green",
   },
@@ -92,7 +92,7 @@ export const Large = {
   args: {
     number: 1,
     text: "Document how your community makes decisions",
-    size: "Large",
+    size: "large",
     iconShape: "blob",
     iconColor: "green",
   },
@@ -110,7 +110,7 @@ export const XLarge = {
   args: {
     number: 1,
     text: "Document how your community makes decisions",
-    size: "XLarge",
+    size: "xlarge",
     iconShape: "blob",
     iconColor: "green",
   },

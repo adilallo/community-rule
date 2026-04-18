@@ -5,7 +5,7 @@ import {
   getPreviousStep,
   isValidStep,
   getStepIndex,
-} from "../../app/create/utils/flowSteps";
+} from "../../app/(app)/create/utils/flowSteps";
 
 describe("flowSteps", () => {
   it("places confirm-stakeholders immediately before final-review", () => {

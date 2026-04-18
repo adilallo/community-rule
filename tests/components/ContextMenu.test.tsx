@@ -1,6 +1,6 @@
 import React from "react";
-import ContextMenu from "../../app/components/ContextMenu/ContextMenu";
-import ContextMenuItem from "../../app/components/ContextMenu/ContextMenuItem";
+import ContextMenu from "../../app/components/modals/ContextMenu/ContextMenu";
+import ContextMenuItem from "../../app/components/modals/ContextMenuItem";
 import { componentTestSuite } from "../utils/componentTestSuite";
 
 type ContextMenuProps = React.ComponentProps<typeof ContextMenu>;

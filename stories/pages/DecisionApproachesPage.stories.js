@@ -1,4 +1,4 @@
-import { DecisionApproachesScreen } from "../../app/create/screens/right-rail/DecisionApproachesScreen";
+import { DecisionApproachesScreen } from "../../app/(app)/create/screens/right-rail/DecisionApproachesScreen";
 
 export default {
   title: "Pages/Create Flow/Decision approaches",

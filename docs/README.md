@@ -1,76 +1,41 @@
 # Documentation
 
-This directory contains project documentation organized by topic.
+User-facing docs. Implementation conventions live in `.cursor/rules/`.
 
-## Documentation Structure
+## Canonical references
 
-### Core Documentation
+- [create-flow.md](./create-flow.md) — Custom create-rule wizard: stages,
+  URLs, persistence. Source of truth for product/eng alignment.
+- [testing-guide.md](./testing-guide.md) — Testing philosophy and what to
+  cover at each layer.
 
-- **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** - Complete testing guide covering component tests, E2E tests, accessibility, and testing philosophy
-- **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** - Documentation for all custom React hooks used in the project
+## Author guides (`guides/`)
 
-### Guides (`guides/`)
+- [content-creation.md](./guides/content-creation.md) — Writing and
+  publishing blog posts.
+- [i18n-translation-workflow.md](./guides/i18n-translation-workflow.md) —
+  Editing UI copy and translation bundles.
 
-- **[container-presentation-pattern.md](./guides/container-presentation-pattern.md)** - Container/Presentation pattern guide for component architecture
-- **[content-creation.md](./guides/content-creation.md)** - Guide for creating blog content
-- **[i18n-translation-workflow.md](./guides/i18n-translation-workflow.md)** - Guide for working with translations and UI content management
+## Temporary backend planning
 
-## Quick Navigation
+These will be deleted once the backend services are stood up:
 
-### For Testing
+- [guides/backend-roadmap.md](./guides/backend-roadmap.md)
+- [guides/backend-linear-tickets.md](./guides/backend-linear-tickets.md)
+- [guides/template-recommendation-matrix.md](./guides/template-recommendation-matrix.md)
 
-Start with **[TESTING_GUIDE.md](./TESTING_GUIDE.md)** for:
+## Cursor rules
 
-- Testing philosophy and approach
-- Component testing with `componentTestSuite`
-- E2E testing with Playwright
-- Accessibility testing
-- How to add tests for new components
+Implementation contracts are enforced by `.cursor/rules/*.mdc`:
 
-### For Custom Hooks
-
-See **[CUSTOM_HOOKS.md](./CUSTOM_HOOKS.md)** for:
-
-- Available custom hooks
-- Usage examples
-- API documentation
-
-### For Component Architecture
-
-See **[container-presentation-pattern.md](./guides/container-presentation-pattern.md)** for:
-
-- Container/Presentation pattern overview
-- When and how to use the pattern
-- Migration guide for existing components
-- Best practices and examples
-
-### For Content Creation
-
-See **[content-creation.md](./guides/content-creation.md)** for:
-
-- How to create blog articles
-- Content guidelines
-- Contribution workflow
-
-### For Translations and UI Content
-
-See **[i18n-translation-workflow.md](./guides/i18n-translation-workflow.md)** for:
-
-- How to update UI text content
-- Translation key structure and naming conventions
-- How to extract strings from components
-- How to add new translation keys
-- Best practices for content creators and developers
-
-## Additional Resources
-
-- **Vitest Documentation**: https://vitest.dev/
-- **Playwright Documentation**: https://playwright.dev/
-- **React Testing Library**: https://testing-library.com/
-- **Lighthouse CI**: https://github.com/GoogleChrome/lighthouse-ci
-- **Next.js Documentation**: https://nextjs.org/docs
-
----
-
-**Last Updated**: January 2025  
-**Maintained by**: CommunityRule Development Team
+| Rule | Scope |
+| --- | --- |
+| `component-structure.mdc` | 4-file split (container/view/types/index). |
+| `component-props.mdc` | Lowercase enum prop convention + Figma traceability. |
+| `tailwind-styling.mdc` | Token usage and class composition. |
+| `localization.mdc` | `messages/` bundles and `useMessages()`. |
+| `testing.mdc` | Test layout, helpers, required imports. |
+| `storybook.mdc` | Story location and `argTypes` patterns. |
+| `hooks.mdc` | Custom hook authoring + TSDoc as the API reference. |
+| `create-flow.mdc` | Wizard step / screen registry conventions. |
+| `api-routes.mdc` | API route handler conventions. |

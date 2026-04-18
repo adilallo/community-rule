@@ -46,15 +46,13 @@ export default {
     },
     mode: {
       control: "select",
-      options: ["standard", "inverse", "Standard", "Inverse"],
-      description:
-        "Visual mode of the checkbox (case-insensitive: accepts both lowercase and PascalCase)",
+      options: ["standard", "inverse"],
+      description: "Visual mode of the checkbox",
     },
     state: {
       control: "select",
-      options: ["default", "hover", "focus", "Default", "Hover", "Focus"],
-      description:
-        "Interaction state for static display (case-insensitive: accepts both lowercase and PascalCase)",
+      options: ["default", "hover", "focus"],
+      description: "Interaction state for static display",
     },
     disabled: {
       control: "boolean",
@@ -228,15 +226,15 @@ export const FigmaPascalCase = () => {
           <Checkbox
             label="Standard Mode (PascalCase)"
             checked={standardChecked}
-            mode="Standard"
-            state="Default"
+            mode="standard"
+            state="default"
             onChange={({ checked }) => setStandardChecked(checked)}
           />
           <Checkbox
             label="Inverse Mode (PascalCase)"
             checked={inverseChecked}
-            mode="Inverse"
-            state="Default"
+            mode="inverse"
+            state="default"
             onChange={({ checked }) => setInverseChecked(checked)}
           />
         </div>
@@ -256,7 +254,7 @@ export const FigmaPascalCase = () => {
             label="Inverse Mode (mixed) - still works"
             checked={false}
             mode="inverse"
-            state="Default"
+            state="default"
           />
         </div>
       </div>

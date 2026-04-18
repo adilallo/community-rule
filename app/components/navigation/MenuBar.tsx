@@ -2,7 +2,6 @@
 
 import { memo } from "react";
 import { useTranslation } from "../../contexts/MessagesContext";
-import { normalizeMenuBarSize } from "../../../lib/propNormalization";
 
 export type MenuBarSizeValue =
   | "X Small"
@@ -23,7 +22,7 @@ interface MenuBarProps extends React.HTMLAttributes<HTMLElement> {
 
 const MenuBar = memo<MenuBarProps>(
   ({ children, className = "", size: sizeProp = "X Small", ...props }) => {
-    const size = normalizeMenuBarSize(sizeProp);
+    const size = sizeProp ?? "X Small";
     const t = useTranslation("menuBar");
 
     // Size styles based on Figma specifications

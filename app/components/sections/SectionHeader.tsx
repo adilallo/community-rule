@@ -1,29 +1,19 @@
 "use client";
 
 import { memo } from "react";
-import { normalizeSectionHeaderVariant } from "../../../lib/propNormalization";
 
-export type SectionHeaderVariantValue =
-  | "default"
-  | "multi-line"
-  | "Default"
-  | "Multi-Line";
+export type SectionHeaderVariantValue = "default" | "multi-line";
 
 interface SectionHeaderProps {
   title: string;
   subtitle: string;
   titleLg?: string;
-  /**
-   * Section header variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
-   */
   variant?: SectionHeaderVariantValue;
 }
 
 const SectionHeader = memo<SectionHeaderProps>(
   ({ title, subtitle, titleLg, variant: variantProp = "default" }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeSectionHeaderVariant(variantProp);
+    const variant = variantProp;
     return (
       <div
         className={

@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import ApplicableScopeField from "../../app/create/components/ApplicableScopeField";
+import ApplicableScopeField from "../../app/(app)/create/components/ApplicableScopeField";
 import { componentTestSuite } from "../utils/componentTestSuite";
 import { renderWithProviders } from "../utils/test-utils";
 

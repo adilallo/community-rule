@@ -3,7 +3,6 @@
 import { memo } from "react";
 import { RuleCardView } from "./RuleCard.view";
 import type { RuleCardProps } from "./RuleCard.types";
-import { normalizeRuleCardSize } from "../../../../lib/propNormalization";
 
 declare global {
   interface Window {
@@ -33,8 +32,7 @@ const RuleCardContainer = memo<RuleCardProps>(
     logoAlt,
     communityInitials,
   }) => {
-    // Normalize size prop
-    const size = normalizeRuleCardSize(sizeProp, "L");
+    const size = sizeProp ?? "L";
 
     const handleClick = () => {
       // Basic analytics event tracking

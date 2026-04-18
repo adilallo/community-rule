@@ -1,4 +1,4 @@
-export { ScrollbarView as default } from "./Scrollbar.view";
+export { default } from "./Scrollbar.container";
 export type { ScrollbarProps } from "./Scrollbar.types";
 
 /** Class name to apply the design system scrollbar to any scrollable element (e.g. textarea, div). */

@@ -1,4 +1,4 @@
-import type { CoreValueDetailEntry, CreateFlowState } from "../../app/create/types";
+import type { CoreValueDetailEntry, CreateFlowState } from "../../app/(app)/create/types";
 import type { CommunityRuleDocumentSection } from "../../app/components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
 
 function isDocumentEntry(x: unknown): x is { title: string; body: string } {

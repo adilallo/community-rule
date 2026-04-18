@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "../../app/create/types";
+import type { CreateFlowState } from "../../app/(app)/create/types";
 import { migrateLegacyCreateFlowState } from "./migrateLegacyCreateFlowState";
 
 const jsonHeaders = { "Content-Type": "application/json" };

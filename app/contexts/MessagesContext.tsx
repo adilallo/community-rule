@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type messages from "../../messages/en/index";
+import { getTranslation } from "../../lib/i18n/getTranslation";
 
 type Messages = typeof messages;
 
@@ -32,27 +33,6 @@ export function useMessages(): Messages {
 }
 
 /**
- * Get a translation value from messages using dot notation
- * @param messages - The messages object
- * @param key - Dot-separated key path (e.g., "heroBanner.title")
- * @returns The translation string or the key if not found
- */
-function getTranslationValue(messages: Messages, key: string): string {
-  const keys = key.split(".");
-  let value: unknown = messages;
-
-  for (const k of keys) {
-    if (value && typeof value === "object" && k in value) {
-      value = (value as Record<string, unknown>)[k];
-    } else {
-      return key; // Fallback to key if path not found
-    }
-  }
-
-  return typeof value === "string" ? value : key;
-}
-
-/**
  * Custom translation hook for client components
  * @param namespace - Optional namespace to scope translations (e.g., "footer")
  * @returns Translation function that accepts a key and returns the translated string
@@ -61,11 +41,7 @@ export function useTranslation(namespace?: string) {
   const messages = useMessages();
 
   return (key: string): string => {
-    if (namespace) {
-      // If namespace is provided, prepend it to the key
-      const fullKey = `${namespace}.${key}`;
-      return getTranslationValue(messages, fullKey);
-    }
-    return getTranslationValue(messages, key);
+    const fullKey = namespace ? `${namespace}.${key}` : key;
+    return getTranslation(messages, fullKey);
   };
 }

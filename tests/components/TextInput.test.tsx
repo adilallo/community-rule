@@ -32,6 +32,7 @@ componentTestSuite<TextInputProps>({
   },
 });
 
+// Pure presentational; no provider context needed.
 describe("TextInput (size tests)", () => {
   it("renders with medium size by default", () => {
     const { container } = render(<TextInput label="Test" inputSize="medium" />);
@@ -45,9 +46,4 @@ describe("TextInput (size tests)", () => {
     expect(input).toHaveClass("h-[32px]");
   });
 
-  it("accepts PascalCase size prop", () => {
-    const { container } = render(<TextInput label="Test" inputSize="Small" />);
-    const input = container.querySelector("input");
-    expect(input).toHaveClass("h-[32px]");
-  });
 });

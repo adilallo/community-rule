@@ -4,11 +4,11 @@ import { memo, forwardRef, useState, useRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
 import { TextInputView } from "./TextInput.view";
 import type { TextInputProps } from "./TextInput.types";
-import {
-  normalizeInputState,
-  normalizeTextInputSize,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / TextInput" (TODO(figma)). Single-line text input with size
+ * variants and managed default/active/focus/error states.
+ */
 const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
@@ -33,9 +33,8 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     },
     ref,
   ) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const externalState = normalizeInputState(externalStateProp);
-    const inputSize = normalizeTextInputSize(inputSizeProp);
+    const externalState = externalStateProp;
+    const inputSize = inputSizeProp;
 
     // Generate unique ID for accessibility if not provided
     const { id: inputId, labelId } = useComponentId("text-input", id);

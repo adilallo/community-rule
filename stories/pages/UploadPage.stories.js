@@ -1,4 +1,4 @@
-import { CommunityUploadScreen } from "../../app/create/screens/upload/CommunityUploadScreen";
+import { CommunityUploadScreen } from "../../app/(app)/create/screens/upload/CommunityUploadScreen";
 
 export default {
   title: "Pages/Create/CommunityUpload",

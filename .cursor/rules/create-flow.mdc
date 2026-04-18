@@ -1,6 +1,6 @@
 ---
 description: Create-flow structure & design-system reuse guardrails
-globs: app/create/**/*.{ts,tsx},messages/en/create/**/*.json
+globs: app/(app)/create/**/*.{ts,tsx},messages/en/create/**/*.json
 alwaysApply: false
 ---
 
@@ -8,15 +8,15 @@ alwaysApply: false
 
 ## Folder & file layout
 
-- Screens live in `app/create/screens/<layoutKind>/<StepIdPascal>Screen.tsx`
+- Screens live in `app/(app)/create/screens/<layoutKind>/<StepIdPascal>Screen.tsx`
   where `<layoutKind>` mirrors `CreateFlowLayoutKind` (`card`, `select`,
   `right-rail`, `completed`, …). File + export name is the **step id**, never
   the layout kind (e.g. `DecisionApproachesScreen`, not `RightRailScreen`).
 - Step id ↔ layout kind mapping is declared in
-  `app/create/utils/createFlowScreenRegistry.ts`. Never branch on layout kind
+  `app/(app)/create/utils/createFlowScreenRegistry.ts`. Never branch on layout kind
   inside a screen — pick the matching shell (`CreateFlowStepShell` /
   `CreateFlowTwoColumnSelectShell`).
-- Shared create-flow pieces go in `app/create/components/` (layout shells,
+- Shared create-flow pieces go in `app/(app)/create/components/` (layout shells,
   field composites). Generic primitives go in `app/components/`.
 
 ## Use the design system — don't hand-roll
@@ -25,8 +25,8 @@ Reach for these before writing new markup:
 
 | Need | Component |
 | --- | --- |
-| Labelled text-area section in a modal | `app/create/components/ModalTextAreaField` |
-| Toggle-chip row + inline "+ Add" input | `app/create/components/ApplicableScopeField` |
+| Labelled text-area section in a modal | `app/(app)/create/components/ModalTextAreaField` |
+| Toggle-chip row + inline "+ Add" input | `app/(app)/create/components/ApplicableScopeField` |
 | `[– value +]` numeric stepper (± label) | `app/components/controls/Incrementer` / `IncrementerBlock` |
 | Mid-paragraph "expand / see all" link button | `app/components/buttons/InlineTextButton` |
 | Help-icon + label above a control | `app/components/utility/InputLabel` (`helpIcon` prop) |

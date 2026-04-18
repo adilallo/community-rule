@@ -1,878 +1,251 @@
 /**
- * Utility functions for normalizing component props to match Figma specifications
- * while maintaining backward compatibility with existing lowercase usage.
+ * Component prop option arrays and value types.
  *
- * Figma uses PascalCase (e.g., "Standard", "Inverse") but codebase uses lowercase.
- * These helpers accept both formats and normalize to lowercase for internal use.
+ * The codebase uses lowercase-canonical enum values (see
+ * `.cursor/rules/component-props.mdc`). This module is the single source of
+ * valid values for each enum prop — Storybook `argTypes` and any runtime guard
+ * import the corresponding `*_OPTIONS` array from here, and the matching
+ * `*Value` type is derived from it.
  */
 
-/**
- * Normalize mode prop values (Standard/Inverse -> standard/inverse)
- */
-export function normalizeMode(
-  value: string | undefined,
-  defaultValue: "standard" | "inverse" = "standard",
-): "standard" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "standard" || normalized === "inverse") {
-    return normalized;
-  }
-  return defaultValue;
-}
+// ---------------------------------------------------------------------------
+// Generic shared values
+// ---------------------------------------------------------------------------
 
-/**
- * Normalize state prop values (Default/Hover/Focus/Selected -> default/hover/focus/selected)
- */
-export function normalizeState(
-  value: string | undefined,
-  defaultValue: "default" | "hover" | "focus" | "selected" = "default",
-): "default" | "hover" | "focus" | "selected" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (
-    normalized === "default" ||
-    normalized === "hover" ||
-    normalized === "focus" ||
-    normalized === "selected"
-  ) {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const MODE_OPTIONS = ["standard", "inverse"] as const;
+export type ModeValue = (typeof MODE_OPTIONS)[number];
 
-/**
- * Normalize state prop values for form inputs (Default/Active/Hover/Focus)
- */
-export function normalizeInputState(
-  value: string | undefined,
-  defaultValue: "default" | "active" | "hover" | "focus" = "default",
-): "default" | "active" | "hover" | "focus" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (
-    normalized === "default" ||
-    normalized === "active" ||
-    normalized === "hover" ||
-    normalized === "focus"
-  ) {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const STATE_OPTIONS = [
+  "default",
+  "hover",
+  "focus",
+  "selected",
+] as const;
+export type StateValue = (typeof STATE_OPTIONS)[number];
 
-/**
- * Normalize toggle state prop values (Default/Hover/Focus/Selected)
- */
-export function normalizeToggleState(
-  value: string | undefined,
-  defaultValue: "default" | "hover" | "focus" | "selected" = "default",
-): "default" | "hover" | "focus" | "selected" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (
-    normalized === "default" ||
-    normalized === "hover" ||
-    normalized === "focus" ||
-    normalized === "selected"
-  ) {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const INPUT_STATE_OPTIONS = [
+  "default",
+  "active",
+  "hover",
+  "focus",
+] as const;
+export type InputStateValue = (typeof INPUT_STATE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive mode prop
- */
-export type ModeValue = "standard" | "inverse" | "Standard" | "Inverse";
+export const SIZE_OPTIONS = [
+  "xsmall",
+  "small",
+  "medium",
+  "large",
+  "xlarge",
+] as const;
+export type SizeValue = (typeof SIZE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive state prop
- */
-export type StateValue =
-  | "default"
-  | "hover"
-  | "focus"
-  | "selected"
-  | "Default"
-  | "Hover"
-  | "Focus"
-  | "Selected";
+export const SMALL_MEDIUM_LARGE_OPTIONS = [
+  "small",
+  "medium",
+  "large",
+] as const;
+export type SmallMediumLargeValue =
+  (typeof SMALL_MEDIUM_LARGE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive input state prop
- */
-export type InputStateValue =
-  | "default"
-  | "active"
-  | "hover"
-  | "focus"
-  | "Default"
-  | "Active"
-  | "Hover"
-  | "Focus";
+export const ALIGNMENT_OPTIONS = ["center", "left"] as const;
+export type AlignmentValue = (typeof ALIGNMENT_OPTIONS)[number];
 
-/**
- * Normalize button size prop values
- */
-export function normalizeSize(
-  value: string | undefined,
-  defaultValue: "xsmall" | "small" | "medium" | "large" | "xlarge" = "xsmall",
-): "xsmall" | "small" | "medium" | "large" | "xlarge" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["xsmall", "small", "medium", "large", "xlarge"];
-  if (sizes.includes(normalized)) {
-    return normalized as "xsmall" | "small" | "medium" | "large" | "xlarge";
-  }
-  return defaultValue;
-}
+// ---------------------------------------------------------------------------
+// Component-specific values
+// ---------------------------------------------------------------------------
 
-/**
- * Normalize alert status prop values
- */
-export function normalizeAlertStatus(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "positive" | "warning" | "danger" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const statuses = ["default", "positive", "warning", "danger"];
-  if (statuses.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const ALERT_STATUS_OPTIONS = [
+  "default",
+  "positive",
+  "warning",
+  "danger",
+] as const;
+export type AlertStatusValue = (typeof ALERT_STATUS_OPTIONS)[number];
 
-/**
- * Normalize alert type prop values
- */
-export function normalizeAlertType(
-  value: string | undefined,
-  defaultValue: "toast" = "toast",
-): "toast" | "banner" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const types = ["toast", "banner"];
-  if (types.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const ALERT_TYPE_OPTIONS = ["toast", "banner"] as const;
+export type AlertTypeValue = (typeof ALERT_TYPE_OPTIONS)[number];
 
-/**
- * Normalize tooltip position prop values
- */
-export function normalizeTooltipPosition(
-  value: string | undefined,
-  defaultValue: "top" = "top",
-): "top" | "bottom" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const positions = ["top", "bottom"];
-  if (positions.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const TOOLTIP_POSITION_OPTIONS = ["top", "bottom"] as const;
+export type TooltipPositionValue = (typeof TOOLTIP_POSITION_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive size prop
- */
-export type SizeValue =
-  | "xsmall"
-  | "small"
-  | "medium"
-  | "large"
-  | "xlarge"
-  | "XSmall"
-  | "Small"
-  | "Medium"
-  | "Large"
-  | "XLarge";
+export const MENU_BAR_SIZE_OPTIONS = [
+  "X Small",
+  "Small",
+  "Medium",
+  "Large",
+  "X Large",
+] as const;
+export type MenuBarSizeValue = (typeof MENU_BAR_SIZE_OPTIONS)[number];
 
-/**
- * Normalize MenuBar size prop values to Figma specifications
- * Maps to: "X Small" | "Small" | "Medium" | "Large" | "X Large"
- * Also supports legacy format for backward compatibility
- */
-export function normalizeMenuBarSize(
-  value: string | undefined,
-  defaultValue:
-    | "X Small"
-    | "Small"
-    | "Medium"
-    | "Large"
-    | "X Large" = "X Small",
-): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
-  if (!value) return defaultValue;
-  if (
-    value === "X Small" ||
-    value === "Small" ||
-    value === "Medium" ||
-    value === "Large" ||
-    value === "X Large"
-  ) {
-    return value;
-  }
-  return defaultValue;
-}
+export const NAVIGATION_ITEM_VARIANT_OPTIONS = ["default"] as const;
+export type NavigationItemVariantValue =
+  (typeof NAVIGATION_ITEM_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize navigation item variant prop values
- */
-export function normalizeNavigationItemVariant(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "default") {
-    return "default";
-  }
-  return defaultValue;
-}
+export const NAVIGATION_ITEM_SIZE_OPTIONS = ["default", "xsmall"] as const;
+export type NavigationItemSizeValue =
+  (typeof NAVIGATION_ITEM_SIZE_OPTIONS)[number];
 
-/**
- * Normalize navigation item size prop values
- */
-export function normalizeNavigationItemSize(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "xsmall" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["default", "xsmall"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const CONTENT_LOCKUP_VARIANT_OPTIONS = [
+  "hero",
+  "feature",
+  "learn",
+  "ask",
+  "ask-inverse",
+  "modal",
+  "login",
+] as const;
+export type ContentLockupVariantValue =
+  (typeof CONTENT_LOCKUP_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize content lockup variant prop values
- */
-export function normalizeContentLockupVariant(
-  value: string | undefined,
-  defaultValue: "hero" = "hero",
-): "hero" | "feature" | "learn" | "ask" | "ask-inverse" | "modal" | "login" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = [
-    "hero",
-    "feature",
-    "learn",
-    "ask",
-    "ask-inverse",
-    "modal",
-    "login",
-  ];
-  if (variants.includes(normalized)) {
-    return normalized as
-      | "hero"
-      | "feature"
-      | "learn"
-      | "ask"
-      | "ask-inverse"
-      | "modal"
-      | "login";
-  }
-  return defaultValue;
-}
+export const NUMBERED_LIST_SIZE_OPTIONS = ["M", "S"] as const;
+export type NumberedListSizeValue = (typeof NUMBERED_LIST_SIZE_OPTIONS)[number];
 
-/**
- * Normalize alignment prop values
- */
-export function normalizeAlignment(
-  value: string | undefined,
-  defaultValue: "center" = "center",
-): "center" | "left" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const alignments = ["center", "left"];
-  if (alignments.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const HEADER_LOCKUP_JUSTIFICATION_OPTIONS = ["left", "center"] as const;
+export type HeaderLockupJustificationValue =
+  (typeof HEADER_LOCKUP_JUSTIFICATION_OPTIONS)[number];
 
-/**
- * Normalize numbered list size prop values
- */
-export function normalizeNumberedListSize(
-  value: string | undefined,
-  defaultValue: "M" = "M",
-): "M" | "S" {
-  if (!value) return defaultValue;
-  const normalized = value.toUpperCase();
-  if (normalized === "M" || normalized === "S") {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const HEADER_LOCKUP_SIZE_OPTIONS = ["L", "M"] as const;
+export type HeaderLockupSizeValue =
+  (typeof HEADER_LOCKUP_SIZE_OPTIONS)[number];
 
-/**
- * Normalize header lockup justification prop values
- */
-export function normalizeHeaderLockupJustification(
-  value: string | undefined,
-  defaultValue: "left" = "left",
-): "left" | "center" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "left" || normalized === "center") {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const HEADER_LOCKUP_PALETTE_OPTIONS = ["default", "inverse"] as const;
+export type HeaderLockupPaletteValue =
+  (typeof HEADER_LOCKUP_PALETTE_OPTIONS)[number];
 
-/**
- * Normalize header lockup size prop values
- */
-export function normalizeHeaderLockupSize(
-  value: string | undefined,
-  defaultValue: "L" = "L",
-): "L" | "M" {
-  if (!value) return defaultValue;
-  const normalized = value.toUpperCase();
-  if (normalized === "L" || normalized === "M") {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const TEXT_INPUT_SIZE_OPTIONS = ["small", "medium"] as const;
+export type TextInputSizeValue = (typeof TEXT_INPUT_SIZE_OPTIONS)[number];
 
-/**
- * Normalize header lockup palette prop values (Default/Inverse -> default/inverse)
- */
-export function normalizeHeaderLockupPalette(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "default" || normalized === "inverse") {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const CONTENT_CONTAINER_SIZE_OPTIONS = ["xs", "responsive"] as const;
+export type ContentContainerSizeValue =
+  (typeof CONTENT_CONTAINER_SIZE_OPTIONS)[number];
 
-/**
- * Normalize text input size prop values
- */
-export function normalizeTextInputSize(
-  value: string | undefined,
-  defaultValue: "medium" = "medium",
-): "small" | "medium" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "small" || normalized === "medium") {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const CONTENT_THUMBNAIL_VARIANT_OPTIONS = [
+  "vertical",
+  "horizontal",
+] as const;
+export type ContentThumbnailVariantValue =
+  (typeof CONTENT_THUMBNAIL_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize content container size prop values
- */
-export function normalizeContentContainerSize(
-  value: string | undefined,
-  defaultValue: "responsive" = "responsive",
-): "xs" | "responsive" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["xs", "responsive"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const SECTION_HEADER_VARIANT_OPTIONS = [
+  "default",
+  "multi-line",
+] as const;
+export type SectionHeaderVariantValue =
+  (typeof SECTION_HEADER_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize content thumbnail variant prop values
- */
-export function normalizeContentThumbnailVariant(
-  value: string | undefined,
-  defaultValue: "vertical" = "vertical",
-): "vertical" | "horizontal" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["vertical", "horizontal"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const QUOTE_BLOCK_VARIANT_OPTIONS = [
+  "compact",
+  "standard",
+  "extended",
+] as const;
+export type QuoteBlockVariantValue =
+  (typeof QUOTE_BLOCK_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize section header variant prop values
- */
-export function normalizeSectionHeaderVariant(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "multi-line" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["default", "multi-line"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const NUMBER_CARD_SIZE_OPTIONS = [
+  "small",
+  "medium",
+  "large",
+  "xlarge",
+] as const;
+export type NumberCardSizeValue = (typeof NUMBER_CARD_SIZE_OPTIONS)[number];
 
-/**
- * Normalize quote block variant prop values
- */
-export function normalizeQuoteBlockVariant(
-  value: string | undefined,
-  defaultValue: "standard" = "standard",
-): "compact" | "standard" | "extended" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["compact", "standard", "extended"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const ASK_ORGANIZER_VARIANT_OPTIONS = [
+  "centered",
+  "left-aligned",
+  "compact",
+  "inverse",
+] as const;
+export type AskOrganizerVariantValue =
+  (typeof ASK_ORGANIZER_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize number card size prop values (already PascalCase in codebase, supports both)
- */
-export function normalizeNumberCardSize(
-  value: string | undefined,
-  defaultValue: "Medium" = "Medium",
-): "Small" | "Medium" | "Large" | "XLarge" {
-  if (!value) return defaultValue;
-  // Check if already PascalCase
-  if (
-    value === "Small" ||
-    value === "Medium" ||
-    value === "Large" ||
-    value === "XLarge"
-  ) {
-    return value;
-  }
-  // Normalize lowercase to PascalCase
-  const normalized = value.toLowerCase();
-  if (normalized === "small") return "Small";
-  if (normalized === "medium") return "Medium";
-  if (normalized === "large") return "Large";
-  if (normalized === "xlarge") return "XLarge";
-  return defaultValue;
-}
+export const CONTEXT_MENU_ITEM_SIZE_OPTIONS = [
+  "small",
+  "medium",
+  "large",
+] as const;
+export type ContextMenuItemSizeValue =
+  (typeof CONTEXT_MENU_ITEM_SIZE_OPTIONS)[number];
 
-/**
- * Normalize ask organizer variant prop values
- */
-export function normalizeAskOrganizerVariant(
-  value: string | undefined,
-  defaultValue: "centered" = "centered",
-): "centered" | "left-aligned" | "compact" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["centered", "left-aligned", "compact", "inverse"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const TOGGLE_GROUP_POSITION_OPTIONS = [
+  "left",
+  "middle",
+  "right",
+] as const;
+export type ToggleGroupPositionValue =
+  (typeof TOGGLE_GROUP_POSITION_OPTIONS)[number];
 
-/**
- * Normalize context menu item size prop values
- */
-export function normalizeContextMenuItemSize(
-  value: string | undefined,
-  defaultValue: "medium" = "medium",
-): "small" | "medium" | "large" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["small", "medium", "large"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const LABEL_VARIANT_OPTIONS = ["default", "horizontal"] as const;
+export type LabelVariantValue = (typeof LABEL_VARIANT_OPTIONS)[number];
 
-/**
- * Normalize image placeholder color prop values
- */
-export function normalizeImagePlaceholderColor(
-  value: string | undefined,
-  defaultValue: "blue" = "blue",
-): "blue" | "green" | "purple" | "red" | "orange" | "teal" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const colors = ["blue", "green", "purple", "red", "orange", "teal"];
-  if (colors.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const TEXT_AREA_APPEARANCE_OPTIONS = ["default", "embedded"] as const;
+export type TextAreaAppearanceValue =
+  (typeof TEXT_AREA_APPEARANCE_OPTIONS)[number];
 
-/**
- * Normalize toggle group position prop values
- */
-export function normalizeToggleGroupPosition(
-  value: string | undefined,
-  defaultValue: "left" = "left",
-): "left" | "middle" | "right" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const positions = ["left", "middle", "right"];
-  if (positions.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const RULE_CARD_SIZE_OPTIONS = ["XS", "S", "M", "L"] as const;
+export type RuleCardSizeValue = (typeof RULE_CARD_SIZE_OPTIONS)[number];
 
-/**
- * Normalize label variant prop values
- */
-export function normalizeLabelVariant(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "horizontal" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const variants = ["default", "horizontal"];
-  if (variants.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const CHIP_STATE_OPTIONS = [
+  "unselected",
+  "selected",
+  "disabled",
+  "custom",
+] as const;
+export type ChipStateValue = (typeof CHIP_STATE_OPTIONS)[number];
 
-/**
- * Normalize TextArea appearance prop (default/embedded; Figma: Default/Embedded).
- */
-export function normalizeTextAreaAppearance(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "embedded" {
-  if (!value) return defaultValue;
-  const n = value.toLowerCase();
-  return n === "embedded" ? "embedded" : "default";
-}
+export const CHIP_PALETTE_OPTIONS = ["default", "inverse"] as const;
+export type ChipPaletteValue = (typeof CHIP_PALETTE_OPTIONS)[number];
 
-/**
- * Normalize small/medium/large size prop values (for SelectInput, TextArea, etc.)
- */
-export function normalizeSmallMediumLargeSize(
-  value: string | undefined,
-  defaultValue: "medium" = "medium",
-): "small" | "medium" | "large" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["small", "medium", "large"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const CHIP_SIZE_OPTIONS = ["s", "m"] as const;
+export type ChipSizeValue = (typeof CHIP_SIZE_OPTIONS)[number];
 
-/**
- * Normalize RuleCard size prop values (L/M -> l/m -> L/M)
- */
-export function normalizeRuleCardSize(
-  value: string | undefined,
-  defaultValue: "L" = "L",
-): "XS" | "S" | "M" | "L" {
-  if (!value) return defaultValue;
-  const normalized = value.toUpperCase();
-  if (
-    normalized === "XS" ||
-    normalized === "S" ||
-    normalized === "M" ||
-    normalized === "L"
-  ) {
-    return normalized;
-  }
-  return defaultValue;
-}
+export const MULTI_SELECT_SIZE_OPTIONS = ["s", "m"] as const;
+export type MultiSelectSizeValue = (typeof MULTI_SELECT_SIZE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive Chip state prop
- */
-export type ChipStateValue =
-  | "unselected"
-  | "selected"
-  | "disabled"
-  | "custom"
-  | "Unselected"
-  | "Selected"
-  | "Disabled"
-  | "Custom";
+export const INPUT_LABEL_SIZE_OPTIONS = ["s", "m"] as const;
+export type InputLabelSizeValue = (typeof INPUT_LABEL_SIZE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive Chip palette prop
- */
-export type ChipPaletteValue = "default" | "inverse" | "Default" | "Inverse";
+export const INPUT_LABEL_PALETTE_OPTIONS = ["default", "inverse"] as const;
+export type InputLabelPaletteValue =
+  (typeof INPUT_LABEL_PALETTE_OPTIONS)[number];
 
-/**
- * Type helper for case-insensitive Chip size prop
- */
-export type ChipSizeValue = "s" | "m" | "S" | "M";
+export const MENU_BAR_ITEM_STATE_OPTIONS = [
+  "default",
+  "hover",
+  "selected",
+] as const;
+export type MenuBarItemStateValue =
+  (typeof MENU_BAR_ITEM_STATE_OPTIONS)[number];
 
-/**
- * Normalize Chip state prop values (Unselected/Selected/Disabled/Custom)
- */
-export function normalizeChipState(
-  value: string | undefined,
-  defaultValue: "unselected" = "unselected",
-): "unselected" | "selected" | "disabled" | "custom" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const states = ["unselected", "selected", "disabled", "custom"];
-  if (states.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const MENU_BAR_ITEM_MODE_OPTIONS = ["default", "inverse"] as const;
+export type MenuBarItemModeValue = (typeof MENU_BAR_ITEM_MODE_OPTIONS)[number];
 
-/**
- * Normalize Chip palette prop values (Default/Inverse -> default/inverse)
- */
-export function normalizeChipPalette(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const palettes = ["default", "inverse"];
-  if (palettes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const MENU_BAR_ITEM_SIZE_OPTIONS = MENU_BAR_SIZE_OPTIONS;
+export type MenuBarItemSizeValue = MenuBarSizeValue;
 
-/**
- * Normalize Chip size prop values (S/M -> s/m)
- */
-export function normalizeChipSize(
-  value: string | undefined,
-  defaultValue: "s" = "s",
-): "s" | "m" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["s", "m"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const BUTTON_TYPE_OPTIONS = [
+  "filled",
+  "outline",
+  "ghost",
+  "danger",
+] as const;
+export type ButtonTypeValue = (typeof BUTTON_TYPE_OPTIONS)[number];
 
-/**
- * Normalize MultiSelect size prop values (S/M -> s/m)
- */
-export function normalizeMultiSelectSize(
-  value: string | undefined,
-  defaultValue: "m" = "m",
-): "s" | "m" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["s", "m"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const BUTTON_PALETTE_OPTIONS = ["default", "inverse"] as const;
+export type ButtonPaletteValue = (typeof BUTTON_PALETTE_OPTIONS)[number];
 
-/**
- * Normalize InputLabel size prop values (S/M -> s/m)
- */
-export function normalizeInputLabelSize(
-  value: string | undefined,
-  defaultValue: "s" = "s",
-): "s" | "m" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const sizes = ["s", "m"];
-  if (sizes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
+export const BUTTON_STATE_OPTIONS = [
+  "default",
+  "focus",
+  "active",
+  "hover",
+  "disabled",
+] as const;
+export type ButtonStateValue = (typeof BUTTON_STATE_OPTIONS)[number];
 
-/**
- * Normalize InputLabel palette prop values (Default/Inverse -> default/inverse)
- */
-export function normalizeInputLabelPalette(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const palettes = ["default", "inverse"];
-  if (palettes.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize MenuBarItem state prop values (Default/Hover/Selected -> default/hover/selected)
- */
-export function normalizeMenuBarItemState(
-  value: string | undefined,
-  defaultValue: "default" | "hover" | "selected" = "default",
-): "default" | "hover" | "selected" {
-  if (!value) return defaultValue;
-  if (value === "default" || value === "hover" || value === "selected") {
-    return value;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize MenuBarItem mode prop values.
- * Default mode: yellow text on dark background (standard header)
- * Inverse mode: black text on yellow background (folderTop variant)
- */
-export function normalizeMenuBarItemMode(
-  value: string | undefined,
-  defaultValue: "default" | "inverse" = "default",
-): "default" | "inverse" {
-  if (!value) return defaultValue;
-  if (value === "default" || value === "inverse") {
-    return value;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize MenuBarItem size prop values.
- * Accepts: "X Small", "Small", "Medium", "Large", "X Large"
- */
-export function normalizeMenuBarItemSize(
-  value: string | undefined,
-  defaultValue:
-    | "X Small"
-    | "Small"
-    | "Medium"
-    | "Large"
-    | "X Large" = "X Small",
-): "X Small" | "Small" | "Medium" | "Large" | "X Large" {
-  if (!value) return defaultValue;
-  if (
-    value === "X Small" ||
-    value === "Small" ||
-    value === "Medium" ||
-    value === "Large" ||
-    value === "X Large"
-  ) {
-    return value;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize button type prop values (Filled/Outline/Ghost/Danger -> filled/outline/ghost/danger)
- */
-export function normalizeButtonType(
-  value: string | undefined,
-  defaultValue: "filled" = "filled",
-): "filled" | "outline" | "ghost" | "danger" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const types = ["filled", "outline", "ghost", "danger"];
-  if (types.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize button palette prop values (Default/Invert -> default/inverse)
- */
-export function normalizeButtonPalette(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "inverse" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  // Handle "invert" -> "inverse" mapping
-  if (normalized === "invert" || normalized === "inverse") {
-    return "inverse";
-  }
-  if (normalized === "default") {
-    return "default";
-  }
-  return defaultValue;
-}
-
-/**
- * Normalize button state prop values (Default/Focus/Active/Hover/Disabled -> default/focus/active/hover/disabled)
- */
-export function normalizeButtonState(
-  value: string | undefined,
-  defaultValue: "default" = "default",
-): "default" | "focus" | "active" | "hover" | "disabled" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  const states = ["default", "focus", "active", "hover", "disabled"];
-  if (states.includes(normalized)) {
-    return normalized as typeof defaultValue;
-  }
-  return defaultValue;
-}
-
-/**
- * Type helper for case-insensitive button type prop
- */
-export type ButtonTypeValue =
-  | "filled"
-  | "outline"
-  | "ghost"
-  | "danger"
-  | "Filled"
-  | "Outline"
-  | "Ghost"
-  | "Danger";
-
-/**
- * Type helper for case-insensitive button palette prop
- */
-export type ButtonPaletteValue =
-  | "default"
-  | "inverse"
-  | "Default"
-  | "Invert"
-  | "Inverse";
-
-/**
- * Type helper for case-insensitive button state prop
- */
-export type ButtonStateValue =
-  | "default"
-  | "focus"
-  | "active"
-  | "hover"
-  | "disabled"
-  | "Default"
-  | "Focus"
-  | "Active"
-  | "Hover"
-  | "Disabled";
-
-/**
- * ProportionBar layout variant (Figma uses a segmented track in the create-flow footer).
- */
+export const PROPORTION_BAR_VARIANT_OPTIONS = [
+  "default",
+  "segmented",
+] as const;
 export type ProportionBarVariantValue =
-  | "default"
-  | "segmented"
-  | "Default"
-  | "Segmented";
-
-/**
- * Normalize ProportionBar variant (Figma PascalCase vs codebase lowercase).
- */
-export function normalizeProportionBarVariant(
-  value: string | undefined,
-  defaultValue: "default" | "segmented" = "default",
-): "default" | "segmented" {
-  if (!value) return defaultValue;
-  const normalized = value.toLowerCase();
-  if (normalized === "default" || normalized === "segmented") {
-    return normalized;
-  }
-  return defaultValue;
-}
+  (typeof PROPORTION_BAR_VARIANT_OPTIONS)[number];

@@ -261,8 +261,8 @@ export function RuleCardView({
                   key={categoryIndex}
                   label={category.name}
                   showHelpIcon={false}
-                  size="S"
-                  palette="Inverse"
+                  size="s"
+                  palette="inverse"
                   options={category.chipOptions}
                   onChipClick={(chipId) => {
                     category.onChipClick?.(category.name, chipId);

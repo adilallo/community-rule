@@ -12,6 +12,7 @@
   "legalAnd": " and ",
   "legalSuffix": ".",
   "backToHome": "← Back to home",
+  "loadingFallback": "Loading…",
   "errors": {
     "network": "Something went wrong. Check your connection and try again.",
     "emailInvalid": "Enter a valid email address.",

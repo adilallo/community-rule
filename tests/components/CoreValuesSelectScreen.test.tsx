@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent, waitFor, within } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { renderWithProviders } from "../utils/test-utils";
-import { CoreValuesSelectScreen } from "../../app/create/screens/select/CoreValuesSelectScreen";
+import { CoreValuesSelectScreen } from "../../app/(app)/create/screens/select/CoreValuesSelectScreen";
 
 describe("CoreValuesSelectScreen", () => {
   beforeEach(() => {

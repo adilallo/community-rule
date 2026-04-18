@@ -44,8 +44,8 @@ function UploadView({
           helpIcon={showHelpIcon}
           asterisk={false}
           helperText={false}
-          size="S"
-          palette="Default"
+          size="s"
+          palette="default"
         />
       )}
 

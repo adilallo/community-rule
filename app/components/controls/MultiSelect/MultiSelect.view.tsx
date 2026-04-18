@@ -28,7 +28,7 @@ function MultiSelectView({
     ? "gap-[var(--measures-spacing-200,8px)]"
     : "gap-[var(--measures-spacing-300,12px)]";
 
-  const chipSize = isSmall ? "S" : "M";
+  const chipSize = size;
 
   return (
     <div
@@ -41,8 +41,8 @@ function MultiSelectView({
           helpIcon={showHelpIcon}
           asterisk={false}
           helperText={false}
-          size={size === "s" ? "S" : "M"}
-          palette={palette === "inverse" ? "Inverse" : "Default"}
+          size={size}
+          palette={palette}
         />
       )}
 
@@ -53,13 +53,12 @@ function MultiSelectView({
         {options.map((option) => (
           <Chip
             key={option.id}
-            label={option.state === "Custom" ? "" : option.label}
-            state={option.state || "Unselected"}
-            palette={palette === "inverse" ? "Inverse" : "Default"}
+            label={option.state === "custom" ? "" : option.label}
+            state={option.state || "unselected"}
+            palette={palette}
             size={chipSize}
             onClick={() => {
-              // Only toggle if not in Custom state
-              if (option.state !== "Custom" && onChipClick) {
+              if (option.state !== "custom" && onChipClick) {
                 onChipClick(option.id);
               }
             }}

@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { CreateFlowTopNavView } from "./CreateFlowTopNav.view";
 import type { CreateFlowTopNavProps } from "./CreateFlowTopNav.types";
 
+/**
+ * Figma: "Utility / CreateFlowTopNav" (TODO(figma)). Top navigation bar for
+ * the create flow with exit, share, export, and edit actions.
+ */
 const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
   ({
     hasShare = false,

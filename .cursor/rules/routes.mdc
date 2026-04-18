@@ -1,0 +1,88 @@
+---
+description: App Router route organization (groups, layouts, chrome composition)
+globs: app/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Route organization
+
+Top-level routes live inside **route groups** so each surface owns its own
+layout and chrome. Groups are wrapping folders in `(parens)` — they organize
+the file tree without affecting URLs.
+
+## Group map
+
+| Group | URL surface | Audience | Chrome |
+|---|---|---|---|
+| `app/(marketing)/` | `/`, `/learn`, `/blog`, `/templates`, future public pages | Public, indexable | TopNav (via root) + marketing `<Footer />` |
+| `app/(app)/` | `/create/*`, `/login`, `/profile`, future signed-in surfaces | Authenticated product | TopNav (via root) — no footer |
+| `app/(admin)/` | `/monitor`, future ops dashboards | Operators | TopNav (via root) — no footer |
+| `app/(dev)/` | `/components-preview`, future dev previews | Local dev (NODE_ENV gated) | TopNav (via root) — no footer |
+| `app/api/` | API routes | n/a | n/a |
+
+Route folders **must not** sit loose at the top level of `app/`. If a new
+surface doesn't fit an existing group, add a new group rather than dropping
+the folder next to `(marketing)/`.
+
+## Layout responsibilities
+
+- **`app/layout.tsx`** — `<html>`, `<body>`, providers (`MessagesProvider`,
+  `AuthModalProvider`), fonts, and `ConditionalNavigation`. Renders
+  `{children}` directly inside the flex column. **Does not** render
+  `<main>` — each group layout owns that.
+- **`app/(marketing)/layout.tsx`** — wraps with `<main className="flex-1">`
+  and appends the public `<Footer />`.
+- **`app/(app)/layout.tsx`** / **`(admin)/layout.tsx`** / **`(dev)/layout.tsx`** —
+  wrap with `<main className="flex-1">`. No footer.
+- **Nested layouts** (e.g. `(app)/create/layout.tsx`) compose feature-specific
+  chrome inside the group's `<main>` — never render `<html>`, `<body>`,
+  `<main>`, or providers.
+
+If a route needs different chrome than its group provides, prefer adding a
+**nested layout** under that route — don't introduce pathname-sniffing
+client components. (`ConditionalNavigation` is the lone tolerated exception
+because it carries SSR session state; do not add new pathname-conditional
+chrome components.)
+
+## Co-located component folders
+
+Page-private server/client components that are **only** used by routes in a
+given group go in `_components/` inside that group:
+
+```
+app/(marketing)/_components/MarketingRuleStackSection.tsx
+```
+
+The leading underscore makes Next.js treat the folder as **private** — it's
+ignored by the router. Use this instead of letting page-only files sit next
+to `page.tsx`.
+
+Components reused across groups belong in `app/components/<category>/`
+(see `component-structure.mdc`).
+
+## Adding a new route
+
+1. **Choose the group** by audience: marketing (public), app (signed-in),
+   admin (operators), dev (local-only). When in doubt, ask whether the
+   public marketing footer should appear — if yes, it's `(marketing)`.
+2. Create `app/(<group>)/<route>/page.tsx`. URLs do **not** include the
+   group name.
+3. If the route needs its own chrome (e.g. a wizard header), add
+   `app/(<group>)/<route>/layout.tsx`.
+4. If the route ships private helpers, put them in
+   `app/(<group>)/<route>/_components/` (or
+   `app/(<group>)/_components/` for group-wide page components).
+
+## Splitting a group
+
+Promote a sub-cluster to its own group only when **both** are true:
+
+- It will hold ≥2 routes that share a layout, **or** it has a clearly
+  distinct audience/access model (e.g. a future `(auth)/` for
+  signup/forgot/verify alongside login).
+- Moving the routes pays for itself by replacing existing pathname
+  conditionals or by composing real shared chrome — not just by tidying
+  the folder list.
+
+YAGNI applies: a group with one route and no shared layout is just a
+folder with parens.

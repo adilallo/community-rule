@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import { CompletedScreen } from "../../app/create/screens/completed/CompletedScreen";
+import { CompletedScreen } from "../../app/(app)/create/screens/completed/CompletedScreen";
 
 describe("CompletedScreen", () => {
   it("renders without crashing", () => {

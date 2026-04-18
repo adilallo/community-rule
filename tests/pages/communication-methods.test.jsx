@@ -6,7 +6,7 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach } from "vitest";
-import { CommunicationMethodsScreen } from "../../app/create/screens/card/CommunicationMethodsScreen";
+import { CommunicationMethodsScreen } from "../../app/(app)/create/screens/card/CommunicationMethodsScreen";
 
 afterEach(() => {
   cleanup();

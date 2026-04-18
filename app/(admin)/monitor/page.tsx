@@ -1,4 +1,4 @@
-import WebVitalsDashboard from "../../components/WebVitalsDashboard";
+import WebVitalsDashboard from "../../components/sections/WebVitalsDashboard";
 import TopNav from "../../components/navigation/TopNav";
 import Footer from "../../components/navigation/Footer";
 

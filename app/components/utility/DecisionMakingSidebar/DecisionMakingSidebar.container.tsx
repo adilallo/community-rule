@@ -3,11 +3,11 @@
 import { memo } from "react";
 import DecisionMakingSidebarView from "./DecisionMakingSidebar.view";
 import type { DecisionMakingSidebarProps } from "./DecisionMakingSidebar.types";
-import {
-  normalizeHeaderLockupJustification,
-  normalizeHeaderLockupSize,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Utility / DecisionMakingSidebar" (TODO(figma)). Sidebar pairing a
+ * header lockup with an `InfoMessageBox` checklist for decision-making screens.
+ */
 const DecisionMakingSidebarContainer = memo<DecisionMakingSidebarProps>(
   ({
     title,
@@ -20,8 +20,8 @@ const DecisionMakingSidebarContainer = memo<DecisionMakingSidebarProps>(
     justification: justificationProp = "left",
     className = "",
   }) => {
-    const size = normalizeHeaderLockupSize(sizeProp);
-    const justification = normalizeHeaderLockupJustification(justificationProp);
+    const size = sizeProp;
+    const justification = justificationProp;
 
     return (
       <DecisionMakingSidebarView

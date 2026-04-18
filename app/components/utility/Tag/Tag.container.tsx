@@ -9,6 +9,10 @@ const DEFAULT_LABELS: Record<TagProps["variant"], string> = {
   selected: "SELECTED",
 };
 
+/**
+ * Figma: "Utility / Tag" (TODO(figma)). Small status pill (e.g. "RECOMMENDED"
+ * or "SELECTED") used to annotate cards and options.
+ */
 const TagContainer = memo<TagProps>(({ variant, children, className = "" }) => {
   const content = children ?? DEFAULT_LABELS[variant];
   return (

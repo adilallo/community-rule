@@ -24,6 +24,7 @@ const mockPost = {
   },
 };
 
+// Pure presentational; no provider context needed.
 describe("ContentContainer", () => {
   it("renders with default props", () => {
     render(<ContentContainer post={mockPost} />);

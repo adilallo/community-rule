@@ -3,23 +3,23 @@
 import { memo } from "react";
 import InputLabelView from "./InputLabel.view";
 import type { InputLabelProps } from "./InputLabel.types";
-import {
-  normalizeInputLabelSize,
-  normalizeInputLabelPalette,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Utility / InputLabel" (TODO(figma)). Reusable form-input label with
+ * optional asterisk, help icon, and helper text.
+ */
 const InputLabelContainer = memo<InputLabelProps>(
   ({
     label,
     helpIcon = false,
     asterisk = false,
     helperText = false,
-    size: sizeProp = "S",
-    palette: paletteProp = "Default",
+    size: sizeProp = "s",
+    palette: paletteProp = "default",
     className = "",
   }) => {
-    const size = normalizeInputLabelSize(sizeProp);
-    const palette = normalizeInputLabelPalette(paletteProp);
+    const size = sizeProp;
+    const palette = paletteProp;
 
     return (
       <InputLabelView

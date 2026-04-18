@@ -1,5 +1,5 @@
 import React from "react";
-import ModalTextAreaField from "../../app/create/components/ModalTextAreaField";
+import ModalTextAreaField from "../../app/(app)/create/components/ModalTextAreaField";
 
 export default {
   title: "Create Flow/ModalTextAreaField",

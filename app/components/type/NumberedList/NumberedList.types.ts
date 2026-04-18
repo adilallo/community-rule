@@ -1,4 +1,4 @@
-export type NumberedListSizeValue = "M" | "S" | "m" | "s";
+export type NumberedListSizeValue = "M" | "S";
 
 export interface NumberedListItem {
   title: string;
@@ -11,8 +11,7 @@ export interface NumberedListProps {
    */
   items: NumberedListItem[];
   /**
-   * Size variant. Accepts both PascalCase (Figma) and lowercase (codebase).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Size variant.
    */
   size?: NumberedListSizeValue;
 }

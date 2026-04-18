@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FLOW_STEP_ORDER } from "../../../app/create/utils/flowSteps";
+import { FLOW_STEP_ORDER } from "../../../app/(app)/create/utils/flowSteps";
 import { assertPlainJsonValue, DEFAULT_PLAIN_JSON_LIMITS } from "./plainJson";
 
 const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];

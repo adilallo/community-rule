@@ -83,8 +83,8 @@ describe("createFlowStateSchema", () => {
     const r = createFlowStateSchema.safeParse({
       communityStructureChipSnapshots: {
         organizationTypes: [
-          { id: "1", label: "Co-op", state: "Selected" },
-          { id: "custom-uuid", label: "My type", state: "Selected" },
+          { id: "1", label: "Co-op", state: "selected" },
+          { id: "custom-uuid", label: "My type", state: "selected" },
         ],
         scale: [{ id: "1", label: "Local" }],
         maturity: [],

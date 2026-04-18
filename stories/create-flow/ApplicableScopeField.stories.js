@@ -1,5 +1,5 @@
 import React from "react";
-import ApplicableScopeField from "../../app/create/components/ApplicableScopeField";
+import ApplicableScopeField from "../../app/(app)/create/components/ApplicableScopeField";
 
 export default {
   title: "Create Flow/ApplicableScopeField",

@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "../../app/create/types";
+import type { CreateFlowState } from "../../app/(app)/create/types";
 
 /** Legacy `currentStep` values mapped to the current `CreateFlowStep` id. */
 const LEGACY_CREATE_FLOW_STEP_RENAMES: Readonly<Record<string, string>> = {

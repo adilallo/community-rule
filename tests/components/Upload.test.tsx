@@ -30,6 +30,7 @@ componentTestSuite<UploadProps>({
   },
 });
 
+// Pure presentational; no provider context needed.
 describe("Upload (behavioral tests)", () => {
   it("renders with active state by default", () => {
     render(<Upload label="Upload" />);

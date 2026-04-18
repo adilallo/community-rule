@@ -15,7 +15,7 @@ export default {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["default", "segmented", "Default", "Segmented"],
+      options: ["default", "segmented"],
       description:
         "Segmented: pill-shaped partial fills (create-flow footer / Figma).",
     },

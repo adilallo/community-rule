@@ -5,34 +5,26 @@ import type {
   ButtonPaletteValue,
   ButtonStateValue,
 } from "../../../lib/propNormalization";
-import {
-  normalizeSize,
-  normalizeButtonType,
-  normalizeButtonPalette,
-} from "../../../lib/propNormalization";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   /**
-   * Button type (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Button type (Figma prop).
    * @default "filled"
    */
   buttonType?: ButtonTypeValue;
   /**
-   * Button palette (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses "Invert", codebase uses "inverse" - both are supported.
+   * Button palette (Figma prop).
    * @default "default"
    */
   palette?: ButtonPaletteValue;
   /**
-   * Button size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Button size.
    * @default "xsmall"
    */
   size?: SizeValue;
   /**
-   * Button state (Figma prop). Accepts both lowercase and PascalCase (case-insensitive).
+   * Button state (Figma prop).
    * @default "default"
    */
   state?: ButtonStateValue;
@@ -83,12 +75,9 @@ const Button = memo<ButtonProps>(
     ariaLabel,
     ...props
   }) => {
-    // Normalize props
-    const buttonType = normalizeButtonType(typeProp, "filled");
-    const buttonPalette = normalizeButtonPalette(paletteProp, "default");
-    const size = normalizeSize(sizeProp);
-    // State prop is for Figma alignment - actual state is handled by CSS pseudo-classes
-    // We accept it for API alignment but don't use it for styling (CSS handles states)
+    const buttonType = typeProp ?? "filled";
+    const buttonPalette = paletteProp ?? "default";
+    const size = sizeProp;
 
     // Map type + palette to variant string for styling (internal use only)
     const getVariantFromTypeAndPalette = (

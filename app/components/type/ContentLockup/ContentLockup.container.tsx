@@ -3,10 +3,6 @@
 import { memo } from "react";
 import ContentLockupView from "./ContentLockup.view";
 import type { ContentLockupProps, VariantStyle } from "./ContentLockup.types";
-import {
-  normalizeContentLockupVariant,
-  normalizeAlignment,
-} from "../../../../lib/propNormalization";
 
 const ContentLockupContainer = memo<ContentLockupProps>(
   ({
@@ -21,9 +17,8 @@ const ContentLockupContainer = memo<ContentLockupProps>(
     alignment: alignmentProp = "center",
     titleId,
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeContentLockupVariant(variantProp);
-    const alignment = normalizeAlignment(alignmentProp);
+    const variant = variantProp;
+    const alignment = alignmentProp;
     // Variant-specific styling
     const variantStyles: Record<string, VariantStyle> = {
       hero: {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { hasCreateFlowUserInput } from "../../app/create/utils/hasCreateFlowUserInput";
+import { hasCreateFlowUserInput } from "../../app/(app)/create/utils/hasCreateFlowUserInput";
 
 describe("hasCreateFlowUserInput", () => {
   it("returns false for empty state", () => {

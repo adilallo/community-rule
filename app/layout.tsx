@@ -6,7 +6,6 @@ import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import "./globals.css";
 import ConditionalNavigation from "./components/navigation/ConditionalNavigation";
-import ConditionalFooter from "./components/navigation/ConditionalFooter";
 
 /** Header reads `cr_session` via Server Components; must not use prerendered guest HTML. */
 export const dynamic = "force-dynamic";
@@ -105,8 +104,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <AuthModalProvider>
             <div className="min-h-screen flex flex-col">
               <ConditionalNavigation />
-              <main className="flex-1">{children}</main>
-              <ConditionalFooter />
+              {children}
             </div>
           </AuthModalProvider>
         </MessagesProvider>

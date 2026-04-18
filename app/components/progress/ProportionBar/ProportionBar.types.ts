@@ -22,8 +22,8 @@ export interface ProportionBarProps {
   className?: string;
   /**
    * Kept for backwards compatibility. Both `default` and `segmented` render the
-   * same fill geometry (square leading edges, matching Figma). Future variants
-   * can differentiate here without API changes.
+   * same fill geometry. Future variants can differentiate here without API
+   * changes.
    */
   variant?: ProportionBarVariant;
 }

@@ -37,6 +37,7 @@ const config: ComponentTestSuiteConfig<StepperProps> = {
 
 componentTestSuite<StepperProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("Stepper (behavioral tests)", () => {
   it("renders with correct number of steps", () => {
     render(<Stepper active={3} totalSteps={5} />);

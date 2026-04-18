@@ -27,6 +27,7 @@ const config: ComponentTestSuiteConfig<LogoProps> = {
 
 componentTestSuite<LogoProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("Logo (behavioral tests)", () => {
   it("renders as a link to home", () => {
     render(<Logo />);

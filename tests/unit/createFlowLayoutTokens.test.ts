@@ -3,7 +3,7 @@ import {
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
   CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
-} from "../../app/create/components/createFlowLayoutTokens";
+} from "../../app/(app)/create/components/createFlowLayoutTokens";
 
 describe("createFlowLayoutTokens", () => {
   it("exports create-flow column and two-column max class strings", () => {

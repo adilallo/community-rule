@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import NumberCard from "../../app/components/cards/NumberCard";
 
+// Pure presentational; no provider context needed.
 describe("NumberCard Component", () => {
   const defaultProps = {
     number: 1,
@@ -200,7 +201,7 @@ describe("NumberCard Component", () => {
   });
 
   it("applies Small size variant correctly", () => {
-    render(<NumberCard {...defaultProps} size="Small" />);
+    render(<NumberCard {...defaultProps} size="small" />);
 
     // For Small size, text is directly in card div (no wrapper), so use closest("div")
     const card = screen.getByText("Test Card Text").closest("div");
@@ -219,7 +220,7 @@ describe("NumberCard Component", () => {
   });
 
   it("applies Medium size variant correctly", () => {
-    render(<NumberCard {...defaultProps} size="Medium" />);
+    render(<NumberCard {...defaultProps} size="medium" />);
 
     const card = screen
       .getByText("Test Card Text")
@@ -237,7 +238,7 @@ describe("NumberCard Component", () => {
   });
 
   it("applies Large size variant correctly", () => {
-    render(<NumberCard {...defaultProps} size="Large" />);
+    render(<NumberCard {...defaultProps} size="large" />);
 
     const card = screen
       .getByText("Test Card Text")
@@ -257,7 +258,7 @@ describe("NumberCard Component", () => {
   });
 
   it("applies XLarge size variant correctly", () => {
-    render(<NumberCard {...defaultProps} size="XLarge" />);
+    render(<NumberCard {...defaultProps} size="xlarge" />);
 
     const card = screen
       .getByText("Test Card Text")

@@ -4,7 +4,6 @@ import { memo, useState } from "react";
 import { logger } from "../../../../lib/logger";
 import QuoteBlockView from "./QuoteBlock.view";
 import type { QuoteBlockProps, VariantConfig } from "./QuoteBlock.types";
-import { normalizeQuoteBlockVariant } from "../../../../lib/propNormalization";
 
 const QuoteBlockContainer = memo<QuoteBlockProps>(
   ({
@@ -18,8 +17,7 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     fallbackAvatarSrc = "/assets/Quote_Avatar.svg",
     onError,
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeQuoteBlockVariant(variantProp);
+    const variant = variantProp;
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
