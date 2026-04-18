@@ -2,32 +2,26 @@ import { describe, it, expect } from "vitest";
 import { migrateLegacyCreateFlowState } from "../../lib/create/migrateLegacyCreateFlowState";
 
 describe("migrateLegacyCreateFlowState", () => {
-  it("maps communityReflection to communitySaveEmail when save email empty", () => {
+  it("passes through object payloads", () => {
     const out = migrateLegacyCreateFlowState({
       title: "T",
-      communityReflection: "old@example.com",
+      currentStep: "community-save",
     });
-    expect(out.communitySaveEmail).toBe("old@example.com");
-    expect("communityReflection" in out).toBe(false);
-  });
-
-  it("does not overwrite existing communitySaveEmail", () => {
-    const out = migrateLegacyCreateFlowState({
-      communityReflection: "old@example.com",
-      communitySaveEmail: "kept@example.com",
-    });
-    expect(out.communitySaveEmail).toBe("kept@example.com");
-  });
-
-  it("rewrites currentStep slug", () => {
-    const out = migrateLegacyCreateFlowState({
-      currentStep: "community-reflection",
-    });
+    expect(out.title).toBe("T");
     expect(out.currentStep).toBe("community-save");
   });
 
   it("returns empty object for nullish input", () => {
     expect(migrateLegacyCreateFlowState(null)).toEqual({});
     expect(migrateLegacyCreateFlowState(undefined)).toEqual({});
+  });
+
+  it("renames legacy right-rail step to decision-approaches", () => {
+    const out = migrateLegacyCreateFlowState({
+      currentStep: "right-rail",
+      title: "T",
+    });
+    expect(out.currentStep).toBe("decision-approaches");
+    expect(out.title).toBe("T");
   });
 });

@@ -11,5 +11,9 @@
   "confirmMembers": "Confirm members",
   "finalizeCommunityRule": "Finalize CommunityRule",
   "confirmStakeholders": "Confirm Stakeholders",
-  "confirmCoreValues": "Confirm values"
+  "confirmCoreValues": "Confirm values",
+  "confirmCommunication": "Confirm",
+  "confirmMembership": "Confirm",
+  "confirmRightRail": "Confirm",
+  "confirmConflictManagement": "Confirm"
 }

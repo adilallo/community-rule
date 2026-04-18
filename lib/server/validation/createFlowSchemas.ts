@@ -63,6 +63,10 @@ export const createFlowStateSchema = z
     coreValueDetailsByChipId: z
       .record(coreValueDetailEntrySchema)
       .optional(),
+    selectedCommunicationMethodIds: z.array(z.string()).max(200).optional(),
+    selectedMembershipMethodIds: z.array(z.string()).max(200).optional(),
+    selectedDecisionApproachIds: z.array(z.string()).max(200).optional(),
+    selectedConflictManagementIds: z.array(z.string()).max(200).optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

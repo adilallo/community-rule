@@ -14,7 +14,10 @@ import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import CreateFlowTopNav from "../components/utility/CreateFlowTopNav";
 import { getNextStep, getStepIndex } from "./utils/flowSteps";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
-import { createFlowStepUsesCenteredTextLayout } from "./utils/createFlowScreenRegistry";
+import {
+  createFlowStepUsesCenteredTextLayout,
+  createFlowStepUsesCardLayout,
+} from "./utils/createFlowScreenRegistry";
 import CreateFlowFooter from "../components/utility/CreateFlowFooter";
 import Button from "../components/buttons/Button";
 import { buildPublishPayload } from "../../lib/create/buildPublishPayload";
@@ -299,36 +302,34 @@ function CreateFlowLayoutContent({
   }, [state.communitySaveEmail, tLogin, updateState]);
 
   const isCompletedStep = currentStep === "completed";
-  const isRightRailStep = currentStep === "right-rail";
+  const isRightRailStep = currentStep === "decision-approaches";
   const isFinalReviewStep = currentStep === "final-review";
-  const isCardsStep = currentStep === "cards";
-  /** Two-column select steps: at `lg+` only the right column scrolls; main must not scroll the full page. */
+  const isCardLayoutStep = createFlowStepUsesCardLayout(currentStep);
+  /** Two-column select / right-rail: below `lg` main scrolls; at `lg+` only the right column scrolls. */
   const isSelectSplitScrollStep =
     currentStep === "community-size" ||
     currentStep === "community-structure" ||
-    currentStep === "core-values";
+    currentStep === "core-values" ||
+    currentStep === "decision-approaches";
   const stepIdx = currentStep != null ? getStepIndex(currentStep) : -1;
 
   /** At `md+`, main cross-axis: center by default; exceptions stay top-aligned (see product spec). */
   const mainContentClass = isCompletedStep
     ? "items-stretch overflow-y-auto md:overflow-hidden"
-    : isRightRailStep
-      ? "items-stretch overflow-hidden"
-      : isSelectSplitScrollStep
-        ? "items-start justify-start overflow-y-auto max-lg:overflow-y-auto lg:min-h-0 lg:items-stretch lg:overflow-hidden"
-        : isFinalReviewStep || isCardsStep || isTemplateReviewRoute
-          ? "items-start justify-center overflow-y-auto"
-          : "items-start justify-center overflow-y-auto md:items-center";
+    : isSelectSplitScrollStep
+      ? "items-start justify-start overflow-y-auto max-lg:overflow-y-auto lg:min-h-0 lg:items-stretch lg:overflow-hidden"
+      : isFinalReviewStep || isCardLayoutStep || isTemplateReviewRoute
+        ? "items-start justify-center overflow-y-auto"
+        : "items-start justify-center overflow-y-auto md:items-center";
 
   const isTextStep = createFlowStepUsesCenteredTextLayout(currentStep);
   const mainMaxMdJustify =
     isTextStep && !isCompletedStep && !isRightRailStep
       ? "max-md:justify-center"
       : "max-md:justify-start";
-  const mainMaxMdCross =
-    isCompletedStep || isRightRailStep
-      ? "max-md:flex-col max-md:items-stretch"
-      : "max-md:flex-col max-md:items-center";
+  const mainMaxMdCross = isCompletedStep
+    ? "max-md:flex-col max-md:items-stretch"
+    : "max-md:flex-col max-md:items-center";
   const mainResponsiveLayout = `${mainMaxMdCross} ${mainMaxMdJustify} md:flex-row md:justify-center`;
   const saveDraftOnExit =
     Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
@@ -574,6 +575,70 @@ function CreateFlowLayoutContent({
                 }}
               >
                 {footer.confirmCoreValues}
+              </Button>
+            ) : currentStep === "communication-methods" && nextStep ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={
+                  isPublishing ||
+                  (state.selectedCommunicationMethodIds?.length ?? 0) === 0
+                }
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmCommunication}
+              </Button>
+            ) : currentStep === "membership-methods" && nextStep ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={
+                  isPublishing ||
+                  (state.selectedMembershipMethodIds?.length ?? 0) === 0
+                }
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmMembership}
+              </Button>
+            ) : currentStep === "decision-approaches" && nextStep ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={
+                  isPublishing ||
+                  (state.selectedDecisionApproachIds?.length ?? 0) === 0
+                }
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmRightRail}
+              </Button>
+            ) : currentStep === "conflict-management" && nextStep ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={
+                  isPublishing ||
+                  (state.selectedConflictManagementIds?.length ?? 0) === 0
+                }
+                className={footerPrimaryButtonClass}
+                onClick={() => {
+                  goToNextStep();
+                }}
+              >
+                {footer.confirmConflictManagement}
               </Button>
             ) : nextStep ? (
               <Button

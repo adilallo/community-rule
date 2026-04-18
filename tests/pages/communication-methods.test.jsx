@@ -6,16 +6,16 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach } from "vitest";
-import { CardsScreen } from "../../app/create/screens/card/CardsScreen";
+import { CommunicationMethodsScreen } from "../../app/create/screens/card/CommunicationMethodsScreen";
 
 afterEach(() => {
   cleanup();
 });
 
-describe("Create flow cards page", () => {
+describe("Create flow communication-methods page", () => {
   test("clicking a card opens the Create modal", async () => {
     const user = userEvent.setup();
-    render(<CardsScreen />);
+    render(<CommunicationMethodsScreen />);
 
     const signalCards = screen.getAllByRole("button", {
       name: /Signal: Encrypted messaging/,
@@ -29,7 +29,7 @@ describe("Create flow cards page", () => {
   });
 
   test("renders without error", () => {
-    render(<CardsScreen />);
+    render(<CommunicationMethodsScreen />);
 
     expect(
       screen.getByText(
@@ -39,13 +39,12 @@ describe("Create flow cards page", () => {
   });
 
   test("renders HeaderLockup and CardStack content", () => {
-    render(<CardsScreen />);
+    render(<CommunicationMethodsScreen />);
 
     expect(
-      screen.getByText(
-        "You can select multiple methods for different needs or add your own",
-      ),
+      screen.getByText(/You can select multiple methods for different needs or/),
     ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "add" })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "See all communication approaches" }),
     ).toBeInTheDocument();
@@ -53,7 +52,7 @@ describe("Create flow cards page", () => {
 
   test("toggle expands and shows Show less", async () => {
     const user = userEvent.setup();
-    render(<CardsScreen />);
+    render(<CommunicationMethodsScreen />);
 
     const toggle = screen.getByRole("button", {
       name: "See all communication approaches",

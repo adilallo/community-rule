@@ -31,6 +31,7 @@ export default {
         "2-0",
         "2-1",
         "2-2",
+        "2-3",
         "3-0",
         "3-1",
         "3-2",
@@ -86,6 +87,7 @@ export const AllStates = {
       <ProportionBar {..._args} progress="2-0" />
       <ProportionBar {..._args} progress="2-1" />
       <ProportionBar {..._args} progress="2-2" />
+      <ProportionBar {..._args} progress="2-3" />
       <ProportionBar {..._args} progress="3-0" />
       <ProportionBar {..._args} progress="3-1" />
       <ProportionBar {..._args} progress="3-2" />

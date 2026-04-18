@@ -1,20 +1,20 @@
-import { CardsScreen } from "../../app/create/screens/card/CardsScreen";
+import { CommunicationMethodsScreen } from "../../app/create/screens/card/CommunicationMethodsScreen";
 
 export default {
-  title: "Pages/Create Flow/Cards",
-  component: CardsScreen,
+  title: "Pages/Create Flow/Communication methods",
+  component: CommunicationMethodsScreen,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component:
-          "Communication / card selection step with modals and responsive layout.",
+          "Communication methods step (`/create/communication-methods`): card stack, modals, responsive layout.",
       },
     },
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <Story />
       </div>
     ),

@@ -56,7 +56,7 @@ describe("createFlowStateSchema", () => {
   it("accepts known fields and passthrough keys", () => {
     const r = createFlowStateSchema.safeParse({
       title: "My rule",
-      currentStep: "cards",
+      currentStep: "communication-methods",
       customField: { nested: [1, 2] },
     });
     expect(r.success).toBe(true);

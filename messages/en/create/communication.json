@@ -2,7 +2,9 @@
   "_comment": "Create flow – communication step: page, cards, and add-platform modals",
   "page": {
     "compactTitle": "How should this community communicate with each-other?",
-    "compactDescription": "You can select multiple methods for different needs or add your own",
+    "compactDescriptionBefore": "You can select multiple methods for different needs or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " your own",
     "expandedTitle": "What method should this community use to communicate with eachother?",
     "expandedDescription": "You can select multiple methods for different needs or add your own",
     "seeAllLink": "See all communication approaches"

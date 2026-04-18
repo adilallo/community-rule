@@ -40,8 +40,8 @@ describe("ProportionBar (behavioral tests)", () => {
   it("renders proportion bar with correct progress value", () => {
     render(<ProportionBar progress="2-1" />);
     const progressbar = screen.getByRole("progressbar");
-    // 2-1: First section full (1) + second section 1/3 filled = 1 + 1/3 ≈ 1.333
-    expect(progressbar).toHaveAttribute("aria-valuenow", "1.3333333333333333");
+    // 2-1 (Figma `17861:33241`): first section full + second section 1/4 filled = 1.25.
+    expect(progressbar).toHaveAttribute("aria-valuenow", "1.25");
     expect(progressbar).toHaveAttribute("aria-valuemin", "0");
     expect(progressbar).toHaveAttribute("aria-valuemax", "3");
   });
@@ -63,7 +63,8 @@ describe("ProportionBar (behavioral tests)", () => {
       { progress: "1-0" as const, expected: 1 / 6 }, // First section 1/6 filled
       { progress: "1-5" as const, expected: 1 }, // First section 6/6 filled (fully filled)
       { progress: "2-0" as const, expected: 1 }, // First section full, second empty
-      { progress: "2-2" as const, expected: 1 + 2 / 3 }, // First section full, second section 2/3 filled
+      { progress: "2-2" as const, expected: 1 + 1 / 2 }, // 1 + 1/2 per Figma `18861:15250`
+      { progress: "2-3" as const, expected: 1 + 3 / 4 }, // 1 + 3/4 per Figma `21434:17632`
       { progress: "3-0" as const, expected: 2 }, // First two sections full, third empty
       { progress: "3-2" as const, expected: 2 + 2 / 3 }, // First two sections full, third section 2/3 filled
     ];

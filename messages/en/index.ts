@@ -19,6 +19,8 @@ import profile from "./pages/profile.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import communication from "./create/communication.json";
+import createMembership from "./create/membership.json";
+import createConflictManagement from "./create/conflictManagement.json";
 import createInformational from "./create/informational.json";
 import createCommunityName from "./create/communityName.json";
 import createCommunitySize from "./create/communitySize.json";
@@ -61,6 +63,8 @@ export default {
   },
   create: {
     communication,
+    membership: createMembership,
+    conflictManagement: createConflictManagement,
     informational: createInformational,
     communityName: createCommunityName,
     communitySize: createCommunitySize,

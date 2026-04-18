@@ -10,6 +10,7 @@ export type ProportionBarState =
   | "2-0"
   | "2-1"
   | "2-2"
+  | "2-3"
   | "3-0"
   | "3-1"
   | "3-2";
@@ -20,7 +21,9 @@ export interface ProportionBarProps {
   progress?: ProportionBarState;
   className?: string;
   /**
-   * `segmented` (Figma: create-flow footer): pill-shaped partial fills inside each segment.
+   * Kept for backwards compatibility. Both `default` and `segmented` render the
+   * same fill geometry (square leading edges, matching Figma). Future variants
+   * can differentiate here without API changes.
    */
   variant?: ProportionBarVariant;
 }

@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * `decision-approaches` step — Figma “Flow — Right Rail” (node `20523-23509`).
+ * Registry: `CREATE_FLOW_SCREEN_REGISTRY["decision-approaches"]` (`layoutKind: "right-rail"`).
+ *
+ * Layout matches {@link CreateFlowTwoColumnSelectShell}: one column below `lg` (1024px), two columns
+ * at `lg+` with a scrollable rail — same breakpoint and height chain as select steps, distinct content.
+ */
+
 import { useState, useCallback, useMemo } from "react";
 import DecisionMakingSidebar from "../../../components/utility/DecisionMakingSidebar";
 import CardStack from "../../../components/utility/CardStack";
@@ -8,21 +16,26 @@ import type { CardStackItem } from "../../../components/utility/CardStack/CardSt
 import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
-import {
-  CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
-  CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
-} from "../../components/createFlowLayoutTokens";
+import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 
 export function RightRailScreen() {
   const m = useMessages();
   const rr = m.create.rightRail;
   const mdUp = useCreateFlowMdUp();
-  const { markCreateFlowInteraction } = useCreateFlow();
+  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [messageBoxCheckedIds, setMessageBoxCheckedIds] = useState<string[]>(
     [],
   );
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expanded, setExpanded] = useState(false);
+
+  const selectedIds = state.selectedDecisionApproachIds ?? [];
+
+  const setSelectedIds = useCallback(
+    (next: string[]) => {
+      updateState({ selectedDecisionApproachIds: next });
+    },
+    [updateState],
+  );
 
   const messageBoxItems: InfoMessageBoxItem[] = useMemo(
     () =>
@@ -47,7 +60,16 @@ export function RightRailScreen() {
   const sidebarDescription = (
     <>
       {rr.sidebar.descriptionBefore}
-      <span className="underline">{rr.sidebar.descriptionLink}</span>
+      <button
+        type="button"
+        className="cursor-pointer border-none bg-transparent p-0 font-inherit text-[length:inherit] leading-[inherit] text-[var(--color-content-default-tertiary)] underline decoration-solid underline-offset-2 hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-border-invert-primary)]"
+        onClick={() => {
+          markCreateFlowInteraction();
+          setExpanded(true);
+        }}
+      >
+        {rr.sidebar.descriptionLinkLabel}
+      </button>
       {rr.sidebar.descriptionAfter}
     </>
   );
@@ -65,11 +87,13 @@ export function RightRailScreen() {
   const handleCardSelect = useCallback(
     (id: string) => {
       markCreateFlowInteraction();
-      setSelectedIds((prev) =>
-        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+      setSelectedIds(
+        selectedIds.includes(id)
+          ? selectedIds.filter((x) => x !== id)
+          : [...selectedIds, id],
       );
     },
-    [markCreateFlowInteraction],
+    [markCreateFlowInteraction, selectedIds, setSelectedIds],
   );
 
   const handleToggleExpand = useCallback(() => {
@@ -78,48 +102,40 @@ export function RightRailScreen() {
   }, [markCreateFlowInteraction]);
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden md:h-full">
-      <div className="flex min-h-0 flex-1 overflow-hidden px-5 max-md:overflow-y-auto md:px-12">
-        <div
-          className={`mx-auto grid h-auto min-h-0 w-full shrink-0 grid-cols-1 gap-6 min-w-0 max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:justify-items-center md:gap-12 md:pb-8 ${CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS}`}
-        >
-          <div
-            className={`flex flex-col items-stretch justify-start overflow-hidden md:justify-center ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
-          >
-            <DecisionMakingSidebar
-              title={rr.sidebar.title}
-              description={sidebarDescription}
-              messageBoxTitle={rr.messageBox.title}
-              messageBoxItems={messageBoxItems}
-              messageBoxCheckedIds={messageBoxCheckedIds}
-              onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
-              size={mdUp ? "L" : "M"}
-              justification={mdUp ? "left" : "center"}
-            />
-          </div>
-          <div
-            className={`scrollbar-hide relative flex min-h-0 flex-col overflow-x-hidden max-md:overflow-visible md:overflow-y-auto ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
-          >
-            <div className="flex w-full min-w-0 flex-col items-center gap-6 py-0 md:pb-8">
-              <CardStack
-                cards={sampleCards}
-                selectedIds={selectedIds}
-                onCardSelect={handleCardSelect}
-                expanded={expanded}
-                onToggleExpand={handleToggleExpand}
-                hasMore={true}
-                toggleLabel={rr.cardStack.toggleSeeAll}
-                showLessLabel={rr.cardStack.toggleShowLess}
-                title={rr.cardStack.emptyTitle}
-                description={rr.cardStack.emptyDescription}
-                layout="singleStack"
-                className="w-full"
-                headerLockupSize={mdUp ? "L" : "M"}
-              />
-            </div>
-          </div>
-        </div>
+    <CreateFlowTwoColumnSelectShell
+      contentTopBelowMd="space-800"
+      lgVerticalAlign="start"
+      header={
+        <DecisionMakingSidebar
+          title={rr.sidebar.title}
+          description={sidebarDescription}
+          messageBoxTitle={rr.messageBox.title}
+          messageBoxItems={messageBoxItems}
+          messageBoxCheckedIds={messageBoxCheckedIds}
+          onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
+          size={mdUp ? "L" : "M"}
+          justification={mdUp ? "left" : "center"}
+        />
+      }
+    >
+      <div className="flex w-full min-w-0 flex-col items-stretch gap-6 py-0">
+        <CardStack
+          cards={sampleCards}
+          selectedIds={selectedIds}
+          onCardSelect={handleCardSelect}
+          expanded={expanded}
+          onToggleExpand={handleToggleExpand}
+          hasMore={true}
+          toggleLabel={rr.cardStack.toggleSeeAll}
+          showLessLabel={rr.cardStack.toggleShowLess}
+          title=""
+          description=""
+          layout="singleStack"
+          compactRecommendedLimit={5}
+          className="w-full"
+          headerLockupSize={mdUp ? "L" : "M"}
+        />
       </div>
-    </div>
+    </CreateFlowTwoColumnSelectShell>
   );
 }

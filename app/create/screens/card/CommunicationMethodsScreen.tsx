@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * `communication-methods` step — Figma “Flow — Compact Card Stack” (node `20246-15828`).
+ * Registry: `layoutKind: "card"` (`CREATE_FLOW_SCREEN_REGISTRY["communication-methods"]`).
+ *
+ * Lives under `screens/card/` (not `select/`): Figma **card stack** layout is a distinct shell from
+ * two-column chip **select** frames. Future card-stack steps get their own `*Screen.tsx` here and
+ * reuse `CardStack` / `CreateFlowStepShell` as needed.
+ */
+
 import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
@@ -9,7 +18,10 @@ import CardStack from "../../../components/utility/CardStack";
 import Create from "../../../components/modals/Create";
 import TextArea from "../../../components/controls/TextArea";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
-import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
+import {
+  CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS,
+  CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
+} from "../../components/createFlowLayoutTokens";
 
 const IN_PERSON_CARD_ID = "in-person-meetings";
 const SIGNAL_CARD_ID = "signal";
@@ -129,15 +141,23 @@ function isAddPlatformCard(cardId: string | null): boolean {
   );
 }
 
-export function CardsScreen() {
+export function CommunicationMethodsScreen() {
   const m = useMessages();
   const comm = m.create.communication;
   const mdUp = useCreateFlowMdUp();
-  const { markCreateFlowInteraction } = useCreateFlow();
+  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [expanded, setExpanded] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
+
+  const selectedIds = state.selectedCommunicationMethodIds ?? [];
+
+  const setSelectedIds = useCallback(
+    (next: string[]) => {
+      updateState({ selectedCommunicationMethodIds: next });
+    },
+    [updateState],
+  );
 
   const sampleCards = useMemo(
     () =>
@@ -154,9 +174,25 @@ export function CardsScreen() {
   );
 
   const title = expanded ? comm.page.expandedTitle : comm.page.compactTitle;
-  const description = expanded
-    ? comm.page.expandedDescription
-    : comm.page.compactDescription;
+
+  const description = expanded ? (
+    comm.page.expandedDescription
+  ) : (
+    <>
+      {comm.page.compactDescriptionBefore}
+      <button
+        type="button"
+        className="cursor-pointer border-none bg-transparent p-0 font-inherit text-[length:inherit] leading-[inherit] text-[var(--color-content-default-tertiary)] underline decoration-solid underline-offset-2 hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-border-invert-primary)]"
+        onClick={() => {
+          markCreateFlowInteraction();
+          setExpanded(true);
+        }}
+      >
+        {comm.page.compactDescriptionLinkLabel}
+      </button>
+      {comm.page.compactDescriptionAfter}
+    </>
+  );
 
   const modalConfig =
     pendingCardId && pendingCardId in comm.modals
@@ -198,13 +234,15 @@ export function CardsScreen() {
   const handleCreateModalConfirm = useCallback(() => {
     markCreateFlowInteraction();
     if (pendingCardId) {
-      setSelectedIds((prev) =>
-        prev.includes(pendingCardId) ? prev : [...prev, pendingCardId],
+      setSelectedIds(
+        selectedIds.includes(pendingCardId)
+          ? selectedIds
+          : [...selectedIds, pendingCardId],
       );
     }
     setCreateModalOpen(false);
     setPendingCardId(null);
-  }, [markCreateFlowInteraction, pendingCardId]);
+  }, [markCreateFlowInteraction, pendingCardId, selectedIds, setSelectedIds]);
 
   return (
     <CreateFlowStepShell
@@ -219,7 +257,7 @@ export function CardsScreen() {
             justification="center"
           />
         </div>
-        <div className={CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}>
+        <div className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}>
           <CardStack
             cards={sampleCards}
             selectedIds={selectedIds}
@@ -231,6 +269,8 @@ export function CardsScreen() {
             }}
             hasMore={true}
             toggleLabel={comm.page.seeAllLink}
+            compactRecommendedLimit={3}
+            compactDesktopLayout="flexWrap"
             headerLockupSize={mdUp ? "L" : "M"}
           />
         </div>

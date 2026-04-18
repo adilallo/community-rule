@@ -11,12 +11,18 @@ import { ConfirmStakeholdersScreen } from "./select/ConfirmStakeholdersScreen";
 import { CommunityUploadScreen } from "./upload/CommunityUploadScreen";
 import { CommunityReviewScreen } from "./review/CommunityReviewScreen";
 import { FinalReviewScreen } from "./review/FinalReviewScreen";
-import { CardsScreen } from "./card/CardsScreen";
+import { CommunicationMethodsScreen } from "./card/CommunicationMethodsScreen";
+import { MembershipMethodsScreen } from "./card/MembershipMethodsScreen";
+import { ConflictManagementScreen } from "./card/ConflictManagementScreen";
 import { RightRailScreen } from "./right-rail/RightRailScreen";
 import { CompletedScreen } from "./completed/CompletedScreen";
 
 /**
- * Renders the create-flow screen for a validated `screenId` (URL segment under /create/).
+ * Maps each wizard `screenId` to its screen component.
+ *
+ * **Folder rule (Figma):** subfolders match `CREATE_FLOW_SCREEN_REGISTRY[].layoutKind`
+ * — `select/` (two-column chip flows), `card/` (compact card-stack steps), `text/`, etc.
+ * The URL segment (`communication-methods`) is not the folder name; see `createFlowScreenRegistry.ts`.
  */
 export function CreateFlowScreenView({
   screenId,
@@ -65,10 +71,14 @@ export function CreateFlowScreenView({
       return <CommunityReviewScreen />;
     case "core-values":
       return <CoreValuesSelectScreen />;
-    case "cards":
-      return <CardsScreen />;
-    case "right-rail":
+    case "communication-methods":
+      return <CommunicationMethodsScreen />;
+    case "membership-methods":
+      return <MembershipMethodsScreen />;
+    case "decision-approaches":
       return <RightRailScreen />;
+    case "conflict-management":
+      return <ConflictManagementScreen />;
     case "confirm-stakeholders":
       return <ConfirmStakeholdersScreen />;
     case "final-review":

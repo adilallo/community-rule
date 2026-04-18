@@ -1,25 +1,24 @@
 import type { CreateFlowState } from "../../app/create/types";
 
+/** Legacy `currentStep` values mapped to the current `CreateFlowStep` id. */
+const LEGACY_CREATE_FLOW_STEP_RENAMES: Readonly<Record<string, string>> = {
+  "right-rail": "decision-approaches",
+};
+
 /**
- * Maps pre-rename draft keys and step ids (`community-reflection` → `community-save`).
- * Safe to run on any parsed draft payload before merging into context.
+ * Normalizes parsed draft JSON before merging into create-flow context.
+ * Renames deprecated step ids so old drafts and bookmarks stay valid.
  */
 export function migrateLegacyCreateFlowState(
   raw: Record<string, unknown> | null | undefined,
 ): CreateFlowState {
   if (!raw || typeof raw !== "object") return {};
-  const next: Record<string, unknown> = { ...raw };
-  if (typeof next.communityReflection === "string") {
-    if (
-      next.communitySaveEmail === undefined ||
-      next.communitySaveEmail === ""
-    ) {
-      next.communitySaveEmail = next.communityReflection;
+  const step = raw.currentStep;
+  if (typeof step === "string") {
+    const next = LEGACY_CREATE_FLOW_STEP_RENAMES[step];
+    if (next !== undefined) {
+      return { ...raw, currentStep: next } as CreateFlowState;
     }
   }
-  delete next.communityReflection;
-  if (next.currentStep === "community-reflection") {
-    next.currentStep = "community-save";
-  }
-  return next as CreateFlowState;
+  return raw as CreateFlowState;
 }

@@ -11,7 +11,7 @@ The Figma **Create Community** sequence is the **source of truth** for the first
 | Stage (Figma) | Purpose (summary) | `CreateFlowStep` values (in order) |
 | --- | --- | --- |
 | **Create Community** | Intro, naming, structure, context, size, upload, save progress (email), then community review. | `informational` → `community-name` → `community-structure` → `community-context` → `community-size` → `community-upload` → `community-save` → `review` |
-| **Create Custom CommunityRule** | Author the CommunityRule content and structure. | `cards` → `right-rail` |
+| **Create Custom CommunityRule** | Author the CommunityRule content and structure. | `core-values` → `communication-methods` → `right-rail` (further card-stack steps get their own `screenId` and `screens/card/*Screen.tsx`; `right-rail` uses `layoutKind: "right-rail"`) |
 | **Review and complete** | Stakeholders, final card, publish, success. | `confirm-stakeholders` → `final-review` → `completed` |
 
 Treat these stages as the **canonical product sections** when adding chrome (e.g. stage headers, progress copy), breaking work across teams, or reusing flows in other surfaces. **Layout kind** is **not** encoded in the URL; it lives in [`CREATE_FLOW_SCREEN_REGISTRY`](../app/create/utils/createFlowScreenRegistry.ts) (Figma node id + `layoutKind` per step). Figma defines eight layout kinds: **informational**, **text**, **select**, **upload**, **review**, **card**, **right-rail**, **completed** — `CreateFlowLayoutKind` and [`app/create/screens/`](../app/create/screens/) mirror that list (one folder per kind; multiple steps may share a kind, e.g. several **select** screens).
@@ -34,11 +34,12 @@ Order is defined in code by [`FLOW_STEP_ORDER`](../app/create/utils/flowSteps.ts
 | 6 | Create Community | `community-upload` | `/create/community-upload` |
 | 7 | Create Community | `community-save` | `/create/community-save` |
 | 8 | Create Community (review frame) | `review` | `/create/review` |
-| 9 | Create Custom CommunityRule | `cards` | `/create/cards` |
-| 10 | Create Custom CommunityRule | `right-rail` | `/create/right-rail` |
-| 11 | Review and complete | `confirm-stakeholders` | `/create/confirm-stakeholders` |
-| 12 | Review and complete | `final-review` | `/create/final-review` |
-| 13 | Review and complete | `completed` | `/create/completed` |
+| 9 | Create Custom CommunityRule | `core-values` | `/create/core-values` |
+| 10 | Create Custom CommunityRule | `communication-methods` | `/create/communication-methods` |
+| 11 | Create Custom CommunityRule | `right-rail` | `/create/right-rail` |
+| 12 | Review and complete | `confirm-stakeholders` | `/create/confirm-stakeholders` |
+| 13 | Review and complete | `final-review` | `/create/final-review` |
+| 14 | Review and complete | `completed` | `/create/completed` |
 
 **Primary entry:** marketing header “Create rule” navigates to **`/create`**, which redirects to **`/create/informational`** (see [`TopNav.container.tsx`](../app/components/navigation/TopNav/TopNav.container.tsx)).
 

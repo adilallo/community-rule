@@ -1,0 +1,76 @@
+{
+  "_comment": "Create flow — conflict management (Figma Flow — Compact Card Stack `20879:15979`)",
+  "page": {
+    "compactTitle": "How should conflicts be managed\nin your group?",
+    "compactDescriptionBefore": "You can also combine or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " new approaches to the list",
+    "expandedTitle": "How should conflicts be managed in your group?",
+    "expandedDescription": "You can also combine or add new approaches to the list",
+    "seeAllLink": "See all conflict management approaches"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "cards": {
+    "peer-mediation": {
+      "label": "Peer Mediation",
+      "supportText": "Trained members within the organization mediate disputes among peers."
+    },
+    "conflict-resolution-council": {
+      "label": "Conflict Resolution Council",
+      "supportText": "Senior members with institutional knowledge provide guidance or decisions."
+    },
+    "facilitated-negotiation": {
+      "label": "Facilitated Negotiation",
+      "supportText": "A neutral facilitator helps guide the negotiation process."
+    },
+    "ad-hoc-arbitration": {
+      "label": "Ad Hoc Arbitration",
+      "supportText": "Arbitrators are chosen specifically for a particular case."
+    },
+    "conflict-workshops": {
+      "label": "Conflict Workshops",
+      "supportText": "Structured sessions where parties collaboratively resolve disputes and improve future interactions."
+    },
+    "6": {
+      "label": "Label",
+      "supportText": "Additional conflict management approach."
+    },
+    "7": {
+      "label": "Label",
+      "supportText": "Additional conflict management approach."
+    },
+    "8": {
+      "label": "Label",
+      "supportText": "Additional conflict management approach."
+    }
+  },
+  "modals": {
+    "peer-mediation": {
+      "title": "Peer Mediation",
+      "description": "Trained members within the organization mediate disputes among peers."
+    },
+    "conflict-resolution-council": {
+      "title": "Conflict Resolution Council",
+      "description": "Senior members with institutional knowledge provide guidance or decisions."
+    },
+    "facilitated-negotiation": {
+      "title": "Facilitated Negotiation",
+      "description": "A neutral facilitator helps guide the negotiation process."
+    },
+    "ad-hoc-arbitration": {
+      "title": "Ad Hoc Arbitration",
+      "description": "Arbitrators are chosen specifically for a particular case."
+    },
+    "conflict-workshops": {
+      "title": "Conflict Workshops",
+      "description": "Structured sessions where parties collaboratively resolve disputes and improve future interactions."
+    },
+    "6": { "title": "Label", "description": "Additional conflict management approach." },
+    "7": { "title": "Label", "description": "Additional conflict management approach." },
+    "8": { "title": "Label", "description": "Additional conflict management approach." }
+  }
+}

@@ -2,7 +2,8 @@ import type { CreateFlowStep } from "../types";
 
 /**
  * Figma layout families for the create flow (not encoded in the URL).
- * Registry and `app/create/screens/` are organized by these kinds.
+ * `app/create/screens/<kind>/` mirrors these names: e.g. `layoutKind: "select"` → `screens/select/`,
+ * `"card"` → `screens/card/` (compact card-stack frames, distinct from two-column chip selects).
  */
 export type CreateFlowLayoutKind =
   | "informational"
@@ -90,16 +91,28 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
     messageNamespace: "create.coreValues",
     centeredBodyBelowMd: false,
   },
-  cards: {
+  "communication-methods": {
     layoutKind: "card",
-    figmaNodeId: "TBD-cards",
+    figmaNodeId: "20246-15828",
     messageNamespace: "create.communication",
     centeredBodyBelowMd: false,
   },
-  "right-rail": {
+  "membership-methods": {
+    layoutKind: "card",
+    figmaNodeId: "20858-13947",
+    messageNamespace: "create.membership",
+    centeredBodyBelowMd: false,
+  },
+  "decision-approaches": {
     layoutKind: "right-rail",
-    figmaNodeId: "TBD-right-rail",
+    figmaNodeId: "20523-23509",
     messageNamespace: "create.rightRail",
+    centeredBodyBelowMd: false,
+  },
+  "conflict-management": {
+    layoutKind: "card",
+    figmaNodeId: "20879-15979",
+    messageNamespace: "create.conflictManagement",
     centeredBodyBelowMd: false,
   },
   "confirm-stakeholders": {
@@ -127,4 +140,12 @@ export function createFlowStepUsesCenteredTextLayout(
 ): boolean {
   if (!step) return false;
   return CREATE_FLOW_SCREEN_REGISTRY[step].centeredBodyBelowMd;
+}
+
+/** Steps whose main area uses the CardStack-style layout (`layoutKind: "card"`). */
+export function createFlowStepUsesCardLayout(
+  step: CreateFlowStep | null,
+): boolean {
+  if (!step) return false;
+  return CREATE_FLOW_SCREEN_REGISTRY[step].layoutKind === "card";
 }

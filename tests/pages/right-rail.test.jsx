@@ -18,7 +18,7 @@ describe("Create flow right-rail page", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "How should conflicts be resolved?",
+        name: "How should this community make difficult decisions?",
       }),
     ).toBeInTheDocument();
   });
@@ -30,9 +30,9 @@ describe("Create flow right-rail page", () => {
       if (element?.tagName !== "P") return false;
       const text = element.textContent ?? "";
       return (
-        text.includes("You can also combine or") &&
+        text.includes("Select as many as you need") &&
         text.includes("add") &&
-        text.includes("new approaches to the list")
+        text.includes("new decision making approaches")
       );
     });
     expect(description).toBeInTheDocument();
@@ -77,17 +77,17 @@ describe("Create flow right-rail page", () => {
 
     expect(
       screen.getByRole("button", {
-        name: /Mediation: Collaborative work to reach a resolution/,
+        name: /Lazy Consensus: A decision is assumed approved/,
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: /Facilitated dialogue: Structured sessions/,
+        name: /Do-ocracy: Decisions are made by those who take initiative/,
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: /Invite-only: Private discussions with selected participants/,
+        name: /Consensus Decision-Making: All members must agree/,
       }),
     ).toBeInTheDocument();
   });
@@ -123,10 +123,10 @@ describe("Create flow right-rail page", () => {
     const user = userEvent.setup();
     render(<RightRailScreen />);
 
-    const mediationCard = screen.getByRole("button", {
-      name: /Mediation: Collaborative work to reach a resolution/,
+    const card = screen.getByRole("button", {
+      name: /Lazy Consensus: A decision is assumed approved/,
     });
-    await user.click(mediationCard);
+    await user.click(card);
 
     expect(screen.getByText("SELECTED")).toBeInTheDocument();
   });

@@ -26,4 +26,28 @@ describe("getProportionBarProgressForCreateFlowStep", () => {
       "2-0",
     );
   });
+
+  it("uses 2-1 on communication-methods", () => {
+    expect(
+      getProportionBarProgressForCreateFlowStep("communication-methods"),
+    ).toBe("2-1");
+  });
+
+  it("uses 2-2 on membership-methods", () => {
+    expect(
+      getProportionBarProgressForCreateFlowStep("membership-methods"),
+    ).toBe("2-2");
+  });
+
+  it("uses 2-3 on decision-approaches (Figma Flow — Right Rail)", () => {
+    expect(
+      getProportionBarProgressForCreateFlowStep("decision-approaches"),
+    ).toBe("2-3");
+  });
+
+  it("uses 3-0 on conflict-management (start of Review segment)", () => {
+    expect(
+      getProportionBarProgressForCreateFlowStep("conflict-management"),
+    ).toBe("3-0");
+  });
 });

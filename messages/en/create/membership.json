@@ -1,0 +1,76 @@
+{
+  "_comment": "Create flow — membership / how members join (compact card stack)",
+  "page": {
+    "compactTitle": "How do new members join\nand get connected?",
+    "compactDescriptionBefore": "You can select multiple methods for different needs or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " your own",
+    "expandedTitle": "How should new members join and get connected?",
+    "expandedDescription": "You can select multiple methods for different needs or add your own",
+    "seeAllLink": "See all membership approaches"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "cards": {
+    "open-access": {
+      "label": "Open Access",
+      "supportText": "Maximum inclusion. Anyone can join immediately by simply showing up."
+    },
+    "orientation-required": {
+      "label": "Orientation Required",
+      "supportText": "Newcomers must attend a training or orientation session."
+    },
+    "invitation-only": {
+      "label": "Invitation Only",
+      "supportText": "New members can only join if they are 'vouched for' by existing members."
+    },
+    "contribution-based": {
+      "label": "Contribution Based",
+      "supportText": "Membership is reserved for people contributing their labor."
+    },
+    "mentorship": {
+      "label": "Mentorship",
+      "supportText": "New members are paired with 'Mentors' to guide them through a probationary period."
+    },
+    "6": {
+      "label": "Label",
+      "supportText": "Additional membership approach."
+    },
+    "7": {
+      "label": "Label",
+      "supportText": "Additional membership approach."
+    },
+    "8": {
+      "label": "Label",
+      "supportText": "Additional membership approach."
+    }
+  },
+  "modals": {
+    "open-access": {
+      "title": "Open Access",
+      "description": "Maximum inclusion. Anyone can join immediately by simply showing up."
+    },
+    "orientation-required": {
+      "title": "Orientation Required",
+      "description": "Newcomers must attend a training or orientation session."
+    },
+    "invitation-only": {
+      "title": "Invitation Only",
+      "description": "New members can only join if they are 'vouched for' by existing members."
+    },
+    "contribution-based": {
+      "title": "Contribution Based",
+      "description": "Membership is reserved for people contributing their labor."
+    },
+    "mentorship": {
+      "title": "Mentorship",
+      "description": "New members are paired with 'Mentors' to guide them through a probationary period."
+    },
+    "6": { "title": "Label", "description": "Additional membership approach." },
+    "7": { "title": "Label", "description": "Additional membership approach." },
+    "8": { "title": "Label", "description": "Additional membership approach." }
+  }
+}

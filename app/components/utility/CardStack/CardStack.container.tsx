@@ -21,7 +21,10 @@ const CardStackContainer = memo<CardStackProps>(
     title = "",
     description = "",
     layout = "default",
+    compactRecommendedLimit = 5,
+    compactDesktopLayout: compactDesktopLayoutProp = "grid",
     headerLockupSize,
+    toggleAlignment = "center",
     className = "",
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
@@ -75,7 +78,10 @@ const CardStackContainer = memo<CardStackProps>(
         title={title}
         description={description}
         layout={layout}
+        compactRecommendedLimit={compactRecommendedLimit}
+        compactDesktopLayout={compactDesktopLayoutProp}
         headerLockupSize={headerLockupSize}
+        toggleAlignment={toggleAlignment}
         className={className}
       />
     );

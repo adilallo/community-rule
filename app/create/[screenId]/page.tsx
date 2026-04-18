@@ -1,33 +1,25 @@
-"use client";
-
-import { notFound, useRouter } from "next/navigation";
-import { use, useEffect } from "react";
+import { notFound } from "next/navigation";
 import { CreateFlowScreenView } from "../screens/CreateFlowScreenView";
 import { isValidStep } from "../utils/flowSteps";
 import type { CreateFlowStep } from "../types";
+
+/**
+ * Single dynamic route for the whole create wizard (every step in `FLOW_STEP_ORDER`).
+ *
+ * Only **canonical** `screenId` values from `CreateFlowStep` are valid. Old placeholder
+ * segments from pre-product shells are not redirected — unknown slugs `notFound()`.
+ */
 
 interface PageProps {
   params: Promise<{ screenId: string }>;
 }
 
-export default function CreateFlowScreenPage({ params }: PageProps) {
-  const { screenId: raw } = use(params);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (raw === "community-reflection") {
-      router.replace("/create/community-save");
-    }
-  }, [raw, router]);
-
-  if (raw === "community-reflection") {
-    return null;
-  }
+export default async function CreateFlowScreenPage({ params }: PageProps) {
+  const { screenId: raw } = await params;
 
   if (!isValidStep(raw)) {
     notFound();
   }
 
-  const screenId = raw as CreateFlowStep;
-  return <CreateFlowScreenView screenId={screenId} />;
+  return <CreateFlowScreenView screenId={raw as CreateFlowStep} />;
 }

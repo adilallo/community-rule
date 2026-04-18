@@ -1,24 +1,41 @@
 import type { ProportionBarViewProps } from "./ProportionBar.types";
 
+/**
+ * Per-step fill ratio for the second (middle) segment at `2-X` progress states.
+ * Values are taken directly from Figma (`17861:33241`, `18861:15250`, `21434:17632`)
+ * and are intentionally non-uniform — they are NOT `X/3`.
+ */
+const SECOND_SEGMENT_FILL_RATIO: Record<number, number> = {
+  0: 0,
+  1: 1 / 4,
+  2: 1 / 2,
+  3: 3 / 4,
+};
+
+function getSecondSegmentFillRatio(partial: number): number {
+  return SECOND_SEGMENT_FILL_RATIO[partial] ?? 0;
+}
+
 export function ProportionBarView({
   progress,
   className,
   barClasses,
-  variant,
+  // `variant` is kept in the prop API for callers, but both `default` and
+  // `segmented` now render identical fill geometry (square leading edges).
+  variant: _variant,
 }: ProportionBarViewProps) {
   // Proportion bar type
   const [fullSegments, partialSegment] = progress.split("-").map(Number);
-  const segmented = variant === "segmented";
   // Calculate total progress:
   // - For 1-X: first section is (X+1)/6 filled
-  // - For 2-X: first section full, second section X/3 filled
+  // - For 2-X: first section full, second section filled per Figma ratios (see `SECOND_SEGMENT_FILL_RATIO`)
   // - For 3-X: first two sections full, third section X/3 filled
   // Max is 3 full segments = 9 units
   let totalProgress = 0;
   if (fullSegments === 1) {
     totalProgress = (partialSegment + 1) / 6; // 1/6 to 6/6 of first section
   } else if (fullSegments === 2) {
-    totalProgress = 1 + partialSegment / 3; // 1 full + 0/3 to 2/3 of second
+    totalProgress = 1 + getSecondSegmentFillRatio(partialSegment);
   } else if (fullSegments === 3) {
     totalProgress = 2 + partialSegment / 3; // 2 full + 0/3 to 2/3 of third
   }
@@ -55,33 +72,32 @@ export function ProportionBarView({
       </div>
 
       {/* Fill layer - always show 3 sections, fill amount varies */}
+      {/*
+        The leading (right) edge of every partial fill is a straight (square) edge —
+        only the outermost left/right edges of the whole bar can round to match the
+        background capsule.
+      */}
       <div className="absolute inset-0 flex gap-[var(--spacing-scale-008)] px-[4px] overflow-hidden">
         {/* First section - for 1-X: (X+1)/6 filled, for 2-X and 3-X: fully filled */}
         <div className="flex-1 h-full relative">
           {fullSegments === 1 ? (
             <div
-              className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] rounded-l-[var(--radius-full)] ${
-                segmented && partialSegment < 5
-                  ? "rounded-r-[var(--radius-full)]"
-                  : ""
-              }`.trim()}
+              className="absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] rounded-l-[var(--radius-full)]"
               style={{ width: `${((partialSegment + 1) / 6) * 100}%` }}
             />
           ) : fullSegments >= 2 ? (
             <div className="absolute inset-0 bg-[var(--color-content-default-brand-primary)] rounded-l-[var(--radius-full)]" />
           ) : null}
         </div>
-        {/* Second section - for 2-X: X/3 filled, for 3-X: fully filled, otherwise empty */}
+        {/* Second section — for 2-X: Figma ratio fill (see `SECOND_SEGMENT_FILL_RATIO`); for 3-X: full; otherwise empty. */}
         <div className="flex-1 h-full relative">
           {fullSegments === 2 ? (
             partialSegment > 0 ? (
               <div
-                className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] ${
-                  segmented
-                    ? "rounded-l-[var(--radius-full)] rounded-r-[var(--radius-full)]"
-                    : ""
-                }`.trim()}
-                style={{ width: `${(partialSegment / 3) * 100}%` }}
+                className="absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)]"
+                style={{
+                  width: `${getSecondSegmentFillRatio(partialSegment) * 100}%`,
+                }}
               />
             ) : null
           ) : fullSegments >= 3 ? (
@@ -89,16 +105,12 @@ export function ProportionBarView({
           ) : null}
         </div>
         {/* Third section - for 3-X: X/3 filled, otherwise empty */}
-        {/* Round right corner when at 100% (third section fully filled, partialSegment === 3) */}
+        {/* Round right corner only when the fill reaches the absolute right edge of the bar (partialSegment >= 3) */}
         <div className="flex-1 h-full relative">
           {fullSegments === 3 && partialSegment > 0 ? (
             <div
               className={`absolute inset-y-0 left-0 bg-[var(--color-content-default-brand-primary)] ${
-                segmented
-                  ? "rounded-l-[var(--radius-full)] rounded-r-[var(--radius-full)]"
-                  : partialSegment >= 3
-                    ? "rounded-r-[var(--radius-full)]"
-                    : ""
+                partialSegment >= 3 ? "rounded-r-[var(--radius-full)]" : ""
               }`.trim()}
               style={{ width: `${Math.min((partialSegment / 3) * 100, 100)}%` }}
             />

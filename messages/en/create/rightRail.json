@@ -1,9 +1,10 @@
 {
+  "_comment": "Create flow — right rail / decision approaches (Figma Flow — Right Rail `20523:23509`)",
   "sidebar": {
-    "title": "How should conflicts be resolved?",
-    "descriptionBefore": "You can also combine or ",
-    "descriptionLink": "add",
-    "descriptionAfter": " new approaches to the list"
+    "title": "How should this community make difficult decisions?",
+    "descriptionBefore": "Select as many as you need to describe how your group makes decisions. You can also ",
+    "descriptionLinkLabel": "add",
+    "descriptionAfter": " new decision making approaches or interact with the categories below to filter."
   },
   "messageBox": {
     "title": "Consider defining approaches to steward key resources:",
@@ -16,99 +17,97 @@
   },
   "cardStack": {
     "toggleSeeAll": "See all decision approaches",
-    "toggleShowLess": "Show less",
-    "emptyTitle": "",
-    "emptyDescription": ""
+    "toggleShowLess": "Show less"
   },
   "cards": [
     {
-      "id": "mediation",
-      "label": "Mediation",
-      "supportText": "Collaborative work to reach a resolution that all parties can agree upon.",
+      "id": "lazy-consensus",
+      "label": "Lazy Consensus",
+      "supportText": "A decision is assumed approved unless objections are raised within a specified timeframe.",
       "recommended": true
     },
     {
-      "id": "facilitation",
-      "label": "Facilitated dialogue",
-      "supportText": "Structured sessions where parties collaboratively resolve disputes.",
+      "id": "do-ocracy",
+      "label": "Do-ocracy",
+      "supportText": "Decisions are made by those who take initiative and carry out the work.",
       "recommended": true
     },
     {
-      "id": "invite-only",
-      "label": "Invite-only",
-      "supportText": "Private discussions with selected participants.",
+      "id": "consensus-decision-making",
+      "label": "Consensus Decision-Making",
+      "supportText": "All members must agree. Best for important decisions in small groups. Does not work well for low stakes decisions.",
       "recommended": true
     },
     {
-      "id": "arbitration",
-      "label": "Arbitration",
-      "supportText": "Arbitrators are chosen specifically for a particular case.",
+      "id": "rotational-leadership",
+      "label": "Rotational Leadership",
+      "supportText": "Decision-making responsibilities rotate among members.",
       "recommended": true
     },
     {
-      "id": "direct-dialogue",
-      "label": "Direct dialogue",
-      "supportText": "Encouraging direct, respectful dialogue between those involved.",
+      "id": "modified-consensus",
+      "label": "Modified Consensus",
+      "supportText": "Attempts to reach full agreement first, but falls back to voting if consensus isn’t possible.",
       "recommended": true
     },
     {
       "id": "label-1",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-2",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-3",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-4",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-5",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-6",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-7",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-8",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-9",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     },
     {
       "id": "label-10",
       "label": "Label",
-      "supportText": "",
+      "supportText": "Additional decision approach.",
       "recommended": false
     }
   ]

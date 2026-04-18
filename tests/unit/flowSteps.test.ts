@@ -16,7 +16,10 @@ describe("flowSteps", () => {
   });
 
   it("getNextStep returns next step in order", () => {
-    expect(getNextStep("right-rail")).toBe("confirm-stakeholders");
+    expect(getNextStep("communication-methods")).toBe("membership-methods");
+    expect(getNextStep("membership-methods")).toBe("decision-approaches");
+    expect(getNextStep("decision-approaches")).toBe("conflict-management");
+    expect(getNextStep("conflict-management")).toBe("confirm-stakeholders");
     expect(getNextStep("confirm-stakeholders")).toBe("final-review");
   });
 
@@ -67,6 +70,6 @@ describe("flowSteps", () => {
     const opts = { skipCommunitySave: true } as const;
     expect(getNextStep("community-size", opts)).toBe("community-upload");
     expect(getNextStep("review", opts)).toBe("core-values");
-    expect(getPreviousStep("cards", opts)).toBe("core-values");
+    expect(getPreviousStep("communication-methods", opts)).toBe("core-values");
   });
 });
