@@ -14,7 +14,7 @@ import { FinalReviewScreen } from "./review/FinalReviewScreen";
 import { CommunicationMethodsScreen } from "./card/CommunicationMethodsScreen";
 import { MembershipMethodsScreen } from "./card/MembershipMethodsScreen";
 import { ConflictManagementScreen } from "./card/ConflictManagementScreen";
-import { RightRailScreen } from "./right-rail/RightRailScreen";
+import { DecisionApproachesScreen } from "./right-rail/DecisionApproachesScreen";
 import { CompletedScreen } from "./completed/CompletedScreen";
 
 /**
@@ -76,7 +76,7 @@ export function CreateFlowScreenView({
     case "membership-methods":
       return <MembershipMethodsScreen />;
     case "decision-approaches":
-      return <RightRailScreen />;
+      return <DecisionApproachesScreen />;
     case "conflict-management":
       return <ConflictManagementScreen />;
     case "confirm-stakeholders":

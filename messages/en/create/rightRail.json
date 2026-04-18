@@ -19,6 +19,39 @@
     "toggleSeeAll": "See all decision approaches",
     "toggleShowLess": "Show less"
   },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "addApproach": {
+    "nextButtonText": "Add Approach"
+  },
+  "sectionHeadings": {
+    "corePrinciple": "Core Principle",
+    "applicableScope": "Applicable Scope",
+    "stepByStepInstructions": "Step-by-Step Instructions",
+    "consensusLevel": "Consensus Level",
+    "objectionsDeadlocks": "Objections & Deadlocks"
+  },
+  "scopeAddButtonLabel": "Add Applicable Scope",
+  "modals": {
+    "lazy-consensus": {
+      "title": "Lazy Consensus",
+      "description": "A decision is assumed approved unless objections are raised within a specified timeframe.",
+      "sections": {
+        "corePrinciple": "We prioritize momentum and trust over bureaucracy. By assuming good faith, we avoid bottlenecks; silence is interpreted as consent to keep the work moving.",
+        "applicableScope": [
+          "Daily Operations",
+          "Minor Expenditures",
+          "Working Group Decisions"
+        ],
+        "stepByStepInstructions": "Post your proposal to the relevant channel with a specific deadline, such as 'Merging in 72 hours.' If the deadline passes without any objections, you are authorized to proceed. Explicit support is welcome but not required.",
+        "consensusLevel": 90,
+        "objectionsDeadlocks": "Any member can pause the process by raising a 'Block' or 'Concern' before the deadline. The proposer is then required to pause execution and engage in a dialogue to resolve the concern. If the disagreement cannot be resolved asynchronously, the proposal is escalated to a synchronous meeting or a higher governance tier for a final decision."
+      }
+    }
+  },
   "cards": [
     {
       "id": "lazy-consensus",

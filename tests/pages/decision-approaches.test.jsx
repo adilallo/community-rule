@@ -6,15 +6,15 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach } from "vitest";
-import { RightRailScreen } from "../../app/create/screens/right-rail/RightRailScreen";
+import { DecisionApproachesScreen } from "../../app/create/screens/right-rail/DecisionApproachesScreen";
 
 afterEach(() => {
   cleanup();
 });
 
-describe("Create flow right-rail page", () => {
+describe("Create flow decision-approaches page", () => {
   test("renders without error", () => {
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     expect(
       screen.getByRole("heading", {
@@ -24,7 +24,7 @@ describe("Create flow right-rail page", () => {
   });
 
   test("renders sidebar description with add link", () => {
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const description = screen.getByText((content, element) => {
       if (element?.tagName !== "P") return false;
@@ -39,7 +39,7 @@ describe("Create flow right-rail page", () => {
   });
 
   test("renders message box with title and checkboxes", () => {
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const region = screen.getByRole("region", {
       name: "Consider defining approaches to steward key resources:",
@@ -65,7 +65,7 @@ describe("Create flow right-rail page", () => {
   });
 
   test("renders card stack with See all decision approaches toggle", () => {
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     expect(
       screen.getByRole("button", { name: "See all decision approaches" }),
@@ -73,7 +73,7 @@ describe("Create flow right-rail page", () => {
   });
 
   test("renders recommended approach cards", () => {
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     expect(
       screen.getByRole("button", {
@@ -94,7 +94,7 @@ describe("Create flow right-rail page", () => {
 
   test("toggle expands and shows Show less", async () => {
     const user = userEvent.setup();
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const toggle = screen.getByRole("button", {
       name: "See all decision approaches",
@@ -108,7 +108,7 @@ describe("Create flow right-rail page", () => {
 
   test("expanded view shows Label cards", async () => {
     const user = userEvent.setup();
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const toggle = screen.getByRole("button", {
       name: "See all decision approaches",
@@ -119,21 +119,29 @@ describe("Create flow right-rail page", () => {
     expect(labelButtons.length).toBeGreaterThanOrEqual(1);
   });
 
-  test("clicking a card toggles selection", async () => {
+  test("clicking a card opens the create modal and confirming selects it", async () => {
     const user = userEvent.setup();
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const card = screen.getByRole("button", {
       name: /Lazy Consensus: A decision is assumed approved/,
     });
     await user.click(card);
 
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+
+    const confirmButton = within(dialog).getByRole("button", {
+      name: "Add Approach",
+    });
+    await user.click(confirmButton);
+
     expect(screen.getByText("SELECTED")).toBeInTheDocument();
   });
 
   test("message box checkboxes are interactive", async () => {
     const user = userEvent.setup();
-    render(<RightRailScreen />);
+    render(<DecisionApproachesScreen />);
 
     const amendCheckbox = screen.getByRole("checkbox", {
       name: "Amend your CommunityRule",

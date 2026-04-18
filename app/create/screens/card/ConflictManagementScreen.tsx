@@ -3,6 +3,12 @@
 /**
  * `conflict-management` step — Figma compact card stack (node `20879-15979`).
  * Registry: `CREATE_FLOW_SCREEN_REGISTRY["conflict-management"]`.
+ *
+ * Card click opens the Figma "Add Approach" create modal (node `20874-172292`) with four
+ * controls: Core Principle, Applicable Scope (capsules), Process Protocol, and Restoration
+ * & Fallbacks. Section defaults are sourced from
+ * `messages/en/create/conflictManagement.json` and will be replaced with DB-driven
+ * content; labels are hard-coded per the Figma design.
  */
 
 import { useState, useCallback, useMemo } from "react";
@@ -12,11 +18,14 @@ import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../components/utility/CardStack";
 import Create from "../../../components/modals/Create";
+import InlineTextButton from "../../../components/buttons/InlineTextButton";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 import {
   CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS,
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
 } from "../../components/createFlowLayoutTokens";
+import ModalTextAreaField from "../../components/ModalTextAreaField";
+import ApplicableScopeField from "../../components/ApplicableScopeField";
 
 const CONFLICT_CARD_ORDER = [
   "peer-mediation",
@@ -28,6 +37,92 @@ const CONFLICT_CARD_ORDER = [
   "7",
   "8",
 ] as const;
+
+type ConflictModalSections = {
+  corePrinciple: string;
+  applicableScope: string[];
+  selectedApplicableScope: string[];
+  processProtocol: string;
+  restorationFallbacks: string;
+};
+
+function AddConflictApproachModalContent({
+  approachCardId,
+}: {
+  approachCardId: string;
+}) {
+  const { markCreateFlowInteraction } = useCreateFlow();
+  const m = useMessages();
+  const cm = m.create.conflictManagement;
+  const modal =
+    approachCardId in cm.modals
+      ? cm.modals[approachCardId as keyof typeof cm.modals]
+      : null;
+  const modalSections = modal?.sections;
+  const defaults: ConflictModalSections = {
+    corePrinciple: modalSections?.corePrinciple ?? "",
+    applicableScope: modalSections?.applicableScope ?? [],
+    selectedApplicableScope: [],
+    processProtocol: modalSections?.processProtocol ?? "",
+    restorationFallbacks: modalSections?.restorationFallbacks ?? "",
+  };
+
+  const [sections, setSections] = useState<ConflictModalSections>(() => ({
+    corePrinciple: defaults.corePrinciple,
+    applicableScope: [...defaults.applicableScope],
+    selectedApplicableScope: [...defaults.selectedApplicableScope],
+    processProtocol: defaults.processProtocol,
+    restorationFallbacks: defaults.restorationFallbacks,
+  }));
+
+  const patch = useCallback(
+    <K extends keyof ConflictModalSections>(
+      key: K,
+      value: ConflictModalSections[K],
+    ) => {
+      markCreateFlowInteraction();
+      setSections((prev) => ({ ...prev, [key]: value }));
+    },
+    [markCreateFlowInteraction],
+  );
+
+  return (
+    <div className="flex flex-col gap-6">
+      <ModalTextAreaField
+        label={cm.sectionHeadings.corePrinciple}
+        value={sections.corePrinciple}
+        onChange={(v) => patch("corePrinciple", v)}
+      />
+      <ApplicableScopeField
+        label={cm.sectionHeadings.applicableScope}
+        addLabel={cm.scopeAddButtonLabel}
+        scopes={sections.applicableScope}
+        selectedScopes={sections.selectedApplicableScope}
+        onToggleScope={(scope) =>
+          patch(
+            "selectedApplicableScope",
+            sections.selectedApplicableScope.includes(scope)
+              ? sections.selectedApplicableScope.filter((s) => s !== scope)
+              : [...sections.selectedApplicableScope, scope],
+          )
+        }
+        onAddScope={(scope) =>
+          patch("applicableScope", [...sections.applicableScope, scope])
+        }
+      />
+      <ModalTextAreaField
+        label={cm.sectionHeadings.processProtocol}
+        value={sections.processProtocol}
+        onChange={(v) => patch("processProtocol", v)}
+      />
+      <ModalTextAreaField
+        label={cm.sectionHeadings.restorationFallbacks}
+        value={sections.restorationFallbacks}
+        onChange={(v) => patch("restorationFallbacks", v)}
+      />
+    </div>
+  );
+}
 
 export function ConflictManagementScreen() {
   const m = useMessages();
@@ -68,41 +163,55 @@ export function ConflictManagementScreen() {
   ) : (
     <>
       {cm.page.compactDescriptionBefore}
-      <button
-        type="button"
-        className="cursor-pointer border-none bg-transparent p-0 font-inherit text-[length:inherit] leading-[inherit] text-[var(--color-content-default-tertiary)] underline decoration-solid underline-offset-2 hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-border-invert-primary)]"
+      <InlineTextButton
         onClick={() => {
           markCreateFlowInteraction();
           setExpanded(true);
         }}
       >
         {cm.page.compactDescriptionLinkLabel}
-      </button>
+      </InlineTextButton>
       {cm.page.compactDescriptionAfter}
     </>
   );
 
-  const modalConfig =
-    pendingCardId && pendingCardId in cm.modals
-      ? (() => {
-          const modal = cm.modals[pendingCardId as keyof typeof cm.modals];
-          return {
-            title: modal.title,
-            description: modal.description,
-            nextButtonText: cm.confirmModal.nextButtonText,
-            showBackButton: false as const,
-            currentStep: undefined,
-            totalSteps: undefined,
-          };
-        })()
-      : {
-          title: cm.confirmModal.title,
-          description: cm.confirmModal.description,
-          nextButtonText: cm.confirmModal.nextButtonText,
-          showBackButton: false as const,
-          currentStep: undefined,
-          totalSteps: undefined,
-        };
+  const modalConfig = (() => {
+    if (!pendingCardId) {
+      return {
+        title: cm.confirmModal.title,
+        description: cm.confirmModal.description,
+        nextButtonText: cm.confirmModal.nextButtonText,
+        showBackButton: false as const,
+        currentStep: undefined,
+        totalSteps: undefined,
+      };
+    }
+
+    if (pendingCardId in cm.modals) {
+      const modal = cm.modals[pendingCardId as keyof typeof cm.modals];
+      return {
+        title: modal.title,
+        description: modal.description,
+        nextButtonText: cm.addApproach.nextButtonText,
+        showBackButton: false as const,
+        currentStep: undefined,
+        totalSteps: undefined,
+      };
+    }
+
+    const cardRow =
+      pendingCardId in cm.cards
+        ? cm.cards[pendingCardId as keyof typeof cm.cards]
+        : null;
+    return {
+      title: cardRow?.label ?? cm.confirmModal.title,
+      description: cardRow?.supportText ?? cm.confirmModal.description,
+      nextButtonText: cm.addApproach.nextButtonText,
+      showBackButton: false as const,
+      currentStep: undefined,
+      totalSteps: undefined,
+    };
+  })();
 
   const handleCardClick = useCallback(
     (id: string) => {
@@ -173,7 +282,15 @@ export function ConflictManagementScreen() {
         showBackButton={modalConfig.showBackButton}
         currentStep={modalConfig.currentStep}
         totalSteps={modalConfig.totalSteps}
-      />
+        backdropVariant="loginYellow"
+      >
+        {pendingCardId ? (
+          <AddConflictApproachModalContent
+            key={pendingCardId}
+            approachCardId={pendingCardId}
+          />
+        ) : null}
+      </Create>
     </CreateFlowStepShell>
   );
 }

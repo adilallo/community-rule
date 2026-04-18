@@ -33,6 +33,13 @@ export interface ChipProps {
    */
   size?: ChipSizeValue;
   className?: string;
+  /**
+   * Whether the chip should be non-interactive. Defaults to `true` when
+   * `state === "disabled"` to preserve historical behavior. Pass
+   * `disabled={false}` alongside `state="Disabled"` to render the dimmed
+   * "disabled" visual while keeping the chip clickable — useful for toggle
+   * groups where the unselected state is the disabled Figma visual.
+   */
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /**

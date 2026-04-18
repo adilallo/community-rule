@@ -14,6 +14,14 @@
     "description": "Confirm to select this option.",
     "nextButtonText": "Confirm"
   },
+  "addPlatform": {
+    "nextButtonText": "Add Platform"
+  },
+  "sectionHeadings": {
+    "eligibility": "Eligibility & Philosophy",
+    "joiningProcess": "Joining Process",
+    "expectations": "Expectations & Removal"
+  },
   "cards": {
     "open-access": {
       "label": "Open Access",
@@ -51,26 +59,75 @@
   "modals": {
     "open-access": {
       "title": "Open Access",
-      "description": "Maximum inclusion. Anyone can join immediately by simply showing up."
+      "description": "Maximum inclusion. Anyone can join immediately by simply showing up.",
+      "sections": {
+        "eligibility": "Membership is open to any individual who lives in [Region/Context] and supports our mission. We believe that gatekeeping creates unnecessary hierarchy, so we prioritize radical inclusivity and low barriers to entry. Our only requirement is a commitment to mutual respect and adherence to the Community Code of Conduct.",
+        "joiningProcess": "There is no formal application or waiting period. A person becomes a member instantly by joining our [Digital Platform/Meeting], introducing themselves to the group, and explicitly agreeing to the community standards. Access to all channels and working groups is granted immediately upon sign-up.",
+        "expectations": "Members are expected to participate constructively. We view removal as a last resort. Barring immediate safety threats, no member will be banned without first going through the steps outlined in our Conflict Management Policy. We prioritize the restorative measures defined in that section over punitive expulsion. However, refusal to engage in that process may result in removal."
+      }
     },
     "orientation-required": {
       "title": "Orientation Required",
-      "description": "Newcomers must attend a training or orientation session."
+      "description": "Newcomers must attend a training or orientation session.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
     },
     "invitation-only": {
       "title": "Invitation Only",
-      "description": "New members can only join if they are 'vouched for' by existing members."
+      "description": "New members can only join if they are 'vouched for' by existing members.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
     },
     "contribution-based": {
       "title": "Contribution Based",
-      "description": "Membership is reserved for people contributing their labor."
+      "description": "Membership is reserved for people contributing their labor.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
     },
     "mentorship": {
       "title": "Mentorship",
-      "description": "New members are paired with 'Mentors' to guide them through a probationary period."
+      "description": "New members are paired with 'Mentors' to guide them through a probationary period.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
     },
-    "6": { "title": "Label", "description": "Additional membership approach." },
-    "7": { "title": "Label", "description": "Additional membership approach." },
-    "8": { "title": "Label", "description": "Additional membership approach." }
+    "6": {
+      "title": "Label",
+      "description": "Additional membership approach.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
+    },
+    "7": {
+      "title": "Label",
+      "description": "Additional membership approach.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
+    },
+    "8": {
+      "title": "Label",
+      "description": "Additional membership approach.",
+      "sections": {
+        "eligibility": "",
+        "joiningProcess": "",
+        "expectations": ""
+      }
+    }
   }
 }

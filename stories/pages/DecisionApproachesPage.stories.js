@@ -1,8 +1,8 @@
-import { RightRailScreen } from "../../app/create/screens/right-rail/RightRailScreen";
+import { DecisionApproachesScreen } from "../../app/create/screens/right-rail/DecisionApproachesScreen";
 
 export default {
-  title: "Pages/Create Flow/Right rail",
-  component: RightRailScreen,
+  title: "Pages/Create Flow/Decision approaches",
+  component: DecisionApproachesScreen,
   parameters: {
     layout: "fullscreen",
     docs: {

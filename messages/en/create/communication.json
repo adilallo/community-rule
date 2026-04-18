@@ -79,6 +79,42 @@
         "logisticsAdmin": "The host manages technical security via waiting rooms to prevent intrusion. Culturally, the focus is on maximizing the value of synchronous time. Norms include muting when not speaking, using the \"Raise Hand\" feature to queue, and utilizing the chat box for non-interruptive side comments. Distractions should be minimized.",
         "codeOfConduct": "We have a zero-tolerance policy for racism, sexism, and bigotry, whether spoken or shared in the chat. We aspire to do no harm. \"Zoom-bombing\" or broadcasting graphic content is prohibited. Willfully spreading obviously false information will not be tolerated. Do not discuss sensitive data that could attract legal or security risk."
       }
+    },
+    "4": {
+      "title": "Label",
+      "description": "Collaborative work to reach a resolution that all parties can agree upon.",
+      "sections": {
+        "corePrinciple": "",
+        "logisticsAdmin": "",
+        "codeOfConduct": ""
+      }
+    },
+    "5": {
+      "title": "Label",
+      "description": "Structured sessions where parties collaboratively resolve disputes.",
+      "sections": {
+        "corePrinciple": "",
+        "logisticsAdmin": "",
+        "codeOfConduct": ""
+      }
+    },
+    "6": {
+      "title": "Label",
+      "description": "Members vote to resolve a dispute democratically.",
+      "sections": {
+        "corePrinciple": "",
+        "logisticsAdmin": "",
+        "codeOfConduct": ""
+      }
+    },
+    "7": {
+      "title": "Label",
+      "description": "Invite-only",
+      "sections": {
+        "corePrinciple": "",
+        "logisticsAdmin": "",
+        "codeOfConduct": ""
+      }
     }
   }
 }

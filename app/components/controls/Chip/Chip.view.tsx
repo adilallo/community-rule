@@ -20,7 +20,10 @@ function ChipView({
   inputRef,
   ariaLabel,
 }: ChipViewProps) {
-  const isDisabled = disabled || state === "disabled";
+  // The container is the source of truth for `disabled`. This allows
+  // `state="disabled"` to be used purely as a visual (for toggle-group chips
+  // that look dimmed while remaining clickable) by passing `disabled={false}`.
+  const isDisabled = disabled ?? false;
   const isSelected = state === "selected";
   const isCustom = state === "custom";
 
@@ -57,11 +60,13 @@ function ChipView({
     } else if (state === "disabled") {
       background = "bg-[var(--color-surface-default-secondary,#141414)]"; // dark background
       border = "border-none";
-      textColor = "text-[color:var(--color-content-default-tertiary,#b4b4b4)]";
+      // Per Figma (node 19839:13842) disabled uses invert-tertiary for the
+      // strongly dimmed look, not default-tertiary.
+      textColor = "text-[color:var(--color-content-invert-tertiary,#2d2d2d)]";
     } else if (isSelected) {
-      background = "bg-[var(--color-surface-inverse-brandaccent,#fdfaa8)]"; // yellow selected
+      background = "bg-[var(--color-surface-invert-brand-primary,#fefcc9)]"; // yellow selected
       border = `${borderWidth} border-[var(--color-border-default-brand-primary,#fdfaa8)]`;
-      textColor = "text-[color:var(--color-content-inverse-primary,black)]";
+      textColor = "text-[color:var(--color-content-invert-primary,black)]";
     } else {
       // Unselected default
       background =
