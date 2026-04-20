@@ -1,9 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import { GovernanceTemplateGrid } from "../../components/sections/GovernanceTemplateGrid";
 import type { TemplateGridCardEntry } from "../../../lib/templates/templateGridPresentation";
+import { clearCreateFlowPersistedDrafts } from "../../(app)/create/utils/clearCreateFlowPersistedDrafts";
 import { useTranslation } from "../../contexts/MessagesContext";
 
 export interface TemplatesPageClientProps {
@@ -17,7 +19,6 @@ export interface TemplatesPageClientProps {
 export default function TemplatesPageClient({
   initialGridEntries,
 }: TemplatesPageClientProps) {
-  const router = useRouter();
   const t = useTranslation("pages.templates");
 
   return (
@@ -39,16 +40,56 @@ export default function TemplatesPageClient({
           />
         </div>
         <div className="mt-6 min-[1024px]:mt-8">
-          <GovernanceTemplateGrid
-            entries={initialGridEntries}
-            onTemplateClick={(slug) => {
-              router.push(
-                `/create/review-template/${encodeURIComponent(slug)}`,
-              );
-            }}
-          />
+          {/* Suspense boundary required by `useSearchParams` below
+              (Next.js 15+ static-generation contract). */}
+          <Suspense
+            fallback={<TemplatesGrid entries={initialGridEntries} fromFlow={false} />}
+          >
+            <TemplatesGridWithSearchParams entries={initialGridEntries} />
+          </Suspense>
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Reads `fromFlow=1` off the URL so we can skip the fresh-slate clear when
+ * the user arrived from `/create/review`'s "Create from template" button.
+ * That button pushes `/templates?fromFlow=1` so their in-progress community
+ * stage is preserved when they pick a template here.
+ */
+function TemplatesGridWithSearchParams({
+  entries,
+}: {
+  entries: TemplateGridCardEntry[];
+}) {
+  const searchParams = useSearchParams();
+  const fromFlow = searchParams.get("fromFlow") === "1";
+  return <TemplatesGrid entries={entries} fromFlow={fromFlow} />;
+}
+
+function TemplatesGrid({
+  entries,
+  fromFlow,
+}: {
+  entries: TemplateGridCardEntry[];
+  fromFlow: boolean;
+}) {
+  const router = useRouter();
+  return (
+    <GovernanceTemplateGrid
+      entries={entries}
+      onTemplateClick={(slug) => {
+        if (!fromFlow) {
+          // Direct entry to `/templates`: treat template click as a fresh
+          // create-flow start and wipe any stale anonymous draft before
+          // navigating. In-flow entry (`?fromFlow=1`) skips the clear so
+          // the user's community stage survives the detour through here.
+          clearCreateFlowPersistedDrafts();
+        }
+        router.push(`/create/review-template/${encodeURIComponent(slug)}`);
+      }}
+    />
   );
 }

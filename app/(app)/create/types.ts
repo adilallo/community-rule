@@ -93,6 +93,18 @@ export interface CreateFlowState {
   selectedDecisionApproachIds?: string[];
   /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.customRule.conflictManagement` presets. */
   selectedConflictManagementIds?: string[];
+  /**
+   * Set when a user picks a template (Customize or Use without changes) before
+   * completing the community stage. The community-review screen consumes this
+   * to `router.replace` past `/create/review` to the correct downstream step
+   * (`core-values` for customize; `confirm-stakeholders` for use-without-changes)
+   * once community data is captured. Cleared the moment the redirect fires, so
+   * later visits to `/create/review` render normally.
+   */
+  pendingTemplateAction?: {
+    slug: string;
+    mode: "customize" | "useWithoutChanges";
+  };
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];
@@ -115,30 +127,23 @@ export interface CreateFlowContextValue {
   /** Reset flow state and clear anonymous localStorage draft keys when present. */
   clearState: () => void;
   /**
-   * True after the user edits any template control (pages use local state until wired to `state`).
-   * Drives Save & Exit visibility together with hasCreateFlowUserInput (utils/hasCreateFlowUserInput.ts).
+   * Scrub only the Create Custom stage selections (core values, communication,
+   * membership, decision approaches, conflict management) from state. Keeps
+   * the community stage (title, context, size, structure) intact so users can
+   * re-enter the custom-rule flow from `/create/review` with a clean slate
+   * after a prior "Customize template" prefill.
+   */
+  resetCustomRuleSelections: () => void;
+  /**
+   * True after the user has edited any control inside the wizard. Screens flip
+   * it via {@link markCreateFlowInteraction} from their event handlers.
+   *
+   * Current consumer: {@link SignedInDraftHydration} — when a signed-in user
+   * has already started editing, we skip replaying their server draft on top
+   * of in-progress local state. Save & Exit visibility is driven by step
+   * index (`SAVE_EXIT_FROM_STEP_INDEX` in `CreateFlowLayoutClient`), not this
+   * flag.
    */
   interactionTouched: boolean;
   markCreateFlowInteraction: () => void;
-}
-
-/**
- * Base props interface for page templates
- * Will be expanded in template implementation tickets (CR-51-55)
- */
-export interface PageTemplateProps {
-  // Base props for all page templates
-  // Will be expanded in template tickets
-}
-
-/**
- * Navigation handlers interface
- * Will be implemented in CR-56
- */
-export interface NavigationHandlers {
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  goToStep: (_step: CreateFlowStep) => void;
-  canGoNext: () => boolean;
-  canGoBack: () => boolean;
 }

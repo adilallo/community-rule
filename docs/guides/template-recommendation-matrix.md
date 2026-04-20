@@ -269,9 +269,27 @@ decision-approaches → conflict-management → confirm-stakeholders → final-r
 | API list | `app/api/templates/route.ts` (GET only, no params today) |
 
 Template ranking adds optional facet query params to `/api/templates`;
-the no-facets path keeps today's curated ordering. The
-`/create/informational?template=<slug>` query-param prefill is a known
-no-op (`CreateFlowLayoutClient.tsx`); fixing it is **out of scope**.
+the no-facets path keeps today's curated ordering. Template **Customize**
+now prefills the custom-rule flow via
+[`buildTemplateCustomizePrefill`](../../lib/create/applyTemplatePrefill.ts)
+(applied in `CreateFlowLayoutClient.tsx`) and routes to `core-values`
+when Community already has input, else to `informational`. Template **Use
+without changes** writes `template.body.sections` into `state.sections`
+and routes to `confirm-stakeholders`, so the user exits via the normal
+`final-review → handleFinalize → publishRule` path and picks up the
+server-enforced 401 sign-in gate for free.
+
+When the user picks a template **before** completing the community
+stage, both handlers still apply their side effects eagerly (prefill or
+`sections`/`summary`) and pin a
+`pendingTemplateAction: { slug, mode: "customize" | "useWithoutChanges" }`
+on `CreateFlowState`, then route to `informational`. Once the user
+reaches `/create/review`, `CommunityReviewScreen` consumes the pin and
+`router.replace`s past itself — to `core-values` for `customize`, to
+`confirm-stakeholders` for `useWithoutChanges`. The community-review
+screen is therefore only shown when the user came from "Create Custom"
+(no template), matching the intent already expressed at the
+template-review step.
 
 ---
 
@@ -660,10 +678,12 @@ Once the API exists:
   rendering.
 - API failure or empty facets → render the messages deck in its on-disk
   order. No regression from today.
-- Selecting a template on the marketing home or `templates/` page can
-  prefill the create flow's `selected*MethodIds` from the template's
-  composition (closes the `?template=` no-op gap noted in
-  `CreateFlowLayoutClient.tsx`). Out of scope for CR-88.
+- Selecting a template on the template-review page via **Customize**
+  prefills the create flow's `selected*MethodIds` and core-values chip
+  snapshot from the template's composition — see
+  [`buildTemplateCustomizePrefill`](../../lib/create/applyTemplatePrefill.ts)
+  and the `handleCustomizeTemplate` handler in
+  `CreateFlowLayoutClient.tsx`. Shipped outside CR-88.
 - Recommendations **never hide** options — ranking only. Authors expect
   to see "all 32 decision-making patterns" with the matching ones
   surfaced first.

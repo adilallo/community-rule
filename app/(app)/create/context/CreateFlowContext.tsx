@@ -167,12 +167,34 @@ export function CreateFlowProvider({
     clearCoreValueDetailsLocalStorage();
   }, []);
 
+  // Keys produced by the Create Custom stage screens + `buildTemplateCustomizePrefill`.
+  // Kept in sync with `CreateFlowState` comments marked "Create Custom —".
+  const resetCustomRuleSelections = useCallback(() => {
+    setState((prev) => {
+      const {
+        selectedCoreValueIds: _a,
+        coreValuesChipsSnapshot: _b,
+        coreValueDetailsByChipId: _c,
+        selectedCommunicationMethodIds: _d,
+        selectedMembershipMethodIds: _e,
+        selectedDecisionApproachIds: _f,
+        selectedConflictManagementIds: _g,
+        ...rest
+      } = prev;
+      return rest;
+    });
+    // Effect on `state.coreValueDetailsByChipId` clears its dedicated
+    // localStorage key when the field goes undefined, so we don't need to
+    // touch `clearCoreValueDetailsLocalStorage()` directly here.
+  }, []);
+
   const contextValue: CreateFlowContextValue = {
     state,
     currentStep,
     updateState,
     replaceState,
     clearState,
+    resetCustomRuleSelections,
     interactionTouched,
     markCreateFlowInteraction,
   };

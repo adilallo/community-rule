@@ -100,3 +100,46 @@ describe("FinalReviewScreen", () => {
     expect(screen.getByText("Open Admission")).toBeInTheDocument();
   });
 });
+
+/**
+ * Seeds a Customize-from-template style state (method ids + core-value
+ * snapshot) and asserts the final-review RuleCard renders the resolved
+ * labels — the fix for "preselected chips don't register on final review".
+ */
+function FinalReviewWithCustomizeSelections() {
+  const { replaceState } = useCreateFlow();
+  useLayoutEffect(() => {
+    replaceState({
+      title: "Oak Park Commons",
+      selectedCoreValueIds: ["1"],
+      coreValuesChipsSnapshot: [
+        { id: "1", label: "Accessibility", state: "selected" },
+        { id: "2", label: "Accountability", state: "unselected" },
+      ],
+      selectedCommunicationMethodIds: ["signal"],
+      selectedMembershipMethodIds: ["open-access"],
+      selectedDecisionApproachIds: ["lazy-consensus"],
+      selectedConflictManagementIds: ["peer-mediation"],
+    });
+  }, [replaceState]);
+  return <FinalReviewScreen />;
+}
+
+describe("FinalReviewScreen — prefilled selections", () => {
+  it("renders chips resolved from selection ids, not demo fallbacks", async () => {
+    render(<FinalReviewWithCustomizeSelections />);
+    await waitFor(() => {
+      expect(screen.getByText("Accessibility")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Signal")).toBeInTheDocument();
+    expect(screen.getByText("Open Access")).toBeInTheDocument();
+    expect(screen.getByText("Lazy Consensus")).toBeInTheDocument();
+    expect(screen.getByText("Peer Mediation")).toBeInTheDocument();
+
+    // Demo chips from `finalReview.json` must not leak through once the
+    // user has real selections: "Open Admission" is shipped as fallback,
+    // while the customize flow resolves to "Open Access".
+    expect(screen.queryByText("Open Admission")).not.toBeInTheDocument();
+    expect(screen.queryByText("Consciousness")).not.toBeInTheDocument();
+  });
+});

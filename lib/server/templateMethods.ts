@@ -1,3 +1,4 @@
+import { methodSlugFromTitle } from "../create/methodSlugFromTitle";
 import type { SectionId } from "./validation/methodFacetsSchemas";
 
 /**
@@ -21,18 +22,7 @@ const CATEGORY_NAME_TO_SECTION: Record<string, SectionId> = {
   "Conflict management": "conflictManagement",
 };
 
-export function methodSlugFromTitle(title: string): string {
-  // Match the slugify rules of the one-time messages ingest: NFKD-normalize,
-  // strip diacritics, drop apostrophes/brackets, collapse non-alphanumerics
-  // to single hyphens, trim leading/trailing hyphens.
-  const folded = title.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
-  const stripped = folded
-    .toLowerCase()
-    .replace(/['’`()\[\]]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return stripped;
-}
+export { methodSlugFromTitle };
 
 type RuleTemplateBodySection = {
   categoryName?: unknown;

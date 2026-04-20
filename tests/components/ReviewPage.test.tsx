@@ -1,9 +1,21 @@
-import { describe, it, expect } from "vitest";
-import { renderWithProviders as render, screen } from "../utils/test-utils";
+import { beforeEach, describe, it, expect } from "vitest";
+import React, { useEffect } from "react";
+import {
+  renderWithProviders as render,
+  screen,
+  waitFor,
+} from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
 import { CommunityReviewScreen } from "../../app/(app)/create/screens/review/CommunityReviewScreen";
+import { useCreateFlow } from "../../app/(app)/create/context/CreateFlowContext";
+import { testRouter } from "../mocks/navigation";
 
 describe("CommunityReviewScreen", () => {
+  beforeEach(() => {
+    testRouter.replace.mockReset();
+    testRouter.push.mockReset();
+  });
+
   it("renders without crashing", () => {
     render(<CommunityReviewScreen />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
@@ -27,18 +39,18 @@ describe("CommunityReviewScreen", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RuleCard with title", () => {
+  it("renders RuleCard with title fallback when no community name is set", () => {
     render(<CommunityReviewScreen />);
     expect(screen.getByText("Mutual Aid Mondays")).toBeInTheDocument();
   });
 
-  it("renders RuleCard with description", () => {
+  it("omits the RuleCard description when the user has not entered community context", () => {
     render(<CommunityReviewScreen />);
     expect(
-      screen.getByText(
-        /Mutual Aid Monday is a grassroots community in Denver, founded in November 2020 by Kelsang Virya, dedicated to supporting neighbors experiencing homelessness./i,
+      screen.queryByText(
+        /Mutual Aid Monday is a grassroots community in Denver/i,
       ),
-    ).toBeInTheDocument();
+    ).not.toBeInTheDocument();
   });
 
   it("renders RuleCard as a button (card is interactive)", () => {
@@ -48,5 +60,62 @@ describe("CommunityReviewScreen", () => {
     expect(
       buttons.some((el) => el.textContent?.includes("Mutual Aid Mondays")),
     ).toBe(true);
+  });
+});
+
+/**
+ * Seeds `pendingTemplateAction` into CreateFlowContext before the screen
+ * under test mounts, so we can assert its mount-time redirect behavior.
+ * Mirrors the flow `handleCustomizeTemplate` / `handleUseTemplateWithoutChanges`
+ * create when the user picks a template before completing community stage.
+ */
+function ReviewWithPendingAction({
+  mode,
+}: {
+  mode: "customize" | "useWithoutChanges";
+}) {
+  const { state, updateState } = useCreateFlow();
+  const seededRef = React.useRef(false);
+  useEffect(() => {
+    if (seededRef.current) return;
+    seededRef.current = true;
+    updateState({
+      title: "Neighborhood",
+      pendingTemplateAction: { slug: "mutual-aid-mondays", mode },
+    });
+  }, [mode, updateState]);
+  // Block the real screen from mounting until the seed landed — otherwise
+  // its own `useEffect` reads an empty state on the first pass and bails.
+  if (!state.pendingTemplateAction) return null;
+  return <CommunityReviewScreen />;
+}
+
+describe("CommunityReviewScreen — pendingTemplateAction redirect", () => {
+  beforeEach(() => {
+    testRouter.replace.mockReset();
+    testRouter.push.mockReset();
+  });
+
+  it("redirects to /create/core-values when mode === 'customize'", async () => {
+    render(<ReviewWithPendingAction mode="customize" />);
+    await waitFor(() => {
+      expect(testRouter.replace).toHaveBeenCalledWith("/create/core-values");
+    });
+    expect(testRouter.push).not.toHaveBeenCalled();
+  });
+
+  it("redirects to /create/confirm-stakeholders when mode === 'useWithoutChanges'", async () => {
+    render(<ReviewWithPendingAction mode="useWithoutChanges" />);
+    await waitFor(() => {
+      expect(testRouter.replace).toHaveBeenCalledWith(
+        "/create/confirm-stakeholders",
+      );
+    });
+    expect(testRouter.push).not.toHaveBeenCalled();
+  });
+
+  it("does not redirect when no pendingTemplateAction is set", () => {
+    render(<CommunityReviewScreen />);
+    expect(testRouter.replace).not.toHaveBeenCalled();
   });
 });

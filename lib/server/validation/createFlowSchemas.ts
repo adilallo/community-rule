@@ -67,6 +67,13 @@ export const createFlowStateSchema = z
     selectedMembershipMethodIds: z.array(z.string()).max(200).optional(),
     selectedDecisionApproachIds: z.array(z.string()).max(200).optional(),
     selectedConflictManagementIds: z.array(z.string()).max(200).optional(),
+    pendingTemplateAction: z
+      .object({
+        slug: z.string().max(200),
+        mode: z.enum(["customize", "useWithoutChanges"]),
+      })
+      .strict()
+      .optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

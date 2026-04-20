@@ -14,6 +14,8 @@ import {
   GOVERNANCE_TEMPLATE_HOME_SLUGS,
   getGovernanceTemplatesForHome,
 } from "../../lib/templates/governanceTemplateCatalog";
+import { CREATE_FLOW_ANONYMOUS_KEY } from "../../app/(app)/create/utils/anonymousDraftStorage";
+import { CORE_VALUE_DETAILS_STORAGE_KEY } from "../../app/(app)/create/utils/coreValueDetailsLocalStorage";
 
 const homeFeatured = getGovernanceTemplatesForHome();
 
@@ -210,6 +212,31 @@ describe("RuleStack Component", () => {
     );
 
     debugSpy.mockRestore();
+  });
+
+  test("template click from home wipes any stale anonymous draft", async () => {
+    window.localStorage.setItem(
+      CREATE_FLOW_ANONYMOUS_KEY,
+      JSON.stringify({ title: "Stale Community" }),
+    );
+    window.localStorage.setItem(
+      CORE_VALUE_DETAILS_STORAGE_KEY,
+      JSON.stringify({ "1": { meaning: "stale", signals: "stale" } }),
+    );
+
+    const user = userEvent.setup();
+    render(<RuleStack />);
+    await waitForRuleStackCards();
+
+    const consensusCard = screen.getByText("Consensus").closest("div");
+    await user.click(consensusCard);
+
+    expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBeNull();
+    expect(
+      window.localStorage.getItem(CORE_VALUE_DETAILS_STORAGE_KEY),
+    ).toBeNull();
+
+    window.localStorage.clear();
   });
 
   test("renders with proper semantic structure", async () => {

@@ -34,11 +34,17 @@ import {
 } from "./utils/anonymousDraftStorage";
 import { deleteServerDraft } from "../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../lib/create/lastPublishedRule";
-import {
-  fetchTemplateBySlug,
-  type RuleTemplateDto,
-} from "../../../lib/create/fetchTemplates";
+import { buildTemplateCustomizePrefill } from "../../../lib/create/applyTemplatePrefill";
+import { loadTemplateReviewBySlug } from "../../../lib/create/loadTemplateReviewBySlug";
 import messages from "../../../messages/en/index";
+import {
+  CREATE_FLOW_FOOTER_BUTTON_CLASS,
+  CREATE_FLOW_FOOTER_BUTTON_ON_DARK_CLASS,
+} from "./utils/createFlowFooterClassNames";
+import {
+  CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP,
+  type CustomRuleConfirmFooterStep,
+} from "./utils/customRuleConfirmFooterSteps";
 import { useAuthModal } from "../../contexts/AuthModalContext";
 import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
@@ -114,7 +120,8 @@ function CreateFlowLayoutContent({
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
-  const { state, clearState, updateState } = useCreateFlow();
+  const { state, clearState, updateState, resetCustomRuleSelections } =
+    useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
   const [publishBannerMessage, setPublishBannerMessage] = useState<
@@ -188,38 +195,139 @@ function CreateFlowLayoutContent({
     );
   }, [state, router, openLogin]);
 
-  const handleUseTemplateWithoutChanges = useCallback(async () => {
+  /**
+   * Customize flow from a template-review page. Applies the template's
+   * customize selections onto `CreateFlowState` so the custom-rule screens
+   * render with chips pre-highlighted, then routes to `core-values` once
+   * the community name is set — otherwise to `informational` with a
+   * `pendingTemplateAction` pin so `/create/review` later redirects past
+   * itself straight to `core-values` (see `CommunityReviewScreen`).
+   *
+   * Why title alone? Other community-stage fields (e.g.
+   * `communityStructureChipSnapshots`) are sticky once the user lands on
+   * those screens, so they can't reliably answer "has the user given us
+   * real input yet?". A non-empty community name is the minimum bar
+   * `buildPublishPayload` already enforces — we reuse that here.
+   *
+   * Direct entry (marketing home "Popular templates" or `/templates`
+   * landed on directly) wipes the anonymous draft at the *click site* via
+   * `clearCreateFlowPersistedDrafts` before navigating, so `state.title`
+   * is empty here and the no-community branch fires naturally. No
+   * URL-marker plumbing needed in this handler.
+   */
+  const handleCustomizeTemplate = useCallback(async () => {
     if (!templateReviewSlug) return;
     setTemplateReviewApplyError(null);
     setIsApplyingTemplate(true);
-    const result = await fetchTemplateBySlug(templateReviewSlug);
+    const loaded = await loadTemplateReviewBySlug(templateReviewSlug);
     setIsApplyingTemplate(false);
-    if (result === null) {
-      setTemplateReviewApplyError(messages.create.templateReview.errors.notFound);
+    if (loaded.ok === false) {
+      setTemplateReviewApplyError(loaded.message);
       return;
     }
-    if ("error" in result) {
-      setTemplateReviewApplyError(result.error);
+    const prefill = buildTemplateCustomizePrefill(loaded.template.body);
+    const hasCommunityName =
+      typeof state.title === "string" && state.title.trim().length > 0;
+    // Prefill merges (shallow) with current state. When we have to bounce the
+    // user to the community stage first, pin a pendingTemplateAction so
+    // `/create/review` knows to skip past itself to `core-values` later.
+    updateState({
+      ...prefill,
+      ...(hasCommunityName
+        ? { pendingTemplateAction: undefined }
+        : {
+            pendingTemplateAction: {
+              slug: templateReviewSlug,
+              mode: "customize",
+            },
+          }),
+    });
+    router.push(
+      hasCommunityName ? "/create/core-values" : "/create/informational",
+    );
+  }, [router, state.title, templateReviewSlug, updateState]);
+
+  /**
+   * "Use without changes" from a template-review page. Drops users into the
+   * review-and-complete stage (`confirm-stakeholders` → `final-review`) so the
+   * publish flow — and its server-enforced sign-in gate (`publishRule` 401 →
+   * `openLogin`) — is reused. The template body becomes the rule document;
+   * the user's community name remains the rule title.
+   *
+   * Community-name branch: apply template body/summary immediately and jump
+   * to `confirm-stakeholders`.
+   *
+   * No-community-name branch: same template body/summary apply so state is
+   * ready, plus a `pendingTemplateAction` pin so `/create/review` later
+   * redirects past itself straight to `confirm-stakeholders` once community
+   * data is captured (see `CommunityReviewScreen`). Users aren't forced back
+   * through the template picker just to pick the same template again.
+   *
+   * Direct entry (marketing home "Popular templates" or `/templates`
+   * landed on directly) wipes the anonymous draft at the click site via
+   * `clearCreateFlowPersistedDrafts` before navigating, so `state.title`
+   * is empty and the no-community branch fires naturally.
+   */
+  const handleUseTemplateWithoutChanges = useCallback(async () => {
+    if (!templateReviewSlug) return;
+    setTemplateReviewApplyError(null);
+
+    setIsApplyingTemplate(true);
+    const loaded = await loadTemplateReviewBySlug(templateReviewSlug);
+    setIsApplyingTemplate(false);
+    if (loaded.ok === false) {
+      setTemplateReviewApplyError(loaded.message);
       return;
     }
-    const template: RuleTemplateDto = result;
+    const { template } = loaded;
     const doc = template.body;
     if (!doc || typeof doc !== "object" || Array.isArray(doc)) {
       setTemplateReviewApplyError(messages.create.templateReview.errors.applyFailed);
       return;
     }
+    const sectionsRaw = (doc as { sections?: unknown }).sections;
+    const sections = Array.isArray(sectionsRaw)
+      ? (sectionsRaw as Record<string, unknown>[])
+      : [];
+    if (sections.length === 0) {
+      setTemplateReviewApplyError(messages.create.templateReview.errors.applyFailed);
+      return;
+    }
+
+    // Using the template verbatim: scrub any prior customize picks so they
+    // don't bleed into `document.coreValues` at publish time.
+    resetCustomRuleSelections();
+
     const summaryRaw =
       typeof template.description === "string"
         ? template.description.trim()
         : "";
-    writeLastPublishedRule({
-      id: `template:${template.slug}`,
-      title: template.title,
-      summary: summaryRaw.length > 0 ? summaryRaw : null,
-      document: doc as Record<string, unknown>,
+    const hasCommunityName =
+      typeof state.title === "string" && state.title.trim().length > 0;
+    updateState({
+      sections,
+      ...(summaryRaw.length > 0 ? { summary: summaryRaw } : {}),
+      ...(hasCommunityName
+        ? { pendingTemplateAction: undefined }
+        : {
+            pendingTemplateAction: {
+              slug: templateReviewSlug,
+              mode: "useWithoutChanges",
+            },
+          }),
     });
-    router.push("/create/completed");
-  }, [router, templateReviewSlug]);
+    router.push(
+      hasCommunityName
+        ? "/create/confirm-stakeholders"
+        : "/create/informational",
+    );
+  }, [
+    resetCustomRuleSelections,
+    router,
+    state.title,
+    templateReviewSlug,
+    updateState,
+  ]);
 
   const runAuthenticatedExit = useCreateFlowExit({
     state,
@@ -360,8 +468,16 @@ function CreateFlowLayoutContent({
     currentStep,
   );
 
-  const footerPrimaryButtonClass =
-    "md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]";
+  /**
+   * Custom Rule stage "confirm selection" steps: all five render the same
+   * primary footer button, differing only by disable predicate and label.
+   * Driving JSX from a config keeps the five sites aligned — adding a new
+   * selection screen means one row here, not a new branch below.
+   */
+  const customRuleConfirmFooter: CustomRuleConfirmFooterStep | undefined =
+    currentStep != null
+      ? CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP.get(currentStep)
+      : undefined;
 
   const hasTopOverlays =
     Boolean(draftSaveBannerMessage) ||
@@ -483,7 +599,7 @@ function CreateFlowLayoutContent({
                   palette="default"
                   size="xsmall"
                   disabled={isApplyingTemplate}
-                  className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)] !text-white"
+                  className={CREATE_FLOW_FOOTER_BUTTON_ON_DARK_CLASS}
                   onClick={() => void handleUseTemplateWithoutChanges()}
                 >
                   {messages.create.templateReview.footer.useWithoutChanges}
@@ -493,17 +609,8 @@ function CreateFlowLayoutContent({
                   palette="default"
                   size="xsmall"
                   disabled={isApplyingTemplate}
-                  title={
-                    messages.create.templateReview.footer.customizeAriaHint
-                  }
-                  className="md:!text-[14px] md:!leading-[16px] !text-[12px] !leading-[14px] !px-[var(--spacing-measures-spacing-200,8px)] md:!px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!py-[var(--spacing-measures-spacing-250,10px)]"
-                  onClick={() => {
-                    if (!templateReviewSlug) return;
-                    // Preserve template slug for a future customize / prefill ticket (informational does not read it yet).
-                    router.push(
-                      `/create/informational?template=${encodeURIComponent(templateReviewSlug)}`,
-                    );
-                  }}
+                  className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
+                  onClick={() => void handleCustomizeTemplate()}
                 >
                   {messages.create.templateReview.footer.customize}
                 </Button>
@@ -513,8 +620,12 @@ function CreateFlowLayoutContent({
                 buttonType="filled"
                 palette="default"
                 size="xsmall"
-                disabled={isPublishing}
-                className={footerPrimaryButtonClass}
+                disabled={
+                  isPublishing ||
+                  typeof state.title !== "string" ||
+                  state.title.trim().length === 0
+                }
+                className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
                   goToNextStep();
                 }}
@@ -528,7 +639,7 @@ function CreateFlowLayoutContent({
                   palette="default"
                   size="xsmall"
                   disabled={isPublishing}
-                  className={footerPrimaryButtonClass}
+                  className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                   onClick={() => {
                     goToNextStep();
                   }}
@@ -545,7 +656,7 @@ function CreateFlowLayoutContent({
                     communitySaveMagicLinkSuccess ||
                     !isValidCreateFlowSaveEmail(state.communitySaveEmail)
                   }
-                  className={footerPrimaryButtonClass}
+                  className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                   onClick={() => {
                     void handleCommunitySaveMagicLinkSubmit();
                   }}
@@ -562,8 +673,11 @@ function CreateFlowLayoutContent({
                   palette="default"
                   size="xsmall"
                   disabled={isPublishing}
-                  className={footerPrimaryButtonClass}
+                  className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                   onClick={() => {
+                    // Scrub any prior template-customize prefill so entering
+                    // the custom-rule stage from review is always a clean slate.
+                    resetCustomRuleSelections();
                     goToNextStep();
                   }}
                 >
@@ -574,93 +688,35 @@ function CreateFlowLayoutContent({
                   palette="default"
                   size="xsmall"
                   disabled={isPublishing}
-                  className={footerPrimaryButtonClass}
+                  className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                   onClick={() => {
-                    router.push("/templates");
+                    // `fromFlow=1` tells `/templates` to skip the fresh-slate
+                    // draft clear it normally runs on template click, so the
+                    // user's in-progress Create Community stage survives this
+                    // detour. Direct entries to `/templates` (no marker) and
+                    // home "Popular templates" clicks always start fresh by
+                    // wiping anonymous draft storage at click time.
+                    router.push("/templates?fromFlow=1");
                   }}
                 >
                   {footer.createFromTemplate}
                 </Button>
               </div>
-            ) : currentStep === "core-values" && nextStep ? (
+            ) : customRuleConfirmFooter && nextStep ? (
               <Button
                 buttonType="filled"
                 palette="default"
                 size="xsmall"
                 disabled={
                   isPublishing ||
-                  (state.selectedCoreValueIds?.length ?? 0) === 0
+                  customRuleConfirmFooter.selectionIds(state).length === 0
                 }
-                className={footerPrimaryButtonClass}
+                className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
                   goToNextStep();
                 }}
               >
-                {footer.confirmCoreValues}
-              </Button>
-            ) : currentStep === "communication-methods" && nextStep ? (
-              <Button
-                buttonType="filled"
-                palette="default"
-                size="xsmall"
-                disabled={
-                  isPublishing ||
-                  (state.selectedCommunicationMethodIds?.length ?? 0) === 0
-                }
-                className={footerPrimaryButtonClass}
-                onClick={() => {
-                  goToNextStep();
-                }}
-              >
-                {footer.confirmCommunication}
-              </Button>
-            ) : currentStep === "membership-methods" && nextStep ? (
-              <Button
-                buttonType="filled"
-                palette="default"
-                size="xsmall"
-                disabled={
-                  isPublishing ||
-                  (state.selectedMembershipMethodIds?.length ?? 0) === 0
-                }
-                className={footerPrimaryButtonClass}
-                onClick={() => {
-                  goToNextStep();
-                }}
-              >
-                {footer.confirmMembership}
-              </Button>
-            ) : currentStep === "decision-approaches" && nextStep ? (
-              <Button
-                buttonType="filled"
-                palette="default"
-                size="xsmall"
-                disabled={
-                  isPublishing ||
-                  (state.selectedDecisionApproachIds?.length ?? 0) === 0
-                }
-                className={footerPrimaryButtonClass}
-                onClick={() => {
-                  goToNextStep();
-                }}
-              >
-                {footer.confirmDecisionApproaches}
-              </Button>
-            ) : currentStep === "conflict-management" && nextStep ? (
-              <Button
-                buttonType="filled"
-                palette="default"
-                size="xsmall"
-                disabled={
-                  isPublishing ||
-                  (state.selectedConflictManagementIds?.length ?? 0) === 0
-                }
-                className={footerPrimaryButtonClass}
-                onClick={() => {
-                  goToNextStep();
-                }}
-              >
-                {footer.confirmConflictManagement}
+                {footer[customRuleConfirmFooter.footerMessageKey]}
               </Button>
             ) : nextStep ? (
               <Button
@@ -668,7 +724,7 @@ function CreateFlowLayoutContent({
                 palette="default"
                 size="xsmall"
                 disabled={isPublishing}
-                className={footerPrimaryButtonClass}
+                className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
                   if (currentStep === "final-review") {
                     void handleFinalize();

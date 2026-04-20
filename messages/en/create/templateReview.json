@@ -5,8 +5,7 @@
   },
   "footer": {
     "useWithoutChanges": "Use without changes",
-    "customize": "Customize",
-    "customizeAriaHint": "Customize flow coming soon; for now this continues to the create flow entry."
+    "customize": "Customize"
   },
   "errors": {
     "loadFailed": "We could not load this template. Try again or pick another template from the home page.",
