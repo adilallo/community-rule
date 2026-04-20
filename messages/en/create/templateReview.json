@@ -13,5 +13,11 @@
     "notFound": "This template was not found.",
     "applyFailed": "Something went wrong. Please try again."
   },
-  "loading": "Loading template…"
+  "loading": "Loading template…",
+  "chipDetailModal": {
+    "closeButton": "Close",
+    "fallback": {
+      "bodyLabel": "Details for this entry are not yet available."
+    }
+  }
 }

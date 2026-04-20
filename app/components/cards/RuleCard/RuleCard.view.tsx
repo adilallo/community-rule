@@ -19,6 +19,7 @@ export function RuleCardView({
   logoUrl,
   logoAlt,
   communityInitials,
+  hideCategoryAddButton = false,
 }: RuleCardViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
@@ -280,7 +281,7 @@ export function RuleCardView({
                   onCustomChipClose={(chipId) => {
                     category.onCustomChipClose?.(category.name, chipId);
                   }}
-                  addButton={true}
+                  addButton={!hideCategoryAddButton}
                   addButtonText="" // Empty text for icon-only circular button
                   className="w-full"
                 />

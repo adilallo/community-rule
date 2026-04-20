@@ -26,6 +26,8 @@ export interface RuleCardProps {
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;
+  /** Hide the per-category "+" add chip affordance (e.g. read-only template review). */
+  hideCategoryAddButton?: boolean;
 }
 
 export interface RuleCardViewProps {
@@ -42,4 +44,5 @@ export interface RuleCardViewProps {
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;
+  hideCategoryAddButton?: boolean;
 }

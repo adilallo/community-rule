@@ -31,6 +31,7 @@ const RuleCardContainer = memo<RuleCardProps>(
     logoUrl,
     logoAlt,
     communityInitials,
+    hideCategoryAddButton = false,
   }) => {
     const size = sizeProp ?? "L";
 
@@ -76,6 +77,7 @@ const RuleCardContainer = memo<RuleCardProps>(
         logoUrl={logoUrl}
         logoAlt={logoAlt}
         communityInitials={communityInitials}
+        hideCategoryAddButton={hideCategoryAddButton}
       />
     );
   },

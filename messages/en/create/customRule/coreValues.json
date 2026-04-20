@@ -324,6 +324,41 @@
       "label": "Participation",
       "meaning": "Democracy requires the active engagement of all members in the decision-making process. To us, this means we require active contribution to maintain voting rights. We acknowledge a tension with Efficiency (Too many cooks).",
       "signals": "Creating barriers to entry that make it difficult for new members to have a voice or ignoring the input of the broader membership."
+    },
+    {
+      "label": "Reliability",
+      "meaning": "Members can count on one another to follow through on what they commit to. To us, this means we do what we say we will do and notify others early when plans must change. We acknowledge a tension with Flexibility (Sticking to the plan vs adapting).",
+      "signals": "Missing deadlines without notice or making ambitious commitments the group knows it cannot keep."
+    },
+    {
+      "label": "Resilience",
+      "meaning": "The group can absorb shocks and keep functioning when conditions get hard. To us, this means we build redundancy into critical roles and document institutional knowledge so no single departure sinks the work. We acknowledge a tension with Efficiency (Backup capacity vs lean operations).",
+      "signals": "Concentrating all critical knowledge in one person or ignoring warning signs of burnout until key members quit."
+    },
+    {
+      "label": "Solidarity",
+      "meaning": "We stand with one another, especially when members face pressure from outside forces. To us, this means we defend members against unjust treatment and share risk collectively rather than leaving anyone exposed. We acknowledge a tension with Individualism (Collective defense vs personal autonomy).",
+      "signals": "Staying silent when a member faces mistreatment or leaving vulnerable members to handle external pressure alone."
+    },
+    {
+      "label": "Stewardship",
+      "meaning": "We take responsibility for tending the shared resources and relationships entrusted to us. To us, this means we make decisions with future members in mind and reinvest in the infrastructure we depend on. We acknowledge a tension with Efficiency (Long-term care vs short-term output).",
+      "signals": "Extracting short-term value from shared resources without replenishing them or deferring maintenance until systems fail."
+    },
+    {
+      "label": "Transparency",
+      "meaning": "Decisions, finances, and processes are visible to the membership by default. To us, this means we publish meeting notes, budgets, and decision logs where all members can read them. We acknowledge a tension with Privacy (Open books vs personal disclosure).",
+      "signals": "Making major decisions in private channels and only announcing outcomes, or hiding finances behind vague summaries."
+    },
+    {
+      "label": "Trust",
+      "meaning": "We extend good faith to one another and build relationships that can withstand disagreement. To us, this means we interpret others charitably and repair quickly when trust is strained. We acknowledge a tension with Accountability (Assuming good intent vs naming harm).",
+      "signals": "Jumping to worst-case interpretations of ambiguous behavior or withholding repair when a breach could be addressed directly."
+    },
+    {
+      "label": "Voluntarism",
+      "meaning": "Participation is freely chosen rather than coerced, and contribution is recognized on its own terms. To us, this means we don't pressure members into tasks they haven't consented to and we honor their right to step back. We acknowledge a tension with Reliability (Free participation vs guaranteed coverage).",
+      "signals": "Using guilt or social pressure to extract labor from members or shaming people who decline additional responsibilities."
     }
   ]
 }
