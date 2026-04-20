@@ -26,6 +26,39 @@ const coreValueDetailEntrySchema = z.object({
 });
 
 /**
+ * Final-review edit modal details per group, merged onto preset defaults at
+ * publish time. Shapes mirror the custom-rule add-method modals.
+ */
+const communicationMethodDetailEntrySchema = z.object({
+  corePrinciple: z.string().max(8000),
+  logisticsAdmin: z.string().max(8000),
+  codeOfConduct: z.string().max(8000),
+});
+
+const membershipMethodDetailEntrySchema = z.object({
+  eligibility: z.string().max(8000),
+  joiningProcess: z.string().max(8000),
+  expectations: z.string().max(8000),
+});
+
+const decisionApproachDetailEntrySchema = z.object({
+  corePrinciple: z.string().max(8000),
+  applicableScope: z.array(z.string().max(2000)).max(50),
+  selectedApplicableScope: z.array(z.string().max(2000)).max(50),
+  stepByStepInstructions: z.string().max(8000),
+  consensusLevel: z.number().int().min(0).max(100),
+  objectionsDeadlocks: z.string().max(8000),
+});
+
+const conflictManagementDetailEntrySchema = z.object({
+  corePrinciple: z.string().max(8000),
+  applicableScope: z.array(z.string().max(2000)).max(50),
+  selectedApplicableScope: z.array(z.string().max(2000)).max(50),
+  processProtocol: z.string().max(8000),
+  restorationFallbacks: z.string().max(8000),
+});
+
+/**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
  */
 export const publishedRuleDocumentSchema = z
@@ -67,6 +100,18 @@ export const createFlowStateSchema = z
     selectedMembershipMethodIds: z.array(z.string()).max(200).optional(),
     selectedDecisionApproachIds: z.array(z.string()).max(200).optional(),
     selectedConflictManagementIds: z.array(z.string()).max(200).optional(),
+    communicationMethodDetailsById: z
+      .record(communicationMethodDetailEntrySchema)
+      .optional(),
+    membershipMethodDetailsById: z
+      .record(membershipMethodDetailEntrySchema)
+      .optional(),
+    decisionApproachDetailsById: z
+      .record(decisionApproachDetailEntrySchema)
+      .optional(),
+    conflictManagementDetailsById: z
+      .record(conflictManagementDetailEntrySchema)
+      .optional(),
     pendingTemplateAction: z
       .object({
         slug: z.string().max(200),

@@ -113,6 +113,89 @@ describe("buildPublishPayload", () => {
   });
 });
 
+describe("buildPublishPayload — methodSelections", () => {
+  it("omits document.methodSelections when no method group is selected", () => {
+    const r = buildPublishPayload({ title: "T" });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.document.methodSelections).toBeUndefined();
+  });
+
+  it("emits preset-only sections when a method is selected without an override", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: ["signal"],
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | Record<string, Array<Record<string, unknown>>>
+      | undefined;
+    expect(ms).toBeDefined();
+    expect(ms?.communication?.length).toBe(1);
+    const entry = ms?.communication?.[0] as {
+      id: string;
+      label: string;
+      sections: { corePrinciple: string };
+    };
+    expect(entry.id).toBe("signal");
+    expect(entry.label).toBe("Signal");
+    // Preset corePrinciple is non-empty for `signal` in the shipped messages
+    // file — proves we read presets when no override is present.
+    expect(entry.sections.corePrinciple.length).toBeGreaterThan(0);
+  });
+
+  it("merges override on top of preset for the selected method", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: ["signal"],
+      communicationMethodDetailsById: {
+        signal: {
+          corePrinciple: "OVERRIDE PRINCIPLE",
+          logisticsAdmin: "OVERRIDE LOGISTICS",
+          codeOfConduct: "OVERRIDE COC",
+        },
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | Record<string, Array<Record<string, unknown>>>
+      | undefined;
+    const entry = ms?.communication?.[0] as {
+      sections: {
+        corePrinciple: string;
+        logisticsAdmin: string;
+        codeOfConduct: string;
+      };
+    };
+    expect(entry.sections.corePrinciple).toBe("OVERRIDE PRINCIPLE");
+    expect(entry.sections.logisticsAdmin).toBe("OVERRIDE LOGISTICS");
+    expect(entry.sections.codeOfConduct).toBe("OVERRIDE COC");
+  });
+
+  it("emits a methodSelections entry per selected group", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: ["signal"],
+      selectedMembershipMethodIds: ["open-access"],
+      selectedDecisionApproachIds: ["lazy-consensus"],
+      selectedConflictManagementIds: ["peer-mediation"],
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | Record<string, Array<unknown>>
+      | undefined;
+    expect(Object.keys(ms ?? {}).sort()).toEqual([
+      "communication",
+      "conflictManagement",
+      "decisionApproaches",
+      "membership",
+    ]);
+  });
+});
+
 describe("parseDocumentSectionsForDisplay", () => {
   it("returns empty for non-object", () => {
     expect(parseDocumentSectionsForDisplay(null)).toEqual([]);

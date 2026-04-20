@@ -3,14 +3,17 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import MultiSelect from "../../../../components/controls/MultiSelect";
 import type { ChipOption } from "../../../../components/controls/MultiSelect/MultiSelect.types";
-import TextArea from "../../../../components/controls/TextArea";
 import Create from "../../../../components/modals/Create";
 import ContentLockup from "../../../../components/type/ContentLockup";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
-import type { CommunityStructureChipSnapshotRow } from "../../types";
+import type {
+  CommunityStructureChipSnapshotRow,
+  CoreValueDetailEntry,
+} from "../../types";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
+import { CoreValueEditFields } from "../../components/methodEditFields";
 
 const MAX_CORE_VALUES = 5;
 
@@ -96,6 +99,8 @@ function snapshotRowsToChipOptions(
   }));
 }
 
+const EMPTY_DETAIL: CoreValueDetailEntry = { meaning: "", signals: "" };
+
 /** Create Custom — Core Values (Figma `20264:68378`). Up to five selections; preset list + custom chips. */
 export function CoreValuesSelectScreen() {
   const m = useMessages();
@@ -122,8 +127,7 @@ export function CoreValuesSelectScreen() {
     null,
   );
   const [modalSession, setModalSession] = useState<ModalSession | null>(null);
-  const [draftMeaning, setDraftMeaning] = useState("");
-  const [draftSignals, setDraftSignals] = useState("");
+  const [draft, setDraft] = useState<CoreValueDetailEntry>(EMPTY_DETAIL);
 
   useEffect(() => {
     const fromSnap = snapshotRowsToChipOptions(state.coreValuesChipsSnapshot);
@@ -158,16 +162,16 @@ export function CoreValuesSelectScreen() {
 
   /** Default meaning/signals from `coreValues.json` `values` for each preset label. */
   const getPresetTexts = useCallback(
-    (valueLabel: string): { meaning: string; signals: string } => {
+    (valueLabel: string): CoreValueDetailEntry => {
       const row = presets.find((p) => p.label === valueLabel);
-      if (!row) return { meaning: "", signals: "" };
+      if (!row) return EMPTY_DETAIL;
       return { meaning: row.meaning, signals: row.signals };
     },
     [presets],
   );
 
   const getInitialTexts = useCallback(
-    (chipId: string, valueLabel: string) => {
+    (chipId: string, valueLabel: string): CoreValueDetailEntry => {
       const saved = state.coreValueDetailsByChipId?.[chipId];
       const preset = getPresetTexts(valueLabel);
       return {
@@ -180,14 +184,20 @@ export function CoreValuesSelectScreen() {
 
   const openModal = useCallback(
     (chipId: string, session: ModalSession, valueLabel: string) => {
-      const initial = getInitialTexts(chipId, valueLabel);
-      setDraftMeaning(initial.meaning);
-      setDraftSignals(initial.signals);
+      setDraft(getInitialTexts(chipId, valueLabel));
       setActiveModalChipId(chipId);
       setModalSession(session);
       markCreateFlowInteraction();
     },
     [getInitialTexts, markCreateFlowInteraction],
+  );
+
+  const handleDraftChange = useCallback(
+    (next: CoreValueDetailEntry) => {
+      markCreateFlowInteraction();
+      setDraft(next);
+    },
+    [markCreateFlowInteraction],
   );
 
   const handleModalDismiss = useCallback(() => {
@@ -208,19 +218,17 @@ export function CoreValuesSelectScreen() {
     markCreateFlowInteraction();
     updateState({
       coreValueDetailsByChipId: {
-        [activeModalChipId]: {
-          meaning: draftMeaning,
-          signals: draftSignals,
-        },
+        ...(state.coreValueDetailsByChipId ?? {}),
+        [activeModalChipId]: draft,
       },
     });
     setActiveModalChipId(null);
     setModalSession(null);
   }, [
     activeModalChipId,
-    draftMeaning,
-    draftSignals,
+    draft,
     markCreateFlowInteraction,
+    state.coreValueDetailsByChipId,
     updateState,
   ]);
 
@@ -374,26 +382,7 @@ export function CoreValuesSelectScreen() {
           nextButtonText={detailModal.addValueButton}
           ariaLabel={modalChipLabel || "Core value details"}
         >
-          <div className="flex flex-col gap-[var(--measures-spacing-600,24px)] pb-2">
-            <TextArea
-              label={detailModal.meaningLabel}
-              showHelpIcon
-              appearance="embedded"
-              size="medium"
-              value={draftMeaning}
-              onChange={(e) => setDraftMeaning(e.target.value)}
-              rows={4}
-            />
-            <TextArea
-              label={detailModal.signalsLabel}
-              showHelpIcon
-              appearance="embedded"
-              size="medium"
-              value={draftSignals}
-              onChange={(e) => setDraftSignals(e.target.value)}
-              rows={4}
-            />
-          </div>
+          <CoreValueEditFields value={draft} onChange={handleDraftChange} />
         </Create>
       )}
     </CreateFlowTwoColumnSelectShell>

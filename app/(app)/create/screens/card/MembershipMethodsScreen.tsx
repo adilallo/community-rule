@@ -5,10 +5,12 @@
  * Registry: `CREATE_FLOW_SCREEN_REGISTRY["membership-methods"]`.
  *
  * Card click opens the Figma create modal (node `20858-13948`) with three
- * editable sections — Eligibility & Philosophy, Joining Process, and
- * Expectations & Removal. Section defaults come from
- * `messages/en/create/customRule/membership.json` and will be replaced with DB-driven
- * content.
+ * editable sections rendered by {@link MembershipMethodEditFields}. The same
+ * field set is reused on `/create/final-review` — see `FinalReviewChipEditModal`.
+ * Confirm persists both the chip selection and any user edits as a
+ * `membershipMethodDetailsById[id]` override; section defaults come from
+ * `messages/en/create/customRule/membership.json` and will be replaced with
+ * DB-driven content.
  */
 
 import { useState, useCallback, useMemo } from "react";
@@ -29,61 +31,9 @@ import {
   CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS,
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
 } from "../../components/createFlowLayoutTokens";
-import ModalTextAreaField from "../../components/ModalTextAreaField";
-
-const SECTION_FIELDS = [
-  "eligibility",
-  "joiningProcess",
-  "expectations",
-] as const;
-type SectionField = (typeof SECTION_FIELDS)[number];
-
-function AddMembershipModalContent({
-  membershipCardId,
-}: {
-  membershipCardId: string;
-}) {
-  const { markCreateFlowInteraction } = useCreateFlow();
-  const m = useMessages();
-  const mem = m.create.customRule.membership;
-  const method = mem.methods.find((entry) => entry.id === membershipCardId);
-  const sections = method?.sections;
-  const defaults: Record<SectionField, string> = {
-    eligibility: sections?.eligibility ?? "",
-    joiningProcess: sections?.joiningProcess ?? "",
-    expectations: sections?.expectations ?? "",
-  };
-
-  const [sectionValues, setSectionValues] = useState<
-    Record<SectionField, string>
-  >(() => ({
-    eligibility: defaults.eligibility,
-    joiningProcess: defaults.joiningProcess,
-    expectations: defaults.expectations,
-  }));
-
-  const updateSection = useCallback(
-    (key: SectionField, value: string) => {
-      markCreateFlowInteraction();
-      setSectionValues((prev) => ({ ...prev, [key]: value }));
-    },
-    [markCreateFlowInteraction],
-  );
-
-  return (
-    <div className="flex flex-col gap-6">
-      {SECTION_FIELDS.map((field) => (
-        <ModalTextAreaField
-          key={field}
-          label={mem.sectionHeadings[field]}
-          rows={6}
-          value={sectionValues[field]}
-          onChange={(v) => updateSection(field, v)}
-        />
-      ))}
-    </div>
-  );
-}
+import { MembershipMethodEditFields } from "../../components/methodEditFields";
+import { membershipPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
+import type { MembershipMethodDetailEntry } from "../../types";
 
 export function MembershipMethodsScreen() {
   const m = useMessages();
@@ -93,15 +43,10 @@ export function MembershipMethodsScreen() {
   const [expanded, setExpanded] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
+  const [pendingDraft, setPendingDraft] =
+    useState<MembershipMethodDetailEntry | null>(null);
 
   const selectedIds = state.selectedMembershipMethodIds ?? [];
-
-  const setSelectedIds = useCallback(
-    (next: string[]) => {
-      updateState({ selectedMembershipMethodIds: next });
-    },
-    [updateState],
-  );
 
   const { scoresBySlug, hasAnyFacets } =
     useFacetRecommendations("membership");
@@ -150,34 +95,46 @@ export function MembershipMethodsScreen() {
     </>
   );
 
-  const modalConfig = (() => {
-    if (!pendingCardId) {
-      return {
+  const modalConfig = pendingCardId
+    ? (() => {
+        const method = methodById.get(pendingCardId);
+        return {
+          title: method?.label ?? mem.confirmModal.title,
+          description: method?.supportText ?? mem.confirmModal.description,
+          nextButtonText: mem.addPlatform.nextButtonText,
+        };
+      })()
+    : {
         title: mem.confirmModal.title,
         description: mem.confirmModal.description,
         nextButtonText: mem.confirmModal.nextButtonText,
-        showBackButton: false as const,
-        currentStep: undefined,
-        totalSteps: undefined,
       };
-    }
 
-    const method = methodById.get(pendingCardId);
-    return {
-      title: method?.label ?? mem.confirmModal.title,
-      description: method?.supportText ?? mem.confirmModal.description,
-      nextButtonText: mem.addPlatform.nextButtonText,
-      showBackButton: false as const,
-      currentStep: undefined,
-      totalSteps: undefined,
-    };
-  })();
+  const seedDraft = useCallback(
+    (id: string): MembershipMethodDetailEntry => {
+      const saved = state.membershipMethodDetailsById?.[id];
+      if (saved) {
+        return { ...saved };
+      }
+      return membershipPresetFor(id);
+    },
+    [state.membershipMethodDetailsById],
+  );
 
   const handleCardClick = useCallback(
     (id: string) => {
       markCreateFlowInteraction();
       setPendingCardId(id);
+      setPendingDraft(seedDraft(id));
       setCreateModalOpen(true);
+    },
+    [markCreateFlowInteraction, seedDraft],
+  );
+
+  const handleDraftChange = useCallback(
+    (next: MembershipMethodDetailEntry) => {
+      markCreateFlowInteraction();
+      setPendingDraft(next);
     },
     [markCreateFlowInteraction],
   );
@@ -185,20 +142,34 @@ export function MembershipMethodsScreen() {
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
     setPendingCardId(null);
+    setPendingDraft(null);
   }, []);
 
   const handleCreateModalConfirm = useCallback(() => {
-    markCreateFlowInteraction();
-    if (pendingCardId) {
-      setSelectedIds(
-        selectedIds.includes(pendingCardId)
-          ? selectedIds
-          : [...selectedIds, pendingCardId],
-      );
+    if (!pendingCardId || !pendingDraft) {
+      handleCreateModalClose();
+      return;
     }
-    setCreateModalOpen(false);
-    setPendingCardId(null);
-  }, [markCreateFlowInteraction, pendingCardId, selectedIds, setSelectedIds]);
+    markCreateFlowInteraction();
+    updateState({
+      selectedMembershipMethodIds: selectedIds.includes(pendingCardId)
+        ? selectedIds
+        : [...selectedIds, pendingCardId],
+      membershipMethodDetailsById: {
+        ...(state.membershipMethodDetailsById ?? {}),
+        [pendingCardId]: pendingDraft,
+      },
+    });
+    handleCreateModalClose();
+  }, [
+    handleCreateModalClose,
+    markCreateFlowInteraction,
+    pendingCardId,
+    pendingDraft,
+    selectedIds,
+    state.membershipMethodDetailsById,
+    updateState,
+  ]);
 
   return (
     <CreateFlowStepShell
@@ -240,15 +211,14 @@ export function MembershipMethodsScreen() {
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
-        showBackButton={modalConfig.showBackButton}
-        currentStep={modalConfig.currentStep}
-        totalSteps={modalConfig.totalSteps}
+        showBackButton={false}
         backdropVariant="loginYellow"
       >
-        {pendingCardId ? (
-          <AddMembershipModalContent
+        {pendingCardId && pendingDraft ? (
+          <MembershipMethodEditFields
             key={pendingCardId}
-            membershipCardId={pendingCardId}
+            value={pendingDraft}
+            onChange={handleDraftChange}
           />
         ) : null}
       </Create>

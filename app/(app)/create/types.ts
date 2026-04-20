@@ -51,6 +51,41 @@ export type CoreValueDetailEntry = {
 };
 
 /**
+ * Per-chip edited sections written by the `final-review` edit modal and
+ * merged back onto presets at publish time. Shapes mirror the custom-rule
+ * add-method modals (see `app/(app)/create/screens/card/*`) so the same
+ * field widgets can render both surfaces.
+ */
+export type CommunicationMethodDetailEntry = {
+  corePrinciple: string;
+  logisticsAdmin: string;
+  codeOfConduct: string;
+};
+
+export type MembershipMethodDetailEntry = {
+  eligibility: string;
+  joiningProcess: string;
+  expectations: string;
+};
+
+export type DecisionApproachDetailEntry = {
+  corePrinciple: string;
+  applicableScope: string[];
+  selectedApplicableScope: string[];
+  stepByStepInstructions: string;
+  consensusLevel: number;
+  objectionsDeadlocks: string;
+};
+
+export type ConflictManagementDetailEntry = {
+  corePrinciple: string;
+  applicableScope: string[];
+  selectedApplicableScope: string[];
+  processProtocol: string;
+  restorationFallbacks: string;
+};
+
+/**
  * Flow state for inputs across create-flow steps.
  * Validated on `PUT /api/drafts/me` via `createFlowStateSchema` (Zod + JSON safety checks).
  * Additional string keys are allowed at runtime for forward-compatible step data.
@@ -93,6 +128,22 @@ export interface CreateFlowState {
   selectedDecisionApproachIds?: string[];
   /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.customRule.conflictManagement` presets. */
   selectedConflictManagementIds?: string[];
+  /**
+   * User edits from the `final-review` edit modal, keyed by preset method id
+   * (e.g. `"signal"`). Merged onto preset defaults at publish time so the
+   * stored rule reflects the author's customizations. Edits persist to the
+   * anonymous localStorage draft and signed-in server draft automatically.
+   */
+  communicationMethodDetailsById?: Record<
+    string,
+    CommunicationMethodDetailEntry
+  >;
+  membershipMethodDetailsById?: Record<string, MembershipMethodDetailEntry>;
+  decisionApproachDetailsById?: Record<string, DecisionApproachDetailEntry>;
+  conflictManagementDetailsById?: Record<
+    string,
+    ConflictManagementDetailEntry
+  >;
   /**
    * Set when a user picks a template (Customize or Use without changes) before
    * completing the community stage. The community-review screen consumes this

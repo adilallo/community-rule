@@ -336,6 +336,55 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 ---
 
+## Ticket 18 — Invite stakeholders (email) from `confirm-stakeholders` step
+
+**Depends on:** **Ticket 3 / CR-74** + **Ticket 4 / CR-75** (magic-link + session) for per-stakeholder identity, **Ticket 6 / CR-77** (publish) so a `PublishedRule` exists to invite people to, **Ticket 2 / CR-73** (`CreateFlowState` validation) to land the persisted stakeholder shape.
+
+**Server / admin:** **Same as CR-74** — dev works against Mailhog / dev-log; **staging/prod** reuses the **SMTP** + **SPF/DKIM** already set up for magic-link email.
+
+**Goal:** Turn the [`confirm-stakeholders`](../../app/(app)/create/screens/select/ConfirmStakeholdersScreen.tsx) step from a local chip list into a real **stakeholder invite** feature. Today the screen only collects in-memory `ChipOption[]` labels with no email, no persistence, no notification. Product copy in [`messages/en/create/reviewAndComplete/confirmStakeholders.json`](../../messages/en/create/reviewAndComplete/confirmStakeholders.json) already promises that "Adding people at this step will **invite them** to see your proposed CommunityRule and make their own proposals" — we need the feature behind that promise.
+
+**Context:** **No Figma hand-off or product direction yet** for the invite mechanic. **Email is the working assumption** (magic-link parity) but could become email + copy-link, in-app invite, SMS, etc. `CreateFlowState` has no structured `stakeholders` field and there is no `RuleStakeholder` / `RuleInvite` Prisma model. Leaving the step as-is ships a copy promise we do not keep; this ticket is the container for closing that gap once the design + product brief lands.
+
+**Open product questions (block implementation until resolved):**
+
+1. Invite channel: email only, email + shareable link, or in-app (account required)?
+2. Does accepting an invite require a CommunityRule account (magic-link), or can stakeholders read / propose anonymously?
+3. Per-stakeholder permissions: view-only vs. propose-changes vs. co-owner? Default?
+4. Timing: invites sent on **publish** (after `POST /api/rules`) or at **confirm-stakeholders** save? How are post-publish additions handled?
+5. Revocation / re-send UX and rate limits (reuse magic-link per-IP limiter or a new per-rule limiter?).
+6. Notification copy + sender identity (reuse `SMTP_FROM` or dedicated sender).
+
+**Implementation sketch (subject to product sign-off):**
+
+1. **Product + design pass** to answer the questions above and produce Figma for the stakeholder row (email field, validation, resend/remove affordances, empty state).
+2. **Schema:** Add a structured `stakeholders: StakeholderInvite[]` to `CreateFlowState` (Ticket 2 pattern) and/or a Prisma `RuleStakeholder` (`id`, `ruleId`, `email`, `role`, `invitedAt`, `acceptedAt`, `revokedAt`, `tokenHash?`). Decide draft vs. published semantics.
+3. **API:** Likely `POST /api/rules/:id/stakeholders` (invite), `DELETE /api/rules/:id/stakeholders/:id` (revoke), `POST /api/rules/:id/stakeholders/:id/resend`. Validate with Zod; align error shape with **Ticket 13 / CR-84**.
+4. **Mail:** Reuse [`lib/server/mail.ts`](../../lib/server/mail.ts) + Mailhog/dev-log pattern from **CR-74**; per-stakeholder hashed token akin to `MagicLinkToken` if acceptance requires identity.
+5. **UI:** Replace free-text chips with `email` + optional `label` input, client-side email validation, inline errors (invalid email, 429 `retryAfterMs`, duplicate). Use `markCreateFlowInteraction()` per the create-flow guardrails in [`.cursor/rules/create-flow.mdc`](../../.cursor/rules/create-flow.mdc).
+6. **i18n:** Expand [`confirmStakeholders.json`](../../messages/en/create/reviewAndComplete/confirmStakeholders.json) with invite copy (send button, error strings, resend, revoke confirm).
+7. **Tests:** Schema + route unit tests; Vitest component tests for the form; optional E2E once publish is stable.
+
+**Out of scope:**
+
+- Real-time collaboration / editing by stakeholders.
+- Threaded proposals / comments UI (future product work).
+- Notifications beyond the initial invite (digest emails, reminders).
+
+**Acceptance criteria:**
+
+- [ ] Product + design brief answering the open questions, linked from the Linear issue.
+- [ ] `CreateFlowState.stakeholders` (or equivalent) is typed, validated server-side, and persists across draft save / resume.
+- [ ] An invited stakeholder receives the chosen notification (email in the default proposal) in local dev via Mailhog / dev-log, same pattern as magic-link.
+- [ ] Invalid / duplicate / rate-limited invites show clear, accessible errors; no silent failures.
+- [ ] Copy in [`confirmStakeholders.json`](../../messages/en/create/reviewAndComplete/confirmStakeholders.json) matches the shipped capability (no "will invite" promise without implementation).
+
+**Files (expected):** [`app/(app)/create/screens/select/ConfirmStakeholdersScreen.tsx`](../../app/(app)/create/screens/select/ConfirmStakeholdersScreen.tsx), [`messages/en/create/reviewAndComplete/confirmStakeholders.json`](../../messages/en/create/reviewAndComplete/confirmStakeholders.json), [`app/(app)/create/types.ts`](../../app/(app)/create/types.ts), [`prisma/schema.prisma`](../../prisma/schema.prisma), new `app/api/rules/[id]/stakeholders/*`, [`lib/server/mail.ts`](../../lib/server/mail.ts), [`lib/server/validation/`](../../lib/server/validation/), tests under `tests/`.
+
+**Linear:** [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders) (**Backlog**). **Parallel** to the CR-72 → CR-83 chain; unblocked to start the product/design brief now — implementation waits on **CR-74 / CR-75 / CR-77 / CR-73**.
+
+---
+
 ## Ticket 9 — Persist web vitals outside `.next` (prefer external RUM)
 
 **Depends on:** none (orthogonal).
@@ -541,14 +590,15 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    15 | 15     | Profile + account (Figma profile) |
 |    16 | 16     | Template matrix + xlsx ingestion  |
 |    17 | 17     | Canon create-flow (custom path)     |
+|    18 | 18     | Stakeholder invites (confirm-stakeholders) |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), not in the CR-72–83 sequence.
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), **CR-90** / Ticket 18 (stakeholder invites — product/design brief unblocked; implementation waits on **CR-73** / **CR-74** / **CR-75** / **CR-77**), none in the CR-72–83 sequence.
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -569,6 +619,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |
 |         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion        |
 |         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) |
+|         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
 
 ---
 

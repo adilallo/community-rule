@@ -3,6 +3,11 @@
   "description": "Here's what other people will see. Make sure everything looks good before you finalize everything. Once the rule is finalized, you must use one of your decision-making mechanisms to edit it again.",
   "ruleCardTitleFallback": "Your community",
   "ruleCardDescriptionFallback": "Add a short description of your community on earlier steps when that field is available. For now, this card shows your community name.",
+  "chipEditModal": {
+    "saveButton": "Save",
+    "readOnlyCloseButton": "Close",
+    "readOnlyNote": "Details for this entry aren't editable yet."
+  },
   "categories": [
     {
       "name": "Values",

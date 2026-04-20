@@ -34,7 +34,10 @@ import {
 } from "./utils/anonymousDraftStorage";
 import { deleteServerDraft } from "../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../lib/create/lastPublishedRule";
-import { buildTemplateCustomizePrefill } from "../../../lib/create/applyTemplatePrefill";
+import {
+  buildCoreValuesPrefillFromTemplateBody,
+  buildTemplateCustomizePrefill,
+} from "../../../lib/create/applyTemplatePrefill";
 import { loadTemplateReviewBySlug } from "../../../lib/create/loadTemplateReviewBySlug";
 import messages from "../../../messages/en/index";
 import {
@@ -298,6 +301,22 @@ function CreateFlowLayoutContent({
     // don't bleed into `document.coreValues` at publish time.
     resetCustomRuleSelections();
 
+    // Seed the core-values snapshot from the Values section so the
+    // final-review chip modal can edit them (it keys edits by chip id).
+    // The Values entries themselves are then dropped from `sections` to
+    // avoid publishing `document.coreValues` and `document.sections.Values`
+    // for the same data — matches the "Customize" path's data shape.
+    const coreValuesPrefill = buildCoreValuesPrefillFromTemplateBody(doc);
+    const sectionsWithoutValues =
+      Object.keys(coreValuesPrefill).length > 0
+        ? sections.filter((s) => {
+            const name = (s as { categoryName?: unknown }).categoryName;
+            if (typeof name !== "string") return true;
+            const key = name.toLowerCase().replace(/[^a-z]+/g, "");
+            return key !== "values" && key !== "corevalues";
+          })
+        : sections;
+
     const summaryRaw =
       typeof template.description === "string"
         ? template.description.trim()
@@ -305,7 +324,8 @@ function CreateFlowLayoutContent({
     const hasCommunityName =
       typeof state.title === "string" && state.title.trim().length > 0;
     updateState({
-      sections,
+      ...coreValuesPrefill,
+      sections: sectionsWithoutValues,
       ...(summaryRaw.length > 0 ? { summary: summaryRaw } : {}),
       ...(hasCommunityName
         ? { pendingTemplateAction: undefined }

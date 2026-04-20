@@ -114,7 +114,11 @@ describe("buildFinalReviewCategoriesFromState", () => {
     ]);
   });
 
-  it("does not duplicate Values when sections already includes one", () => {
+  it("prefers the chip snapshot over a duplicated Values section in sections", () => {
+    // The use-without-changes handler now strips Values from `sections` and
+    // seeds the snapshot, but legacy drafts persisted before that fix can
+    // still arrive here with both sources present. The snapshot wins so the
+    // final-review chip modal can attach edits via the per-chip id.
     const state: CreateFlowState = {
       sections: [
         {
@@ -129,7 +133,7 @@ describe("buildFinalReviewCategoriesFromState", () => {
     };
     const rows = buildFinalReviewCategoriesFromState(state, NAMES);
     expect(rows).toEqual([
-      { name: "Values", chips: ["Consciousness"] },
+      { name: "Values", chips: ["Accessibility"] },
     ]);
   });
 });

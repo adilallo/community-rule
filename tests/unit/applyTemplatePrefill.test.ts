@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildTemplateCustomizePrefill } from "../../lib/create/applyTemplatePrefill";
+import {
+  buildCoreValuesPrefillFromTemplateBody,
+  buildTemplateCustomizePrefill,
+} from "../../lib/create/applyTemplatePrefill";
 import coreValuesMessages from "../../messages/en/create/customRule/coreValues.json";
 
 function coreValuePresetId(label: string): string {
@@ -105,5 +108,48 @@ describe("buildTemplateCustomizePrefill", () => {
       ],
     });
     expect(prefill).toEqual({});
+  });
+});
+
+describe("buildCoreValuesPrefillFromTemplateBody", () => {
+  it("returns {} for malformed bodies", () => {
+    expect(buildCoreValuesPrefillFromTemplateBody(null)).toEqual({});
+    expect(buildCoreValuesPrefillFromTemplateBody({})).toEqual({});
+    expect(
+      buildCoreValuesPrefillFromTemplateBody({ sections: "nope" }),
+    ).toEqual({});
+  });
+
+  it("returns {} when the body has no Values section", () => {
+    expect(
+      buildCoreValuesPrefillFromTemplateBody({
+        sections: [
+          { categoryName: "Communication", entries: [{ title: "Signal" }] },
+        ],
+      }),
+    ).toEqual({});
+  });
+
+  it("seeds the snapshot + selected ids from the Values section only", () => {
+    const prefill = buildCoreValuesPrefillFromTemplateBody({
+      sections: [
+        {
+          categoryName: "Values",
+          entries: [
+            { title: "Consensus", body: "" },
+            { title: "Community Care", body: "" },
+          ],
+        },
+        {
+          categoryName: "Communication",
+          entries: [{ title: "Signal", body: "" }],
+        },
+      ],
+    });
+    const selected = prefill.selectedCoreValueIds ?? [];
+    expect(selected).toContain(coreValuePresetId("Consensus"));
+    expect(selected).toContain(coreValuePresetId("Community Care"));
+    // Methods should not be touched by the values-only helper.
+    expect(prefill.selectedCommunicationMethodIds).toBeUndefined();
   });
 });
