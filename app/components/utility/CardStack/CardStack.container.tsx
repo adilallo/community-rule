@@ -26,6 +26,7 @@ const CardStackContainer = memo<CardStackProps>(
     description = "",
     layout = "default",
     compactRecommendedLimit = 5,
+    compactCardIds,
     compactDesktopLayout: compactDesktopLayoutProp = "grid",
     headerLockupSize,
     toggleAlignment = "center",
@@ -83,6 +84,7 @@ const CardStackContainer = memo<CardStackProps>(
         description={description}
         layout={layout}
         compactRecommendedLimit={compactRecommendedLimit}
+        compactCardIds={compactCardIds}
         compactDesktopLayout={compactDesktopLayoutProp}
         headerLockupSize={headerLockupSize}
         toggleAlignment={toggleAlignment}

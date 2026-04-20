@@ -14,7 +14,7 @@ import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowL
  */
 export function InformationalScreen() {
   const mdUp = useCreateFlowMdUp();
-  const copy = useMessages().create.informational;
+  const copy = useMessages().create.community.informational;
 
   const items = [
     {

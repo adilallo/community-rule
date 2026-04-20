@@ -85,13 +85,13 @@ export interface CreateFlowState {
   coreValuesChipsSnapshot?: CommunityStructureChipSnapshotRow[];
   /** User-authored detail text keyed by chip id (preset ids or custom UUIDs). */
   coreValueDetailsByChipId?: Record<string, CoreValueDetailEntry>;
-  /** Create Custom — communication methods step (`/create/communication-methods`); card ids from `create.communication` presets. */
+  /** Create Custom — communication methods step (`/create/communication-methods`); card ids from `create.customRule.communication` presets. */
   selectedCommunicationMethodIds?: string[];
-  /** Create Custom — membership / join patterns (`/create/membership-methods`); card ids from `create.membership` presets. */
+  /** Create Custom — membership / join patterns (`/create/membership-methods`); card ids from `create.customRule.membership` presets. */
   selectedMembershipMethodIds?: string[];
-  /** Create Custom — decision approaches (`/create/decision-approaches`); card ids from `create.rightRail` presets. */
+  /** Create Custom — decision approaches (`/create/decision-approaches`); card ids from `create.customRule.decisionApproaches` presets. */
   selectedDecisionApproachIds?: string[];
-  /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.conflictManagement` presets. */
+  /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.customRule.conflictManagement` presets. */
   selectedConflictManagementIds?: string[];
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */

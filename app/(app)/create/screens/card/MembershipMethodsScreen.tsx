@@ -7,7 +7,7 @@
  * Card click opens the Figma create modal (node `20858-13948`) with three
  * editable sections — Eligibility & Philosophy, Joining Process, and
  * Expectations & Removal. Section defaults come from
- * `messages/en/create/membership.json` and will be replaced with DB-driven
+ * `messages/en/create/customRule/membership.json` and will be replaced with DB-driven
  * content.
  */
 
@@ -15,6 +15,11 @@ import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import {
+  deriveCompactCards,
+  rankMethodsByScore,
+  useFacetRecommendations,
+} from "../../hooks/useFacetRecommendations";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../../components/utility/CardStack";
 import Create from "../../../../components/modals/Create";
@@ -33,17 +38,6 @@ const SECTION_FIELDS = [
 ] as const;
 type SectionField = (typeof SECTION_FIELDS)[number];
 
-const MEMBERSHIP_CARD_ORDER = [
-  "open-access",
-  "orientation-required",
-  "invitation-only",
-  "contribution-based",
-  "mentorship",
-  "6",
-  "7",
-  "8",
-] as const;
-
 function AddMembershipModalContent({
   membershipCardId,
 }: {
@@ -51,15 +45,13 @@ function AddMembershipModalContent({
 }) {
   const { markCreateFlowInteraction } = useCreateFlow();
   const m = useMessages();
-  const mem = m.create.membership;
-  const modal =
-    membershipCardId in mem.modals
-      ? mem.modals[membershipCardId as keyof typeof mem.modals]
-      : null;
-  const defaults = modal?.sections ?? {
-    eligibility: "",
-    joiningProcess: "",
-    expectations: "",
+  const mem = m.create.customRule.membership;
+  const method = mem.methods.find((entry) => entry.id === membershipCardId);
+  const sections = method?.sections;
+  const defaults: Record<SectionField, string> = {
+    eligibility: sections?.eligibility ?? "",
+    joiningProcess: sections?.joiningProcess ?? "",
+    expectations: sections?.expectations ?? "",
   };
 
   const [sectionValues, setSectionValues] = useState<
@@ -95,7 +87,7 @@ function AddMembershipModalContent({
 
 export function MembershipMethodsScreen() {
   const m = useMessages();
-  const mem = m.create.membership;
+  const mem = m.create.customRule.membership;
   const mdUp = useCreateFlowMdUp();
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [expanded, setExpanded] = useState(false);
@@ -111,18 +103,32 @@ export function MembershipMethodsScreen() {
     [updateState],
   );
 
+  const { scoresBySlug, hasAnyFacets } =
+    useFacetRecommendations("membership");
+  const rankedMethods = useMemo(
+    () => rankMethodsByScore(mem.methods, scoresBySlug),
+    [mem.methods, scoresBySlug],
+  );
+
+  const { compactCardIds, recommendedIds } = useMemo(
+    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
+    [rankedMethods, scoresBySlug, hasAnyFacets],
+  );
+
   const sampleCards = useMemo(
     () =>
-      MEMBERSHIP_CARD_ORDER.map((id) => {
-        const row = mem.cards[id as keyof typeof mem.cards];
-        return {
-          id,
-          label: row.label,
-          supportText: row.supportText,
-          recommended: true,
-        };
-      }),
-    [mem],
+      rankedMethods.map((entry) => ({
+        id: entry.id,
+        label: entry.label,
+        supportText: entry.supportText,
+        recommended: recommendedIds.has(entry.id),
+      })),
+    [rankedMethods, recommendedIds],
+  );
+
+  const methodById = useMemo(
+    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
+    [rankedMethods],
   );
 
   const title = expanded ? mem.page.expandedTitle : mem.page.compactTitle;
@@ -156,25 +162,10 @@ export function MembershipMethodsScreen() {
       };
     }
 
-    if (pendingCardId in mem.modals) {
-      const modal = mem.modals[pendingCardId as keyof typeof mem.modals];
-      return {
-        title: modal.title,
-        description: modal.description,
-        nextButtonText: mem.addPlatform.nextButtonText,
-        showBackButton: false as const,
-        currentStep: undefined,
-        totalSteps: undefined,
-      };
-    }
-
-    const cardRow =
-      pendingCardId in mem.cards
-        ? mem.cards[pendingCardId as keyof typeof mem.cards]
-        : null;
+    const method = methodById.get(pendingCardId);
     return {
-      title: cardRow?.label ?? mem.confirmModal.title,
-      description: cardRow?.supportText ?? mem.confirmModal.description,
+      title: method?.label ?? mem.confirmModal.title,
+      description: method?.supportText ?? mem.confirmModal.description,
       nextButtonText: mem.addPlatform.nextButtonText,
       showBackButton: false as const,
       currentStep: undefined,
@@ -235,6 +226,7 @@ export function MembershipMethodsScreen() {
             hasMore={true}
             toggleLabel={mem.page.seeAllLink}
             compactRecommendedLimit={5}
+            compactCardIds={compactCardIds}
             compactDesktopLayout="pyramidFive"
             headerLockupSize={mdUp ? "L" : "M"}
           />

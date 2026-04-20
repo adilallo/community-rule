@@ -28,7 +28,11 @@ import {
   requestMagicLink,
 } from "../../../lib/create/api";
 import { safeInternalPath } from "../../../lib/safeInternalPath";
-import { setTransferPendingFlag } from "./utils/anonymousDraftStorage";
+import {
+  clearAnonymousCreateFlowStorage,
+  setTransferPendingFlag,
+} from "./utils/anonymousDraftStorage";
+import { deleteServerDraft } from "../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../lib/create/lastPublishedRule";
 import {
   fetchTemplateBySlug,
@@ -64,10 +68,14 @@ function CreateFlowSessionShell({ children }: { children: ReactNode }) {
   }, []);
 
   const sessionResolved = sessionUser !== undefined;
-  const enableAnonymousPersistence = sessionResolved && sessionUser === null;
+  // Mirror in-progress draft to localStorage for ALL visitors once we know who
+  // they are. Refresh-survival is the same UX for guest and signed-in users;
+  // signed-in users additionally get an explicit "Save & Exit" that PUTs to
+  // the server (handled in `useCreateFlowExit`).
+  const enableLocalDraftMirroring = sessionResolved;
 
   return (
-    <CreateFlowProvider enableAnonymousPersistence={enableAnonymousPersistence}>
+    <CreateFlowProvider enableLocalDraftMirroring={enableLocalDraftMirroring}>
       <CreateFlowDraftSaveBannerProvider>
         <CreateFlowLayoutContent
           sessionUser={sessionUser}
@@ -91,7 +99,7 @@ function CreateFlowLayoutContent({
 }) {
   const { create } = useMessages();
   const footer = create.footer;
-  const communitySaveMessages = create.communitySave;
+  const communitySaveMessages = create.community.communitySave;
   const tLogin = useTranslation("pages.login");
   const router = useRouter();
   const pathname = usePathname();
@@ -142,7 +150,7 @@ function CreateFlowLayoutContent({
     if (payloadResult.ok === false) {
       setPublishBannerMessage(
         payloadResult.error === "missingCommunityName"
-          ? messages.create.publish.missingCommunityName
+          ? messages.create.reviewAndComplete.publish.missingCommunityName
           : payloadResult.error,
       );
       return;
@@ -176,7 +184,7 @@ function CreateFlowLayoutContent({
     setPublishBannerMessage(
       publishResult.error.trim() !== ""
         ? publishResult.error
-        : messages.create.publish.genericPublishFailed,
+        : messages.create.reviewAndComplete.publish.genericPublishFailed,
     );
   }, [state, router, openLogin]);
 
@@ -225,6 +233,20 @@ function CreateFlowLayoutContent({
   const handleExit = async (opts?: { saveDraft?: boolean }) => {
     const saveDraft = opts?.saveDraft ?? false;
     if (!sessionResolved) return;
+
+    // Exit from `/create/completed` is post-publish: the rule is saved, so we
+    // skip the leave-confirm + login prompt and just wipe the in-flight draft.
+    // For signed-in users we also DELETE the server draft so a future visit to
+    // /create starts fresh instead of rehydrating yesterday's work.
+    if (currentStep === "completed") {
+      clearState();
+      clearAnonymousCreateFlowStorage();
+      if (sessionUser) {
+        void deleteServerDraft();
+      }
+      router.push("/");
+      return;
+    }
 
     if (sessionUser === null) {
       if (saveDraft) return;
@@ -372,7 +394,7 @@ function CreateFlowLayoutContent({
               <Alert
                 type="banner"
                 status="danger"
-                title={messages.create.publish.finalizeBannerTitle}
+                title={messages.create.reviewAndComplete.publish.finalizeBannerTitle}
                 description={publishBannerMessage}
                 onClose={() => setPublishBannerMessage(null)}
                 className="w-full"
@@ -622,7 +644,7 @@ function CreateFlowLayoutContent({
                   goToNextStep();
                 }}
               >
-                {footer.confirmRightRail}
+                {footer.confirmDecisionApproaches}
               </Button>
             ) : currentStep === "conflict-management" && nextStep ? (
               <Button
@@ -657,7 +679,7 @@ function CreateFlowLayoutContent({
               >
                 {currentStep === "final-review"
                   ? isPublishing
-                    ? messages.create.publish.finalizeButtonPublishing
+                    ? messages.create.reviewAndComplete.publish.finalizeButtonPublishing
                     : footer.finalizeCommunityRule
                   : currentStep === "confirm-stakeholders"
                     ? footer.confirmStakeholders

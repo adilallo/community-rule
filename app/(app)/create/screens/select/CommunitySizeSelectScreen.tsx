@@ -27,7 +27,7 @@ function selectedIdsFromOptions(options: ChipOption[]): string[] {
 /** Create Community — Figma `20094:41317`, chips only (layout tokens shared with structure select). */
 export function CommunitySizeSelectScreen() {
   const m = useMessages();
-  const cs = m.create.communitySize;
+  const cs = m.create.community.communitySize;
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
 
   const [communitySizeOptions, setCommunitySizeOptions] = useState<

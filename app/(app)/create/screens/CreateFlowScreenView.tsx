@@ -35,7 +35,7 @@ export function CreateFlowScreenView({
     case "community-name":
       return (
         <CreateFlowTextFieldScreen
-          messageNamespace="create.communityName"
+          messageNamespace="create.community.communityName"
           stateField="title"
           maxLength={48}
         />
@@ -45,7 +45,7 @@ export function CreateFlowScreenView({
     case "community-context":
       return (
         <CreateFlowTextFieldScreen
-          messageNamespace="create.communityContext"
+          messageNamespace="create.community.communityContext"
           stateField="communityContext"
           maxLength={48}
           mainAlign="center"
@@ -58,7 +58,7 @@ export function CreateFlowScreenView({
     case "community-save":
       return (
         <CreateFlowTextFieldScreen
-          messageNamespace="create.communitySave"
+          messageNamespace="create.community.communitySave"
           stateField="communitySaveEmail"
           maxLength={254}
           mainAlign="center"

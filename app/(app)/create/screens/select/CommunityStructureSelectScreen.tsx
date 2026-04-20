@@ -106,7 +106,7 @@ function snapshotRowsToChipOptions(
 /** Create Community step 3 — Figma `20094:18244` (responsive grid + column caps via `createFlowLayoutTokens`). */
 export function CommunityStructureSelectScreen() {
   const m = useMessages();
-  const cs = m.create.communityStructure;
+  const cs = m.create.community.communityStructure;
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
 
   const [organizationTypeOptions, setOrganizationTypeOptions] = useState<

@@ -27,12 +27,12 @@ function buildFinalReviewCategories(
 export function FinalReviewScreen() {
   const { state } = useCreateFlow();
   const mdUp = useCreateFlowMdUp();
-  const t = useTranslation("create.finalReview");
+  const t = useTranslation("create.reviewAndComplete.finalReview");
   const m = useMessages();
 
   const finalReviewCategories = useMemo(
-    () => buildFinalReviewCategories(m.create.finalReview.categories),
-    [m.create.finalReview.categories],
+    () => buildFinalReviewCategories(m.create.reviewAndComplete.finalReview.categories),
+    [m.create.reviewAndComplete.finalReview.categories],
   );
 
   const ruleCardTitle = useMemo(() => {

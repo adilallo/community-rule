@@ -17,7 +17,7 @@ import {
 export function CompletedScreen() {
   const mdUp = useCreateFlowMdUp();
   const m = useMessages();
-  const completed = m.create.completed;
+  const completed = m.create.reviewAndComplete.completed;
 
   const fallbackSections = useMemo(
     () =>

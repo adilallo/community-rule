@@ -99,7 +99,7 @@ function snapshotRowsToChipOptions(
 /** Create Custom — Core Values (Figma `20264:68378`). Up to five selections; preset list + custom chips. */
 export function CoreValuesSelectScreen() {
   const m = useMessages();
-  const cv = m.create.coreValues;
+  const cv = m.create.customRule.coreValues;
   const presets = useMemo(
     () => normalizeCoreValuePresets(cv.values as CoreValuePresetJson[]),
     [cv.values],

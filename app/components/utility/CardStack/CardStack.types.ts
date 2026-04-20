@@ -26,6 +26,16 @@ export interface CardStackProps {
    */
   compactRecommendedLimit?: number;
   /**
+   * Optional explicit list of card ids to render in the compact slot, in
+   * order. When provided, this overrides the default
+   * `cards.filter(c => c.recommended)` selection — the `recommended` flag
+   * then only controls the visual "Recommended" badge. Used by the
+   * create-flow card-deck steps so facet scores can pick the compact set
+   * (and badge only the truly matched subset). Cards whose ids are not in
+   * `cards` are silently dropped.
+   */
+  compactCardIds?: string[];
+  /**
    * At `md+`, how compact recommended cards are laid out. `flexWrap` matches Figma Flow — Compact Card Stack (three cards in a row).
    * `pyramidFive` = two rows (3 + 2) centered for five recommended cards (membership step).
    */
@@ -50,6 +60,7 @@ export interface CardStackViewProps {
   description: string;
   layout: "default" | "singleStack";
   compactRecommendedLimit: number;
+  compactCardIds: string[] | undefined;
   compactDesktopLayout: "grid" | "flexWrap" | "pyramidFive";
   headerLockupSize: HeaderLockupSizeValue | undefined;
   toggleAlignment: "center" | "end";

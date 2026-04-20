@@ -8,7 +8,7 @@ export default {
 
 export const Default = {
   args: {
-    messageNamespace: "create.communityName",
+    messageNamespace: "create.community.communityName",
     stateField: "title",
     maxLength: 48,
   },

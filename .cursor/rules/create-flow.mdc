@@ -39,9 +39,16 @@ file are a smell once they're used more than once.
 
 ## Copy & data
 
-- Step copy lives in `messages/en/create/<step>.json`, wired into
-  `messages/en/index.ts` under the `create:` namespace (see
-  `localization.mdc` for the standard pattern).
+- Step copy lives in `messages/en/create/<stage>/<step>.json` where
+  `<stage>` is one of `community`, `customRule`, `reviewAndComplete`
+  (matches Figma stages — see `docs/create-flow.md`). Cross-cutting chrome
+  (`footer.json`, `topNav.json`, `draftHydration.json`,
+  `templateReview.json`) and shared layout-shell strings (`select.json`,
+  `text.json`, `upload.json`) live at the `create/` root. Wire each new
+  JSON into `messages/en/index.ts` under the matching `create.<stage>.*`
+  namespace (see `localization.mdc`).
+- Modal `sections` defaults are DB-shaped seed placeholders, not UI
+  constants — expect replacement with live data.
 - Modal `sections` defaults are DB-shaped seed placeholders, not UI
   constants — expect replacement with live data.
 

@@ -17,6 +17,7 @@ export function CardStackView({
   description,
   layout,
   compactRecommendedLimit,
+  compactCardIds,
   compactDesktopLayout,
   headerLockupSize,
   toggleAlignment,
@@ -24,10 +25,22 @@ export function CardStackView({
 }: CardStackViewProps) {
   const lockupSize = headerLockupSize ?? "L";
   const isSelected = (id: string) => selectedIds.includes(id);
-  // Compact: recommended only (default up to 5). Expanded: all cards.
-  const compactCards = cards
-    .filter((c) => c.recommended ?? false)
-    .slice(0, compactRecommendedLimit);
+  // Compact: explicit `compactCardIds` (caller-driven, used by create-flow
+  // facet ranker) takes precedence over the legacy `recommended`-filter so
+  // the screen can show un-tagged cards in the compact slot when there is
+  // no facet signal yet (CR-88 §10).
+  const compactCards = (() => {
+    if (compactCardIds && compactCardIds.length > 0) {
+      const byId = new Map(cards.map((c) => [c.id, c]));
+      return compactCardIds
+        .map((id) => byId.get(id))
+        .filter((c): c is (typeof cards)[number] => c !== undefined)
+        .slice(0, compactRecommendedLimit);
+    }
+    return cards
+      .filter((c) => c.recommended ?? false)
+      .slice(0, compactRecommendedLimit);
+  })();
 
   // Single stack: always one column; expand reveals more in same stack (scrollable)
   if (layout === "singleStack") {

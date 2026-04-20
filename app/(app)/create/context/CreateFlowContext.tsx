@@ -32,22 +32,29 @@ interface CreateFlowProviderProps {
   children: ReactNode;
   initialStep?: CreateFlowStep | null;
   /**
-   * When true (signed-out, session resolved), load/sync `create-flow-anonymous` in localStorage.
-   * When false, in-memory only (authenticated fresh create).
+   * When true (session resolved, guest or signed-in), mirror in-flight draft to
+   * `create-flow-anonymous` in localStorage so refresh / dev-restart never wipes
+   * progress. When false, in-memory only (e.g. unit tests, pre-session-resolve).
+   *
+   * Signed-in users additionally get an explicit "Save & Exit" that PUTs to the
+   * server (`useCreateFlowExit`); the server draft is the cross-device snapshot,
+   * localStorage is the on-every-keystroke buffer.
    */
-  enableAnonymousPersistence?: boolean;
+  enableLocalDraftMirroring?: boolean;
 }
 
 /**
- * Create flow state. Anonymous users mirror state to localStorage; authenticated users stay in memory.
+ * Create flow state. All users mirror in-flight state to localStorage when
+ * `enableLocalDraftMirroring` is true; signed-in users layer an explicit
+ * server-draft snapshot on top via {@link useCreateFlowExit}.
  */
 export function CreateFlowProvider({
   children,
   initialStep = null,
-  enableAnonymousPersistence = false,
+  enableLocalDraftMirroring = false,
 }: CreateFlowProviderProps) {
   const [state, setState] = useState<CreateFlowState>(() => {
-    const base = enableAnonymousPersistence
+    const base = enableLocalDraftMirroring
       ? readAnonymousCreateFlowState()
       : {};
     const storedDetails = readCoreValueDetailsFromLocalStorage();
@@ -62,15 +69,23 @@ export function CreateFlowProvider({
   });
   const [interactionTouched, setInteractionTouched] = useState(false);
   const [currentStep] = useState<CreateFlowStep | null>(initialStep);
-  const prevPersistRef = useRef(enableAnonymousPersistence);
+  const prevPersistRef = useRef(enableLocalDraftMirroring);
+  const persistWriteSkipRef = useRef(true);
 
   useEffect(() => {
     clearLegacyCreateFlowKeysOnce();
   }, []);
 
-  // Session resolved as guest after initial paint: hydrate from localStorage if still empty.
+  // Session resolved after initial paint: hydrate from localStorage, merging
+  // with anything already in state. We can't bail on `prev` being non-empty:
+  // the initializer pre-populates `coreValueDetailsByChipId` from a separate
+  // localStorage key, so `prev` is virtually always non-empty here.
+  // Merge strategy: `prev` wins for fields the user might have touched between
+  // mount and session-resolve; `from` fills in anything else; coreValueDetails
+  // is union-merged (prev wins per chip id since it loaded from the dedicated
+  // `create-flow-core-value-details` key).
   useEffect(() => {
-    if (!enableAnonymousPersistence) {
+    if (!enableLocalDraftMirroring) {
       prevPersistRef.current = false;
       return;
     }
@@ -79,14 +94,39 @@ export function CreateFlowProvider({
     if (!wasOff) return;
     const from = readAnonymousCreateFlowState();
     if (Object.keys(from).length === 0) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate anonymous draft when guest persistence turns on
-    setState((prev) => (Object.keys(prev).length > 0 ? prev : { ...from }));
-  }, [enableAnonymousPersistence]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate local draft when mirroring turns on
+    setState((prev) => {
+      const merged: CreateFlowState = { ...from, ...prev };
+      const fromDetails = from.coreValueDetailsByChipId;
+      const prevDetails = prev.coreValueDetailsByChipId;
+      if (fromDetails || prevDetails) {
+        merged.coreValueDetailsByChipId = {
+          ...(fromDetails ?? {}),
+          ...(prevDetails ?? {}),
+        };
+      }
+      return merged;
+    });
+  }, [enableLocalDraftMirroring]);
 
   useEffect(() => {
-    if (!enableAnonymousPersistence) return;
+    if (!enableLocalDraftMirroring) {
+      // Reset so the next OFF→ON transition skips its first write again.
+      persistWriteSkipRef.current = true;
+      return;
+    }
+    // Skip the very first write that runs on the same render where mirroring
+    // turned ON — the hydrate effect (above) is racing to setState the loaded
+    // draft, and writing the still-empty pre-hydrate state here would clobber
+    // localStorage. The next render (with the hydrated state) will write
+    // normally. Without this guard, drafts get wiped during HMR / any
+    // auth-session refetch that re-toggles `enableLocalDraftMirroring`.
+    if (persistWriteSkipRef.current) {
+      persistWriteSkipRef.current = false;
+      return;
+    }
     writeAnonymousCreateFlowState(state);
-  }, [state, enableAnonymousPersistence]);
+  }, [state, enableLocalDraftMirroring]);
 
   /** Meaning/signals for core values: survives refresh for signed-in users; merged with anonymous draft when both exist. */
   useEffect(() => {

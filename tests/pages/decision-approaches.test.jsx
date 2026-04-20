@@ -106,17 +106,22 @@ describe("Create flow decision-approaches page", () => {
     ).toBeInTheDocument();
   });
 
-  test("expanded view shows Label cards", async () => {
+  test("expanded view reveals additional non-recommended approaches", async () => {
     const user = userEvent.setup();
     render(<DecisionApproachesScreen />);
+
+    expect(
+      screen.queryByRole("button", { name: /^Sociocracy:/ }),
+    ).not.toBeInTheDocument();
 
     const toggle = screen.getByRole("button", {
       name: "See all decision approaches",
     });
     await user.click(toggle);
 
-    const labelButtons = screen.getAllByRole("button", { name: /^Label/ });
-    expect(labelButtons.length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByRole("button", { name: /^Sociocracy:/ }),
+    ).toBeInTheDocument();
   });
 
   test("clicking a card opens the create modal and confirming selects it", async () => {

@@ -18,26 +18,34 @@ import login from "./pages/login.json";
 import profile from "./pages/profile.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
-import communication from "./create/communication.json";
-import createMembership from "./create/membership.json";
-import createConflictManagement from "./create/conflictManagement.json";
-import createInformational from "./create/informational.json";
-import createCommunityName from "./create/communityName.json";
-import createCommunitySize from "./create/communitySize.json";
-import createCommunityContext from "./create/communityContext.json";
-import createCommunityStructure from "./create/communityStructure.json";
-import createCommunityUpload from "./create/communityUpload.json";
-import createCommunitySave from "./create/communitySave.json";
-import createReview from "./create/review.json";
-import createCoreValues from "./create/coreValues.json";
-import createConfirmStakeholders from "./create/confirmStakeholders.json";
-import createFinalReview from "./create/finalReview.json";
-import createCompleted from "./create/completed.json";
-import createRightRail from "./create/rightRail.json";
+
+// create – stage 1: community
+import createInformational from "./create/community/informational.json";
+import createCommunityName from "./create/community/communityName.json";
+import createCommunityStructure from "./create/community/communityStructure.json";
+import createCommunityContext from "./create/community/communityContext.json";
+import createCommunitySize from "./create/community/communitySize.json";
+import createCommunityUpload from "./create/community/communityUpload.json";
+import createCommunitySave from "./create/community/communitySave.json";
+import createReview from "./create/community/review.json";
+
+// create – stage 2: customRule
+import createCoreValues from "./create/customRule/coreValues.json";
+import createCommunication from "./create/customRule/communication.json";
+import createMembership from "./create/customRule/membership.json";
+import createDecisionApproaches from "./create/customRule/decisionApproaches.json";
+import createConflictManagement from "./create/customRule/conflictManagement.json";
+
+// create – stage 3: reviewAndComplete
+import createConfirmStakeholders from "./create/reviewAndComplete/confirmStakeholders.json";
+import createFinalReview from "./create/reviewAndComplete/finalReview.json";
+import createCompleted from "./create/reviewAndComplete/completed.json";
+import createPublish from "./create/reviewAndComplete/publish.json";
+
+// create – cross-cutting (chrome + layout-shell strings)
 import createFooter from "./create/footer.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
-import createPublish from "./create/publish.json";
 import createTemplateReview from "./create/templateReview.json";
 
 export default {
@@ -62,26 +70,32 @@ export default {
     profile,
   },
   create: {
-    communication,
-    membership: createMembership,
-    conflictManagement: createConflictManagement,
-    informational: createInformational,
-    communityName: createCommunityName,
-    communitySize: createCommunitySize,
-    communityContext: createCommunityContext,
-    communityStructure: createCommunityStructure,
-    communityUpload: createCommunityUpload,
-    communitySave: createCommunitySave,
-    review: createReview,
-    coreValues: createCoreValues,
-    confirmStakeholders: createConfirmStakeholders,
-    finalReview: createFinalReview,
-    completed: createCompleted,
-    rightRail: createRightRail,
+    community: {
+      informational: createInformational,
+      communityName: createCommunityName,
+      communityStructure: createCommunityStructure,
+      communityContext: createCommunityContext,
+      communitySize: createCommunitySize,
+      communityUpload: createCommunityUpload,
+      communitySave: createCommunitySave,
+      review: createReview,
+    },
+    customRule: {
+      coreValues: createCoreValues,
+      communication: createCommunication,
+      membership: createMembership,
+      decisionApproaches: createDecisionApproaches,
+      conflictManagement: createConflictManagement,
+    },
+    reviewAndComplete: {
+      confirmStakeholders: createConfirmStakeholders,
+      finalReview: createFinalReview,
+      completed: createCompleted,
+      publish: createPublish,
+    },
     footer: createFooter,
     topNav: createTopNav,
     draftHydration: createDraftHydration,
-    publish: createPublish,
     templateReview: createTemplateReview,
   },
   navigation,

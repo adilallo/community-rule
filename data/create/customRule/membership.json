@@ -1,0 +1,553 @@
+{
+  "application-review": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": true,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "collective-interviews": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": false
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "consensus-or-vote-based-approval": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": false
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": false,
+      "established": false,
+      "enterprise": false
+    }
+  },
+  "contribution-based": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": false
+    }
+  },
+  "hybrid-approval-process": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "identity-verification": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": true,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "invitation-only": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": false
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": false,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": false
+    }
+  },
+  "lottery-sortition": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": false
+    }
+  },
+  "membership-agreement-or-pledge": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "mentorship": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": true,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "open-access": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": false
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": false,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": false,
+      "enterprise": false
+    }
+  },
+  "orientation-required": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "pay-to-join": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": false,
+      "forProfit": false,
+      "nonprofit": false,
+      "openSource": false,
+      "mutualAid": false,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": false,
+      "enterprise": false
+    }
+  },
+  "peer-sponsorship": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": true,
+      "enterprise": false
+    }
+  },
+  "referral-system-with-screening": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": true,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "skill-based-contribution": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": false,
+      "forProfit": false,
+      "nonprofit": false,
+      "openSource": true,
+      "mutualAid": false,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": true,
+      "growthStage": true,
+      "established": false,
+      "enterprise": false
+    }
+  },
+  "skill-based-evaluation": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": true,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": true,
+      "nonprofit": true,
+      "openSource": false,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "trial-period-provisional-membership": {
+    "size": {
+      "oneMember": true,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  },
+  "weighted-or-tiered-membership": {
+    "size": {
+      "oneMember": false,
+      "twoToFive": false,
+      "sixToTwelve": true,
+      "thirteenToOneHundred": true,
+      "oneHundredToOneHundredK": true
+    },
+    "orgType": {
+      "dao": true,
+      "forProfit": false,
+      "nonprofit": true,
+      "openSource": true,
+      "mutualAid": true,
+      "workersCoop": true
+    },
+    "scale": {
+      "global": true,
+      "national": true,
+      "regional": true,
+      "local": true
+    },
+    "maturity": {
+      "earlyStage": false,
+      "growthStage": false,
+      "established": true,
+      "enterprise": true
+    }
+  }
+}

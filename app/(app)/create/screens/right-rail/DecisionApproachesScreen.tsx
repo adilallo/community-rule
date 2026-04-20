@@ -9,8 +9,9 @@
  *
  * Card click opens the Figma "Add Approach" create modal (node `20870-72155`) with five controls:
  * Core Principle, Applicable Scope, Step-by-Step Instructions, Consensus Level, and Objections &
- * Deadlocks. Section defaults are sourced from `messages/en/create/rightRail.json` and will be
- * replaced with DB-driven content; labels are hard-coded per the Figma design.
+ * Deadlocks. Section defaults are sourced from `messages/en/create/customRule/decisionApproaches.json` (read
+ * via `m.create.customRule.decisionApproaches`) and will be replaced with DB-driven content; labels are
+ * hard-coded per the Figma design.
  */
 
 import { useState, useCallback, useMemo } from "react";
@@ -24,6 +25,11 @@ import type { CardStackItem } from "../../../../components/utility/CardStack/Car
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import {
+  deriveCompactCards,
+  rankMethodsByScore,
+  useFacetRecommendations,
+} from "../../hooks/useFacetRecommendations";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import ModalTextAreaField from "../../components/ModalTextAreaField";
 import ApplicableScopeField from "../../components/ApplicableScopeField";
@@ -49,12 +55,9 @@ function AddDecisionApproachModalContent({
 }) {
   const { markCreateFlowInteraction } = useCreateFlow();
   const m = useMessages();
-  const rr = m.create.rightRail;
-  const modal =
-    approachCardId in rr.modals
-      ? rr.modals[approachCardId as keyof typeof rr.modals]
-      : null;
-  const modalSections = modal?.sections;
+  const da = m.create.customRule.decisionApproaches;
+  const method = da.methods.find((entry) => entry.id === approachCardId);
+  const modalSections = method?.sections;
   const defaults: RightRailModalSections = {
     corePrinciple: modalSections?.corePrinciple ?? "",
     applicableScope: modalSections?.applicableScope ?? [],
@@ -87,13 +90,13 @@ function AddDecisionApproachModalContent({
   return (
     <div className="flex flex-col gap-6">
       <ModalTextAreaField
-        label={rr.sectionHeadings.corePrinciple}
+        label={da.sectionHeadings.corePrinciple}
         value={sections.corePrinciple}
         onChange={(v) => patch("corePrinciple", v)}
       />
       <ApplicableScopeField
-        label={rr.sectionHeadings.applicableScope}
-        addLabel={rr.scopeAddButtonLabel}
+        label={da.sectionHeadings.applicableScope}
+        addLabel={da.scopeAddButtonLabel}
         scopes={sections.applicableScope}
         selectedScopes={sections.selectedApplicableScope}
         onToggleScope={(scope) =>
@@ -109,12 +112,12 @@ function AddDecisionApproachModalContent({
         }
       />
       <ModalTextAreaField
-        label={rr.sectionHeadings.stepByStepInstructions}
+        label={da.sectionHeadings.stepByStepInstructions}
         value={sections.stepByStepInstructions}
         onChange={(v) => patch("stepByStepInstructions", v)}
       />
       <IncrementerBlock
-        label={rr.sectionHeadings.consensusLevel}
+        label={da.sectionHeadings.consensusLevel}
         value={sections.consensusLevel}
         min={CONSENSUS_LEVEL_MIN}
         max={CONSENSUS_LEVEL_MAX}
@@ -125,7 +128,7 @@ function AddDecisionApproachModalContent({
         incrementAriaLabel="Increase consensus level"
       />
       <ModalTextAreaField
-        label={rr.sectionHeadings.objectionsDeadlocks}
+        label={da.sectionHeadings.objectionsDeadlocks}
         value={sections.objectionsDeadlocks}
         onChange={(v) => patch("objectionsDeadlocks", v)}
       />
@@ -135,7 +138,7 @@ function AddDecisionApproachModalContent({
 
 export function DecisionApproachesScreen() {
   const m = useMessages();
-  const rr = m.create.rightRail;
+  const da = m.create.customRule.decisionApproaches;
   const mdUp = useCreateFlowMdUp();
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [messageBoxCheckedIds, setMessageBoxCheckedIds] = useState<string[]>(
@@ -156,41 +159,53 @@ export function DecisionApproachesScreen() {
 
   const messageBoxItems: InfoMessageBoxItem[] = useMemo(
     () =>
-      rr.messageBox.items.map((item) => ({
+      da.messageBox.items.map((item) => ({
         id: item.id,
         label: item.label,
       })),
-    [rr.messageBox.items],
+    [da.messageBox.items],
+  );
+
+  const { scoresBySlug, hasAnyFacets } =
+    useFacetRecommendations("decisionApproaches");
+  const rankedMethods = useMemo(
+    () => rankMethodsByScore(da.methods, scoresBySlug),
+    [da.methods, scoresBySlug],
+  );
+
+  const { compactCardIds, recommendedIds } = useMemo(
+    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
+    [rankedMethods, scoresBySlug, hasAnyFacets],
   );
 
   const sampleCards: CardStackItem[] = useMemo(
     () =>
-      rr.cards.map((c) => ({
-        id: c.id,
-        label: c.label,
-        supportText: c.supportText,
-        recommended: c.recommended,
+      rankedMethods.map((entry) => ({
+        id: entry.id,
+        label: entry.label,
+        supportText: entry.supportText,
+        recommended: recommendedIds.has(entry.id),
       })),
-    [rr.cards],
+    [rankedMethods, recommendedIds],
   );
 
-  const cardById = useMemo(
-    () => new Map(rr.cards.map((c) => [c.id, c])),
-    [rr.cards],
+  const methodById = useMemo(
+    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
+    [rankedMethods],
   );
 
   const sidebarDescription = (
     <>
-      {rr.sidebar.descriptionBefore}
+      {da.sidebar.descriptionBefore}
       <InlineTextButton
         onClick={() => {
           markCreateFlowInteraction();
           setExpanded(true);
         }}
       >
-        {rr.sidebar.descriptionLinkLabel}
+        {da.sidebar.descriptionLinkLabel}
       </InlineTextButton>
-      {rr.sidebar.descriptionAfter}
+      {da.sidebar.descriptionAfter}
     </>
   );
 
@@ -239,26 +254,17 @@ export function DecisionApproachesScreen() {
   const modalConfig = (() => {
     if (!pendingCardId) {
       return {
-        title: rr.confirmModal.title,
-        description: rr.confirmModal.description,
-        nextButtonText: rr.confirmModal.nextButtonText,
+        title: da.confirmModal.title,
+        description: da.confirmModal.description,
+        nextButtonText: da.confirmModal.nextButtonText,
       };
     }
 
-    if (pendingCardId in rr.modals) {
-      const modal = rr.modals[pendingCardId as keyof typeof rr.modals];
-      return {
-        title: modal.title,
-        description: modal.description,
-        nextButtonText: rr.addApproach.nextButtonText,
-      };
-    }
-
-    const card = cardById.get(pendingCardId);
+    const method = methodById.get(pendingCardId);
     return {
-      title: card?.label ?? rr.confirmModal.title,
-      description: card?.supportText ?? rr.confirmModal.description,
-      nextButtonText: rr.addApproach.nextButtonText,
+      title: method?.label ?? da.confirmModal.title,
+      description: method?.supportText ?? da.confirmModal.description,
+      nextButtonText: da.addApproach.nextButtonText,
     };
   })();
 
@@ -268,9 +274,9 @@ export function DecisionApproachesScreen() {
       lgVerticalAlign="start"
       header={
         <DecisionMakingSidebar
-          title={rr.sidebar.title}
+          title={da.sidebar.title}
           description={sidebarDescription}
-          messageBoxTitle={rr.messageBox.title}
+          messageBoxTitle={da.messageBox.title}
           messageBoxItems={messageBoxItems}
           messageBoxCheckedIds={messageBoxCheckedIds}
           onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
@@ -287,12 +293,13 @@ export function DecisionApproachesScreen() {
           expanded={expanded}
           onToggleExpand={handleToggleExpand}
           hasMore={true}
-          toggleLabel={rr.cardStack.toggleSeeAll}
-          showLessLabel={rr.cardStack.toggleShowLess}
+          toggleLabel={da.cardStack.toggleSeeAll}
+          showLessLabel={da.cardStack.toggleShowLess}
           title=""
           description=""
           layout="singleStack"
           compactRecommendedLimit={5}
+          compactCardIds={compactCardIds}
           className="w-full"
           headerLockupSize={mdUp ? "L" : "M"}
         />

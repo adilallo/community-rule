@@ -1,4 +1,5 @@
 import { PrismaClient, type Prisma } from "@prisma/client";
+import { seedMethodFacets } from "./seed/methodFacets";
 
 /**
  * Curated rule templates for GET /api/templates.
@@ -387,6 +388,14 @@ async function main() {
       },
     });
   }
+
+  const facetSeed = await seedMethodFacets(prisma);
+  // eslint-disable-next-line no-console -- seed CLI feedback
+  console.log(
+    `Seeded MethodFacet rows: ${Object.entries(facetSeed.rowsBySection)
+      .map(([section, count]) => `${section}=${count}`)
+      .join(", ")}`,
+  );
 }
 
 main()

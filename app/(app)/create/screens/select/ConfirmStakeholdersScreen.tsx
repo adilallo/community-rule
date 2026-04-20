@@ -12,7 +12,7 @@ import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowL
 
 export function ConfirmStakeholdersScreen() {
   const { markCreateFlowInteraction } = useCreateFlow();
-  const t = useTranslation("create.confirmStakeholders");
+  const t = useTranslation("create.reviewAndComplete.confirmStakeholders");
   const [toastDismissed, setToastDismissed] = useState(false);
   const [stakeholderOptions, setStakeholderOptions] = useState<ChipOption[]>(
     [],

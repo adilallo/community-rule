@@ -7,7 +7,7 @@
  * Card click opens the Figma "Add Approach" create modal (node `20874-172292`) with four
  * controls: Core Principle, Applicable Scope (capsules), Process Protocol, and Restoration
  * & Fallbacks. Section defaults are sourced from
- * `messages/en/create/conflictManagement.json` and will be replaced with DB-driven
+ * `messages/en/create/customRule/conflictManagement.json` and will be replaced with DB-driven
  * content; labels are hard-coded per the Figma design.
  */
 
@@ -15,6 +15,11 @@ import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import {
+  deriveCompactCards,
+  rankMethodsByScore,
+  useFacetRecommendations,
+} from "../../hooks/useFacetRecommendations";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../../components/utility/CardStack";
 import Create from "../../../../components/modals/Create";
@@ -26,17 +31,6 @@ import {
 } from "../../components/createFlowLayoutTokens";
 import ModalTextAreaField from "../../components/ModalTextAreaField";
 import ApplicableScopeField from "../../components/ApplicableScopeField";
-
-const CONFLICT_CARD_ORDER = [
-  "peer-mediation",
-  "conflict-resolution-council",
-  "facilitated-negotiation",
-  "ad-hoc-arbitration",
-  "conflict-workshops",
-  "6",
-  "7",
-  "8",
-] as const;
 
 type ConflictModalSections = {
   corePrinciple: string;
@@ -53,12 +47,9 @@ function AddConflictApproachModalContent({
 }) {
   const { markCreateFlowInteraction } = useCreateFlow();
   const m = useMessages();
-  const cm = m.create.conflictManagement;
-  const modal =
-    approachCardId in cm.modals
-      ? cm.modals[approachCardId as keyof typeof cm.modals]
-      : null;
-  const modalSections = modal?.sections;
+  const cm = m.create.customRule.conflictManagement;
+  const method = cm.methods.find((entry) => entry.id === approachCardId);
+  const modalSections = method?.sections;
   const defaults: ConflictModalSections = {
     corePrinciple: modalSections?.corePrinciple ?? "",
     applicableScope: modalSections?.applicableScope ?? [],
@@ -126,7 +117,7 @@ function AddConflictApproachModalContent({
 
 export function ConflictManagementScreen() {
   const m = useMessages();
-  const cm = m.create.conflictManagement;
+  const cm = m.create.customRule.conflictManagement;
   const mdUp = useCreateFlowMdUp();
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [expanded, setExpanded] = useState(false);
@@ -142,18 +133,32 @@ export function ConflictManagementScreen() {
     [updateState],
   );
 
+  const { scoresBySlug, hasAnyFacets } =
+    useFacetRecommendations("conflictManagement");
+  const rankedMethods = useMemo(
+    () => rankMethodsByScore(cm.methods, scoresBySlug),
+    [cm.methods, scoresBySlug],
+  );
+
+  const { compactCardIds, recommendedIds } = useMemo(
+    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
+    [rankedMethods, scoresBySlug, hasAnyFacets],
+  );
+
   const sampleCards = useMemo(
     () =>
-      CONFLICT_CARD_ORDER.map((id) => {
-        const row = cm.cards[id as keyof typeof cm.cards];
-        return {
-          id,
-          label: row.label,
-          supportText: row.supportText,
-          recommended: true,
-        };
-      }),
-    [cm],
+      rankedMethods.map((entry) => ({
+        id: entry.id,
+        label: entry.label,
+        supportText: entry.supportText,
+        recommended: recommendedIds.has(entry.id),
+      })),
+    [rankedMethods, recommendedIds],
+  );
+
+  const methodById = useMemo(
+    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
+    [rankedMethods],
   );
 
   const title = expanded ? cm.page.expandedTitle : cm.page.compactTitle;
@@ -187,25 +192,10 @@ export function ConflictManagementScreen() {
       };
     }
 
-    if (pendingCardId in cm.modals) {
-      const modal = cm.modals[pendingCardId as keyof typeof cm.modals];
-      return {
-        title: modal.title,
-        description: modal.description,
-        nextButtonText: cm.addApproach.nextButtonText,
-        showBackButton: false as const,
-        currentStep: undefined,
-        totalSteps: undefined,
-      };
-    }
-
-    const cardRow =
-      pendingCardId in cm.cards
-        ? cm.cards[pendingCardId as keyof typeof cm.cards]
-        : null;
+    const method = methodById.get(pendingCardId);
     return {
-      title: cardRow?.label ?? cm.confirmModal.title,
-      description: cardRow?.supportText ?? cm.confirmModal.description,
+      title: method?.label ?? cm.confirmModal.title,
+      description: method?.supportText ?? cm.confirmModal.description,
       nextButtonText: cm.addApproach.nextButtonText,
       showBackButton: false as const,
       currentStep: undefined,
@@ -266,6 +256,7 @@ export function ConflictManagementScreen() {
             hasMore={true}
             toggleLabel={cm.page.seeAllLink}
             compactRecommendedLimit={5}
+            compactCardIds={compactCardIds}
             compactDesktopLayout="pyramidFive"
             headerLockupSize={mdUp ? "L" : "M"}
           />

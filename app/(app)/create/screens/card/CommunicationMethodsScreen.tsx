@@ -13,6 +13,11 @@ import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import {
+  deriveCompactCards,
+  rankMethodsByScore,
+  useFacetRecommendations,
+} from "../../hooks/useFacetRecommendations";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../../components/utility/CardStack";
 import Create from "../../../../components/modals/Create";
@@ -24,26 +29,12 @@ import {
 } from "../../components/createFlowLayoutTokens";
 import ModalTextAreaField from "../../components/ModalTextAreaField";
 
-const IN_PERSON_CARD_ID = "in-person-meetings";
-const SIGNAL_CARD_ID = "signal";
-const VIDEO_MEETINGS_CARD_ID = "video-meetings";
-
 const SECTION_FIELDS = [
   "corePrinciple",
   "logisticsAdmin",
   "codeOfConduct",
 ] as const;
 type SectionField = (typeof SECTION_FIELDS)[number];
-
-const COMMUNICATION_CARD_ORDER = [
-  IN_PERSON_CARD_ID,
-  SIGNAL_CARD_ID,
-  VIDEO_MEETINGS_CARD_ID,
-  "4",
-  "5",
-  "6",
-  "7",
-] as const;
 
 function AddPlatformModalContent({
   platformCardId,
@@ -52,15 +43,13 @@ function AddPlatformModalContent({
 }) {
   const { markCreateFlowInteraction } = useCreateFlow();
   const m = useMessages();
-  const comm = m.create.communication;
-  const modal =
-    platformCardId in comm.modals
-      ? comm.modals[platformCardId as keyof typeof comm.modals]
-      : null;
-  const defaults = modal?.sections ?? {
-    corePrinciple: "",
-    logisticsAdmin: "",
-    codeOfConduct: "",
+  const comm = m.create.customRule.communication;
+  const method = comm.methods.find((entry) => entry.id === platformCardId);
+  const sections = method?.sections;
+  const defaults: Record<SectionField, string> = {
+    corePrinciple: sections?.corePrinciple ?? "",
+    logisticsAdmin: sections?.logisticsAdmin ?? "",
+    codeOfConduct: sections?.codeOfConduct ?? "",
   };
 
   const [sectionValues, setSectionValues] = useState<
@@ -96,7 +85,7 @@ function AddPlatformModalContent({
 
 export function CommunicationMethodsScreen() {
   const m = useMessages();
-  const comm = m.create.communication;
+  const comm = m.create.customRule.communication;
   const mdUp = useCreateFlowMdUp();
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const [expanded, setExpanded] = useState(false);
@@ -112,18 +101,32 @@ export function CommunicationMethodsScreen() {
     [updateState],
   );
 
+  const { scoresBySlug, hasAnyFacets } =
+    useFacetRecommendations("communication");
+  const rankedMethods = useMemo(
+    () => rankMethodsByScore(comm.methods, scoresBySlug),
+    [comm.methods, scoresBySlug],
+  );
+
+  const { compactCardIds, recommendedIds } = useMemo(
+    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
+    [rankedMethods, scoresBySlug, hasAnyFacets],
+  );
+
   const sampleCards = useMemo(
     () =>
-      COMMUNICATION_CARD_ORDER.map((id) => {
-        const row = comm.cards[id as keyof typeof comm.cards];
-        return {
-          id,
-          label: row.label,
-          supportText: row.supportText,
-          recommended: true,
-        };
-      }),
-    [comm],
+      rankedMethods.map((entry) => ({
+        id: entry.id,
+        label: entry.label,
+        supportText: entry.supportText,
+        recommended: recommendedIds.has(entry.id),
+      })),
+    [rankedMethods, recommendedIds],
+  );
+
+  const methodById = useMemo(
+    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
+    [rankedMethods],
   );
 
   const title = expanded ? comm.page.expandedTitle : comm.page.compactTitle;
@@ -157,25 +160,10 @@ export function CommunicationMethodsScreen() {
       };
     }
 
-    if (pendingCardId in comm.modals) {
-      const modal = comm.modals[pendingCardId as keyof typeof comm.modals];
-      return {
-        title: modal.title,
-        description: modal.description,
-        nextButtonText: comm.addPlatform.nextButtonText,
-        showBackButton: false as const,
-        currentStep: undefined,
-        totalSteps: undefined,
-      };
-    }
-
-    const cardRow =
-      pendingCardId in comm.cards
-        ? comm.cards[pendingCardId as keyof typeof comm.cards]
-        : null;
+    const method = methodById.get(pendingCardId);
     return {
-      title: cardRow?.label ?? comm.confirmModal.title,
-      description: cardRow?.supportText ?? comm.confirmModal.description,
+      title: method?.label ?? comm.confirmModal.title,
+      description: method?.supportText ?? comm.confirmModal.description,
       nextButtonText: comm.addPlatform.nextButtonText,
       showBackButton: false as const,
       currentStep: undefined,
@@ -235,7 +223,8 @@ export function CommunicationMethodsScreen() {
             }}
             hasMore={true}
             toggleLabel={comm.page.seeAllLink}
-            compactRecommendedLimit={3}
+            compactRecommendedLimit={5}
+            compactCardIds={compactCardIds}
             compactDesktopLayout="flexWrap"
             headerLockupSize={mdUp ? "L" : "M"}
           />

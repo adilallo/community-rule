@@ -14,7 +14,7 @@ import {
 /** Create Community review — Figma `19706:12135` (`/create/review`; two columns from `lg:`; column caps in `createFlowLayoutTokens`). */
 export function CommunityReviewScreen() {
   const lgUp = useCreateFlowLgUp();
-  const t = useTranslation("create.review");
+  const t = useTranslation("create.community.review");
   const { state } = useCreateFlow();
 
   const cardTitle =

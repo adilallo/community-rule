@@ -7,7 +7,7 @@ describe("CreateFlowTextFieldScreen (community name)", () => {
   it("renders main heading", () => {
     render(
       <CreateFlowTextFieldScreen
-        messageNamespace="create.communityName"
+        messageNamespace="create.community.communityName"
         stateField="title"
         maxLength={48}
       />,
@@ -22,7 +22,7 @@ describe("CreateFlowTextFieldScreen (community name)", () => {
   it("renders description and text field", () => {
     render(
       <CreateFlowTextFieldScreen
-        messageNamespace="create.communityName"
+        messageNamespace="create.community.communityName"
         stateField="title"
         maxLength={48}
       />,

@@ -10,7 +10,7 @@ import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowL
 /** Create Community — Figma Flow — Upload `20094:41524`. */
 export function CommunityUploadScreen() {
   const m = useMessages();
-  const u = m.create.communityUpload;
+  const u = m.create.community.communityUpload;
   const { markCreateFlowInteraction } = useCreateFlow();
 
   const handleUploadClick = () => {

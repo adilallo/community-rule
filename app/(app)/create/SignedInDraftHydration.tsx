@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import type { CreateFlowState } from "./types";
 import { createFlowStateHasKeys } from "../../../lib/create/draftHydrationUtils";
 import {
-  clearAnonymousCreateFlowStorage,
   hasTransferPendingFlag,
   readAnonymousCreateFlowState,
 } from "./utils/anonymousDraftStorage";
@@ -16,11 +15,18 @@ import messages from "../../../messages/en/index";
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
 /**
- * When sync is on and the user is signed in, fetch `GET /api/drafts/me` once and merge into context.
- * Skips when `?syncDraft=1` or transfer-pending — {@link PostLoginDraftTransfer} owns that path.
+ * When sync is on and the user is signed in, restore the server-side draft only
+ * when there is no in-flight localStorage draft to defer to. localStorage is
+ * the on-every-keystroke buffer (CreateFlowProvider mirrors state there for
+ * everyone), so a refresh mid-flow already has the freshest data; pulling the
+ * server draft on top would clobber unsaved keystrokes with a stale snapshot.
  *
- * **Conflict:** If both server draft and `create-flow-anonymous` are non-empty, `window.confirm`
- * chooses account draft (OK) vs browser copy (Cancel); browser storage is cleared after resolution.
+ * Server draft becomes authoritative only when localStorage is empty — i.e.
+ * fresh device, after explicit Save & Exit (which clears localStorage), or
+ * after Exit-from-completed clears local state.
+ *
+ * Skips when `?syncDraft=1` or transfer-pending — {@link PostLoginDraftTransfer}
+ * owns that path.
  */
 export function SignedInDraftHydration({
   sessionUser,
@@ -54,6 +60,14 @@ export function SignedInDraftHydration({
       return;
     }
 
+    // Local draft wins over server: no fetch, no replaceState. The provider
+    // already hydrated from localStorage at mount, so the user sees their
+    // unsaved keystrokes immediately.
+    if (createFlowStateHasKeys(readAnonymousCreateFlowState())) {
+      finishedUserIdRef.current = userId;
+      return;
+    }
+
     let cancelled = false;
     setLoadingHydration(true);
 
@@ -62,43 +76,14 @@ export function SignedInDraftHydration({
         const serverDraft = await fetchDraftFromServer();
         if (cancelled) return;
 
-        const localDraft = readAnonymousCreateFlowState();
-        const hasServer =
-          serverDraft != null && createFlowStateHasKeys(serverDraft);
-        const hasLocal = createFlowStateHasKeys(localDraft);
-
         if (touchedRef.current) {
           finishedUserIdRef.current = userId;
           return;
         }
 
-        if (hasServer && hasLocal) {
-          const useAccount =
-            typeof window !== "undefined" &&
-            window.confirm(messages.create.draftHydration.conflictPrompt);
-          if (cancelled) return;
-          if (useAccount) {
-            replaceState(serverDraft as CreateFlowState);
-          } else {
-            replaceState(localDraft);
-          }
-          clearAnonymousCreateFlowStorage();
-          finishedUserIdRef.current = userId;
-          return;
-        }
-
-        if (hasServer) {
+        if (serverDraft != null && createFlowStateHasKeys(serverDraft)) {
           replaceState(serverDraft as CreateFlowState);
-          clearAnonymousCreateFlowStorage();
-          finishedUserIdRef.current = userId;
-          return;
         }
-
-        if (hasLocal) {
-          replaceState(localDraft);
-          clearAnonymousCreateFlowStorage();
-        }
-
         finishedUserIdRef.current = userId;
       } finally {
         if (!cancelled) setLoadingHydration(false);
