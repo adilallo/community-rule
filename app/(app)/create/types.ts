@@ -156,6 +156,23 @@ export interface CreateFlowState {
     slug: string;
     mode: "customize" | "useWithoutChanges";
   };
+  /**
+   * Set when the user chooses **Use without changes** on a template-review
+   * page. The custom-rule segment (`core-values` … `conflict-management`) is
+   * skipped, so linear `getPreviousStep("confirm-stakeholders")` would wrongly
+   * point at `conflict-management`. Navigation uses this slug so Back from
+   * `confirm-stakeholders` returns to `/create/review-template/{slug}`.
+   * Cleared when the user picks **Customize** from template review (normal
+   * linear back applies) or when the flow state is cleared.
+   */
+  templateReviewBackSlug?: string;
+  /**
+   * True when the user opened `/create/review-template/{slug}` from the create
+   * wizard (`/templates?fromFlow=1` after `/create/review`). Persisted so Back
+   * from template review targets `/create/review` and so returning from
+   * `confirm-stakeholders` can re-apply `?fromFlow=1` on the template URL.
+   */
+  templateReviewEntryFromCreateFlow?: boolean;
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

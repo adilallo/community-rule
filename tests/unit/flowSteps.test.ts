@@ -1,10 +1,12 @@
 import { describe, it, expect } from "vitest";
 import {
   FLOW_STEP_ORDER,
+  buildTemplateReviewHref,
   getNextStep,
   getPreviousStep,
   isValidStep,
   getStepIndex,
+  resolveCreateFlowBackTarget,
 } from "../../app/(app)/create/utils/flowSteps";
 
 describe("flowSteps", () => {
@@ -71,5 +73,34 @@ describe("flowSteps", () => {
     expect(getNextStep("community-size", opts)).toBe("community-upload");
     expect(getNextStep("review", opts)).toBe("core-values");
     expect(getPreviousStep("communication-methods", opts)).toBe("core-values");
+  });
+
+  it("resolveCreateFlowBackTarget returns template review when use-without slug is set on confirm-stakeholders", () => {
+    expect(
+      resolveCreateFlowBackTarget(
+        "confirm-stakeholders",
+        undefined,
+        "mutual-aid-mondays",
+      ),
+    ).toEqual({ kind: "templateReview", slug: "mutual-aid-mondays" });
+  });
+
+  it("resolveCreateFlowBackTarget falls back to linear previous when slug is absent", () => {
+    expect(
+      resolveCreateFlowBackTarget("confirm-stakeholders", undefined, undefined),
+    ).toEqual({ kind: "step", step: "conflict-management" });
+  });
+
+  it("resolveCreateFlowBackTarget ignores whitespace-only slug", () => {
+    expect(
+      resolveCreateFlowBackTarget("confirm-stakeholders", undefined, "   "),
+    ).toEqual({ kind: "step", step: "conflict-management" });
+  });
+
+  it("buildTemplateReviewHref encodes slug and optional fromFlow query", () => {
+    expect(buildTemplateReviewHref("a/b")).toBe("/create/review-template/a%2Fb");
+    expect(buildTemplateReviewHref("mutual-aid", { fromCreateWizard: true })).toBe(
+      "/create/review-template/mutual-aid?fromFlow=1",
+    );
   });
 });

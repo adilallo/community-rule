@@ -80,6 +80,32 @@ export function getPreviousStep(
 }
 
 /**
+ * Where the create-flow footer Back action should go. Usually the previous
+ * step in {@link FLOW_STEP_ORDER}; when the user reached `confirm-stakeholders`
+ * via template **Use without changes**, Back returns to template review instead
+ * of `conflict-management` (that segment was skipped).
+ */
+export type CreateFlowBackTarget =
+  | { kind: "step"; step: CreateFlowStep }
+  | { kind: "templateReview"; slug: string };
+
+export function resolveCreateFlowBackTarget(
+  currentStep: CreateFlowStep | null | undefined,
+  options: CreateFlowNavigationOptions | undefined,
+  templateReviewBackSlug: string | undefined | null,
+): CreateFlowBackTarget | null {
+  const slug =
+    typeof templateReviewBackSlug === "string"
+      ? templateReviewBackSlug.trim()
+      : "";
+  if (currentStep === "confirm-stakeholders" && slug.length > 0) {
+    return { kind: "templateReview", slug };
+  }
+  const prev = getPreviousStep(currentStep, options);
+  return prev != null ? { kind: "step", step: prev } : null;
+}
+
+/**
  * Returns the index of the step (0-based), or -1 if invalid
  */
 export function getStepIndex(step: CreateFlowStep | null | undefined): number {
@@ -117,4 +143,23 @@ export function parseCreateFlowScreenFromPathname(
   if (segment === "review-template") return null;
 
   return isValidStep(segment) ? segment : null;
+}
+
+/** Same query as `/templates?fromFlow=1` — template was picked after `/create/review`. */
+export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY = "fromFlow" as const;
+export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE = "1" as const;
+
+/**
+ * `/create/review-template/{slug}` with optional marker so chrome can send
+ * footer Back to `/create/review` instead of marketing home.
+ */
+export function buildTemplateReviewHref(
+  slug: string,
+  options?: { fromCreateWizard?: boolean },
+): string {
+  const path = `/create/review-template/${encodeURIComponent(slug)}`;
+  if (options?.fromCreateWizard) {
+    return `${path}?${TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY}=${TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE}`;
+  }
+  return path;
 }

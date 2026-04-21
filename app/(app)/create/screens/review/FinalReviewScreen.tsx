@@ -15,6 +15,7 @@ import {
   buildFinalReviewCategoryRowsDetailed,
   type FinalReviewCategoryRowDetailed,
 } from "../../../../../lib/create/buildFinalReviewCategories";
+import { applyFinalReviewChipEditPatch } from "../../../../../lib/create/applyFinalReviewChipEditPatch";
 import type { TemplateChipDetail } from "../../../../../lib/create/templateReviewMapping";
 import {
   FinalReviewChipEditModal,
@@ -93,53 +94,7 @@ export function FinalReviewScreen() {
   const handleSave = useCallback(
     (patch: FinalReviewChipEditPatch) => {
       markCreateFlowInteraction();
-      switch (patch.groupKey) {
-        case "coreValues": {
-          updateState({
-            coreValueDetailsByChipId: {
-              ...(state.coreValueDetailsByChipId ?? {}),
-              [patch.overrideKey]: patch.value,
-            },
-          });
-          return;
-        }
-        case "communication": {
-          updateState({
-            communicationMethodDetailsById: {
-              ...(state.communicationMethodDetailsById ?? {}),
-              [patch.overrideKey]: patch.value,
-            },
-          });
-          return;
-        }
-        case "membership": {
-          updateState({
-            membershipMethodDetailsById: {
-              ...(state.membershipMethodDetailsById ?? {}),
-              [patch.overrideKey]: patch.value,
-            },
-          });
-          return;
-        }
-        case "decisionApproaches": {
-          updateState({
-            decisionApproachDetailsById: {
-              ...(state.decisionApproachDetailsById ?? {}),
-              [patch.overrideKey]: patch.value,
-            },
-          });
-          return;
-        }
-        case "conflictManagement": {
-          updateState({
-            conflictManagementDetailsById: {
-              ...(state.conflictManagementDetailsById ?? {}),
-              [patch.overrideKey]: patch.value,
-            },
-          });
-          return;
-        }
-      }
+      updateState(applyFinalReviewChipEditPatch(state, patch));
     },
     [markCreateFlowInteraction, updateState, state],
   );

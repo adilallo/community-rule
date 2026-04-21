@@ -112,6 +112,20 @@ describe("createFlowStateSchema", () => {
     expect(r.success).toBe(true);
   });
 
+  it("accepts templateReviewBackSlug", () => {
+    const r = createFlowStateSchema.safeParse({
+      templateReviewBackSlug: "mutual-aid-mondays",
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("accepts templateReviewEntryFromCreateFlow", () => {
+    const r = createFlowStateSchema.safeParse({
+      templateReviewEntryFromCreateFlow: true,
+    });
+    expect(r.success).toBe(true);
+  });
+
   it("rejects core value detail strings that are too long", () => {
     const r = createFlowStateSchema.safeParse({
       coreValueDetailsByChipId: {

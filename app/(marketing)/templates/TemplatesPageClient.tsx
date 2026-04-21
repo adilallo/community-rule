@@ -6,6 +6,7 @@ import HeaderLockup from "../../components/type/HeaderLockup";
 import { GovernanceTemplateGrid } from "../../components/sections/GovernanceTemplateGrid";
 import type { TemplateGridCardEntry } from "../../../lib/templates/templateGridPresentation";
 import { clearCreateFlowPersistedDrafts } from "../../(app)/create/utils/clearCreateFlowPersistedDrafts";
+import { buildTemplateReviewHref } from "../../(app)/create/utils/flowSteps";
 import { useTranslation } from "../../contexts/MessagesContext";
 
 export interface TemplatesPageClientProps {
@@ -88,7 +89,9 @@ function TemplatesGrid({
           // the user's community stage survives the detour through here.
           clearCreateFlowPersistedDrafts();
         }
-        router.push(`/create/review-template/${encodeURIComponent(slug)}`);
+        router.push(
+          buildTemplateReviewHref(slug, { fromCreateWizard: fromFlow }),
+        );
       }}
     />
   );

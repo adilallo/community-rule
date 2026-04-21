@@ -113,10 +113,10 @@ describe("Templates page (/templates)", () => {
     ).toBe(
       JSON.stringify({ "1": { meaning: "stale", signals: "stale" } }),
     );
-    // No `?fromFlow=1` on the outbound review-template URL — the marker
-    // only disambiguates /templates' own click behavior.
+    // In-flow picks also pass `?fromFlow=1` on the template review URL so
+    // footer Back on `/create/review-template/…` returns to `/create/review`.
     expect(testRouter.push).toHaveBeenCalledWith(
-      "/create/review-template/consensus",
+      "/create/review-template/consensus?fromFlow=1",
     );
   });
 });

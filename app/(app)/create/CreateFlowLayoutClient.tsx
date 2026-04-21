@@ -11,6 +11,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
+import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
+import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
 import CreateFlowTopNav from "../../components/utility/CreateFlowTopNav";
 import { getNextStep, getStepIndex } from "./utils/flowSteps";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
@@ -20,11 +22,9 @@ import {
 } from "./utils/createFlowScreenRegistry";
 import CreateFlowFooter from "../../components/utility/CreateFlowFooter";
 import Button from "../../components/buttons/Button";
-import { buildPublishPayload } from "../../../lib/create/buildPublishPayload";
 import { isValidCreateFlowSaveEmail } from "../../../lib/create/isValidCreateFlowSaveEmail";
 import {
   fetchAuthSession,
-  publishRule,
   requestMagicLink,
 } from "../../../lib/create/api";
 import { safeInternalPath } from "../../../lib/safeInternalPath";
@@ -33,12 +33,6 @@ import {
   setTransferPendingFlag,
 } from "./utils/anonymousDraftStorage";
 import { deleteServerDraft } from "../../../lib/create/api";
-import { writeLastPublishedRule } from "../../../lib/create/lastPublishedRule";
-import {
-  buildCoreValuesPrefillFromTemplateBody,
-  buildTemplateCustomizePrefill,
-} from "../../../lib/create/applyTemplatePrefill";
-import { loadTemplateReviewBySlug } from "../../../lib/create/loadTemplateReviewBySlug";
 import messages from "../../../messages/en/index";
 import {
   CREATE_FLOW_FOOTER_BUTTON_CLASS,
@@ -48,6 +42,7 @@ import {
   CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP,
   type CustomRuleConfirmFooterStep,
 } from "./utils/customRuleConfirmFooterSteps";
+import { getDefaultFooterLabel } from "./utils/createFlowFooterLabels";
 import { useAuthModal } from "../../contexts/AuthModalContext";
 import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
@@ -86,12 +81,14 @@ function CreateFlowSessionShell({ children }: { children: ReactNode }) {
   return (
     <CreateFlowProvider enableLocalDraftMirroring={enableLocalDraftMirroring}>
       <CreateFlowDraftSaveBannerProvider>
-        <CreateFlowLayoutContent
-          sessionUser={sessionUser}
-          sessionResolved={sessionResolved}
-        >
-          {children}
-        </CreateFlowLayoutContent>
+        <Suspense fallback={null}>
+          <CreateFlowLayoutContent
+            sessionUser={sessionUser}
+            sessionResolved={sessionResolved}
+          >
+            {children}
+          </CreateFlowLayoutContent>
+        </Suspense>
       </CreateFlowDraftSaveBannerProvider>
     </CreateFlowProvider>
   );
@@ -120,6 +117,7 @@ function CreateFlowLayoutContent({
     previousStep,
     goToNextStep,
     goToPreviousStep,
+    templateReviewFooterBackToCreateReview,
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
@@ -127,14 +125,6 @@ function CreateFlowLayoutContent({
     useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
-  const [publishBannerMessage, setPublishBannerMessage] = useState<
-    string | null
-  >(null);
-  const [isPublishing, setIsPublishing] = useState(false);
-  const [templateReviewApplyError, setTemplateReviewApplyError] = useState<
-    string | null
-  >(null);
-  const [isApplyingTemplate, setIsApplyingTemplate] = useState(false);
   const [communitySaveMagicLinkSubmitting, setCommunitySaveMagicLinkSubmitting] =
     useState(false);
   const [communitySaveMagicLinkError, setCommunitySaveMagicLinkError] = useState<
@@ -143,211 +133,28 @@ function CreateFlowLayoutContent({
   const [communitySaveMagicLinkSuccess, setCommunitySaveMagicLinkSuccess] =
     useState(false);
 
-  const templateReviewMatch = pathname?.match(
-    /\/create\/review-template\/([^/?#]+)/,
-  );
-  const templateReviewSlug = templateReviewMatch?.[1]
-    ? decodeURIComponent(templateReviewMatch[1])
-    : null;
-  /** Match anywhere in path so locale/basePath variants still get template footer + layout. */
-  const isTemplateReviewRoute = Boolean(
-    pathname?.includes("/create/review-template/"),
-  );
+  const {
+    publishBannerMessage,
+    setPublishBannerMessage,
+    isPublishing,
+    finalize: handleFinalize,
+  } = useCreateFlowFinalize({ state, router, openLogin });
 
-  const handleFinalize = useCallback(async () => {
-    setPublishBannerMessage(null);
-    const payloadResult = buildPublishPayload(state);
-    if (payloadResult.ok === false) {
-      setPublishBannerMessage(
-        payloadResult.error === "missingCommunityName"
-          ? messages.create.reviewAndComplete.publish.missingCommunityName
-          : payloadResult.error,
-      );
-      return;
-    }
-    const { title, summary, document: ruleDocument } = payloadResult;
-    setIsPublishing(true);
-    const publishResult = await publishRule({
-      title,
-      summary,
-      document: ruleDocument,
-    });
-    setIsPublishing(false);
-    if (publishResult.ok === true) {
-      writeLastPublishedRule({
-        id: publishResult.id,
-        title,
-        summary: summary ?? null,
-        document: ruleDocument,
-      });
-      router.push("/create/completed");
-      return;
-    }
-    if (publishResult.status === 401) {
-      openLogin({
-        variant: "default",
-        nextPath: "/create/final-review?syncDraft=1",
-        backdropVariant: "blurredYellow",
-      });
-      return;
-    }
-    setPublishBannerMessage(
-      publishResult.error.trim() !== ""
-        ? publishResult.error
-        : messages.create.reviewAndComplete.publish.genericPublishFailed,
-    );
-  }, [state, router, openLogin]);
-
-  /**
-   * Customize flow from a template-review page. Applies the template's
-   * customize selections onto `CreateFlowState` so the custom-rule screens
-   * render with chips pre-highlighted, then routes to `core-values` once
-   * the community name is set — otherwise to `informational` with a
-   * `pendingTemplateAction` pin so `/create/review` later redirects past
-   * itself straight to `core-values` (see `CommunityReviewScreen`).
-   *
-   * Why title alone? Other community-stage fields (e.g.
-   * `communityStructureChipSnapshots`) are sticky once the user lands on
-   * those screens, so they can't reliably answer "has the user given us
-   * real input yet?". A non-empty community name is the minimum bar
-   * `buildPublishPayload` already enforces — we reuse that here.
-   *
-   * Direct entry (marketing home "Popular templates" or `/templates`
-   * landed on directly) wipes the anonymous draft at the *click site* via
-   * `clearCreateFlowPersistedDrafts` before navigating, so `state.title`
-   * is empty here and the no-community branch fires naturally. No
-   * URL-marker plumbing needed in this handler.
-   */
-  const handleCustomizeTemplate = useCallback(async () => {
-    if (!templateReviewSlug) return;
-    setTemplateReviewApplyError(null);
-    setIsApplyingTemplate(true);
-    const loaded = await loadTemplateReviewBySlug(templateReviewSlug);
-    setIsApplyingTemplate(false);
-    if (loaded.ok === false) {
-      setTemplateReviewApplyError(loaded.message);
-      return;
-    }
-    const prefill = buildTemplateCustomizePrefill(loaded.template.body);
-    const hasCommunityName =
-      typeof state.title === "string" && state.title.trim().length > 0;
-    // Prefill merges (shallow) with current state. When we have to bounce the
-    // user to the community stage first, pin a pendingTemplateAction so
-    // `/create/review` knows to skip past itself to `core-values` later.
-    updateState({
-      ...prefill,
-      ...(hasCommunityName
-        ? { pendingTemplateAction: undefined }
-        : {
-            pendingTemplateAction: {
-              slug: templateReviewSlug,
-              mode: "customize",
-            },
-          }),
-    });
-    router.push(
-      hasCommunityName ? "/create/core-values" : "/create/informational",
-    );
-  }, [router, state.title, templateReviewSlug, updateState]);
-
-  /**
-   * "Use without changes" from a template-review page. Drops users into the
-   * review-and-complete stage (`confirm-stakeholders` → `final-review`) so the
-   * publish flow — and its server-enforced sign-in gate (`publishRule` 401 →
-   * `openLogin`) — is reused. The template body becomes the rule document;
-   * the user's community name remains the rule title.
-   *
-   * Community-name branch: apply template body/summary immediately and jump
-   * to `confirm-stakeholders`.
-   *
-   * No-community-name branch: same template body/summary apply so state is
-   * ready, plus a `pendingTemplateAction` pin so `/create/review` later
-   * redirects past itself straight to `confirm-stakeholders` once community
-   * data is captured (see `CommunityReviewScreen`). Users aren't forced back
-   * through the template picker just to pick the same template again.
-   *
-   * Direct entry (marketing home "Popular templates" or `/templates`
-   * landed on directly) wipes the anonymous draft at the click site via
-   * `clearCreateFlowPersistedDrafts` before navigating, so `state.title`
-   * is empty and the no-community branch fires naturally.
-   */
-  const handleUseTemplateWithoutChanges = useCallback(async () => {
-    if (!templateReviewSlug) return;
-    setTemplateReviewApplyError(null);
-
-    setIsApplyingTemplate(true);
-    const loaded = await loadTemplateReviewBySlug(templateReviewSlug);
-    setIsApplyingTemplate(false);
-    if (loaded.ok === false) {
-      setTemplateReviewApplyError(loaded.message);
-      return;
-    }
-    const { template } = loaded;
-    const doc = template.body;
-    if (!doc || typeof doc !== "object" || Array.isArray(doc)) {
-      setTemplateReviewApplyError(messages.create.templateReview.errors.applyFailed);
-      return;
-    }
-    const sectionsRaw = (doc as { sections?: unknown }).sections;
-    const sections = Array.isArray(sectionsRaw)
-      ? (sectionsRaw as Record<string, unknown>[])
-      : [];
-    if (sections.length === 0) {
-      setTemplateReviewApplyError(messages.create.templateReview.errors.applyFailed);
-      return;
-    }
-
-    // Using the template verbatim: scrub any prior customize picks so they
-    // don't bleed into `document.coreValues` at publish time.
-    resetCustomRuleSelections();
-
-    // Seed the core-values snapshot from the Values section so the
-    // final-review chip modal can edit them (it keys edits by chip id).
-    // The Values entries themselves are then dropped from `sections` to
-    // avoid publishing `document.coreValues` and `document.sections.Values`
-    // for the same data — matches the "Customize" path's data shape.
-    const coreValuesPrefill = buildCoreValuesPrefillFromTemplateBody(doc);
-    const sectionsWithoutValues =
-      Object.keys(coreValuesPrefill).length > 0
-        ? sections.filter((s) => {
-            const name = (s as { categoryName?: unknown }).categoryName;
-            if (typeof name !== "string") return true;
-            const key = name.toLowerCase().replace(/[^a-z]+/g, "");
-            return key !== "values" && key !== "corevalues";
-          })
-        : sections;
-
-    const summaryRaw =
-      typeof template.description === "string"
-        ? template.description.trim()
-        : "";
-    const hasCommunityName =
-      typeof state.title === "string" && state.title.trim().length > 0;
-    updateState({
-      ...coreValuesPrefill,
-      sections: sectionsWithoutValues,
-      ...(summaryRaw.length > 0 ? { summary: summaryRaw } : {}),
-      ...(hasCommunityName
-        ? { pendingTemplateAction: undefined }
-        : {
-            pendingTemplateAction: {
-              slug: templateReviewSlug,
-              mode: "useWithoutChanges",
-            },
-          }),
-    });
-    router.push(
-      hasCommunityName
-        ? "/create/confirm-stakeholders"
-        : "/create/informational",
-    );
-  }, [
+  const {
+    isTemplateReviewRoute,
+    templateReviewSlug,
+    isApplyingTemplate,
+    templateReviewApplyError,
+    setTemplateReviewApplyError,
+    handleCustomize: handleCustomizeTemplate,
+    handleUseWithoutChanges: handleUseTemplateWithoutChanges,
+  } = useTemplateReviewActions({
+    pathname,
+    state,
+    updateState,
     resetCustomRuleSelections,
     router,
-    state.title,
-    templateReviewSlug,
-    updateState,
-  ]);
+  });
 
   const runAuthenticatedExit = useCreateFlowExit({
     state,
@@ -499,80 +306,90 @@ function CreateFlowLayoutContent({
       ? CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP.get(currentStep)
       : undefined;
 
-  const hasTopOverlays =
-    Boolean(draftSaveBannerMessage) ||
-    Boolean(publishBannerMessage) ||
-    Boolean(templateReviewApplyError) ||
-    Boolean(communitySaveMagicLinkError) ||
-    Boolean(communitySaveMagicLinkSuccess);
+  /**
+   * Top banner stack rendered above the main column when any of the
+   * shell-level statuses are active. Each entry maps to one `<Alert>`;
+   * we filter out empty messages so the wrapper only mounts when at
+   * least one banner is actually showing. Order here is the visual
+   * stacking order (top → bottom).
+   */
+  const topBanners: Array<{
+    key: string;
+    status: "danger" | "positive";
+    title: string;
+    description?: string;
+    onClose: () => void;
+  }> = [
+    draftSaveBannerMessage
+      ? {
+          key: "draftSave",
+          status: "danger" as const,
+          title: messages.create.topNav.draftSaveBannerTitle,
+          description: draftSaveBannerMessage,
+          onClose: () => setDraftSaveBannerMessage(null),
+        }
+      : null,
+    publishBannerMessage
+      ? {
+          key: "publish",
+          status: "danger" as const,
+          title:
+            messages.create.reviewAndComplete.publish.finalizeBannerTitle,
+          description: publishBannerMessage,
+          onClose: () => setPublishBannerMessage(null),
+        }
+      : null,
+    templateReviewApplyError
+      ? {
+          key: "templateApply",
+          status: "danger" as const,
+          title: messages.create.templateReview.errors.applyFailed,
+          description: templateReviewApplyError,
+          onClose: () => setTemplateReviewApplyError(null),
+        }
+      : null,
+    communitySaveMagicLinkError
+      ? {
+          key: "magicLinkError",
+          status: "danger" as const,
+          title: communitySaveMessages.magicLinkErrorTitle,
+          description: communitySaveMagicLinkError,
+          onClose: () => setCommunitySaveMagicLinkError(null),
+        }
+      : null,
+    communitySaveMagicLinkSuccess
+      ? {
+          key: "magicLinkSuccess",
+          status: "positive" as const,
+          title: communitySaveMessages.magicLinkSuccessTitle,
+          description: communitySaveMessages.magicLinkSuccessDescription,
+          onClose: () => setCommunitySaveMagicLinkSuccess(false),
+        }
+      : null,
+  ].filter((b): b is NonNullable<typeof b> => b !== null);
 
   return (
     <div className="relative flex h-screen min-h-0 flex-col overflow-hidden bg-black">
-      {hasTopOverlays ? (
+      {topBanners.length > 0 ? (
         <div
           className="pointer-events-none fixed left-0 right-0 top-0 z-[200] flex flex-col gap-2 px-[var(--spacing-measures-spacing-500,20px)] pt-[var(--spacing-measures-spacing-300,12px)] md:px-[var(--measures-spacing-1800,64px)]"
           aria-live="polite"
         >
-          {draftSaveBannerMessage ? (
-            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
+          {topBanners.map((b) => (
+            <div
+              key={b.key}
+              className="pointer-events-auto mx-auto w-full max-w-[960px]"
+            >
               <Alert
                 type="banner"
-                status="danger"
-                title={messages.create.topNav.draftSaveBannerTitle}
-                description={draftSaveBannerMessage}
-                onClose={() => setDraftSaveBannerMessage(null)}
+                status={b.status}
+                title={b.title}
+                description={b.description}
+                onClose={b.onClose}
                 className="w-full"
               />
             </div>
-          ) : null}
-          {publishBannerMessage ? (
-            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
-              <Alert
-                type="banner"
-                status="danger"
-                title={messages.create.reviewAndComplete.publish.finalizeBannerTitle}
-                description={publishBannerMessage}
-                onClose={() => setPublishBannerMessage(null)}
-                className="w-full"
-              />
-            </div>
-          ) : null}
-          {templateReviewApplyError ? (
-            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
-              <Alert
-                type="banner"
-                status="danger"
-                title={messages.create.templateReview.errors.applyFailed}
-                description={templateReviewApplyError}
-                onClose={() => setTemplateReviewApplyError(null)}
-                className="w-full"
-              />
-            </div>
-          ) : null}
-          {communitySaveMagicLinkError ? (
-            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
-              <Alert
-                type="banner"
-                status="danger"
-                title={communitySaveMessages.magicLinkErrorTitle}
-                description={communitySaveMagicLinkError}
-                onClose={() => setCommunitySaveMagicLinkError(null)}
-                className="w-full"
-              />
-            </div>
-          ) : null}
-          {communitySaveMagicLinkSuccess ? (
-            <div className="pointer-events-auto mx-auto w-full max-w-[960px]">
-              <Alert
-                type="banner"
-                status="positive"
-                title={communitySaveMessages.magicLinkSuccessTitle}
-                description={communitySaveMessages.magicLinkSuccessDescription}
-                onClose={() => setCommunitySaveMagicLinkSuccess(false)}
-                className="w-full"
-              />
-            </div>
-          ) : null}
+          ))}
         </div>
       ) : null}
       <Suspense fallback={null}>
@@ -755,23 +572,21 @@ function CreateFlowLayoutContent({
               >
                 {currentStep === "final-review"
                   ? isPublishing
-                    ? messages.create.reviewAndComplete.publish.finalizeButtonPublishing
+                    ? messages.create.reviewAndComplete.publish
+                        .finalizeButtonPublishing
                     : footer.finalizeCommunityRule
-                  : currentStep === "confirm-stakeholders"
-                    ? footer.confirmStakeholders
-                    : currentStep === "community-context"
-                      ? footer.confirmDescription
-                      : currentStep === "community-structure"
-                        ? footer.confirmDetails
-                        : currentStep === "community-size"
-                          ? footer.confirmMembers
-                          : footer.next}
+                  : getDefaultFooterLabel(currentStep, footer)}
               </Button>
             ) : null
           }
           onBackClick={
             isTemplateReviewRoute
-              ? () => router.push("/")
+              ? () =>
+                  router.push(
+                    templateReviewFooterBackToCreateReview
+                      ? "/create/review"
+                      : "/",
+                  )
               : previousStep
                 ? goToPreviousStep
                 : undefined
