@@ -1,21 +1,19 @@
 # Recommendation Matrix — Implementation Context (CR-88)
 
 **Status:** Implemented (CR-88). This doc remains the spec — keep code in sync with it.
-**Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)
+**Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no) (**Done** — no `.xlsx` import; authoring = committed JSON + seed).
+**Follow-up (UI):** [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) — pass facets into marketing template fetches so grids rank like the wizard; template ranking **tests** ship with CR-93.
 **Roadmap:** [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §4 (`RuleTemplate`) and §13.
 **Spec ticket:** [`docs/guides/backend-linear-tickets.md`](backend-linear-tickets.md) Ticket 16.
 
-This doc documents the **method facet matrix** that powers two ranking
-surfaces, both consuming the same underlying data:
+This doc documents the **method facet matrix** that powers ranking from shared facet data:
 
-1. **Create-flow card ranking** — the four card-deck wizard steps
+1. **Create-flow card ranking (shipped)** — the four card-deck wizard steps
    (`communication-methods`, `membership-methods`, `decision-approaches`,
    `conflict-management`) reorder their `methods[]` array based on which
    methods match the user's selected community facets.
-2. **Template grid ranking** — the curated `RuleTemplate` rows shown on
-   the marketing home `MarketingRuleStackSection.tsx` and `templates/`
-   page get scored by how many of their composed methods match the user's
-   facets, then sorted highest-first.
+2. **Template list API (shipped)** — `GET /api/templates?facet.*` returns scored/ranked `RuleTemplate` rows when query params are present.
+3. **Template marketing grids (CR-93)** — home `MarketingRuleStackSection.tsx` and `/templates` still call `GET /api/templates` **without** facets; wiring + tests are **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)**.
 
 > **Scope note:** Card / modal copy lives in
 > `messages/en/create/customRule/*.json` as flat `methods` arrays (one
@@ -266,10 +264,9 @@ decision-approaches → conflict-management → confirm-stakeholders → final-r
 | Templates index | `app/(marketing)/templates/page.tsx` |
 | Template preview (by slug) | `app/(app)/create/review-template/[slug]/page.tsx` |
 | "Use without changes" → publish | `app/(app)/create/CreateFlowLayoutClient.tsx` `handleUseTemplateWithoutChanges` |
-| API list | `app/api/templates/route.ts` (GET only, no params today) |
+| API list | `app/api/templates/route.ts` (`GET`; optional `facet.*` params — see §9.1) |
 
-Template ranking adds optional facet query params to `/api/templates`;
-the no-facets path keeps today's curated ordering. Template **Customize**
+**Marketing UIs** do not pass `facet.*` yet (**[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)**). The no-facets path keeps curated ordering; with facets, templates are ranked and `scores` may be returned. Template **Customize**
 now prefills the custom-rule flow via
 [`buildTemplateCustomizePrefill`](../../lib/create/applyTemplatePrefill.ts)
 (applied in `CreateFlowLayoutClient.tsx`) and routes to `core-values`

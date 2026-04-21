@@ -1,6 +1,6 @@
 # Create rule flow (custom wizard) — canonical reference
 
-Product/engineering reference for the **custom** “Create rule” experience: URL order, persistence, and entry points. **Implementation work** to align code with this doc (progress bar, resume redirects, etc.) is tracked in Linear **[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)** and [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md) **Ticket 17**.
+Product/engineering reference for the **custom** “Create rule” experience: URL order, persistence, and entry points. **Canon wizard** alignment (docs, `[screenId]` routing, footer progress) shipped under **[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)** (**Done**). **Draft resume vs profile**, server hydration, and “new rule” vs **continue draft** are tracked with **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (profile dashboard). See also [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md) **Ticket 17**.
 
 ---
 
@@ -90,9 +90,9 @@ Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticke
 
 ---
 
-## Known implementation gaps (tracked on CR-89)
+## Known implementation gaps (tracked on CR-86)
 
-- **URL vs `currentStep` in saved draft:** hydration may merge server JSON without redirecting to `state.currentStep`; confirm product behavior and fix or document.
+- **Server draft + URL alignment:** `SignedInDraftHydration` may merge server JSON without navigating to the saved step; **profile** will own listing drafts, **Continue** at last step, and **New rule** vs stale server draft — see **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (“Rule drafts + create-flow resume”).
 - **Inner “text/select shells”:** deferred until Create Community is stable; screens use **`CreateFlowStepShell`** only for Stage 1.
 
 ---
@@ -100,4 +100,4 @@ Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticke
 ## Related docs
 
 - [docs/guides/backend-roadmap.md](guides/backend-roadmap.md) §12 — Frontend hook-up
-- [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md) — Tickets 4, 5, 6, 17
+- [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md) — Tickets 4, 5, 6, 17; profile/drafts — Ticket 15 / **CR-86**

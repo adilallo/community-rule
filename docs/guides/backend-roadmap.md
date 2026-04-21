@@ -15,7 +15,7 @@ Temporary working notes for building the backend. Safe to delete once the stack 
 
 ### HTTP API (implemented in repo)
 
-Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table; handlers live under `app/api/*/route.ts`.
+Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table (including `/api/templates` facet params, `/api/create-flow/methods`, and `/api/web-vitals`); handlers live under `app/api/*/route.ts`.
 
 | Method     | Path                           | Purpose                                       |
 | ---------- | ------------------------------ | --------------------------------------------- |
@@ -26,11 +26,11 @@ Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table; handlers liv
 | POST       | `/api/auth/logout`             | Clear session                                 |
 | GET / PUT  | `/api/drafts/me`               | Load or save create-flow JSON (authenticated) |
 | GET / POST | `/api/rules`                   | List or publish rules                         |
-| GET        | `/api/templates`               | List curated templates                        |
+| GET        | `/api/templates`               | List curated templates; optional `facet.*` re-ranks (see [template-recommendation-matrix.md](template-recommendation-matrix.md)) |
+| GET        | `/api/create-flow/methods`      | Facet scores for wizard method lists (`section` + optional `facet.*`) |
+| POST / GET | `/api/web-vitals`              | Web vitals ingest / aggregate (file-based under `.next` today; production path §7) |
 
 **Product sign-in** uses **magic link** (`/api/auth/magic-link/*`).
-
-**Also present (not in CONTRIBUTING table):** `POST` / `GET` [`/api/web-vitals`](../app/api/web-vitals/route.ts) — file-based store today; production path TBD (§7).
 
 ### HTTP API (profile / account — not implemented yet)
 
@@ -82,7 +82,7 @@ Plain-English entities (names can evolve):
 | **PublishedRule**  | Saved rule after publish (title, summary, document JSON). Profile UI badges such as **IN PROGRESS** may be **derived from `document` JSON**, a future `status` column, or UI-only—product decision when implementing Ticket 15.                              |
 | **RuleTemplate**   | Curated templates (slug, category, ordering, `body` JSON). **v1 API** lists rows for cards / create entry; **not** yet a recommendation engine (see below).                                                                                                  |
 
-**RuleTemplate — recommendation matrix (after v1 list):** Product may author templates in **spreadsheets** (e.g. one row per governance pattern, columns for **matching dimensions** such as group size, organization type, location, maturity, plus long-form fields for create-flow prefill). That implies: **normalized schema or versioned JSON** for dimensions × template fit (✓/✗, weights, or scores), an **import path** (export `.xlsx` / Sheets → validate → DB or build-time artifact), and **`GET /api/templates` (or a sibling route)** that accepts **user- or wizard-selected facets** and returns a **ranked or filtered** set. **Out of scope for first ship** of Tickets 7–8 (seed + display list); tracked as **Ticket 16** in [docs/backend-linear-tickets.md](backend-linear-tickets.md) and Linear **[CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)**. Prefer **batch import** over live Google Sheets API in production unless ops explicitly wants sync.
+**RuleTemplate — recommendation matrix (after v1 list):** Product may author templates in **spreadsheets** (e.g. one row per governance pattern, columns for **matching dimensions** such as group size, organization type, location, maturity, plus long-form fields for create-flow prefill). That implies: **normalized schema or versioned JSON** for dimensions × template fit (✓/✗, weights, or scores), an **import path** (export `.xlsx` / Sheets → validate → DB or build-time artifact), and **`GET /api/templates` (or a sibling route)** that accepts **user- or wizard-selected facets** and returns a **ranked or filtered** set. **Out of scope for first ship** of Tickets 7–8 (seed + display list); tracked as **Ticket 16** in [docs/backend-linear-tickets.md](backend-linear-tickets.md) and Linear **[CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)** (**Done** — committed JSON + seed; no runtime `.xlsx`). Prefer **batch import** over live Google Sheets API in production unless ops explicitly wants sync.
 
 **Session follow-ups to implement or decide:** token **rotation** on sensitive events, whether **new login invalidates other sessions**, and **cleanup** of expired `Session` rows (job or lazy delete). Revisit a small auth library (e.g. Auth.js, Lucia) only if maintaining custom code becomes costly.
 

@@ -8,6 +8,13 @@ Copy each block into Linear (or your tracker) as a separate issue, **in order**.
 
 A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), **passwordless email (magic-link request)** rate limits in-memory until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**, **profile / my rules / account** scope from Figma profile (`22143:900069`) as **Ticket 15** (change email deferred). **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors — **unblocked** now that **CR-73** is Done), **CR-85** (session lifecycle — **unblocked** now that **CR-75** is Done)—see **Linear** table at the end of this doc.
 
+### Audit note (Linear CR-72+ vs repo, 2026-04)
+
+- **Done in Linear and shipped:** **CR-72–CR-76**, **CR-77** (publish from create flow), **CR-78** (template seed), **CR-79**, **CR-88**, **CR-89**. The **CR-72 → CR-83** numbering is the original **sequential plan**, not current blocking order; the **core product vertical** through publish + templates is effectively complete in-repo.
+- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-83** (no `docs/ops-backend-deploy.md` yet), **CR-84** / **CR-85** (parallel hygiene), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing).
+- **CR-86** is **no longer blocked** by publish — **CR-77** is **Done**; profile work is gated by **implementation**, not waiting on publish wiring.
+- **Not in this ticket list** but called out in **[docs/backend-roadmap.md](backend-roadmap.md):** shared **rate-limit store** (e.g. Redis) before multi-instance; **`GET /api/create-flow/methods`** exists for facet scoring (Ticket 16 / CR-88) but is not duplicated as a separate doc ticket.
+
 ---
 
 ## When you need server / admin access (and for what)
@@ -210,21 +217,23 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Completing the flow persists a **PublishedRule** via existing [publishRule](lib/create/api.ts).
 
-**Context:** [lib/create/api.ts](lib/create/api.ts) already wraps `POST /api/rules`. UI on the `final-review` / `completed` steps (see [app/(app)/create/screens/CreateFlowScreenView.tsx](app/(app)/create/screens/CreateFlowScreenView.tsx) and `app/(app)/create/screens/`) must call it with `{ title, summary?, document }` derived from `CreateFlowState`.
+**Context:** [lib/create/api.ts](lib/create/api.ts) wraps `POST /api/rules` with Zod-validated body (Ticket 2). Finalize flows through [useCreateFlowFinalize](app/(app)/create/hooks/useCreateFlowFinalize.ts) from [CreateFlowLayoutClient](app/(app)/create/CreateFlowLayoutClient.tsx) (`final-review` → `publishRule` → `/create/completed`).
 
-**Implementation:**
+**Implementation (shipped):**
 
-1. Map `useCreateFlow().state` → `title` / `summary` / `document` (document likely mirrors [CommunityRuleDocument](app/components/sections/CommunityRuleDocument/) shape or raw JSON).
-2. Call `publishRule` on explicit user action (“Publish” / “Finalize”) or on transition to `completed` (product decision—prefer explicit button to avoid double-submit).
-3. Handle **401**: redirect or modal to sign-in (Ticket 3).
-4. Success: navigate to `completed` with rule id in query or state; optional confetti per design.
+1. Map `CreateFlowState` → `title` / `summary` / `document` via [buildPublishPayload](lib/create/buildPublishPayload.ts) (and related builders).
+2. Call `publishRule` on explicit **Finalize** from `final-review` ([useCreateFlowFinalize](app/(app)/create/hooks/useCreateFlowFinalize.ts)).
+3. **401** → `openLogin` with return path (Ticket 3 / `AuthModalProvider`).
+4. Success: navigate to `completed` with rule id in query string.
 
 **Acceptance criteria:**
 
-- [ ] Published row appears in Postgres (`PublishedRule`) and `GET /api/rules` lists it.
-- [ ] User sees clear success/failure.
+- [x] Published row appears in Postgres (`PublishedRule`) and `GET /api/rules` lists it.
+- [x] User sees clear success/failure (banner / flow state; see finalize hook).
 
-**Files:** relevant `app/(app)/create/*/page.tsx`, [lib/create/api.ts](lib/create/api.ts) if request shape changes, types from Ticket 2.
+**Files:** [app/(app)/create/hooks/useCreateFlowFinalize.ts](app/(app)/create/hooks/useCreateFlowFinalize.ts), [CreateFlowLayoutClient.tsx](app/(app)/create/CreateFlowLayoutClient.tsx), [app/api/rules/route.ts](app/api/rules/route.ts), [lib/create/api.ts](lib/create/api.ts), [lib/create/buildPublishPayload.ts](lib/create/buildPublishPayload.ts).
+
+**Status:** [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules) **Done**.
 
 ---
 
@@ -234,7 +243,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Curated templates exist in DB for recommendations (v1 = static curated list, no ML).
 
-**Not in v1 (this ticket):** **Spreadsheet-authored matrices**, multi-axis **facet filtering**, or **ranked** recommendations from user answers — that is **Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)** after the flat list ships.
+**Not in v1 (this ticket):** **Facet-based method/template intelligence** beyond a flat curated list — that work is **Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)** (facet data + APIs + wizard method ranking). **Template marketing grids** ranked by user facets are **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)** (product/UI follow-up).
 
 **Implementation:**
 
@@ -245,10 +254,12 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Acceptance criteria:**
 
-- [ ] `GET /api/templates` returns non-empty `templates` after seed on empty DB.
-- [ ] Re-running seed does not duplicate rows.
+- [x] `GET /api/templates` returns non-empty `templates` after seed on empty DB.
+- [x] Re-running seed does not duplicate rows.
 
 **Files:** `prisma/seed.ts`, [package.json](package.json), [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Status:** [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document) **Done**.
 
 ---
 
@@ -258,50 +269,52 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Goal:** Home or create entry surfaces use live template data instead of only static i18n JSON.
 
-**Context:** [RuleStack.view.tsx](app/components/sections/RuleStack/RuleStack.view.tsx) and create entry surfaces reference future template work. Wizard URLs are static segments under `app/(app)/create/`; see [`docs/create-flow.md`](create-flow.md) and **Ticket 17** for the canonical custom flow.
+**Context:** [RuleStack.view.tsx](app/components/sections/RuleStack/RuleStack.view.tsx) renders cards from API-shaped grid entries. The custom wizard uses [`app/(app)/create/[screenId]/page.tsx`](app/(app)/create/[screenId]/page.tsx) and [`docs/create-flow.md`](create-flow.md) (**Ticket 17**).
 
-**Implementation:**
+**Implementation (shipped):**
 
-1. Add a small client or server data fetch to `GET /api/templates` (RSC `fetch` with cache tags, or client `useEffect` with loading skeleton—match existing data-fetch patterns in the app).
-2. Map API rows to existing card components; keep i18n for chrome strings (“See all templates”).
-3. Empty state: if API returns `[]`, fall back to static copy or hide section per design.
+1. **Server-first paint:** [MarketingRuleStackSection](app/(marketing)/_components/MarketingRuleStackSection.tsx) loads rows via `listRuleTemplatesFromDb` and passes `initialGridEntries` into [RuleStack.container.tsx](app/components/sections/RuleStack/RuleStack.container.tsx) (avoids client fetch on LCP-critical home).
+2. **Client fetch:** [lib/create/fetchTemplates.ts](lib/create/fetchTemplates.ts) when `initialGridEntries` is not provided (`GET /api/templates`, credentials, abort); catalog fallback on error/empty.
+3. **Templates index:** [app/(marketing)/templates/page.tsx](app/(marketing)/templates/page.tsx) server-loads the full grid for first paint.
+4. **Empty / error:** Fallback presentation via [templateGridPresentation.ts](lib/templates/templateGridPresentation.ts) + catalog slugs.
 
 **Acceptance criteria:**
 
-- [ ] Changing a template row in Prisma Studio reflects after refresh (or revalidate).
-- [ ] No layout shift regression on LCP-critical pages (use skeletons).
+- [x] Changing a template row in the DB reflects after refresh (SSR path) or client refetch where the client path is used.
+- [x] No layout shift regression on LCP-critical pages: dynamic `RuleStack` loading shell + server-provided `initialGridEntries` on home.
 
-**Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), create-flow entry routes under [app/(app)/create/](app/(app)/create/), possibly new `lib/templates/fetchTemplates.ts`.
+**Files:** [app/components/sections/RuleStack/](app/components/sections/RuleStack/), [app/(marketing)/_components/MarketingRuleStackSection.tsx](app/(marketing)/_components/MarketingRuleStackSection.tsx), [app/(marketing)/templates/](app/(marketing)/templates/), [lib/create/fetchTemplates.ts](lib/create/fetchTemplates.ts), [lib/templates/templateGridPresentation.ts](lib/templates/templateGridPresentation.ts).
 
-**Follow-up:** **Ticket 16** — dynamic recommendations from authoring spreadsheets and create-flow answers.
+**Follow-up:** **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)** — rank marketing template cards by community facets (API already supports `facet.*`; UI wiring is product work).
+
+**Status:** [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui) **Done**.
 
 ---
 
-## Ticket 16 — Template recommendation matrix + spreadsheet ingestion
+## Ticket 16 — Template recommendation matrix (facet data + APIs; no xlsx import)
 
-**Depends on:** Tickets 7–8 (templates exist in DB and UI can fetch them). Can overlap **Ticket 6** (create flow) for wizard steps that POST answers.
+**Depends on:** Tickets 7–8 (templates exist in DB and UI can fetch them).
 
-**Goal:** Support **dynamic** template selection driven by **authoring spreadsheets** (e.g. Excel / Google Sheets exported to `.xlsx`): each **row** is a template variant with long-form copy (title, description, principles, steps, objections); **columns** encode **matching dimensions** (group size bands, organization type, location, maturity, etc.) with symbols or weights (✓/✗, 0–1 scores). The create flow (or home) should **narrow or rank** options from **user-supplied facets** or a short questionnaire.
+**Goal:** **Facet-aware recommendations** for **methods** in the create-flow card decks, and **API-level** ranking for **templates** when `facet.*` query params are present — without a runtime `.xlsx` / SheetJS import (authoring stays **committed JSON** + Prisma seed, with spreadsheets as optional one-time offline references only).
 
-**Context:** The current [`RuleTemplate`](prisma/schema.prisma) model is a **flat** list (`slug`, `title`, `category`, `description`, `body` JSON). It does **not** model dimension columns, matrix versioning, or import from sheets. Example product shape: a “Decision-making” workbook → many governance patterns, each row tied to applicability across org context.
+**Context:** [`RuleTemplate`](prisma/schema.prisma) remains a list row per template; facet match data for **methods** lives in `MethodFacet` (seeded from `data/create/customRule/*.json`). See [template-recommendation-matrix.md](template-recommendation-matrix.md).
 
-**Implementation (phased — product can stop after any phase):**
+**Implementation (shipped):**
 
-1. **Authoring contract:** Document required columns / sheet tabs (per domain: decision-making, meetings, etc.), validation rules, and how ✓/✗ or numeric cells map to API filters or scores.
-2. **Storage:** Either extend `RuleTemplate` / `body` with a structured `recommendationMatrix` blob **or** add normalized tables (`TemplateDimension`, `TemplateFacetValue`, `TemplateApplicability`) — pick based on query needs and reporting.
-3. **Import:** Script or internal admin path: `.xlsx` → parse (e.g. `xlsx` / SheetJS) → validate → upsert DB rows or generate seed JSON checked into repo. **Default:** batch job on export, **not** live Sheets API in prod unless explicitly required.
-4. **API:** Extend `GET /api/templates` with optional query params (`?facet.orgType=nonprofit&facet.size=6-12`) **or** add `POST /api/templates/recommend` with a JSON body of answers; return ranked `templates` + optional `scores` / `reasons` for UI.
-5. **UI:** Create-flow step(s) collect facets; call API; prefill `CreateFlowState` or document JSON from chosen row’s `body`.
+1. **Authoring contract + storage:** Zod-validated JSON under `data/create/customRule/`; seed into `MethodFacet` (and related); documented in template-recommendation-matrix.md.
+2. **APIs:** `GET /api/templates?facet.*` returns `{ templates, scores? }`; `GET /api/create-flow/methods?section=…&facet.*` returns methods with match scores for card re-ranking.
+3. **UI (wizard):** `useFacetRecommendations` + `rankMethodsByScore` / `deriveCompactCards` on the custom-rule card / right-rail steps (recommended methods).
+4. **Not shipped here:** **Marketing template grids** (home, `/templates`) still call `GET /api/templates` **without** facets — product/UI follow-up **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)**. **Automated tests** for template ranking via `/api/templates` are **deferred to CR-93** with that UI work.
 
 **Acceptance criteria:**
 
-- [ ] Importing an updated workbook (or running the importer) changes recommendations without hand-editing Prisma rows in Studio.
-- [ ] API behavior is documented (params or POST body) and covered by tests for at least one reference matrix.
-- [ ] Invalid / partial facet combinations degrade gracefully (empty list vs fallback featured templates).
+- [x] Updating committed facet JSON + re-seeding changes recommendations without hand-editing arbitrary Prisma rows for facet data.
+- [x] API behavior documented in template-recommendation-matrix.md §9; facet parsing / method route covered by tests; template ranking tests deferred per CR-93.
+- [x] Invalid / partial facet combinations degrade gracefully (curated / score-0 fallbacks).
 
-**Files (expected):** `prisma/schema.prisma`, `lib/templates/*` or `scripts/import-templates-xlsx.ts`, `app/api/templates/*`, create-flow pages, tests.
+**Files:** [prisma/schema.prisma](prisma/schema.prisma), [data/create/customRule/](data/create/customRule/), [app/api/templates/route.ts](app/api/templates/route.ts), [app/api/create-flow/methods/route.ts](app/api/create-flow/methods/route.ts), [lib/server/ruleTemplates.ts](lib/server/ruleTemplates.ts), [lib/server/validation/methodFacetsSchemas.ts](lib/server/validation/methodFacetsSchemas.ts), [app/(app)/create/hooks/useFacetRecommendations.ts](app/(app)/create/hooks/useFacetRecommendations.ts), [docs/guides/template-recommendation-matrix.md](template-recommendation-matrix.md).
 
-**Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) (**Backlog**). **Parallel** to much of the core chain; **blocked** only by having **CR-78**/**CR-79** far enough along that a template list exists (or stub rows).
+**Status:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no) **Done**.
 
 ---
 
@@ -317,22 +330,20 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 1. Keep [`docs/create-flow.md`](create-flow.md) in sync with product/Figma (stage ↔ step mapping, future template routes).
 2. ~~Remove legacy [`app/(app)/create/[step]/page.tsx`](app/(app)/create/[step]/page.tsx)~~ — replaced by [`app/(app)/create/[screenId]/page.tsx`](app/(app)/create/[screenId]/page.tsx) with real screens; unknown slugs `notFound()`.
-3. Unify **step source of truth**: URL via [`useCreateFlowNavigation`](app/(app)/create/hooks/useCreateFlowNavigation.ts) vs unused [`CreateFlowContext`](app/(app)/create/context/CreateFlowContext.tsx) `currentStep` — pick one model; align [`useCreateFlowExit`](app/(app)/create/hooks/useCreateFlowExit.ts) / draft payload if needed.
-4. **Resume:** After [`SignedInDraftHydration`](app/(app)/create/SignedInDraftHydration.tsx), decide redirect to `/create/${state.currentStep}` vs stay on current URL; test or document.
-5. Wire [`CreateFlowFooter`](app/components/utility/CreateFlowFooter/) `ProportionBar` to step progress from `FLOW_STEP_ORDER` (and `review-template` / `completed` exceptions per design); optional **two-level progress** (stage + step within stage) when design specifies.
-6. When Figma hands off, surface **stage labels** in create shell (top nav, footer, or step chrome) using the mapping in `create-flow.md`.
+3. ~~Unify **step source of truth** / **resume after `SignedInDraftHydration`~~ — moved to **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (profile lists drafts, continue at last step, new rule vs server draft; see `docs/create-flow.md` known gaps).
+4. Wire [`CreateFlowFooter`](app/components/utility/CreateFlowFooter/) `ProportionBar` to step progress from `FLOW_STEP_ORDER` (and `review-template` / `completed` exceptions per design); optional **two-level progress** (stage + step within stage) when design specifies.
+5. When Figma hands off, surface **stage labels** in create shell (top nav, footer, or step chrome) using the mapping in `create-flow.md`.
 
 **Acceptance criteria:**
 
-- [ ] [`docs/create-flow.md`](create-flow.md) matches shipped behavior or lists known gaps, including **Figma three-stage** mapping and **future template route** note.
-- [ ] No misleading dynamic step placeholder for valid wizard URLs.
-- [ ] Footer progress reflects step index **or** doc/issue records a deliberate deferral with design sign-off.
-- [ ] Hydration + `currentStep` behavior is verified (redirect vs stay).
-- [ ] Template **Customize** prefill is documented (maps template body to `selected*Ids` + `coreValuesChipsSnapshot`, routes to `core-values` when Community has data else `informational`); full template-customize-from-mid-wizard entry beyond `core-values` stays deferred.
+- [x] [`docs/create-flow.md`](create-flow.md) matches shipped behavior or lists known gaps, including **Figma three-stage** mapping and **future template route** note; draft/hydration follow-ups point to **CR-86**.
+- [x] No misleading dynamic step placeholder for valid wizard URLs.
+- [x] Footer progress reflects step index via `getProportionBarProgressForCreateFlowStep` (optional stage labels still Figma-dependent).
+- [x] Template **Customize** prefill is documented (maps template body to `selected*Ids` + `coreValuesChipsSnapshot`, routes to `core-values` when Community has data else `informational`); full template-customize-from-mid-wizard entry beyond `core-values` stays deferred.
 
 **Files:** [`docs/create-flow.md`](create-flow.md), [`app/(app)/create/`](app/(app)/create/), [`app/components/utility/CreateFlowFooter/`](app/components/utility/CreateFlowFooter/), optionally [`docs/backend-roadmap.md`](backend-roadmap.md) §12 cross-links.
 
-**Linear:** [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) (**Backlog**). **Parallel** to templates (7–8) and publish (6); not part of **CR-72 → CR-83**.
+**Linear:** [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) **Done**. Open-ended draft/hydration work: **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)**. **Parallel** to templates (7–8) and publish (6); not part of **CR-72 → CR-83**.
 
 ---
 
@@ -468,7 +479,9 @@ _Section B — Final Review screen `+` button per category:_
 - [ ] Production with read-only filesystem does not break vitals collection path.
 - [ ] Monitor page still useful or intentionally replaced with a doc link.
 
-**Files:** [app/api/web-vitals/route.ts](app/api/web-vitals/route.ts), [app/(admin)/monitor/](<app/(admin)/monitor/page.tsx>) (adjust paths as needed), optionally `prisma/schema.prisma` **only if** option C.
+**Files:** [app/api/web-vitals/route.ts](app/api/web-vitals/route.ts), [app/(admin)/monitor/page.tsx](app/(admin)/monitor/page.tsx), optionally `prisma/schema.prisma` **only if** option C.
+
+**Repo check (2026-04):** Route still **writes files under `.next/web-vitals`** — **CR-80** remains applicable.
 
 ---
 
@@ -485,6 +498,8 @@ _Section B — Final Review screen `+` button per category:_
 1. Add `GET /api/rules/[id]/route.ts` returning `{ rule }` or 404 (public read; no secrets).
 2. Add `app/(marketing)/rules/[id]/page.tsx` (or under `create` if private) rendering `document` JSON with existing document components.
 3. Consider soft-delete flag later; out of scope unless product requires hide.
+
+**Repo check (2026-04):** Only [`app/api/rules/route.ts`](app/api/rules/route.ts) exists (list + POST); **no** `app/api/rules/[id]/` handler yet — **CR-81** still open.
 
 **Acceptance criteria:**
 
@@ -599,7 +614,7 @@ _Section B — Final Review screen `+` button per category:_
 
 ## Ticket 15 — Profile dashboard + account (Figma profile)
 
-**Depends on:** Ticket 3 (auth), **Ticket 4** (session in UI), **Ticket 6** (publish so users have rules to list). Soft optional: Tickets 7–8 for “create from template” CTA parity.
+**Depends on:** Ticket 3 (auth), **Ticket 4** (session in UI), **Ticket 6** (**CR-77** publish — **Done** — so real published rules exist for “my rules”). Soft optional: Tickets 7–8 for “create from template” CTA parity.
 
 **Goal:** Signed-in **profile** experience matching [Figma — Profile](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22143-900069): **Your CommunityRules** (list **own** published rules), **duplicate** / **delete** per rule, CTAs into create flow (custom + from template), **logout** (existing API), **delete account** (policy + API + confirmation UX).
 
@@ -627,7 +642,7 @@ _Section B — Final Review screen `+` button per category:_
 
 **Files:** new `app/` routes and components, `app/api/rules/...` (or new segment handlers), [lib/create/api.ts](lib/create/api.ts) as needed, [prisma/schema.prisma](prisma/schema.prisma) only if account-delete policy requires schema tweaks, [messages/en/](messages/en/) for copy.
 
-**Linear:** [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile) (**Backlog**). **Blocked by** **CR-77** (publish) only — **CR-75** Done. **Related:** [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional) (public rule detail for deep links from profile cards). **Not** part of the sequential **CR-72 → CR-83** chain—parallel after publish + session, similar to CR-84/CR-85.
+**Linear:** [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile) (**Backlog**). **Publish prerequisite:** **CR-77** **Done** — not blocked on wiring. **Related:** [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional) (public rule detail for deep links from profile cards). **Not** part of the sequential **CR-72 → CR-83** chain—parallel after session, similar to CR-84/CR-85. **Also on CR-86:** draft list + resume + hydration alignment (moved from CR-89).
 
 ---
 
@@ -650,18 +665,20 @@ _Section B — Final Review screen `+` button per category:_
 |    13 | 13     | API errors + request-id logging   |
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
-|    16 | 16     | Template matrix + xlsx ingestion  |
+|    16 | 16     | Template matrix (facets; no xlsx) |
 |    17 | 17     | Canon create-flow (custom path)     |
 |    18 | 18     | Stakeholder invites (confirm-stakeholders) |
 |    19 | 19     | `Add` button behavior (custom-rule pages + Final Review) |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
+**Follow-up (no doc ticket #):** **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)** — marketing template grids ranked by user facets (API-ready; tests deferred with that issue).
+
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 6 / CR-77** (publish) is **Done**. **Ticket 16** / **CR-88** (facet data + APIs + wizard method ranking) shipped **after 7–8**; **CR-93** tracks **marketing** template grids ranked by user facets (API-ready). **Ticket 17** / **CR-89** (**[Done](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) (progress bar, `[screenId]` routing). **Draft resume / hydration** follow-ups: **CR-86**. **Tickets 13–14** are parallel (**CR-84** / **CR-85** — **Backlog**). **Ticket 15 / CR-86** is **parallel** (publish prerequisite met); implementation backlog. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), **CR-90** / Ticket 18 (stakeholder invites — product/design brief unblocked; implementation waits on **CR-73** / **CR-74** / **CR-75** / **CR-77**), **CR-91** / Ticket 19 (`Add` button behavior on custom-rule pages and Final Review chips — pure product/design clarification, no technical blockers), none in the CR-72–83 sequence.
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-83** remain **Backlog** (web vitals, public rule detail, CI migrate smoke, ops runbook — optional / ops tail). **Parallel:** **CR-84**, **CR-85** (**Backlog**); **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -670,8 +687,8 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)               | Magic-link sign-in UI (Ticket 3; Done)  |
 |          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                | Create flow session UI (Ticket 4; Done) |
 |          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors)  |
-|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring                          |
-|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed                           |
+|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring **Done**                 |
+|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed **Done**                  |
 |          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                         |
 |          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            |
 |         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           |
@@ -680,8 +697,9 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         |
 |         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup             |
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |
-|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion        |
-|         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) |
+|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)         | Template matrix (facets; no xlsx)        |
+|         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) **Done** |
+|          — | [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) | Template grid + facet ranking (product)   |
 |         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
 |         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) |
 
