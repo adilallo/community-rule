@@ -56,7 +56,7 @@ describe("createFlowStateSchema", () => {
   it("accepts known fields and passthrough keys", () => {
     const r = createFlowStateSchema.safeParse({
       title: "My rule",
-      currentStep: "cards",
+      currentStep: "communication-methods",
       customField: { nested: [1, 2] },
     });
     expect(r.success).toBe(true);
@@ -75,6 +75,62 @@ describe("createFlowStateSchema", () => {
   it("rejects communitySaveEmail longer than 320 chars", () => {
     const r = createFlowStateSchema.safeParse({
       communitySaveEmail: "x".repeat(321),
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it("accepts communityStructureChipSnapshots with custom chip rows", () => {
+    const r = createFlowStateSchema.safeParse({
+      communityStructureChipSnapshots: {
+        organizationTypes: [
+          { id: "1", label: "Co-op", state: "selected" },
+          { id: "custom-uuid", label: "My type", state: "selected" },
+        ],
+        scale: [{ id: "1", label: "Local" }],
+        maturity: [],
+      },
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("rejects invalid chip snapshot row types", () => {
+    const r = createFlowStateSchema.safeParse({
+      communityStructureChipSnapshots: {
+        organizationTypes: [{ id: "1", label: 123 }],
+      },
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it("accepts coreValueDetailsByChipId", () => {
+    const r = createFlowStateSchema.safeParse({
+      coreValueDetailsByChipId: {
+        "1": { meaning: "We care about access.", signals: "Blocking access." },
+        "uuid-here": { meaning: "", signals: "" },
+      },
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("accepts templateReviewBackSlug", () => {
+    const r = createFlowStateSchema.safeParse({
+      templateReviewBackSlug: "mutual-aid-mondays",
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("accepts templateReviewEntryFromCreateFlow", () => {
+    const r = createFlowStateSchema.safeParse({
+      templateReviewEntryFromCreateFlow: true,
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it("rejects core value detail strings that are too long", () => {
+    const r = createFlowStateSchema.safeParse({
+      coreValueDetailsByChipId: {
+        "1": { meaning: "x".repeat(8001), signals: "y" },
+      },
     });
     expect(r.success).toBe(false);
   });

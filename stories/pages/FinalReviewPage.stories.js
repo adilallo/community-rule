@@ -1,4 +1,4 @@
-import { FinalReviewScreen } from "../../app/create/screens/review/FinalReviewScreen";
+import { FinalReviewScreen } from "../../app/(app)/create/screens/review/FinalReviewScreen";
 
 export default {
   title: "Pages/Create Flow/Final review",

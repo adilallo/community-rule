@@ -1,0 +1,59 @@
+---
+description: Custom hooks live in app/hooks; co-locate logic, document via TSDoc.
+globs: app/hooks/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Custom hooks
+
+Reusable component logic lives in `app/hooks/`. Each hook is a small, focused
+module with a TSDoc block that doubles as the API reference (no separate doc
+file).
+
+## File layout
+
+- One file per hook: `app/hooks/use<Name>.ts`.
+- Re-export from `app/hooks/index.ts`. Consumers import from the barrel:
+  `import { useFoo } from "../hooks";`.
+- Companion unit test (when there is non-trivial logic): `tests/unit/hooks/`.
+
+## Authoring rules
+
+- Marked as a regular function (`export function useFoo() {}`); React handles
+  the `use*` naming convention.
+- Wrap exposed callbacks in `useCallback` and computed values in `useMemo`
+  so consumers can list them in dependency arrays without churn.
+- Read DOM/browser APIs only inside `useEffect` so the hook stays SSR-safe.
+- Never throw on missing globals (e.g. `window`, `gtag`); guard and no-op.
+
+## TSDoc — the only reference
+
+Every exported hook gets a TSDoc block with:
+
+- 1–2 sentence summary.
+- `@param` per argument and `@returns` describing the shape.
+- `@example` showing the typical call site.
+
+```ts
+/**
+ * Detect clicks outside a set of elements (e.g. close a dropdown).
+ *
+ * @param refs Elements that should NOT trigger the handler.
+ * @param handler Invoked when a click lands outside every ref.
+ * @param enabled Toggle without unmounting the consumer (default true).
+ *
+ * @example
+ * useClickOutside([menuRef, buttonRef], () => setOpen(false), open);
+ */
+export function useClickOutside(
+  refs: Array<RefObject<HTMLElement>>,
+  handler: (event: MouseEvent | TouchEvent) => void,
+  enabled = true,
+): void { /* ... */ }
+```
+
+## Container/view consumption
+
+Hooks belong in **container** files (per `component-structure.mdc`). Views
+stay pure and read derived values via props — never call hooks that touch
+state or side effects from a view.

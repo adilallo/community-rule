@@ -97,6 +97,15 @@ const nextConfig = {
 
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/create/right-rail",
+        destination: "/create/decision-approaches",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 const withMDX = createMDX({

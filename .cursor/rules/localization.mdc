@@ -1,0 +1,65 @@
+---
+description: Text localization via messages/ bundles and useMessages()
+globs: messages/**/*.{ts,json}
+alwaysApply: false
+---
+
+# Text localization
+
+All user-visible copy lives in the typed messages bundle under `messages/en/`
+and is read via `useMessages()` (fully typed) or `useTranslation()` (dot
+notation). Never hard-code user-facing strings in components.
+
+## File layout
+
+- `messages/en/<area>.json` for single-file areas (`common.json`,
+  `navigation.json`, `metadata.json`).
+- `messages/en/<folder>/<entry>.json` for areas with multiple buckets:
+  `components/*.json`, `pages/*.json`. One JSON per component / page —
+  don't shoehorn unrelated copy into a shared file.
+- `messages/en/create/<stage>/<step>.json` — wizard steps grouped by Figma
+  stage (`community`, `customRule`, `reviewAndComplete`). Cross-cutting
+  chrome (footer, top nav, draft hydration, template review) and shared
+  layout-shell strings (`select.json`, `text.json`, `upload.json`) live at
+  the `create/` root.
+- Optional `"_comment"` at the top of a JSON documents the bundle's purpose.
+
+## Registration — required
+
+Every new JSON must be wired into `messages/en/index.ts`:
+
+```typescript
+import createConflictManagement from "./create/customRule/conflictManagement.json";
+
+export default {
+  // …
+  create: {
+    customRule: {
+      conflictManagement: createConflictManagement,
+    },
+  },
+};
+```
+
+The default export **is** the type source for `useMessages()`; skipping this
+step means consumers can't read your strings and TypeScript won't flag the gap.
+
+## Access pattern
+
+```typescript
+import { useMessages } from "../contexts/MessagesContext";
+
+const m = useMessages();
+const title = m.create.customRule.conflictManagement.page.compactTitle; // fully typed
+```
+
+Use `useTranslation(namespace)` only when you need dot-path lookup by dynamic
+key; prefer direct property access for the type safety.
+
+## Key conventions
+
+- **Structural keys**: camelCase (`compactTitle`,
+  `sectionHeadings.corePrinciple`).
+- **Content ids**: match the id consumers already use (card id, step id, URL
+  segment) — typically kebab-case (`"in-person-meetings"`,
+  `"peer-mediation"`).

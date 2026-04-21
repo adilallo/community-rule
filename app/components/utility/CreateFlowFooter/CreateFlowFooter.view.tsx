@@ -1,4 +1,3 @@
-import { normalizeProportionBarVariant } from "../../../../lib/propNormalization";
 import ProportionBar from "../../progress/ProportionBar";
 import Button from "../../buttons/Button";
 import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
@@ -11,9 +10,7 @@ export function CreateFlowFooterView({
   onBackClick,
   className = "",
 }: CreateFlowFooterProps) {
-  const proportionBarVariant = normalizeProportionBarVariant(
-    proportionBarVariantProp,
-  );
+  const proportionBarVariant = proportionBarVariantProp ?? "default";
   return (
     <footer
       className={`bg-black w-full ${className}`}

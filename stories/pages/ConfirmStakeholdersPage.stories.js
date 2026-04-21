@@ -1,4 +1,4 @@
-import { ConfirmStakeholdersScreen } from "../../app/create/screens/select/ConfirmStakeholdersScreen";
+import { ConfirmStakeholdersScreen } from "../../app/(app)/create/screens/select/ConfirmStakeholdersScreen";
 
 export default {
   title: "Pages/Create Flow/Confirm stakeholders",

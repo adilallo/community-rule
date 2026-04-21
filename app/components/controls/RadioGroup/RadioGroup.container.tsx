@@ -3,11 +3,11 @@
 import { memo, useCallback, useId } from "react";
 import { RadioGroupView } from "./RadioGroup.view";
 import type { RadioGroupProps } from "./RadioGroup.types";
-import {
-  normalizeMode,
-  normalizeState,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / RadioGroup" (TODO(figma)). Group of radio buttons sharing
+ * a name that emits the single currently selected value.
+ */
 const RadioGroupContainer = ({
   name,
   value,
@@ -19,14 +19,11 @@ const RadioGroupContainer = ({
   className = "",
   ...props
 }: RadioGroupProps) => {
-  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-  const mode = normalizeMode(modeProp);
-  // Normalize state, but handle "With Subtext" separately (it's represented by options with subtext)
-  const state =
-    typeof stateProp === "string" &&
-    (stateProp.toLowerCase() === "with subtext" || stateProp === "With Subtext")
-      ? "default" // "With Subtext" is handled via RadioOption.subtext, use default state
-      : normalizeState(stateProp);
+  const mode = modeProp;
+  const state: "default" | "hover" | "focus" | "selected" =
+    stateProp === "With Subtext" || stateProp === "with subtext"
+      ? "default"
+      : stateProp;
   // Generate unique ID for accessibility if not provided
   const generatedId = useId();
   const groupId = name || `radio-group-${generatedId}`;

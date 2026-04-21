@@ -121,7 +121,7 @@ export const HeaderOverlayBlurred = {
   ),
 };
 
-/** Matches `app/login/page.tsx`: dedicated route, solid yellow, no portal. */
+/** Matches `app/(app)/login/page.tsx`: dedicated route, solid yellow, no portal. */
 export const FullPageRouteSolid = {
   name: "Full-page route (/login — solid)",
   parameters: {

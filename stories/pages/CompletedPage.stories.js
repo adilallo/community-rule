@@ -1,4 +1,4 @@
-import { CompletedScreen } from "../../app/create/screens/completed/CompletedScreen";
+import { CompletedScreen } from "../../app/(app)/create/screens/completed/CompletedScreen";
 
 export default {
   title: "Pages/Create Flow/Completed",

@@ -6,6 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
+// Pure presentational; no provider context needed.
 describe("LogoWall Component", () => {
   test("renders with default logos", () => {
     render(<LogoWall />);

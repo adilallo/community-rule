@@ -1,0 +1,79 @@
+{
+  "size": {
+    "source": "messages/en/create/community/communitySize.json#/communitySizes",
+    "values": {
+      "oneMember": {
+        "chipId": "1"
+      },
+      "twoToFive": {
+        "chipId": "2"
+      },
+      "sixToTwelve": {
+        "chipId": "3"
+      },
+      "thirteenToOneHundred": {
+        "chipId": "4"
+      },
+      "oneHundredToOneHundredK": {
+        "chipId": "5"
+      }
+    }
+  },
+  "orgType": {
+    "source": "messages/en/create/community/communityStructure.json#/organizationTypes",
+    "values": {
+      "workersCoop": {
+        "chipId": "1"
+      },
+      "mutualAid": {
+        "chipId": "2"
+      },
+      "openSource": {
+        "chipId": "3"
+      },
+      "nonprofit": {
+        "chipId": "4"
+      },
+      "forProfit": {
+        "chipId": "5"
+      },
+      "dao": {
+        "chipId": "6"
+      }
+    }
+  },
+  "scale": {
+    "source": "messages/en/create/community/communityStructure.json#/scaleOptions",
+    "values": {
+      "local": {
+        "chipId": "1"
+      },
+      "regional": {
+        "chipId": "2"
+      },
+      "national": {
+        "chipId": "3"
+      },
+      "global": {
+        "chipId": "4"
+      }
+    }
+  },
+  "maturity": {
+    "source": "messages/en/create/community/communityStructure.json#/maturityOptions",
+    "values": {
+      "earlyStage": {
+        "chipId": "1"
+      },
+      "growthStage": {
+        "chipId": "2"
+      },
+      "established": {
+        "chipId": "3"
+      },
+      "enterprise": {
+        "chipId": "4"
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import WebVitalsDashboard from "../app/components/WebVitalsDashboard";
+import WebVitalsDashboard from "../app/components/sections/WebVitalsDashboard";
 
 export default {
   title: "Components/WebVitalsDashboard",

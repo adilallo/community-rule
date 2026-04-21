@@ -32,6 +32,10 @@ export default {
     nextButtonDisabled: {
       control: { type: "boolean" },
     },
+    backdropVariant: {
+      control: { type: "select" },
+      options: ["default", "loginYellow"],
+    },
     currentStep: {
       control: { type: "number", min: 1, max: 5 },
     },
@@ -163,6 +167,25 @@ WithoutFooter.args = {
   ),
   showBackButton: false,
   showNextButton: false,
+};
+
+export const LoginYellowBackdrop = Template.bind({});
+LoginYellowBackdrop.args = {
+  isOpen: true,
+  title: "Horizontalism",
+  description: "Edit or add to this description to describe what this value means to your community.",
+  backdropVariant: "loginYellow",
+  children: (
+    <div className="space-y-4">
+      <p className="text-[var(--color-content-default-primary)]">
+        Core value detail body (yellow blurred overlay like Login).
+      </p>
+    </div>
+  ),
+  showBackButton: false,
+  showNextButton: true,
+  nextButtonText: "Add Value",
+  nextButtonDisabled: false,
 };
 
 export const NextButtonDisabled = Template.bind({});

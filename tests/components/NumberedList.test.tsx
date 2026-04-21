@@ -49,6 +49,7 @@ const config: ComponentTestSuiteConfig<NumberedListProps> = {
 
 componentTestSuite<NumberedListProps>(config);
 
+// Pure presentational; no provider context needed.
 describe("NumberedList (behavioral tests)", () => {
   it("renders all items", () => {
     render(<NumberedList items={mockItems} />);

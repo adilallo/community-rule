@@ -26,31 +26,3 @@ export function getTranslation(messages: Messages, key: string): string {
 
   return typeof value === "string" ? value : key;
 }
-
-/**
- * Type-safe helper to get nested values from messages
- * Usage: getNested(messages, "heroBanner", "title")
- */
-export function getNested<T extends keyof Messages>(
-  messages: Messages,
-  namespace: T,
-  key: string,
-): string {
-  const namespaceObj = messages[namespace];
-  if (!namespaceObj || typeof namespaceObj !== "object") {
-    return key;
-  }
-
-  const keys = key.split(".");
-  let value: unknown = namespaceObj;
-
-  for (const k of keys) {
-    if (value && typeof value === "object" && k in value) {
-      value = (value as Record<string, unknown>)[k];
-    } else {
-      return key;
-    }
-  }
-
-  return typeof value === "string" ? value : key;
-}

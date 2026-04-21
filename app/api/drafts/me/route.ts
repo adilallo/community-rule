@@ -68,3 +68,20 @@ export async function PUT(request: NextRequest) {
     draft: { payload: draft.payload, updatedAt: draft.updatedAt },
   });
 }
+
+export async function DELETE() {
+  if (!isDatabaseConfigured()) {
+    return dbUnavailable();
+  }
+
+  const user = await getSessionUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Idempotent: missing draft is a no-op so callers can fire-and-forget after
+  // publish / exit without worrying about prior state.
+  await prisma.ruleDraft.deleteMany({ where: { userId: user.id } });
+
+  return NextResponse.json({ ok: true });
+}

@@ -1,0 +1,137 @@
+{
+  "_comment": "Create flow – communication step: page, cards, and add-platform modals",
+  "page": {
+    "compactTitle": "How should this community communicate with each-other?",
+    "compactDescriptionBefore": "You can select multiple methods for different needs or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " your own",
+    "expandedTitle": "What method should this community use to communicate with eachother?",
+    "expandedDescription": "You can select multiple methods for different needs or add your own",
+    "seeAllLink": "See all communication approaches"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "addPlatform": {
+    "nextButtonText": "Add Platform"
+  },
+  "sectionHeadings": {
+    "corePrinciple": "Core Principle & Scope",
+    "logisticsAdmin": "Logistics, Admin & Norms",
+    "codeOfConduct": "Code of Conduct"
+  },
+  "methods": [
+    {
+      "id": "in-person-meetings",
+      "label": "In-Person Meetings",
+      "supportText": "Physical gatherings for high-bandwidth communication and relationship building.",
+      "sections": {
+        "corePrinciple": "We value the highest bandwidth of communication, physical presence, to build trust that digital tools cannot match. Consequently, we reserve this high-trust space for annual retreats, strategic planning, and high-stakes interpersonal repair where body language is essential.",
+        "logisticsAdmin": "Logistics focus on physical accessibility, venue security, and travel equity. Organizers control entry via keys or door staff. Culturally, participants are expected to maintain mission focus and adhere strictly to the itinerary to respect everyone's time. Side conversations or distracting behaviors that derail the agenda are discouraged. We prioritize efficiency and shared attention over multitasking.",
+        "codeOfConduct": "We aspire to operate within these principles. We don't need to see eye to eye on everything, but we believe the world can be improved by collective action. Aspire to do no harm to members of this community. Violence or physical intimidation will not be tolerated. We have a zero-tolerance policy for racism, sexism, and bigotry. Do not engage in activities at the venue that attract unwanted legal attention or endanger the group's physical safety."
+      }
+    },
+    {
+      "id": "signal",
+      "label": "Signal",
+      "supportText": "Encrypted messaging for high-security, private coordination.",
+      "sections": {
+        "corePrinciple": "We prioritize privacy and security above all else, accepting limited features to guarantee our communications cannot be surveilled. This acts as our \"Tactical\" layer for high-risk coordination, direct action planning, and medical/legal support where data hygiene is critical.",
+        "logisticsAdmin": "Admins are technical stewards, not status holders; they manage entry/removal and must not change settings without explicit cause. Disappearing messages are mandatory (standard 4-week timer) to prevent data liability. Norms focus on \"Attention Economy\": use emoji reactions instead of \"thanks\" messages to avoid push notification spam. Only join channels where you can actively contribute.",
+        "codeOfConduct": "This space relies on collective responsibility. Posting content that attracts unwanted legal attention or exposes members' real-world identities without consent is prohibited. We aspire to do no harm by practicing strict operational security. Intentionally leaking information violates our safety. We have a zero-tolerance policy for racism, sexism, and bigotry. Willfully spreading false information that endangers the group is grounds for removal."
+      }
+    },
+    {
+      "id": "video-meetings",
+      "label": "Video Meetings",
+      "supportText": "Synchronous video calls for remote face-to-face interaction.",
+      "sections": {
+        "corePrinciple": "We prioritize synchronous connection to read facial expressions without the barrier of travel, using this tool for weekly syncs and quick consensus checks that benefit from real-time debate before moving to a vote.",
+        "logisticsAdmin": "The host manages technical security via waiting rooms to prevent intrusion. Culturally, the focus is on maximizing the value of synchronous time. Norms include muting when not speaking, using the \"Raise Hand\" feature to queue, and utilizing the chat box for non-interruptive side comments. Distractions should be minimized to ensure the meeting stays on track and ends on time.",
+        "codeOfConduct": "We have a zero-tolerance policy for racism, sexism, and bigotry, whether spoken or shared in the chat. We aspire to do no harm. \"Zoom-bombing\" or broadcasting graphic content is prohibited. Willfully spreading obviously false information will not be tolerated. Do not discuss sensitive data that could attract unwanted legal scrutiny if the recording were subpoenaed. The Host will remove anyone threatening the group's safety."
+      }
+    },
+    {
+      "id": "loomio",
+      "label": "Loomio",
+      "supportText": "Decision-making platform for proposals, voting, and consensus.",
+      "sections": {
+        "corePrinciple": "We focus specifically on decision-making, separating \"chatter\" from \"signal\" to count every voice. This is our \"Ballot Box\" layer, used strictly for formal proposals, board elections, and consensus checks, distinct from discussion layers.",
+        "logisticsAdmin": "Groups are invite-only to protect voting integrity. Polls have set deadlines. Norms dictate that users must read the full proposal before voting, use the \"Abstain\" option if uninformed, and provide constructive feedback for any \"No\" vote.",
+        "codeOfConduct": "Our core unity is tied to collective action. Therefore, any attempt to fraudulently manipulate votes violates our principles. We have zero tolerance for hate speech in proposal comments. Disagreement should be expressed through the voting tools, not through harmful attacks. Do not use proposals to provoke unwanted legal attention. Aspire to do no harm to the democratic process."
+      }
+    },
+    {
+      "id": "matrix-element",
+      "label": "Matrix / Element",
+      "supportText": "Decentralized, encrypted chat protocol for sovereignty and interoperability.",
+      "sections": {
+        "corePrinciple": "We value data sovereignty and federation, owning our infrastructure to ensure we cannot be deplatformed. This serves as our \"Sovereign Archive\" for internal governance and cross-org collaboration, replacing corporate tools for groups requiring total data ownership.",
+        "logisticsAdmin": "Infrastructure is self-hosted with users managing their own encryption keys. Bridges connect to other networks. Culturally, this is an asynchronous space, so users should not expect immediate replies. Norms include verifying your own devices to prevent encryption errors and using the \"Reply\" function heavily.",
+        "codeOfConduct": "Users must not post content that attracts unwanted legal scrutiny to the server or its operators. We share a core belief that the world can be improved by collective action, so we do not tolerate behavior that sabotages that goal. We have zero tolerance for hate speech or harassment. Aspire to do no harm. While we value free expression, doxxing or targeted abuse will result in a ban from our room."
+      }
+    },
+    {
+      "id": "github-gitlab",
+      "label": "GitHub / GitLab",
+      "supportText": "Version control platforms for code collaboration and issue tracking.",
+      "sections": {
+        "corePrinciple": "We view \"code as law,\" believing the history of a decision is as important as the outcome. This platform serves as our \"System of Record\" for code changes, text-based bylaw amendments, and technical governance where an immutable audit trail is required.",
+        "logisticsAdmin": "Access is strictly managed via repository permissions and branch protection rules. History is immutable. Culturally, users are expected to write descriptive commit messages and use Pull Request templates to explain the \"why.\" Reviews should be professional and constructive, focusing on the technical merits rather than the personality of the author.",
+        "codeOfConduct": "Avoid rude, inconsiderate, or harmful behaviors in code reviews. We do not tolerate the exposure of private identities or the insertion of malicious code. We aspire to operate within these principles and maintain this repo as a space where hate isn't welcome. Do not upload proprietary IP or content that attracts unwanted legal attention to the project. Willfully spreading false technical information to sabotage the project is grounds for a ban."
+      }
+    },
+    {
+      "id": "discord",
+      "label": "Discord",
+      "supportText": "Real-time chat and voice server organized by topic channels.",
+      "sections": {
+        "corePrinciple": "We create a vibrant, persistent community hub for presence and social connection. It functions as the \"Community Living Room\" for general socializing and working group coordination, feeding into more formal tools like Loomio for decisions.",
+        "logisticsAdmin": "Access is hierarchically managed via Roles and server ownership is tied to an organizational account. Bots automate logging. Norms dictate that users check Pinned Messages before asking questions, keep topics in their designated channels, and use \"Threads\" for deep dives. Voice channels are casual drop-in spaces.",
+        "codeOfConduct": "We have a zero-tolerance policy for racism, sexism, and bigotry. We aspire to do no harm. Avoid rude or inconsiderate behavior. Do not post content that attracts unwanted legal attention to the server, such as pirated material or illicit threats. Exposing private identities is prohibited. Maintaining a space where hate isn't welcome is everyone's responsibility, not just moderators'."
+      }
+    },
+    {
+      "id": "email-distribution-list",
+      "label": "Email Distribution List",
+      "supportText": "Asynchronous announcements and formal threading via email.",
+      "sections": {
+        "corePrinciple": "We prioritize universality and reliability, using the lowest common denominator tool to ensure everyone is included. This functions as our \"Broadcast\" layer for official announcements and legal notices, ensuring members off chat apps still receive critical information.",
+        "logisticsAdmin": "Lists are split into \"Announce\" and \"Discuss.\" Admins approve subscriptions manually. Culturally, users are expected to respect the inbox. Reply directly to the sender for personal matters, avoid \"Reply All\" storms, update the Subject Line if the topic shifts, and format emails clearly.",
+        "codeOfConduct": "We aspire to do no harm in our communications. Using the list to spread obviously false information, racist tropes, or to intentionally target members for harassment is prohibited. Do not use this list to distribute content that attracts unwanted legal attention to the organization. We don't need to see eye to eye, but rude behaviors that degrade our collective dialogue will result in moderation."
+      }
+    },
+    {
+      "id": "slack",
+      "label": "Slack",
+      "supportText": "Structured workplace chat for teams and organizations.",
+      "sections": {
+        "corePrinciple": "We focus on structured productivity, treating communication like a digital office to maximize output. This is our \"Operations\" layer used for daily project management and file sharing, distinct from the governance or social layers.",
+        "logisticsAdmin": "The workspace is paid to retain history. Admins provision accounts for staff and guests. Culturally, users should use public channels by default to share knowledge, strictly observe \"Do Not Disturb\" hours to respect work-life balance, and use \"Threads\" to prevent channel flooding.",
+        "codeOfConduct": "Intentionally harming members via bullying, sexual harassment, or retaliation is prohibited. We maintain a zero-tolerance policy for bigotry in both public channels and DMs. Aspire to be professional. Do not use company channels for content that attracts unwanted legal attention or liability. We believe collective action improves the world, and toxic behavior undermines that work."
+      }
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "supportText": "Ubiquitous mobile chat for quick, informal coordination.",
+      "sections": {
+        "corePrinciple": "We lower the barrier to entry, meeting people where they are with a tool that requires zero training. This acts as the \"Field\" layer for neighborhood pods, urgent mutual aid, specifically for logistics that require immediate mobile notifications.",
+        "logisticsAdmin": "Organized as a \"Community\" with nested groups. Safety relies on vetting members before adding them as phone numbers are exposed. Norms include strict \"Quiet Hours\", keeping the main feed clear for logistics, and moving social chatter to \"Off-topic\" groups.",
+        "codeOfConduct": "Harvesting members' phone numbers for harassment is a severe violation. Willfully spreading misleading information that endangers the community is grounds for removal. We aspire to do no harm. Racism, sexism, and abusive language are never acceptable. Do not post content that attracts unwanted legal attention. Maintaining a safe group is our collective responsibility."
+      }
+    },
+    {
+      "id": "discourse-forum",
+      "label": "Discourse (Forum)",
+      "supportText": "Long-form, threaded discussion board for deep asynchronous conversation.",
+      "sections": {
+        "corePrinciple": "We value depth and deliberation, moving complex discussions away from chat to ensure they are thoughtful. This functions as our \"Library\" layer for policy development and proposal shaping, where rough ideas are refined before going to a vote.",
+        "logisticsAdmin": "Accounts are tied to a membership database. Trust Levels unlock features automatically. Culturally, users are expected to search before posting, write descriptive titles, and cite sources. Emotional argumentation is discouraged in favor of logic. Off-topic replies are moved by moderators.",
+        "codeOfConduct": "We aspire to minimize avoidant strategies like content warnings, trusting members to engage with reality constructively. However, intentional harm, rude behavior, and personal attacks are prohibited. Zero tolerance for racism, sexism, and bigotry. Do not post content that attracts unwanted legal attention. Constructive disagreement is welcome. Willfully false information is not."
+      }
+    }
+  ]
+}

@@ -4,6 +4,10 @@ import { memo } from "react";
 import UploadView from "./Upload.view";
 import type { UploadProps } from "./Upload.types";
 
+/**
+ * Figma: "Control / Upload" (TODO(figma)). Click-to-upload tile with a label
+ * and hint text used to add an image from the user's device.
+ */
 const UploadContainer = memo<UploadProps>(
   ({
     active = true,

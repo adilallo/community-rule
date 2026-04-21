@@ -1,4 +1,4 @@
-import type { CreateFlowState } from "../../app/create/types";
+import type { CreateFlowState } from "../../app/(app)/create/types";
 import { migrateLegacyCreateFlowState } from "./migrateLegacyCreateFlowState";
 
 const jsonHeaders = { "Content-Type": "application/json" };
@@ -116,6 +116,23 @@ async function errorBodyMessage(res: Response): Promise<string> {
   const statusText = res.statusText?.trim();
   if (statusText) return statusText;
   return "Save failed";
+}
+
+/**
+ * Wipe the signed-in user's saved draft. Fire-and-forget: any non-2xx (including
+ * the sync-flag-off `503` and the unauthenticated `401`) is swallowed because
+ * callers only invoke this on already-published / explicitly-discarded flows
+ * where a leftover server draft is acceptable.
+ */
+export async function deleteServerDraft(): Promise<void> {
+  try {
+    await fetch("/api/drafts/me", {
+      method: "DELETE",
+      credentials: "include",
+    });
+  } catch {
+    /* ignore — server draft cleanup is best-effort */
+  }
 }
 
 export async function saveDraftToServer(

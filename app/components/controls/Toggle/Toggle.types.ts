@@ -15,8 +15,7 @@ export interface ToggleProps extends Omit<
   onBlur?: (_e: React.FocusEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   /**
-   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Visual state.
    */
   state?: StateValue;
   showIcon?: boolean;

@@ -3,14 +3,12 @@ import type { ModeValue, StateValue } from "../../../../lib/propNormalization";
 export interface RadioButtonProps {
   checked?: boolean;
   /**
-   * Mode variant. Accepts both "standard"/"Standard" and "inverse"/"Inverse" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Mode variant.
    */
   mode?: ModeValue;
   /**
-   * Visual state. Accepts "default"/"Default", "hover"/"Hover", "focus"/"Focus", "selected"/"Selected" (case-insensitive).
+   * Visual state.
    * Note: "selected" state is represented by the `checked` prop in practice.
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
    */
   state?: StateValue;
   /**

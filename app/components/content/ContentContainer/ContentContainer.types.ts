@@ -1,17 +1,12 @@
 import type { BlogPost } from "../../../../lib/content";
 
-export type ContentContainerSizeValue =
-  | "xs"
-  | "responsive"
-  | "Xs"
-  | "Responsive";
+export type ContentContainerSizeValue = "xs" | "responsive";
 
 export interface ContentContainerProps {
   post: BlogPost;
   width?: string;
   /**
-   * Content container size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Content container size.
    */
   size?: ContentContainerSizeValue;
 }

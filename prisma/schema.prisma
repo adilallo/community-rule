@@ -71,3 +71,27 @@ model RuleTemplate {
   sortOrder   Int      @default(0)
   featured    Boolean  @default(false)
 }
+
+/// Recommendation matrix (CR-88).
+/// JSON in `data/create/customRule/<section>.json` is canonical; this table is
+/// rebuilt from those files at `prisma db seed` time so the API can join.
+/// See `docs/guides/template-recommendation-matrix.md` §7.
+model MethodFacet {
+  id      String  @id @default(cuid())
+  /// One of "communication" | "membership" | "decisionApproaches" | "conflictManagement".
+  section String
+  /// Matches the `id` of an entry in `messages/en/create/customRule/<section>.json#/methods`.
+  slug    String
+  /// One of "size" | "orgType" | "scale" | "maturity".
+  group   String
+  /// Canonical facet value id, e.g. "workersCoop", "earlyStage".
+  value   String
+  /// `true` iff the JSON marks this method as matching the facet (`✓` cell).
+  matches Boolean
+  /// Optional per-cell weight; reserved for a future weighted-rank pass (v1 ignores).
+  weight  Float?
+
+  @@unique([section, slug, group, value])
+  @@index([section])
+  @@index([group, value, matches])
+}

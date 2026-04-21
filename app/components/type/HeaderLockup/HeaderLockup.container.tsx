@@ -3,11 +3,6 @@
 import { memo } from "react";
 import HeaderLockupView from "./HeaderLockup.view";
 import type { HeaderLockupProps } from "./HeaderLockup.types";
-import {
-  normalizeHeaderLockupJustification,
-  normalizeHeaderLockupSize,
-  normalizeHeaderLockupPalette,
-} from "../../../../lib/propNormalization";
 
 const HeaderLockupContainer = memo<HeaderLockupProps>(
   ({
@@ -17,10 +12,9 @@ const HeaderLockupContainer = memo<HeaderLockupProps>(
     size: sizeProp = "L",
     palette: paletteProp = "default",
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const justification = normalizeHeaderLockupJustification(justificationProp);
-    const size = normalizeHeaderLockupSize(sizeProp);
-    const palette = normalizeHeaderLockupPalette(paletteProp);
+    const justification = justificationProp;
+    const size = sizeProp;
+    const palette = paletteProp;
 
     return (
       <HeaderLockupView

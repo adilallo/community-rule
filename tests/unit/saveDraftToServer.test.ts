@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { saveDraftToServer } from "../../lib/create/api";
-import type { CreateFlowState } from "../../app/create/types";
+import type { CreateFlowState } from "../../app/(app)/create/types";
 
 const minimalState: CreateFlowState = {};
 

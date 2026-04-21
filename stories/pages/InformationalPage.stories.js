@@ -1,4 +1,4 @@
-import { InformationalScreen } from "../../app/create/screens/informational/InformationalScreen";
+import { InformationalScreen } from "../../app/(app)/create/screens/informational/InformationalScreen";
 
 export default {
   title: "Pages/Create/Informational",

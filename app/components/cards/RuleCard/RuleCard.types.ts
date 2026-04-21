@@ -21,11 +21,13 @@ export interface RuleCardProps {
   className?: string;
   onClick?: () => void;
   expanded?: boolean;
-  size?: "XS" | "S" | "M" | "L" | "xs" | "s" | "m" | "l";
+  size?: "XS" | "S" | "M" | "L";
   categories?: Category[];
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;
+  /** Hide the per-category "+" add chip affordance (e.g. read-only template review). */
+  hideCategoryAddButton?: boolean;
 }
 
 export interface RuleCardViewProps {
@@ -42,4 +44,5 @@ export interface RuleCardViewProps {
   logoUrl?: string;
   logoAlt?: string;
   communityInitials?: string;
+  hideCategoryAddButton?: boolean;
 }

@@ -3,10 +3,6 @@
 import { memo } from "react";
 import { AlertView } from "./Alert.view";
 import type { AlertProps } from "./Alert.types";
-import {
-  normalizeAlertStatus,
-  normalizeAlertType,
-} from "../../../../lib/propNormalization";
 
 const AlertContainer = memo<AlertProps>(
   ({
@@ -19,9 +15,8 @@ const AlertContainer = memo<AlertProps>(
     onClose,
     className = "",
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const status = normalizeAlertStatus(statusProp);
-    const type = normalizeAlertType(typeProp);
+    const status = statusProp;
+    const type = typeProp;
     // Determine background and border colors based on status and type
     const getStatusStyles = () => {
       switch (status) {

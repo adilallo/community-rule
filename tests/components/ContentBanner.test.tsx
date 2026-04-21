@@ -43,6 +43,7 @@ const mockPost: BlogPost = {
   lastModified: new Date("2025-04-15"),
 };
 
+// Pure presentational; no provider context needed.
 describe("ContentBanner", () => {
   it("renders without crashing", () => {
     render(<ContentBanner post={mockPost} />);

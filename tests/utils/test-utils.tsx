@@ -2,7 +2,7 @@ import React, { type ReactElement } from "react";
 import { render, type RenderOptions } from "@testing-library/react";
 import { AuthModalProvider } from "../../app/contexts/AuthModalContext";
 import { MessagesProvider } from "../../app/contexts/MessagesContext";
-import { CreateFlowProvider } from "../../app/create/context/CreateFlowContext";
+import { CreateFlowProvider } from "../../app/(app)/create/context/CreateFlowContext";
 import messages from "../../messages/en/index";
 
 /**

@@ -7,6 +7,10 @@ import type { CardStackProps } from "./CardStack.types";
 const DEFAULT_TOGGLE_LABEL = "See all communication approaches";
 const DEFAULT_SHOW_LESS_LABEL = "Show less";
 
+/**
+ * Figma: "Utility / CardStack" (TODO(figma)). Selectable stack of cards with
+ * an optional "see all"/"show less" expand toggle.
+ */
 const CardStackContainer = memo<CardStackProps>(
   ({
     cards,
@@ -21,7 +25,11 @@ const CardStackContainer = memo<CardStackProps>(
     title = "",
     description = "",
     layout = "default",
+    compactRecommendedLimit = 5,
+    compactCardIds,
+    compactDesktopLayout: compactDesktopLayoutProp = "grid",
     headerLockupSize,
+    toggleAlignment = "center",
     className = "",
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
@@ -75,7 +83,11 @@ const CardStackContainer = memo<CardStackProps>(
         title={title}
         description={description}
         layout={layout}
+        compactRecommendedLimit={compactRecommendedLimit}
+        compactCardIds={compactCardIds}
+        compactDesktopLayout={compactDesktopLayoutProp}
         headerLockupSize={headerLockupSize}
+        toggleAlignment={toggleAlignment}
         className={className}
       />
     );

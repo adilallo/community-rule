@@ -14,27 +14,26 @@ let ruleCardIdCounter = 0;
 interface ChipData {
   id: string;
   label: string;
-  state: "Unselected" | "Selected" | "Custom";
-  palette: "Default" | "Inverse";
-  size: "S" | "M";
+  state: "unselected" | "selected" | "custom";
+  palette: "default" | "inverse";
+  size: "s" | "m";
 }
 
-// MultiSelect example component with state management
-function MultiSelectExample({ size }: { size: "S" | "M" }) {
+function MultiSelectExample({ size }: { size: "s" | "m" }) {
   const [options, setOptions] = useState<
     Array<{
       id: string;
       label: string;
-      state: "Unselected" | "Selected" | "Custom";
+      state: "unselected" | "selected" | "custom";
     }>
   >([
-    { id: "1", label: "1 member", state: "Unselected" },
-    { id: "2", label: "2-10 members", state: "Unselected" },
-    { id: "3", label: "10-24 members", state: "Unselected" },
-    { id: "4", label: "24-64 members", state: "Unselected" },
-    { id: "5", label: "64-128 members", state: "Unselected" },
-    { id: "6", label: "125-1000 members", state: "Unselected" },
-    { id: "7", label: "1000+ members", state: "Unselected" },
+    { id: "1", label: "1 member", state: "unselected" },
+    { id: "2", label: "2-10 members", state: "unselected" },
+    { id: "3", label: "10-24 members", state: "unselected" },
+    { id: "4", label: "24-64 members", state: "unselected" },
+    { id: "5", label: "64-128 members", state: "unselected" },
+    { id: "6", label: "125-1000 members", state: "unselected" },
+    { id: "7", label: "1000+ members", state: "unselected" },
   ]);
 
   const handleChipClick = (chipId: string) => {
@@ -43,7 +42,7 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
         opt.id === chipId
           ? {
               ...opt,
-              state: opt.state === "Selected" ? "Unselected" : "Selected",
+              state: opt.state === "selected" ? "unselected" : "selected",
             }
           : opt,
       ),
@@ -52,14 +51,14 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
 
   const handleAddClick = () => {
     const newId = `custom-${Date.now()}`;
-    setOptions((prev) => [...prev, { id: newId, label: "", state: "Custom" }]);
+    setOptions((prev) => [...prev, { id: newId, label: "", state: "custom" }]);
   };
 
   const handleCustomConfirm = (chipId: string, value: string) => {
     setOptions((prev) =>
       prev.map((opt) =>
         opt.id === chipId
-          ? { ...opt, label: value, state: "Selected" as const }
+          ? { ...opt, label: value, state: "selected" as const }
           : opt,
       ),
     );
@@ -72,7 +71,7 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
   return (
     <div className="space-y-[var(--spacing-scale-016)]">
       <h3 className="font-inter text-[20px] leading-[24px] font-semibold text-[var(--color-content-default-primary)]">
-        {size === "S" ? "Small (S)" : "Medium (M)"}
+        {size === "s" ? "Small (S)" : "Medium (M)"}
       </h3>
       <MultiSelect
         label="Label"
@@ -91,12 +90,12 @@ function MultiSelectExample({ size }: { size: "S" | "M" }) {
 
 export default function ComponentsPreview() {
   const [chipStates, setChipStates] = useState<
-    Record<string, "Unselected" | "Selected">
+    Record<string, "unselected" | "selected">
   >({
-    "default-s": "Unselected",
-    "default-m": "Unselected",
-    "inverse-s": "Unselected",
-    "inverse-m": "Unselected",
+    "default-s": "unselected",
+    "default-m": "unselected",
+    "inverse-s": "unselected",
+    "inverse-m": "unselected",
   });
 
   // Manage custom chips separately
@@ -104,16 +103,16 @@ export default function ComponentsPreview() {
     {
       id: "custom-1",
       label: "",
-      state: "Custom",
-      palette: "Default",
-      size: "S",
+      state: "custom",
+      palette: "default",
+      size: "s",
     },
     {
       id: "custom-2",
       label: "",
-      state: "Custom",
-      palette: "Default",
-      size: "M",
+      state: "custom",
+      palette: "default",
+      size: "m",
     },
   ]);
 
@@ -124,7 +123,7 @@ export default function ComponentsPreview() {
       chipOptions: Array<{
         id: string;
         label: string;
-        state: "Unselected" | "Selected" | "Custom";
+        state: "unselected" | "selected" | "custom";
       }>;
       onChipClick?: (_categoryName: string, _chipId: string) => void;
       onAddClick?: (_categoryName: string) => void;
@@ -139,11 +138,11 @@ export default function ComponentsPreview() {
     {
       name: "Values",
       chipOptions: [
-        { id: "values-1", label: "Consciousness", state: "Unselected" },
-        { id: "values-2", label: "Ecology", state: "Unselected" },
-        { id: "values-3", label: "Abundance", state: "Unselected" },
-        { id: "values-4", label: "Art", state: "Unselected" },
-        { id: "values-5", label: "Decisiveness", state: "Unselected" },
+        { id: "values-1", label: "Consciousness", state: "unselected" },
+        { id: "values-2", label: "Ecology", state: "unselected" },
+        { id: "values-3", label: "Abundance", state: "unselected" },
+        { id: "values-4", label: "Art", state: "unselected" },
+        { id: "values-5", label: "Decisiveness", state: "unselected" },
       ],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
@@ -156,9 +155,9 @@ export default function ComponentsPreview() {
                       ? {
                           ...opt,
                           state:
-                            opt.state === "Selected"
-                              ? "Unselected"
-                              : "Selected",
+                            opt.state === "selected"
+                              ? "unselected"
+                              : "selected",
                         }
                       : opt,
                   ),
@@ -176,7 +175,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: [
                     ...cat.chipOptions,
-                    { id: newId, label: "", state: "Custom" },
+                    { id: newId, label: "", state: "custom" },
                   ],
                 }
               : cat,
@@ -195,7 +194,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
-                      ? { ...opt, label: value, state: "Selected" }
+                      ? { ...opt, label: value, state: "selected" }
                       : opt,
                   ),
                 }
@@ -220,7 +219,7 @@ export default function ComponentsPreview() {
     },
     {
       name: "Communication",
-      chipOptions: [{ id: "comm-1", label: "Signal", state: "Unselected" }],
+      chipOptions: [{ id: "comm-1", label: "Signal", state: "unselected" }],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
           prev.map((cat) =>
@@ -232,9 +231,9 @@ export default function ComponentsPreview() {
                       ? {
                           ...opt,
                           state:
-                            opt.state === "Selected"
-                              ? "Unselected"
-                              : "Selected",
+                            opt.state === "selected"
+                              ? "unselected"
+                              : "selected",
                         }
                       : opt,
                   ),
@@ -252,7 +251,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: [
                     ...cat.chipOptions,
-                    { id: newId, label: "", state: "Custom" },
+                    { id: newId, label: "", state: "custom" },
                   ],
                 }
               : cat,
@@ -271,7 +270,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
-                      ? { ...opt, label: value, state: "Selected" }
+                      ? { ...opt, label: value, state: "selected" }
                       : opt,
                   ),
                 }
@@ -297,7 +296,7 @@ export default function ComponentsPreview() {
     {
       name: "Membership",
       chipOptions: [
-        { id: "membership-1", label: "Open Admission", state: "Unselected" },
+        { id: "membership-1", label: "Open Admission", state: "unselected" },
       ],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
@@ -310,9 +309,9 @@ export default function ComponentsPreview() {
                       ? {
                           ...opt,
                           state:
-                            opt.state === "Selected"
-                              ? "Unselected"
-                              : "Selected",
+                            opt.state === "selected"
+                              ? "unselected"
+                              : "selected",
                         }
                       : opt,
                   ),
@@ -330,7 +329,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: [
                     ...cat.chipOptions,
-                    { id: newId, label: "", state: "Custom" },
+                    { id: newId, label: "", state: "custom" },
                   ],
                 }
               : cat,
@@ -349,7 +348,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
-                      ? { ...opt, label: value, state: "Selected" }
+                      ? { ...opt, label: value, state: "selected" }
                       : opt,
                   ),
                 }
@@ -375,8 +374,8 @@ export default function ComponentsPreview() {
     {
       name: "Decision-making",
       chipOptions: [
-        { id: "decision-1", label: "Lazy Consensus", state: "Unselected" },
-        { id: "decision-2", label: "Modified Consensus", state: "Unselected" },
+        { id: "decision-1", label: "Lazy Consensus", state: "unselected" },
+        { id: "decision-2", label: "Modified Consensus", state: "unselected" },
       ],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
@@ -389,9 +388,9 @@ export default function ComponentsPreview() {
                       ? {
                           ...opt,
                           state:
-                            opt.state === "Selected"
-                              ? "Unselected"
-                              : "Selected",
+                            opt.state === "selected"
+                              ? "unselected"
+                              : "selected",
                         }
                       : opt,
                   ),
@@ -409,7 +408,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: [
                     ...cat.chipOptions,
-                    { id: newId, label: "", state: "Custom" },
+                    { id: newId, label: "", state: "custom" },
                   ],
                 }
               : cat,
@@ -428,7 +427,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
-                      ? { ...opt, label: value, state: "Selected" }
+                      ? { ...opt, label: value, state: "selected" }
                       : opt,
                   ),
                 }
@@ -454,8 +453,8 @@ export default function ComponentsPreview() {
     {
       name: "Conflict management",
       chipOptions: [
-        { id: "conflict-1", label: "Code of Conduct", state: "Unselected" },
-        { id: "conflict-2", label: "Restorative Justice", state: "Unselected" },
+        { id: "conflict-1", label: "Code of Conduct", state: "unselected" },
+        { id: "conflict-2", label: "Restorative Justice", state: "unselected" },
       ],
       onChipClick: (categoryName: string, chipId: string) => {
         setRuleCardCategories((prev) =>
@@ -468,9 +467,9 @@ export default function ComponentsPreview() {
                       ? {
                           ...opt,
                           state:
-                            opt.state === "Selected"
-                              ? "Unselected"
-                              : "Selected",
+                            opt.state === "selected"
+                              ? "unselected"
+                              : "selected",
                         }
                       : opt,
                   ),
@@ -488,7 +487,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: [
                     ...cat.chipOptions,
-                    { id: newId, label: "", state: "Custom" },
+                    { id: newId, label: "", state: "custom" },
                   ],
                 }
               : cat,
@@ -507,7 +506,7 @@ export default function ComponentsPreview() {
                   ...cat,
                   chipOptions: cat.chipOptions.map((opt) =>
                     opt.id === chipId
-                      ? { ...opt, label: value, state: "Selected" }
+                      ? { ...opt, label: value, state: "selected" }
                       : opt,
                   ),
                 }
@@ -560,45 +559,45 @@ export default function ComponentsPreview() {
                 <Chip
                   label="Small"
                   state={chipStates["default-s"]}
-                  palette="Default"
-                  size="S"
+                  palette="default"
+                  size="s"
                   onClick={() =>
                     setChipStates((prev) => ({
                       ...prev,
                       "default-s":
-                        prev["default-s"] === "Selected"
-                          ? "Unselected"
-                          : "Selected",
+                        prev["default-s"] === "selected"
+                          ? "unselected"
+                          : "selected",
                     }))
                   }
                 />
                 <Chip
                   label="Medium"
                   state={chipStates["default-m"]}
-                  palette="Default"
-                  size="M"
+                  palette="default"
+                  size="m"
                   onClick={() =>
                     setChipStates((prev) => ({
                       ...prev,
                       "default-m":
-                        prev["default-m"] === "Selected"
-                          ? "Unselected"
-                          : "Selected",
+                        prev["default-m"] === "selected"
+                          ? "unselected"
+                          : "selected",
                     }))
                   }
                 />
                 <Chip
                   label="Disabled"
-                  state="Disabled"
-                  palette="Default"
-                  size="S"
+                  state="disabled"
+                  palette="default"
+                  size="s"
                 />
                 {customChips
-                  .filter((chip) => chip.palette === "Default")
+                  .filter((chip) => chip.palette === "default")
                   .map((chip) => (
                     <Chip
                       key={chip.id}
-                      label={chip.state === "Custom" ? "" : chip.label}
+                      label={chip.state === "custom" ? "" : chip.label}
                       state={chip.state}
                       palette={chip.palette}
                       size={chip.size}
@@ -607,7 +606,7 @@ export default function ComponentsPreview() {
                         setCustomChips((prev) =>
                           prev.map((c) =>
                             c.id === chip.id
-                              ? { ...c, label: value, state: "Selected" }
+                              ? { ...c, label: value, state: "selected" }
                               : c,
                           ),
                         );
@@ -622,8 +621,8 @@ export default function ComponentsPreview() {
                         e.stopPropagation();
                         // Only toggle if the chip is in Selected or Unselected state (not Custom)
                         if (
-                          chip.state === "Selected" ||
-                          chip.state === "Unselected"
+                          chip.state === "selected" ||
+                          chip.state === "unselected"
                         ) {
                           setCustomChips((prev) =>
                             prev.map((c) =>
@@ -631,9 +630,9 @@ export default function ComponentsPreview() {
                                 ? {
                                     ...c,
                                     state:
-                                      c.state === "Selected"
-                                        ? "Unselected"
-                                        : "Selected",
+                                      c.state === "selected"
+                                        ? "unselected"
+                                        : "selected",
                                   }
                                 : c,
                             ),
@@ -652,9 +651,9 @@ export default function ComponentsPreview() {
                       {
                         id: newId,
                         label: "",
-                        state: "Custom",
-                        palette: "Default",
-                        size: "S",
+                        state: "custom",
+                        palette: "default",
+                        size: "s",
                       },
                     ]);
                   }}
@@ -698,38 +697,38 @@ export default function ComponentsPreview() {
                   <Chip
                     label="Small"
                     state={chipStates["inverse-s"]}
-                    palette="Inverse"
-                    size="S"
+                    palette="inverse"
+                    size="s"
                     onClick={() =>
                       setChipStates((prev) => ({
                         ...prev,
                         "inverse-s":
-                          prev["inverse-s"] === "Selected"
-                            ? "Unselected"
-                            : "Selected",
+                          prev["inverse-s"] === "selected"
+                            ? "unselected"
+                            : "selected",
                       }))
                     }
                   />
                   <Chip
                     label="Medium"
                     state={chipStates["inverse-m"]}
-                    palette="Inverse"
-                    size="M"
+                    palette="inverse"
+                    size="m"
                     onClick={() =>
                       setChipStates((prev) => ({
                         ...prev,
                         "inverse-m":
-                          prev["inverse-m"] === "Selected"
-                            ? "Unselected"
-                            : "Selected",
+                          prev["inverse-m"] === "selected"
+                            ? "unselected"
+                            : "selected",
                       }))
                     }
                   />
                   <Chip
                     label="Disabled"
-                    state="Disabled"
-                    palette="Inverse"
-                    size="S"
+                    state="disabled"
+                    palette="inverse"
+                    size="s"
                   />
                 </div>
               </div>
@@ -959,10 +958,10 @@ export default function ComponentsPreview() {
           </h2>
           <div className="bg-[var(--color-surface-default-secondary)] rounded-[var(--radius-300,12px)] p-[var(--spacing-scale-032)] space-y-[var(--spacing-scale-024)]">
             {/* Small size */}
-            <MultiSelectExample size="S" />
+            <MultiSelectExample size="s" />
 
             {/* Medium size */}
-            <MultiSelectExample size="M" />
+            <MultiSelectExample size="m" />
           </div>
         </section>
       </div>

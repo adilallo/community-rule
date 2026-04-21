@@ -4,12 +4,10 @@ import { memo } from "react";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import ContentThumbnailTemplateView from "./ContentThumbnailTemplate.view";
 import type { ContentThumbnailTemplateProps } from "./ContentThumbnailTemplate.types";
-import { normalizeContentThumbnailVariant } from "../../../../lib/propNormalization";
 
 const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
   ({ post, className = "", variant: variantProp = "vertical" }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeContentThumbnailVariant(variantProp);
+    const variant = variantProp;
     // Get article-specific background image from frontmatter
     const getBackgroundImage = (
       post: ContentThumbnailTemplateProps["post"],

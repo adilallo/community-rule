@@ -1,26 +1,16 @@
-export type AlertStatusValue =
-  | "default"
-  | "positive"
-  | "warning"
-  | "danger"
-  | "Default"
-  | "Positive"
-  | "Warning"
-  | "Danger";
+export type AlertStatusValue = "default" | "positive" | "warning" | "danger";
 
-export type AlertTypeValue = "toast" | "banner" | "Toast" | "Banner";
+export type AlertTypeValue = "toast" | "banner";
 
 export interface AlertProps {
   title: string;
   description?: string;
   /**
-   * Alert status. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Alert status.
    */
   status?: AlertStatusValue;
   /**
-   * Alert type. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Alert type.
    */
   type?: AlertTypeValue;
   /**

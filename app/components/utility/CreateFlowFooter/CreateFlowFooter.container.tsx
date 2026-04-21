@@ -4,6 +4,10 @@ import { memo } from "react";
 import { CreateFlowFooterView } from "./CreateFlowFooter.view";
 import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
 
+/**
+ * Figma: "Utility / CreateFlowFooter" (TODO(figma)). Sticky footer for the
+ * create flow with a back action, optional secondary button, and progress bar.
+ */
 const CreateFlowFooterContainer = memo<CreateFlowFooterProps>(
   ({
     secondButton,

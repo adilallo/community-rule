@@ -1,0 +1,364 @@
+{
+  "header": {
+    "title": "Choose up to five Core Values",
+    "descriptionLead": "What does the community hold most dear? You can also combine or",
+    "addLink": "add",
+    "descriptionTrail": "new values to the list."
+  },
+  "multiSelect": {
+    "addButtonText": "Add value"
+  },
+  "detailModal": {
+    "subtitle": "Edit or add to this description to describe what this value means to your community.",
+    "meaningLabel": "What does this value mean to your group?",
+    "signalsLabel": "Signals of Violation",
+    "addValueButton": "Add Value"
+  },
+  "values": [
+    {
+      "label": "Accessibility",
+      "meaning": "We design spaces and tools that everyone can use regardless of ability or background. To us, this means we provide alt-text for images, wheelchair ramps for events, and use plain language in documents. We acknowledge a tension with Aesthetics/Security (Simple design vs flashy easy access vs strict gates).",
+      "signals": "Hosting events in venues that are physically inaccessible to wheelchair users or publishing video content without captions which excludes the deaf community."
+    },
+    {
+      "label": "Accountability",
+      "meaning": "Members accept responsibility for their actions and their impact on the community. To us, this means we publish error logs and hold retrospective meetings to own our mistakes without shifting blame. We acknowledge a tension with Psychological Safety (Blame-free culture vs owning mistakes).",
+      "signals": "Leaders refusing to accept responsibility for failures and instead blaming external factors or junior team members for the lack of success."
+    },
+    {
+      "label": "Adaptability",
+      "meaning": "The group remains flexible and willing to change strategies when circumstances shift. To us, this means we pivot strategies quarterly based on feedback rather than sticking to a rigid 5-year plan. We acknowledge a tension with Consistency (Changing course vs staying the path).",
+      "signals": "Persisting with a strategy that evidence shows is failing or penalizing members who suggest necessary changes based on new data."
+    },
+    {
+      "label": "Agency",
+      "meaning": "Every individual possesses the power and capacity to act on their own behalf. To us, this means Members choose their own tasks and define their own working hours. We acknowledge a tension with Alignment (Doing what you want vs pulling together).",
+      "signals": "Managers micromanaging details that should be up to the individual or requiring approval for minor decisions that slows down work unnecessarily."
+    },
+    {
+      "label": "Altruism",
+      "meaning": "We act out of a genuine concern for the well-being of others without expecting reward. To us, this means we offer services for free or pay-what-you-can, prioritizing need over ability to pay. We acknowledge a tension with Sustainability (Giving it all away vs keeping the lights on).",
+      "signals": "Only offering assistance when it provides a public relations benefit or expecting recipients of aid to perform public gratitude."
+    },
+    {
+      "label": "Anti-oppression",
+      "meaning": "We actively oppose all forms of systemic discrimination and hierarchy. To us, this means we have a dedicated diversity officer and mandatory bias training. We acknowledge a tension with Comfort (Challenging norms is uncomfortable).",
+      "signals": "Dismissing concerns about bias as irrelevant politics or refusing to examine how organizational structures replicate systemic inequalities."
+    },
+    {
+      "label": "Autonomy",
+      "meaning": "The group maintains independence from external control by governments or corporations. To us, this means we refuse funding that comes with strings attached or veto power. We acknowledge a tension with Coordination (Independence vs standardization).",
+      "signals": "Accepting funding that comes with strings attached such as donor veto power or allowing external partners to dictate internal strategy."
+    },
+    {
+      "label": "Capacity Building",
+      "meaning": "We focus on teaching skills so that members become stronger and more capable over time. To us, this means we dedicate 20% of the budget to training and mentorship programs. We acknowledge a tension with Efficiency (Training takes time away from doing).",
+      "signals": "Cutting the training budget immediately when funds are tight or expecting junior members to perform without providing any mentorship."
+    },
+    {
+      "label": "Collaboration",
+      "meaning": "We work together to solve problems rather than competing against one another. To us, this means we default to 'Multi-player mode' on documents and credit all contributors. We acknowledge a tension with Speed (Group work is slower than solo work).",
+      "signals": "Individuals hoarding information to make themselves indispensable or taking sole credit for work that was the result of a team effort."
+    },
+    {
+      "label": "Common Ownership",
+      "meaning": "Resources and assets are owned collectively by the members rather than by private investors. To us, this means Assets are held in a trust or cooperative structure where every member has a share. We acknowledge a tension with Investment Speed (Harder to raise VC capital).",
+      "signals": "Structuring the organization so that a small group of founders retains all voting power and profits despite claims of being a collective."
+    },
+    {
+      "label": "Community Care",
+      "meaning": "We prioritize the physical and mental health of our members above productivity. To us, this means we start meetings with check-ins and fund mental health stipends. We acknowledge a tension with Productivity (Rest takes time away from output).",
+      "signals": "Praising individuals for working while sick or scheduling mandatory meetings during times that are ostensibly reserved for rest and recovery."
+    },
+    {
+      "label": "Conflict Resolution",
+      "meaning": "We address disagreements openly and constructively to find a path forward. To us, this means we have a standing mediation committee and clear grievance forms. We acknowledge a tension with Harmony (Addressing conflict feels disruptive).",
+      "signals": "Ignoring interpersonal disputes in the hope they will disappear or labeling members who raise valid concerns as troublemakers to silence them."
+    },
+    {
+      "label": "Consent",
+      "meaning": "Participation and interactions are always voluntary and based on clear permission. To us, this means we use 'opt-in' by default for all communications and initiatives. We acknowledge a tension with Speed (Asking everyone takes time).",
+      "signals": "Automatically subscribing members to lists without asking or pressuring individuals to take on tasks they have already explicitly declined."
+    },
+    {
+      "label": "Consensus",
+      "meaning": "We strive to make decisions that everyone can agree to or at least live with. To us, this means we do not move forward with a proposal until all blocking concerns are resolved. We acknowledge a tension with Action/Speed (Everyone agreeing takes forever).",
+      "signals": "Pushing a decision forward despite unresolved blocking concerns or using social pressure to force dissenters to conform to the majority."
+    },
+    {
+      "label": "Constructive Feedback",
+      "meaning": "Criticism is offered kindly to help improve the work rather than to tear people down. To us, this means we use the 'Praise-Improve-Praise' sandwich and focus on the work, not the person. We acknowledge a tension with Politeness (Honesty can hurt feelings).",
+      "signals": "Delivering harsh criticism without offering actionable advice for improvement or attacking a person's character rather than their work."
+    },
+    {
+      "label": "Cooperation",
+      "meaning": "We believe working together produces better results than working in isolation. To us, this means we actively partner with similar organizations instead of competing for market share. We acknowledge a tension with Competition (Sharing the pie vs taking the pie).",
+      "signals": "Viewing similar organizations as threats to be destroyed rather than partners or refusing to share resources that could help the broader ecosystem."
+    },
+    {
+      "label": "Copyleft",
+      "meaning": "We use licensing that ensures derived works remain free and open for everyone. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Releasing modifications to open projects under restrictive licenses that prevent the community from benefiting from the improvements."
+    },
+    {
+      "label": "Decentralization",
+      "meaning": "Power is distributed across a network rather than concentrated in a central authority. To us, this means Decision-making authority is pushed to the edges no central HQ exists. We acknowledge a tension with Efficiency/Cohesion (Herding cats).",
+      "signals": "Concentrating all critical decision-making power in a single founder or small inner circle while claiming to be a flat organization."
+    },
+    {
+      "label": "Direct Action",
+      "meaning": "We take immediate steps to solve problems ourselves instead of asking authorities to do it. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Forming a committee to study a problem endlessly instead of taking immediate steps to address the urgent needs of the community."
+    },
+    {
+      "label": "Diversity",
+      "meaning": "We value a wide range of perspectives and backgrounds within our membership. To us, this means we strictly enforce quotas or targets for representation in leadership. We acknowledge a tension with Homophily/Ease (It's easier to work with people like you).",
+      "signals": "Hiring primarily for culture fit which results in a homogenous team or having a leadership team that lacks representation from marginalized groups."
+    },
+    {
+      "label": "Documentation",
+      "meaning": "We record our processes clearly so that others can learn from and duplicate our work. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Relying on oral tradition where only long-time members understand the systems or refusing to write down processes because it takes too much time."
+    },
+    {
+      "label": "Education",
+      "meaning": "We are committed to the continuous learning and growth of all members. To us, this means we publish open curriculums and host free workshops for the public. We acknowledge a tension with Action (Learning vs Doing).",
+      "signals": "Treating questions from newcomers as annoyances or creating an environment where members are afraid to admit they do not know something."
+    },
+    {
+      "label": "Empathy",
+      "meaning": "We strive to understand and share the feelings of others in our community. To us, this means we prioritize user research and listening tours before building solutions. We acknowledge a tension with Objectivity (Feeling with users vs analyzing data).",
+      "signals": "Dismissing user feedback that conflicts with internal assumptions or prioritizing data metrics over the actual lived experience of people."
+    },
+    {
+      "label": "Empowerment",
+      "meaning": "We give members the authority and resources to take charge of their own work. To us, this means we provide resources and authority to those closest to the problem. We acknowledge a tension with Control (Letting go means risking mistakes).",
+      "signals": "Delegating responsibility without giving the corresponding authority to make decisions or second-guessing every choice made by the team."
+    },
+    {
+      "label": "Equity",
+      "meaning": "We distribute resources based on need to ensure fair outcomes for everyone. To us, this means we use sliding scale pricing and offer scholarships to level the playing field. We acknowledge a tension with Equality (Different treatment vs same treatment).",
+      "signals": "Treating everyone exactly the same despite different starting points or refusing to accommodate specific needs under the guise of fairness."
+    },
+    {
+      "label": "Experimentation",
+      "meaning": "We encourage trying new things and learning from failure rather than sticking to the safe path. To us, this means we celebrate 'smart failures' as learning opportunities. We acknowledge a tension with Reliability (New things break).",
+      "signals": "Punishing members for experiments that do not succeed or requiring guaranteed success before approving any new initiative."
+    },
+    {
+      "label": "Fairness",
+      "meaning": "We apply rules and distribute resources in a just and impartial manner. To us, this means we use transparent salary bands and objective criteria for promotions. We acknowledge a tension with Favoritism (Treating everyone same vs helping friends).",
+      "signals": "Creating special rules for friends of the leadership or applying policies inconsistently depending on who is involved."
+    },
+    {
+      "label": "Fair Remuneration",
+      "meaning": "Workers are paid a fair wage that reflects the true value of their labor. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Expecting members to work for exposure or passion instead of paying a living wage for their labor."
+    },
+    {
+      "label": "Flexibility",
+      "meaning": "We accommodate the different needs and schedules of our members. To us, this means we allow remote work and asynchronous schedules. We acknowledge a tension with Predictability (Asynch work makes scheduling hard).",
+      "signals": "Penalizing members for using flexible work arrangements or judging commitment based on the number of hours physically present in the office."
+    },
+    {
+      "label": "Forkability",
+      "meaning": "Anyone has the right to take the work in a new direction if the current path fails. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Legally threatening or socially shunning a group that decides to take the project in a different direction due to disagreements."
+    },
+    {
+      "label": "Freedom",
+      "meaning": "We protect the liberty of individuals to express themselves and act as they choose. To us, this means we release our work under copyleft licenses. We acknowledge a tension with Security (Total freedom includes freedom to harm).",
+      "signals": "Censoring speech that is critical of the leadership or implementing surveillance tools to monitor member activity."
+    },
+    {
+      "label": "Freedom of Information",
+      "meaning": "Information is a public good that should not be hidden behind paywalls. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Locking important organizational knowledge behind paywalls or restricting access to documents based on arbitrary hierarchy."
+    },
+    {
+      "label": "Generosity",
+      "meaning": "We give freely of our time and resources to support the collective goal. To us, this means we share our surplus resources with aligned groups in need. We acknowledge a tension with Self-Preservation (Giving until it hurts).",
+      "signals": "Hoarding a surplus of resources while allied groups are struggling to survive or viewing every interaction as a transaction to be maximized."
+    },
+    {
+      "label": "Harm Reduction",
+      "meaning": "We focus on minimizing negative consequences associated with risky behaviors or systemic issues. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Insisting on abstinence-only approaches to risk or refusing to provide safety equipment because it might encourage risky behavior."
+    },
+    {
+      "label": "Holism",
+      "meaning": "We consider the whole person and the whole system rather than just isolated parts. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Ignoring the personal context of a member and treating them solely as a unit of production or optimizing one department at the expense of others."
+    },
+    {
+      "label": "Holocracy",
+      "meaning": "We organize around roles and circles rather than top-down managers. To us, this means we use circles and roles instead of managers and job titles. We acknowledge a tension with Clarity (Roles can be confusing compared to titles).",
+      "signals": "Reintroducing hidden hierarchies where influence is based on social capital rather than clear roles or ignoring governance processes."
+    },
+    {
+      "label": "Honesty",
+      "meaning": "We tell the truth even when it is difficult or uncomfortable. To us, this means we refuse to spin bad news and admit when we don't know the answer. We acknowledge a tension with Diplomacy (Blunt truth vs tact).",
+      "signals": "Hiding bad news from the membership to protect morale or giving vague non-answers when asked direct questions about challenges."
+    },
+    {
+      "label": "Horizontalism",
+      "meaning": "We organize as equals without bosses or top-down management structures. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Creating informal power structures where a shadow board makes the real decisions outside of the collective process."
+    },
+    {
+      "label": "Humility",
+      "meaning": "We recognize that we do not have all the answers and are open to learning from others. To us, this means Leaders eat last and credit the team for successes. We acknowledge a tension with Marketing (Selling yourself vs being modest).",
+      "signals": "Leaders taking credit for the team's success while blaming the team for failures or refusing to admit when they are wrong."
+    },
+    {
+      "label": "Inclusion",
+      "meaning": "We proactively welcome people who are often marginalized or excluded. To us, this means we proactively invite marginalized voices to the planning table. We acknowledge a tension with Exclusivity/Focus (Big tent vs niche group).",
+      "signals": "Holding meetings in spaces or at times that are inaccessible to working parents or people with different schedules."
+    },
+    {
+      "label": "Inclusivity",
+      "meaning": "We actively welcome people who have been historically marginalized or excluded. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Using jargon that alienates newcomers or failing to provide translation for members who speak different languages."
+    },
+    {
+      "label": "Independence",
+      "meaning": "We avoid reliance on any single funding source or authority figure. To us, this means we maintain a diversified funding base to avoid dependency on one donor. We acknowledge a tension with Resources (Going it alone means less help).",
+      "signals": "Relying on a single large donor who threatens to pull funding if the organization takes a political stance they dislike."
+    },
+    {
+      "label": "Innovation",
+      "meaning": "We value new ideas and creative solutions over tradition and established methods. To us, this means we reward novel approaches even if they disrupt current workflows. We acknowledge a tension with Tradition (New vs Old).",
+      "signals": "Shutting down new ideas with the excuse that things have always been done a certain way or refusing to allocate resources to test new concepts."
+    },
+    {
+      "label": "Integrity",
+      "meaning": "We align our actions with our stated values even when no one is watching. To us, this means we refuse contracts that violate our ethical standards, regardless of profit. We acknowledge a tension with Profit/Opportunity (Saying no to easy money).",
+      "signals": "Accepting a partnership that violates the group's core values because the financial offer is too good to refuse."
+    },
+    {
+      "label": "Interdependence",
+      "meaning": "We recognize that our survival and success are tied to the well-being of others. To us, this means we map our supply chain to ensure we support local ecosystems. We acknowledge a tension with Self-Sufficiency (Relying on others vs prepping).",
+      "signals": "Acting as if the organization exists in a vacuum and ignoring the impact of its actions on the surrounding community or ecosystem."
+    },
+    {
+      "label": "Interoperability",
+      "meaning": "Our tools and systems are designed to work seamlessly with other open systems. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Building walled gardens that trap users or deliberately breaking compatibility with other open tools to lock people in."
+    },
+    {
+      "label": "Intersectionality",
+      "meaning": "We consider how different forms of discrimination overlap to affect individuals. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Focusing on a single issue like class while ignoring how race and gender compound the experience of oppression for some members."
+    },
+    {
+      "label": "Justice",
+      "meaning": "We seek to repair past wrongs and create a fair system for the future. To us, this means we prioritize restorative processes over punitive ones. We acknowledge a tension with Mercy (Strict rules vs forgiveness).",
+      "signals": "Focusing on punishment and exclusion rather than healing and restoration or applying rules more strictly to marginalized members."
+    },
+    {
+      "label": "Knowledge Sharing",
+      "meaning": "We freely distribute information so that everyone can benefit from it. To us, this means we document everything in a public wiki. We acknowledge a tension with Intellectual Property (Open source vs patent).",
+      "signals": "Creating silos where information is hoarded to maintain power or refusing to document work so that others become dependent on a single expert."
+    },
+    {
+      "label": "Labor Rights",
+      "meaning": "We uphold the right of all workers to organize and advocate for their conditions. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Discouraging members from discussing their pay or working conditions or retaliating against those who try to organize."
+    },
+    {
+      "label": "Leadership",
+      "meaning": "We encourage everyone to step up and take initiative when needed. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Waiting for permission to solve an obvious problem or complaining about an issue without offering to help fix it."
+    },
+    {
+      "label": "Learning",
+      "meaning": "We embrace mistakes as opportunities to grow rather than failures to be punished. To us, this means we fund conference tickets and book clubs for members. We acknowledge a tension with Performance (Study time vs work time).",
+      "signals": "Viewing mistakes as a sign of incompetence rather than a learning opportunity or cutting the budget for personal development."
+    },
+    {
+      "label": "Liberty",
+      "meaning": "We oppose authoritarian control and support the freedom of the individual. To us, this means we defend the right of members to fork the project if they disagree. We acknowledge a tension with Order (Chaos vs rules).",
+      "signals": "Imposing strict rules on personal behavior that has no impact on the work or demanding ideological purity tests for membership."
+    },
+    {
+      "label": "Localism",
+      "meaning": "We prioritize local needs and resources over global or distant ones. To us, this means we source supplies from within a 50-mile radius. We acknowledge a tension with Globalism/Scale (Sourcing near vs sourcing cheap).",
+      "signals": "Importing goods that could be sourced locally to save a small amount of money or ignoring the needs of the immediate neighborhood."
+    },
+    {
+      "label": "Maintenance",
+      "meaning": "We value the unglamorous work of sustaining and fixing what we have already built. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Celebrating only new feature launches while neglecting the critical infrastructure that keeps the organization running."
+    },
+    {
+      "label": "Mentorship",
+      "meaning": "Experienced members actively guide and support newcomers. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Senior members refusing to spend time training juniors or creating a culture where asking for help is seen as weakness."
+    },
+    {
+      "label": "Meritocracy",
+      "meaning": "Influence is earned through active contribution and skill rather than status or wealth. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Rewarding people based on their confidence and social status rather than the actual quality and impact of their contributions."
+    },
+    {
+      "label": "Mutual Aid",
+      "meaning": "We engage in a reciprocal exchange of resources where everyone is both a giver and a receiver. To us, this means we practice 'solidarity, not charity' by exchanging resources directly. We acknowledge a tension with Charity (Solidarity vs Tax Write-offs).",
+      "signals": "Creating a transactional system where help is only given with the expectation of an immediate equivalent return."
+    },
+    {
+      "label": "Non-violence",
+      "meaning": "We reject physical and emotional violence as a means to achieve our goals. To us, this means we de-escalate conflicts and refuse to engage with law enforcement where possible. We acknowledge a tension with Self-Defense (Turning cheek vs fighting back).",
+      "signals": "Using aggressive language or intimidation tactics to silence opposition or justifying harm as necessary for the greater good."
+    },
+    {
+      "label": "Open Source",
+      "meaning": "We make our work freely available for others to use; study; and modify. To us, this means Observable actions that demonstrate this value. We recognize that Values often trade off with Efficiency or Speed.",
+      "signals": "Releasing code without documentation or using a license that claims to be open but actually restricts commercial use or modification."
+    },
+    {
+      "label": "Openness",
+      "meaning": "We operate transparently and invite participation from the outside world. To us, this means All meetings are open to the public unless safety is at risk. We acknowledge a tension with Privacy/Security (Open doors let bugs in).",
+      "signals": "Conducting all real business in private messages and only using public meetings to rubber-stamp decisions that have already been made."
+    },
+    {
+      "label": "Participation",
+      "meaning": "Democracy requires the active engagement of all members in the decision-making process. To us, this means we require active contribution to maintain voting rights. We acknowledge a tension with Efficiency (Too many cooks).",
+      "signals": "Creating barriers to entry that make it difficult for new members to have a voice or ignoring the input of the broader membership."
+    },
+    {
+      "label": "Reliability",
+      "meaning": "Members can count on one another to follow through on what they commit to. To us, this means we do what we say we will do and notify others early when plans must change. We acknowledge a tension with Flexibility (Sticking to the plan vs adapting).",
+      "signals": "Missing deadlines without notice or making ambitious commitments the group knows it cannot keep."
+    },
+    {
+      "label": "Resilience",
+      "meaning": "The group can absorb shocks and keep functioning when conditions get hard. To us, this means we build redundancy into critical roles and document institutional knowledge so no single departure sinks the work. We acknowledge a tension with Efficiency (Backup capacity vs lean operations).",
+      "signals": "Concentrating all critical knowledge in one person or ignoring warning signs of burnout until key members quit."
+    },
+    {
+      "label": "Solidarity",
+      "meaning": "We stand with one another, especially when members face pressure from outside forces. To us, this means we defend members against unjust treatment and share risk collectively rather than leaving anyone exposed. We acknowledge a tension with Individualism (Collective defense vs personal autonomy).",
+      "signals": "Staying silent when a member faces mistreatment or leaving vulnerable members to handle external pressure alone."
+    },
+    {
+      "label": "Stewardship",
+      "meaning": "We take responsibility for tending the shared resources and relationships entrusted to us. To us, this means we make decisions with future members in mind and reinvest in the infrastructure we depend on. We acknowledge a tension with Efficiency (Long-term care vs short-term output).",
+      "signals": "Extracting short-term value from shared resources without replenishing them or deferring maintenance until systems fail."
+    },
+    {
+      "label": "Transparency",
+      "meaning": "Decisions, finances, and processes are visible to the membership by default. To us, this means we publish meeting notes, budgets, and decision logs where all members can read them. We acknowledge a tension with Privacy (Open books vs personal disclosure).",
+      "signals": "Making major decisions in private channels and only announcing outcomes, or hiding finances behind vague summaries."
+    },
+    {
+      "label": "Trust",
+      "meaning": "We extend good faith to one another and build relationships that can withstand disagreement. To us, this means we interpret others charitably and repair quickly when trust is strained. We acknowledge a tension with Accountability (Assuming good intent vs naming harm).",
+      "signals": "Jumping to worst-case interpretations of ambiguous behavior or withholding repair when a breach could be addressed directly."
+    },
+    {
+      "label": "Voluntarism",
+      "meaning": "Participation is freely chosen rather than coerced, and contribution is recognized on its own terms. To us, this means we don't pressure members into tasks they haven't consented to and we honor their right to step back. We acknowledge a tension with Reliability (Free participation vs guaranteed coverage).",
+      "signals": "Using guilt or social pressure to extract labor from members or shaming people who decline additional responsibilities."
+    }
+  ]
+}

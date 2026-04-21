@@ -4,6 +4,10 @@ import { memo, useCallback, useState } from "react";
 import InfoMessageBoxView from "./InfoMessageBox.view";
 import type { InfoMessageBoxProps } from "./InfoMessageBox.types";
 
+/**
+ * Figma: "Utility / InfoMessageBox" (TODO(figma)). Bordered message box that
+ * lists checkbox items under a title with an optional leading icon.
+ */
 const InfoMessageBoxContainer = memo<InfoMessageBoxProps>(
   ({
     title,

@@ -1,41 +1,24 @@
 import type { InputStateValue } from "../../../../lib/propNormalization";
 
-export type TextAreaSizeValue =
-  | "small"
-  | "medium"
-  | "large"
-  | "Small"
-  | "Medium"
-  | "Large";
-export type TextAreaLabelVariantValue =
-  | "default"
-  | "horizontal"
-  | "Default"
-  | "Horizontal";
+export type TextAreaSizeValue = "small" | "medium" | "large";
+export type TextAreaLabelVariantValue = "default" | "horizontal";
 
-export type TextAreaAppearanceValue =
-  | "default"
-  | "embedded"
-  | "Default"
-  | "Embedded";
+export type TextAreaAppearanceValue = "default" | "embedded";
 
 export interface TextAreaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   "size" | "onChange" | "onFocus" | "onBlur"
 > {
   /**
-   * Text area size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Text area size.
    */
   size?: TextAreaSizeValue;
   /**
-   * Label variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Label variant.
    */
   labelVariant?: TextAreaLabelVariantValue;
   /**
-   * Visual state. Accepts "default"/"Default", "active"/"Active", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Visual state.
    */
   state?: InputStateValue;
   disabled?: boolean;

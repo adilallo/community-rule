@@ -21,24 +21,13 @@ export default {
     },
     mode: {
       control: "select",
-      options: ["standard", "inverse", "Standard", "Inverse"],
-      description:
-        "Visual mode of the radio button (case-insensitive: accepts both lowercase and PascalCase)",
+      options: ["standard", "inverse"],
+      description: "Visual mode of the radio button",
     },
     state: {
       control: "select",
-      options: [
-        "default",
-        "hover",
-        "focus",
-        "selected",
-        "Default",
-        "Hover",
-        "Focus",
-        "Selected",
-      ],
-      description:
-        "Interaction state for static display (case-insensitive: accepts both lowercase and PascalCase)",
+      options: ["default", "hover", "focus", "selected"],
+      description: "Interaction state for static display",
     },
     disabled: {
       control: "boolean",
@@ -286,15 +275,15 @@ export const FigmaPascalCase = () => {
           <RadioButton
             label="Standard Mode (PascalCase)"
             checked={standardChecked}
-            mode="Standard"
-            state="Default"
+            mode="standard"
+            state="default"
             onChange={({ checked }) => setStandardChecked(checked)}
           />
           <RadioButton
             label="Inverse Mode (PascalCase)"
             checked={inverseChecked}
-            mode="Inverse"
-            state="Default"
+            mode="inverse"
+            state="default"
             onChange={({ checked }) => setInverseChecked(checked)}
           />
         </div>
@@ -314,7 +303,7 @@ export const FigmaPascalCase = () => {
             label="Inverse Mode (mixed) - still works"
             checked={false}
             mode="inverse"
-            state="Default"
+            state="default"
           />
         </div>
       </div>

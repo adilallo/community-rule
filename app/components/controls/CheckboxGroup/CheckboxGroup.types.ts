@@ -12,8 +12,7 @@ export interface CheckboxGroupProps {
   value?: string[];
   onChange?: (_data: { value: string[] }) => void;
   /**
-   * Mode variant. Accepts both "standard"/"Standard" and "inverse"/"Inverse" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Mode variant.
    */
   mode?: ModeValue;
   disabled?: boolean;

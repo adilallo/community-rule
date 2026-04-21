@@ -3,8 +3,11 @@
 import { memo, useCallback, useId, useState } from "react";
 import { CheckboxGroupView } from "./CheckboxGroup.view";
 import type { CheckboxGroupProps } from "./CheckboxGroup.types";
-import { normalizeMode } from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / CheckboxGroup" (TODO(figma)). Group of checkboxes sharing
+ * a name that emits the array of currently selected values.
+ */
 const CheckboxGroupContainer = ({
   name,
   value,
@@ -15,8 +18,7 @@ const CheckboxGroupContainer = ({
   className = "",
   ...props
 }: CheckboxGroupProps) => {
-  // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-  const mode = normalizeMode(modeProp);
+  const mode = modeProp;
   // Generate unique ID for accessibility if not provided
   const generatedId = useId();
   const groupId = name || `checkbox-group-${generatedId}`;

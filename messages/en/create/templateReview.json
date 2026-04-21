@@ -5,13 +5,18 @@
   },
   "footer": {
     "useWithoutChanges": "Use without changes",
-    "customize": "Customize",
-    "customizeAriaHint": "Customize flow coming soon; for now this continues to the create flow entry."
+    "customize": "Customize"
   },
   "errors": {
     "loadFailed": "We could not load this template. Try again or pick another template from the home page.",
     "notFound": "This template was not found.",
     "applyFailed": "Something went wrong. Please try again."
   },
-  "loading": "Loading template…"
+  "loading": "Loading template…",
+  "chipDetailModal": {
+    "closeButton": "Close",
+    "fallback": {
+      "bodyLabel": "Details for this entry are not yet available."
+    }
+  }
 }

@@ -17,16 +17,16 @@ const config: ComponentTestSuiteConfig<Props> = {
     helpIcon: false,
     asterisk: false,
     helperText: false,
-    size: "S",
-    palette: "Default",
+    size: "s",
+    palette: "default",
   } as Props,
   requiredProps: ["label"],
   optionalProps: {
     helpIcon: true,
     asterisk: true,
     helperText: true,
-    size: "M",
-    palette: "Inverse",
+    size: "m",
+    palette: "inverse",
   },
   primaryRole: undefined, // InputLabel is not directly interactive
   testCases: {
@@ -67,28 +67,28 @@ describe("InputLabel – behaviour specifics", () => {
     expect(screen.getByText("Custom helper")).toBeInTheDocument();
   });
 
-  it("applies size S styling", () => {
-    render(<InputLabel label="Test Label" size="S" />);
+  it("applies size s styling", () => {
+    render(<InputLabel label="Test Label" size="s" />);
     const label = screen.getByText("Test Label");
     expect(label).toHaveClass("text-[length:var(--sizing-350,14px)]");
   });
 
-  it("applies size M styling", () => {
-    render(<InputLabel label="Test Label" size="M" />);
+  it("applies size m styling", () => {
+    render(<InputLabel label="Test Label" size="m" />);
     const label = screen.getByText("Test Label");
     expect(label).toHaveClass("text-[length:var(--sizing-400,16px)]");
   });
 
-  it("applies Default palette styling", () => {
-    render(<InputLabel label="Test Label" palette="Default" />);
+  it("applies default palette styling", () => {
+    render(<InputLabel label="Test Label" palette="default" />);
     const label = screen.getByText("Test Label");
     expect(label).toHaveClass(
       "text-[color:var(--color-content-default-secondary,#d2d2d2)]",
     );
   });
 
-  it("applies Inverse palette styling", () => {
-    render(<InputLabel label="Test Label" palette="Inverse" />);
+  it("applies inverse palette styling", () => {
+    render(<InputLabel label="Test Label" palette="inverse" />);
     const label = screen.getByText("Test Label");
     expect(label).toHaveClass(
       "text-[color:var(--color-content-inverse-secondary,#1f1f1f)]",

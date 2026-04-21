@@ -1,0 +1,305 @@
+{
+  "_comment": "Create flow — conflict management (Figma Flow — Compact Card Stack `20879:15979`)",
+  "page": {
+    "compactTitle": "How should conflicts be managed\nin your group?",
+    "compactDescriptionBefore": "You can also combine or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " new approaches to the list",
+    "expandedTitle": "How should conflicts be managed in your group?",
+    "expandedDescription": "You can also combine or add new approaches to the list",
+    "seeAllLink": "See all conflict management approaches"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "addApproach": {
+    "nextButtonText": "Add Approach"
+  },
+  "sectionHeadings": {
+    "corePrinciple": "Core Principle",
+    "applicableScope": "Applicable Scope",
+    "processProtocol": "Process Protocol",
+    "restorationFallbacks": "Restoration & Fallbacks"
+  },
+  "scopeAddButtonLabel": "Add Applicable Scope",
+  "methods": [
+    {
+      "id": "peer-mediation",
+      "label": "Peer Mediation",
+      "supportText": "Trained members within the organization mediate disputes among peers.",
+      "sections": {
+        "corePrinciple": "We democratize conflict skills. Instead of relying on professional outsiders, trained peers help their colleagues resolve disputes, reinforcing the idea that we take care of each other.",
+        "applicableScope": [
+          "Low-level friction",
+          "misunderstandings",
+          "and minor grievances between peers."
+        ],
+        "processProtocol": "A volunteer peer (who is not a manager) invites the disputants to a private chat. Using a simple script, they ask questions like 'Tell us your side,' 'Tell us what you need,' and 'What can you agree to?'. The peer keeps the conversation focused on future interactions rather than past grievances. The disputants retain full control over the resolution.",
+        "restorationFallbacks": "The goal is a verbal agreement to try a new way of interacting. If the peer mediator determines the issue is too complex or involves serious harassment, they are required to refer the case to professional Mediation or a Judicial Committee."
+      }
+    },
+    {
+      "id": "conflict-resolution-council",
+      "label": "Conflict Resolution Council",
+      "supportText": "Senior members with institutional knowledge provide guidance or decisions.",
+      "sections": {
+        "corePrinciple": "We rely on the wisdom of experienced members to guide us back to our values. This body acts as the 'keepers of the culture,' providing high-context advice to resolve friction.",
+        "applicableScope": [
+          "Smoldering cultural tensions or gray-area cases where the Code of Conduct isn't clearly violated but trust is eroding."
+        ],
+        "processProtocol": "Disputants submit a request to the standing Council, which reviews the submission and may interview witnesses to understand the cultural context. The Council deliberates privately, referencing the community's values and history, before issuing a formal 'Opinion' or recommendation. While the Council holds significant influence (approx. 50% 'weight'), their recommendation is not strictly binding; it relies on social pressure and respect for the elders to encourage adoption.",
+        "restorationFallbacks": "The artifact is a formal 'Council Opinion' that clarifies how community values apply to the situation. If the parties ignore this guidance, the Council may recommend formal disciplinary action or a community vote to enforce the standard."
+      }
+    },
+    {
+      "id": "facilitated-negotiation",
+      "label": "Facilitated Negotiation",
+      "supportText": "A neutral facilitator helps guide the negotiation process.",
+      "sections": {
+        "corePrinciple": "Neutral support helps parties navigate emotional barriers to reach their own agreement. We recognize that sometimes communication breaks down not because of the issue, but because of the dynamic between people.",
+        "applicableScope": [
+          "Heated interpersonal disputes where direct communication has failed but the parties are still willing to talk."
+        ],
+        "processProtocol": "A neutral facilitator joins the discussion to set strict ground rules, such as 'no interrupting' and 'speak from I'. The facilitator manages the emotional temperature while parties take turns sharing their perspectives. By reframing toxic language—turning accusations like 'You're a liar' into statements of impact like 'I feel untrusted'—the facilitator helps the disputants focus on the substantive issues. The parties themselves retain the power to co-create and finalize the solution.",
+        "restorationFallbacks": "The process concludes with a signed or verbal Memorandum of Understanding outlining the agreed-upon behaviors. If this fails to hold, the next step is often formal Mediation or Non-Binding Arbitration to bring in more structured guidance."
+      }
+    },
+    {
+      "id": "ad-hoc-arbitration",
+      "label": "Ad Hoc Arbitration",
+      "supportText": "Arbitrators are chosen specifically for a particular case.",
+      "sections": {
+        "corePrinciple": "We value speed and specific expertise. For technical or niche disputes, we appoint a temporary judge who knows the subject matter better than a general tribunal.",
+        "applicableScope": [
+          "Technical disputes (e.g.",
+          "code architecture)",
+          "artistic differences",
+          "or specific one-off grievances."
+        ],
+        "processProtocol": "Parties agree that they are deadlocked and mutually select a single expert they both trust to act as the arbitrator. They sign an agreement beforehand to abide by this person's decision, effectively handing over 100% of the decision power. Each side presents their technical arguments, and the arbitrator reviews the evidence to issue a final ruling on the specific issue.",
+        "restorationFallbacks": "The arbitrator's ruling is final and binding for that specific issue, allowing work to proceed. Importantly, this specific ruling does not create a binding precedent for future, unrelated conflicts."
+      }
+    },
+    {
+      "id": "conflict-workshops",
+      "label": "Conflict Workshops",
+      "supportText": "Structured sessions where parties collaboratively resolve disputes and improve future interactions.",
+      "sections": {
+        "corePrinciple": "We view conflict competence as a skill to be learned. By practicing in a low-stakes environment, we immunize the community against toxic fighting when high-stakes issues arise.",
+        "applicableScope": [
+          "Preventative care during 'peacetime' or as a mandatory reset when the community vibe feels toxic."
+        ],
+        "processProtocol": "A trainer assesses the community's conflict style and gathers the group for a structured session. Participants engage in role-playing exercises, such as 'The Angry Neighbor', to practice active listening and Non-Violent Communication (NVC). The group debriefs what worked and commits to using new tools. This is a capacity-building exercise where no binding decisions are made.",
+        "restorationFallbacks": "The outcome is increased capacity and a shared vocabulary for handling tension. While there is no ruling, a member's refusal to participate in mandatory workshops may be documented as a lack of commitment to the group's health."
+      }
+    },
+    {
+      "id": "supermajority-vote",
+      "label": "Supermajority Vote",
+      "supportText": "Members vote to resolve a dispute democratically.",
+      "sections": {
+        "corePrinciple": "We use the weight of the community to resolve binary impasses. When a decision must be made and consensus is impossible, a decisive vote allows the group to move on.",
+        "applicableScope": [
+          "Final deadlock on policy decisions or removal of a member after other methods have failed."
+        ],
+        "processProtocol": "The conflict is crystallized into a clear, binary proposal (e.g., 'Should we remove member X?'). A debate period allows arguments for and against to be presented. A vote is then taken, typically via secret ballot to protect relationships. For the decision to be binding, the 'Yes' votes must exceed a high threshold—usually 75% (or 2/3rds, depending on bylaws)—effectively transferring 100% of the decision power to the voting body.",
+        "restorationFallbacks": "This produces a binding, final decision. The minority is expected to 'disagree and commit' to the result. Continued resistance or sabotage after a vote is considered a violation of community norms and is often grounds for leaving the group."
+      }
+    },
+    {
+      "id": "interest-based-bargaining",
+      "label": "Interest-Based Bargaining",
+      "supportText": "Focuses on underlying interests rather than fixed positions to find win-win solutions.",
+      "sections": {
+        "corePrinciple": "We separate the people from the problem. By focusing on why someone wants something (interests) rather than what they demand (positions), we can often find 'win-win' scenarios.",
+        "applicableScope": [
+          "Resource allocation disputes",
+          "scheduling conflicts",
+          "or disagreements over project direction."
+        ],
+        "processProtocol": "Parties list their specific demands ('Positions') and then peel back the layers by asking 'Why do you want this?' for each one. This uncovers the underlying 'Interest'—for example, 'I want the 5pm slot' becomes 'I need to pick up my kids'. The parties identify shared interests and brainstorm solutions that satisfy these core needs. They retain full authority to accept or reject the final trade-off.",
+        "restorationFallbacks": "The result is a trade-off agreement or contract. If parties remain stuck in their positions and cannot find a win-win, the process typically escalates to facilitated negotiation or mediation."
+      }
+    },
+    {
+      "id": "restorative-practices",
+      "label": "Restorative Practices",
+      "supportText": "Dialogue-focused methods for understanding and repairing harm.",
+      "sections": {
+        "corePrinciple": "We view conflict as a wound in the community, not a legal infraction. Our goal is accountability and repair: the offender must understand the impact of their actions and work to make it right.",
+        "applicableScope": [
+          "Harassment",
+          "Code of Conduct violations",
+          "or interpersonal harm where the offender admits responsibility."
+        ],
+        "processProtocol": "A facilitator holds pre-conference meetings with both parties to ensure readiness. A joint dialogue is then convened where the harmed party shares the impact of the actions ('When you did X, I felt Y'). The offender practices deep listening and reflects back what they heard without defending themselves. Together, they co-create a 'Repair Plan' to address the harm, retaining ownership of the solution.",
+        "restorationFallbacks": "The artifact is a signed 'Repair Plan' detailing specific actions (apologies, education, community service). If the offender refuses to follow through on the plan they helped create, the process converts to a punitive one, such as a Tribunal hearing or expulsion."
+      }
+    },
+    {
+      "id": "mediation",
+      "label": "Mediation",
+      "supportText": "A neutral third party assists parties in reaching a voluntary agreement.",
+      "sections": {
+        "corePrinciple": "We empower disputants to solve their own problems with structure. A mediator manages the process, but the parties own the outcome, ensuring they actually buy into the solution.",
+        "applicableScope": [
+          "Deep-seated interpersonal conflicts",
+          "co-founder disputes",
+          "or recurring friction between working groups."
+        ],
+        "processProtocol": "The mediator conducts separate 'intake' calls to hear each side's story privately before convening a joint session. During the session, the mediator uses 'looping' to ensure parties feel heard and may call a 'Caucus' (private meeting) if emotions run high. The mediator guides the parties to generate options and stress-test them, but the final decision power remains 0% with the mediator and 100% with the parties.",
+        "restorationFallbacks": "The outcome is a written Mediation Agreement. If mediation fails due to impasse, the parties must explicitly decide whether to 'agree to disagree' and live with the conflict, or escalate to Binding Arbitration to force a resolution."
+      }
+    },
+    {
+      "id": "circle-processes",
+      "label": "Circle Processes",
+      "supportText": "A structured format for open dialogue with equal input from all involved.",
+      "sections": {
+        "corePrinciple": "We prioritize equality and connection. By sitting in a circle and using a talking piece, we dismantle hierarchies and force deep listening, allowing the emotional truth of a conflict to surface.",
+        "applicableScope": [
+          "Community-wide trauma",
+          "grief processing",
+          "or when a conflict has rippled out to affect the whole group."
+        ],
+        "processProtocol": "Participants gather in a circle with a centerpiece, and a 'Keeper' opens the session with a poem or quote to set the tone. A talking piece is introduced, granting the holder sole permission to speak. The group moves through rounds answering specific questions like 'What is the hardest part of this for you?', ensuring every voice is heard equally. No decision is forced; the power resides in the collective understanding generated by the circle.",
+        "restorationFallbacks": "The goal is a collective sense of understanding or a 'Group Covenant' describing how we want to be together. If specific harm is identified that requires repair, the circle may spin off into a separate Restorative Justice process."
+      }
+    },
+    {
+      "id": "judicial-committees",
+      "label": "Judicial Committees",
+      "supportText": "A standing committee responsible for adjudicating disputes.",
+      "sections": {
+        "corePrinciple": "We ensure consistency and due process. By having a standing body, we remove bias and ensure that every conflict is judged against the same set of bylaws.",
+        "applicableScope": [
+          "Interpretation of bylaws",
+          "contested elections",
+          "or allegations of abuse of power by leadership."
+        ],
+        "processProtocol": "A formal complaint is filed with the Committee, which is composed of elected or appointed members serving fixed terms. The Committee holds a formal hearing where both sides present evidence and call witnesses. The proceedings are recorded. The Committee then deliberates in closed session to determine if the rules were violated, holding 100% of the decision power.",
+        "restorationFallbacks": "The Committee issues a written 'Judgment' that is binding. This may include penalties like censure, removal from office, or expulsion. The decision is recorded in the organization's case law to guide future rulings."
+      }
+    },
+    {
+      "id": "managerial-decision",
+      "label": "Managerial Decision",
+      "supportText": "A manager or leader makes a binding decision.",
+      "sections": {
+        "corePrinciple": "We prioritize efficiency and clear lines of authority. In a hierarchy, the person with responsibility for the outcome must have the authority to resolve the blockers.",
+        "applicableScope": [
+          "Operational disagreements",
+          "performance issues",
+          "or swift resolution of low-stakes conflicts."
+        ],
+        "processProtocol": "The manager hears both sides of the conflict (often in 1:1 meetings) and consults organizational policy. They then make a unilateral decision based on what is best for the business or the team's goals. The manager holds 100% of the decision power.",
+        "restorationFallbacks": "The decision is communicated as a directive. Compliance is mandatory as a condition of employment. Failure to comply is treated as insubordination."
+      }
+    },
+    {
+      "id": "internal-tribunal",
+      "label": "Internal Tribunal",
+      "supportText": "A formal hearing body within the organization.",
+      "sections": {
+        "corePrinciple": "We provide rigorous due process for the most serious accusations. To protect members from unjust expulsion, we simulate a legal trial to ensure high standards of evidence.",
+        "applicableScope": [
+          "High-stakes violations that could result in permanent expulsion",
+          "blacklisting",
+          "or significant financial penalty."
+        ],
+        "processProtocol": "A panel of judges (often distinct from the leadership team) is convened. A 'Prosecutor' presents the case against the accused, and a 'Defender' advocates for them. Formal rules of evidence apply. The Tribunal weighs the facts against the organization's 'Constitution' or supreme laws.",
+        "restorationFallbacks": "The Tribunal issues a Verdict. If guilty, the sentence is executed immediately. Appeals are only allowed on procedural grounds (e.g., if the Tribunal failed to follow its own rules), not on the facts of the case."
+      }
+    },
+    {
+      "id": "consensus-building",
+      "label": "Consensus Building",
+      "supportText": "Collaborative work to reach a resolution that all parties can agree upon.",
+      "sections": {
+        "corePrinciple": "We believe that sustainable solutions come from the parties themselves finding common ground. Unlike a top-down ruling, a consensus agreement ensures that all stakeholders feel heard and invested in the outcome.",
+        "applicableScope": [
+          "Best for complex",
+          "multi-stakeholder issues where relationships must be preserved and no single rule was broken."
+        ],
+        "processProtocol": "The process begins by convening all stakeholders in a shared space to establish shared goals and ground rules. Each party is invited to state their underlying needs rather than just their surface demands. The group then brainstorms multiple options for mutual gain without immediate judgment. Through dialogue, these options are refined until a single solution emerges that every stakeholder can support, maintaining full decision-making power within the group itself.",
+        "restorationFallbacks": "The result is a shared agreement ratified by all parties. If consensus cannot be reached, the group may define a specific fallback mechanism, such as escalating to a Supermajority Vote (requiring 75% agreement) or bringing in an external Facilitator to unblock the dialogue."
+      }
+    },
+    {
+      "id": "binding-arbitration",
+      "label": "Binding Arbitration",
+      "supportText": "An external arbitrator makes a binding decision.",
+      "sections": {
+        "corePrinciple": "We need finality and legal certainty. By outsourcing the decision to a professional judge, we remove internal bias and ensure the ruling will hold up in court.",
+        "applicableScope": [
+          "Commercial disputes",
+          "contract breaches between entities",
+          "or employment termination disputes."
+        ],
+        "processProtocol": "The organization contracts a professional arbitration firm. The process follows strict legal procedures similar to a court trial but is private. The arbitrator hears evidence and legal arguments from both sides' lawyers. The arbitrator holds 100% of the decision power.",
+        "restorationFallbacks": "The award is final, binding, and enforceable in real-world courts. There is typically no right of appeal. This provides total closure to the dispute."
+      }
+    },
+    {
+      "id": "non-binding-arbitration",
+      "label": "Non-Binding Arbitration",
+      "supportText": "An arbitrator gives a recommendation that is not binding.",
+      "sections": {
+        "corePrinciple": "We want an expert opinion to break a deadlock, but we aren't ready to hand over full control. A neutral expert's 'advisory opinion' can often shame or persuade parties into agreement.",
+        "applicableScope": [
+          "Complex technical or valuation disputes where parties need a reality check on their positions."
+        ],
+        "processProtocol": "Similar to binding arbitration, a neutral expert hears the case. However, instead of a ruling, they issue a 'Recommendation' explaining how a court would likely rule or what is fair. The parties then take this recommendation back to the negotiation table.",
+        "restorationFallbacks": "The parties use the recommendation as a baseline for a final settlement. If they still cannot agree, they preserve the right to go to court or binding arbitration."
+      }
+    },
+    {
+      "id": "binding-contracts",
+      "label": "Binding Contracts",
+      "supportText": "Legal agreements that define resolution methods.",
+      "sections": {
+        "corePrinciple": "We prioritize predictability and liability protection. By defining the rules of engagement in advance, we prevent ambiguity when things go wrong.",
+        "applicableScope": [
+          "Vendor relationships",
+          "employment terms",
+          "intellectual property ownership",
+          "and liability waivers."
+        ],
+        "processProtocol": "The process happens before conflict arises. Parties negotiate terms (using lawyers if necessary) and sign a document. When a conflict occurs, the contract is referenced. If the contract says 'X happens,' then X happens automatically without further debate.",
+        "restorationFallbacks": "The contract itself is the resolution mechanism. Breach of contract triggers specific penalties defined in the document (e.g., termination, fines)."
+      }
+    },
+    {
+      "id": "lottery-sortition",
+      "label": "Lottery/Sortition",
+      "supportText": "Random selection used to resolve low-stakes disputes or select juries.",
+      "sections": {
+        "corePrinciple": "We believe that when two valid options exist and neither is 'wrong,' a random decision is the fairest way to break the tie.",
+        "applicableScope": [
+          "Allocating scarce resources (e.g.",
+          "who gets the office)",
+          "scheduling conflicts",
+          "or low-stakes ties."
+        ],
+        "processProtocol": "The group agrees that the issue is not worth further debate and commits to a random method (coin flip, drawing straws, RNG). The random event occurs, and the result is accepted immediately. This transfers 100% of the decision power to chance.",
+        "restorationFallbacks": "The resolution is immediate. Because the process is seen as inherently unbiased, no repair is usually needed. Refusal to accept the result is treated as acting in bad faith."
+      }
+    },
+    {
+      "id": "rotational-judging",
+      "label": "Rotational Judging",
+      "supportText": "A rotating set of members is assigned to handle conflicts.",
+      "sections": {
+        "corePrinciple": "We distribute the power of judgment. By taking turns being the 'judge,' members learn empathy for the difficulty of making decisions and prevent a permanent ruling class.",
+        "applicableScope": [
+          "Minor Code of Conduct infractions",
+          "disputes over shared space or noise."
+        ],
+        "processProtocol": "A 'Jury Duty' roster is created including all eligible members. When a dispute arises, the next three members on the list are summoned to hear the case briefly. They issue a ruling based on common sense and community norms, holding 100% of the decision power for that specific instance. Afterward, they return to the pool.",
+        "restorationFallbacks": "The ruling is binding for that instance. This builds community capacity for governance. Repeated poor judgments by rotational judges may trigger a review of the 'Jury Duty' training process."
+      }
+    }
+  ]
+}

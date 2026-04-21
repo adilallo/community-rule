@@ -3,11 +3,6 @@
 import { memo } from "react";
 import MenuBarItemView from "./MenuBarItem.view";
 import type { MenuBarItemProps } from "./MenuBarItem.types";
-import {
-  normalizeMenuBarItemState,
-  normalizeMenuBarItemMode,
-  normalizeMenuBarItemSize,
-} from "../../../../lib/propNormalization";
 
 const MenuBarItemContainer = memo<MenuBarItemProps>(
   ({
@@ -24,9 +19,9 @@ const MenuBarItemContainer = memo<MenuBarItemProps>(
     ariaLabel,
     ...props
   }) => {
-    const state = normalizeMenuBarItemState(stateProp, "default");
-    const mode = normalizeMenuBarItemMode(modeProp, "default");
-    const size = normalizeMenuBarItemSize(sizeProp, "X Small");
+    const state = stateProp ?? "default";
+    const mode = modeProp ?? "default";
+    const size = sizeProp ?? "X Small";
 
     // Size styles based on Figma specifications
     const sizeStyles: Record<

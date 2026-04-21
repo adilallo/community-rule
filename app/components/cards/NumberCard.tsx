@@ -3,80 +3,57 @@
 import { memo } from "react";
 import SectionNumber from "../sections/SectionNumber";
 
-import { normalizeNumberCardSize } from "../../../lib/propNormalization";
-
-export type NumberCardSizeValue =
-  | "Small"
-  | "Medium"
-  | "Large"
-  | "XLarge"
-  | "small"
-  | "medium"
-  | "large"
-  | "xlarge";
+export type NumberCardSizeValue = "small" | "medium" | "large" | "xlarge";
 
 interface NumberCardProps {
   number: number;
   text: string;
-  /**
-   * Number card size. Accepts both PascalCase (Figma default) and lowercase (case-insensitive).
-   * Figma uses PascalCase, codebase uses PascalCase - both are supported.
-   */
   size?: NumberCardSizeValue;
   iconShape?: string;
   iconColor?: string;
 }
 
 const NumberCard = memo<NumberCardProps>(({ number, text, size: sizeProp }) => {
-  // Base classes common to all sizes
   const baseClasses =
     "bg-[var(--color-surface-inverse-primary)] rounded-[12px] shadow-lg";
 
-  // If size prop is provided, use explicit size classes
-  // Otherwise, use responsive breakpoints for backward compatibility
   if (sizeProp) {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const size = normalizeNumberCardSize(sizeProp);
-    // Size-specific classes
+    const size = sizeProp;
     const sizeClasses = {
-      Small: "flex flex-col items-end justify-center gap-4 p-5 relative",
-      Medium: "flex flex-row items-center gap-8 p-8 relative",
-      Large:
+      small: "flex flex-col items-end justify-center gap-4 p-5 relative",
+      medium: "flex flex-row items-center gap-8 p-8 relative",
+      large:
         "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
-      XLarge:
+      xlarge:
         "flex flex-col items-start justify-end gap-[22px] h-[238px] p-8 relative",
     };
 
-    // Text size classes
     const textClasses = {
-      Small:
+      small:
         "font-bricolage-grotesque font-medium text-[24px] leading-[32px] text-[#141414]",
-      Medium:
+      medium:
         "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
-      Large:
+      large:
         "font-bricolage-grotesque font-medium text-[24px] leading-[24px] text-[#141414]",
-      XLarge:
+      xlarge:
         "font-bricolage-grotesque font-medium text-[32px] leading-[32px] text-[#141414]",
     };
 
-    // Section number wrapper classes - Small doesn't need a wrapper
     const sectionNumberWrapperClasses = {
-      Small: "relative shrink-0",
-      Medium: "flex justify-start flex-shrink-0",
-      Large: "absolute top-8 right-8",
-      XLarge: "absolute top-8 right-8",
+      small: "relative shrink-0",
+      medium: "flex justify-start flex-shrink-0",
+      large: "absolute top-8 right-8",
+      xlarge: "absolute top-8 right-8",
     };
 
-    // Content container classes
     const contentClasses = {
-      Small: "min-w-full relative shrink-0",
-      Medium: "flex-1",
-      Large: "absolute bottom-8 left-8 right-16",
-      XLarge: "absolute bottom-8 left-8 right-16",
+      small: "min-w-full relative shrink-0",
+      medium: "flex-1",
+      large: "absolute bottom-8 left-8 right-16",
+      xlarge: "absolute bottom-8 left-8 right-16",
     };
 
-    // Small variant has section number as direct child, others need wrapper
-    if (size === "Small") {
+    if (size === "small") {
       return (
         <div className={`${baseClasses} ${sizeClasses[size]}`}>
           {/* Section Number - Direct child for Small */}

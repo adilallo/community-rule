@@ -1,0 +1,535 @@
+{
+  "_comment": "Create flow — decision approaches (Figma Flow — Right Rail `20523:23509`)",
+  "sidebar": {
+    "title": "How should this community make difficult decisions?",
+    "descriptionBefore": "Select as many as you need to describe how your group makes decisions. You can also ",
+    "descriptionLinkLabel": "add",
+    "descriptionAfter": " new decision making approaches or interact with the categories below to filter."
+  },
+  "messageBox": {
+    "title": "Consider defining approaches to steward key resources:",
+    "items": [
+      {
+        "id": "amend",
+        "label": "Amend your CommunityRule"
+      },
+      {
+        "id": "finances",
+        "label": "Steward finances"
+      },
+      {
+        "id": "project",
+        "label": "Project level decisions"
+      },
+      {
+        "id": "discipline",
+        "label": "Discipline and member termination"
+      }
+    ]
+  },
+  "cardStack": {
+    "toggleSeeAll": "See all decision approaches",
+    "toggleShowLess": "Show less"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "addApproach": {
+    "nextButtonText": "Add Approach"
+  },
+  "sectionHeadings": {
+    "corePrinciple": "Core Principle",
+    "applicableScope": "Applicable Scope",
+    "stepByStepInstructions": "Step-by-Step Instructions",
+    "consensusLevel": "Consensus Level",
+    "objectionsDeadlocks": "Objections & Deadlocks"
+  },
+  "scopeAddButtonLabel": "Add Applicable Scope",
+  "methods": [
+    {
+      "id": "lazy-consensus",
+      "label": "Lazy Consensus",
+      "supportText": "A decision is assumed approved unless objections are raised within a specified timeframe.",
+      "sections": {
+        "corePrinciple": "We prioritize momentum and trust over bureaucracy. By assuming good faith, we avoid bottlenecks; silence is interpreted as consent to keep the work moving.",
+        "applicableScope": [
+          "Daily Operations",
+          "Minor Expenditures"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "Post your proposal to the relevant channel with a specific deadline, such as 'Merging in 72 hours.' If the deadline passes without any objections, you are authorized to proceed. Explicit support is welcome but not required.",
+        "objectionsDeadlocks": "Any member can pause the process by raising a 'Block' or 'Concern' before the deadline. The proposer is then required to pause execution and engage in a dialogue to resolve the concern. If the disagreement cannot be resolved asynchronously, the proposal is escalated to a synchronous meeting or a higher governance tier for a final decision."
+      }
+    },
+    {
+      "id": "do-ocracy",
+      "label": "Do-ocracy",
+      "supportText": "Decisions are made by those who take initiative and carry out the work.",
+      "sections": {
+        "corePrinciple": "Action is valued over permission. We believe that decision-making power should reside with the individuals who are actually doing the work.",
+        "applicableScope": [
+          "Implementation Details",
+          "Volunteer Tasks",
+          "Low-Risk Experiments"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "Identify a task that needs to be done and simply start doing it. While it is good practice to announce your intentions to avoid duplicated effort, you do not need to wait for approval. Report back once the task is complete.",
+        "objectionsDeadlocks": "Objections are handled through a retroactive review process (Retrospective). If an action is deemed harmful after the fact, the group discusses it to establish new safety guidelines for the future. In extreme cases, the action may be reversed, but the doer is rarely punished for acting in good faith."
+      }
+    },
+    {
+      "id": "consensus-decision-making",
+      "label": "Consensus Decision-Making",
+      "supportText": "All members must agree. Best for important decisions in small groups. Does not work well for low stakes decsions. ",
+      "sections": {
+        "corePrinciple": "We strive for deep unity and alignment. We only move forward when every single member can live with the decision, ensuring no minority voice is ignored.",
+        "applicableScope": [
+          "Core Values",
+          "Constitutional Changes",
+          "High-Stakes Strategy"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "The facilitator presents the proposal and opens the floor for clarifying questions. After a period of discussion and modification to address concerns, the facilitator calls for consensus by asking, 'Does anyone block?' If no blocks are raised, the decision is adopted.",
+        "objectionsDeadlocks": "A 'Block' acts as a veto and stops the proposal entirely. Blocks must be justified based on the group's core principles, not personal preference. If the group cannot resolve the block through modification, the proposal is shelved, and the status quo remains in effect until a new solution is proposed."
+      }
+    },
+    {
+      "id": "rotational-leadership",
+      "label": "Rotational Leadership",
+      "supportText": "Decision-making responsibilities rotate among members.",
+      "sections": {
+        "corePrinciple": "We share the burden of leadership to build skills across the group and prevent power from accumulating in the hands of a single individual.",
+        "applicableScope": [
+          "Facilitation",
+          "Meeting Chair",
+          "Administrative Roles"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "The group defines the role and a set term length, such as one month. A roster of eligible members is created, and at the end of each term, the responsibilities automatically pass to the next person on the list without a vote.",
+        "objectionsDeadlocks": "If a selected member is unable to fulfill their term due to capacity, they are responsible for finding a substitute to swap shifts with them. If a member is deemed unfit by the group, a special governance meeting is called to skip their turn or remove them from the roster."
+      }
+    },
+    {
+      "id": "modified-consensus",
+      "label": "Modified Consensus",
+      "supportText": "Attempts to reach full agreement first, but falls back to voting if consensus isn’t possible.",
+      "sections": {
+        "corePrinciple": "We prefer unanimous agreement but refuse to be paralyzed by it. If full consensus cannot be reached, we have a fallback mechanism to ensure progress.",
+        "applicableScope": [
+          "General Governance",
+          "Policy Changes"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "The group first attempts to reach standard consensus. If consensus is blocked after a set number of attempts or a specific time period, the proposal moves to a vote. This fallback vote requires a Supermajority to pass.",
+        "objectionsDeadlocks": "When a deadlock occurs in the consensus phase, the process shifts to a Supermajority vote (e.g., 75%) to resolve it. The dissenting minority's views are explicitly recorded in the official minutes to ensure their perspective is preserved, even though the decision proceeds against their wishes."
+      }
+    },
+    {
+      "id": "consensus-seeking-with-delegates",
+      "label": "Consensus Seeking with Delegates",
+      "supportText": "Members provide input, and delegates refine decisions to seek broad agreement.",
+      "sections": {
+        "corePrinciple": "We scale our decision-making by using representation. Small, trusted groups can deliberate more effectively than large crowds.",
+        "applicableScope": [
+          "Federated Networks",
+          "Large Co-ops"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "The general membership discusses the issue in small pods and elects a delegate to represent their views. These delegates then meet in a circle to deliberate and reach consensus on a final decision on behalf of their pods.",
+        "objectionsDeadlocks": "If delegates cannot reach agreement, they must return to their home pods to explain the impasse and receive updated instructions. If a delegate repeatedly fails to represent their pod's will, the pod may recall them and elect a new representative to restart the negotiation."
+      }
+    },
+    {
+      "id": "sociocracy",
+      "label": "Sociocracy",
+      "supportText": "Decisions are made in small, interconnected circles with feedback loops connecting the organization.",
+      "sections": {
+        "corePrinciple": "We govern by dynamic consent. No valid objection is ignored, but no one can stop a decision without a reasoned argument explaining how it harms our aim.",
+        "applicableScope": [
+          "Organizational Structure",
+          "Policy Making"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "After a proposal is presented and clarifying questions are answered, the group does a 'reaction round' to share feelings. This is followed by a 'consent round' where the facilitator asks if anyone has a paramount objection. If none exist, the proposal is adopted.",
+        "objectionsDeadlocks": "An objection is only valid if it is 'Paramount'—meaning the objector argues that the proposal interferes with the group's ability to achieve its aim. The group is then obligated to modify the proposal to resolve the objection. If the objection cannot be integrated, the proposal is rejected."
+      }
+    },
+    {
+      "id": "supermajority-rule",
+      "label": "Supermajority Rule",
+      "supportText": "A higher threshold (e.g., 2/3 or 3/4) must be met for a decision to pass. Can be a great fallback for when consensus fails.",
+      "sections": {
+        "corePrinciple": "Broad agreement is necessary for significant changes. We require more than a simple majority to prevent the 'tyranny of the 51%' from dominating the minority.",
+        "applicableScope": [
+          "Bylaw Amendments",
+          "Removing Members"
+        ],
+        "consensusLevel": 67,
+        "stepByStepInstructions": "The proposal is debated until the final text is locked. A vote is then taken, and if the number of 'Yeas' exceeds the pre-set threshold (usually 67% or 75%), the motion passes.",
+        "objectionsDeadlocks": "If the vote achieves a majority but fails to reach the Supermajority threshold, the motion fails and the status quo is maintained. This ensures that the constitution or bylaws remain stable and are not changed without overwhelming support."
+      }
+    },
+    {
+      "id": "ranked-choice-voting",
+      "label": "Ranked Choice Voting",
+      "supportText": "Members rank options by preference, and votes are redistributed until one option has a majority.",
+      "sections": {
+        "corePrinciple": "We seek to maximize overall preference. We want the option that the broadest number of people support, rather than just the one with the loudest base.",
+        "applicableScope": [
+          "Elections",
+          "Multi-Option Selection"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Voters rank all options by preference (1st, 2nd, 3rd). If no option wins a majority of 1st choices, the lowest-ranked option is eliminated, and their votes are redistributed to the voters' second choices. This continues until a winner emerges.",
+        "objectionsDeadlocks": "In the extremely rare event of a mathematical tie in the final round, the winner is decided by looking at which candidate had the most First Choice votes in the initial round. If that is also tied, a random selection method (like a coin toss) is used as the final tie-breaker."
+      }
+    },
+    {
+      "id": "range-voting",
+      "label": "Range Voting",
+      "supportText": "Members score each option, and the option with the highest total or average score wins.",
+      "sections": {
+        "corePrinciple": "We want to capture the nuance of opinion. By measuring the intensity of preference, we can identify options that are broadly acceptable rather than polarizing.",
+        "applicableScope": [
+          "Prioritization",
+          "Budget Allocation"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "Voters assign a score to each option (e.g., from 0 to 10). The scores for each option are summed up or averaged, and the option with the highest total score is selected as the winner.",
+        "objectionsDeadlocks": "If two options receive the exact same total score, the tie is broken by selecting the option that received the highest number of perfect scores (e.g., the most '10s'). This prioritizes the option that generates the most enthusiastic support."
+      }
+    },
+    {
+      "id": "majority-rule",
+      "label": "Majority Rule",
+      "supportText": "A decision is approved if it receives more than 50% of the votes.",
+      "sections": {
+        "corePrinciple": "We value efficiency and equality. Every member's vote counts equally, and we accept that the side with the most votes wins.",
+        "applicableScope": [
+          "General Elections",
+          "Low-Risk Referendums"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "After a period of debate, a motion is made to 'call the question.' A simple up/down vote is taken, and if more than 50% of the members vote in favor, the decision is approved.",
+        "objectionsDeadlocks": "In the event of a 50/50 tie, the motion fails by default, and the status quo prevails. Alternatively, a designated Chairperson may cast a tie-breaking vote if this power was granted in the bylaws."
+      }
+    },
+    {
+      "id": "approval-voting",
+      "label": "Approval Voting",
+      "supportText": "Members vote for all options they find acceptable; the option with the most approvals wins.",
+      "sections": {
+        "corePrinciple": "We focus on satisfaction and flexibility. Instead of picking just one favorite, members identify all the options they would be willing to accept.",
+        "applicableScope": [
+          "Scheduling",
+          "Selecting Venues",
+          "Shortlisting"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "All options are presented to the group. Voters select every option they approve of or can live with. The option that receives the most checks is declared the winner.",
+        "objectionsDeadlocks": "Ties are frequent in Approval Voting. If a tie occurs, the group holds a runoff vote featuring only the tied options. If the runoff is also tied, the decision may be made by random selection."
+      }
+    },
+    {
+      "id": "weighted-voting",
+      "label": "Weighted Voting",
+      "supportText": "Votes carry different weights based on criteria like financial contribution or seniority.",
+      "sections": {
+        "corePrinciple": "We recognize stakeholder equity. Those who have invested more risk, money, or time should have a proportionally greater say in the outcome.",
+        "applicableScope": [
+          "Financial Decisions (Condos",
+          "DAOs)"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Voting power is assigned to members based on specific criteria, such as tokens held or years active. When a vote is cast, it is multiplied by the member's weight, and the side with the majority of the weighted stake wins.",
+        "objectionsDeadlocks": "Disputes regarding vote weight must be resolved by auditing the underlying ledger (e.g., financial records or blockchain) before the vote proceeds. If the ledger is contested, the vote is postponed until an external audit is completed."
+      }
+    },
+    {
+      "id": "cumulative-voting",
+      "label": "Cumulative Voting",
+      "supportText": "Members distribute a set number of votes across one or more options, often to express intensity of preference.",
+      "sections": {
+        "corePrinciple": "We want to protect minority representation. Minority groups can pool their influence to ensure they elect at least one representative.",
+        "applicableScope": [
+          "Board Elections"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "Voters are given a number of votes equal to the open seats. They can distribute these votes however they wish, including stacking all of them on a single candidate. The candidates with the highest totals win.",
+        "objectionsDeadlocks": "Deadlocks are rare, but if two candidates tie for the final seat, a runoff election is held between just those two candidates. The voting pool remains the same, but voters only cast ballots for the specific seat in question."
+      }
+    },
+    {
+      "id": "quadratic-voting",
+      "label": "Quadratic Voting",
+      "supportText": "Members use credits to vote, with the cost increasing quadratically for multiple votes on the same option.",
+      "sections": {
+        "corePrinciple": "We measure how much you care, not just what you want. This system uses 'costly signaling' to allow members to express intense preference on specific issues.",
+        "applicableScope": [
+          "Resource Allocation",
+          "DAOs"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "Users are allocated a budget of 'Credits.' They can buy votes for an option, but the cost increases quadratically (e.g., 1 vote costs 1 credit, but 2 votes costs 4 credits). The option with the highest calculated support wins.",
+        "objectionsDeadlocks": "The primary risk is a 'Sybil Attack' (one person pretending to be multiple people to avoid the quadratic cost). Identity verification must be enforced strictly. If an attack is suspected, the vote is frozen pending a security review."
+      }
+    },
+    {
+      "id": "continuous-voting",
+      "label": "Continuous Voting",
+      "supportText": "Members can change their votes over time, with decisions finalized when a threshold is reached.",
+      "sections": {
+        "corePrinciple": "We believe governance should be fluid. Decisions shouldn't be locked in for years; support for a policy can be given or withdrawn at any time.",
+        "applicableScope": [
+          "DAOs",
+          "Policy Settings"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Proposals remain open indefinitely. Members can stake their votes on them at any time. If a proposal maintains enough support to stay above the passing threshold for a set duration (e.g., 24 hours), it executes.",
+        "objectionsDeadlocks": "To prevent 'Flash Attacks' (sudden massive voting to pass a malicious proposal), a mandatory time delay or 'Grace Period' is enforced before execution. This gives dissenting members time to react or withdraw their assets ('Rage Quit') if they strongly disagree."
+      }
+    },
+    {
+      "id": "holacracy",
+      "label": "Holacracy",
+      "supportText": "Decision-making authority is distributed across self-organizing teams.",
+      "sections": {
+        "corePrinciple": "We distribute authority to roles, not people. This system focuses on rapid evolution through 'Integrative Decision Making' within self-organizing circles.",
+        "applicableScope": [
+          "Operational Management"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "A proposal is made to change a role or policy. The group tests valid objections, which must be based on data or safety. The proposer then integrates these objections into an amended proposal, which is adopted once no valid objections remain.",
+        "objectionsDeadlocks": "Objections must pass a strict validity test: 'Is this unsafe to try?' or 'Does this move us backward?' If an objector cannot prove the proposal is unsafe, the objection is discarded as a personal preference, and the proposal proceeds."
+      }
+    },
+    {
+      "id": "collaborative-platforms",
+      "label": "Collaborative Platforms",
+      "supportText": "Structured discussions on tools like Loomio or Polis are used to make group decisions.",
+      "sections": {
+        "corePrinciple": "We use technology to bridge time zones and enable asynchronous deliberation. This allows remote teams to participate fully without synchronous meetings.",
+        "applicableScope": [
+          "Remote Teams",
+          "Online Communities"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Discussion happens asynchronously on a platform like Loomio or Polis. A poll is opened for a specific window of time, and the platform automatically closes the poll and tallies the results based on the pre-set settings.",
+        "objectionsDeadlocks": "If technical issues prevent participation, the administrator is empowered to extend the voting deadline by 24 hours. If engagement is too low to meet quorum, the vote is declared void and must be re-launched with better promotion."
+      }
+    },
+    {
+      "id": "deliberative-polling",
+      "label": "Deliberative Polling",
+      "supportText": "Members discuss and reflect on an issue before voting, informed by deliberation.",
+      "sections": {
+        "corePrinciple": "We value informed democracy over raw opinion. We believe that people make better decisions when they are provided with experts, data, and time to reflect.",
+        "applicableScope": [
+          "Civic Juries",
+          "Policy Research"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "A random sample of the population is selected. They are provided with briefing materials and access to experts. After a period of facilitated small-group discussion, they are polled to see how their informed opinions have shifted.",
+        "objectionsDeadlocks": "The result is usually advisory/informational. If the results are ambiguous or contradictory, the organizers may commission a second round of deliberation with a fresh sample to verify the findings."
+      }
+    },
+    {
+      "id": "investor-filled-board-seats",
+      "label": "Investor-Filled Board Seats",
+      "supportText": "Key decisions are made by a board with seats allocated to investors or stakeholders.",
+      "sections": {
+        "corePrinciple": "We operate on fiduciary duty. Since capital controls the direction of the organization, those who provide the funding have the right to steer the ship.",
+        "applicableScope": [
+          "Startups",
+          "For-Profits"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Investors appoint directors to the board as a condition of their funding. The board meets quarterly to vote on strategic decisions, and these votes are binding on the CEO and the organization.",
+        "objectionsDeadlocks": "Deadlocks between Founder-Directors and Investor-Directors are resolved via the legal clauses in the Shareholder Agreement (e.g., specific veto rights or arbitration). If the conflict is irreparable, investors may force a sale of the company."
+      }
+    },
+    {
+      "id": "elected-board-of-directors",
+      "label": "Elected Board of Directors",
+      "supportText": "Members elect representatives to make decisions on their behalf.",
+      "sections": {
+        "corePrinciple": "We believe in representative democracy. It is inefficient for the entire membership to decide every detail, so we delegate authority to a trusted few.",
+        "applicableScope": [
+          "Nonprofits",
+          "Co-ops"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "The general membership votes annually to elect Directors. These Directors then meet regularly to make operational and strategic decisions. Members retain the power to recall Directors if they lose trust.",
+        "objectionsDeadlocks": "If the membership disagrees with a Board decision, they can launch a petition to trigger a Special General Meeting. At this meeting, members can vote to overturn the specific policy or, in extreme cases, recall the entire Board."
+      }
+    },
+    {
+      "id": "advisory-committees",
+      "label": "Advisory Committees",
+      "supportText": "Smaller groups provide recommendations, which the broader organization typically follows.",
+      "sections": {
+        "corePrinciple": "We value expertise without granting it absolute authority. These bodies provide specialized guidance to help leaders make better informed choices.",
+        "applicableScope": [
+          "Technical Review",
+          "Ethics Boards"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "The committee reviews a specific problem or proposal in depth. They issue a formal, non-binding report with recommendations. The final decision-maker then chooses whether to adopt or ignore this advice.",
+        "objectionsDeadlocks": "While the decision-maker can ignore the advice, doing so repeatedly may lead to the resignation of the committee members. To prevent this, the decision-maker is often required to write a formal response explaining why they chose to diverge from the recommendation."
+      }
+    },
+    {
+      "id": "delegated-decision-making",
+      "label": "Delegated Decision-Making",
+      "supportText": "Specific individuals or groups are entrusted with decision-making authority.",
+      "sections": {
+        "corePrinciple": "We operate on trust and speed. We explicitly empower individuals to own specific domains so the group doesn't become a bottleneck.",
+        "applicableScope": [
+          "Project Management",
+          "Sub-committees"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "The group explicitly grants authority to a specific person or role for a defined domain. That person makes decisions autonomously, and the group reviews the outcomes periodically rather than micromanaging the process.",
+        "objectionsDeadlocks": "If the delegate makes a decision the group dislikes, the group cannot retroactively undo it (unless unsafe). Instead, the remedy is to revoke the delegation for future decisions or assign the role to a different person."
+      }
+    },
+    {
+      "id": "executive-committees",
+      "label": "Executive Committees",
+      "supportText": "A subset of leaders or senior members makes critical decisions.",
+      "sections": {
+        "corePrinciple": "We need agility for crisis management. A small, high-context group can react faster and handle sensitive information better than a large board.",
+        "applicableScope": [
+          "Emergencies",
+          "Confidential HR"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "The full board delegates specific powers to a smaller Executive Committee. This committee meets frequently to handle urgent matters and reports their actions back to the full board for ratification.",
+        "objectionsDeadlocks": "The Executive Committee's power is limited by the bylaws. If they overstep their authority, the Full Board can vote to annul their decision. Persistent overreach typically results in the dissolution or restructuring of the committee."
+      }
+    },
+    {
+      "id": "first-past-the-post",
+      "label": "First Past the Post",
+      "supportText": "The option with the most votes wins, regardless of whether it achieves a majority.",
+      "sections": {
+        "corePrinciple": "We prioritize simplicity. The goal is to identify a clear winner quickly, even if they don't have the support of the majority.",
+        "applicableScope": [
+          "Simple Elections"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "Voters cast a single vote for one option. All votes are counted, and the candidate with the highest number of votes wins, regardless of whether they achieved more than 50% of the total.",
+        "objectionsDeadlocks": "In the event of a tie for first place, a runoff election is held between the tied candidates. To prevent vote-splitting from distorting results in the future, the group may decide to switch to Ranked Choice Voting for subsequent elections."
+      }
+    },
+    {
+      "id": "lottery-sortition",
+      "label": "Lottery/Sortition",
+      "supportText": "Members or leaders are randomly selected to make decisions, promoting fairness.",
+      "sections": {
+        "corePrinciple": "We seek fairness and anti-corruption. By removing ego and campaigning from the process, we ensure that decisions are made by a truly representative sample.",
+        "applicableScope": [
+          "Juries",
+          "selecting speakers",
+          "assigning unpleasant tasks"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "A pool of eligible candidates is defined. A randomizer (like dice or an algorithm) is used to select a person or option. The result of the random draw is binding.",
+        "objectionsDeadlocks": "If a selected individual refuses to serve, the random draw is performed again immediately. If refusal becomes a pattern, the group must examine whether the incentives for the role are adequate."
+      }
+    },
+    {
+      "id": "proof-of-work",
+      "label": "Proof of Work",
+      "supportText": "Decision weight is tied to demonstrable effort or contributions, common in blockchain systems.",
+      "sections": {
+        "corePrinciple": "We require skin in the game. Influence should match effort, so those who contribute the most resources or labor have the right to decide.",
+        "applicableScope": [
+          "Crypto",
+          "Meritocratic Communities"
+        ],
+        "consensusLevel": 51,
+        "stepByStepInstructions": "Participants perform a verifiable task or contribute computational power. Once the work is verified, they earn the right to append a block or make a decision, with the longest chain of work becoming the truth.",
+        "objectionsDeadlocks": "Disagreements result in a 'Fork,' where the community splits into two separate groups, each following a different chain of truth. This is the ultimate deadlock breaker: the groups simply separate and go their own ways."
+      }
+    },
+    {
+      "id": "random-choice",
+      "label": "Random Choice",
+      "supportText": "Decisions are made by chance, such as a coin toss or drawing lots, to avoid bias.",
+      "sections": {
+        "corePrinciple": "We need to break paralysis. When options are equal and the stakes are low, spending time debating is wasteful.",
+        "applicableScope": [
+          "Low stakes ties",
+          "Restaurant choice"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "When the group is deadlocked on trivial options, simply flip a coin or draw straws. The group agrees beforehand to immediately obey the result of the chance event.",
+        "objectionsDeadlocks": "Refusal to accept the coin flip is considered bad faith. Since this method is only used for low-stakes issues, persistent arguing after the flip is grounds for a conduct warning."
+      }
+    },
+    {
+      "id": "algorithm-driven-decisions",
+      "label": "Algorithm-Driven Decisions",
+      "supportText": "Automated systems analyze data and propose or enforce decisions.",
+      "sections": {
+        "corePrinciple": "We value objectivity. We prefer 'rules over rulers,' relying on pre-agreed logic to distribute resources rather than human bias.",
+        "applicableScope": [
+          "Budget distribution",
+          "Scheduling"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "The group agrees on a set of rules or code. Data is input into the system, and the algorithm processes it to produce an output. The group accepts this output as the final decision.",
+        "objectionsDeadlocks": "If the algorithm produces a clearly erroneous result (a 'bug'), the group can vote to suspend the automation and manually override the decision. A technical review is then triggered to patch the code before it is used again."
+      }
+    },
+    {
+      "id": "autocratic-decision-making",
+      "label": "Autocratic Decision-Making",
+      "supportText": "A single leader or authority makes all decisions without group input.",
+      "sections": {
+        "corePrinciple": "We prioritize clarity and speed above all else. A single vision allows for rapid execution without the drag of committee meetings.",
+        "applicableScope": [
+          "Dictatorships",
+          "Owner-operated small biz",
+          "Emergencies"
+        ],
+        "consensusLevel": 0,
+        "stepByStepInstructions": "The designated leader analyzes the situation and makes a unilateral decision. They issue a command, and the group executes it without debate.",
+        "objectionsDeadlocks": "There is no formal appeal process. The only recourse for disagreement is to leave the organization ('voting with your feet'). Mass resignation is the only effective check on the leader's power."
+      }
+    },
+    {
+      "id": "hierarchical-decision-making",
+      "label": "Hierarchical Decision-Making",
+      "supportText": "Decisions are made at different levels of an organizational structure, with authority increasing at higher levels.",
+      "sections": {
+        "corePrinciple": "We use a chain of command to manage complexity. Decisions are made at the appropriate level of the organization to ensure efficiency.",
+        "applicableScope": [
+          "Military",
+          "Corporations"
+        ],
+        "stepByStepInstructions": "An employee formulates a proposal and submits it to their manager. The manager reviews it and either approves, denies, or escalates it to the next level of authority if it is above their pay grade.",
+        "objectionsDeadlocks": "If an employee believes their manager is blocking a decision unfairly, they may appeal to the 'skip-level' manager (their boss's boss) or an Ombudsman. This open-door policy serves as the check against bottlenecking."
+      }
+    },
+    {
+      "id": "negotiated-decisions",
+      "label": "Negotiated Decisions",
+      "supportText": "Stakeholders or parties discuss and negotiate until they reach an agreement.",
+      "sections": {
+        "corePrinciple": "We arrive at decisions through compromise. Parties with different interests meet in the middle to find a mutually acceptable agreement.",
+        "applicableScope": [
+          "Treaties",
+          "Partnerships",
+          "Salary"
+        ],
+        "consensusLevel": 100,
+        "stepByStepInstructions": "Each party states their initial position. Through a series of discussions, trade-offs are proposed and accepted. The process concludes when a final agreement is written and signed by all parties.",
+        "objectionsDeadlocks": "If negotiations stall, the parties may agree to bring in a neutral third-party mediator. If mediation fails, the negotiation is declared dead, and the parties return to their pre-negotiation status (BATNA - Best Alternative to a Negotiated Agreement)."
+      }
+    }
+  ]
+}

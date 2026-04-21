@@ -1,4 +1,4 @@
-import { CommunityReviewScreen } from "../../app/create/screens/review/CommunityReviewScreen";
+import { CommunityReviewScreen } from "../../app/(app)/create/screens/review/CommunityReviewScreen";
 
 export default {
   title: "Pages/Create/Review",

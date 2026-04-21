@@ -1,4 +1,4 @@
-import { CommunitySizeSelectScreen } from "../../app/create/screens/select/CommunitySizeSelectScreen";
+import { CommunitySizeSelectScreen } from "../../app/(app)/create/screens/select/CommunitySizeSelectScreen";
 
 export default {
   title: "Pages/Create/CommunitySize",

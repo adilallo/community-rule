@@ -159,7 +159,7 @@ describe("RuleCard Component", () => {
       {
         name: "Values",
         chipOptions: [
-          { id: "v1", label: "Consciousness", state: "Unselected" },
+          { id: "v1", label: "Consciousness", state: "unselected" },
         ],
       },
     ];

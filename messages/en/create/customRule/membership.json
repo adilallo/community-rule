@@ -1,0 +1,217 @@
+{
+  "_comment": "Create flow — membership / how members join (compact card stack)",
+  "page": {
+    "compactTitle": "How do new members join\nand get connected?",
+    "compactDescriptionBefore": "You can select multiple methods for different needs or ",
+    "compactDescriptionLinkLabel": "add",
+    "compactDescriptionAfter": " your own",
+    "expandedTitle": "How should new members join and get connected?",
+    "expandedDescription": "You can select multiple methods for different needs or add your own",
+    "seeAllLink": "See all membership approaches"
+  },
+  "confirmModal": {
+    "title": "Confirm selection",
+    "description": "Confirm to select this option.",
+    "nextButtonText": "Confirm"
+  },
+  "addPlatform": {
+    "nextButtonText": "Add Platform"
+  },
+  "sectionHeadings": {
+    "eligibility": "Eligibility & Philosophy",
+    "joiningProcess": "Joining Process",
+    "expectations": "Expectations & Removal"
+  },
+  "methods": [
+    {
+      "id": "open-access",
+      "label": "Open Access",
+      "supportText": "Maximum inclusion. Anyone can join immediately by simply showing up.",
+      "sections": {
+        "eligibility": "Membership is open to any individual who lives in [Region/Context] and supports our mission. We believe that gatekeeping creates unnecessary hierarchy, so we prioritize radical inclusivity and low barriers to entry. Our only requirement is a commitment to mutual respect and adherence to the Community Code of Conduct.",
+        "joiningProcess": "There is no formal application or waiting period. A person becomes a member instantly by joining our [Digital Platform/Meeting], introducing themselves to the group, and explicitly agreeing to the community standards. Access to all channels and working groups is granted immediately upon sign-up.",
+        "expectations": "Members are expected to participate constructively. We view removal as a last resort. Barring immediate safety threats, no member will be banned without first going through the steps outlined in our Conflict Management Policy. We prioritize the restorative measures defined in that section over punitive expulsion. However, refusal to engage in that process may result in removal."
+      }
+    },
+    {
+      "id": "orientation-required",
+      "label": "Orientation Required",
+      "supportText": "Newcomers must attend a training or orientation session.",
+      "sections": {
+        "eligibility": "We welcome all new members who are willing to align with our specific values and operational methods. We believe that shared knowledge is power. Requiring education before decision-making prevents confusion and ensures that all members are empowered to participate fully in our governance.",
+        "joiningProcess": "Prospective members enter as \"Observers.\" To become a voting \"Member,\" an individual must attend a mandatory [2-hour] \"New Member Orientation\" session. This session covers our history, decision-making tools, and safety protocols. Upon completion, they sign the membership agreement and are granted full voting rights.",
+        "expectations": "Members must remain active to retain voting status. Inactivity for [6 months] reverts a member to \"Alumni\" status. Regarding behavior, we follow the graduated sanctions described in our Conflict Management section. Membership revocation is the final step in that process and is reserved for cases where mediation and accountability attempts have failed."
+      }
+    },
+    {
+      "id": "invitation-only",
+      "label": "Invitation Only",
+      "supportText": "New members can only join if they are 'vouched for' by existing members.",
+      "sections": {
+        "eligibility": "To ensure the physical and digital safety of our community, we operate on a strict \"web of trust\" model. We prioritize the security of our vulnerable members over rapid expansion. Membership is restricted to those who are known and trusted by the existing network.",
+        "joiningProcess": "An applicant must be \"vouched for\" by at least [2] existing members in good standing. The vouchers must submit a statement confirming they know the applicant in real life and attest to their integrity. The Membership Working Group reviews these requests. The wider group then has a [72-hour] window to raise safety concerns before approval.",
+        "expectations": "Members are responsible for the integrity of those they vouch for. If trust is broken, we do not act unilaterally. Instead we engage the specific accountability mechanisms detailed in our Conflict Management Policy. Removal is a consensus decision made only after those specific mediation steps have been exhausted or rejected by the offending party."
+      }
+    },
+    {
+      "id": "contribution-based",
+      "label": "Contribution Based",
+      "supportText": "Membership is reserved for people contributing their labor.",
+      "sections": {
+        "eligibility": "We practice \"Do-ocracy\" which means the people doing the work make the decisions. Membership is not a static title but a dynamic status earned through contribution. This ensures that our governance reflects the reality of labor and prevents \"armchair\" participation from stalling our progress.",
+        "joiningProcess": "Participants enter as \"Volunteers.\" A Volunteer becomes a voting \"Member\" only after documenting [10 hours] of labor or completing [3 shifts] within a [30-day] period. \"Labor\" is defined broadly to include administrative tasks, emotional support, and physical work to ensure accessibility.",
+        "expectations": "To maintain voting rights, a member must log at least [5 hours] of activity per month. However, high activity does not grant immunity from community standards. Behavioral violations are handled separate from labor tracking by utilizing the workflows defined in the Conflict Management section. A member may be removed for hampering the group's safety regardless of their work output."
+      }
+    },
+    {
+      "id": "mentorship",
+      "label": "Mentorship",
+      "supportText": "New members are paired with 'Mentors' to guide them through a probationary period.",
+      "sections": {
+        "eligibility": "We believe that the best way to integrate new members is through personal guidance. Eligibility is open to those who are willing to learn and build relationships. We value inter-generational knowledge transfer and community cohesion over rapid growth.",
+        "joiningProcess": "Upon applying, a prospective member is assigned a Mentor. They undergo a [3-month] mentorship period involving regular check-ins and shared tasks. After the mentor validates the newcomer's readiness, full membership is granted.",
+        "expectations": "Mentees are expected to be proactive in their learning. Mentors must provide support, not just judgment. If the relationship fails, a new mentor may be assigned. Persistent lack of engagement or violation of values leads to offboarding."
+      }
+    },
+    {
+      "id": "peer-sponsorship",
+      "label": "Peer Sponsorship",
+      "supportText": "New member must be vouched for by an existing member.",
+      "sections": {
+        "eligibility": "Trust is the foundation of our group. We rely on the judgment of our existing members to bring in trustworthy individuals. Eligibility is restricted to those who have a personal connection with at least one current member.",
+        "joiningProcess": "An existing member must formally sponsor the applicant, submitting a statement of support. The sponsorship is reviewed by the membership committee, followed by a [notification period] for the wider group to raise objections before confirmation.",
+        "expectations": "Sponsors are partially accountable for the behavior of those they bring in during the onboarding phase. If a new member violates norms, the sponsor is expected to participate in the conflict resolution process."
+      }
+    },
+    {
+      "id": "consensus-or-vote-based-approval",
+      "label": "Consensus or Vote-Based Approval",
+      "supportText": "Group votes on whether to admit a new member.",
+      "sections": {
+        "eligibility": "We function as a democratic collective where every voice matters. We believe that adding a new member changes the group dynamic, so the group must consent to the addition. Eligibility implies a willingness to abide by collective decisions.",
+        "joiningProcess": "Candidates introduce themselves at a meeting or submit a profile. After a Q&A period, the existing membership votes. Approval requires [Consensus / Supermajority / Simple Majority].",
+        "expectations": "Members must respect the democratic process. Removal follows the same voting threshold as admission, ensuring that exclusion is a collective decision, not an individual one."
+      }
+    },
+    {
+      "id": "trial-period-provisional-membership",
+      "label": "Trial Period / Provisional Membership",
+      "supportText": "New members have a probationary period before full rights.",
+      "sections": {
+        "eligibility": "Commitment is proven through action, not just words. We believe in a 'try before you commit' approach for both the group and the individual. Anyone can start the trial, but full membership is earned.",
+        "joiningProcess": "Newcomers start as 'Provisional Members' with limited rights (e.g., no voting on strategy). After [3 months] or [X contributions], a review is conducted. Successful completion upgrades them to full 'Member' status.",
+        "expectations": "Provisional members must demonstrate activity and cultural alignment. If the trial period expires without meeting criteria, the provisional status is revoked or extended once."
+      }
+    },
+    {
+      "id": "referral-system-with-screening",
+      "label": "Referral System with Screening",
+      "supportText": "Members refer new people, with structured screening.",
+      "sections": {
+        "eligibility": "We combine the trust of referrals with the fairness of objective screening. This ensures we grow through trusted networks while maintaining quality standards and reducing nepotism.",
+        "joiningProcess": "Candidates must be referred by a member. Once referred, they complete a standard screening interview or questionnaire with the Membership Team to ensure they meet the baseline requirements independently of their referrer.",
+        "expectations": "Referred members are treated as individuals, not extensions of their referrer. They are subject to the standard Code of Conduct and removal processes."
+      }
+    },
+    {
+      "id": "membership-agreement-or-pledge",
+      "label": "Membership Agreement or Pledge",
+      "supportText": "New members must agree to specific values, responsibilities, or rules.",
+      "sections": {
+        "eligibility": "Our unity comes from shared agreement. Eligibility is based on the willingness to explicitly commit to our [Manifesto/Constitution/Code of Conduct]. We prioritize alignment of values over specific skills.",
+        "joiningProcess": "Prospective members review the Membership Agreement. They must sign (digitally or physically) or publicly recite the pledge. Membership is effective immediately upon this affirmation.",
+        "expectations": "The Agreement acts as the contract for behavior. Violation of the specific terms agreed to is grounds for immediate review and potential removal."
+      }
+    },
+    {
+      "id": "weighted-or-tiered-membership",
+      "label": "Weighted or Tiered Membership",
+      "supportText": "Different levels of membership with increasing rights over time.",
+      "sections": {
+        "eligibility": "We recognize that commitment levels vary. By offering tiers (e.g., Supporter, Contributor, Core), we allow people to engage at their capacity. Higher tiers require deeper accountability and grant more governance power.",
+        "joiningProcess": "Everyone joins at the 'Basic' tier. Moving to higher tiers requires meeting specific criteria (e.g., hours worked, dues paid, tenure) and applying for an upgrade, which is verified by the Governance Circle.",
+        "expectations": "Members must maintain the requirements of their tier. Falling below requirements results in a downgrade to a lower tier rather than removal from the group."
+      }
+    },
+    {
+      "id": "hybrid-approval-process",
+      "label": "Hybrid Approval Process",
+      "supportText": "Combines multiple approval steps like voting, screening, and referrals.",
+      "sections": {
+        "eligibility": "We require a rigorous vetting process to ensure high alignment. By combining methods, we filter for competence, culture, and trust. Eligibility is for those dedicated enough to navigate a multi-step process.",
+        "joiningProcess": "Step 1: Application/Referral. Step 2: Screening Interview. Step 3: Trial Task or Period. Step 4: Final Ratification Vote by the core team.",
+        "expectations": "Due to the high barrier to entry, members are expected to be highly active leaders. Removal is a formal process involving the same bodies that approved the member."
+      }
+    },
+    {
+      "id": "skill-based-contribution",
+      "label": "Skill-Based Contribution",
+      "supportText": "Joining by submitting work, such as a pull request.",
+      "sections": {
+        "eligibility": "Code (or work) speaks louder than words. We operate as a meritocracy where the ability to contribute is the only barrier to entry. Anyone capable of doing the work is eligible.",
+        "joiningProcess": "A contributor picks up a 'Good First Issue' or task. Once their contribution (e.g., Pull Request) is reviewed and merged/accepted by a Maintainer, they are invited to the organization roster.",
+        "expectations": "Continued membership depends on active contribution. Members who go dormant for [6 months] may be moved to 'Alumni'. Malicious contributions result in an immediate ban."
+      }
+    },
+    {
+      "id": "pay-to-join",
+      "label": "Pay-to-Join",
+      "supportText": "Requires financial contribution or dues.",
+      "sections": {
+        "eligibility": "We value financial sustainability and commitment. Paying dues demonstrates a tangible investment in the group's longevity. Eligibility is open to anyone willing and able to support the organization financially.",
+        "joiningProcess": "The prospective member selects a membership tier and sets up a payment method. Upon successful transaction, access to member-only spaces is automatically granted.",
+        "expectations": "Membership is contingent on active payment. Failure to pay dues results in a grace period followed by a lapse in membership status/access."
+      }
+    },
+    {
+      "id": "application-review",
+      "label": "Application & Review",
+      "supportText": "Application reviewed by an onboarding team.",
+      "sections": {
+        "eligibility": "We seek specific qualities to balance our team. A formal application allows us to assess skills, experience, and diversity needs objectively. Eligibility is open, but selection is competitive.",
+        "joiningProcess": "Candidates submit a detailed written application. The Membership Committee scores applications against a rubric. Selected candidates are notified and onboarded.",
+        "expectations": "Members obtained through this process are expected to fulfill the roles they applied for. Significant deviation from the stated intent in the application may trigger a review."
+      }
+    },
+    {
+      "id": "identity-verification",
+      "label": "Identity Verification",
+      "supportText": "Requires verification of identity, credentials, or background.",
+      "sections": {
+        "eligibility": "Security and accountability are paramount. We require Sybil resistance (one person, one account). Eligibility is restricted to real, unique humans who can prove their identity.",
+        "joiningProcess": "User submits proof of identity (ID, social media link, or cryptographic proof like Proof of Humanity). A verifier or automated system confirms the identity. Access is granted upon verification.",
+        "expectations": "Members must maintain a single identity. Validated bad actors are permanently blacklisted. Privacy is respected, but accountability is enforced."
+      }
+    },
+    {
+      "id": "collective-interviews",
+      "label": "Collective Interviews",
+      "supportText": "Group collectively interviews new members for cultural fit.",
+      "sections": {
+        "eligibility": "Culture is co-created. We believe the existing community should interact with potential members to ensure resonance. Eligibility requires the social skills to engage with the group.",
+        "joiningProcess": "Applicants attend a 'Ask Me Anything' or group interview session. After the session, the group debriefs and decides on admission based on the interaction.",
+        "expectations": "Members are expected to maintain the cultural vibe established in the interview. 'Vibe checks' may continue, and dissonance can lead to conflict resolution."
+      }
+    },
+    {
+      "id": "skill-based-evaluation",
+      "label": "Skill-Based Evaluation",
+      "supportText": "Requires passing a skills assessment or portfolio review.",
+      "sections": {
+        "eligibility": "We are a guild of professionals. Quality assurance is our priority. Eligibility is limited to those who can demonstrate a specific level of proficiency in our domain.",
+        "joiningProcess": "Candidate submits a portfolio or takes a standardized test. Experts within the group review the submission. A passing score grants membership.",
+        "expectations": "Members must maintain professional standards. Plagiarism or gross negligence in work leads to revocation of credentials/membership."
+      }
+    },
+    {
+      "id": "lottery-sortition",
+      "label": "Lottery / Sortition",
+      "supportText": "Members are selected randomly from a pool of eligible applicants.",
+      "sections": {
+        "eligibility": "We believe in fairness and equality. By removing human bias from selection, we ensure a representative sample of the community and prevent power consolidation. Eligibility is open to all who meet basic criteria.",
+        "joiningProcess": "Interested individuals submit their name to the pool. At regular intervals, a random selection (using a cryptographic or transparent physical randomizer) occurs. Selected individuals are invited to join.",
+        "expectations": "Selected members are expected to serve their term faithfully. Removal is rare and reserved for gross misconduct, as the legitimacy of the system relies on the randomness of the selection."
+      }
+    }
+  ]
+}

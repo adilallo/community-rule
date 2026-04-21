@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import { CommunityUploadScreen } from "../../app/create/screens/upload/CommunityUploadScreen";
+import { CommunityUploadScreen } from "../../app/(app)/create/screens/upload/CommunityUploadScreen";
 
 describe("CommunityUploadScreen", () => {
   it("renders HeaderLockup", () => {

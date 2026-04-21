@@ -7,32 +7,33 @@ import type {
 export interface ChipProps {
   label: string;
   /**
-   * Visual state of the chip, aligned with Figma:
-   * - "Unselected"
-   * - "Selected"
-   * - "Disabled"
-   * - "Custom" (editable chips with check/close buttons)
-   *
-   * Accepts both PascalCase (Figma) and lowercase values.
+   * Visual state of the chip:
+   * - "unselected"
+   * - "selected"
+   * - "disabled"
+   * - "custom" (editable chips with check/close buttons)
    */
   state?: ChipStateValue;
   /**
-   * Palette of the chip, aligned with Figma:
-   * - "Default"
-   * - "Inverse"
-   *
-   * Accepts both PascalCase (Figma) and lowercase values.
+   * Palette of the chip:
+   * - "default"
+   * - "inverse"
    */
   palette?: ChipPaletteValue;
   /**
-   * Size of the chip, aligned with Figma:
-   * - "S"
-   * - "M"
-   *
-   * Accepts both uppercase (Figma) and lowercase values.
+   * Size of the chip:
+   * - "s"
+   * - "m"
    */
   size?: ChipSizeValue;
   className?: string;
+  /**
+   * Whether the chip should be non-interactive. Defaults to `true` when
+   * `state === "disabled"` to preserve historical behavior. Pass
+   * `disabled={false}` alongside `state="disabled"` to render the dimmed
+   * "disabled" visual while keeping the chip clickable — useful for toggle
+   * groups where the unselected state is the disabled visual.
+   */
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /**

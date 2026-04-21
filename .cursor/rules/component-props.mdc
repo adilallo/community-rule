@@ -1,0 +1,51 @@
+---
+description: Component prop conventions — lowercase-canonical enums, Figma traceability
+globs: app/components/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Component prop alignment
+
+Figma is the source of truth for component **design** (existence, variants,
+visual specification). The codebase implements those components using
+idiomatic TypeScript naming. Enum props are **lowercase** in code; PascalCase
+is a Figma-side concern only.
+
+## Enum prop convention
+
+- Types use lowercase string unions: `"small" | "medium" | "large"`.
+- Do NOT add PascalCase variants to type unions.
+- Do NOT call normalizers in containers. The container layer is for `memo`,
+  derived state, prop defaults, and bound logic — not for casing translation.
+- Each enum prop has a sibling `<COMPONENT>_<PROP>_OPTIONS as const` array
+  exported alongside the type. Storybook `argTypes` and any runtime guard
+  consume that array as the single source of valid values.
+
+```typescript
+export const CHIP_PALETTE_OPTIONS = ["primary", "secondary"] as const;
+export type ChipPaletteValue = (typeof CHIP_PALETTE_OPTIONS)[number];
+```
+
+## Figma traceability
+
+- Container docstring (required on every DS container): `Figma:
+  "<Component Path>" (<node-id>)`.
+- View root element: `data-figma-node="<id>"` when the view maps to a
+  distinct Figma node.
+- For create-flow screens, node ids come from `CREATE_FLOW_SCREEN_REGISTRY`
+  in `app/(app)/create/utils/createFlowScreenRegistry.ts`. For everything else,
+  pull the node id from the Figma file directly. Use `TODO(figma)` as a
+  placeholder rather than omitting the docstring entirely.
+
+```typescript
+/**
+ * Figma: "Control / Incrementer" (17857:30943). A compact [ - value + ]
+ * row used for numeric step inputs.
+ */
+```
+
+## Pasting from Figma
+
+Figma's "Inspect → Code" output emits PascalCase. When importing a snippet,
+lowercase the enum values before committing — same pattern as removing
+inline pixel values in favor of design tokens.

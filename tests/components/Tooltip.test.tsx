@@ -30,6 +30,7 @@ componentTestSuite<TooltipProps>({
   },
 });
 
+// Pure presentational; no provider context needed.
 describe("Tooltip (behavioral tests)", () => {
   it("shows tooltip on hover", async () => {
     const user = userEvent.setup();

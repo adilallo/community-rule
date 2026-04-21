@@ -3,6 +3,7 @@
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { logger } from "../../../../lib/logger";
+import { clearCreateFlowPersistedDrafts } from "../../../(app)/create/utils/clearCreateFlowPersistedDrafts";
 import {
   fetchTemplates,
   isTemplatesFetchAborted,
@@ -89,6 +90,11 @@ const RuleStackContainer = memo<RuleStackProps>(
       }
     }
     logger.debug(`${slug} template clicked`);
+    // Marketing entry is always a *fresh* create-flow start: wipe any
+    // in-progress anonymous draft so a stale community name/structure from
+    // an earlier abandoned session can't short-circuit the `state.title`
+    // check in `handleCustomizeTemplate` / `handleUseTemplateWithoutChanges`.
+    clearCreateFlowPersistedDrafts();
     router.push(`/create/review-template/${encodeURIComponent(slug)}`);
   };
 

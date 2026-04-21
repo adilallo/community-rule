@@ -3,11 +3,11 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { ToggleGroupView } from "./ToggleGroup.view";
 import type { ToggleGroupProps } from "./ToggleGroup.types";
-import {
-  normalizeToggleState,
-  normalizeToggleGroupPosition,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / ToggleGroup" (TODO(figma)). Segmented row of `Toggle`
+ * buttons whose corner radii are shared based on position (left/middle/right).
+ */
 const ToggleGroupContainer = memo(
   forwardRef<HTMLButtonElement, ToggleGroupProps>((props, _ref) => {
     const {
@@ -23,9 +23,8 @@ const ToggleGroupContainer = memo(
       ...rest
     } = props;
 
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const position = normalizeToggleGroupPosition(positionProp);
-    const state = normalizeToggleState(stateProp);
+    const position = positionProp;
+    const state = stateProp;
 
     const groupId = useId();
 

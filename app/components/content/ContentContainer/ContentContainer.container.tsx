@@ -4,12 +4,10 @@ import { memo } from "react";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import ContentContainerView from "./ContentContainer.view";
 import type { ContentContainerProps } from "./ContentContainer.types";
-import { normalizeContentContainerSize } from "../../../../lib/propNormalization";
 
 const ContentContainerContainer = memo<ContentContainerProps>(
   ({ post, width = "200px", size: sizeProp = "responsive" }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const size = normalizeContentContainerSize(sizeProp);
+    const size = sizeProp;
     // Get the corresponding icon based on the same logic as background images
     const getIconImage = (slug: string): string => {
       const icons = [

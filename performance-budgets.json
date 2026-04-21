@@ -6,9 +6,9 @@
       "description": "Largest Contentful Paint should be under 2.5s"
     },
     {
-      "name": "fid",
-      "maxValue": 100,
-      "description": "First Input Delay should be under 100ms"
+      "name": "inp",
+      "maxValue": 200,
+      "description": "Interaction to Next Paint should be under 200ms"
     },
     {
       "name": "cls",
@@ -70,8 +70,8 @@
             "budget": 0.1
           },
           {
-            "metric": "max-potential-fid",
-            "budget": 130
+            "metric": "interaction-to-next-paint",
+            "budget": 200
           }
         ],
         "resourceSizes": [
@@ -155,8 +155,8 @@
             "budget": 0.1
           },
           {
-            "metric": "max-potential-fid",
-            "budget": 130
+            "metric": "interaction-to-next-paint",
+            "budget": 200
           }
         ]
       }
@@ -250,8 +250,8 @@
             "budget": 0.1
           },
           {
-            "metric": "max-potential-fid",
-            "budget": 130
+            "metric": "interaction-to-next-paint",
+            "budget": 200
           }
         ],
         "resourceSizes": [
@@ -331,8 +331,8 @@
             "budget": 0.1
           },
           {
-            "metric": "max-potential-fid",
-            "budget": 130
+            "metric": "interaction-to-next-paint",
+            "budget": 200
           }
         ],
         "resourceSizes": [

@@ -1,9 +1,5 @@
-export type NavigationItemVariantValue = "default" | "Default";
-export type NavigationItemSizeValue =
-  | "default"
-  | "xsmall"
-  | "Default"
-  | "XSmall";
+export type NavigationItemVariantValue = "default";
+export type NavigationItemSizeValue = "default" | "xsmall";
 
 export interface NavigationItemProps extends Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -12,13 +8,11 @@ export interface NavigationItemProps extends Omit<
   href?: string;
   children?: React.ReactNode;
   /**
-   * Navigation item variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Navigation item variant.
    */
   variant?: NavigationItemVariantValue;
   /**
-   * Navigation item size. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Navigation item size.
    */
   size?: NavigationItemSizeValue;
   className?: string;

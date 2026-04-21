@@ -1,16 +1,8 @@
 import type { ReactNode } from "react";
 
-export type HeaderLockupJustificationValue =
-  | "left"
-  | "center"
-  | "Left"
-  | "Center";
-export type HeaderLockupSizeValue = "L" | "M" | "l" | "m";
-export type HeaderLockupPaletteValue =
-  | "default"
-  | "inverse"
-  | "Default"
-  | "Inverse";
+export type HeaderLockupJustificationValue = "left" | "center";
+export type HeaderLockupSizeValue = "L" | "M";
+export type HeaderLockupPaletteValue = "default" | "inverse";
 
 export interface HeaderLockupProps {
   /**
@@ -22,18 +14,15 @@ export interface HeaderLockupProps {
    */
   description?: ReactNode;
   /**
-   * Text justification. Accepts both PascalCase (Figma) and lowercase (codebase).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Text justification.
    */
   justification?: HeaderLockupJustificationValue;
   /**
-   * Size variant. Accepts both PascalCase (Figma) and lowercase (codebase).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Size variant.
    */
   size?: HeaderLockupSizeValue;
   /**
-   * Palette. Default = light text (dark bg); Inverse = dark text (light bg).
-   * Accepts both PascalCase (Figma) and lowercase (codebase).
+   * Palette. default = light text (dark bg); inverse = dark text (light bg).
    */
   palette?: HeaderLockupPaletteValue;
 }

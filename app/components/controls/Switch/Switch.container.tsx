@@ -3,8 +3,11 @@
 import { memo, useCallback, useId, forwardRef } from "react";
 import { SwitchView } from "./Switch.view";
 import type { SwitchProps } from "./Switch.types";
-import { normalizeState } from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / Switch" (TODO(figma)). Animated on/off toggle switch,
+ * optionally paired with a trailing text label.
+ */
 const SwitchContainer = memo(
   forwardRef<HTMLButtonElement, SwitchProps>((props, ref) => {
     const {
@@ -18,8 +21,7 @@ const SwitchContainer = memo(
       ...rest
     } = props;
 
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const state = normalizeState(stateProp);
+    const state = stateProp;
 
     const switchId = useId();
 

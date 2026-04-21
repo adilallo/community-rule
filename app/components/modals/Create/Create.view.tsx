@@ -6,6 +6,15 @@ import ModalFooter from "../../utility/ModalFooter";
 import ModalHeader from "../../utility/ModalHeader";
 import type { CreateViewProps } from "./Create.types";
 
+const backdropOverlayClasses: Record<
+  CreateViewProps["backdropVariant"],
+  string
+> = {
+  default: "fixed inset-0 bg-black/50 z-[9998]",
+  loginYellow:
+    "fixed inset-0 z-[9998] bg-[var(--color-surface-inverse-brand-primary)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-surface-inverse-brand-primary)]/75",
+};
+
 export function CreateView({
   isOpen,
   onClose,
@@ -28,6 +37,7 @@ export function CreateView({
   ariaLabelledBy,
   createRef,
   overlayRef,
+  backdropVariant,
 }: CreateViewProps) {
   if (!isOpen) return null;
 
@@ -36,7 +46,7 @@ export function CreateView({
       {/* Overlay */}
       <div
         ref={overlayRef}
-        className="fixed inset-0 bg-black/50 z-[9998]"
+        className={backdropOverlayClasses[backdropVariant]}
         onClick={onClose}
         aria-hidden="true"
       />

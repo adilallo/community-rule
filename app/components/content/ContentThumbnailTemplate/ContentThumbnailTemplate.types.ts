@@ -1,17 +1,12 @@
 import type { BlogPost } from "../../../../lib/content";
 
-export type ContentThumbnailTemplateVariantValue =
-  | "vertical"
-  | "horizontal"
-  | "Vertical"
-  | "Horizontal";
+export type ContentThumbnailTemplateVariantValue = "vertical" | "horizontal";
 
 export interface ContentThumbnailTemplateProps {
   post: BlogPost;
   className?: string;
   /**
-   * Content thumbnail variant. Accepts both lowercase and PascalCase (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Content thumbnail variant.
    */
   variant?: ContentThumbnailTemplateVariantValue;
   slugOrder?: string[];

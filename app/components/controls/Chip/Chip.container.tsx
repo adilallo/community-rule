@@ -3,18 +3,17 @@
 import { memo, useState, useEffect, useRef } from "react";
 import ChipView from "./Chip.view";
 import type { ChipProps } from "./Chip.types";
-import {
-  normalizeChipPalette,
-  normalizeChipSize,
-  normalizeChipState,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / Chip" (TODO(figma)). Compact pill-shaped tag with
+ * selectable, removable, and inline-editable (custom) states.
+ */
 const ChipContainer = memo<ChipProps>(
   ({
     label,
-    state: stateProp = "Unselected",
-    palette: paletteProp = "Default",
-    size: sizeProp = "S",
+    state: stateProp = "unselected",
+    palette: paletteProp = "default",
+    size: sizeProp = "s",
     className = "",
     disabled,
     onClick,
@@ -23,9 +22,9 @@ const ChipContainer = memo<ChipProps>(
     onClose,
     ariaLabel,
   }) => {
-    const state = normalizeChipState(stateProp);
-    const palette = normalizeChipPalette(paletteProp);
-    const size = normalizeChipSize(sizeProp);
+    const state = stateProp;
+    const palette = paletteProp;
+    const size = sizeProp;
 
     const isDisabled = disabled ?? state === "disabled";
     const isCustom = state === "custom";

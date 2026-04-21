@@ -9,7 +9,7 @@ export interface ChipOption {
   state?: ChipStateValue;
 }
 
-export type MultiSelectSizeValue = "S" | "M" | "s" | "m";
+export type MultiSelectSizeValue = "s" | "m";
 
 export interface MultiSelectProps {
   /**
@@ -21,13 +21,11 @@ export interface MultiSelectProps {
    */
   showHelpIcon?: boolean;
   /**
-   * Size variant: "S" (small) or "M" (medium)
-   * Accepts both uppercase (Figma) and lowercase values.
+   * Size variant: "s" (small) or "m" (medium)
    */
   size?: MultiSelectSizeValue;
   /**
-   * Palette for chips: "Default" or "Inverse"
-   * Accepts both PascalCase (Figma) and lowercase values.
+   * Palette for chips: "default" or "inverse"
    */
   palette?: ChipPaletteValue;
   /**

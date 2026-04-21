@@ -1,11 +1,13 @@
 import { describe, it, expect } from "vitest";
 import {
   FLOW_STEP_ORDER,
+  buildTemplateReviewHref,
   getNextStep,
   getPreviousStep,
   isValidStep,
   getStepIndex,
-} from "../../app/create/utils/flowSteps";
+  resolveCreateFlowBackTarget,
+} from "../../app/(app)/create/utils/flowSteps";
 
 describe("flowSteps", () => {
   it("places confirm-stakeholders immediately before final-review", () => {
@@ -16,7 +18,10 @@ describe("flowSteps", () => {
   });
 
   it("getNextStep returns next step in order", () => {
-    expect(getNextStep("right-rail")).toBe("confirm-stakeholders");
+    expect(getNextStep("communication-methods")).toBe("membership-methods");
+    expect(getNextStep("membership-methods")).toBe("decision-approaches");
+    expect(getNextStep("decision-approaches")).toBe("conflict-management");
+    expect(getNextStep("conflict-management")).toBe("confirm-stakeholders");
     expect(getNextStep("confirm-stakeholders")).toBe("final-review");
   });
 
@@ -36,6 +41,7 @@ describe("flowSteps", () => {
   it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
     expect(isValidStep("community-size")).toBe(true);
     expect(isValidStep("confirm-stakeholders")).toBe(true);
+    expect(isValidStep("core-values")).toBe(true);
     expect(isValidStep("nope")).toBe(false);
     expect(isValidStep(null)).toBe(false);
   });
@@ -54,5 +60,47 @@ describe("flowSteps", () => {
     expect(getNextStep("community-name")).toBe("community-structure");
     expect(getNextStep("community-structure")).toBe("community-context");
     expect(getNextStep("community-context")).toBe("community-size");
+  });
+
+  it("skipCommunitySave bridges upload → review and review → upload", () => {
+    const opts = { skipCommunitySave: true } as const;
+    expect(getNextStep("community-upload", opts)).toBe("review");
+    expect(getPreviousStep("review", opts)).toBe("community-upload");
+  });
+
+  it("skipCommunitySave does not change steps outside the save segment", () => {
+    const opts = { skipCommunitySave: true } as const;
+    expect(getNextStep("community-size", opts)).toBe("community-upload");
+    expect(getNextStep("review", opts)).toBe("core-values");
+    expect(getPreviousStep("communication-methods", opts)).toBe("core-values");
+  });
+
+  it("resolveCreateFlowBackTarget returns template review when use-without slug is set on confirm-stakeholders", () => {
+    expect(
+      resolveCreateFlowBackTarget(
+        "confirm-stakeholders",
+        undefined,
+        "mutual-aid-mondays",
+      ),
+    ).toEqual({ kind: "templateReview", slug: "mutual-aid-mondays" });
+  });
+
+  it("resolveCreateFlowBackTarget falls back to linear previous when slug is absent", () => {
+    expect(
+      resolveCreateFlowBackTarget("confirm-stakeholders", undefined, undefined),
+    ).toEqual({ kind: "step", step: "conflict-management" });
+  });
+
+  it("resolveCreateFlowBackTarget ignores whitespace-only slug", () => {
+    expect(
+      resolveCreateFlowBackTarget("confirm-stakeholders", undefined, "   "),
+    ).toEqual({ kind: "step", step: "conflict-management" });
+  });
+
+  it("buildTemplateReviewHref encodes slug and optional fromFlow query", () => {
+    expect(buildTemplateReviewHref("a/b")).toBe("/create/review-template/a%2Fb");
+    expect(buildTemplateReviewHref("mutual-aid", { fromCreateWizard: true })).toBe(
+      "/create/review-template/mutual-aid?fromFlow=1",
+    );
   });
 });

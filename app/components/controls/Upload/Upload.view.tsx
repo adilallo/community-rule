@@ -44,13 +44,13 @@ function UploadView({
           helpIcon={showHelpIcon}
           asterisk={false}
           helperText={false}
-          size="S"
-          palette="Default"
+          size="s"
+          palette="default"
         />
       )}
 
-      {/* Upload container */}
-      <div className="bg-[var(--color-surface-default-secondary,#141414)] flex gap-[24px] items-center justify-center px-[var(--measures-spacing-600,24px)] py-[var(--measures-spacing-1200,48px)] rounded-[var(--measures-radius-200,8px)] shrink-0 w-full">
+      {/* Upload container — max width per create-flow spec */}
+      <div className="bg-[var(--color-surface-default-secondary,#141414)] mx-auto flex w-full max-w-[474px] shrink-0 items-center justify-center gap-[24px] rounded-[var(--measures-radius-200,8px)] px-[var(--measures-spacing-600,24px)] py-[var(--measures-spacing-1200,48px)]">
         {/* Upload button */}
         <button
           type="button"

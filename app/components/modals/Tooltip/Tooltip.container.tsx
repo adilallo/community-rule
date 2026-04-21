@@ -3,7 +3,6 @@
 import { memo, useState } from "react";
 import { TooltipView } from "./Tooltip.view";
 import type { TooltipProps } from "./Tooltip.types";
-import { normalizeTooltipPosition } from "../../../../lib/propNormalization";
 
 const TooltipContainer = memo<TooltipProps>(
   ({
@@ -13,8 +12,7 @@ const TooltipContainer = memo<TooltipProps>(
     className = "",
     disabled = false,
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const position = normalizeTooltipPosition(positionProp);
+    const position = positionProp;
     const [isVisible, setIsVisible] = useState(false);
 
     if (disabled) {

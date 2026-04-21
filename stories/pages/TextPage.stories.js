@@ -1,4 +1,4 @@
-import { CreateFlowTextFieldScreen } from "../../app/create/screens/text/CreateFlowTextFieldScreen";
+import { CreateFlowTextFieldScreen } from "../../app/(app)/create/screens/text/CreateFlowTextFieldScreen";
 
 export default {
   title: "Pages/Create/CommunityName",
@@ -8,7 +8,7 @@ export default {
 
 export const Default = {
   args: {
-    messageNamespace: "create.communityName",
+    messageNamespace: "create.community.communityName",
     stateField: "title",
     maxLength: 48,
   },

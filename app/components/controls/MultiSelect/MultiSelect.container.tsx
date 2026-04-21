@@ -3,17 +3,17 @@
 import { memo } from "react";
 import MultiSelectView from "./MultiSelect.view";
 import type { MultiSelectProps } from "./MultiSelect.types";
-import {
-  normalizeMultiSelectSize,
-  normalizeChipPalette,
-} from "../../../../lib/propNormalization";
 
+/**
+ * Figma: "Control / MultiSelect" (TODO(figma)). Labelled set of chips for
+ * picking multiple values, with an optional add button for custom entries.
+ */
 const MultiSelectContainer = memo<MultiSelectProps>(
   ({
     label,
     showHelpIcon = true,
-    size: sizeProp = "M",
-    palette: paletteProp = "Default",
+    size: sizeProp = "m",
+    palette: paletteProp = "default",
     options,
     onChipClick,
     onAddClick,
@@ -24,8 +24,8 @@ const MultiSelectContainer = memo<MultiSelectProps>(
     onCustomChipClose,
     className = "",
   }) => {
-    const size = normalizeMultiSelectSize(sizeProp);
-    const palette = normalizeChipPalette(paletteProp);
+    const size = sizeProp;
+    const palette = paletteProp;
 
     return (
       <MultiSelectView

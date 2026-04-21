@@ -32,10 +32,10 @@ vi.mock("../../lib/create/api", () => ({
   requestMagicLink: vi.fn(),
 }));
 
-vi.mock("../../app/create/utils/anonymousDraftStorage", async (importOriginal) => {
+vi.mock("../../app/(app)/create/utils/anonymousDraftStorage", async (importOriginal) => {
   const actual =
     await importOriginal<
-      typeof import("../../app/create/utils/anonymousDraftStorage")
+      typeof import("../../app/(app)/create/utils/anonymousDraftStorage")
     >();
   return {
     ...actual,
@@ -44,7 +44,7 @@ vi.mock("../../app/create/utils/anonymousDraftStorage", async (importOriginal) =
 });
 
 import { requestMagicLink } from "../../lib/create/api";
-import { setTransferPendingFlag } from "../../app/create/utils/anonymousDraftStorage";
+import { setTransferPendingFlag } from "../../app/(app)/create/utils/anonymousDraftStorage";
 
 function renderLoginForm() {
   return renderWithProviders(

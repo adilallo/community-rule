@@ -4,7 +4,7 @@ import messages from "../../messages/en/index";
 import { getTranslation } from "../../lib/i18n/getTranslation";
 import HeroBanner from "../components/sections/HeroBanner";
 import AskOrganizer from "../components/sections/AskOrganizer";
-import { MarketingRuleStackSection } from "./MarketingRuleStackSection";
+import { MarketingRuleStackSection } from "./_components/MarketingRuleStackSection";
 
 // Code split below-the-fold components to reduce initial bundle size
 const LogoWall = dynamic(() => import("../components/sections/LogoWall"), {

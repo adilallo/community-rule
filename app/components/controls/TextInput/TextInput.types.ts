@@ -1,19 +1,17 @@
 import type { InputStateValue } from "../../../../lib/propNormalization";
 
-export type TextInputSizeValue = "small" | "medium" | "Small" | "Medium";
+export type TextInputSizeValue = "small" | "medium";
 
 export interface TextInputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "size" | "onChange" | "onFocus" | "onBlur"
 > {
   /**
-   * Visual state. Accepts "default"/"Default", "active"/"Active", "hover"/"Hover", "focus"/"Focus" (case-insensitive).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Visual state.
    */
   state?: InputStateValue;
   /**
-   * Size variant. Accepts both PascalCase (Figma) and lowercase (codebase).
-   * Figma uses PascalCase, codebase uses lowercase - both are supported.
+   * Size variant.
    * @default "medium"
    */
   inputSize?: TextInputSizeValue;

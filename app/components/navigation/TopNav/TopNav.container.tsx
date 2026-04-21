@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthModal } from "../../../contexts/AuthModalContext";
 import { useTranslation } from "../../../contexts/MessagesContext";
@@ -9,6 +9,8 @@ import Button from "../../buttons/Button";
 import AvatarContainer from "../../utility/AvatarContainer";
 import Avatar from "../../icons/Avatar";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
+import { clearAnonymousCreateFlowStorage } from "../../../(app)/create/utils/anonymousDraftStorage";
+import { clearCoreValueDetailsLocalStorage } from "../../../(app)/create/utils/coreValueDetailsLocalStorage";
 import { TopNavView } from "./TopNav.view";
 import type { TopNavProps, NavSize } from "./TopNav.types";
 
@@ -24,6 +26,20 @@ const TopNavContainer = memo<TopNavProps>(
     const router = useRouter();
     const { openLogin } = useAuthModal();
     const t = useTranslation("header");
+
+    /**
+     * TopNav is hidden on `/create` routes by ConditionalNavigationClient, so
+     * this button is always clicked from outside the wizard — there is no
+     * mounted CreateFlowProvider to reset. Wiping the anonymous draft keys
+     * here guarantees a fresh start; the provider that mounts on `/create`
+     * will read empty storage. Server drafts (signed-in Save & Exit) are
+     * left alone — they're intentional persistence the user opted into.
+     */
+    const handleCreateRuleClick = useCallback(() => {
+      clearAnonymousCreateFlowStorage();
+      clearCoreValueDetailsLocalStorage();
+      router.push("/create");
+    }, [router]);
 
     // Schema markup for site navigation
     const schemaData = {
@@ -197,7 +213,7 @@ const TopNavContainer = memo<TopNavProps>(
           size={buttonSize}
           buttonType={buttonType}
           palette={palette}
-          onClick={() => router.push("/create")}
+          onClick={handleCreateRuleClick}
           ariaLabel={t("ariaLabels.createNewRule")}
         >
           {renderAvatarGroup(containerSize, avatarSize)}

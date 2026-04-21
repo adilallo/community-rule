@@ -3,10 +3,6 @@
 import { memo } from "react";
 import NavigationItemView from "./NavigationItem.view";
 import type { NavigationItemProps } from "./NavigationItem.types";
-import {
-  normalizeNavigationItemVariant,
-  normalizeNavigationItemSize,
-} from "../../../../lib/propNormalization";
 
 const NavigationItemContainer = memo<NavigationItemProps>(
   ({
@@ -19,9 +15,8 @@ const NavigationItemContainer = memo<NavigationItemProps>(
     isActive = false,
     ...props
   }) => {
-    // Normalize props to handle both PascalCase (Figma) and lowercase (codebase)
-    const variant = normalizeNavigationItemVariant(variantProp);
-    const size = normalizeNavigationItemSize(sizeProp);
+    const variant = variantProp;
+    const size = sizeProp;
     // Variant styles
     const variantStyles: Record<string, string> = {
       default:
