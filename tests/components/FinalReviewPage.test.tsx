@@ -35,20 +35,21 @@ function FinalReviewWithStateProbe({
 }
 
 const FALLBACK_CARD_TITLE = "Your community";
-const FALLBACK_CARD_DESCRIPTION_SNIPPET =
-  "Add a short description of your community";
 
 function FinalReviewWithFlowState({
   title,
-  summary,
+  communityContext,
 }: {
   title: string;
-  summary?: string;
+  communityContext?: string;
 }) {
   const { replaceState } = useCreateFlow();
   useLayoutEffect(() => {
-    replaceState({ title, ...(summary !== undefined ? { summary } : {}) });
-  }, [replaceState, title, summary]);
+    replaceState({
+      title,
+      ...(communityContext !== undefined ? { communityContext } : {}),
+    });
+  }, [replaceState, title, communityContext]);
   return <FinalReviewScreen />;
 }
 
@@ -81,16 +82,30 @@ describe("FinalReviewScreen", () => {
     expect(screen.getByText(FALLBACK_CARD_TITLE)).toBeInTheDocument();
   });
 
-  it("renders RuleCard with fallback description when context has no summary", () => {
-    render(<FinalReviewScreen />);
+  it("does not use summary as the card body when community context is empty", () => {
+    function TitleAndSummaryHarness() {
+      const { replaceState } = useCreateFlow();
+      useLayoutEffect(() => {
+        replaceState({
+          title: "Oak Park Commons",
+          summary:
+            "Leftover template or one-line summary — must not appear as the RuleCard description.",
+        });
+      }, [replaceState]);
+      return <FinalReviewScreen />;
+    }
+    render(<TitleAndSummaryHarness />);
     expect(
-      screen.getByText(new RegExp(FALLBACK_CARD_DESCRIPTION_SNIPPET, "i")),
-    ).toBeInTheDocument();
+      screen.queryByText(/Leftover template or one-line summary/i),
+    ).not.toBeInTheDocument();
   });
 
   it("renders RuleCard title from create flow state", async () => {
     render(
-      <FinalReviewWithFlowState title="Oak Park Commons" summary="Local mutual aid." />,
+      <FinalReviewWithFlowState
+        title="Oak Park Commons"
+        communityContext="Local mutual aid."
+      />,
     );
     await waitFor(() => {
       expect(screen.getByText("Oak Park Commons")).toBeInTheDocument();

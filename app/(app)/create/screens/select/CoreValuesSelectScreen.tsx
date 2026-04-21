@@ -17,7 +17,19 @@ import { CoreValueEditFields } from "../../components/methodEditFields";
 
 const MAX_CORE_VALUES = 5;
 
-type ModalSession = "pending" | "editing";
+/**
+ * Why three sessions, not two:
+ *
+ * - `pending` — preset chip just selected; modal opened to capture
+ *   meaning/signals. Dismiss = unselect the chip (keep it in the
+ *   preset row, just not selected).
+ * - `customPending` — brand-new custom chip just created via the Add
+ *   value flow; modal opened with empty fields. Dismiss = drop the
+ *   chip entirely (it was never confirmed via the Add Value button).
+ * - `editing` — chip already exists & is selected; modal reopened to
+ *   tweak meaning/signals. Dismiss = no-op (chip stays as-is).
+ */
+type ModalSession = "pending" | "customPending" | "editing";
 
 /** Row in `coreValues.json` `values` — string (legacy) or `{ label, meaning, signals }`. */
 type CoreValuePresetJson =
@@ -208,6 +220,14 @@ export function CoreValuesSelectScreen() {
           : opt,
       );
       persistCoreValues(next);
+    } else if (activeModalChipId && modalSession === "customPending") {
+      // Custom chip never confirmed via Add Value — drop it from both
+      // the local options and the create-flow draft so refresh / back
+      // navigation doesn't resurrect a phantom chip.
+      const next = coreValueOptions.filter(
+        (opt) => opt.id !== activeModalChipId,
+      );
+      persistCoreValues(next);
     }
     setActiveModalChipId(null);
     setModalSession(null);
@@ -295,11 +315,9 @@ export function CoreValuesSelectScreen() {
 
         queueMicrotask(() => {
           syncCoreValuesToDraft(next);
-          if (canSelect) {
-            openModal(chipId, "pending", value);
-          } else {
-            openModal(chipId, "editing", value);
-          }
+          // Both branches treat the chip as a brand-new draft until the
+          // user confirms via Add Value — dismissal removes it.
+          openModal(chipId, "customPending", value);
         });
         return next;
       });

@@ -210,11 +210,18 @@ export function FinalReviewScreen() {
     return raw.length > 0 ? raw : t("ruleCardTitleFallback");
   }, [state.title, t]);
 
+  /**
+   * Match {@link CommunityReviewScreen}: the card body is the free-text
+   * `community-context` field only — not `summary` (template / one-line
+   * rule summary can carry template-review copy).
+   */
   const ruleCardDescription = useMemo(() => {
     const raw =
-      typeof state.summary === "string" ? state.summary.trim() : "";
-    return raw.length > 0 ? raw : t("ruleCardDescriptionFallback");
-  }, [state.summary, t]);
+      typeof state.communityContext === "string"
+        ? state.communityContext.trim()
+        : "";
+    return raw.length > 0 ? raw : undefined;
+  }, [state.communityContext]);
 
   return (
     <CreateFlowLockupCardStepShell

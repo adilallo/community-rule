@@ -385,6 +385,68 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 ---
 
+## Ticket 19 — `Add` button behavior on custom-rule pages and Final Review chips
+
+**Depends on:** nothing technical. Pure **product + design** clarification — blocks consistent UX of the Create flow's custom path and the Final Review screen, but does not block any backend work.
+
+**Server / admin:** none.
+
+**Goal:** Decide what the **`Add`** affordance should do on each custom-rule page and on the **Final Review** screen, and produce Figma covering the chosen behavior. Today the affordance is inconsistent: on most custom-rule pages it just expands the card list, on `core-values` it opens a real modal flow, and on Final Review the `+` button on each chip row is a no-op.
+
+**Context — what `Add` does today:**
+
+- **Core values** ([`CoreValuesSelectScreen.tsx`](../../app/(app)/create/screens/select/CoreValuesSelectScreen.tsx)) — full custom-chip flow: `Add value` → empty chip with input → check → opens an editable `meaning` / `signals` modal. Dismissing the modal now drops the brand-new chip (`customPending` session). Add Value confirms it as a selected chip.
+- **Communication / Membership / Conflict management / Decision approaches** (card-style screens, e.g. [`CommunicationMethodsScreen.tsx`](../../app/(app)/create/screens/card/CommunicationMethodsScreen.tsx)) — there is **no `Add custom method` affordance**. The inline `add` link in the page description (`messages/en/create/customRule/*.json`, `compactDescriptionLinkLabel: "add"`) only toggles `setExpanded(true)` on the card stack — it shows more preset cards, it does **not** open a creation modal.
+- **Confirm stakeholders** — multiselect-style add (free-text chip), pending real invite work in **Ticket 18 / CR-90**.
+- **Community structure** — multiselect-style add (free-text chip).
+- **Final Review** ([`FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx)) — renders `<RuleCard categories=…>` and only wires `onChipClick`. `category.onAddClick` is **not provided**, so the `+` button on each MultiSelect category renders by default (`addButton={!hideCategoryAddButton}` in [`RuleCard.view.tsx`](../../app/components/cards/RuleCard/RuleCard.view.tsx)) but **does nothing** when clicked. Dead control we are shipping today.
+
+**Open product questions (block implementation until resolved):**
+
+_Section A — custom-rule card pages (communication, membership, conflict management, decision approaches):_
+
+1. Should each of these pages have a true **"Add custom \<method/approach/protocol\>"** button, distinct from the existing `add` text link that just expands the card stack?
+2. If yes: where does it sit (header CTA / end of stack / both)? Does it open a **clean empty modal** in the same shape as the page's edit modal (the `*EditFields` components under `app/(app)/create/components/methodEditFields/`)? Same `customPending` semantics as core values (dismiss = drop, confirm = persist + select)? Required vs optional fields?
+3. If no: should we **rename or remove** the inline `add` link in the description so it doesn't promise creation behavior we don't deliver?
+
+_Section B — Final Review screen `+` button per category:_
+
+1. Pick one:
+   - **Option 1 — fresh modal in place.** Clicking `+` opens [`FinalReviewChipEditModal`](../../app/(app)/create/components/FinalReviewChipEditModal.tsx) seeded empty for the category. On Save, append a new chip and write through to the matching `*MethodDetailsById` (or `coreValueDetailsByChipId` + snapshot) map, matching the editable chip flow that just shipped.
+   - **Option 2 — bounce back to the source step.** Navigate the user to the corresponding custom-rule step (e.g. communication chip `+` → `/create/communication`) so they add via the existing card-page flow, then return to Final Review.
+   - **Option 3 — hide the button.** Pass `hideCategoryAddButton` to the Final Review `<RuleCard>` so the dead control disappears until product knows what they want.
+2. If Option 1, what is the empty state of the modal (title only, all fields, recommended seeds)?
+3. If Option 2, how do we preserve the user's place on Final Review so they can come back without re-confirming everything?
+4. Does the answer differ for `coreValues` vs the four method categories? (Different edit-fields components, different state slices.)
+
+**Implementation sketch (subject to product sign-off):**
+
+1. **Product + design pass** answering Sections A and B; produce Figma for whichever options win on each affected page and on Final Review.
+2. **Custom-rule card pages (if Option A1 wins):** add an `Add custom <method>` button alongside the card stack on each of the four pages. Reuse the page's `*EditFields` component inside a `customPending`-style modal (same dismiss-drops / confirm-persists semantics as `CoreValuesSelectScreen`). Persist into the matching `*MethodDetailsById` slice and selected-id list.
+3. **Final Review (if Option B1 wins):** wire `category.onAddClick` per category in [`FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx) → open `FinalReviewChipEditModal` seeded empty for the matching `groupKey`, with a `customPending` mode that drops the new entry on dismiss and persists on Save (parity with the current chip-edit flow).
+4. **Final Review (if Option B3 wins, interim):** pass `hideCategoryAddButton` to the Final Review `<RuleCard>` so the no-op `+` is removed.
+5. **i18n:** add copy for the new buttons, modal headers, validation, and confirmation/discard prompts under `messages/en/create/customRule/*.json` and `messages/en/create/reviewAndComplete/finalReview.json`.
+6. **Tests:** Vitest component tests covering dismiss-drops vs confirm-persists for each new modal (mirror the new `CoreValuesSelectScreen.test.tsx` `custom chip — confirmed vs dismissed` pair).
+
+**Out of scope:**
+
+- Server-side persistence changes — adding a chip already flows through existing `*MethodDetailsById` / `coreValueDetailsByChipId` snapshots.
+- Reworking the inline `add` link's `compactDescriptionLinkLabel` semantics until product decides whether it still belongs.
+- Bulk-add UX (paste many chips at once).
+
+**Acceptance criteria:**
+
+- [ ] Product brief answering Section A and Section B, linked from the Linear issue.
+- [ ] Figma covering whichever options product picks for the four card-style pages and Final Review.
+- [ ] If Option B3 (interim) ships first: the Final Review `+` is no longer rendered (no dead controls).
+- [ ] Once Option A1 / B1 are picked: implementation tickets file under this one with `customPending` parity and tests, no regressions to the existing chip-edit flow.
+
+**Files (reference):** [`app/(app)/create/screens/card/CommunicationMethodsScreen.tsx`](../../app/(app)/create/screens/card/CommunicationMethodsScreen.tsx), [`MembershipMethodsScreen.tsx`](../../app/(app)/create/screens/card/MembershipMethodsScreen.tsx), [`ConflictManagementScreen.tsx`](../../app/(app)/create/screens/card/ConflictManagementScreen.tsx), [`right-rail/DecisionApproachesScreen.tsx`](../../app/(app)/create/screens/right-rail/DecisionApproachesScreen.tsx), [`select/CoreValuesSelectScreen.tsx`](../../app/(app)/create/screens/select/CoreValuesSelectScreen.tsx), [`review/FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx), [`components/FinalReviewChipEditModal.tsx`](../../app/(app)/create/components/FinalReviewChipEditModal.tsx), [`components/methodEditFields/`](../../app/(app)/create/components/methodEditFields/), [`components/cards/RuleCard/RuleCard.view.tsx`](../../app/components/cards/RuleCard/RuleCard.view.tsx).
+
+**Linear:** [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final) (**Backlog**). Sibling product/design ticket to **CR-90** (same "copy promises a feature, UI doesn't deliver" pattern). **Parallel** to the CR-72 → CR-83 chain; not on the critical path.
+
+---
+
 ## Ticket 9 — Persist web vitals outside `.next` (prefer external RUM)
 
 **Depends on:** none (orthogonal).
@@ -591,14 +653,15 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 |    16 | 16     | Template matrix + xlsx ingestion  |
 |    17 | 17     | Canon create-flow (custom path)     |
 |    18 | 18     | Stakeholder invites (confirm-stakeholders) |
+|    19 | 19     | `Add` button behavior (custom-rule pages + Final Review) |
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 16** is also **deferrable** until after **7–8** (flat template list + UI); it adds **spreadsheet-driven** recommendations and facet APIs. **Ticket 17** (**[CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) and tracks UX/code alignment (progress bar, resume URL, `[step]` cleanup); **parallel** to publish and templates. **Tickets 13–14** are parallel to that chain (**CR-73** / **CR-75** prerequisites are **Done** — **CR-84** / **CR-85** are unblocked), not sequential after CR-83. **Ticket 15** is also **parallel** (blocked by **publish (CR-77)** once session/auth are shipped); Linear: **CR-86**. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), **CR-90** / Ticket 18 (stakeholder invites — product/design brief unblocked; implementation waits on **CR-73** / **CR-74** / **CR-75** / **CR-77**), none in the CR-72–83 sequence.
+**Main chain:** **CR-72 → CR-83** (each blocks the next). **Parallel:** **CR-84** (**CR-73** Done — ready to pick up), **CR-85** (**CR-75** Done — ready to pick up), **CR-86** / Ticket 15 (blocked by **CR-77** publish only; **CR-75** Done), **CR-88** / Ticket 16 (template matrix + `.xlsx` ingestion — after **CR-78**/**CR-79**), **CR-89** / Ticket 17 (canon create-flow + implementation gaps), **CR-90** / Ticket 18 (stakeholder invites — product/design brief unblocked; implementation waits on **CR-73** / **CR-74** / **CR-75** / **CR-77**), **CR-91** / Ticket 19 (`Add` button behavior on custom-rule pages and Final Review chips — pure product/design clarification, no technical blockers), none in the CR-72–83 sequence.
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -620,6 +683,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)         | Template matrix + xlsx ingestion        |
 |         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) |
 |         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
+|         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) |
 
 ---
 
