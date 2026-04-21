@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useEffect, useState } from "react";
+import { useMessages } from "../../../contexts/MessagesContext";
 import { logger } from "../../../../lib/logger";
 import WebVitalsDashboardView from "./WebVitalsDashboard.view";
 import type { Metrics, Vitals, VitalData } from "./WebVitalsDashboard.types";
@@ -18,17 +19,55 @@ const createInitialVitals = (): Vitals => ({
   ttfb: createInitialVital(),
 });
 
+function reportWebVitalToApi(
+  metric: keyof Vitals,
+  value: number,
+  rating: VitalData["rating"],
+): void {
+  if (typeof window === "undefined") return;
+  if (rating === "unknown") return;
+
+  const body = {
+    metric,
+    data: { value, rating },
+    url: window.location.href,
+    userAgent: navigator.userAgent,
+    timestamp: new Date().toISOString(),
+  };
+
+  void fetch("/api/web-vitals", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  }).catch((err: unknown) => {
+    logger.error("Web vitals ingest failed:", err);
+  });
+}
+
 const WebVitalsDashboardContainer = memo(() => {
+  const m = useMessages();
+  const copy = m.webVitalsDashboard;
   const [vitals, setVitals] = useState<Vitals>(createInitialVitals);
   const [metrics, setMetrics] = useState<Metrics>({});
   const [loading, setLoading] = useState(true);
+  const [storage, setStorage] = useState<"external" | "local">("local");
+
+  const rumDashboardUrl =
+    typeof process.env.NEXT_PUBLIC_RUM_DASHBOARD_URL === "string" &&
+    process.env.NEXT_PUBLIC_RUM_DASHBOARD_URL.trim() !== ""
+      ? process.env.NEXT_PUBLIC_RUM_DASHBOARD_URL.trim()
+      : null;
 
   useEffect(() => {
     const fetchVitals = async () => {
       try {
         const response = await fetch("/api/web-vitals");
-        const data = (await response.json()) as { metrics?: Metrics };
+        const data = (await response.json()) as {
+          metrics?: Metrics;
+          storage?: "external" | "local";
+        };
         setMetrics(data.metrics || {});
+        setStorage(data.storage === "external" ? "external" : "local");
       } catch (error) {
         logger.error("Error fetching web vitals:", error);
       } finally {
@@ -39,77 +78,71 @@ const WebVitalsDashboardContainer = memo(() => {
     fetchVitals();
 
     if (typeof window !== "undefined") {
-      import("web-vitals").then((webVitals) => {
-        // web-vitals v4 typings don't expose legacy get* names the same way; runtime bundle still provides them for this dashboard.
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } =
-          webVitals as unknown as {
-            getCLS: (
-              _fn: (_m: { value: number; rating: string }) => void,
-            ) => void;
-            getFID: (
-              _fn: (_m: { value: number; rating: string }) => void,
-            ) => void;
-            getFCP: (
-              _fn: (_m: { value: number; rating: string }) => void,
-            ) => void;
-            getLCP: (
-              _fn: (_m: { value: number; rating: string }) => void,
-            ) => void;
-            getTTFB: (
-              _fn: (_m: { value: number; rating: string }) => void,
-            ) => void;
-          };
+      // web-vitals v4+ exposes onLCP / onCLS / … — legacy getLCP was removed.
+      import("web-vitals").then(
+        ({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+          onLCP((metric) => {
+            const rating = metric.rating as VitalData["rating"];
+            setVitals((prev) => ({
+              ...prev,
+              lcp: {
+                value: Math.round(metric.value),
+                rating,
+              },
+            }));
+            reportWebVitalToApi("lcp", Math.round(metric.value), rating);
+          });
 
-        getLCP((metric: { value: number; rating: VitalData["rating"] }) => {
-          setVitals((prev) => ({
-            ...prev,
-            lcp: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
+          onFID((metric) => {
+            const rating = metric.rating as VitalData["rating"];
+            setVitals((prev) => ({
+              ...prev,
+              fid: {
+                value: Math.round(metric.value),
+                rating,
+              },
+            }));
+            reportWebVitalToApi("fid", Math.round(metric.value), rating);
+          });
 
-        getFID((metric: { value: number; rating: VitalData["rating"] }) => {
-          setVitals((prev) => ({
-            ...prev,
-            fid: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
+          onCLS((metric) => {
+            const rounded = Math.round(metric.value * 1000) / 1000;
+            const rating = metric.rating as VitalData["rating"];
+            setVitals((prev) => ({
+              ...prev,
+              cls: {
+                value: rounded,
+                rating,
+              },
+            }));
+            reportWebVitalToApi("cls", rounded, rating);
+          });
 
-        getCLS((metric: { value: number; rating: VitalData["rating"] }) => {
-          setVitals((prev) => ({
-            ...prev,
-            cls: {
-              value: Math.round(metric.value * 1000) / 1000,
-              rating: metric.rating,
-            },
-          }));
-        });
+          onFCP((metric) => {
+            const rating = metric.rating as VitalData["rating"];
+            setVitals((prev) => ({
+              ...prev,
+              fcp: {
+                value: Math.round(metric.value),
+                rating,
+              },
+            }));
+            reportWebVitalToApi("fcp", Math.round(metric.value), rating);
+          });
 
-        getFCP((metric: { value: number; rating: VitalData["rating"] }) => {
-          setVitals((prev) => ({
-            ...prev,
-            fcp: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-
-        getTTFB((metric: { value: number; rating: VitalData["rating"] }) => {
-          setVitals((prev) => ({
-            ...prev,
-            ttfb: {
-              value: Math.round(metric.value),
-              rating: metric.rating,
-            },
-          }));
-        });
-      });
+          onTTFB((metric) => {
+            const rating = metric.rating as VitalData["rating"];
+            setVitals((prev) => ({
+              ...prev,
+              ttfb: {
+                value: Math.round(metric.value),
+                rating,
+              },
+            }));
+            reportWebVitalToApi("ttfb", Math.round(metric.value), rating);
+          });
+        },
+      );
     }
   }, []);
 
@@ -118,6 +151,9 @@ const WebVitalsDashboardContainer = memo(() => {
       vitals={vitals}
       metrics={metrics}
       loading={loading}
+      storage={storage}
+      copy={copy}
+      rumDashboardUrl={rumDashboardUrl}
     />
   );
 });

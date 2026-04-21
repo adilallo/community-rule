@@ -1,3 +1,5 @@
+import type messages from "../../../../messages/en/index";
+
 export interface VitalData {
   value: number;
   rating: "good" | "needs-improvement" | "poor" | "unknown";
@@ -26,8 +28,13 @@ export interface Metrics {
   [key: string]: MetricData;
 }
 
+export type WebVitalsDashboardCopy = typeof messages.webVitalsDashboard;
+
 export interface WebVitalsDashboardViewProps {
   vitals: Vitals;
   metrics: Metrics;
   loading: boolean;
+  storage: "external" | "local";
+  copy: WebVitalsDashboardCopy;
+  rumDashboardUrl: string | null;
 }

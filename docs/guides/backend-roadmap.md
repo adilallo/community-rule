@@ -10,7 +10,7 @@ Temporary working notes for building the backend. Safe to delete once the stack 
 - **PostgreSQL + Prisma**: schema and migrations under `prisma/`; product APIs under `app/api/*` (health, auth/magic-link, session, drafts, rules, templates, web-vitals).
 - **Server modules** in `lib/server/` (db, session, mail, rate limiting, etc.).
 - **Create flow:** **Anonymous** users mirror in-progress state to **`create-flow-anonymous`** in `localStorage`; **Exit** opens the save-progress magic-link modal; after verify, [`PostLoginDraftTransfer`](app/(app)/create/PostLoginDraftTransfer.tsx) can **PUT** `/api/drafts/me` when **`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`**. **Signed-in** users get a **fresh** in-memory session per “Create rule” entry, but with sync on the layout may **hydrate** from **`GET /api/drafts/me`** via [`SignedInDraftHydration`](app/(app)/create/SignedInDraftHydration.tsx); **Save & Exit** (from `community-structure` onward) **PUT**s when sync is on. **Log in** from the marketing header uses the global modal ([`AuthModalProvider`](app/contexts/AuthModalContext.tsx)); **`/login`** remains for verify errors and deep links. **Step order and URLs:** [`docs/create-flow.md`](docs/create-flow.md) and [`app/(app)/create/utils/flowSteps.ts`](app/(app)/create/utils/flowSteps.ts).
-- **Web vitals** [`app/api/web-vitals/route.ts`](app/api/web-vitals/route.ts) still use **file-based** storage under `.next` (not suitable for multi-instance production).
+- **Web vitals** [`app/api/web-vitals/route.ts`](app/api/web-vitals/route.ts): **production default** is **`external`** (structured logs; no `.next` writes). **`local`** file-based mode remains for development (`WEB_VITALS_STORAGE`).
 - **CI:** [`.gitea/workflows/ci.yaml`](.gitea/workflows/ci.yaml) (build, test, lint, `prisma validate`); no in-repo production deploy definition.
 
 ### HTTP API (implemented in repo)
@@ -28,7 +28,7 @@ Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table (including `/
 | GET / POST | `/api/rules`                   | List or publish rules                         |
 | GET        | `/api/templates`               | List curated templates; optional `facet.*` re-ranks (see [template-recommendation-matrix.md](template-recommendation-matrix.md)) |
 | GET        | `/api/create-flow/methods`      | Facet scores for wizard method lists (`section` + optional `facet.*`) |
-| POST / GET | `/api/web-vitals`              | Web vitals ingest / aggregate (file-based under `.next` today; production path §7) |
+| POST / GET | `/api/web-vitals`              | Web vitals ingest / read aggregates (`external` default in production — logs only; `local` under `.next` in dev — see §7) |
 
 **Product sign-in** uses **magic link** (`/api/auth/magic-link/*`).
 
@@ -136,7 +136,7 @@ Match the current API behavior; tighten as product evolves:
 
 **Operator / local (always manual):** Steps 1–4 — env file, Docker Postgres, `npm ci`, `prisma migrate dev`, `npm run dev`.
 
-**Backend behavior already in the repo:** Steps **5–10** match implemented Route Handlers and middleware (`lib/server/*`). **Step 11** (web vitals) is **not** production-ready (files under `.next`); treat as follow-up work aligned with §7.
+**Backend behavior already in the repo:** Steps **5–10** match implemented Route Handlers and middleware (`lib/server/*`). **Step 11** (web vitals): production defaults to **`external`** (no `.next` writes); optional vendor RUM or DB persistence remains a deliberate ops choice per §7.
 
 **Product / frontend still open (not only “backend exists”):** Sign-in UI, wiring publish from the create flow, template seed + UI consumption (flat list first), **canon create-flow alignment** (Ticket 17 / [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) — progress bar, resume URL, `[step]` cleanup; spec in [`docs/create-flow.md`](create-flow.md)), **spreadsheet-driven template recommendations** (Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) — after v1 templates), **profile / my rules dashboard** (Ticket 15)—see §12 and [docs/backend-linear-tickets.md](backend-linear-tickets.md).
 
@@ -182,7 +182,7 @@ npm run dev
 
 **Step 10.** **Frontend draft sync:** Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so **Save & Exit** and **post-login anonymous → account transfer** can **PUT** `/api/drafts/me`. Without sync, drafts are **not** written to the server (anonymous progress still lives in `localStorage` only).
 
-**Step 11.** **Web vitals:** Move off `.next` files—**prefer an external analytics or logging pipeline** (see §7). Use Postgres for vitals only as a deliberate ops choice.
+**Step 11.** **Web vitals:** Production uses **`external`** storage (structured logs). Add a browser RUM SDK or Postgres-backed vitals only as a deliberate ops choice (see §7).
 
 ---
 

@@ -35,7 +35,7 @@ Use `npx prisma studio` to inspect the database.
 | GET / POST | `/api/rules` | List or publish rules. |
 | GET | `/api/templates` | List curated templates. Optional repeatable `facet.<group>=<value>` query params re-rank results (and may include `scores` in the JSON). See [docs/guides/template-recommendation-matrix.md](docs/guides/template-recommendation-matrix.md) §9.1. |
 | GET | `/api/create-flow/methods` | Facet-aware scores for custom-rule card steps: required `section` (`communication` \| `membership` \| `decisionApproaches` \| `conflictManagement`) and optional `facet.*` params (same facet groups as `/api/templates`). Returns `methods` with match metadata for re-ordering in the wizard. |
-| POST / GET | `/api/web-vitals` | Ingest or read aggregated web vitals (file-based store under `.next` today; not ideal for multi-instance — see [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7). |
+| POST / GET | `/api/web-vitals` | Ingest or read web vitals. **Production default:** `external` — structured logs only (no writes under `.next`; safe for read-only FS). **Development default:** `local` — aggregates under `.next/web-vitals`. Override with `WEB_VITALS_STORAGE`. See [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7. |
 
 ### Magic-link sign-in
 

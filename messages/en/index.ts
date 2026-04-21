@@ -11,9 +11,11 @@ import menuBar from "./components/menuBar.json";
 import quoteBlock from "./components/quoteBlock.json";
 import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
+import webVitalsDashboard from "./components/webVitalsDashboard.json";
 import home from "./pages/home.json";
 import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
+import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
 import navigation from "./navigation.json";
@@ -62,10 +64,12 @@ export default {
   quoteBlock,
   ruleCard,
   ruleStack,
+  webVitalsDashboard,
   pages: {
     home,
     templates,
     learn,
+    monitor,
     login,
     profile,
   },
