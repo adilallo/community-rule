@@ -1,0 +1,74 @@
+name: Migrate Smoke
+run-name: "${{ gitea.actor }} triggered migrate smoke"
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [main]
+    paths:
+      - "prisma/**"
+      - ".gitea/workflows/migrate-smoke.yaml"
+  push:
+    branches: [main]
+    paths:
+      - "prisma/**"
+      - ".gitea/workflows/migrate-smoke.yaml"
+
+env:
+  NODE_VERSION: "20"
+  NEXT_TELEMETRY_DISABLED: "1"
+  # Non-default host port so a local dev Postgres on 5432 keeps working.
+  PG_HOST_PORT: "5433"
+  POSTGRES_USER: communityrule
+  POSTGRES_PASSWORD: communityrule
+  POSTGRES_DB: communityrule
+
+jobs:
+  migrate:
+    runs-on: [self-hosted, macos-latest]
+    env:
+      CI: true
+      DATABASE_URL: "postgresql://communityrule:communityrule@127.0.0.1:5433/communityrule"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "${{ env.NODE_VERSION }}"
+          cache: npm
+
+      - name: Start Postgres
+        run: |
+          set -euo pipefail
+          docker rm -f migrate-smoke-pg >/dev/null 2>&1 || true
+          docker run -d --name migrate-smoke-pg \
+            -e POSTGRES_USER="$POSTGRES_USER" \
+            -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+            -e POSTGRES_DB="$POSTGRES_DB" \
+            -p "${PG_HOST_PORT}:5432" \
+            postgres:16-alpine
+
+      - name: Wait for Postgres
+        run: |
+          set -euo pipefail
+          for i in {1..30}; do
+            if docker exec migrate-smoke-pg pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null 2>&1; then
+              echo "Postgres ready after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Postgres did not become ready in 30s"
+          docker logs migrate-smoke-pg || true
+          exit 1
+
+      - run: npm ci --no-audit --fund=false
+
+      - name: Apply migrations
+        run: npm run db:deploy
+
+      - name: Verify Prisma can connect to migrated DB
+        run: echo "SELECT 1;" | npx --no-install prisma db execute --stdin --url "$DATABASE_URL"
+
+      - name: Stop Postgres
+        if: always()
+        run: docker rm -f migrate-smoke-pg >/dev/null 2>&1 || true

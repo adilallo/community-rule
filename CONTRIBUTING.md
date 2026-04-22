@@ -21,6 +21,16 @@ Use `npx prisma studio` to inspect the database.
   production, or any shared database. Add a **new** migration that
   corrects the schema instead. Full policy:
   [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §8.
+- **CI smoke:** [`.gitea/workflows/migrate-smoke.yaml`](.gitea/workflows/migrate-smoke.yaml)
+  spins up a throwaway Postgres and runs `npm run db:deploy` whenever
+  `prisma/**` changes on a PR (or via `workflow_dispatch`). If the
+  runner cannot run Docker/Postgres, run the same check locally before
+  merging migration changes:
+
+  ```bash
+  docker compose up -d postgres
+  npm run db:deploy
+  ```
 
 ### API routes
 
