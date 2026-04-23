@@ -20,10 +20,11 @@ User-facing docs. Implementation conventions live in `.cursor/rules/`.
 
 These will be deleted once the backend services are stood up:
 
+- [relaunch-brief.md](./relaunch-brief.md) — short executive summary for MEDLab Cloudron admin: what the relaunch is, what's being replaced, how cutover works.
 - [guides/backend-roadmap.md](./guides/backend-roadmap.md)
 - [guides/backend-linear-tickets.md](./guides/backend-linear-tickets.md)
 - [guides/template-recommendation-matrix.md](./guides/template-recommendation-matrix.md)
-- [guides/ops-backend-deploy.md](./guides/ops-backend-deploy.md) — admin handoff for deploying to MEDLab's Cloudron.
+- [guides/ops-backend-deploy.md](./guides/ops-backend-deploy.md) — technical deploy handoff + cutover plan (Cloudron, env vars, health checks, follow-up tickets).
 
 ## Cursor rules
 
