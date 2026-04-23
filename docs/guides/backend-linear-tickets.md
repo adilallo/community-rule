@@ -11,7 +11,8 @@ A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)
 ### Audit note (Linear CR-72+ vs repo, 2026-04)
 
 - **Done in Linear and shipped:** **CR-72–CR-76**, **CR-77** (publish from create flow), **CR-78** (template seed), **CR-79**, **CR-88**, **CR-89**. The **CR-72 → CR-83** numbering is the original **sequential plan**, not current blocking order; the **core product vertical** through publish + templates is effectively complete in-repo.
-- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-83** (no `docs/ops-backend-deploy.md` yet), **CR-84** / **CR-85** (parallel hygiene), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing).
+- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-84** / **CR-85** (parallel hygiene), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing).
+- **CR-83 Done (admin handoff scope):** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) shipped as the **admin handoff sheet** (access, env vars, platform settings, open decisions). The full deploy runbook is intentionally split out — see the new follow-up tickets in [Ticket 12 / CR-83 follow-ups](#follow-up-tickets-filed-under-cr-83) below.
 - **CR-86** is **no longer blocked** by publish — **CR-77** is **Done**; profile work is gated by **implementation**, not waiting on publish wiring.
 - **Not in this ticket list** but called out in **[docs/backend-roadmap.md](backend-roadmap.md):** shared **rate-limit store** (e.g. Redis) before multi-instance; **`GET /api/create-flow/methods`** exists for facet scoring (Ticket 16 / CR-88) but is not duplicated as a separate doc ticket.
 
@@ -535,29 +536,58 @@ _Section B — Final Review screen `+` button per category:_
 
 ---
 
-## Ticket 12 — Staging / production runbook (operator checklist)
+## Ticket 12 — Staging / production admin handoff (Cloudron at MEDLab)
 
 **Depends on:** Tickets 1–8 complete enough to deploy a vertical slice.
 
-**Server / admin:** **This is the main ticket where you need the admin.** You draft the runbook; **admin fills in real hostnames, DB endpoint, SMTP, backup tooling, and who runs `migrate deploy`.** Without their input, you cannot complete production-ready deploy steps.
+**Server / admin:** **This is the handoff ticket.** Scope is **narrowed** vs. the original "full operator runbook" framing: the deliverable is the **admin-handoff sheet** — exactly what access, env vars, and platform decisions to ask MEDLab's Cloudron admin for. The full deploy runbook (build / push / install / migrate / smoke / rollback) is **split out into a follow-up ticket** so CR-83 isn't blocked on access we don't have yet.
 
-**Goal:** Single doc for admin: env vars, TLS, DB backups, migrations, Docker, SMTP, health checks.
+**Goal:** Single short doc the admin can read end-to-end and respond to in one round-trip: required access, Cloudron-injected vs. manually-set env vars, platform settings to confirm (`httpPort`, `healthCheckPath`, addons, memory, backups), and the open product decisions only admin can answer (subdomains, sender address, registry choice, cutover overlap, retention).
 
-**Implementation:**
+**Platform context:** Target is **Cloudron at MEDLab** (same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend), which is Express + MySQL with a 30-min `run.sh` watchdog). New app is a properly packaged Cloudron app (Docker image + `CloudronManifest.json`), uses the **postgresql + sendmail + localstorage** addons, and replaces the legacy service entirely — **no data migration**. Cloudron's container supervisor replaces the old watchdog.
 
-1. Add `docs/ops-backend-deploy.md` (or similar) with numbered steps:
-   - Required env: `DATABASE_URL`, `SESSION_SECRET`, `SMTP_URL`, `SMTP_FROM`, optional `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`.
-   - `docker compose` vs `Dockerfile` deploy; `prisma migrate deploy` before traffic.
-   - Reverse proxy: `GET /api/health` for LB health.
-   - Backups and restore drill for Postgres.
-   - SMTP DNS (SPF/DKIM).
-2. Cross-link [docs/backend-roadmap.md](docs/backend-roadmap.md) §11 (environments) and §8 (migrations policy); note **never rewrite applied migrations** and where application logs go.
+**Implementation (shipped):**
+
+1. [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) — admin handoff sheet (~1 page):
+   - **§2 Access checklist** (Cloudron admin login, registry creds, DNS, `cloudron` CLI, log access, read of legacy app config).
+   - **§3 Env vars** split into Cloudron auto-injected (`CLOUDRON_POSTGRESQL_URL`, `CLOUDRON_MAIL_SMTP_*`) vs. manually-set (`SESSION_SECRET`, `SMTP_FROM`, `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`).
+   - **§4 Platform settings** (`httpPort: 3000`, `healthCheckPath: /api/health`, memory, backups, TLS).
+   - **§5 Decisions** (subdomains, sender, registry, cutover, retention).
+   - **§7 Old vs new deltas** (addons, watchdog, OTP→magic link, sender, API surface — all reasons not to reuse legacy infra).
+   - **§8 Follow-up tickets** (the six tickets below).
+2. Cross-links: [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §11 (environments — names Cloudron at MEDLab) and §8 (migrations policy — never rewrite applied migrations).
 
 **Acceptance criteria:**
 
-- [ ] Someone who did not write the code can deploy and roll back migrations with only the doc.
+- [x] Admin can grant the right access + answer the open decisions in one pass without further back-and-forth.
+- [x] Doc is ~1 page and explicitly lists what is **not** in scope so admin doesn't expect a full deploy walkthrough.
+- [x] Six follow-up tickets enumerated and linked (see below).
 
-**Files:** new `docs/ops-backend-deploy.md`.
+**Files:** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md), [`docs/guides/backend-roadmap.md`](backend-roadmap.md), [`docs/README.md`](../README.md), [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
+
+**Status:** [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend) **Done** (admin handoff scope). Deployment-pipeline implementation tracked in the follow-up tickets below.
+
+### Follow-up tickets filed under CR-83
+
+All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule** team, **Backlog** state. IDs filled in once filed via Linear MCP.
+
+| # | Linear | Title | Depends on |
+| - | ------ | ----- | ---------- |
+| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `[Backend] Bridge CLOUDRON_* env vars to canonical names` | none — can ship now |
+| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | `[Backend] Container image registry: choose, build, push` | registry decision (handoff §5) |
+| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | `[Backend] Cloudron staging install + smoke` | CR-96 + CR-97 + Cloudron CLI access + staging DNS |
+| 4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-dns-cutover) | `[Backend] Cloudron production install + DNS cutover` | CR-98 green for the agreed overlap window |
+| 5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | `[Backend] Steady-state operator runbook` | CR-98 (write what we actually did) |
+| 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-expressmysql-backend) | `[Backend] Decommission legacy Express/MySQL backend` | CR-99 + sign-off window |
+
+**Per-ticket detail:**
+
+1. **Bridge `CLOUDRON_*` env vars to canonical names.** Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_SERVER/PORT/USERNAME/PASSWORD`; the app reads `DATABASE_URL` / `SMTP_URL`. Recommended approach: read both names in [`lib/server/env.ts`](../../lib/server/env.ts) and assemble `SMTP_URL` from the four parts in [`lib/server/mail.ts`](../../lib/server/mail.ts) when only the Cloudron names are present. Alternative: a `start.sh` shim in the image. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; with only canonical names set (current behavior), unchanged; unit tests cover both.
+2. **Container image registry: choose, build, push.** Acceptance: `docker pull <registry>/communityrule:<tag>` works from a Cloudron-reachable network. CI builds and pushes on merge to `main` (stretch).
+3. **Cloudron staging install + smoke.** Acceptance: `curl https://<staging>/api/health` returns `{"ok":true,"database":"connected"}`; magic-link request → click link → `GET /api/auth/session` returns a user; publishing a rule succeeds.
+4. **Cloudron production install + DNS cutover.** Acceptance: production subdomain resolves to the new app; old subdomain still works during overlap; sign-in + publish succeed against production; backups confirmed.
+5. **Steady-state operator runbook.** Lives at `docs/guides/ops-runbook.md` (sibling to the handoff). Covers deploy a new version, rollback, restore drill cadence, multi-instance limitations from [`backend-roadmap.md`](backend-roadmap.md) §5/§7. Acceptance: a fresh reader can deploy + roll back using only this doc.
+6. **Decommission legacy Express/MySQL backend.** Acceptance: old Cloudron app stopped + uninstalled; old MySQL addon backed up once and removed; legacy Gitea repo README updated to point at this app. Priority: Low.
 
 ---
 
@@ -661,7 +691,7 @@ _Section B — Final Review screen `+` button per category:_
 |     9 | 9      | Web vitals persistence            |
 |    10 | 10     | Public rule detail (optional)     |
 |    11 | 11     | CI migrate smoke (optional)       |
-|    12 | 12     | Ops runbook                       |
+|    12 | 12     | Ops admin handoff (Cloudron) **Done** |
 |    13 | 13     | API errors + request-id logging   |
 |    14 | 14     | Session lifecycle + cleanup       |
 |    15 | 15     | Profile + account (Figma profile) |
@@ -678,7 +708,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-83** remain **Backlog** (web vitals, public rule detail, CI migrate smoke, ops runbook — optional / ops tail). **Parallel:** **CR-84**, **CR-85** (**Backlog**); **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-82** remain **Backlog** (web vitals, public rule detail, CI migrate smoke). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel:** **CR-84**, **CR-85** (**Backlog**); **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -693,7 +723,13 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            |
 |         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           |
 |         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | CI migrate smoke (optional)             |
-|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops runbook / admin handoff             |
+|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops admin handoff (Cloudron) **Done**   |
+|       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | `[Backend] Bridge CLOUDRON_* env vars to canonical names` |
+|       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | `[Backend] Container image registry: choose, build, push` |
+|       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | `[Backend] Cloudron staging install + smoke`           |
+|       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-dns-cutover)                     | `[Backend] Cloudron production install + DNS cutover`  |
+|       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | `[Backend] Steady-state operator runbook`              |
+|       12.6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-expressmysql-backend)                  | `[Backend] Decommission legacy Express/MySQL backend`  |
 |         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         |
 |         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup             |
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |

@@ -206,13 +206,15 @@ npm run dev
 
 **Optional QA:** Run automated tests against an **ephemeral** database in CI instead of maintaining a fourth long-lived server.
 
+**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. Admin handoff (access, env vars, platform settings, open decisions): [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). Note: Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*`; the app reads `DATABASE_URL` / `SMTP_URL`, so a small env-var bridge in [`lib/server/env.ts`](../../lib/server/env.ts) / [`lib/server/mail.ts`](../../lib/server/mail.ts) is needed (tracked in [**CR-96**](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names), filed under CR-83 — see [backend-linear-tickets.md](backend-linear-tickets.md) Ticket 12 follow-ups).
+
 **Admin / infra (coordinate with whoever runs the server):**
 
-1. TLS certificates and hostnames.
-2. PostgreSQL backups and restore drill.
-3. SMTP DNS (SPF, DKIM).
-4. Health check URL for reverse proxy (`/api/health`).
-5. Log retention and alerts for 5xx errors.
+1. TLS certificates and hostnames. _On Cloudron: handled by the platform per chosen subdomain._
+2. PostgreSQL backups and restore drill. _On Cloudron: daily snapshots; configure retention in admin UI._
+3. SMTP DNS (SPF, DKIM). _On Cloudron: handled for the platform-managed domain._
+4. Health check URL for reverse proxy (`/api/health`). _On Cloudron: set `healthCheckPath` in `CloudronManifest.json`._
+5. Log retention and alerts for 5xx errors. _On Cloudron: app log viewer; export off-platform if longer retention is needed._
 
 ---
 

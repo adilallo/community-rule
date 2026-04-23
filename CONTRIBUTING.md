@@ -15,6 +15,11 @@
 
 Use `npx prisma studio` to inspect the database.
 
+Deploying to staging or production (MEDLab Cloudron) — see
+[docs/guides/ops-backend-deploy.md](docs/guides/ops-backend-deploy.md)
+for the admin handoff and the linked Linear tickets for the actual
+deployment-pipeline work.
+
 ### Prisma migrations
 
 - **Never edit** a migration that has already been applied to staging,
