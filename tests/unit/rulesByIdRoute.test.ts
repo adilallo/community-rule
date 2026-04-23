@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const isDatabaseConfiguredMock = vi.fn();
@@ -29,31 +30,50 @@ beforeEach(() => {
 describe("GET /api/rules/[id]", () => {
   it("returns 503 when the database is not configured", async () => {
     isDatabaseConfiguredMock.mockReturnValue(false);
-    const res = await GET(new Request("https://x.test/api/rules/abc"), makeContext("abc"));
+    const res = await GET(
+      new NextRequest("https://x.test/api/rules/abc"),
+      makeContext("abc"),
+    );
     expect(res.status).toBe(503);
     expect(findUniqueMock).not.toHaveBeenCalled();
   });
 
-  it("returns 404 when no published rule matches the id", async () => {
+  it("returns 404 with the canonical error shape when no published rule matches the id", async () => {
     isDatabaseConfiguredMock.mockReturnValue(true);
     findUniqueMock.mockResolvedValueOnce(null);
     const res = await GET(
-      new Request("https://x.test/api/rules/missing"),
+      new NextRequest("https://x.test/api/rules/missing"),
       makeContext("missing"),
     );
     expect(res.status).toBe(404);
-    const body = (await res.json()) as { error: string };
-    expect(typeof body.error).toBe("string");
+    expect(res.headers.get("x-request-id")).toBeTruthy();
+    const body = (await res.json()) as {
+      error: { code: string; message: string };
+    };
+    expect(body.error.code).toBe("not_found");
+    expect(typeof body.error.message).toBe("string");
     expect(findUniqueMock).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: "missing" } }),
     );
+  });
+
+  it("forwards an incoming x-request-id on the response", async () => {
+    isDatabaseConfiguredMock.mockReturnValue(true);
+    findUniqueMock.mockResolvedValueOnce(null);
+    const res = await GET(
+      new NextRequest("https://x.test/api/rules/missing", {
+        headers: { "x-request-id": "req_test-1" },
+      }),
+      makeContext("missing"),
+    );
+    expect(res.headers.get("x-request-id")).toBe("req_test-1");
   });
 
   it("returns 404 when the query throws (swallowed by helper)", async () => {
     isDatabaseConfiguredMock.mockReturnValue(true);
     findUniqueMock.mockRejectedValueOnce(new Error("db down"));
     const res = await GET(
-      new Request("https://x.test/api/rules/broken"),
+      new NextRequest("https://x.test/api/rules/broken"),
       makeContext("broken"),
     );
     expect(res.status).toBe(404);
@@ -71,7 +91,7 @@ describe("GET /api/rules/[id]", () => {
     };
     findUniqueMock.mockResolvedValueOnce(row);
     const res = await GET(
-      new Request("https://x.test/api/rules/rule-1"),
+      new NextRequest("https://x.test/api/rules/rule-1"),
       makeContext("rule-1"),
     );
     expect(res.status).toBe(200);

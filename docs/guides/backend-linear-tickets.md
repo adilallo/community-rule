@@ -11,7 +11,7 @@ A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)
 ### Audit note (Linear CR-72+ vs repo, 2026-04)
 
 - **Done in Linear and shipped:** **CR-72–CR-76**, **CR-77** (publish from create flow), **CR-78** (template seed), **CR-79**, **CR-88**, **CR-89**. The **CR-72 → CR-83** numbering is the original **sequential plan**, not current blocking order; the **core product vertical** through publish + templates is effectively complete in-repo.
-- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-84** / **CR-85** (parallel hygiene), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing).
+- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-85** (parallel hygiene — session lifecycle), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing). **CR-84 Done** — canonical error contract `{ error: { code, message }, details? }` and `x-request-id` propagation shipped via `lib/server/{responses,requestId,apiRoute}.ts`; auth + drafts + rules routes migrated, remaining `app/api/*` are a follow-up pass.
 - **CR-83 Done (admin handoff scope):** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) shipped as the **admin handoff sheet** (access, env vars, platform settings, open decisions). The full deploy runbook is intentionally split out — see the new follow-up tickets in [Ticket 12 / CR-83 follow-ups](#follow-up-tickets-filed-under-cr-83) below.
 - **CR-86** is **no longer blocked** by publish — **CR-77** is **Done**; profile work is gated by **implementation**, not waiting on publish wiring.
 - **Not in this ticket list** but called out in **[docs/backend-roadmap.md](backend-roadmap.md):** shared **rate-limit store** (e.g. Redis) before multi-instance; **`GET /api/create-flow/methods`** exists for facet scoring (Ticket 16 / CR-88) but is not duplicated as a separate doc ticket.
@@ -607,12 +607,12 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 
 **Acceptance criteria:**
 
-- [ ] At least auth + draft + rules routes return the agreed shape for new code paths.
-- [ ] Errors in logs include request id when available.
+- [x] At least auth + draft + rules routes return the agreed shape for new code paths.
+- [x] Errors in logs include request id when available.
 
-**Files:** `lib/server/` (new helper), selected `app/api/**/route.ts`, optional tests.
+**Files:** [`lib/server/responses.ts`](lib/server/responses.ts), [`lib/server/requestId.ts`](lib/server/requestId.ts), [`lib/server/apiRoute.ts`](lib/server/apiRoute.ts); migrated `app/api/auth/**/route.ts`, `app/api/drafts/me/route.ts`, `app/api/rules/route.ts`, `app/api/rules/[id]/route.ts`; tests in `tests/unit/{responses,requestId,apiRoute,draftsMeRoute,rulesByIdRoute}.test.ts`.
 
-**Linear:** [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging) (**CR-73** Done — ready to pick up).
+**Linear:** [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging) **Done** (**CR-73** Done — was ready to pick up).
 
 ---
 

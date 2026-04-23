@@ -115,9 +115,9 @@ Match the current API behavior; tighten as product evolves:
 
 ## 7. API responses, errors, and observability
 
-**Error JSON (target):** Prefer a stable shape, e.g. `{ "error": { "code": "string", "message": "string" }, "details"?: ... }` for 4xx/5xx, instead of only `{ "error": "string" }`. Validation errors can map into `details`. Implement gradually in route handlers.
+**Error JSON (implemented):** 4xx/5xx bodies use the canonical shape `{ "error": { "code": "string", "message": "string" }, "details"?: ... }`. Codes come from the `ApiErrorCode` union in [`lib/server/responses.ts`](../lib/server/responses.ts) (helpers: `errorJson`, `dbUnavailable`, `unauthorized`, `notFound`, `rateLimited`, `serverMisconfigured`, `internalError`); validation failures use [`jsonFromZodError`](../lib/server/validation/zodHttp.ts) and surface flattened issues in `details`. **Migrated:** auth (`/api/auth/*`), drafts (`/api/drafts/me`), rules (`/api/rules`, `/api/rules/[id]`). Remaining `app/api/*` handlers (e.g. `web-vitals`, `templates`, `create-flow/methods`, `health`) are a follow-up pass; new routes should adopt the helpers from day one.
 
-**Logging:** Use the shared [`lib/logger.ts`](../lib/logger.ts) where possible. Include a **request correlation id** (reuse `x-request-id` if present, else generate) on API routes and log it with errors so support can tie logs together.
+**Logging:** Use the shared [`lib/logger.ts`](../lib/logger.ts) where possible. Wrap route handlers with [`apiRoute(scope, handler)`](../lib/server/apiRoute.ts) so a sanitized `x-request-id` is generated (or forwarded) onto every response and uncaught throws return the canonical 500 with the id logged via `logRouteError` ([`lib/server/requestId.ts`](../lib/server/requestId.ts)). Pass the `requestId` through to in-handler `logRouteError(scope, requestId, err, extra?)` calls when catching expected failures (e.g. mail send) so support can tie logs together.
 
 **Metrics:** No vendor required for v1; optional later: request duration, error counts.
 
