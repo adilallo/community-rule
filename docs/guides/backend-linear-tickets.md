@@ -11,7 +11,7 @@ A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)
 ### Audit note (Linear CR-72+ vs repo, 2026-04)
 
 - **Done in Linear and shipped:** **CR-72–CR-76**, **CR-77** (publish from create flow), **CR-78** (template seed), **CR-79**, **CR-88**, **CR-89**. The **CR-72 → CR-83** numbering is the original **sequential plan**, not current blocking order; the **core product vertical** through publish + templates is effectively complete in-repo.
-- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-82** (CI migrate smoke), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing). **CR-84 Done** — canonical error contract `{ error: { code, message }, details? }` and `x-request-id` propagation shipped via `lib/server/{responses,requestId,apiRoute}.ts`; auth + drafts + rules routes migrated, remaining `app/api/*` are a follow-up pass. **CR-85 Done** — multi-device session policy + lazy expired-row cleanup (per-user prune on every sign-in plus ~5% global sweep, no cron); ADR comment block in [`lib/server/session.ts`](../../lib/server/session.ts).
+- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing). **CR-82** (migrate smoke): **local** `npm run migrate:smoke` + [CONTRIBUTING.md](../../CONTRIBUTING.md) / [docs/testing-guide.md](../testing-guide.md) — in-repo Gitea workflow YAML **removed**; optional future remote job if hosted runners return. **CR-84 Done** — canonical error contract `{ error: { code, message }, details? }` and `x-request-id` propagation shipped via `lib/server/{responses,requestId,apiRoute}.ts`; auth + drafts + rules routes migrated, remaining `app/api/*` are a follow-up pass. **CR-85 Done** — multi-device session policy + lazy expired-row cleanup (per-user prune on every sign-in plus ~5% global sweep, no cron); ADR comment block in [`lib/server/session.ts`](../../lib/server/session.ts).
 - **CR-83 Done (admin handoff + cutover plan):** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) shipped. Cloudron admin access on `cloud.medlab.host` granted; doc now covers (a) what's in place, (b) the side-by-side → apex cutover plan, and (c) the two open product questions + registry decision still outstanding. Steady-state operator runbook is split out into a follow-up — see [Ticket 12 / CR-83 follow-ups](#follow-up-tickets-filed-under-cr-83) below. Key new finding: legacy `communityrule.info` is a single Cloudron **LAMP** app (`lamp.cloudronapp.php74@5.1.2`) hosting marketing site + Express/MySQL backend + a broken Flask chatbot all in one container; all three retire together via CR-99 + CR-101.
 - **CR-86** is **no longer blocked** by publish — **CR-77** is **Done**; profile work is gated by **implementation**, not waiting on publish wiring.
 - **Not in this ticket list** but called out in **[docs/backend-roadmap.md](backend-roadmap.md):** shared **rate-limit store** (e.g. Redis) before multi-instance; **`GET /api/create-flow/methods`** exists for facet scoring (Ticket 16 / CR-88) but is not duplicated as a separate doc ticket.
@@ -56,7 +56,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 | 4–8    | **No**                                                                                   | Local or staging URL is still “your” deploy—admin only if that URL is on their infra.                                                                                |
 | 9      | **No** to implement; **Yes** when **production** uses multiple instances or read-only FS | **Default** is external RUM/log drain; Postgres vitals only if ops explicitly wants one datastore—may need vendor keys for SaaS.                                     |
 | 10     | **No** to code                                                                           | Same deploy pipeline as the rest of the app.                                                                                                                         |
-| 11     | **Maybe**                                                                                | Whoever owns **Gitea runners**: can they run Postgres in CI? Not the same as production server, but often the same “infra” person.                                   |
+| 11     | **No**                                                                                  | **Migrate smoke** is local (`npm run migrate:smoke`); no server for CI.                                                                                                 |
 | 12     | **Yes—this is the handoff ticket**                                                       | You (or admin) write **`docs/ops-backend-deploy.md`** so deploy steps are explicit; **you need admin input** to fill in hostnames, DB provider, SMTP, backup policy. |
 
 ### One-line summary
@@ -513,26 +513,20 @@ _Section B — Final Review screen `+` button per category:_
 
 ---
 
-## Ticket 11 — CI: database migration smoke (optional, runner-dependent)
+## Ticket 11 — Database migration smoke (local)
 
-**Depends on:** existing [`.gitea/workflows/ci.yaml`](.gitea/workflows/ci.yaml).
-
-**Server / admin:** **Not production server**—but you may need whoever runs **Gitea/self-hosted runners** to allow **Postgres in CI** (Docker service / sidecar) or to accept a **manual migrate** process documented instead.
+**Depends on:** nothing in production; **Docker** on the developer machine.
 
 **Goal:** Catch broken SQL migrations before merge.
 
-**Context:** Lint job already runs `prisma validate` with a dummy `DATABASE_URL`. **Migrate** needs a real Postgres reachable from the runner.
-
-**Implementation:**
-
-1. If Gitea runners support **Docker sidecar** or **postgres service**, add a job: start Postgres, set `DATABASE_URL`, `npx prisma migrate deploy`, then run a minimal test that hits `/api/health` with DB connected (may require `next build` + short `next start` + curl).
-2. If **macOS self-hosted** runners cannot run service containers easily, document in CONTRIBUTING: “run `migrate deploy` against staging before prod” and keep validate-only in CI.
+**Implementation (shipped in repo):** `npm run migrate:smoke` runs [`scripts/migrate-smoke-local.sh`](../../scripts/migrate-smoke-local.sh) — ephemeral Postgres on `127.0.0.1:5433`, `prisma migrate deploy`, connection check, teardown. Documented in [CONTRIBUTING.md](../../CONTRIBUTING.md) and [docs/testing-guide.md](../testing-guide.md) § *Running tests* (Prisma). In-repo **Gitea workflow YAML** for this was removed in favor of the local script; reintroducing a remote job is optional if self-hosted runners are available again.
 
 **Acceptance criteria:**
 
-- [ ] Broken migration fails CI **or** documented alternative process is explicit.
+- [x] Documented + scripted local migrate smoke before merge.
+- [ ] (Optional) Remote CI job, if you later restore runners and want parity.
 
-**Files:** [.gitea/workflows/ci.yaml](.gitea/workflows/ci.yaml), [CONTRIBUTING.md](CONTRIBUTING.md).
+**Files:** [`scripts/migrate-smoke-local.sh`](../../scripts/migrate-smoke-local.sh), [`package.json`](../../package.json) (`migrate:smoke`), [CONTRIBUTING.md](../../CONTRIBUTING.md), [docs/testing-guide.md](../testing-guide.md).
 
 ---
 
@@ -694,7 +688,7 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 |     8 | 8      | Templates in UI                   |
 |     9 | 9      | Web vitals persistence            |
 |    10 | 10     | Public rule detail (optional)     |
-|    11 | 11     | CI migrate smoke (optional)       |
+|    11 | 11     | Migrate smoke (local) **Done in repo** |
 |    12 | 12     | Ops admin handoff (Cloudron) **Done** |
 |    13 | 13     | API errors + request-id logging   |
 |    14 | 14     | Session lifecycle + cleanup       |
@@ -712,7 +706,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-82** remain **Backlog** (web vitals, public rule detail, CI migrate smoke). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -726,7 +720,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                         |
 |          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            |
 |         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           |
-|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | CI migrate smoke (optional)             |
+|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | Local migrate smoke (**Done in repo**; optional remote CI) |
 |         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops admin handoff (Cloudron) **Done**   |
 |       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | `[Backend] Bridge CLOUDRON_* env vars to canonical names` |
 |       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | `[Backend] Container image registry: choose, build, push` |

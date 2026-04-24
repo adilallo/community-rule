@@ -26,16 +26,9 @@ deployment-pipeline work.
   production, or any shared database. Add a **new** migration that
   corrects the schema instead. Full policy:
   [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §8.
-- **CI smoke:** [`.gitea/workflows/migrate-smoke.yaml`](.gitea/workflows/migrate-smoke.yaml)
-  spins up a throwaway Postgres and runs `npm run db:deploy` whenever
-  `prisma/**` changes on a PR (or via `workflow_dispatch`). If the
-  runner cannot run Docker/Postgres, run the same check locally before
-  merging migration changes:
-
-  ```bash
-  docker compose up -d postgres
-  npm run db:deploy
-  ```
+- Any change under **`prisma/`**: run **`npm run migrate:smoke`** (see
+  [docs/testing-guide.md](docs/testing-guide.md#running-tests), **Prisma**
+  under *Running tests*).
 
 ### API routes
 
@@ -87,7 +80,6 @@ Ticket 17.
 
 1. Branch from `main`: `git checkout -b feature/<short-name>`.
 2. Make the change and add/update tests.
-3. `npm test && npm run e2e` (and `npm run storybook:build` if you touched
-   stories).
+3. Before merging, run [docs/testing-guide.md](docs/testing-guide.md#running-tests) *Running tests*.
 4. Commit using a clear message (`feat:`, `fix:`, `chore:`, …).
-5. Open a PR; CI runs unit, E2E, visual regression, and Lighthouse.
+5. Open a pull request.

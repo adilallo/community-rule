@@ -3,6 +3,34 @@
 This is the **why** of testing in CommunityRule. For file layout, helper
 APIs, and required imports see `.cursor/rules/testing.mdc`.
 
+## Running tests
+
+```bash
+npx tsc --noEmit
+npm test
+npx next build
+npm run e2e                          # when routes, auth, or critical flows change
+npm run storybook:build              # when stories/ change
+npm run test:component               # components only, faster inner loop
+npm run visual:update                # after UI changes to visual regression tests
+```
+
+**Prisma** (`prisma/**` changes): **requires Docker.**
+
+```bash
+npm run migrate:smoke
+```
+
+Starts a throwaway Postgres on `127.0.0.1:5433`, runs `prisma migrate
+deploy`, checks the connection, then removes the container. Port **5433**
+avoids clashing with `docker compose` on **5432**. If you already use
+Compose on 5432: `docker compose up -d postgres` then
+`DATABASE_URL=postgresql://communityrule:communityrule@127.0.0.1:5432/communityrule npm run db:deploy`.
+
+Do not rewrite migrations already applied to shared DBs — see
+[CONTRIBUTING.md](../CONTRIBUTING.md) and
+[guides/backend-roadmap.md](guides/backend-roadmap.md) §8.
+
 ## Philosophy
 
 - **Test behaviour, not implementation.** Assert on what a user can see and
@@ -44,15 +72,6 @@ APIs, and required imports see `.cursor/rules/testing.mdc`.
   minor spacing).
 - Hook internals or memoization specifics.
 - Responsive visibility in JSDOM — use Playwright instead.
-
-## Running tests
-
-```bash
-npm test                  # vitest run with coverage
-npm run test:component    # vitest, components only (faster inner loop)
-npm run e2e               # playwright (alias: test:e2e)
-npm run visual:update     # refresh playwright screenshots after UI changes
-```
 
 ## Adding tests for a new component
 

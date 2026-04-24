@@ -6,8 +6,8 @@ User-facing docs. Implementation conventions live in `.cursor/rules/`.
 
 - [create-flow.md](./create-flow.md) — Custom create-rule wizard: stages,
   URLs, persistence. Source of truth for product/eng alignment.
-- [testing-guide.md](./testing-guide.md) — Testing philosophy and what to
-  cover at each layer.
+- [testing-guide.md](./testing-guide.md) — Testing philosophy, layer
+  coverage, and Prisma migration smoke before merge.
 
 ## Author guides (`guides/`)
 
