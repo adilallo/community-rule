@@ -60,7 +60,7 @@ removal trigger.
 
 ## Verification recipe
 
-Run these (in order) before declaring a change done. They mirror CI:
+Run these (in order) before declaring a change done:
 
 ```bash
 rm -rf .next            # only if you moved/renamed routes or layouts
@@ -71,6 +71,8 @@ npx next build          # production build + route manifest
 
 For UI-only changes, also: `npm run storybook` and visually confirm.
 For E2E-relevant changes: `npm run e2e`.
+For changes under `prisma/`: `npm run migrate:smoke` (see
+[docs/testing-guide.md](docs/testing-guide.md) § *Running tests*).
 
 ## Where else to look
 

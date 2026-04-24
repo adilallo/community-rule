@@ -26,17 +26,20 @@ const getRatingIcon = (rating: string): string => {
   }
 };
 
-const formatValue = (metric: string, value: number): string => {
+function formatValue(metric: string, value: number): string {
   if (metric === "cls") {
     return value.toFixed(3);
   }
   return `${value}ms`;
-};
+}
 
 function WebVitalsDashboardView({
   vitals,
   metrics,
   loading,
+  storage,
+  copy,
+  rumDashboardUrl,
 }: WebVitalsDashboardViewProps) {
   if (loading) {
     return (
@@ -59,8 +62,30 @@ function WebVitalsDashboardView({
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-[var(--color-content-default-primary)]">
-        Web Vitals Dashboard
+        {copy.title}
       </h2>
+
+      {storage === "external" && (
+        <div
+          className="mb-6 p-4 rounded-lg border border-[var(--color-border-default-primary)] bg-[var(--color-surface-default-secondary)] text-[var(--font-size-body-medium)] text-[var(--color-content-default-secondary)]"
+          role="status"
+        >
+          <p className="font-semibold text-[var(--color-content-default-primary)] mb-2">
+            {copy.externalNoticeTitle}
+          </p>
+          <p className="mb-3">{copy.externalNoticeBody}</p>
+          {rumDashboardUrl ? (
+            <a
+              href={rumDashboardUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--color-content-default-primary)] underline font-medium"
+            >
+              {copy.externalDashboardLinkLabel}
+            </a>
+          ) : null}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         {Object.entries(vitals).map(([metric, data]) => (
@@ -74,21 +99,20 @@ function WebVitalsDashboardView({
             </div>
             <div className="text-sm">
               <div className="font-medium">
-                Value: {formatValue(metric, data.value)}
+                {copy.valueLabel}: {formatValue(metric, data.value)}
               </div>
               <div className="capitalize">
-                Rating: {data.rating.replace("-", " ")}
+                {copy.ratingLabel}: {data.rating.replace("-", " ")}
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Historical Metrics */}
       {Object.keys(metrics).length > 0 && (
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-4 text-[var(--color-content-default-primary)]">
-            Historical Metrics
+            {copy.historicalMetricsTitle}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(metrics).map(([metric, data]) => (
@@ -98,20 +122,26 @@ function WebVitalsDashboardView({
               >
                 <h4 className="font-semibold mb-2">{metric.toUpperCase()}</h4>
                 <div className="text-sm space-y-1">
-                  <div>Count: {data.count}</div>
-                  <div>Average: {formatValue(metric, data.average)}</div>
                   <div>
-                    Range: {formatValue(metric, data.min)} -{" "}
+                    {copy.countLabel}: {data.count}
+                  </div>
+                  <div>
+                    {copy.averageLabel}: {formatValue(metric, data.average)}
+                  </div>
+                  <div>
+                    {copy.rangeLabel}: {formatValue(metric, data.min)} -{" "}
                     {formatValue(metric, data.max)}
                   </div>
                   <div className="flex gap-2 text-xs">
                     <span className="text-green-600">
-                      Good: {data.goodCount}
+                      {copy.goodLabel}: {data.goodCount}
                     </span>
                     <span className="text-yellow-600">
-                      Needs Improvement: {data.needsImprovementCount}
+                      {copy.needsImprovementLabel}: {data.needsImprovementCount}
                     </span>
-                    <span className="text-red-600">Poor: {data.poorCount}</span>
+                    <span className="text-red-600">
+                      {copy.poorLabel}: {data.poorCount}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -120,32 +150,16 @@ function WebVitalsDashboardView({
         </div>
       )}
 
-      {/* Performance Guidelines */}
       <div className="p-4 bg-[var(--color-surface-default-secondary)] rounded-lg">
         <h3 className="font-semibold mb-2 text-[var(--color-content-default-primary)]">
-          Performance Guidelines
+          {copy.performanceGuidelinesTitle}
         </h3>
         <ul className="text-sm space-y-1 text-[var(--color-content-default-secondary)]">
-          <li>
-            • <strong>LCP:</strong> Good &lt; 2.5s, Needs Improvement 2.5-4s,
-            Poor &gt; 4s
-          </li>
-          <li>
-            • <strong>FID:</strong> Good &lt; 100ms, Needs Improvement
-            100-300ms, Poor &gt; 300ms
-          </li>
-          <li>
-            • <strong>CLS:</strong> Good &lt; 0.1, Needs Improvement 0.1-0.25,
-            Poor &gt; 0.25
-          </li>
-          <li>
-            • <strong>FCP:</strong> Good &lt; 1.8s, Needs Improvement 1.8-3s,
-            Poor &gt; 3s
-          </li>
-          <li>
-            • <strong>TTFB:</strong> Good &lt; 800ms, Needs Improvement
-            800-1800ms, Poor &gt; 1800ms
-          </li>
+          <li>• {copy.guidelines.lcp}</li>
+          <li>• {copy.guidelines.fid}</li>
+          <li>• {copy.guidelines.cls}</li>
+          <li>• {copy.guidelines.fcp}</li>
+          <li>• {copy.guidelines.ttfb}</li>
         </ul>
       </div>
     </div>

@@ -45,9 +45,19 @@ Keep new routes within this shape so auth, config, and validation stay uniform.
 4. **Prisma access** via `import { prisma } from "lib/server/db"`. Do not
    instantiate `PrismaClient` directly.
 
-5. **Responses** via `NextResponse.json(...)`. Shared shapes (`dbUnavailable`)
-   live in `lib/server/responses.ts`; add new shared responses there when a
-   pattern repeats in two routes.
+5. **Responses** via `NextResponse.json(...)`. Shared shapes
+   (`dbUnavailable`, `unauthorized`, `notFound`, `rateLimited`,
+   `serverMisconfigured`, `internalError`) and the generic `errorJson(code,
+   message, status, opts?)` live in `lib/server/responses.ts`. Add new
+   shared responses there when a pattern repeats in two routes.
+
+6. **Errors + observability.** All 4xx/5xx bodies use the canonical shape
+   `{ error: { code, message }, details? }` with codes from the
+   `ApiErrorCode` union in `lib/server/responses.ts`. Wrap handlers with
+   `apiRoute("scope.name", async (req, ctx, { requestId }) => { ... })`
+   from `lib/server/apiRoute.ts` so an `x-request-id` is generated /
+   forwarded onto every response and uncaught throws return a canonical
+   500 with the id logged via `lib/logger`.
 
 # Server-only isolation
 
@@ -68,9 +78,8 @@ instead of introducing new patterns:
 
 - **Rate limiting.** `lib/server/rateLimit.ts` is an in-memory stopgap marked
   for replacement. Reuse `rateLimitKey()` where limiting is needed; don't
-  design a new limiter.
-- **Error response shape.** Currently `{ error: string }` + HTTP status. No
-  error codes yet — don't add a taxonomy until one is designed.
+  design a new limiter. When returning 429, prefer `rateLimited(retryAfterMs)`
+  from `responses.ts` so the body and `Retry-After` header stay uniform.
 - **Pagination / filtering.** Only `rules/route.ts` paginates (`take` capped
   at 100). Mirror it if you add list endpoints; don't invent cursors or
   offset contracts unilaterally.

@@ -1,11 +1,36 @@
 import { cookies } from "next/headers";
 import type { User } from "@prisma/client";
+import { logger } from "../logger";
 import { prisma } from "./db";
 import { getSessionPepper } from "./env";
 import { hashSessionToken, newSessionToken } from "./hash";
 
+/**
+ * Custom session lifecycle (CR-85).
+ *
+ * Decisions documented here so the implementation below is the canonical
+ * source of truth (referenced from `docs/guides/backend-roadmap.md` §4–5).
+ *
+ * 1. **Policy: multi-device.** A new sign-in (`createSessionForUser`) does
+ *    NOT delete the user's other still-valid sessions. Users routinely use
+ *    phone + laptop and there is no v1 security argument for forcing a
+ *    single active session — pre-publish state lives in `localStorage`
+ *    until "Save & Exit", and `/api/auth/logout` only revokes the current
+ *    cookie by design.
+ * 2. **Rotation: deferred.** No token rotation on privilege-sensitive
+ *    actions in v1. Revisit if/when product requires it (ticket calls
+ *    this v1.1).
+ * 3. **Cleanup: lazy, two-tier, no cron.** Every sign-in prunes the
+ *    signing user's own expired rows (cheap — uses `@@index([userId])`).
+ *    A small fraction of sign-ins (`SESSION_GLOBAL_PRUNE_PROB`) also runs
+ *    a global sweep so rows from users who never return are still bounded
+ *    over months. Cleanup is best-effort: a prune failure never fails the
+ *    sign-in itself.
+ */
+
 export const SESSION_COOKIE_NAME = "cr_session";
 const SESSION_MAX_AGE_SEC = 60 * 60 * 24 * 30;
+const SESSION_GLOBAL_PRUNE_PROB = 0.05;
 
 export async function getSessionUser(): Promise<User | null> {
   const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
@@ -31,6 +56,24 @@ export async function getSessionUser(): Promise<User | null> {
   return session.user;
 }
 
+/**
+ * Delete expired `Session` rows. Scoped to a single user when `userId` is
+ * provided (uses the `@@index([userId])` lookup); otherwise sweeps the
+ * whole table. Returns the number of rows deleted.
+ */
+export async function pruneExpiredSessions(
+  opts: { userId?: string } = {},
+): Promise<number> {
+  const where: { expiresAt: { lt: Date }; userId?: string } = {
+    expiresAt: { lt: new Date() },
+  };
+  if (opts.userId) {
+    where.userId = opts.userId;
+  }
+  const { count } = await prisma.session.deleteMany({ where });
+  return count;
+}
+
 export async function createSessionForUser(
   userId: string,
 ): Promise<{ token: string; expiresAt: Date }> {
@@ -46,6 +89,15 @@ export async function createSessionForUser(
       expiresAt,
     },
   });
+
+  try {
+    await pruneExpiredSessions({ userId });
+    if (Math.random() < SESSION_GLOBAL_PRUNE_PROB) {
+      await pruneExpiredSessions();
+    }
+  } catch (err) {
+    logger.warn("[session] expired-row cleanup failed", err);
+  }
 
   return { token, expiresAt };
 }

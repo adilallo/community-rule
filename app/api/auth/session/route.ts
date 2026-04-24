@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { isDatabaseConfigured } from "../../../../lib/server/env";
 import { dbUnavailable } from "../../../../lib/server/responses";
 import { getSessionUser } from "../../../../lib/server/session";
+import { apiRoute } from "../../../../lib/server/apiRoute";
 
-export async function GET() {
+export const GET = apiRoute("auth.session", async () => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
@@ -16,4 +17,4 @@ export async function GET() {
   return NextResponse.json({
     user: { id: user.id, email: user.email },
   });
-}
+});

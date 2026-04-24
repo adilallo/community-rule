@@ -1,0 +1,46 @@
+{
+  "_comment": "Admin /monitor performance page",
+  "title": "Performance Monitoring",
+  "description": "Real-time monitoring of Core Web Vitals and performance metrics for Community Rule 3.0",
+  "performanceTargets": {
+    "title": "Performance Targets",
+    "loadTime": "Load Time",
+    "loadTimeTarget": "< 2 seconds",
+    "lcp": "LCP",
+    "lcpTarget": "< 2.5s",
+    "fid": "FID",
+    "fidTarget": "< 100ms",
+    "cls": "CLS",
+    "clsTarget": "< 0.1",
+    "lighthouse": "Lighthouse Score",
+    "lighthouseTarget": "> 90"
+  },
+  "optimizationStatus": {
+    "title": "Optimization Status",
+    "codeSplitting": "Code Splitting & Dynamic Imports",
+    "reactMemo": "React.memo Optimizations",
+    "imageOptimization": "Image Optimization",
+    "fontPreloading": "Font Preloading",
+    "bundleAnalysis": "Bundle Analysis",
+    "errorBoundaries": "Error Boundaries"
+  },
+  "monitoringCommands": {
+    "title": "Monitoring Commands",
+    "bundleAnalyze": {
+      "title": "Bundle analysis",
+      "command": "npm run bundle:analyze"
+    },
+    "e2ePerformance": {
+      "title": "E2E performance (Core Web Vitals)",
+      "command": "npm run e2e:performance"
+    },
+    "lhciDesktop": {
+      "title": "Lighthouse CI (desktop preset)",
+      "command": "npm run lhci:desktop"
+    },
+    "performanceBudget": {
+      "title": "Lighthouse CI with performance budgets",
+      "command": "npm run performance:budget"
+    }
+  }
+}

@@ -10,8 +10,8 @@ Temporary working notes for building the backend. Safe to delete once the stack 
 - **PostgreSQL + Prisma**: schema and migrations under `prisma/`; product APIs under `app/api/*` (health, auth/magic-link, session, drafts, rules, templates, web-vitals).
 - **Server modules** in `lib/server/` (db, session, mail, rate limiting, etc.).
 - **Create flow:** **Anonymous** users mirror in-progress state to **`create-flow-anonymous`** in `localStorage`; **Exit** opens the save-progress magic-link modal; after verify, [`PostLoginDraftTransfer`](app/(app)/create/PostLoginDraftTransfer.tsx) can **PUT** `/api/drafts/me` when **`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`**. **Signed-in** users get a **fresh** in-memory session per “Create rule” entry, but with sync on the layout may **hydrate** from **`GET /api/drafts/me`** via [`SignedInDraftHydration`](app/(app)/create/SignedInDraftHydration.tsx); **Save & Exit** (from `community-structure` onward) **PUT**s when sync is on. **Log in** from the marketing header uses the global modal ([`AuthModalProvider`](app/contexts/AuthModalContext.tsx)); **`/login`** remains for verify errors and deep links. **Step order and URLs:** [`docs/create-flow.md`](docs/create-flow.md) and [`app/(app)/create/utils/flowSteps.ts`](app/(app)/create/utils/flowSteps.ts).
-- **Web vitals** [`app/api/web-vitals/route.ts`](app/api/web-vitals/route.ts) still use **file-based** storage under `.next` (not suitable for multi-instance production).
-- **CI:** [`.gitea/workflows/ci.yaml`](.gitea/workflows/ci.yaml) (build, test, lint, `prisma validate`); no in-repo production deploy definition.
+- **Web vitals** [`app/api/web-vitals/route.ts`](app/api/web-vitals/route.ts): **production default** is **`external`** (structured logs; no `.next` writes). **`local`** file-based mode remains for development (`WEB_VITALS_STORAGE`).
+- **Pre-merge checks:** run locally (see [docs/testing-guide.md](../testing-guide.md) § *Running tests*; [CONTRIBUTING.md](../CONTRIBUTING.md) pull request workflow). No in-repo remote CI workflow; production deploy is out of band ([ops-backend-deploy.md](ops-backend-deploy.md)).
 
 ### HTTP API (implemented in repo)
 
@@ -28,7 +28,7 @@ Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table (including `/
 | GET / POST | `/api/rules`                   | List or publish rules                         |
 | GET        | `/api/templates`               | List curated templates; optional `facet.*` re-ranks (see [template-recommendation-matrix.md](template-recommendation-matrix.md)) |
 | GET        | `/api/create-flow/methods`      | Facet scores for wizard method lists (`section` + optional `facet.*`) |
-| POST / GET | `/api/web-vitals`              | Web vitals ingest / aggregate (file-based under `.next` today; production path §7) |
+| POST / GET | `/api/web-vitals`              | Web vitals ingest / read aggregates (`external` default in production — logs only; `local` under `.next` in dev — see §7) |
 
 **Product sign-in** uses **magic link** (`/api/auth/magic-link/*`).
 
@@ -84,7 +84,7 @@ Plain-English entities (names can evolve):
 
 **RuleTemplate — recommendation matrix (after v1 list):** Product may author templates in **spreadsheets** (e.g. one row per governance pattern, columns for **matching dimensions** such as group size, organization type, location, maturity, plus long-form fields for create-flow prefill). That implies: **normalized schema or versioned JSON** for dimensions × template fit (✓/✗, weights, or scores), an **import path** (export `.xlsx` / Sheets → validate → DB or build-time artifact), and **`GET /api/templates` (or a sibling route)** that accepts **user- or wizard-selected facets** and returns a **ranked or filtered** set. **Out of scope for first ship** of Tickets 7–8 (seed + display list); tracked as **Ticket 16** in [docs/backend-linear-tickets.md](backend-linear-tickets.md) and Linear **[CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)** (**Done** — committed JSON + seed; no runtime `.xlsx`). Prefer **batch import** over live Google Sheets API in production unless ops explicitly wants sync.
 
-**Session follow-ups to implement or decide:** token **rotation** on sensitive events, whether **new login invalidates other sessions**, and **cleanup** of expired `Session` rows (job or lazy delete). Revisit a small auth library (e.g. Auth.js, Lucia) only if maintaining custom code becomes costly.
+**Session lifecycle (shipped, [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)):** **Multi-device** policy — a new sign-in does **not** invalidate the user's other valid sessions. **Cleanup is lazy and cron-free:** every `createSessionForUser` prunes that user's expired rows (uses `@@index([userId])`); ~5% of sign-ins also run a global sweep so rows from users who never return remain bounded over months. Cleanup failures are logged but never fail the sign-in. **Rotation** on privilege-sensitive actions is deferred to v1.1. See the ADR comment block at the top of [`lib/server/session.ts`](../../lib/server/session.ts). Revisit a small auth library (e.g. Auth.js, Lucia) only if maintaining custom code becomes costly.
 
 **RuleDraft future (not v1):** versioning, multiple drafts per user, easier corruption recovery—only if product needs them.
 
@@ -96,6 +96,7 @@ Align JSON shapes with `app/(app)/create/types.ts` as it matures.
 
 - **Decision:** **Custom** database-backed sessions + **email magic link**; cookies are **httpOnly**; session and magic-link tokens are hashed at rest.
 - **Rate limiting (magic-link request):** **In-memory** is acceptable for a **single Node process**. It does **not** coordinate across instances—**add a shared limiter (e.g. Redis)** before horizontal scaling or serious abuse exposure.
+- **Lifecycle policy (shipped, [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)):** multi-device (sign-in does not revoke other valid sessions); lazy expired-row cleanup on every sign-in (per-user prune + ~5% global sweep) — no cron required. Token rotation deferred to v1.1. Canonical comment block lives at the top of [`lib/server/session.ts`](../../lib/server/session.ts).
 - Do **not** treat “switch to NextAuth/Lucia” as required for v1; document the custom lifecycle above instead.
 
 ---
@@ -115,9 +116,9 @@ Match the current API behavior; tighten as product evolves:
 
 ## 7. API responses, errors, and observability
 
-**Error JSON (target):** Prefer a stable shape, e.g. `{ "error": { "code": "string", "message": "string" }, "details"?: ... }` for 4xx/5xx, instead of only `{ "error": "string" }`. Validation errors can map into `details`. Implement gradually in route handlers.
+**Error JSON (implemented):** 4xx/5xx bodies use the canonical shape `{ "error": { "code": "string", "message": "string" }, "details"?: ... }`. Codes come from the `ApiErrorCode` union in [`lib/server/responses.ts`](../lib/server/responses.ts) (helpers: `errorJson`, `dbUnavailable`, `unauthorized`, `notFound`, `rateLimited`, `serverMisconfigured`, `internalError`); validation failures use [`jsonFromZodError`](../lib/server/validation/zodHttp.ts) and surface flattened issues in `details`. **Migrated:** auth (`/api/auth/*`), drafts (`/api/drafts/me`), rules (`/api/rules`, `/api/rules/[id]`). Remaining `app/api/*` handlers (e.g. `web-vitals`, `templates`, `create-flow/methods`, `health`) are a follow-up pass; new routes should adopt the helpers from day one.
 
-**Logging:** Use the shared [`lib/logger.ts`](../lib/logger.ts) where possible. Include a **request correlation id** (reuse `x-request-id` if present, else generate) on API routes and log it with errors so support can tie logs together.
+**Logging:** Use the shared [`lib/logger.ts`](../lib/logger.ts) where possible. Wrap route handlers with [`apiRoute(scope, handler)`](../lib/server/apiRoute.ts) so a sanitized `x-request-id` is generated (or forwarded) onto every response and uncaught throws return the canonical 500 with the id logged via `logRouteError` ([`lib/server/requestId.ts`](../lib/server/requestId.ts)). Pass the `requestId` through to in-handler `logRouteError(scope, requestId, err, extra?)` calls when catching expected failures (e.g. mail send) so support can tie logs together.
 
 **Metrics:** No vendor required for v1; optional later: request duration, error counts.
 
@@ -136,7 +137,7 @@ Match the current API behavior; tighten as product evolves:
 
 **Operator / local (always manual):** Steps 1–4 — env file, Docker Postgres, `npm ci`, `prisma migrate dev`, `npm run dev`.
 
-**Backend behavior already in the repo:** Steps **5–10** match implemented Route Handlers and middleware (`lib/server/*`). **Step 11** (web vitals) is **not** production-ready (files under `.next`); treat as follow-up work aligned with §7.
+**Backend behavior already in the repo:** Steps **5–10** match implemented Route Handlers and middleware (`lib/server/*`). **Step 11** (web vitals): production defaults to **`external`** (no `.next` writes); optional vendor RUM or DB persistence remains a deliberate ops choice per §7.
 
 **Product / frontend still open (not only “backend exists”):** Sign-in UI, wiring publish from the create flow, template seed + UI consumption (flat list first), **canon create-flow alignment** (Ticket 17 / [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) — progress bar, resume URL, `[step]` cleanup; spec in [`docs/create-flow.md`](create-flow.md)), **spreadsheet-driven template recommendations** (Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion) — after v1 templates), **profile / my rules dashboard** (Ticket 15)—see §12 and [docs/backend-linear-tickets.md](backend-linear-tickets.md).
 
@@ -182,7 +183,7 @@ npm run dev
 
 **Step 10.** **Frontend draft sync:** Set `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` in `.env` so **Save & Exit** and **post-login anonymous → account transfer** can **PUT** `/api/drafts/me`. Without sync, drafts are **not** written to the server (anonymous progress still lives in `localStorage` only).
 
-**Step 11.** **Web vitals:** Move off `.next` files—**prefer an external analytics or logging pipeline** (see §7). Use Postgres for vitals only as a deliberate ops choice.
+**Step 11.** **Web vitals:** Production uses **`external`** storage (structured logs). Add a browser RUM SDK or Postgres-backed vitals only as a deliberate ops choice (see §7).
 
 ---
 
@@ -206,13 +207,15 @@ npm run dev
 
 **Optional QA:** Run automated tests against an **ephemeral** database in CI instead of maintaining a fourth long-lived server.
 
+**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. Admin handoff (access, env vars, platform settings, open decisions): [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). Note: Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*`; the app reads `DATABASE_URL` / `SMTP_URL`, so a small env-var bridge in [`lib/server/env.ts`](../../lib/server/env.ts) / [`lib/server/mail.ts`](../../lib/server/mail.ts) is needed (tracked in [**CR-96**](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names), filed under CR-83 — see [backend-linear-tickets.md](backend-linear-tickets.md) Ticket 12 follow-ups).
+
 **Admin / infra (coordinate with whoever runs the server):**
 
-1. TLS certificates and hostnames.
-2. PostgreSQL backups and restore drill.
-3. SMTP DNS (SPF, DKIM).
-4. Health check URL for reverse proxy (`/api/health`).
-5. Log retention and alerts for 5xx errors.
+1. TLS certificates and hostnames. _On Cloudron: handled by the platform per chosen subdomain._
+2. PostgreSQL backups and restore drill. _On Cloudron: daily snapshots; configure retention in admin UI._
+3. SMTP DNS (SPF, DKIM). _On Cloudron: handled for the platform-managed domain._
+4. Health check URL for reverse proxy (`/api/health`). _On Cloudron: set `healthCheckPath` in `CloudronManifest.json`._
+5. Log retention and alerts for 5xx errors. _On Cloudron: app log viewer; export off-platform if longer retention is needed._
 
 ---
 

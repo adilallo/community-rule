@@ -44,7 +44,8 @@
     "analyze:server": "ANALYZE=true npm run build",
     "analyze:browser": "BUNDLE_ANALYZE=true npm run build",
     "bundle:analyze": "node scripts/bundle-analyzer.js",
-    "db:deploy": "prisma migrate deploy"
+    "db:deploy": "prisma migrate deploy",
+    "migrate:smoke": "./scripts/migrate-smoke-local.sh"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

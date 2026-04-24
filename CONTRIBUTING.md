@@ -15,12 +15,20 @@
 
 Use `npx prisma studio` to inspect the database.
 
+Deploying to staging or production (MEDLab Cloudron) — see
+[docs/guides/ops-backend-deploy.md](docs/guides/ops-backend-deploy.md)
+for the admin handoff and the linked Linear tickets for the actual
+deployment-pipeline work.
+
 ### Prisma migrations
 
 - **Never edit** a migration that has already been applied to staging,
   production, or any shared database. Add a **new** migration that
   corrects the schema instead. Full policy:
   [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §8.
+- Any change under **`prisma/`**: run **`npm run migrate:smoke`** (see
+  [docs/testing-guide.md](docs/testing-guide.md#running-tests), **Prisma**
+  under *Running tests*).
 
 ### API routes
 
@@ -35,7 +43,7 @@ Use `npx prisma studio` to inspect the database.
 | GET / POST | `/api/rules` | List or publish rules. |
 | GET | `/api/templates` | List curated templates. Optional repeatable `facet.<group>=<value>` query params re-rank results (and may include `scores` in the JSON). See [docs/guides/template-recommendation-matrix.md](docs/guides/template-recommendation-matrix.md) §9.1. |
 | GET | `/api/create-flow/methods` | Facet-aware scores for custom-rule card steps: required `section` (`communication` \| `membership` \| `decisionApproaches` \| `conflictManagement`) and optional `facet.*` params (same facet groups as `/api/templates`). Returns `methods` with match metadata for re-ordering in the wizard. |
-| POST / GET | `/api/web-vitals` | Ingest or read aggregated web vitals (file-based store under `.next` today; not ideal for multi-instance — see [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7). |
+| POST / GET | `/api/web-vitals` | Ingest or read web vitals. **Production default:** `external` — structured logs only (no writes under `.next`; safe for read-only FS). **Development default:** `local` — aggregates under `.next/web-vitals`. Override with `WEB_VITALS_STORAGE`. See [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7. |
 
 ### Magic-link sign-in
 
@@ -72,7 +80,6 @@ Ticket 17.
 
 1. Branch from `main`: `git checkout -b feature/<short-name>`.
 2. Make the change and add/update tests.
-3. `npm test && npm run e2e` (and `npm run storybook:build` if you touched
-   stories).
+3. Before merging, run [docs/testing-guide.md](docs/testing-guide.md#running-tests) *Running tests*.
 4. Commit using a clear message (`feat:`, `fix:`, `chore:`, …).
-5. Open a PR; CI runs unit, E2E, visual regression, and Lighthouse.
+5. Open a pull request.

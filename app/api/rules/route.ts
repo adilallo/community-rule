@@ -2,13 +2,17 @@ import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../lib/server/env";
-import { dbUnavailable } from "../../../lib/server/responses";
+import {
+  dbUnavailable,
+  unauthorized,
+} from "../../../lib/server/responses";
 import { getSessionUser } from "../../../lib/server/session";
+import { apiRoute } from "../../../lib/server/apiRoute";
 import { publishRuleBodySchema } from "../../../lib/server/validation/createFlowSchemas";
 import { readLimitedJson } from "../../../lib/server/validation/requestBody";
 import { jsonFromZodError } from "../../../lib/server/validation/zodHttp";
 
-export async function GET(request: NextRequest) {
+export const GET = apiRoute("rules.list", async (request: NextRequest) => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
@@ -29,16 +33,16 @@ export async function GET(request: NextRequest) {
   });
 
   return NextResponse.json({ rules });
-}
+});
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute("rules.publish", async (request: NextRequest) => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
 
   const user = await getSessionUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return unauthorized();
   }
 
   const parsedBody = await readLimitedJson(request);
@@ -70,4 +74,4 @@ export async function POST(request: NextRequest) {
       createdAt: rule.createdAt,
     },
   });
-}
+});

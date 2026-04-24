@@ -10,13 +10,20 @@ import {
 } from "../../../../../lib/server/hash";
 import { sendMagicLinkEmail } from "../../../../../lib/server/mail";
 import { rateLimitKey } from "../../../../../lib/server/rateLimit";
-import { dbUnavailable } from "../../../../../lib/server/responses";
-import { logger } from "../../../../../lib/logger";
+import {
+  dbUnavailable,
+  errorJson,
+  rateLimited,
+  serverMisconfigured,
+} from "../../../../../lib/server/responses";
+import { logRouteError } from "../../../../../lib/server/requestId";
+import { apiRoute } from "../../../../../lib/server/apiRoute";
 import { safeInternalPath } from "../../../../../lib/safeInternalPath";
 
 const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 const EMAIL_MIN_INTERVAL_MS = 60 * 1000;
 const IP_MIN_INTERVAL_MS = 20 * 1000;
+const SCOPE = "auth.magicLink.request";
 
 function normalizeEmail(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
@@ -32,7 +39,7 @@ function readNextPath(body: unknown): string | null {
   return safeInternalPath(n);
 }
 
-export async function POST(request: NextRequest) {
+export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { requestId }) => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
@@ -41,7 +48,7 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    return errorJson("invalid_json", "Invalid JSON", 400);
   }
 
   const email = normalizeEmail(
@@ -50,10 +57,7 @@ export async function POST(request: NextRequest) {
       : null,
   );
   if (!email) {
-    return NextResponse.json(
-      { error: "Valid email required" },
-      { status: 400 },
-    );
+    return errorJson("validation_error", "Valid email required", 400);
   }
 
   const ip =
@@ -63,28 +67,19 @@ export async function POST(request: NextRequest) {
 
   const rlEmail = rateLimitKey(`magic-email:${email}`, EMAIL_MIN_INTERVAL_MS);
   if (rlEmail.ok === false) {
-    return NextResponse.json(
-      { error: "Too many requests", retryAfterMs: rlEmail.retryAfterMs },
-      { status: 429 },
-    );
+    return rateLimited(rlEmail.retryAfterMs);
   }
 
   const rlIp = rateLimitKey(`magic-ip:${ip}`, IP_MIN_INTERVAL_MS);
   if (rlIp.ok === false) {
-    return NextResponse.json(
-      { error: "Too many requests", retryAfterMs: rlIp.retryAfterMs },
-      { status: 429 },
-    );
+    return rateLimited(rlIp.retryAfterMs);
   }
 
   let pepper: string;
   try {
     pepper = getSessionPepper();
   } catch {
-    return NextResponse.json(
-      { error: "Server misconfiguration" },
-      { status: 500 },
-    );
+    return serverMisconfigured();
   }
 
   const token = newSessionToken();
@@ -108,13 +103,10 @@ export async function POST(request: NextRequest) {
   try {
     await sendMagicLinkEmail(email, verifyUrl);
   } catch (err) {
-    logger.error("sendMagicLinkEmail failed:", err);
+    logRouteError(SCOPE, requestId, err, { phase: "sendMagicLinkEmail", email });
     await prisma.magicLinkToken.deleteMany({ where: { email } });
-    return NextResponse.json(
-      { error: "Could not send email" },
-      { status: 502 },
-    );
+    return errorJson("mail_failed", "Could not send email", 502);
   }
 
   return NextResponse.json({ ok: true });
-}
+});

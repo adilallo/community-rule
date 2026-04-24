@@ -1,0 +1,24 @@
+{
+  "_comment": "Admin Web Vitals dashboard copy",
+  "title": "Web Vitals Dashboard",
+  "historicalMetricsTitle": "Historical Metrics",
+  "performanceGuidelinesTitle": "Performance Guidelines",
+  "valueLabel": "Value",
+  "ratingLabel": "Rating",
+  "countLabel": "Count",
+  "averageLabel": "Average",
+  "rangeLabel": "Range",
+  "goodLabel": "Good",
+  "needsImprovementLabel": "Needs Improvement",
+  "poorLabel": "Poor",
+  "externalNoticeTitle": "Server-side aggregates",
+  "externalNoticeBody": "Production uses external storage for web vitals. Historical totals are not kept in this app; use your log pipeline or metrics dashboard. Live values below still reflect this browser session.",
+  "externalDashboardLinkLabel": "Open metrics dashboard",
+  "guidelines": {
+    "lcp": "LCP: Good < 2.5s, Needs Improvement 2.5–4s, Poor > 4s",
+    "fid": "FID: Good < 100ms, Needs Improvement 100–300ms, Poor > 300ms",
+    "cls": "CLS: Good < 0.1, Needs Improvement 0.1–0.25, Poor > 0.25",
+    "fcp": "FCP: Good < 1.8s, Needs Improvement 1.8–3s, Poor > 3s",
+    "ttfb": "TTFB: Good < 800ms, Needs Improvement 800–1800ms, Poor > 1800ms"
+  }
+}

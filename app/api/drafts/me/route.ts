@@ -2,20 +2,24 @@ import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../../lib/server/env";
-import { dbUnavailable } from "../../../../lib/server/responses";
+import {
+  dbUnavailable,
+  unauthorized,
+} from "../../../../lib/server/responses";
 import { getSessionUser } from "../../../../lib/server/session";
+import { apiRoute } from "../../../../lib/server/apiRoute";
 import { putDraftBodySchema } from "../../../../lib/server/validation/createFlowSchemas";
 import { readLimitedJson } from "../../../../lib/server/validation/requestBody";
 import { jsonFromZodError } from "../../../../lib/server/validation/zodHttp";
 
-export async function GET() {
+export const GET = apiRoute("drafts.me.get", async () => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
 
   const user = await getSessionUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return unauthorized();
   }
 
   const draft = await prisma.ruleDraft.findUnique({
@@ -27,16 +31,16 @@ export async function GET() {
       ? { payload: draft.payload, updatedAt: draft.updatedAt }
       : null,
   });
-}
+});
 
-export async function PUT(request: NextRequest) {
+export const PUT = apiRoute("drafts.me.put", async (request: NextRequest) => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
 
   const user = await getSessionUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return unauthorized();
   }
 
   const parsedBody = await readLimitedJson(request);
@@ -67,16 +71,16 @@ export async function PUT(request: NextRequest) {
   return NextResponse.json({
     draft: { payload: draft.payload, updatedAt: draft.updatedAt },
   });
-}
+});
 
-export async function DELETE() {
+export const DELETE = apiRoute("drafts.me.delete", async () => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
 
   const user = await getSessionUser();
   if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return unauthorized();
   }
 
   // Idempotent: missing draft is a no-op so callers can fire-and-forget after
@@ -84,4 +88,4 @@ export async function DELETE() {
   await prisma.ruleDraft.deleteMany({ where: { userId: user.id } });
 
   return NextResponse.json({ ok: true });
-}
+});

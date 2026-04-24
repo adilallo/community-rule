@@ -1,90 +1,71 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 import { logger } from "../../../lib/logger";
+import { getWebVitalsStorageMode } from "../../../lib/server/webVitals/mode";
+import {
+  appendLocalWebVital,
+  readLocalAggregatedMetrics,
+  type WebVitalData,
+} from "../../../lib/server/webVitals/localFileStore";
+import { readLimitedJson } from "../../../lib/server/validation/requestBody";
+import { webVitalIngestSchema } from "../../../lib/server/validation/webVitalsSchema";
+import { jsonFromZodError } from "../../../lib/server/validation/zodHttp";
 
-const WEB_VITALS_DIR = path.join(process.cwd(), ".next", "web-vitals");
-
-interface WebVitalData {
-  metric: string;
-  data: {
-    value: number;
-    rating: string;
-  };
-  url: string;
-  userAgent: string;
-  timestamp: string;
-  receivedAt: string;
+function normalizeTimestamp(raw: string | number): string {
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    return new Date(raw).toISOString();
+  }
+  return new Date(raw).toISOString();
 }
 
-interface WebVitalMetrics {
-  [metric: string]: {
-    count: number;
-    average: number;
-    min: number;
-    max: number;
-    goodCount: number;
-    needsImprovementCount: number;
-    poorCount: number;
-    lastUpdated: string;
-  };
-}
-
-// Ensure web-vitals directory exists
-if (!fs.existsSync(WEB_VITALS_DIR)) {
-  fs.mkdirSync(WEB_VITALS_DIR, { recursive: true });
+function logExternalIngest(body: WebVitalData): void {
+  const line = JSON.stringify({
+    kind: "web_vital_ingest",
+    metric: body.metric,
+    value: body.data.value,
+    rating: body.data.rating,
+    url: body.url,
+    receivedAt: body.receivedAt,
+  });
+  logger.info(line);
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { metric, data, url, userAgent, timestamp } = body as {
-      metric: string;
-      data: { value: number; rating: string };
-      url: string;
-      userAgent: string;
-      timestamp: string;
-    };
+    const limited = await readLimitedJson(request);
+    if (limited.ok === false) {
+      return limited.response;
+    }
 
-    // Store the metric data
+    const parsed = webVitalIngestSchema.safeParse(limited.value);
+    if (!parsed.success) return jsonFromZodError(parsed.error);
+
+    const body = parsed.data;
+
     const vitalsData: WebVitalData = {
-      metric,
-      data,
-      url,
-      userAgent,
-      timestamp: new Date(timestamp).toISOString(),
+      metric: body.metric,
+      data: {
+        value: body.data.value,
+        rating: body.data.rating,
+      },
+      url: body.url,
+      userAgent: body.userAgent,
+      timestamp: normalizeTimestamp(body.timestamp),
       receivedAt: new Date().toISOString(),
     };
 
-    // Save to file (in production, you would save to a database)
-    const filePath = path.join(WEB_VITALS_DIR, `${metric}.json`);
-    let existingData: WebVitalData[] = [];
+    const mode = getWebVitalsStorageMode();
 
-    if (fs.existsSync(filePath)) {
-      try {
-        const fileContent = fs.readFileSync(filePath, "utf8");
-        existingData = JSON.parse(fileContent) as WebVitalData[];
-      } catch (error) {
-        const err = error as Error;
-        logger.warn("Could not parse existing vitals data:", err.message);
-      }
+    if (mode === "external") {
+      logExternalIngest(vitalsData);
+      return NextResponse.json({ success: true, storage: "external" });
     }
 
-    existingData.push(vitalsData);
-
-    // Keep only last 100 entries per metric
-    if (existingData.length > 100) {
-      existingData = existingData.slice(-100);
-    }
-
-    fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
-
-    // Log for monitoring
+    appendLocalWebVital(vitalsData);
     logger.info(
-      `Web Vital received: ${metric} = ${data.value}ms (${data.rating})`,
+      `Web Vital received: ${body.metric} = ${body.data.value}ms (${body.data.rating})`,
     );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, storage: "local" });
   } catch (error) {
     logger.error("Error processing web vital:", error);
     return NextResponse.json(
@@ -96,51 +77,17 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const metrics: WebVitalMetrics = {};
+    const mode = getWebVitalsStorageMode();
 
-    if (fs.existsSync(WEB_VITALS_DIR)) {
-      const files = fs.readdirSync(WEB_VITALS_DIR);
-
-      files.forEach((file) => {
-        if (file.endsWith(".json")) {
-          const metric = file.replace(".json", "");
-          const fileContent = fs.readFileSync(
-            path.join(WEB_VITALS_DIR, file),
-            "utf8",
-          );
-          const data = JSON.parse(fileContent) as WebVitalData[];
-
-          if (data.length > 0) {
-            const values = data
-              .map((d) => d.data.value)
-              .filter((v) => v !== undefined);
-            const ratings = data
-              .map((d) => d.data.rating)
-              .filter((r) => r !== undefined);
-
-            metrics[metric] = {
-              count: data.length,
-              average:
-                values.length > 0
-                  ? Math.round(
-                      values.reduce((a, b) => a + b, 0) / values.length,
-                    )
-                  : 0,
-              min: values.length > 0 ? Math.min(...values) : 0,
-              max: values.length > 0 ? Math.max(...values) : 0,
-              goodCount: ratings.filter((r) => r === "good").length,
-              needsImprovementCount: ratings.filter(
-                (r) => r === "needs-improvement",
-              ).length,
-              poorCount: ratings.filter((r) => r === "poor").length,
-              lastUpdated: data[data.length - 1]?.receivedAt || "",
-            };
-          }
-        }
+    if (mode === "external") {
+      return NextResponse.json({
+        metrics: {},
+        storage: "external" as const,
       });
     }
 
-    return NextResponse.json({ metrics });
+    const metrics = readLocalAggregatedMetrics();
+    return NextResponse.json({ metrics, storage: "local" as const });
   } catch (error) {
     logger.error("Error fetching web vitals:", error);
     return NextResponse.json(
