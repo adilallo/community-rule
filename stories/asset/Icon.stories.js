@@ -1,4 +1,4 @@
-import { Icon } from "../../app/components/asset";
+import { Icon, ICON_NAME_OPTIONS } from "../../app/components/asset";
 
 export default {
   title: "Components/Asset/Icon",
@@ -9,7 +9,7 @@ export default {
   argTypes: {
     name: {
       control: "select",
-      options: ["exclamation"],
+      options: [...ICON_NAME_OPTIONS],
       description: "Name of the icon to render",
     },
     size: {

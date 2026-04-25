@@ -47,7 +47,7 @@ export function CreateFlowScreenView({
         <CreateFlowTextFieldScreen
           messageNamespace="create.community.communityContext"
           stateField="communityContext"
-          maxLength={48}
+          maxLength={200}
           mainAlign="center"
         />
       );

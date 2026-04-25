@@ -40,7 +40,7 @@ Planned for the signed-in profile/dashboard ([Figma profile frame](https://www.f
 - Owner-only **delete** and **duplicate** (clone) for published rules.
 - **Delete account** (authenticated), with an explicit policy for drafts, sessions, and linked rules.
 
-**Future (separate ticket):** **Change email** with verification (e.g. magic link to a new address, conflict handling)—**out of scope** for the profile milestone above.
+**Tracked separately:** **Change email** with verification (e.g. magic link to a new address, conflict handling)—**[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** / **Ticket 20** in [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md); **out of scope** for the profile milestone above.
 
 ---
 
@@ -109,7 +109,7 @@ Match the current API behavior; tighten as product evolves:
 - **`POST /api/rules`:** Authenticated user only; rule is stored with **`userId`** (owner).
 - **`GET /api/rules`:** **Public list** of published rules (metadata: id, title, summary, timestamps)—no auth required today. **Not** a private “my rules” feed unless you add a separate route later (see §1 “profile / account — not implemented yet” and Ticket 15).
 - **Profile / owner scope (planned):** Authenticated **list own rules**, **delete own rule**, **duplicate own rule**—required for the signed-in dashboard in design; **v1 shipped handlers** may not include these until that work lands.
-- **Delete account (planned):** Authenticated endpoint + UX to remove the user record per policy (cascade vs orphan `PublishedRule`, drafts, sessions)—Ticket 15. **Change email** is **not** part of that milestone; plan a **future ticket** for verified email updates.
+- **Delete account (planned):** Authenticated endpoint + UX to remove the user record per policy (cascade vs orphan `PublishedRule`, drafts, sessions)—Ticket 15. **Change email** is **not** part of that milestone; implement via **[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** (Ticket 20 — verified email updates).
 - **v1 (shipped today):** No **editing** or **deleting** published rules via API in current handlers; no **sharing** or **collaborative ownership**—treat each rule as **owned by one user** until product defines more.
 
 ---
@@ -229,7 +229,7 @@ npm run dev
 
 **Step 4.** On publish, call `POST /api/rules` from the completed step when the backend is required (wire when the final review UI is ready).
 
-**Step 5.** **Profile / dashboard** (`/profile` or agreed path): signed-in hub for **my rules** (after Ticket 15 APIs exist), **duplicate** / **delete** rule actions, **logout**, **delete account**—aligned with [Figma profile](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22143-900069). **Change email** in design is **deferred** (hide, “coming soon,” or backlog) until a future account ticket; greeting copy can stay **static** or use **email local-part in UI only**—no `displayName` field required for MVP.
+**Step 5.** **Profile / dashboard** (`/profile` or agreed path): signed-in hub for **my rules** (after Ticket 15 APIs exist), **duplicate** / **delete** rule actions, **logout**, **delete account**—aligned with [Figma profile](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22143-900069). **Change email** in design ships under **[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** (Ticket 20); until then, **hide**, **“coming soon,”** or backlog per product. Greeting copy can stay **static** or use **full email in UI**—no `displayName` field required for MVP.
 
 **Step 6.** **Templates:** **Tickets 7–8** — seed `RuleTemplate` and load **`GET /api/templates`** in home / create surfaces (flat list, optional `featured`). **Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-xlsx-sheets-ingestion)** — add **facet-based recommendations** and **spreadsheet ingestion** when product is ready (matrix rows + dimension columns like the decision-making workbook).
 

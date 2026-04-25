@@ -9,6 +9,7 @@ function HeaderLockupView({
   justification,
   size,
   palette,
+  titleId,
 }: HeaderLockupViewProps) {
   const isL = size === "L";
   const isLeft = justification === "left";
@@ -30,6 +31,7 @@ function HeaderLockupView({
       {/* Title */}
       <div className="flex items-center relative shrink-0 w-full">
         <h1
+          id={titleId}
           className={`flex-[1_0_0] min-h-px min-w-px overflow-hidden relative ${titleColorClass} text-ellipsis whitespace-pre-wrap ${
             isLeft ? "text-left" : "text-center"
           } ${

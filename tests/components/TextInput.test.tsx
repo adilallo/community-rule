@@ -46,4 +46,11 @@ describe("TextInput (size tests)", () => {
     expect(input).toHaveClass("h-[32px]");
   });
 
+  it("forwards maxLength to the native input", () => {
+    const { container } = render(
+      <TextInput label="Test" maxLength={200} />,
+    );
+    const input = container.querySelector("input");
+    expect(input).toHaveAttribute("maxLength", "200");
+  });
 });

@@ -28,6 +28,7 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
       focusRingClasses = "",
       textHint = false,
       formHeader = true,
+      maxLength,
     },
     ref,
   ) => {
@@ -70,6 +71,7 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
               onBlur={handleBlur}
               onMouseDown={handleMouseDown}
               disabled={disabled}
+              maxLength={maxLength}
               className={inputClasses}
               style={{ borderRadius }}
             />

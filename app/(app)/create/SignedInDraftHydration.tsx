@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { CreateFlowState } from "./types";
 import { createFlowStateHasKeys } from "../../../lib/create/draftHydrationUtils";
 import {
@@ -11,6 +11,10 @@ import {
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { fetchDraftFromServer } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
+import {
+  isValidStep,
+  parseCreateFlowScreenFromPathname,
+} from "./utils/flowSteps";
 
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
@@ -36,6 +40,8 @@ export function SignedInDraftHydration({
   sessionResolved: boolean;
 }) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const syncDraftParam = searchParams.get("syncDraft");
   const { replaceState, interactionTouched } = useCreateFlow();
   const touchedRef = useRef(interactionTouched);
@@ -82,7 +88,15 @@ export function SignedInDraftHydration({
         }
 
         if (serverDraft != null && createFlowStateHasKeys(serverDraft)) {
-          replaceState(serverDraft as CreateFlowState);
+          const next = serverDraft as CreateFlowState;
+          replaceState(next);
+          const saved = next.currentStep;
+          if (saved && isValidStep(saved)) {
+            const urlStep = parseCreateFlowScreenFromPathname(pathname ?? null);
+            if (urlStep !== saved) {
+              router.replace(`/create/${saved}`);
+            }
+          }
         }
         finishedUserIdRef.current = userId;
       } finally {
@@ -93,7 +107,14 @@ export function SignedInDraftHydration({
     return () => {
       cancelled = true;
     };
-  }, [sessionResolved, sessionUser, syncDraftParam, replaceState]);
+  }, [
+    sessionResolved,
+    sessionUser,
+    syncDraftParam,
+    replaceState,
+    pathname,
+    router,
+  ]);
 
   if (!loadingHydration) return null;
 

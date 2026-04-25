@@ -162,9 +162,17 @@ function TopNavView({
         aria-label={t("ariaLabels.mainNavigationHeader")}
       >
         <nav
-          className="flex items-center gap-[var(--spacing-scale-002)] sm:justify-between mx-auto h-[var(--spacing-scale-040)] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)] sm:px-[var(--spacing-measures-spacing-016)] sm:py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)] sm:gap-0"
-          role="navigation"
-          aria-label={t("ariaLabels.mainNavigation")}
+            className="flex items-center gap-[var(--spacing-scale-002)] sm:justify-between mx-auto
+            h-[var(--spacing-scale-040)]
+            lg:h-auto
+            px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)]
+            sm:px-[var(--spacing-measures-spacing-016)] sm:py-[var(--spacing-measures-spacing-008)]
+            lg:px-[var(--spacing-measures-spacing-64,64px)]
+            lg:py-[var(--spacing-scale-020)]
+            xl:py-[var(--spacing-scale-024)]
+            sm:gap-0"
+            role="navigation"
+            aria-label={t("ariaLabels.mainNavigation")}
         >
           {/* Logo - Consistent left positioning across all breakpoints */}
           <Logo

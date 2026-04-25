@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import MultiSelect from "../../controls/MultiSelect";
-import type { RuleCardViewProps } from "./RuleCard.types";
+import NavigationLink from "../../navigation/Link";
+import type { RuleCardBottomLink, RuleCardViewProps } from "./RuleCard.types";
 
 export function RuleCardView({
   title,
@@ -20,9 +21,13 @@ export function RuleCardView({
   logoAlt,
   communityInitials,
   hideCategoryAddButton = false,
+  hasBottomLinks = false,
+  bottomStatusLabel,
+  bottomLinks,
 }: RuleCardViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
+  const interactiveCard = !hasBottomLinks;
 
   // Size-based styling
   const isLarge = size === "L";
@@ -70,15 +75,14 @@ export function RuleCardView({
         : "" // XS and S: no fixed width
     : "";
 
-  // Logo/Icon dimensions - use CSS responsive classes
-  // For S: 80px container with 12px padding = 56px icon area
-  // For XS: 72px container with 16px padding = 40px icon (72 - 16*2 = 40px)
-  const logoSize = 103; // Use max size, CSS will resize
+  // Logo/Icon dimensions (inner circle) after Figma header `pl-1 pr-2 py-2` in icon cell
+  // (Card / Rule — e.g. `22143:900771` / `19706:12110`); outer column width holds padding + this.
+  const logoSize = 103; // `next/image` prop; actual box comes from `logoContainerClass`
   const logoContainerClass = `
-    max-[639px]:size-[72px]
-    min-[640px]:max-[1023px]:size-[80px]
+    max-[639px]:size-[56px]
+    min-[640px]:max-[1023px]:size-[64px]
     min-[1024px]:max-[1439px]:size-[56px]
-    min-[1440px]:size-[103px]
+    min-[1440px]:size-[88px]
   `;
 
   // Title typography - use CSS responsive classes
@@ -106,7 +110,7 @@ export function RuleCardView({
         logoUrl.startsWith("http://localhost") ||
         logoUrl.startsWith("https://localhost");
 
-      const containerClass = `${logoContainerClass} relative rounded-full overflow-hidden mix-blend-luminosity max-[639px]:p-[16px] min-[640px]:max-[1023px]:p-[12px]`;
+      const containerClass = `${logoContainerClass} relative rounded-full overflow-hidden mix-blend-luminosity`;
 
       if (isLocalhost) {
         return (
@@ -139,7 +143,7 @@ export function RuleCardView({
     if (icon) {
       return (
         <div
-          className={`${logoContainerClass} flex items-center justify-center max-[639px]:p-[16px] min-[640px]:max-[1023px]:p-[12px]`}
+          className={`${logoContainerClass} flex items-center justify-center`}
         >
           {icon}
         </div>
@@ -150,8 +154,7 @@ export function RuleCardView({
       const initialsSize = `
         max-[639px]:text-[16px]
         min-[640px]:max-[1023px]:text-[20px]
-        min-[1024px]:max-[1439px]:text-[24px]
-        min-[1440px]:text-[36px]
+        min-[1024px]:text-[36px]
       `;
       return (
         <div
@@ -178,54 +181,72 @@ export function RuleCardView({
         ? "rounded-[var(--measures-radius-300,12px)]"
         : "rounded-[var(--radius-measures-radius-small)]";
 
+  function renderBottomLink(link: RuleCardBottomLink) {
+    const shared = {
+      variant: "paragraph" as const,
+      type: "primary" as const,
+      theme: "light" as const,
+      className: "shrink-0",
+      children: link.label,
+    };
+    if (link.href) {
+      return (
+        <NavigationLink
+          key={link.id}
+          {...shared}
+          href={link.href}
+          onClick={(e) => e.stopPropagation()}
+        />
+      );
+    }
+    return (
+      <NavigationLink
+        key={link.id}
+        {...shared}
+        onClick={(e) => {
+          e.stopPropagation();
+          link.onClick?.();
+        }}
+      />
+    );
+  }
+
   return (
     <div
-      className={`${backgroundColor} ${cardPadding} ${cardGap} ${borderRadiusClass} shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] hover:shadow-[0px_0px_64px_0px_rgba(0,0,0,0.15)] transition-shadow duration-200 flex flex-col items-start justify-center relative ${cardWidth || "w-full"} ${className || ""}`}
-      tabIndex={0}
-      role="button"
+      className={`${backgroundColor} ${cardPadding} ${cardGap} ${borderRadiusClass} shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] ${interactiveCard ? "hover:shadow-[0px_0px_64px_0px_rgba(0,0,0,0.15)] transition-shadow duration-200" : ""} flex flex-col items-start justify-center relative ${cardWidth || "w-full"} ${className || ""}`}
+      tabIndex={interactiveCard ? 0 : undefined}
+      role={interactiveCard ? "button" : "article"}
       aria-label={ariaLabel}
-      aria-expanded={expanded}
-      onClick={onClick}
-      onKeyDown={onKeyDown}
+      aria-expanded={interactiveCard ? expanded : undefined}
+      onClick={interactiveCard ? onClick : undefined}
+      onKeyDown={interactiveCard ? onKeyDown : undefined}
     >
-      {/* Outermost container with bottom border - taller to match Figma */}
+      {/* Figma: Header = `border-b` row, `gap-px`, icon `pl-1 pr-2 py-2` + `border-l` on title. */}
       <div
-        className={`
-        border-b border-solid border-[var(--color-content-invert-primary)] flex items-center relative shrink-0 w-full
-        max-[639px]:h-[72px]
-        min-[640px]:max-[1023px]:h-[80px]
-        min-[1024px]:max-[1439px]:h-[88px]
-        min-[1440px]:h-[136px]
-      `}
+        className="
+        border-b border-solid border-[var(--color-content-invert-primary)] flex
+        w-full shrink-0 items-center gap-px
+      "
       >
-        {/* Logo/Icon - fixed width/height, vertically centered, does not touch bottom */}
         {renderLogo() && (
           <div
-            className={`
-            flex items-center justify-center shrink-0
-            max-[639px]:w-[72px] max-[639px]:h-[72px] max-[639px]:border-r max-[639px]:border-solid max-[639px]:border-[var(--color-content-invert-primary)]
-            min-[640px]:max-[1023px]:w-[80px] min-[640px]:max-[1023px]:h-[80px] min-[640px]:max-[1023px]:border-r min-[640px]:max-[1023px]:border-solid min-[640px]:max-[1023px]:border-[var(--color-content-invert-primary)]
-            min-[1024px]:max-[1439px]:w-[56px] min-[1024px]:max-[1439px]:h-[56px]
-            min-[1440px]:w-[103px] min-[1440px]:h-[103px]
-          `}
+            className="
+            flex shrink-0 items-center justify-center
+            pl-[4px] pr-[8px] py-[8px]
+            max-[639px]:w-[72px]
+            min-[640px]:max-[1023px]:w-[80px]
+            min-[1024px]:w-[119px]
+          "
           >
             {renderLogo()}
           </div>
         )}
-        {/* Spacing between icon and title */}
-        <div
-          className="
-          max-[1023px]:hidden
-          min-[1024px]:w-[16px] min-[1024px]:shrink-0
-        "
-        />
-        {/* Container with no padding and left border - extends full height to touch bottom */}
         {title && (
           <div
             className={`
-            flex-1 min-w-0 h-full flex
-            max-[1023px]:border-0
-            min-[1024px]:border-l min-[1024px]:border-solid min-[1024px]:border-[var(--color-content-invert-primary)]
+            flex min-w-0 flex-1 flex-col justify-center
+            min-h-[72px] min-[640px]:min-h-[80px] min-[1024px]:min-h-[88px] min-[1440px]:min-h-[136px]
+            border-l border-solid border-[var(--color-content-invert-primary)]
           `}
           >
             {/* Inner container for header text with padding */}
@@ -234,8 +255,7 @@ export function RuleCardView({
               flex items-center justify-center w-full
               max-[639px]:pl-[8px] max-[639px]:py-[8px]
               min-[640px]:max-[1023px]:pl-[12px] min-[640px]:max-[1023px]:py-[12px]
-              min-[1024px]:max-[1439px]:px-[16px] min-[1024px]:max-[1439px]:py-[12px]
-              min-[1440px]:px-[16px] min-[1440px]:py-[24px]
+              min-[1024px]:px-[16px] min-[1024px]:py-[24px]
             `}
             >
               <h3
@@ -248,7 +268,51 @@ export function RuleCardView({
         )}
       </div>
 
-      {expanded ? (
+      {hasBottomLinks ? (
+        <div
+          className={`flex w-full shrink-0 flex-col ${isLarge ? "gap-6" : "gap-4"}`}
+        >
+          {description ? (
+            <p
+              className={`w-full ${descriptionClass} text-[var(--color-content-invert-primary)]`}
+            >
+              {description}
+            </p>
+          ) : null}
+          {bottomLinks && bottomLinks.length > 0 ? (
+            <div
+              className={[
+                "flex w-full min-w-0 flex-nowrap items-center",
+                bottomStatusLabel ? "justify-between gap-2" : "justify-end",
+              ].join(" ")}
+              data-figma-node="21867:47400"
+            >
+              {bottomStatusLabel ? (
+                <span className="shrink-0 rounded-[2px] bg-[var(--color-surface-default-tertiary)] px-1 py-0.5 font-inter text-[10px] font-medium uppercase leading-3 text-[var(--color-surface-invert-brand-teal)]">
+                  {bottomStatusLabel}
+                </span>
+              ) : null}
+              {/**
+               * Figma `22143:900539` / `21867:46099`: one row — status (optional) + all links in
+               * a single `flex-nowrap` group (`space/800` = 32px between links on large).
+               * If the row is too narrow, scroll horizontally; links never wrap.
+               */}
+              <div
+                className={[
+                  "flex min-w-0 flex-nowrap items-center justify-end overflow-x-auto [scrollbar-width:thin]",
+                  bottomStatusLabel ? "min-w-0 flex-1" : "w-auto",
+                  isLarge
+                    ? "gap-3 sm:gap-6 lg:gap-8"
+                    : "gap-2 min-[400px]:gap-3 sm:gap-4 lg:gap-8",
+                ].join(" ")}
+                data-figma-node="21867:46099"
+              >
+                {bottomLinks.map((link) => renderBottomLink(link))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : expanded ? (
         <>
           {/* Categories Section - Using MultiSelect */}
           {categories && categories.length > 0 && (
@@ -314,3 +378,4 @@ export function RuleCardView({
     </div>
   );
 }
+

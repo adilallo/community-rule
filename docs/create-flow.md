@@ -90,9 +90,9 @@ Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticke
 
 ---
 
-## Known implementation gaps (tracked on CR-86)
+## Known implementation gaps
 
-- **Server draft + URL alignment:** `SignedInDraftHydration` may merge server JSON without navigating to the saved step; **profile** will own listing drafts, **Continue** at last step, and **New rule** vs stale server draft — see **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (“Rule drafts + create-flow resume”).
+- **Profile + drafts (CR-86):** The profile page lists the server draft, **Continue** deep-links to `/create/{currentStep}`, and **Start new rule** clears local + server draft before opening the wizard. `SignedInDraftHydration` calls `router.replace` to the saved step when it applies a server draft so the URL matches hydrated state. Remaining edge cases (e.g. template review routes) are handled when they surface in QA.
 - **Inner “text/select shells”:** deferred until Create Community is stable; screens use **`CreateFlowStepShell`** only for Stage 1.
 
 ---

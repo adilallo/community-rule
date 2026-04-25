@@ -42,14 +42,14 @@ const Logo = memo<LogoProps>(
       },
       footer: {
         containerHeight:
-          "h-[41px] sm:h-[calc(40px*1.37)] lg:h-[calc(40px*2.05)]",
-        gap: "gap-[8.28px] sm:gap-[calc(8px*1.37)] lg:gap-[calc(8px*2.05)]",
+          "h-[41px] md:h-[calc(40px*1.37)] lg:h-[calc(40px*2.05)]",
+        gap: "gap-[8.28px] md:gap-[calc(8px*1.37)] lg:gap-[calc(8px*2.05)]",
         textSize:
-          "text-[21.97px] sm:text-[calc(21.97px*1.37)] lg:text-[calc(21.97px*2.05)]",
+          "text-[21.97px] md:text-[calc(21.97px*1.37)] lg:text-[calc(21.97px*2.05)]",
         lineHeight:
-          "leading-[27.05px] sm:leading-[calc(27.05px*1.37)] lg:leading-[calc(27.05px*2.05)]",
+          "leading-[27.05px] md:leading-[calc(27.05px*1.37)] lg:leading-[calc(27.05px*2.05)]",
         iconSize:
-          "w-[27.05px] h-[27.05px] sm:w-[calc(27.05px*1.37)] sm:h-[calc(27.05px*1.37)] lg:w-[calc(27.05px*2.05)] lg:h-[calc(27.05px*2.05)]",
+          "w-[27.05px] h-[27.05px] md:w-[calc(27.05px*1.37)] md:h-[calc(27.05px*1.37)] lg:w-[calc(27.05px*2.05)] lg:h-[calc(27.05px*2.05)]",
       },
       createFlow: {
         containerHeight: "h-[30px] md:h-[41px]",

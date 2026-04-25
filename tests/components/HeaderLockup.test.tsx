@@ -89,4 +89,12 @@ describe("HeaderLockup (behavioral tests)", () => {
     render(<HeaderLockup title="Test Title" justification="left" size="L" />);
     expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
   });
+
+  it("forwards titleId to the h1", () => {
+    render(<HeaderLockup title="Test Title" titleId="profile-welcome" />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAttribute(
+      "id",
+      "profile-welcome",
+    );
+  });
 });

@@ -1,3 +1,6 @@
+import type { RefObject } from "react";
+import type { CreateModalBackdropVariant } from "./CreateModalFrame.view";
+
 export interface CreateProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,10 +31,10 @@ export interface CreateProps {
   upload?: boolean;
   proportion?: boolean;
   /**
-   * Backdrop behind the dialog. `loginYellow` matches the Login modal’s blurred brand overlay.
+   * Backdrop behind the dialog. `blurredYellow` matches the login-style blurred brand overlay.
    * @default "default"
    */
-  backdropVariant?: "default" | "loginYellow";
+  backdropVariant?: CreateModalBackdropVariant;
 }
 
 export interface CreateViewProps {
@@ -54,7 +57,7 @@ export interface CreateViewProps {
   className: string;
   ariaLabel?: string;
   ariaLabelledBy?: string;
-  createRef: React.RefObject<HTMLDivElement>;
-  overlayRef: React.RefObject<HTMLDivElement>;
-  backdropVariant: "default" | "loginYellow";
+  createRef: RefObject<HTMLDivElement | null>;
+  overlayRef: RefObject<HTMLDivElement | null>;
+  backdropVariant: CreateModalBackdropVariant;
 }

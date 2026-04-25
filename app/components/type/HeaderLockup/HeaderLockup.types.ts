@@ -25,6 +25,10 @@ export interface HeaderLockupProps {
    * Palette. default = light text (dark bg); inverse = dark text (light bg).
    */
   palette?: HeaderLockupPaletteValue;
+  /**
+   * Optional DOM id for the title `h1` (e.g. skip-link / `aria-labelledby` targets).
+   */
+  titleId?: string;
 }
 
 export interface HeaderLockupViewProps {
@@ -33,4 +37,5 @@ export interface HeaderLockupViewProps {
   justification: "left" | "center";
   size: "L" | "M";
   palette: "default" | "inverse";
+  titleId?: string;
 }

@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const isDatabaseConfiguredMock = vi.fn();
 const findUniqueMock = vi.fn();
+const getSessionUserMock = vi.fn();
 
 vi.mock("../../lib/server/env", () => ({
   isDatabaseConfigured: () => isDatabaseConfiguredMock(),
@@ -16,6 +17,10 @@ vi.mock("../../lib/server/db", () => ({
   },
 }));
 
+vi.mock("../../lib/server/session", () => ({
+  getSessionUser: () => getSessionUserMock(),
+}));
+
 import { GET } from "../../app/api/rules/[id]/route";
 
 function makeContext(id: string) {
@@ -25,6 +30,8 @@ function makeContext(id: string) {
 beforeEach(() => {
   isDatabaseConfiguredMock.mockReset();
   findUniqueMock.mockReset();
+  getSessionUserMock.mockReset();
+  getSessionUserMock.mockResolvedValue(null);
 });
 
 describe("GET /api/rules/[id]", () => {
@@ -79,7 +86,7 @@ describe("GET /api/rules/[id]", () => {
     expect(res.status).toBe(404);
   });
 
-  it("returns 200 with { rule } when a published rule exists", async () => {
+  it("returns 200 with { rule, viewerIsOwner: false } when a published rule exists and the viewer is anonymous", async () => {
     isDatabaseConfiguredMock.mockReturnValue(true);
     const row = {
       id: "rule-1",
@@ -97,9 +104,59 @@ describe("GET /api/rules/[id]", () => {
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
       rule: { id: string; title: string; summary: string | null };
+      viewerIsOwner: boolean;
     };
     expect(body.rule.id).toBe("rule-1");
     expect(body.rule.title).toBe("Mutual Aid Mondays");
     expect(body.rule.summary).toBe("A grassroots community in Denver.");
+    expect(body.viewerIsOwner).toBe(false);
+    expect(findUniqueMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns viewerIsOwner true when the signed-in user owns the rule", async () => {
+    isDatabaseConfiguredMock.mockReturnValue(true);
+    getSessionUserMock.mockResolvedValue({ id: "user-1", email: "a@b.c" });
+    const row = {
+      id: "rule-1",
+      title: "Mutual Aid Mondays",
+      summary: "A grassroots community in Denver.",
+      document: { sections: [] },
+      createdAt: new Date("2026-01-01T00:00:00Z"),
+      updatedAt: new Date("2026-01-02T00:00:00Z"),
+    };
+    findUniqueMock
+      .mockResolvedValueOnce(row)
+      .mockResolvedValueOnce({ userId: "user-1" });
+    const res = await GET(
+      new NextRequest("https://x.test/api/rules/rule-1"),
+      makeContext("rule-1"),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { viewerIsOwner: boolean };
+    expect(body.viewerIsOwner).toBe(true);
+    expect(findUniqueMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns viewerIsOwner false when the signed-in user does not own the rule", async () => {
+    isDatabaseConfiguredMock.mockReturnValue(true);
+    getSessionUserMock.mockResolvedValue({ id: "user-1", email: "a@b.c" });
+    const row = {
+      id: "rule-1",
+      title: "Mutual Aid Mondays",
+      summary: "A grassroots community in Denver.",
+      document: { sections: [] },
+      createdAt: new Date("2026-01-01T00:00:00Z"),
+      updatedAt: new Date("2026-01-02T00:00:00Z"),
+    };
+    findUniqueMock
+      .mockResolvedValueOnce(row)
+      .mockResolvedValueOnce({ userId: "other" });
+    const res = await GET(
+      new NextRequest("https://x.test/api/rules/rule-1"),
+      makeContext("rule-1"),
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { viewerIsOwner: boolean };
+    expect(body.viewerIsOwner).toBe(false);
   });
 });

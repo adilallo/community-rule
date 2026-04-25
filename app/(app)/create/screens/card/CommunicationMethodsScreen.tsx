@@ -213,7 +213,7 @@ export function CommunicationMethodsScreen() {
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
         showBackButton={false}
-        backdropVariant="loginYellow"
+        backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
           <CommunicationMethodEditFields

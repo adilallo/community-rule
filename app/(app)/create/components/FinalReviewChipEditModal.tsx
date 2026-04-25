@@ -175,7 +175,7 @@ export function FinalReviewChipEditModal({
     <Create
       isOpen={isOpen}
       onClose={onClose}
-      backdropVariant="loginYellow"
+      backdropVariant="blurredYellow"
       headerContent={
         <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
           <ContentLockup

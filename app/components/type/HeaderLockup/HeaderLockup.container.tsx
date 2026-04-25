@@ -11,6 +11,7 @@ const HeaderLockupContainer = memo<HeaderLockupProps>(
     justification: justificationProp = "left",
     size: sizeProp = "L",
     palette: paletteProp = "default",
+    titleId,
   }) => {
     const justification = justificationProp;
     const size = sizeProp;
@@ -23,6 +24,7 @@ const HeaderLockupContainer = memo<HeaderLockupProps>(
         justification={justification}
         size={size}
         palette={palette}
+        titleId={titleId}
       />
     );
   },

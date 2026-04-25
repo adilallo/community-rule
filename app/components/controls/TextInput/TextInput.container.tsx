@@ -29,6 +29,7 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
       showHelpIcon = true,
       textHint = false,
       formHeader = true,
+      maxLength,
       ...props
     },
     ref,
@@ -242,6 +243,7 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
         focusRingClasses={stateStyles.focusRing}
         textHint={textHint}
         formHeader={formHeader}
+        maxLength={maxLength}
         {...props}
       />
     );

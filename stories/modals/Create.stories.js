@@ -34,7 +34,7 @@ export default {
     },
     backdropVariant: {
       control: { type: "select" },
-      options: ["default", "loginYellow"],
+      options: ["default", "blurredYellow"],
     },
     currentStep: {
       control: { type: "number", min: 1, max: 5 },
@@ -174,7 +174,7 @@ LoginYellowBackdrop.args = {
   isOpen: true,
   title: "Horizontalism",
   description: "Edit or add to this description to describe what this value means to your community.",
-  backdropVariant: "loginYellow",
+  backdropVariant: "blurredYellow",
   children: (
     <div className="space-y-4">
       <p className="text-[var(--color-content-default-primary)]">

@@ -64,4 +64,5 @@ export interface TextInputViewProps {
   focusRingClasses?: string;
   textHint?: boolean | string;
   formHeader?: boolean;
+  maxLength?: number;
 }

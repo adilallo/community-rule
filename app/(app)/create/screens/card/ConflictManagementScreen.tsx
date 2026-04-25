@@ -215,7 +215,7 @@ export function ConflictManagementScreen() {
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
         showBackButton={false}
-        backdropVariant="loginYellow"
+        backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
           <ConflictManagementEditFields
