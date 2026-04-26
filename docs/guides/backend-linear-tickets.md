@@ -482,10 +482,10 @@ _Section B — Final Review screen `+` button per category:_
 
 **Acceptance criteria:**
 
-- [ ] New email is confirmed **only** after the user completes the link sent to that inbox; then `User.email` updates.
-- [ ] Duplicate-email and rate-limit cases are handled with accessible errors (`CR-84` shape).
-- [ ] Profile reflects the new address after success.
-- [ ] Documented session policy after email change.
+- [x] New email is confirmed **only** after the user completes the link sent to that inbox; then `User.email` updates.
+- [x] Duplicate-email and rate-limit cases are handled with accessible errors (`CR-84` shape).
+- [x] Profile reflects the new address after success.
+- [x] Documented session policy after email change.
 
 **Files (expected):** `prisma/schema.prisma`, new `app/api/user/...` or `app/api/auth/...` routes, [`lib/server/mail.ts`](../../lib/server/mail.ts), [`app/(app)/profile/`](../../app/(app)/profile/), [`messages/en/pages/profile.json`](../../messages/en/pages/profile.json), tests under `tests/unit/`.
 

@@ -26,6 +26,13 @@ import { hashSessionToken, newSessionToken } from "./hash";
  *    a global sweep so rows from users who never return are still bounded
  *    over months. Cleanup is best-effort: a prune failure never fails the
  *    sign-in itself.
+ * 4. **Email change (CR-103).** After a verified email update, revoke every
+ *    `Session` for that `userId` **except** the current browser's session when
+ *    the verify link is opened with a valid `cr_session` cookie for the same
+ *    user. If there is no such session (e.g. user opened the link on another
+ *    device), all sessions are removed and the verify handler issues a new
+ *    session cookie so that device is signed in. Other devices must sign in
+ *    again.
  */
 
 export const SESSION_COOKIE_NAME = "cr_session";
@@ -54,6 +61,36 @@ export async function getSessionUser(): Promise<User | null> {
   }
 
   return session.user;
+}
+
+/**
+ * When completing email change (CR-103), returns the current request's session
+ * `tokenHash` if the cookie maps to a non-expired session for `userId`;
+ * otherwise `null` (caller will drop all sessions and create a new one).
+ */
+export async function getValidatedSessionTokenHashForUser(
+  userId: string,
+): Promise<string | null> {
+  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
+  if (!token) return null;
+
+  let pepper: string;
+  try {
+    pepper = getSessionPepper();
+  } catch {
+    return null;
+  }
+
+  const tokenHash = hashSessionToken(token, pepper);
+  const session = await prisma.session.findUnique({
+    where: { tokenHash },
+  });
+
+  if (!session || session.expiresAt < new Date() || session.userId !== userId) {
+    return null;
+  }
+
+  return tokenHash;
 }
 
 /**

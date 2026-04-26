@@ -70,6 +70,39 @@ export async function logout(): Promise<void> {
   });
 }
 
+/** CR-103: send verify link to `newEmail` for the signed-in user. */
+export async function requestEmailChange(
+  newEmail: string,
+): Promise<{ ok: true } | { ok: false; error: string; retryAfterMs?: number }> {
+  const res = await fetch("/api/user/email-change/request", {
+    method: "POST",
+    credentials: "include",
+    headers: jsonHeaders,
+    body: JSON.stringify({ newEmail }),
+  });
+  const data: unknown = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    let retryAfterMs: number | undefined;
+    if (
+      res.status === 429 &&
+      data &&
+      typeof data === "object" &&
+      "details" in data
+    ) {
+      const d = (data as { details?: { retryAfterMs?: unknown } }).details;
+      if (d && typeof d.retryAfterMs === "number") {
+        retryAfterMs = d.retryAfterMs;
+      }
+    }
+    return {
+      ok: false,
+      error: readApiErrorMessage(data),
+      retryAfterMs,
+    };
+  }
+  return { ok: true };
+}
+
 export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   const res = await fetch("/api/drafts/me", { credentials: "include" });
   if (res.status === 401) return null;

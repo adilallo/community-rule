@@ -3,6 +3,7 @@
 import { useId, useMemo } from "react";
 import Button from "../../../components/buttons/Button";
 import RuleCard from "../../../components/cards/RuleCard";
+import TextInput from "../../../components/controls/TextInput";
 import List from "../../../components/layout/List";
 import type { ListItem, ListSize } from "../../../components/layout/List";
 import Dialog from "../../../components/modals/Dialog";
@@ -43,6 +44,15 @@ export type ProfilePageViewProps = {
   accountDeleteOpen: boolean;
   accountDeleteBusy: boolean;
   actionError: string | null;
+  profileSuccessMessage: string | null;
+  emailChangeOpen: boolean;
+  emailChangeValue: string;
+  onEmailChangeValueChange: (value: string) => void;
+  emailChangeBusy: boolean;
+  emailChangeModalError: string | null;
+  onOpenEmailChange: () => void;
+  onCloseEmailChange: () => void;
+  onSubmitEmailChange: () => void;
   onSignOut: () => void;
   onDeleteRule: (id: string) => void;
   onCloseDeleteRule: () => void;
@@ -156,6 +166,15 @@ export function ProfilePageView({
   accountDeleteOpen,
   accountDeleteBusy,
   actionError,
+  profileSuccessMessage,
+  emailChangeOpen,
+  emailChangeValue,
+  onEmailChangeValueChange,
+  emailChangeBusy,
+  emailChangeModalError,
+  onOpenEmailChange,
+  onCloseEmailChange,
+  onSubmitEmailChange,
   onSignOut,
   onDeleteRule,
   onCloseDeleteRule,
@@ -205,8 +224,8 @@ export function ProfilePageView({
         id: "change-email",
         title: t("optionChangeEmail"),
         description: "",
+        onClick: onOpenEmailChange,
         leadingIcon: "mail",
-        variant: "muted",
         showDescription: false,
       },
       {
@@ -219,7 +238,7 @@ export function ProfilePageView({
         showDescription: false,
       },
     ];
-  }, [t, onSignOut, onOpenDeleteAccount]);
+  }, [t, onSignOut, onOpenDeleteAccount, onOpenEmailChange]);
 
   const ruleCardShellClass =
     "w-full !max-w-full cursor-default !gap-3 !rounded-[12px] shadow-[0_0_48px_rgba(0,0,0,0.1)] lg:!rounded-[24px] lg:shadow-[0_0_24px_rgba(0,0,0,0.1)]";
@@ -257,6 +276,15 @@ export function ProfilePageView({
               </>
             )}
           </header>
+
+          {profileSuccessMessage ? (
+            <p
+              className="rounded-lg border border-[var(--color-border-default-secondary)] bg-[var(--color-surface-default-secondary)] px-4 py-3 font-inter text-sm text-[var(--color-content-default-primary)]"
+              role="status"
+            >
+              {profileSuccessMessage}
+            </p>
+          ) : null}
 
           {actionError ? (
             <p
@@ -484,6 +512,60 @@ export function ProfilePageView({
           </>
         }
       />
+
+      <Dialog
+        isOpen={emailChangeOpen}
+        onClose={() => {
+          if (!emailChangeBusy) onCloseEmailChange();
+        }}
+        backdropVariant="blurredYellow"
+        title={t("emailChangeModalTitle")}
+        description={t("emailChangeModalDescription")}
+        footer={
+          <>
+            <Button
+              type="button"
+              size="medium"
+              buttonType="outline"
+              palette="default"
+              onClick={onCloseEmailChange}
+              disabled={emailChangeBusy}
+            >
+              {t("emailChangeCancel")}
+            </Button>
+            <Button
+              type="button"
+              size="medium"
+              buttonType="filled"
+              palette="default"
+              onClick={onSubmitEmailChange}
+              disabled={emailChangeBusy}
+            >
+              {t("emailChangeSubmit")}
+            </Button>
+          </>
+        }
+      >
+        {emailChangeModalError ? (
+          <p
+            className="font-inter text-sm text-[var(--color-content-default-primary)]"
+            role="alert"
+          >
+            {emailChangeModalError}
+          </p>
+        ) : null}
+        <TextInput
+          type="email"
+          inputSize="medium"
+          label={t("emailChangeNewEmailLabel")}
+          placeholder={t("emailChangeNewEmailPlaceholder")}
+          value={emailChangeValue}
+          onChange={(e) => onEmailChangeValueChange(e.target.value)}
+          disabled={emailChangeBusy}
+          error={Boolean(emailChangeModalError)}
+          autoComplete="email"
+        />
+      </Dialog>
     </>
   );
 }

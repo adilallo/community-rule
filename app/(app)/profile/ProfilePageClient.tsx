@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthModal } from "../../contexts/AuthModalContext";
 import { useTranslation } from "../../contexts/MessagesContext";
@@ -13,6 +13,7 @@ import {
   fetchMyPublishedRules,
   fetchServerDraftForProfile,
   logout,
+  requestEmailChange,
   type MyPublishedRule,
 } from "../../../lib/create/api";
 import {
@@ -55,6 +56,16 @@ export default function ProfilePageClient() {
   const [accountDeleteOpen, setAccountDeleteOpen] = useState(false);
   const [accountDeleteBusy, setAccountDeleteBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [emailChangeOpen, setEmailChangeOpen] = useState(false);
+  const [emailChangeInput, setEmailChangeInput] = useState("");
+  const [emailChangeBusy, setEmailChangeBusy] = useState(false);
+  const [emailChangeModalError, setEmailChangeModalError] = useState<
+    string | null
+  >(null);
+  const [profileSuccessMessage, setProfileSuccessMessage] = useState<
+    string | null
+  >(null);
+  const emailChangeQueryHandledRef = useRef(false);
 
   const load = useCallback(async () => {
     setActionError(null);
@@ -84,6 +95,72 @@ export default function ProfilePageClient() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (emailChangeQueryHandledRef.current) return;
+    if (typeof window === "undefined") return;
+    const search = window.location.search;
+    if (!search) return;
+    const params = new URLSearchParams(search);
+    const ok = params.get("email_change");
+    const err = params.get("error");
+    if (ok !== "ok" && !err?.startsWith("email_change_")) return;
+
+    emailChangeQueryHandledRef.current = true;
+
+    if (ok === "ok") {
+      setProfileSuccessMessage(t("emailChangeSuccess"));
+      void load().then(() => {
+        router.refresh();
+      });
+    } else if (err === "email_change_expired") {
+      setActionError(t("emailChangeVerifyExpired"));
+    } else if (err === "email_change_invalid") {
+      setActionError(t("emailChangeVerifyInvalid"));
+    } else if (err === "email_change_taken") {
+      setActionError(t("emailChangeVerifyTaken"));
+    } else if (err === "email_change_server") {
+      setActionError(t("actionError"));
+    }
+
+    router.replace("/profile", { scroll: false });
+  }, [load, router, t]);
+
+  const handleOpenEmailChange = useCallback(() => {
+    if (!user) return;
+    setActionError(null);
+    setProfileSuccessMessage(null);
+    setEmailChangeModalError(null);
+    setEmailChangeInput(user.email);
+    setEmailChangeOpen(true);
+  }, [user]);
+
+  const handleCloseEmailChange = useCallback(() => {
+    if (emailChangeBusy) return;
+    setEmailChangeOpen(false);
+  }, [emailChangeBusy]);
+
+  const handleSubmitEmailChange = useCallback(async () => {
+    const trimmed = emailChangeInput.trim();
+    if (!trimmed || emailChangeBusy) return;
+    setEmailChangeModalError(null);
+    setEmailChangeBusy(true);
+    const res = await requestEmailChange(trimmed);
+    setEmailChangeBusy(false);
+    if (res.ok === false) {
+      if (res.retryAfterMs != null && res.retryAfterMs > 0) {
+        const sec = Math.max(1, Math.ceil(res.retryAfterMs / 1000));
+        setEmailChangeModalError(
+          t("emailChangeRateLimited").replace(/\{\{seconds\}\}/g, String(sec)),
+        );
+      } else {
+        setEmailChangeModalError(res.error);
+      }
+    } else {
+      setEmailChangeOpen(false);
+      setProfileSuccessMessage(t("emailChangeRequestSent"));
+    }
+  }, [emailChangeBusy, emailChangeInput, t]);
 
   const handleSignOut = useCallback(async () => {
     setActionError(null);
@@ -236,6 +313,15 @@ export default function ProfilePageClient() {
       accountDeleteOpen={accountDeleteOpen}
       accountDeleteBusy={accountDeleteBusy}
       actionError={actionError}
+      profileSuccessMessage={profileSuccessMessage}
+      emailChangeOpen={emailChangeOpen}
+      emailChangeValue={emailChangeInput}
+      onEmailChangeValueChange={(value) => setEmailChangeInput(value)}
+      emailChangeBusy={emailChangeBusy}
+      emailChangeModalError={emailChangeModalError}
+      onOpenEmailChange={handleOpenEmailChange}
+      onCloseEmailChange={handleCloseEmailChange}
+      onSubmitEmailChange={handleSubmitEmailChange}
       onSignOut={handleSignOut}
       onDeleteRule={handleRequestDeleteRule}
       onCloseDeleteRule={handleCloseDeleteRuleDialog}
