@@ -86,19 +86,28 @@ export default function ReviewTemplatePage({ params }: PageProps) {
 
   if (error || !template) {
     return (
-      <CreateFlowStepShell variant="wideGrid" contentTopBelowMd="space-800">
+      <>
         <div
-          className={`flex shrink-0 flex-col gap-4 pb-8 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+          className="pointer-events-none fixed left-0 right-0 top-14 z-[120] flex justify-center px-5 pt-3 md:top-20 md:px-12"
+          aria-live="polite"
         >
-          <Alert
-            type="banner"
-            status="danger"
-            title={t("errors.loadFailed")}
-            description={error ?? t("errors.notFound")}
-            className="w-full"
-          />
+          <div className="pointer-events-auto w-full max-w-[960px]">
+            <Alert
+              type="banner"
+              status="danger"
+              title={t("errors.loadFailed")}
+              description={error ?? t("errors.notFound")}
+              className="w-full"
+            />
+          </div>
         </div>
-      </CreateFlowStepShell>
+        <CreateFlowStepShell variant="wideGrid" contentTopBelowMd="space-800">
+          <div
+            className={`min-h-[40vh] shrink-0 ${CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS}`}
+            aria-hidden
+          />
+        </CreateFlowStepShell>
+      </>
     );
   }
 

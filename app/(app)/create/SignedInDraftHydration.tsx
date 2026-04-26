@@ -11,6 +11,7 @@ import {
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { fetchDraftFromServer } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
+import Alert from "../../components/modals/Alert";
 import {
   isValidStep,
   parseCreateFlowScreenFromPathname,
@@ -119,12 +120,19 @@ export function SignedInDraftHydration({
   if (!loadingHydration) return null;
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="w-full shrink-0 px-[var(--spacing-measures-spacing-500,20px)] py-[var(--spacing-measures-spacing-200,8px)] md:px-[var(--measures-spacing-1800,64px)] text-center font-inter text-sm text-[var(--color-text-default-secondary,#a3a3a3)]"
-    >
-      {messages.create.draftHydration.loadingSavedProgress}
+    <div className="pointer-events-none fixed left-0 right-0 top-14 z-[170] flex justify-center px-[var(--spacing-measures-spacing-500,20px)] pt-2 md:top-16 md:px-[var(--measures-spacing-1800,64px)]">
+      <div className="pointer-events-auto w-full max-w-[960px]">
+        <Alert
+          type="banner"
+          status="default"
+          size="s"
+          title={messages.create.draftHydration.loadingSavedProgress}
+          hasBodyText={false}
+          hasLeadingIcon={false}
+          hasTrailingIcon={false}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

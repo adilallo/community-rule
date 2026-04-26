@@ -1,0 +1,48 @@
+---
+description: Unified Alert (toast/banner) for app notifications — Figma + drift prevention
+globs: app/**/*.tsx, stories/modals/Alert.stories.js, tests/components/Alert.test.tsx
+alwaysApply: false
+---
+
+# Alerts and notifications
+
+## Source of truth
+
+- **Figma:** [Community Rule System — Modal / Alert](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=6351-14646) (node **6351-14646**).
+- **Code:** `app/components/modals/Alert` — default export `Alert` from `Alert.container.tsx` (Figma docstring on the container).
+
+## When to use `Alert`
+
+Use **`Alert`** for **app-level, section-level, and shell-level** success, warning, error, and neutral status messages that should read as a designed system surface (not body copy alone).
+
+Do **not** recreate the same job with ad-hoc UI: bordered `<p>`, free-standing `role="alert"` blocks, or raw `text-[var(--color-border-default-utility-negative)]` paragraphs for product messaging.
+
+## Props (lowercase in code; match Figma intent)
+
+| Concern | Prop | Notes |
+| --- | --- | --- |
+| Layout | `type` | `toast` — bottom accent bar, top rounded corners; `banner` — full rounded block, inline or stacked. |
+| Intent | `status` | `default` \| `positive` \| `warning` \| `danger`. |
+| Density | `size` | `s` \| `m` (Figma S/M). Typography and padding are implemented inside `Alert.container.tsx` — do not fork spacing per call site. |
+| Copy | `title`, `description?` | Required title; optional description when `hasBodyText` is true. |
+| Icon | `hasLeadingIcon?` | Default `true`. |
+| Body | `hasBodyText?` | Default `true`; set `false` for title-only. |
+| Dismiss | `onClose?`, `hasTrailingIcon?` | Close control shows only when `onClose` is provided **and** `hasTrailingIcon` is not `false`. Omit `onClose` for non-dismissible messages. |
+
+Valid enum slices for Storybook / guards: `ALERT_*_OPTIONS` in `lib/propNormalization.ts`.
+
+## Choosing toast vs banner
+
+- **`toast`** — transient edge / bottom emphasis (e.g. completed flow), strong bottom border accent.
+- **`banner`** — rounded block; for **page / shell / modal** messaging, mount inside a **`fixed`** (or equivalent) overlay wrapper with `pointer-events-none` on the outer layer and `pointer-events-auto` on the alert so layout chrome does not reflow when the message appears (see `CreateFlowLayoutClient` `topBanners`, profile overlays, `LoginForm`, `PostLoginDraftTransfer`).
+
+## Exemptions (do not force `Alert`)
+
+1. **Single-field validation** under a control — keep `TextInput` / `TextArea` `error` and helper text (e.g. invalid email on the login form) unless design explicitly moves that line into `Alert`.
+2. **Marketing layout** — `HeroBanner`, `ContentBanner` are not system alerts.
+3. **Landmarks** — `role="banner"` on headers/nav is not the `Alert` “banner” type.
+4. **A11y-only live regions** — e.g. tooltip / incrementer `aria-live` for widget state, not product notifications.
+
+## Copy
+
+All user-visible strings go through **`messages/`** and `useTranslation` / message modules per `localization.mdc`.

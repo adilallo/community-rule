@@ -62,6 +62,7 @@ export default function ProfilePageClient() {
   const [emailChangeModalError, setEmailChangeModalError] = useState<
     string | null
   >(null);
+  const [emailChangeRequestSent, setEmailChangeRequestSent] = useState(false);
   const [profileSuccessMessage, setProfileSuccessMessage] = useState<
     string | null
   >(null);
@@ -131,6 +132,7 @@ export default function ProfilePageClient() {
     setActionError(null);
     setProfileSuccessMessage(null);
     setEmailChangeModalError(null);
+    setEmailChangeRequestSent(false);
     setEmailChangeInput(user.email);
     setEmailChangeOpen(true);
   }, [user]);
@@ -138,7 +140,24 @@ export default function ProfilePageClient() {
   const handleCloseEmailChange = useCallback(() => {
     if (emailChangeBusy) return;
     setEmailChangeOpen(false);
+    setEmailChangeRequestSent(false);
   }, [emailChangeBusy]);
+
+  const handleDismissProfileSuccess = useCallback(() => {
+    setProfileSuccessMessage(null);
+  }, []);
+
+  const handleDismissActionError = useCallback(() => {
+    setActionError(null);
+  }, []);
+
+  const handleDismissRulesError = useCallback(() => {
+    setRulesError(false);
+  }, []);
+
+  const handleDismissEmailChangeModalError = useCallback(() => {
+    setEmailChangeModalError(null);
+  }, []);
 
   const handleSubmitEmailChange = useCallback(async () => {
     const trimmed = emailChangeInput.trim();
@@ -157,8 +176,7 @@ export default function ProfilePageClient() {
         setEmailChangeModalError(res.error);
       }
     } else {
-      setEmailChangeOpen(false);
-      setProfileSuccessMessage(t("emailChangeRequestSent"));
+      setEmailChangeRequestSent(true);
     }
   }, [emailChangeBusy, emailChangeInput, t]);
 
@@ -318,7 +336,12 @@ export default function ProfilePageClient() {
       emailChangeValue={emailChangeInput}
       onEmailChangeValueChange={(value) => setEmailChangeInput(value)}
       emailChangeBusy={emailChangeBusy}
+      emailChangeRequestSent={emailChangeRequestSent}
       emailChangeModalError={emailChangeModalError}
+      onDismissProfileSuccess={handleDismissProfileSuccess}
+      onDismissActionError={handleDismissActionError}
+      onDismissRulesError={handleDismissRulesError}
+      onDismissEmailChangeModalError={handleDismissEmailChangeModalError}
       onOpenEmailChange={handleOpenEmailChange}
       onCloseEmailChange={handleCloseEmailChange}
       onSubmitEmailChange={handleSubmitEmailChange}

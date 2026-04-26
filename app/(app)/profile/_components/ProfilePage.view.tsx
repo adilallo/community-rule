@@ -6,7 +6,9 @@ import RuleCard from "../../../components/cards/RuleCard";
 import TextInput from "../../../components/controls/TextInput";
 import List from "../../../components/layout/List";
 import type { ListItem, ListSize } from "../../../components/layout/List";
+import Icon from "../../../components/asset/Icon";
 import Dialog from "../../../components/modals/Dialog";
+import Alert from "../../../components/modals/Alert";
 import HeaderLockup from "../../../components/type/HeaderLockup";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import type { CreateFlowState } from "../../create/types";
@@ -49,7 +51,9 @@ export type ProfilePageViewProps = {
   emailChangeValue: string;
   onEmailChangeValueChange: (value: string) => void;
   emailChangeBusy: boolean;
+  emailChangeRequestSent: boolean;
   emailChangeModalError: string | null;
+  onDismissEmailChangeModalError: () => void;
   onOpenEmailChange: () => void;
   onCloseEmailChange: () => void;
   onSubmitEmailChange: () => void;
@@ -65,6 +69,9 @@ export type ProfilePageViewProps = {
   onOpenDeleteAccount: () => void;
   onCloseDeleteAccount: () => void;
   onConfirmDeleteAccount: () => void;
+  onDismissProfileSuccess: () => void;
+  onDismissActionError: () => void;
+  onDismissRulesError: () => void;
 };
 
 /**
@@ -171,7 +178,9 @@ export function ProfilePageView({
   emailChangeValue,
   onEmailChangeValueChange,
   emailChangeBusy,
+  emailChangeRequestSent,
   emailChangeModalError,
+  onDismissEmailChangeModalError,
   onOpenEmailChange,
   onCloseEmailChange,
   onSubmitEmailChange,
@@ -187,8 +196,12 @@ export function ProfilePageView({
   onOpenDeleteAccount,
   onCloseDeleteAccount,
   onConfirmDeleteAccount,
+  onDismissProfileSuccess,
+  onDismissActionError,
+  onDismissRulesError,
 }: ProfilePageViewProps) {
   const t = useTranslation("pages.profile");
+  const tLogin = useTranslation("pages.login");
   const titleId = useId();
   const welcomeTitle = t("welcomeTitle").replace(/\{\{name\}\}/g, userEmail);
   const welcomeBody =
@@ -276,30 +289,6 @@ export function ProfilePageView({
               </>
             )}
           </header>
-
-          {profileSuccessMessage ? (
-            <p
-              className="rounded-lg border border-[var(--color-border-default-secondary)] bg-[var(--color-surface-default-secondary)] px-4 py-3 font-inter text-sm text-[var(--color-content-default-primary)]"
-              role="status"
-            >
-              {profileSuccessMessage}
-            </p>
-          ) : null}
-
-          {actionError ? (
-            <p
-              className="rounded-lg border border-[var(--color-border-default-secondary)] bg-[var(--color-surface-default-tertiary)] px-4 py-3 font-inter text-sm text-[var(--color-content-default-primary)]"
-              role="alert"
-            >
-              {actionError}
-            </p>
-          ) : null}
-
-          {rulesError ? (
-            <p className="font-inter text-sm text-[var(--color-content-default-tertiary)]">
-              {t("actionError")}
-            </p>
-          ) : null}
 
           <div className="flex flex-col gap-8 lg:flex-row lg:flex-nowrap lg:items-start lg:gap-8">
             <section
@@ -519,53 +508,136 @@ export function ProfilePageView({
           if (!emailChangeBusy) onCloseEmailChange();
         }}
         backdropVariant="blurredYellow"
-        title={t("emailChangeModalTitle")}
-        description={t("emailChangeModalDescription")}
+        title={
+          emailChangeRequestSent
+            ? tLogin("successTitle")
+            : t("emailChangeModalTitle")
+        }
+        description={
+          emailChangeRequestSent
+            ? tLogin("successBody")
+            : t("emailChangeModalDescription")
+        }
         footer={
-          <>
+          emailChangeRequestSent ? (
             <Button
               type="button"
               size="medium"
               buttonType="outline"
               palette="default"
               onClick={onCloseEmailChange}
-              disabled={emailChangeBusy}
             >
-              {t("emailChangeCancel")}
+              {t("emailChangeConfirmationClose")}
             </Button>
-            <Button
-              type="button"
-              size="medium"
-              buttonType="filled"
-              palette="default"
-              onClick={onSubmitEmailChange}
-              disabled={emailChangeBusy}
-            >
-              {t("emailChangeSubmit")}
-            </Button>
-          </>
+          ) : (
+            <>
+              <Button
+                type="button"
+                size="medium"
+                buttonType="outline"
+                palette="default"
+                onClick={onCloseEmailChange}
+                disabled={emailChangeBusy}
+              >
+                {t("emailChangeCancel")}
+              </Button>
+              <Button
+                type="button"
+                size="medium"
+                buttonType="filled"
+                palette="default"
+                onClick={onSubmitEmailChange}
+                disabled={emailChangeBusy}
+              >
+                {t("emailChangeSubmit")}
+              </Button>
+            </>
+          )
         }
       >
-        {emailChangeModalError ? (
-          <p
-            className="font-inter text-sm text-[var(--color-content-default-primary)]"
-            role="alert"
-          >
-            {emailChangeModalError}
-          </p>
-        ) : null}
-        <TextInput
-          type="email"
-          inputSize="medium"
-          label={t("emailChangeNewEmailLabel")}
-          placeholder={t("emailChangeNewEmailPlaceholder")}
-          value={emailChangeValue}
-          onChange={(e) => onEmailChangeValueChange(e.target.value)}
-          disabled={emailChangeBusy}
-          error={Boolean(emailChangeModalError)}
-          autoComplete="email"
-        />
+        {emailChangeRequestSent ? (
+          <div className="flex flex-col gap-3 pt-2">
+            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-inverse-brand-primary)]">
+              <Icon name="mail" size={22} aria-hidden />
+            </div>
+          </div>
+        ) : (
+          <TextInput
+            type="email"
+            inputSize="medium"
+            label={t("emailChangeNewEmailLabel")}
+            placeholder={t("emailChangeNewEmailPlaceholder")}
+            value={emailChangeValue}
+            onChange={(e) => onEmailChangeValueChange(e.target.value)}
+            disabled={emailChangeBusy}
+            error={Boolean(emailChangeModalError)}
+            autoComplete="email"
+          />
+        )}
       </Dialog>
+
+      {(profileSuccessMessage || actionError || rulesError) && (
+        <div
+          className="pointer-events-none fixed left-0 right-0 top-[41px] z-[60] flex justify-center px-4 pt-3 md:px-8 lg:top-[85px] lg:px-16 xl:top-[89px]"
+          aria-live="polite"
+        >
+          <div className="pointer-events-auto flex w-full max-w-[640px] flex-col gap-2">
+            {profileSuccessMessage ? (
+              <Alert
+                type="banner"
+                status="positive"
+                size="s"
+                title={profileSuccessMessage}
+                hasBodyText={false}
+                hasLeadingIcon
+                onClose={onDismissProfileSuccess}
+                className="w-full"
+              />
+            ) : null}
+            {actionError ? (
+              <Alert
+                type="banner"
+                status="danger"
+                size="s"
+                title={actionError}
+                hasBodyText={false}
+                hasLeadingIcon
+                onClose={onDismissActionError}
+                className="w-full"
+              />
+            ) : null}
+            {rulesError ? (
+              <Alert
+                type="banner"
+                status="warning"
+                size="s"
+                title={t("rulesLoadBannerTitle")}
+                description={t("rulesLoadBannerDescription")}
+                hasLeadingIcon
+                onClose={onDismissRulesError}
+                className="w-full"
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {emailChangeOpen && emailChangeModalError ? (
+        <div className="pointer-events-none fixed inset-x-0 top-6 z-[10001] flex justify-center px-4 md:top-10">
+          <div className="pointer-events-auto w-full max-w-[min(480px,calc(100%-2rem))]">
+            <Alert
+              type="banner"
+              status="danger"
+              size="s"
+              title={emailChangeModalError}
+              hasBodyText={false}
+              hasLeadingIcon
+              onClose={onDismissEmailChangeModalError}
+              className="w-full"
+            />
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

@@ -66,6 +66,9 @@ export type AlertStatusValue = (typeof ALERT_STATUS_OPTIONS)[number];
 export const ALERT_TYPE_OPTIONS = ["toast", "banner"] as const;
 export type AlertTypeValue = (typeof ALERT_TYPE_OPTIONS)[number];
 
+export const ALERT_SIZE_OPTIONS = ["s", "m"] as const;
+export type AlertSizeValue = (typeof ALERT_SIZE_OPTIONS)[number];
+
 export const TOOLTIP_POSITION_OPTIONS = ["top", "bottom"] as const;
 export type TooltipPositionValue = (typeof TOOLTIP_POSITION_OPTIONS)[number];
 
