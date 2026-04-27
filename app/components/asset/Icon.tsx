@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import ArrowBackIcon from "./icon/arrow_back.svg";
 import ContentCopyIcon from "./icon/content_copy.svg";
 import EditIcon from "./icon/edit.svg";
 import ExclamationIcon from "./icon/exclamation.svg";
@@ -10,6 +11,7 @@ import MailIcon from "./icon/mail.svg";
 import WarningIcon from "./icon/warning.svg";
 
 export const ICON_NAME_OPTIONS = [
+  "arrow_back",
   "chevron_right",
   "content_copy",
   "edit",
@@ -27,6 +29,7 @@ type SvgComponent =
 
 /** SVG import may be a React component or a module object { default: Component } (e.g. with Turbopack) */
 const iconMap: Record<IconName, SvgComponent> = {
+  arrow_back: ArrowBackIcon,
   chevron_right: ChevronRightIcon,
   content_copy: ContentCopyIcon,
   edit: EditIcon,

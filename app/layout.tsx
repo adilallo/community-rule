@@ -1,5 +1,5 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { AuthModalProvider } from "./contexts/AuthModalContext";
 import { MessagesProvider } from "./contexts/MessagesContext";
@@ -37,6 +37,12 @@ const spaceGrotesk = Space_Grotesk({
   fallback: ["system-ui", "arial"],
 });
 
+/** Viewport and favicon use the Metadata / Viewport APIs; avoid a manual `<head>` with a second viewport `meta` (duplicates Next’s head injection). */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "CommunityRule - Build operating manuals for successful communities",
   description:
@@ -51,6 +57,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL("https://communityrule.com"),
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "16x16", type: "image/x-icon" }],
+  },
   alternates: {
     canonical: "/",
   },
@@ -87,16 +96,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="en" className="font-sans">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="icon"
-          href="/favicon.ico"
-          type="image/x-icon"
-          sizes="16x16"
-        />
-      </head>
       <body
         className={`${inter.variable} ${bricolageGrotesque.variable} ${spaceGrotesk.variable}`}
       >

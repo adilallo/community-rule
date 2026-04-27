@@ -18,6 +18,7 @@ import learn from "./pages/learn.json";
 import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
+import notFoundPage from "./pages/notFoundPage.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 
@@ -72,6 +73,7 @@ export default {
     monitor,
     login,
     profile,
+    notFoundPage,
   },
   create: {
     community: {
