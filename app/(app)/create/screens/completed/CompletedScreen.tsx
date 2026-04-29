@@ -7,7 +7,7 @@ import type { CommunityRuleSection } from "../../../../components/type/Community
 import Alert from "../../../../components/modals/Alert";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { fetchPublishedRuleDetail } from "../../../../../lib/create/api";
-import { parseDocumentSectionsForDisplay } from "../../../../../lib/create/buildPublishPayload";
+import { parsePublishedDocumentForCommunityRuleDisplay } from "../../../../../lib/create/publishedDocumentToDisplaySections";
 import {
   readLastPublishedRule,
   writeLastPublishedRule,
@@ -48,7 +48,7 @@ function initialCompletedUi(
       documentSections: [],
     };
   }
-  const parsed = parseDocumentSectionsForDisplay(stored.document);
+  const parsed = parsePublishedDocumentForCommunityRuleDisplay(stored.document);
   if (parsed.length === 0) {
     return {
       headerTitle: "",
@@ -105,7 +105,7 @@ export function CompletedScreen() {
         summary: detail.rule.summary,
         document: doc,
       });
-      const parsed = parseDocumentSectionsForDisplay(doc);
+      const parsed = parsePublishedDocumentForCommunityRuleDisplay(doc);
       if (parsed.length === 0) {
         router.replace(`/rules/${encodeURIComponent(ruleIdParam)}`);
         return;

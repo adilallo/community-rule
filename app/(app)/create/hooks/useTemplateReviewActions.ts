@@ -163,16 +163,11 @@ export function useTemplateReviewActions({
           })
         : sections;
 
-    const summaryRaw =
-      typeof template.description === "string"
-        ? template.description.trim()
-        : "";
     const hasCommunityName =
       typeof state.title === "string" && state.title.trim().length > 0;
     updateState({
       ...coreValuesPrefill,
       sections: sectionsWithoutValues,
-      ...(summaryRaw.length > 0 ? { summary: summaryRaw } : {}),
       templateReviewBackSlug: templateReviewSlug,
       ...(hasCommunityName
         ? { pendingTemplateAction: undefined }

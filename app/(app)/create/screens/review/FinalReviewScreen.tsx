@@ -170,8 +170,7 @@ export function FinalReviewScreen() {
 
   /**
    * Match {@link CommunityReviewScreen}: the card body is the free-text
-   * `community-context` field only — not `summary` (template / one-line
-   * rule summary can carry template-review copy).
+   * `community-context` field only — not `summary`.
    */
   const ruleCardDescription = useMemo(() => {
     const raw =

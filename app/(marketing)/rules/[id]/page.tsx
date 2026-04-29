@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublicPublishedRuleById } from "../../../../lib/server/publishedRules";
-import { parseDocumentSectionsForDisplay } from "../../../../lib/create/buildPublishPayload";
+import { parsePublishedDocumentForCommunityRuleDisplay } from "../../../../lib/create/publishedDocumentToDisplaySections";
 import CommunityRule from "../../../components/type/CommunityRule";
 import HeaderLockup from "../../../components/type/HeaderLockup";
 
@@ -49,7 +49,7 @@ export default async function PublicRuleDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const sections = parseDocumentSectionsForDisplay(rule.document);
+  const sections = parsePublishedDocumentForCommunityRuleDisplay(rule.document);
   const description =
     typeof rule.summary === "string" && rule.summary.trim().length > 0
       ? rule.summary

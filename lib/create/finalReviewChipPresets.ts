@@ -169,6 +169,50 @@ export function coreValuePresetFor(chipId: string): CoreValueDetailEntry {
   };
 }
 
+/** Match `coreValues.json` row by trimmed label (custom chip id / drift fallbacks). */
+export function coreValuePresetForLabel(label: string): CoreValueDetailEntry {
+  const t = label.trim();
+  if (!t) return { meaning: "", signals: "" };
+  const values = (coreValuesMessages as { values?: unknown }).values;
+  if (!Array.isArray(values)) return { meaning: "", signals: "" };
+  for (const row of values) {
+    if (typeof row === "string") {
+      if (row.trim() === t) return { meaning: "", signals: "" };
+      continue;
+    }
+    if (!row || typeof row !== "object") continue;
+    const o = row as Record<string, unknown>;
+    if (typeof o.label === "string" && o.label.trim() === t) {
+      return {
+        meaning: asString(o.meaning),
+        signals: asString(o.signals),
+      };
+    }
+  }
+  return { meaning: "", signals: "" };
+}
+
+/**
+ * Published / display copy: saved draft wins when non-empty; otherwise preset
+ * by chip id (numeric presets), then by label match in `coreValues.json`.
+ */
+export function mergeCoreValueDetailWithPresets(
+  chipId: string,
+  label: string,
+  saved: CoreValueDetailEntry | undefined,
+): CoreValueDetailEntry {
+  const savedMeaning =
+    typeof saved?.meaning === "string" ? saved.meaning.trim() : "";
+  const savedSignals =
+    typeof saved?.signals === "string" ? saved.signals.trim() : "";
+  const fromId = coreValuePresetFor(chipId);
+  const fromLabel = coreValuePresetForLabel(label);
+  return {
+    meaning: savedMeaning || fromId.meaning || fromLabel.meaning,
+    signals: savedSignals || fromId.signals || fromLabel.signals,
+  };
+}
+
 /** Resolve method preset label by id for a given group (localized display). */
 export function methodLabelFor(
   groupKey: TemplateFacetGroupKey,

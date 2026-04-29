@@ -130,6 +130,18 @@ function methodsForGroup(
 }
 
 /**
+ * Resolve a preset method id from a chip label (template sections / display
+ * enrichment where entries carry titles but not stable ids).
+ */
+export function resolveMethodPresetIdFromLabel(
+  label: string,
+  groupKey: TemplateFacetGroupKey,
+): string | null {
+  if (groupKey === "coreValues") return null;
+  return overrideKeyForLabel(label, methodsForGroup(groupKey));
+}
+
+/**
  * Detailed builder: same logic as {@link buildFinalReviewCategoriesFromState}
  * but each chip is returned with its `overrideKey` + `groupKey` so the
  * final-review screen can wire chip clicks to an editable modal that

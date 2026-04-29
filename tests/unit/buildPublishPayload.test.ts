@@ -4,6 +4,7 @@ import {
   parseDocumentSectionsForDisplay,
   parseSectionsFromCreateFlowState,
 } from "../../lib/create/buildPublishPayload";
+import { mergeCoreValueDetailWithPresets } from "../../lib/create/finalReviewChipPresets";
 import type { CreateFlowState } from "../../app/(app)/create/types";
 
 describe("buildPublishPayload", () => {
@@ -63,6 +64,17 @@ describe("buildPublishPayload", () => {
     });
   });
 
+  it("prefers communityContext over summary for the published summary field", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      summary: "One-liner or leftover",
+      communityContext: "  Full community context.  ",
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.summary).toBe("Full community context.");
+  });
+
   it("uses valid state.sections when present", () => {
     const sections: CreateFlowState["sections"] = [
       {
@@ -106,9 +118,15 @@ describe("buildPublishPayload", () => {
     });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
+    const preset2 = mergeCoreValueDetailWithPresets("2", "Beta", undefined);
     expect(r.document.coreValues).toEqual([
       { chipId: "1", label: "Alpha", meaning: "m1", signals: "s1" },
-      { chipId: "2", label: "Beta", meaning: "", signals: "" },
+      {
+        chipId: "2",
+        label: "Beta",
+        meaning: preset2.meaning,
+        signals: preset2.signals,
+      },
     ]);
   });
 });
@@ -119,6 +137,36 @@ describe("buildPublishPayload — methodSelections", () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.document.methodSelections).toBeUndefined();
+  });
+
+  it("derives methodSelections from template sections when selected ids are empty", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [{ title: "Slack", body: "" }],
+        },
+      ],
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | {
+          communication?: Array<{
+            id: string;
+            sections: { corePrinciple: string };
+          }>;
+        }
+      | undefined;
+    expect(ms?.communication?.length).toBe(1);
+    expect(ms?.communication?.[0]?.id).toBe("slack");
+    const first = ms?.communication?.[0];
+    expect(first?.sections.corePrinciple.length).toBeGreaterThan(10);
+    const entries =
+      (r.document.sections as Array<{ entries: Array<{ blocks?: unknown[] }> }>)[0]
+        ?.entries;
+    expect(entries?.[0]?.blocks?.length).toBeGreaterThanOrEqual(1);
   });
 
   it("emits preset-only sections when a method is selected without an override", () => {

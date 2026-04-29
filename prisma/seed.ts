@@ -61,10 +61,7 @@ function governancePatternBody(coreValues: string): Prisma.InputJsonValue {
   };
 }
 
-/** Chip copy from Template Composition.xlsx (Decision-making, Membership, Values, Communication, Conflict). */
-const COMPOSITION_CHIP_BODY =
-  "Suggested focus for this governance area. Replace with your own language in the create flow.";
-
+/** Chip titles from Template Composition.xlsx; bodies stay empty — presets hydrate at publish / display. */
 function entriesFromCompositionCell(cell: string): { title: string; body: string }[] {
   const trimmed = cell.trim();
   if (!trimmed) return [];
@@ -72,7 +69,7 @@ function entriesFromCompositionCell(cell: string): { title: string; body: string
     .split(/,\s*/)
     .map((title) => title.trim())
     .filter(Boolean)
-    .map((title) => ({ title, body: COMPOSITION_CHIP_BODY }));
+    .map((title) => ({ title, body: "" }));
 }
 
 function bodyFromXlsxComposition(row: {
