@@ -1,7 +1,7 @@
 "use client";
 
-import WebVitalsDashboard from "../../components/sections/WebVitalsDashboard";
-import TopNav from "../../components/navigation/TopNav";
+import WebVitalsDashboard from "./_components/WebVitalsDashboard";
+import Top from "../../components/navigation/Top";
 import Footer from "../../components/navigation/Footer";
 import { useMessages } from "../../contexts/MessagesContext";
 
@@ -11,7 +11,7 @@ export default function MonitorPageContent() {
 
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
-      <TopNav folderTop={false} />
+      <Top folderTop={false} />
 
       <main className="container mx-auto px-[var(--spacing-scale-024)] py-[var(--spacing-scale-032)]">
         <div className="max-w-6xl mx-auto">

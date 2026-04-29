@@ -70,7 +70,7 @@ describe("Page Flow Integration", () => {
     expect(screen.getByAltText("Mutual Aid CO")).toBeInTheDocument();
     expect(screen.getByAltText("CU Boulder")).toBeInTheDocument();
 
-    // Numbered Cards section - wait for dynamically imported component
+    // CardSteps section — wait for dynamically imported component
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /How CommunityRule works/ }),
@@ -153,10 +153,10 @@ describe("Page Flow Integration", () => {
     expect(ctaButton).toBeInTheDocument();
   });
 
-  test("numbered cards display with correct icons and colors", async () => {
+  test("CardSteps section shows step tiles with expected icon/color props", async () => {
     render(<Page />);
 
-    // Wait for dynamically imported NumberedCards component
+    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       const cards = screen.getAllByText(
         /Document how your community|Build an operating manual|Get a link to your manual/,
@@ -189,11 +189,10 @@ describe("Page Flow Integration", () => {
     const seeAll = screen.getByRole("link", { name: "See all templates" });
     expect(seeAll).toHaveAttribute("href", "/templates");
 
-    // Check that create rule button is present
-    const createButton = screen.getByRole("button", {
-      name: "Create CommunityRule",
+    const seeHowButton = screen.getByRole("button", {
+      name: "See how it works",
     });
-    expect(createButton).toBeInTheDocument();
+    expect(seeHowButton).toBeInTheDocument();
   });
 
   test("ask organizer section has proper call-to-action", () => {

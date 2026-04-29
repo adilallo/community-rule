@@ -5,7 +5,7 @@ import { RadioGroupView } from "./RadioGroup.view";
 import type { RadioGroupProps } from "./RadioGroup.types";
 
 /**
- * Figma: "Control / RadioGroup" (TODO(figma)). Group of radio buttons sharing
+ * Figma: "Control / RadioGroup". Group of radio buttons sharing
  * a name that emits the single currently selected value.
  */
 const RadioGroupContainer = ({

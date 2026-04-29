@@ -10,7 +10,7 @@ export default {
   argTypes: {
     entries: {
       control: false,
-      description: "Catalog entries to render as a 2-column grid of RuleCards",
+      description: "Catalog entries to render as a 2-column grid of Rules",
     },
     onTemplateClick: { action: "template-clicked" },
   },

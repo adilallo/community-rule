@@ -8,6 +8,9 @@ User-facing docs. Implementation conventions live in `.cursor/rules/`.
   URLs, persistence. Source of truth for product/eng alignment.
 - [testing-guide.md](./testing-guide.md) — Testing philosophy, layer
   coverage, and Prisma migration smoke before merge.
+- [figma-component-registry.md](./figma-component-registry.md) — Figma
+  Community Rule System file ↔ `app/components/` (and route-colocated
+  admin UI) map.
 
 ## Author guides (`guides/`)
 

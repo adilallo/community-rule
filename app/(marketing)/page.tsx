@@ -14,15 +14,12 @@ const LogoWall = dynamic(() => import("../components/sections/LogoWall"), {
   ssr: true,
 });
 
-const NumberedCards = dynamic(
-  () => import("../components/sections/NumberedCards"),
-  {
-    loading: () => (
-      <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
-    ),
-    ssr: true,
-  },
-);
+const CardSteps = dynamic(() => import("../components/sections/CardSteps"), {
+  loading: () => (
+    <section className="py-[var(--spacing-scale-032)] min-h-[300px]" />
+  ),
+  ssr: true,
+});
 
 const FeatureGrid = dynamic(
   () => import("../components/sections/FeatureGrid"),
@@ -54,22 +51,27 @@ export default function Page() {
     ctaHref: t("pages.home.heroBanner.ctaHref"),
   };
 
-  const numberedCardsData = {
-    title: t("pages.home.numberedCards.title"),
-    subtitle: t("pages.home.numberedCards.subtitle"),
-    cards: [
+  const cardStepsData = {
+    title: t("pages.home.cardSteps.title"),
+    subtitle: t("pages.home.cardSteps.subtitle"),
+    headingDesktopLines: [
+      t("pages.home.cardSteps.headingDesktopLine1"),
+      t("pages.home.cardSteps.headingDesktopLine2"),
+      t("pages.home.cardSteps.headingDesktopLine3"),
+    ] as const,
+    steps: [
       {
-        text: t("pages.home.numberedCards.cards.card1.text"),
+        text: t("pages.home.cardSteps.cards.card1.text"),
         iconShape: "blob",
         iconColor: "green",
       },
       {
-        text: t("pages.home.numberedCards.cards.card2.text"),
+        text: t("pages.home.cardSteps.cards.card2.text"),
         iconShape: "gear",
         iconColor: "purple",
       },
       {
-        text: t("pages.home.numberedCards.cards.card3.text"),
+        text: t("pages.home.cardSteps.cards.card3.text"),
         iconShape: "star",
         iconColor: "orange",
       },
@@ -92,7 +94,7 @@ export default function Page() {
     <div>
       <HeroBanner {...heroBannerData} />
       <LogoWall />
-      <NumberedCards {...numberedCardsData} />
+      <CardSteps {...cardStepsData} />
       <Suspense
         fallback={
           <section className="py-[var(--spacing-scale-032)] min-h-[400px]" />

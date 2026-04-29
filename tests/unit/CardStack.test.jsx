@@ -6,7 +6,7 @@ import {
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
-import CardStack from "../../app/components/utility/CardStack";
+import CardStack from "../../app/components/cards/CardStack";
 
 const SAMPLE_CARDS = [
   {

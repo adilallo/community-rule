@@ -5,7 +5,7 @@ import { ScrollbarView } from "./Scrollbar.view";
 import type { ScrollbarProps } from "./Scrollbar.types";
 
 /**
- * Figma: "Utility / Scrollbar" (TODO(figma)).
+ * Figma: "Utility / Scrollbar".
  * Custom-styled scrollable wrapper. Most surfaces should attach
  * `SCROLLBAR_DESIGN_CLASS` directly instead of nesting through this view.
  */

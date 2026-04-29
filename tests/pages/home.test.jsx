@@ -20,7 +20,7 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
 
     // Wait for dynamically imported components to load
-    // Check numbered cards section (using getAllByText since there are multiple instances)
+    // Check CardSteps section (using getAllByText since there are multiple instances)
     await waitFor(() => {
       expect(
         screen.getAllByText("How CommunityRule works").length,
@@ -70,10 +70,10 @@ describe("Page", () => {
     ).toBeGreaterThan(0);
   });
 
-  test("renders numbered cards with correct data", async () => {
+  test("renders CardSteps section with correct data", async () => {
     render(<Page />);
 
-    // Wait for dynamically imported NumberedCards component to load
+    // Wait for dynamically imported CardSteps component to load
     await waitFor(() => {
       expect(
         screen.getAllByText("How CommunityRule works").length,
@@ -140,7 +140,7 @@ describe("Page", () => {
 
     // Wait for dynamically imported components to load
     // LogoWall - should be present (even if just the component structure)
-    // NumberedCards
+    // CardSteps
     await waitFor(() => {
       expect(
         screen.getAllByText("How CommunityRule works").length,
@@ -192,7 +192,7 @@ describe("Page", () => {
       ).length,
     ).toBeGreaterThan(0);
 
-    // Wait for dynamically imported NumberedCards component
+    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       expect(
         screen.getAllByText(
@@ -239,12 +239,12 @@ describe("Page", () => {
     );
   });
 
-  test("renders numbered card items with correct content", async () => {
+  test("renders CardSteps step tiles with correct content", async () => {
     render(<Page />);
 
-    // Wait for dynamically imported NumberedCards component
+    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
-      // Check all three numbered card items (using getAllByText since there are multiple instances)
+      // Three Step tiles inside CardSteps
       expect(
         screen.getAllByText("Document how your community makes decisions")
           .length,

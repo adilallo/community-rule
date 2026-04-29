@@ -28,7 +28,7 @@ export default {
     docs: {
       description: {
         component:
-          "Completed flow: teal background, inverse HeaderLockup, CommunityRule document, optional bottom toast.",
+          "Completed flow: teal background, inverse HeaderLockup, CommunityRule body, optional bottom toast.",
       },
     },
   },

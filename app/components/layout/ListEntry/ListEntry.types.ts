@@ -1,4 +1,4 @@
-import type { IconName } from "../../asset/Icon";
+import type { IconName } from "../../asset/icon";
 
 export const LIST_SIZE_OPTIONS = ["s", "m", "l"] as const;
 export type ListSize = (typeof LIST_SIZE_OPTIONS)[number];

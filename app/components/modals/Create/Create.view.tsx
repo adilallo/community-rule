@@ -1,8 +1,8 @@
 "use client";
 
 import ContentLockup from "../../type/ContentLockup";
-import ModalFooter from "../../utility/ModalFooter";
-import ModalHeader from "../../utility/ModalHeader";
+import ModalFooter from "../ModalFooter";
+import ModalHeader from "../ModalHeader";
 import { CreateModalFrameView } from "./CreateModalFrame.view";
 import type { CreateViewProps } from "./Create.types";
 

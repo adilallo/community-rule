@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
-import RuleCard from "../../cards/RuleCard";
+import Rule from "../../cards/Rule";
 import { getAssetPath } from "../../../../lib/assetUtils";
 import type { GovernanceTemplateCatalogEntry } from "../../../../lib/templates/governanceTemplateCatalog";
 
@@ -53,7 +53,7 @@ export function GovernanceTemplateGrid({
       `}
     >
       {entries.map((card) => (
-        <RuleCard
+        <Rule
           key={card.slug}
           title={card.title}
           description={card.description}

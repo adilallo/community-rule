@@ -43,7 +43,7 @@ Order is defined in code by [`FLOW_STEP_ORDER`](../app/(app)/create/utils/flowSt
 | 15 | Review and complete | `final-review` | `/create/final-review` |
 | 16 | Review and complete | `completed` | `/create/completed` |
 
-**Primary entry:** marketing header “Create rule” navigates to **`/create`**, which redirects to **`/create/informational`** (see [`TopNav.container.tsx`](../app/components/navigation/TopNav/TopNav.container.tsx)).
+**Primary entry:** marketing header “Create rule” navigates to **`/create`**, which redirects to **`/create/informational`** (see [`Top.container.tsx`](../app/components/navigation/Top/Top.container.tsx)).
 
 Active step for chrome and navigation is resolved from the pathname via [`parseCreateFlowScreenFromPathname`](../app/(app)/create/utils/flowSteps.ts) inside [`useCreateFlowNavigation`](../app/(app)/create/hooks/useCreateFlowNavigation.ts).
 
@@ -73,7 +73,7 @@ Only one `?fromFlow=1` marker exists, on one hop (`/create/review` → `/templat
 
 Server drafts (`/api/drafts/me`) are **not** touched here. Per product plan they are not auto-hydrated into the create flow; users select and load a specific saved draft from the profile page. So wiping `localStorage` is sufficient for the "fresh slate" invariant.
 
-**Final-review RuleCard category chips** are derived from `CreateFlowState` via [`buildFinalReviewCategoriesFromState`](../lib/create/buildFinalReviewCategories.ts): for the Customize / plain custom-rule path it resolves `selected{Communication,Membership,DecisionApproach,ConflictManagement}MethodIds` against the curated method presets in `messages/en/create/customRule/*.json`, and `buildCoreValuesForDocument` supplies the `Values` row from `coreValuesChipsSnapshot` + `selectedCoreValueIds`. For the Use-without-changes path the template body lives in `state.sections`; the helper renders `categoryName` + entry titles directly. The demo chips shipped in `finalReview.json` remain the fallback only when nothing in state resolves to any chip (e.g. direct navigation for development).
+**Final-review Rule category chips** are derived from `CreateFlowState` via [`buildFinalReviewCategoriesFromState`](../lib/create/buildFinalReviewCategories.ts): for the Customize / plain custom-rule path it resolves `selected{Communication,Membership,DecisionApproach,ConflictManagement}MethodIds` against the curated method presets in `messages/en/create/customRule/*.json`, and `buildCoreValuesForDocument` supplies the `Values` row from `coreValuesChipsSnapshot` + `selectedCoreValueIds`. For the Use-without-changes path the template body lives in `state.sections`; the helper renders `categoryName` + entry titles directly. The demo chips shipped in `finalReview.json` remain the fallback only when nothing in state resolves to any chip (e.g. direct navigation for development).
 
 **Starting the wizard from a template at `final-review` directly** is out of scope until a dedicated product ticket ships. A **full create-from-template** experience will **likely use separate route(s)** when product and eng define it (may still align conceptually with the same three stages where behavior overlaps the custom path).
 

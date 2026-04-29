@@ -41,6 +41,8 @@ priors — they reflect deliberate decisions.
    (`app/components/Foo` → `tests/components/Foo.test.tsx`).
 5. **Routes live inside groups** — `(marketing)`, `(app)`, `(admin)`,
    `(dev)`. Don't drop a new route folder loose at the top of `app/`.
+   **Admin-only widgets** may live in **`app/(admin)/<route>/_components/`**
+   when only that route uses them (e.g. **`WebVitalsDashboard`** on **`/monitor`**).
 6. **No new pathname-sniffing chrome.** Compose chrome via group/nested
    layouts, not `usePathname()` checks. (`ConditionalNavigation` is the
    sole tolerated exception — it carries SSR session state.)
@@ -83,3 +85,6 @@ For changes under `prisma/`: `npm run migrate:smoke` (see
 - [docs/README.md](docs/README.md) — index of user-facing docs.
 - [docs/create-flow.md](docs/create-flow.md) — wizard URL/persistence canon
   (read alongside `create-flow.mdc`).
+- [docs/figma-component-registry.md](docs/figma-component-registry.md) —
+  Figma ↔ component bucket map after refactors (Type, Sections, admin
+  `_components/`, etc.).

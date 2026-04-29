@@ -72,14 +72,14 @@ export type AlertSizeValue = (typeof ALERT_SIZE_OPTIONS)[number];
 export const TOOLTIP_POSITION_OPTIONS = ["top", "bottom"] as const;
 export type TooltipPositionValue = (typeof TOOLTIP_POSITION_OPTIONS)[number];
 
-export const MENU_BAR_SIZE_OPTIONS = [
+export const MENU_SIZE_OPTIONS = [
   "X Small",
   "Small",
   "Medium",
   "Large",
   "X Large",
 ] as const;
-export type MenuBarSizeValue = (typeof MENU_BAR_SIZE_OPTIONS)[number];
+export type MenuSizeValue = (typeof MENU_SIZE_OPTIONS)[number];
 
 export const NAVIGATION_ITEM_VARIANT_OPTIONS = ["default"] as const;
 export type NavigationItemVariantValue =
@@ -145,13 +145,13 @@ export const QUOTE_BLOCK_VARIANT_OPTIONS = [
 export type QuoteBlockVariantValue =
   (typeof QUOTE_BLOCK_VARIANT_OPTIONS)[number];
 
-export const NUMBER_CARD_SIZE_OPTIONS = [
+export const STEP_SIZE_OPTIONS = [
   "small",
   "medium",
   "large",
   "xlarge",
 ] as const;
-export type NumberCardSizeValue = (typeof NUMBER_CARD_SIZE_OPTIONS)[number];
+export type StepSizeValue = (typeof STEP_SIZE_OPTIONS)[number];
 
 export const ASK_ORGANIZER_VARIANT_OPTIONS = [
   "centered",
@@ -161,14 +161,6 @@ export const ASK_ORGANIZER_VARIANT_OPTIONS = [
 ] as const;
 export type AskOrganizerVariantValue =
   (typeof ASK_ORGANIZER_VARIANT_OPTIONS)[number];
-
-export const CONTEXT_MENU_ITEM_SIZE_OPTIONS = [
-  "small",
-  "medium",
-  "large",
-] as const;
-export type ContextMenuItemSizeValue =
-  (typeof CONTEXT_MENU_ITEM_SIZE_OPTIONS)[number];
 
 export const TOGGLE_GROUP_POSITION_OPTIONS = [
   "left",
@@ -185,8 +177,8 @@ export const TEXT_AREA_APPEARANCE_OPTIONS = ["default", "embedded"] as const;
 export type TextAreaAppearanceValue =
   (typeof TEXT_AREA_APPEARANCE_OPTIONS)[number];
 
-export const RULE_CARD_SIZE_OPTIONS = ["XS", "S", "M", "L"] as const;
-export type RuleCardSizeValue = (typeof RULE_CARD_SIZE_OPTIONS)[number];
+export const RULE_SIZE_OPTIONS = ["XS", "S", "M", "L"] as const;
+export type RuleSizeValue = (typeof RULE_SIZE_OPTIONS)[number];
 
 export const CHIP_STATE_OPTIONS = [
   "unselected",
@@ -212,19 +204,19 @@ export const INPUT_LABEL_PALETTE_OPTIONS = ["default", "inverse"] as const;
 export type InputLabelPaletteValue =
   (typeof INPUT_LABEL_PALETTE_OPTIONS)[number];
 
-export const MENU_BAR_ITEM_STATE_OPTIONS = [
+export const MENU_ITEM_STATE_OPTIONS = [
   "default",
   "hover",
   "selected",
 ] as const;
-export type MenuBarItemStateValue =
-  (typeof MENU_BAR_ITEM_STATE_OPTIONS)[number];
+export type MenuItemStateValue =
+  (typeof MENU_ITEM_STATE_OPTIONS)[number];
 
-export const MENU_BAR_ITEM_MODE_OPTIONS = ["default", "inverse"] as const;
-export type MenuBarItemModeValue = (typeof MENU_BAR_ITEM_MODE_OPTIONS)[number];
+export const MENU_ITEM_MODE_OPTIONS = ["default", "inverse"] as const;
+export type MenuItemModeValue = (typeof MENU_ITEM_MODE_OPTIONS)[number];
 
-export const MENU_BAR_ITEM_SIZE_OPTIONS = MENU_BAR_SIZE_OPTIONS;
-export type MenuBarItemSizeValue = MenuBarSizeValue;
+export const MENU_ITEM_SIZE_OPTIONS = MENU_SIZE_OPTIONS;
+export type MenuItemSizeValue = MenuSizeValue;
 
 export const BUTTON_TYPE_OPTIONS = [
   "filled",

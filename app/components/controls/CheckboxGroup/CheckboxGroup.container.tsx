@@ -5,7 +5,7 @@ import { CheckboxGroupView } from "./CheckboxGroup.view";
 import type { CheckboxGroupProps } from "./CheckboxGroup.types";
 
 /**
- * Figma: "Control / CheckboxGroup" (TODO(figma)). Group of checkboxes sharing
+ * Figma: "Control / CheckboxGroup". Group of checkboxes sharing
  * a name that emits the array of currently selected values.
  */
 const CheckboxGroupContainer = ({

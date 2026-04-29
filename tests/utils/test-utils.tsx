@@ -6,7 +6,7 @@ import { CreateFlowProvider } from "../../app/(app)/create/context/CreateFlowCon
 import messages from "../../messages/en/index";
 
 /**
- * Custom render function: MessagesProvider, AuthModalProvider (TopNav login), CreateFlowProvider.
+ * Custom render function: MessagesProvider, AuthModalProvider (`Top` login), CreateFlowProvider.
  */
 export function renderWithProviders(
   ui: ReactElement,

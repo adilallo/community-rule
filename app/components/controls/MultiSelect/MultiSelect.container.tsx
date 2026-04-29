@@ -5,7 +5,7 @@ import MultiSelectView from "./MultiSelect.view";
 import type { MultiSelectProps } from "./MultiSelect.types";
 
 /**
- * Figma: "Control / MultiSelect" (TODO(figma)). Labelled set of chips for
+ * Figma: "Control / MultiSelect". Labelled set of chips for
  * picking multiple values, with an optional add button for custom entries.
  */
 const MultiSelectContainer = memo<MultiSelectProps>(

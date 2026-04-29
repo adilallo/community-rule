@@ -3,19 +3,20 @@
 import type { TagViewProps } from "./Tag.types";
 
 /**
- * Tag view – Figma 17861-22238.
- * Recommended: light yellow bg (#F6EEA7), dark text (#3F3F3F).
- * Selected: dark bg (#3F3F3F), white text (#FFFFFF).
- * Typography: Inter Medium 10px, line-height 12, uppercase.
+ * Tag view – Figma 17861-22238; **`Selection`** (Figma Card / CardSelection, `16775:28762`).
  */
 export function TagView({ variant, children, className }: TagViewProps) {
   const isRecommended = variant === "recommended";
-  const bgClass = isRecommended ? "bg-[#F6EEA7]" : "bg-[#3F3F3F]";
-  const textClass = isRecommended ? "text-[#3F3F3F]" : "text-[#FFFFFF]";
+  const bgClass = isRecommended
+    ? "bg-[var(--color-surface-inverse-brand-accent)]"
+    : "bg-[var(--color-gray-1000)]";
+  const textClass = isRecommended
+    ? "text-[var(--color-content-inverse-brand-primary)]"
+    : "text-[var(--color-gray-000)]";
 
   return (
     <span
-      className={`inline-flex w-[6rem] min-w-[6rem] items-center justify-center rounded px-2 py-0.5 font-inter text-[10px] font-medium uppercase leading-3 ${bgClass} ${textClass} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center rounded-[2px] px-1 py-0.5 font-inter text-[10px] font-medium uppercase leading-3 ${bgClass} ${textClass} ${className}`}
       role="status"
     >
       {children}

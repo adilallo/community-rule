@@ -22,10 +22,10 @@ test.describe("Critical User Journeys", () => {
       await learnButton.click();
     }
 
-    // 4. User scrolls to numbered cards section
-    // Note: SectionHeader shows "How CommunityRule works" on mobile, "How CommunityRule helps" on desktop
+    // 4. User scrolls to CardSteps section (home)
+    // Note: mobile title is one line; lg+ uses stacked "How / CommunityRule / helps" from home copy
     const howItWorksHeading = page.locator(
-      'h2:has-text("How CommunityRule works"), h2:has-text("How CommunityRule helps")',
+      'h2:has-text("How CommunityRule works"), h2:has-text("How"), h2:has-text("CommunityRule"), h2:has-text("helps")',
     );
     await expect(howItWorksHeading).toBeVisible();
 
@@ -129,7 +129,7 @@ test.describe("Critical User Journeys", () => {
       featureSection.locator("text=Conflict resolution"),
     ).toBeVisible();
 
-    // Check feature links - MiniCard components render as <a> tags with href="#..."
+    // Check feature links - Mini tiles render as <a> tags with href="#..."
     // There are 4 feature cards + 1 "Learn more" link = 5 total links
     // We check for the specific feature card links
     await expect(

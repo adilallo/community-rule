@@ -51,13 +51,48 @@ export { default } from "./<Name>.container";
 export type { <Name>Props } from "./<Name>.types";
 ```
 
-## Single-file pattern (exception)
+## Small presentational packages (buttons)
 
-`app/components/buttons/*.tsx` and other trivially-presentational components
-can stay as a single file when they have **no derived state and only a
-handful of props** (e.g. `Button.tsx`, `InlineTextButton.tsx`). If you find
-yourself adding state, side effects, or enum logic, promote it to the split
-pattern.
+`app/components/buttons/<Name>/` holds **`index.tsx`** plus **`<Name>.tsx`**
+(the **`Button`**, **`InlineTextButton`** packages today). Promote to the full
+container/view/types split when state or logic outgrows a single module (like **`controls/TextInput`**).
+
+## `cards/` packages
+
+Prefer the **container / view / types** layout for **`Selection/`**, **`CardStack/`**, **`Rule/`**,
+**`Icon/`**, **`Mini/`**, **`TemplateReviewCard/`**. **`Step/`** keeps a single
+**`<Name>.tsx`** next to **`index.tsx`** until complexity justifies a split.
+
+## `modals/` packages
+
+Use the same **container / view / types** split where those files exist (**`Alert`**, **`Create`**, **`Dialog`**, **`Login`**, **`Tooltip`**, **`ModalHeader`**, **`ModalFooter`**).
+
+## `navigation/` packages
+
+Use the **container / view / types** split + per-package **`index.tsx`** for **`Top/`**, **`CreateFlowTopNav/`**, **`CreateFlowFooter/`**, **`NavigationItem/`**, **`Link/`**, **`MenuItem/`**. **`TopWithPathname.tsx`** lives inside **`Top/`** as the pathname + session wrapper.
+
+**Root-level** **`Menu.tsx`**, **`Footer.tsx`**, **`ConditionalNavigation.tsx`**, and **`ConditionalNavigationClient.tsx`** sit beside those folders—no bucket-level barrel. Figma **Navigation / Menu** maps to **`Menu`** + **`MenuItem`** (see **`docs/figma-component-registry.md`**, Navigation conventions) and **`routes.mdc`** for shell behavior.
+
+## `progress/` packages
+
+Use the **container / view / types** split + **`index.tsx`** for **`Stepper/`** and **`ProportionBar/`** (same shape as **`controls/`**). See **`docs/figma-component-registry.md`** — **Progress conventions** for Figma **Progress** vs **Control / Proportion**.
+
+## `sections/` packages
+
+Section-level compositions are **mixed**: many folders use **`container` / `view` / `types`** (**`FeatureGrid/`**, **`QuoteBlock/`**, …), while **`ContentBanner.tsx`** and **`SectionNumber.tsx`** are **single modules** at the bucket root. Prefer the **split** for **new** composites; see **`docs/figma-component-registry.md`** — **Sections conventions**. **`SectionHeader/`** lives under **`type/`** (Figma Type / SectionHeader). Published rule typography body **`CommunityRule/`** lives under **`type/`** (see **Type conventions**).
+
+## `type/` packages
+
+**`type/`** is mostly **`container` / `view` / `types`** + **`index.tsx`** (**`HeaderLockup/`**, **`ContentLockup/`**, **`NumberedList/`**, **`InputLabel/`**). **`SectionHeader/`** is a small presentational package (**`SectionHeader.tsx`** + **`index.tsx`**) for the Figma Type SectionHeader lockup. **`CommunityRule/`**, **`Section/`**, and **`TextBlock/`** are **view + types** packages (Community Rule document tree). See **`docs/figma-component-registry.md`** — **Type conventions**.
+
+## No package-level barrels
+
+Do **not** add **`app/components/<bucket>/index.tsx`** that re-exports every
+sibling under that bucket (there is no `buttons/index.tsx` or `asset/index.tsx`).
+Import **`…/buttons/Button`**, **`…/asset/icon`**, **`…/asset/Logo`**, etc.—same
+mental model everywhere.
+
+**Per-component** **`index.tsx`** entrypoints (**`Logo/index.tsx`**, **`controls/TextInput/index.tsx`**, …) stay as documented above—aggregating an entire **`buttons/`** or **`asset/`** tier in one file does not.
 
 ## Wrapper / group components
 

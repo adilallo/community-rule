@@ -18,7 +18,7 @@ import { SelectInputView } from "./SelectInput.view";
 import type { SelectInputProps } from "./SelectInput.types";
 
 /**
- * Figma: "Control / SelectInput" (TODO(figma)). Custom-styled select dropdown
+ * Figma: "Control / SelectInput". Custom-styled select dropdown
  * with a labelled trigger button and floating option menu.
  */
 const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(

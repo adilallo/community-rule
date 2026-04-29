@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
-import CreateFlowTopNav from "../../app/components/utility/CreateFlowTopNav";
+import CreateFlowTopNav from "../../app/components/navigation/CreateFlowTopNav";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

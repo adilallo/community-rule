@@ -14,7 +14,7 @@ A responsive feature grid component that displays organizational tools and servi
 
 - **Responsive Layout**: Adapts from 2x2 grid on mobile to 1x4 grid on tablet to horizontal layout on desktop
 - **ContentLockup Integration**: Uses the feature variant with "Learn more" link
-- **MiniCard Grid**: Four feature cards with color-coded backgrounds and icons
+- **Mini grid**: Four feature tiles with color-coded backgrounds and icons
 - **Accessibility**: Full keyboard navigation, focus indicators, and ARIA labels
 - **Design System**: Uses design tokens for consistent spacing, colors, and typography
 
@@ -26,7 +26,7 @@ A responsive feature grid component that displays organizational tools and servi
 
 ## Interactive Elements
 
-- **MiniCards**: Hover effects, focus indicators, and keyboard navigation
+- **Mini tiles**: Hover effects, focus indicators, and keyboard navigation
 - **Learn More Link**: Underlined link with focus states
 - **Color-coded Features**: Royal, green, pink, and blue backgrounds for categorization
 
@@ -69,7 +69,7 @@ export const Default = {
 Default FeatureGrid with standard content. This component demonstrates:
 
 - **ContentLockup**: Feature variant with title, subtitle, and "Learn more" link
-- **MiniCard Grid**: Four feature cards with different colors and icons
+- **Mini grid**: Four feature tiles with different colors and icons
 - **Responsive Design**: Layout adapts across mobile, tablet, and desktop breakpoints
 - **Interactive States**: Hover effects and focus indicators on all interactive elements
 

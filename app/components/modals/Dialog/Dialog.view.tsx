@@ -2,8 +2,8 @@
 
 import { memo } from "react";
 import ContentLockup from "../../type/ContentLockup";
-import ModalFooter from "../../utility/ModalFooter";
-import ModalHeader from "../../utility/ModalHeader";
+import ModalFooter from "../ModalFooter";
+import ModalHeader from "../ModalHeader";
 import { CreateModalFrameView } from "../Create/CreateModalFrame.view";
 import type { DialogViewProps } from "./Dialog.types";
 

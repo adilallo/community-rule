@@ -11,7 +11,7 @@ import {
 import messages from "../../../../../messages/en/index";
 import Alert from "../../../../components/modals/Alert";
 import {
-  CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS,
+  CREATE_FLOW_REVIEW_RULE_LAYOUT_CLASS,
   CreateFlowLockupCardStepShell,
 } from "../../components/CreateFlowLockupCardStepShell";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
@@ -118,7 +118,7 @@ export default function ReviewTemplatePage({ params }: PageProps) {
     >
       <TemplateReviewCard
         template={template}
-        ruleCardClassName={CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS}
+        ruleCardClassName={CREATE_FLOW_REVIEW_RULE_LAYOUT_CLASS}
         size={mdUp ? "L" : "M"}
       />
     </CreateFlowLockupCardStepShell>

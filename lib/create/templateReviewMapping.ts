@@ -1,18 +1,9 @@
-import type { Category } from "../../app/components/cards/RuleCard/RuleCard.types";
+import type { Category } from "../../app/components/cards/Rule";
 import type { ChipOption } from "../../app/components/controls/MultiSelect/MultiSelect.types";
+import type { CommunityRuleSection } from "../../app/components/type/CommunityRule/CommunityRule.types";
+import { isDocumentEntry } from "./documentEntryGuards";
 
-function isDocumentEntry(x: unknown): x is { title: string; body: string } {
-  if (!x || typeof x !== "object") return false;
-  const o = x as Record<string, unknown>;
-  return typeof o.title === "string" && typeof o.body === "string";
-}
-
-function isDocumentSection(
-  x: unknown,
-): x is {
-  categoryName: string;
-  entries: { title: string; body: string }[];
-} {
+function isDocumentSection(x: unknown): x is CommunityRuleSection {
   if (!x || typeof x !== "object") return false;
   const o = x as Record<string, unknown>;
   if (typeof o.categoryName !== "string") return false;
@@ -79,7 +70,7 @@ export interface TemplateChipDetail {
 }
 
 /**
- * Maps API template `body` (published-rule document shape) to RuleCard category
+ * Maps API template `body` (published-rule document shape) to Rule category
  * rows **plus** a chipId → detail lookup for wiring chip clicks to the
  * read-only detail modal.
  */
@@ -144,8 +135,11 @@ export function templateSummaryFromBody(
   for (const s of sections) {
     if (!isDocumentSection(s)) continue;
     const first = s.entries[0];
-    if (isDocumentEntry(first) && first.body.trim()) {
-      return first.body.trim();
+    if (isDocumentEntry(first)) {
+      const main = first.body.trim();
+      if (main.length > 0) return main;
+      const fromBlock = first.blocks?.[0]?.body?.trim();
+      if (fromBlock && fromBlock.length > 0) return fromBlock;
     }
   }
   return "";

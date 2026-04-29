@@ -77,7 +77,7 @@ describe("FinalReviewScreen", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RuleCard with fallback title when context has no name", () => {
+  it("renders Rule with fallback title when context has no name", () => {
     render(<FinalReviewScreen />);
     expect(screen.getByText(FALLBACK_CARD_TITLE)).toBeInTheDocument();
   });
@@ -89,7 +89,7 @@ describe("FinalReviewScreen", () => {
         replaceState({
           title: "Oak Park Commons",
           summary:
-            "Leftover template or one-line summary — must not appear as the RuleCard description.",
+            "Leftover template or one-line summary — must not appear as the Rule description.",
         });
       }, [replaceState]);
       return <FinalReviewScreen />;
@@ -100,7 +100,7 @@ describe("FinalReviewScreen", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("renders RuleCard title from create flow state", async () => {
+  it("renders Rule title from create flow state", async () => {
     render(
       <FinalReviewWithFlowState
         title="Oak Park Commons"
@@ -115,7 +115,7 @@ describe("FinalReviewScreen", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RuleCard as a button (card is interactive)", () => {
+  it("renders Rule as a button (card is interactive)", () => {
     render(<FinalReviewScreen />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);
@@ -124,7 +124,7 @@ describe("FinalReviewScreen", () => {
     ).toBe(true);
   });
 
-  it("renders expanded RuleCard with category labels", () => {
+  it("renders expanded Rule with category labels", () => {
     render(<FinalReviewScreen />);
     expect(screen.getByText("Values")).toBeInTheDocument();
     expect(screen.getByText("Communication")).toBeInTheDocument();
@@ -143,7 +143,7 @@ describe("FinalReviewScreen", () => {
 
 /**
  * Seeds a Customize-from-template style state (method ids + core-value
- * snapshot) and asserts the final-review RuleCard renders the resolved
+ * snapshot) and asserts the final-review Rule renders the resolved
  * labels — the fix for "preselected chips don't register on final review".
  */
 function FinalReviewWithCustomizeSelections() {

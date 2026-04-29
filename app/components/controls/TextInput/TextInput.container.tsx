@@ -6,7 +6,7 @@ import { TextInputView } from "./TextInput.view";
 import type { TextInputProps } from "./TextInput.types";
 
 /**
- * Figma: "Control / TextInput" (TODO(figma)). Single-line text input with size
+ * Figma: "Control / TextInput". Single-line text input with size
  * variants and managed default/active/focus/error states.
  */
 const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(

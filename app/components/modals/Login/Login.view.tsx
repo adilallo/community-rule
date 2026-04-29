@@ -1,7 +1,7 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import ModalHeader from "../../utility/ModalHeader";
+import ModalHeader from "../ModalHeader";
 import type { LoginBackdropVariant, LoginViewProps } from "./Login.types";
 
 const backdropClasses: Record<LoginBackdropVariant, string> = {

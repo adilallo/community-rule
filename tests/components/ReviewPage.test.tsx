@@ -39,12 +39,12 @@ describe("CommunityReviewScreen", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders RuleCard with title fallback when no community name is set", () => {
+  it("renders Rule with title fallback when no community name is set", () => {
     render(<CommunityReviewScreen />);
     expect(screen.getByText("Mutual Aid Mondays")).toBeInTheDocument();
   });
 
-  it("omits the RuleCard description when the user has not entered community context", () => {
+  it("omits the Rule description when the user has not entered community context", () => {
     render(<CommunityReviewScreen />);
     expect(
       screen.queryByText(
@@ -53,7 +53,7 @@ describe("CommunityReviewScreen", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("renders RuleCard as a button (card is interactive)", () => {
+  it("renders Rule as a button (card is interactive)", () => {
     render(<CommunityReviewScreen />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBeGreaterThanOrEqual(1);

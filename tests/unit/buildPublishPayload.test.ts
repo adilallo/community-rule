@@ -209,6 +209,39 @@ describe("parseDocumentSectionsForDisplay", () => {
     };
     expect(parseDocumentSectionsForDisplay(doc)).toEqual(doc.sections);
   });
+
+  it("accepts entries with labeled blocks and empty body", () => {
+    const doc = {
+      sections: [
+        {
+          categoryName: "Membership",
+          entries: [
+            {
+              title: "Open membership",
+              body: "",
+              blocks: [
+                { label: "Eligibility", body: "Anyone may join." },
+                { label: "Process", body: "Sign the sheet." },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    expect(parseDocumentSectionsForDisplay(doc)).toEqual(doc.sections);
+  });
+
+  it("still parses entries with empty body and no blocks", () => {
+    const doc = {
+      sections: [
+        {
+          categoryName: "Values",
+          entries: [{ title: "Consensus", body: "" }],
+        },
+      ],
+    };
+    expect(parseDocumentSectionsForDisplay(doc)).toEqual(doc.sections);
+  });
 });
 
 describe("parseSectionsFromCreateFlowState", () => {

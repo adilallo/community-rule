@@ -17,12 +17,13 @@
  */
 
 import { useState, useCallback, useMemo } from "react";
-import DecisionMakingSidebar from "../../../../components/utility/DecisionMakingSidebar";
-import CardStack from "../../../../components/utility/CardStack";
+import CardStack from "../../../../components/cards/CardStack";
+import HeaderLockup from "../../../../components/type/HeaderLockup";
 import Create from "../../../../components/modals/Create";
 import InlineTextButton from "../../../../components/buttons/InlineTextButton";
-import type { InfoMessageBoxItem } from "../../../../components/utility/InfoMessageBox/InfoMessageBox.types";
-import type { CardStackItem } from "../../../../components/utility/CardStack/CardStack.types";
+import InfoMessageBox from "../../../../components/controls/InfoMessageBox";
+import type { InfoMessageBoxItem } from "../../../../components/controls/InfoMessageBox/InfoMessageBox.types";
+import type { CardStackItem } from "../../../../components/cards/CardStack/CardStack.types";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
@@ -204,16 +205,20 @@ export function DecisionApproachesScreen() {
       contentTopBelowMd="space-800"
       lgVerticalAlign="start"
       header={
-        <DecisionMakingSidebar
-          title={da.sidebar.title}
-          description={sidebarDescription}
-          messageBoxTitle={da.messageBox.title}
-          messageBoxItems={messageBoxItems}
-          messageBoxCheckedIds={messageBoxCheckedIds}
-          onMessageBoxCheckboxChange={handleMessageBoxCheckboxChange}
-          size={mdUp ? "L" : "M"}
-          justification={mdUp ? "left" : "center"}
-        />
+        <div className="flex w-full min-w-0 flex-col gap-3">
+          <HeaderLockup
+            title={da.sidebar.title}
+            description={sidebarDescription}
+            size={mdUp ? "L" : "M"}
+            justification={mdUp ? "left" : "center"}
+          />
+          <InfoMessageBox
+            title={da.messageBox.title}
+            items={messageBoxItems}
+            checkedIds={messageBoxCheckedIds}
+            onCheckboxChange={handleMessageBoxCheckboxChange}
+          />
+        </div>
       }
     >
       <div className="flex w-full min-w-0 flex-col items-stretch gap-6 py-0">

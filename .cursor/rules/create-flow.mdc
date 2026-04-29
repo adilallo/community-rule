@@ -29,7 +29,7 @@ Reach for these before writing new markup:
 | Toggle-chip row + inline "+ Add" input | `app/(app)/create/components/ApplicableScopeField` |
 | `[– value +]` numeric stepper (± label) | `app/components/controls/Incrementer` / `IncrementerBlock` |
 | Mid-paragraph "expand / see all" link button | `app/components/buttons/InlineTextButton` |
-| Help-icon + label above a control | `app/components/utility/InputLabel` (`helpIcon` prop) |
+| Help-icon + label above a control | `app/components/type/InputLabel` (`helpIcon` prop) |
 | Toggle chip (dim-but-clickable) | `Chip` with `state="Disabled" disabled={false}` |
 | Card-click → structured creation modal | `Create` with `backdropVariant="blurredYellow"` |
 

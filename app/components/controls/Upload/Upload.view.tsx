@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import InputLabel from "../../utility/InputLabel";
+import InputLabel from "../../type/InputLabel";
 import type { UploadViewProps } from "./Upload.types";
 
 function UploadView({

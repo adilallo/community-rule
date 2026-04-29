@@ -9,7 +9,7 @@
 
 import { memo, useState } from "react";
 import Chip from "../../../components/controls/Chip";
-import InputLabel from "../../../components/utility/InputLabel";
+import InputLabel from "../../../components/type/InputLabel";
 
 export interface ApplicableScopeFieldProps {
   /** Label rendered above the capsule row. */

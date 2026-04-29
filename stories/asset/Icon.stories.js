@@ -1,4 +1,6 @@
-import { Icon, ICON_NAME_OPTIONS } from "../../app/components/asset";
+import Icon, {
+  ICON_NAME_OPTIONS,
+} from "../../app/components/asset/icon";
 
 export default {
   title: "Components/Asset/Icon",

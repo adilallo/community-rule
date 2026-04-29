@@ -231,7 +231,7 @@ export function buildFinalReviewCategoryRowsDetailed(
 }
 
 /**
- * Derive the final-review RuleCard category rows from the current
+ * Derive the final-review Rule category rows from the current
  * {@link CreateFlowState}.
  *
  * Two-mode contract, mirroring the two template entry points:

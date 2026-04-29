@@ -34,8 +34,9 @@ export type ChipPaletteValue = (typeof CHIP_PALETTE_OPTIONS)[number];
   distinct Figma node.
 - For create-flow screens, node ids come from `CREATE_FLOW_SCREEN_REGISTRY`
   in `app/(app)/create/utils/createFlowScreenRegistry.ts`. For everything else,
-  pull the node id from the Figma file directly. Use `TODO(figma)` as a
-  placeholder rather than omitting the docstring entirely.
+  prefer `Figma: "<Path>" (<node-id>)` from the file. If the node id is not
+  wired yet, use `Figma: "<Path>"` plus a short note (e.g. *canonical code under
+  \`controls/\`*) rather than omitting the docstring.
 
 ```typescript
 /**

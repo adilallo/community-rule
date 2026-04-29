@@ -35,7 +35,9 @@ Backend setup (Postgres, Prisma, magic-link auth) is documented in
 ## Project layout
 
 ```text
-app/              Next.js app router (routes, components, hooks, contexts)
+app/              Next.js app router: route groups (marketing), (app), (admin), (dev);
+                  shared components under app/components/; optional _components/
+                  colocated with a route (e.g. (admin)/monitor/_components/)
 lib/              Shared library code (i18n, validation, utilities)
 messages/en/      Localized UI copy (see docs/guides/i18n-translation-workflow.md)
 prisma/           Database schema, migrations, seed

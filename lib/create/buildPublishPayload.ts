@@ -6,7 +6,7 @@ import type {
   DecisionApproachDetailEntry,
   MembershipMethodDetailEntry,
 } from "../../app/(app)/create/types";
-import type { CommunityRuleDocumentSection } from "../../app/components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
+import type { CommunityRuleSection } from "../../app/components/type/CommunityRule/CommunityRule.types";
 import {
   communicationPresetFor,
   conflictManagementPresetFor,
@@ -14,14 +14,11 @@ import {
   membershipPresetFor,
   methodLabelFor,
 } from "./finalReviewChipPresets";
+import { isDocumentEntry } from "./documentEntryGuards";
 
-function isDocumentEntry(x: unknown): x is { title: string; body: string } {
-  if (!x || typeof x !== "object") return false;
-  const o = x as Record<string, unknown>;
-  return typeof o.title === "string" && typeof o.body === "string";
-}
+export { isDocumentEntry } from "./documentEntryGuards";
 
-function isDocumentSection(x: unknown): x is CommunityRuleDocumentSection {
+function isDocumentSection(x: unknown): x is CommunityRuleSection {
   if (!x || typeof x !== "object") return false;
   const o = x as Record<string, unknown>;
   if (typeof o.categoryName !== "string") return false;
@@ -32,10 +29,10 @@ function isDocumentSection(x: unknown): x is CommunityRuleDocumentSection {
 /** Narrow `CreateFlowState.sections` into Community Rule document sections. */
 export function parseSectionsFromCreateFlowState(
   state: CreateFlowState,
-): CommunityRuleDocumentSection[] {
+): CommunityRuleSection[] {
   const raw = state.sections;
   if (!Array.isArray(raw)) return [];
-  const out: CommunityRuleDocumentSection[] = [];
+  const out: CommunityRuleSection[] = [];
   for (const x of raw) {
     if (isDocumentSection(x)) out.push(x);
   }
@@ -233,7 +230,7 @@ export function buildMethodSelectionsForDocument(
 /** Read `document.sections` from a stored published payload for display. */
 export function parseDocumentSectionsForDisplay(
   document: unknown,
-): CommunityRuleDocumentSection[] {
+): CommunityRuleSection[] {
   if (!document || typeof document !== "object") return [];
   const sections = (document as Record<string, unknown>).sections;
   if (!Array.isArray(sections)) return [];

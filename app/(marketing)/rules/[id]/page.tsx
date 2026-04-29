@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPublicPublishedRuleById } from "../../../../lib/server/publishedRules";
 import { parseDocumentSectionsForDisplay } from "../../../../lib/create/buildPublishPayload";
-import CommunityRuleDocument from "../../../components/sections/CommunityRuleDocument";
+import CommunityRule from "../../../components/type/CommunityRule";
 import HeaderLockup from "../../../components/type/HeaderLockup";
 
 interface PageProps {
@@ -65,7 +65,7 @@ export default async function PublicRuleDetailPage({ params }: PageProps) {
           size="L"
           palette="inverse"
         />
-        <CommunityRuleDocument sections={sections} />
+        <CommunityRule sections={sections} />
       </div>
     </div>
   );

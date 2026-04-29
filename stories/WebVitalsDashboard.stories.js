@@ -1,7 +1,7 @@
-import WebVitalsDashboard from "../app/components/sections/WebVitalsDashboard";
+import WebVitalsDashboard from "../app/(admin)/monitor/_components/WebVitalsDashboard";
 
 export default {
-  title: "Components/WebVitalsDashboard",
+  title: "Components/Monitor/WebVitalsDashboard",
   component: WebVitalsDashboard,
   parameters: {
     layout: "fullscreen",

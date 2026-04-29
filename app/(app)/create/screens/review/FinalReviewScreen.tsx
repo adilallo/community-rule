@@ -1,14 +1,13 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import RuleCard from "../../../../components/cards/RuleCard";
-import type { Category } from "../../../../components/cards/RuleCard/RuleCard.types";
+import Rule, { type Category } from "../../../../components/cards/Rule";
 import { TemplateChipDetailModal } from "../../../../components/cards/TemplateReviewCard/TemplateChipDetailModal";
 import { useMessages, useTranslation } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import {
-  CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS,
+  CREATE_FLOW_REVIEW_RULE_LAYOUT_CLASS,
   CreateFlowLockupCardStepShell,
 } from "../../components/CreateFlowLockupCardStepShell";
 import {
@@ -22,12 +21,16 @@ import {
   type FinalReviewChipEditPatch,
   type FinalReviewChipEditTarget,
 } from "../../components/FinalReviewChipEditModal";
+import {
+  getAssetPath,
+  vectorMarkPath,
+} from "../../../../../lib/assetUtils";
 
 /**
  * `finalReview.json.categories` ships a demo ordering + localized names
  * (Values / Communication / Membership / Decision-making / Conflict
  * management). We reuse that ordering for the state-derived rows so the
- * RuleCard layout stays stable across customize / use-without-changes /
+ * Rule layout stays stable across customize / use-without-changes /
  * plain-custom flows, and fall back to the demo chips when state resolves
  * to nothing selected.
  */
@@ -183,16 +186,16 @@ export function FinalReviewScreen() {
       lockupTitle={t("title")}
       lockupDescription={t("description")}
     >
-      <RuleCard
+      <Rule
         title={ruleCardTitle}
         description={ruleCardDescription}
         size={mdUp ? "L" : "M"}
         expanded={true}
         backgroundColor="bg-[#c9fef9]"
-        logoUrl="/assets/Vector_MutualAid.svg"
+        logoUrl={getAssetPath(vectorMarkPath("mutual-aid"))}
         logoAlt={ruleCardTitle}
         categories={finalReviewCategories}
-        className={CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS}
+        className={CREATE_FLOW_REVIEW_RULE_LAYOUT_CLASS}
         onClick={() => {}}
       />
       <FinalReviewChipEditModal

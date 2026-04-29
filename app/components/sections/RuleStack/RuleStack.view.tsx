@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslation } from "../../../contexts/MessagesContext";
-import SectionHeader from "../SectionHeader";
+import SectionHeader from "../../type/SectionHeader";
 import Button from "../../buttons/Button";
 import { GovernanceTemplateGrid } from "../GovernanceTemplateGrid";
 import { GovernanceTemplateGridSkeleton } from "../GovernanceTemplateGrid/GovernanceTemplateGridSkeleton";

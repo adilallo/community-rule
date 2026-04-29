@@ -5,7 +5,7 @@ import { SwitchView } from "./Switch.view";
 import type { SwitchProps } from "./Switch.types";
 
 /**
- * Figma: "Control / Switch" (TODO(figma)). Animated on/off toggle switch,
+ * Figma: "Control / Switch". Animated on/off toggle switch,
  * optionally paired with a trailing text label.
  */
 const SwitchContainer = memo(

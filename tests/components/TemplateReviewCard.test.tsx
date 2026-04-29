@@ -41,8 +41,8 @@ const config: ComponentTestSuiteConfig<Props> = {
   primaryRole: "button",
   testCases: {
     renders: true,
-    // RuleCard contains nested interactive elements (chips inside a clickable card)
-    // which trigger axe's "nested-interactive" rule. Tracked by RuleCard itself.
+    // Rule contains nested interactive elements (chips inside a clickable card)
+    // which trigger axe's "nested-interactive" rule. Tracked by Rule itself.
     accessibility: false,
   },
 };

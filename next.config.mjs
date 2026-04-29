@@ -7,7 +7,7 @@ const nextConfig = {
   serverExternalPackages: ["@prisma/client"],
   /**
    * `next dev --turbopack` does not use `webpack()`; without this, `.svg`
-   * imports resolve as asset URLs and {@link app/components/asset/Icon.tsx}
+   * imports resolve as asset URLs and {@link app/components/asset/icon/Icon.tsx}
    * cannot render them as components.
    */
   turbopack: {

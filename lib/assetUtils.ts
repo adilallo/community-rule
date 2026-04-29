@@ -26,6 +26,15 @@ export function getAssetPath(assetPath: string): string {
 }
 
 /**
+ * Decorative vector marks in `public/assets/vector/<kebab-case>.svg`
+ * (Figma Asset / Vector). Same folder pattern as governance template marks
+ * under `assets/template-mark/`.
+ */
+export function vectorMarkPath(slug: string): string {
+  return `assets/vector/${slug}.svg`;
+}
+
+/**
  * Asset paths for common components
  */
 export const ASSETS = {
