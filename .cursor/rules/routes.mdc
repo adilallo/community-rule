@@ -14,10 +14,10 @@ the file tree without affecting URLs.
 
 | Group | URL surface | Audience | Chrome |
 |---|---|---|---|
-| `app/(marketing)/` | `/`, `/learn`, `/blog`, `/templates`, future public pages | Public, indexable | TopNav (via root) + marketing `<Footer />` |
-| `app/(app)/` | `/create/*`, `/login`, `/profile`, future signed-in surfaces | Authenticated product | TopNav (via root) — no footer except **`/profile`** (see `profile/layout.tsx`) |
-| `app/(admin)/` | `/monitor`, future ops dashboards | Operators | TopNav (via root) — no footer |
-| `app/(dev)/` | `/components-preview`, future dev previews | Local dev (NODE_ENV gated) | TopNav (via root) — no footer |
+| `app/(marketing)/` | `/`, `/learn`, `/blog`, `/templates`, future public pages | Public, indexable | `Top` (via root) + marketing `<Footer />` |
+| `app/(app)/` | `/create/*`, `/login`, `/profile`, future signed-in surfaces | Authenticated product | `Top` (via root) — no footer except **`/profile`** (see `profile/layout.tsx`) |
+| `app/(admin)/` | `/monitor`, future ops dashboards | Operators | `Top` (via root) — no footer |
+| `app/(dev)/` | `/components-preview`, future dev previews | Local dev (NODE_ENV gated) | `Top` (via root) — no footer |
 | `app/api/` | API routes | n/a | n/a |
 
 Route folders **must not** sit loose at the top level of `app/`. If a new

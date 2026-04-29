@@ -2,11 +2,11 @@
 
 import { useId, useMemo } from "react";
 import Button from "../../../components/buttons/Button";
-import RuleCard from "../../../components/cards/RuleCard";
+import Rule from "../../../components/cards/Rule";
 import TextInput from "../../../components/controls/TextInput";
 import List from "../../../components/layout/List";
 import type { ListItem, ListSize } from "../../../components/layout/List";
-import Icon from "../../../components/asset/Icon";
+import Icon from "../../../components/asset/icon";
 import Dialog from "../../../components/modals/Dialog";
 import Alert from "../../../components/modals/Alert";
 import HeaderLockup from "../../../components/type/HeaderLockup";
@@ -82,10 +82,10 @@ const profileSectionHeadingClass =
   "font-bricolage text-base font-bold leading-[22px] text-[var(--color-content-default-primary)] md:font-inter md:text-xl md:font-bold md:leading-7 xl:font-bricolage-grotesque xl:font-bold xl:text-[28px] xl:leading-9";
 
 /**
- * Sticky `top` for page content below the product {@link TopNav} (standard variant).
- * Must match `TopNav.view.tsx`: nav `h` 40px → `lg` 84px → `xl` 88px, plus `header` `border-b` (+1px).
+ * Sticky `top` for page content below the product {@link Top} (standard variant).
+ * Must match `Top.view.tsx`: nav `h` 40px → `lg` 84px → `xl` 88px, plus `header` `border-b` (+1px).
  */
-const stickyBelowTopNavTopClass =
+const stickyBelowTopTopClass =
   "top-[41px] lg:top-[85px] xl:top-[89px]";
 
 export type ProfilePageSignedOutViewProps = {
@@ -111,7 +111,7 @@ export function ProfilePageSignedOutView({
         <header
           className={
             profileLgUp
-              ? `sticky z-10 bg-[var(--color-surface-default-primary)] ${stickyBelowTopNavTopClass}`
+              ? `sticky z-10 bg-[var(--color-surface-default-primary)] ${stickyBelowTopTopClass}`
               : `flex flex-col gap-1 py-3 md:sticky md:top-[41px] md:z-10 md:bg-[var(--color-surface-default-primary)]`
           }
         >
@@ -304,7 +304,7 @@ export function ProfilePageView({
               </h2>
               <div className="flex flex-col gap-3">
                 {showDraftCard && draft?.hasDraft ? (
-                  <RuleCard
+                  <Rule
                     title={(() => {
                       const raw = draft.state.title;
                       const s = typeof raw === "string" ? raw.trim() : "";
@@ -337,7 +337,7 @@ export function ProfilePageView({
                   />
                 ) : null}
                 {rules.map((rule) => (
-                  <RuleCard
+                  <Rule
                     key={rule.id}
                     title={rule.title}
                     description={rule.summary ?? undefined}

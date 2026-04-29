@@ -2,7 +2,7 @@ import React from "react";
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import CreateFlowFooter from "../../app/components/utility/CreateFlowFooter";
+import CreateFlowFooter from "../../app/components/navigation/CreateFlowFooter";
 import Button from "../../app/components/buttons/Button";
 import {
   componentTestSuite,

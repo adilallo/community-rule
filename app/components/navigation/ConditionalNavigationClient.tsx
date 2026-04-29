@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import { usePathname } from "next/navigation";
-import TopNavWithPathname from "./TopNav/TopNavWithPathname";
+import TopWithPathname from "./Top/TopWithPathname";
 
 export type ConditionalNavigationClientProps = {
   initialSignedIn: boolean;
@@ -22,7 +22,7 @@ const ConditionalNavigationClient = memo(
       return null;
     }
 
-    return <TopNavWithPathname initialSignedIn={initialSignedIn} />;
+    return <TopWithPathname initialSignedIn={initialSignedIn} />;
   },
 );
 

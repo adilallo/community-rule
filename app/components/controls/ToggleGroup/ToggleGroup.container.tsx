@@ -5,7 +5,7 @@ import { ToggleGroupView } from "./ToggleGroup.view";
 import type { ToggleGroupProps } from "./ToggleGroup.types";
 
 /**
- * Figma: "Control / ToggleGroup" (TODO(figma)). Segmented row of `Toggle`
+ * Figma: "Control / ToggleGroup". Segmented row of `Toggle`
  * buttons whose corner radii are shared based on position (left/middle/right).
  */
 const ToggleGroupContainer = memo(

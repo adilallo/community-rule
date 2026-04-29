@@ -2,11 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import RuleCard from "../RuleCard";
-import type {
-  Category,
-  RuleCardProps,
-} from "../RuleCard/RuleCard.types";
+import Rule from "../Rule";
+import type { Category, RuleProps } from "../Rule";
 import { getAssetPath } from "../../../../lib/assetUtils";
 import type { RuleTemplateDto } from "../../../../lib/create/fetchTemplates";
 import {
@@ -21,14 +18,14 @@ import { TemplateChipDetailModal } from "./TemplateChipDetailModal";
 
 export interface TemplateReviewCardProps {
   template: RuleTemplateDto;
-  /** Merged onto RuleCard `className` (e.g. final-review desktop vs mobile radius/padding). */
+  /** Merged onto Rule `className` (e.g. final-review desktop vs mobile radius/padding). */
   ruleCardClassName?: string;
-  /** RuleCard size; create-flow passes `L` at/above `md`, `M` below (640px). */
-  size?: RuleCardProps["size"];
+  /** Rule size; create-flow passes `L` at/above `md`, `M` below (640px). */
+  size?: RuleProps["size"];
 }
 
 /**
- * Expanded RuleCard for template review: surfaces + icon from Figma catalog (21764-16435);
+ * Expanded Rule for template review: surfaces + icon from Figma catalog (21764-16435);
  * tag rows from API `body`. Chip clicks open a read-only detail modal per
  * facet group (values / communication / membership / decision-making / conflict
  * management) so reviewers can see what each chip means without editing.
@@ -56,7 +53,7 @@ export function TemplateReviewCard({
           setActiveChipId(chipId);
         },
       })),
-    [rawCategories],
+    [rawCategories, setActiveChipId],
   );
 
   const activeDetail =
@@ -64,7 +61,7 @@ export function TemplateReviewCard({
 
   return (
     <>
-      <RuleCard
+      <Rule
         title={template.title}
         description={summary}
         expanded

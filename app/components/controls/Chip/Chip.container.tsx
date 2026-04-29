@@ -5,7 +5,7 @@ import ChipView from "./Chip.view";
 import type { ChipProps } from "./Chip.types";
 
 /**
- * Figma: "Control / Chip" (TODO(figma)). Compact pill-shaped tag with
+ * Figma: "Control / Chip". Compact pill-shaped tag with
  * selectable, removable, and inline-editable (custom) states.
  */
 const ChipContainer = memo<ChipProps>(

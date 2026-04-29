@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentLockup from "../../type/ContentLockup";
-import MiniCard from "../../cards/MiniCard";
+import Mini from "../../cards/Mini";
 import type { FeatureGridViewProps } from "./FeatureGrid.types";
 
 function FeatureGridView({
@@ -37,10 +37,10 @@ function FeatureGridView({
             />
           </div>
 
-          {/* MiniCard Grid */}
+          {/* Mini grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-scale-012)] mt-[var(--spacing-scale-048)] lg:mt-0 lg:flex-grow lg:shrink-0">
             {features.map((feature, index) => (
-              <MiniCard
+              <Mini
                 key={index}
                 backgroundColor={feature.backgroundColor}
                 labelLine1={feature.labelLine1}

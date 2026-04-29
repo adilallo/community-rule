@@ -1,8 +1,0 @@
-{
-  "_comment": "NumberedCards component defaults (shared across pages)",
-  "titleLg": "How CommunityRule helps",
-  "buttons": {
-    "createCommunityRule": "Create CommunityRule",
-    "seeHowItWorks": "See how it works"
-  }
-}

@@ -2,7 +2,7 @@ import type { IncrementerProps } from "../Incrementer/Incrementer.types";
 import type {
   InputLabelPaletteValue,
   InputLabelSizeValue,
-} from "../../utility/InputLabel/InputLabel.types";
+} from "../../type/InputLabel/InputLabel.types";
 
 export interface IncrementerBlockProps extends IncrementerProps {
   /** Label text displayed above the incrementer. */

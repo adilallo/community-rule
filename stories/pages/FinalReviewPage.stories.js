@@ -8,7 +8,7 @@ export default {
     docs: {
       description: {
         component:
-          "Pre-finalize review: HeaderLockup + expanded RuleCard sections.",
+          "Pre-finalize review: HeaderLockup + expanded Rule sections.",
       },
     },
   },

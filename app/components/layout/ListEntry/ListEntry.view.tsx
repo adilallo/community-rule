@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Link from "next/link";
-import Icon, { type IconName } from "../../asset/Icon";
+import Icon, { type IconName } from "../../asset/icon";
 import Divider from "../../utility/Divider";
 import { FIGMA_LIST_ENTRY_OUTER, listEntrySizeLayout } from "../listSizeLayout";
 import type {

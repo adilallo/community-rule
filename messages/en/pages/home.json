@@ -7,8 +7,11 @@
     "ctaText": "Learn how CommunityRule works",
     "ctaHref": "#"
   },
-  "numberedCards": {
+  "cardSteps": {
     "title": "How CommunityRule works",
+    "headingDesktopLine1": "How",
+    "headingDesktopLine2": "CommunityRule",
+    "headingDesktopLine3": "helps",
     "subtitle": "Here's a quick overview of the process, from start to finish.",
     "cards": {
       "card1": {

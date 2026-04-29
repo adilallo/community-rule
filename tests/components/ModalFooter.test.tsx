@@ -3,7 +3,7 @@ import {
   componentTestSuite,
   type ComponentTestSuiteConfig,
 } from "../utils/componentTestSuite";
-import ModalFooter from "../../app/components/utility/ModalFooter";
+import ModalFooter from "../../app/components/modals/ModalFooter";
 
 type Props = React.ComponentProps<typeof ModalFooter>;
 

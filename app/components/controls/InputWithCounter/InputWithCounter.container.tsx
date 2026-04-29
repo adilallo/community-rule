@@ -5,7 +5,7 @@ import { InputWithCounterView } from "./InputWithCounter.view";
 import type { InputWithCounterProps } from "./InputWithCounter.types";
 
 /**
- * Figma: "Control / InputWithCounter" (TODO(figma)).
+ * Figma: "Control / InputWithCounter".
  * Single-line text input with a label, optional help glyph, and a live
  * `value.length / maxLength` counter underneath.
  */

@@ -13,14 +13,14 @@ import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
-import CreateFlowTopNav from "../../components/utility/CreateFlowTopNav";
+import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
+import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
 import { getNextStep, getStepIndex } from "./utils/flowSteps";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import {
   createFlowStepUsesCenteredTextLayout,
   createFlowStepUsesCardLayout,
 } from "./utils/createFlowScreenRegistry";
-import CreateFlowFooter from "../../components/utility/CreateFlowFooter";
 import Button from "../../components/buttons/Button";
 import { isValidCreateFlowSaveEmail } from "../../../lib/create/isValidCreateFlowSaveEmail";
 import {

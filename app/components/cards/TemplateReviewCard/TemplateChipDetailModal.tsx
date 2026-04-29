@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Create from "../../modals/Create";
 import Chip from "../../controls/Chip";
-import InputLabel from "../../utility/InputLabel";
+import InputLabel from "../../type/InputLabel";
 import ContentLockup from "../../type/ContentLockup";
 import ModalTextAreaField from "../../../(app)/create/components/ModalTextAreaField";
 import { useMessages, useTranslation } from "../../../contexts/MessagesContext";

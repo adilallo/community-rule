@@ -8,7 +8,7 @@
 
 import { memo, useId } from "react";
 import TextArea from "../../../components/controls/TextArea";
-import InputLabel from "../../../components/utility/InputLabel";
+import InputLabel from "../../../components/type/InputLabel";
 
 export interface ModalTextAreaFieldProps {
   /** Label rendered above the text area. */

@@ -3,8 +3,8 @@
 import { memo } from "react";
 import { useTranslation } from "../../contexts/MessagesContext";
 import Link from "next/link";
-import Logo from "../asset/logo";
-import Separator from "../utility/Separator";
+import Logo from "../asset/Logo";
+import Divider from "../utility/Divider";
 import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
 
 /**
@@ -158,7 +158,7 @@ const Footer = memo(() => {
             </div>
           </div>
 
-          <Separator />
+          <Divider />
 
           <div
             className="flex w-full flex-col

@@ -46,7 +46,8 @@ function HeaderLockupView({
 
       {/* Description */}
       {description != null &&
-        !(typeof description === "string" && description.length === 0) && (
+        !(typeof description === "string" && description.length === 0) &&
+        (typeof description === "string" ? (
           <p
             className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
               isLeft ? "" : "text-center"
@@ -56,7 +57,17 @@ function HeaderLockupView({
           >
             {description}
           </p>
-        )}
+        ) : (
+          <div
+            className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
+              isLeft ? "" : "text-center"
+            } ${
+              isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
+            }`}
+          >
+            {description}
+          </div>
+        ))}
     </div>
   );
 }

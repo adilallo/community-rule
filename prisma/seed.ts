@@ -5,7 +5,7 @@ import { seedMethodFacets } from "./seed/methodFacets";
  * Curated rule templates for GET /api/templates.
  * Home “Popular templates” list uses `lib/templates/governanceTemplateCatalog.ts` (Figma 21764-16435);
  * DB titles/descriptions should stay aligned with `governanceTemplateCatalog.ts`.
- * `body.sections` use the same category row labels as the final-review RuleCard
+ * `body.sections` use the same category row labels as the final-review Rule
  * (Values, Communication, Membership, Decision-making, Conflict management) so
  * template review matches that layout; `entries[].title` = chip labels, `body` = supporting text.
  * Chip titles per template are sourced from the product **Template Composition** workbook (xlsx column

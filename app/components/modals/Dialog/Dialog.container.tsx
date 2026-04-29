@@ -32,7 +32,6 @@ const DialogContainer = memo<DialogProps>(
         title={title}
         description={description}
         footer={footer}
-        children={children}
         className={className}
         ariaLabel={ariaLabel}
         ariaLabelledBy={titleId}
@@ -40,7 +39,9 @@ const DialogContainer = memo<DialogProps>(
         backdropVariant={backdropVariant}
         overlayRef={overlayRef}
         dialogRef={dialogRef}
-      />
+      >
+        {children}
+      </DialogView>
     );
   },
 );

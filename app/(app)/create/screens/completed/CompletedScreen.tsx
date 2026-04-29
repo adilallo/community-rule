@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import CommunityRuleDocument from "../../../../components/sections/CommunityRuleDocument";
-import type { CommunityRuleDocumentSection } from "../../../../components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
+import CommunityRule from "../../../../components/type/CommunityRule";
+import type { CommunityRuleSection } from "../../../../components/type/CommunityRule/CommunityRule.types";
 import Alert from "../../../../components/modals/Alert";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { fetchPublishedRuleDetail } from "../../../../../lib/create/api";
@@ -24,7 +24,7 @@ function initialCompletedUi(
 ): {
   headerTitle: string;
   headerDescription: string | undefined;
-  documentSections: CommunityRuleDocumentSection[];
+  documentSections: CommunityRuleSection[];
 } {
   if (ruleIdFromUrl) {
     return {
@@ -80,7 +80,7 @@ export function CompletedScreen() {
     string | undefined
   >(initial.headerDescription);
   const [documentSections, setDocumentSections] =
-    useState<CommunityRuleDocumentSection[]>(initial.documentSections);
+    useState<CommunityRuleSection[]>(initial.documentSections);
 
   useEffect(() => {
     if (!ruleIdParam) return;
@@ -170,7 +170,7 @@ export function CompletedScreen() {
               aria-hidden
             />
             <div className="w-full min-w-0 py-0 md:pb-8">
-              <CommunityRuleDocument
+              <CommunityRule
                 sections={documentSections}
                 useCardStyle={!mdUp}
                 className={mdUp ? "min-w-0" : "w-full min-w-0 p-4"}

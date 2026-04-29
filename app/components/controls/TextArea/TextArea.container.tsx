@@ -6,7 +6,7 @@ import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
 
 /**
- * Figma: "Control / TextArea" (TODO(figma)). Multi-line text input with size
+ * Figma: "Control / TextArea". Multi-line text input with size
  * variants, an embedded appearance, and an optional label and help glyph.
  */
 const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(

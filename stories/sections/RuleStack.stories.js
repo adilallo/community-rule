@@ -44,7 +44,7 @@ export default {
     docs: {
       description: {
         component:
-          "A complete template library component that displays governance patterns in a responsive grid layout. Includes SectionHeader with multi-line variant, interactive RuleCard components, and a call-to-action button. Features comprehensive accessibility, analytics tracking, and responsive design across all breakpoints.\n\n" +
+          "A complete template library component that displays governance patterns in a responsive grid layout. Composes **`type/SectionHeader`** (multi-line variant), interactive **`Rule`** cards, and a call-to-action button. Features comprehensive accessibility, analytics tracking, and responsive design across all breakpoints.\n\n" +
           "**Testing Scenarios:**\n" +
           "- **Responsive Testing**: Resize browser window to test layout adaptation from single column on mobile to 2x2 grid on larger screens\n" +
           "- **Interactive Testing**: Hover over cards to see effects, use Tab to navigate between cards, and click to see analytics events in console\n" +

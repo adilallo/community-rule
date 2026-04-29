@@ -42,11 +42,11 @@ export default {
     size: {
       control: "select",
       options: ["XS", "S", "M", "L"],
-      description: "RuleCard size variant",
+      description: "Rule size variant",
     },
     ruleCardClassName: {
       control: "text",
-      description: "Class names merged onto the inner RuleCard",
+      description: "Class names merged onto the inner Rule",
     },
   },
 };

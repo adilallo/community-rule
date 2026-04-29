@@ -78,5 +78,5 @@ export function useCreateModalA11y(
       document.removeEventListener("keydown", handleTab);
       previousActiveElementRef.current?.focus();
     };
-  }, [isOpen]);
+  }, [dialogRef, isOpen]);
 }

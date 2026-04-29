@@ -138,7 +138,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 3. Surface API errors: invalid email, 429 `retryAfterMs`, expired/invalid token, network failure (accessible copy).
 4. Ensure `fetch` calls use `credentials: "include"` where needed (see [lib/create/api.ts](lib/create/api.ts)).
 5. **Dev:** without `SMTP_URL`, verify URL is logged; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `SMTP_URL=smtp://localhost:1025`.
-6. **Marketing header:** When signed in (`fetchAuthSession`), **Log in** becomes **Profile** linking to [`/profile`](app/(app)/profile/page.tsx) (placeholder until Ticket 15 / CR-86). Implemented in [TopNavWithPathname.tsx](app/components/navigation/TopNav/TopNavWithPathname.tsx) + [TopNav.container.tsx](app/components/navigation/TopNav/TopNav.container.tsx).
+6. **Marketing header:** When signed in (`fetchAuthSession`), **Log in** becomes **Profile** linking to [`/profile`](app/(app)/profile/page.tsx) (placeholder until Ticket 15 / CR-86). Implemented in [TopWithPathname.tsx](app/components/navigation/Top/TopWithPathname.tsx) + [Top.container.tsx](app/components/navigation/Top/Top.container.tsx).
 
 **Acceptance criteria:**
 
@@ -149,7 +149,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 **Status:** [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done) **Done** for shipped UI/APIs. **Residual checklist** below: repo doc items are **done**; use Linear (CR-74 or child issue) to track **per-environment** staging URL checks.
 
-**Files:** [app/(app)/login/](app/(app)/login/), [app/(app)/profile/](app/(app)/profile/) (placeholder), [app/components/modals/Login/](app/components/modals/Login/), [messages/en/pages/login.json](messages/en/pages/login.json), [messages/en/pages/profile.json](messages/en/pages/profile.json), [messages/en/components/header.json](messages/en/components/header.json), [app/components/navigation/TopNav/TopNav.container.tsx](app/components/navigation/TopNav/TopNav.container.tsx), [app/components/navigation/TopNav/TopNavWithPathname.tsx](app/components/navigation/TopNav/TopNavWithPathname.tsx), [lib/create/api.ts](lib/create/api.ts), [app/api/auth/magic-link/request/route.ts](app/api/auth/magic-link/request/route.ts), [app/api/auth/magic-link/verify/route.ts](app/api/auth/magic-link/verify/route.ts), [prisma/schema.prisma](prisma/schema.prisma) (`MagicLinkToken`), [lib/server/mail.ts](lib/server/mail.ts). Onboarding: [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example).
+**Files:** [app/(app)/login/](app/(app)/login/), [app/(app)/profile/](app/(app)/profile/) (placeholder), [app/components/modals/Login/](app/components/modals/Login/), [messages/en/pages/login.json](messages/en/pages/login.json), [messages/en/pages/profile.json](messages/en/pages/profile.json), [messages/en/components/header.json](messages/en/components/header.json), [app/components/navigation/Top/Top.container.tsx](app/components/navigation/Top/Top.container.tsx), [app/components/navigation/Top/TopWithPathname.tsx](app/components/navigation/Top/TopWithPathname.tsx), [lib/create/api.ts](lib/create/api.ts), [app/api/auth/magic-link/request/route.ts](app/api/auth/magic-link/request/route.ts), [app/api/auth/magic-link/verify/route.ts](app/api/auth/magic-link/verify/route.ts), [prisma/schema.prisma](prisma/schema.prisma) (`MagicLinkToken`), [lib/server/mail.ts](lib/server/mail.ts). Onboarding: [CONTRIBUTING.md](CONTRIBUTING.md), [`.env.example`](.env.example).
 
 ### Residual / before CR-75 (create-flow session UI)
 
@@ -173,7 +173,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 **Implementation (repo):**
 
 1. [app/(app)/create/layout.tsx](app/(app)/create/layout.tsx): session + `enableAnonymousPersistence`; anonymous exit → `openLogin({ variant: 'saveProgress', nextPath })`; signed-in exit → `useCreateFlowExit`.
-2. [CreateFlowTopNav](app/components/utility/CreateFlowTopNav/): i18n [`messages/en/create/topNav.json`](messages/en/create/topNav.json); logo + Share/Export/Edit (completed) + Exit/Save & Exit only.
+2. [CreateFlowTopNav](app/components/navigation/CreateFlowTopNav/): i18n [`messages/en/create/topNav.json`](messages/en/create/topNav.json); logo + Share/Export/Edit (completed) + Exit/Save & Exit only.
 3. [useCreateFlowExit](app/(app)/create/hooks/useCreateFlowExit.ts): `saveDraftToServer` when sync + signed in; `clearState` + home.
 4. [CreateFlowContext](app/(app)/create/context/CreateFlowContext.tsx): optional anonymous localStorage mirror via `enableAnonymousPersistence`.
 5. **QA:** [ProfilePageClient](app/(app)/profile/ProfilePageClient.tsx) Sign out when session present.
@@ -183,7 +183,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [x] Completed step still works; **Save & Exit** gating uses session + step (not conflated with `completed` only).
 - [x] Signed in + sync: Save & Exit persists server-side; anonymous: localStorage + exit modal + transfer after magic link. Sign out on profile clears session. _(Re-verify on staging/prod as needed.)_
 
-**Files:** [app/(app)/create/layout.tsx](app/(app)/create/layout.tsx), [app/(app)/create/hooks/useCreateFlowExit.ts](app/(app)/create/hooks/useCreateFlowExit.ts), [app/components/utility/CreateFlowTopNav/](app/components/utility/CreateFlowTopNav/), [app/(app)/create/context/CreateFlowContext.tsx](app/(app)/create/context/CreateFlowContext.tsx), [messages/en/create/topNav.json](messages/en/create/topNav.json), [app/(app)/profile/ProfilePageClient.tsx](app/(app)/profile/ProfilePageClient.tsx).
+**Files:** [app/(app)/create/layout.tsx](app/(app)/create/layout.tsx), [app/(app)/create/hooks/useCreateFlowExit.ts](app/(app)/create/hooks/useCreateFlowExit.ts), [app/components/navigation/CreateFlowTopNav/](app/components/navigation/CreateFlowTopNav/), [app/(app)/create/context/CreateFlowContext.tsx](app/(app)/create/context/CreateFlowContext.tsx), [messages/en/create/topNav.json](messages/en/create/topNav.json), [app/(app)/profile/ProfilePageClient.tsx](app/(app)/profile/ProfilePageClient.tsx).
 
 ---
 
@@ -332,7 +332,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 1. Keep [`docs/create-flow.md`](create-flow.md) in sync with product/Figma (stage ↔ step mapping, future template routes).
 2. ~~Remove legacy [`app/(app)/create/[step]/page.tsx`](app/(app)/create/[step]/page.tsx)~~ — replaced by [`app/(app)/create/[screenId]/page.tsx`](app/(app)/create/[screenId]/page.tsx) with real screens; unknown slugs `notFound()`.
 3. ~~Unify **step source of truth** / **resume after `SignedInDraftHydration`~~ — moved to **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (profile lists drafts, continue at last step, new rule vs server draft; see `docs/create-flow.md` known gaps).
-4. Wire [`CreateFlowFooter`](app/components/utility/CreateFlowFooter/) `ProportionBar` to step progress from `FLOW_STEP_ORDER` (and `review-template` / `completed` exceptions per design); optional **two-level progress** (stage + step within stage) when design specifies.
+4. Wire [`CreateFlowFooter`](app/components/navigation/CreateFlowFooter/) `ProportionBar` to step progress from `FLOW_STEP_ORDER` (and `review-template` / `completed` exceptions per design); optional **two-level progress** (stage + step within stage) when design specifies.
 5. When Figma hands off, surface **stage labels** in create shell (top nav, footer, or step chrome) using the mapping in `create-flow.md`.
 
 **Acceptance criteria:**
@@ -342,7 +342,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - [x] Footer progress reflects step index via `getProportionBarProgressForCreateFlowStep` (optional stage labels still Figma-dependent).
 - [x] Template **Customize** prefill is documented (maps template body to `selected*Ids` + `coreValuesChipsSnapshot`, routes to `core-values` when Community has data else `informational`); full template-customize-from-mid-wizard entry beyond `core-values` stays deferred.
 
-**Files:** [`docs/create-flow.md`](create-flow.md), [`app/(app)/create/`](app/(app)/create/), [`app/components/utility/CreateFlowFooter/`](app/components/utility/CreateFlowFooter/), optionally [`docs/backend-roadmap.md`](backend-roadmap.md) §12 cross-links.
+**Files:** [`docs/create-flow.md`](create-flow.md), [`app/(app)/create/`](app/(app)/create/), [`app/components/navigation/CreateFlowFooter/`](app/components/navigation/CreateFlowFooter/), optionally [`docs/backend-roadmap.md`](backend-roadmap.md) §12 cross-links.
 
 **Linear:** [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo) **Done**. Open-ended draft/hydration work: **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)**. **Parallel** to templates (7–8) and publish (6); not part of **CR-72 → CR-83**.
 
@@ -411,7 +411,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 - **Communication / Membership / Conflict management / Decision approaches** (card-style screens, e.g. [`CommunicationMethodsScreen.tsx`](../../app/(app)/create/screens/card/CommunicationMethodsScreen.tsx)) — there is **no `Add custom method` affordance**. The inline `add` link in the page description (`messages/en/create/customRule/*.json`, `compactDescriptionLinkLabel: "add"`) only toggles `setExpanded(true)` on the card stack — it shows more preset cards, it does **not** open a creation modal.
 - **Confirm stakeholders** — multiselect-style add (free-text chip), pending real invite work in **Ticket 18 / CR-90**.
 - **Community structure** — multiselect-style add (free-text chip).
-- **Final Review** ([`FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx)) — renders `<RuleCard categories=…>` and only wires `onChipClick`. `category.onAddClick` is **not provided**, so the `+` button on each MultiSelect category renders by default (`addButton={!hideCategoryAddButton}` in [`RuleCard.view.tsx`](../../app/components/cards/RuleCard/RuleCard.view.tsx)) but **does nothing** when clicked. Dead control we are shipping today.
+- **Final Review** ([`FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx)) — renders `<Rule categories=…>` and only wires `onChipClick`. `category.onAddClick` is **not provided**, so the `+` button on each MultiSelect category renders by default (`addButton={!hideCategoryAddButton}` in [`Rule.view.tsx`](../../app/components/cards/Rule/Rule.view.tsx)) but **does nothing** when clicked. Dead control we are shipping today.
 
 **Open product questions (block implementation until resolved):**
 
@@ -426,7 +426,7 @@ _Section B — Final Review screen `+` button per category:_
 1. Pick one:
    - **Option 1 — fresh modal in place.** Clicking `+` opens [`FinalReviewChipEditModal`](../../app/(app)/create/components/FinalReviewChipEditModal.tsx) seeded empty for the category. On Save, append a new chip and write through to the matching `*MethodDetailsById` (or `coreValueDetailsByChipId` + snapshot) map, matching the editable chip flow that just shipped.
    - **Option 2 — bounce back to the source step.** Navigate the user to the corresponding custom-rule step (e.g. communication chip `+` → `/create/communication`) so they add via the existing card-page flow, then return to Final Review.
-   - **Option 3 — hide the button.** Pass `hideCategoryAddButton` to the Final Review `<RuleCard>` so the dead control disappears until product knows what they want.
+   - **Option 3 — hide the button.** Pass `hideCategoryAddButton` to the Final Review `<Rule>` so the dead control disappears until product knows what they want.
 2. If Option 1, what is the empty state of the modal (title only, all fields, recommended seeds)?
 3. If Option 2, how do we preserve the user's place on Final Review so they can come back without re-confirming everything?
 4. Does the answer differ for `coreValues` vs the four method categories? (Different edit-fields components, different state slices.)
@@ -436,7 +436,7 @@ _Section B — Final Review screen `+` button per category:_
 1. **Product + design pass** answering Sections A and B; produce Figma for whichever options win on each affected page and on Final Review.
 2. **Custom-rule card pages (if Option A1 wins):** add an `Add custom <method>` button alongside the card stack on each of the four pages. Reuse the page's `*EditFields` component inside a `customPending`-style modal (same dismiss-drops / confirm-persists semantics as `CoreValuesSelectScreen`). Persist into the matching `*MethodDetailsById` slice and selected-id list.
 3. **Final Review (if Option B1 wins):** wire `category.onAddClick` per category in [`FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx) → open `FinalReviewChipEditModal` seeded empty for the matching `groupKey`, with a `customPending` mode that drops the new entry on dismiss and persists on Save (parity with the current chip-edit flow).
-4. **Final Review (if Option B3 wins, interim):** pass `hideCategoryAddButton` to the Final Review `<RuleCard>` so the no-op `+` is removed.
+4. **Final Review (if Option B3 wins, interim):** pass `hideCategoryAddButton` to the Final Review `<Rule>` so the no-op `+` is removed.
 5. **i18n:** add copy for the new buttons, modal headers, validation, and confirmation/discard prompts under `messages/en/create/customRule/*.json` and `messages/en/create/reviewAndComplete/finalReview.json`.
 6. **Tests:** Vitest component tests covering dismiss-drops vs confirm-persists for each new modal (mirror the new `CoreValuesSelectScreen.test.tsx` `custom chip — confirmed vs dismissed` pair).
 
@@ -453,7 +453,7 @@ _Section B — Final Review screen `+` button per category:_
 - [ ] If Option B3 (interim) ships first: the Final Review `+` is no longer rendered (no dead controls).
 - [ ] Once Option A1 / B1 are picked: implementation tickets file under this one with `customPending` parity and tests, no regressions to the existing chip-edit flow.
 
-**Files (reference):** [`app/(app)/create/screens/card/CommunicationMethodsScreen.tsx`](../../app/(app)/create/screens/card/CommunicationMethodsScreen.tsx), [`MembershipMethodsScreen.tsx`](../../app/(app)/create/screens/card/MembershipMethodsScreen.tsx), [`ConflictManagementScreen.tsx`](../../app/(app)/create/screens/card/ConflictManagementScreen.tsx), [`right-rail/DecisionApproachesScreen.tsx`](../../app/(app)/create/screens/right-rail/DecisionApproachesScreen.tsx), [`select/CoreValuesSelectScreen.tsx`](../../app/(app)/create/screens/select/CoreValuesSelectScreen.tsx), [`review/FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx), [`components/FinalReviewChipEditModal.tsx`](../../app/(app)/create/components/FinalReviewChipEditModal.tsx), [`components/methodEditFields/`](../../app/(app)/create/components/methodEditFields/), [`components/cards/RuleCard/RuleCard.view.tsx`](../../app/components/cards/RuleCard/RuleCard.view.tsx).
+**Files (reference):** [`app/(app)/create/screens/card/CommunicationMethodsScreen.tsx`](../../app/(app)/create/screens/card/CommunicationMethodsScreen.tsx), [`MembershipMethodsScreen.tsx`](../../app/(app)/create/screens/card/MembershipMethodsScreen.tsx), [`ConflictManagementScreen.tsx`](../../app/(app)/create/screens/card/ConflictManagementScreen.tsx), [`right-rail/DecisionApproachesScreen.tsx`](../../app/(app)/create/screens/right-rail/DecisionApproachesScreen.tsx), [`select/CoreValuesSelectScreen.tsx`](../../app/(app)/create/screens/select/CoreValuesSelectScreen.tsx), [`review/FinalReviewScreen.tsx`](../../app/(app)/create/screens/review/FinalReviewScreen.tsx), [`components/FinalReviewChipEditModal.tsx`](../../app/(app)/create/components/FinalReviewChipEditModal.tsx), [`components/methodEditFields/`](../../app/(app)/create/components/methodEditFields/), [`components/cards/Rule/Rule.view.tsx`](../../app/components/cards/Rule/Rule.view.tsx).
 
 **Linear:** [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final) (**Backlog**). Sibling product/design ticket to **CR-90** (same "copy promises a feature, UI doesn't deliver" pattern). **Parallel** to the CR-72 → CR-83 chain; not on the critical path.
 

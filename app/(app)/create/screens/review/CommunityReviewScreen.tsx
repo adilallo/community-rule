@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import RuleCard from "../../../../components/cards/RuleCard";
+import Rule from "../../../../components/cards/Rule";
 import { useTranslation } from "../../../../contexts/MessagesContext";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { useCreateFlow } from "../../context/CreateFlowContext";
@@ -12,6 +12,10 @@ import {
   CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
 } from "../../components/createFlowLayoutTokens";
+import {
+  getAssetPath,
+  vectorMarkPath,
+} from "../../../../../lib/assetUtils";
 
 /**
  * Targets for a `pendingTemplateAction` redirect. Customize resumes the
@@ -90,13 +94,13 @@ export function CommunityReviewScreen() {
           />
         </div>
         <div className={CREATE_FLOW_MD_UP_GRID_CELL_CLASS}>
-          <RuleCard
+          <Rule
             title={cardTitle}
             description={cardDescription}
             size={lgUp ? "L" : "M"}
             expanded={false}
             backgroundColor="bg-[var(--color-teal-teal50,#c9fef9)]"
-            logoUrl="/assets/Vector_MutualAid.svg"
+            logoUrl={getAssetPath(vectorMarkPath("mutual-aid"))}
             logoAlt={cardTitle}
             className="rounded-[24px]"
           />

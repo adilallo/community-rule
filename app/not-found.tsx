@@ -2,7 +2,7 @@ import Link from "next/link";
 import messages from "../messages/en/index";
 import { getTranslation } from "../lib/i18n/getTranslation";
 import { getGovernanceTemplateCatalogEntry } from "../lib/templates/governanceTemplateCatalog";
-import Icon from "./components/asset/Icon";
+import Icon from "./components/asset/icon";
 import Button from "./components/buttons/Button";
 import HeroDecor from "./components/sections/HeroBanner/HeroDecor";
 
@@ -17,7 +17,7 @@ const NOT_FOUND_TEMPLATE_SLUGS = [
  * Figma: 404 page frame 22078-808557; 480px lockup 22078-808903; title + CTA group 22078-808908
  * (filled / Go home left, outline / Browse right, 16px between).
  * Same [HeroDecor](app/components/sections/HeroBanner/HeroDecor.tsx) SVG as home; 404 places it only behind the title stack.
- * Shell: [app/layout.tsx](app/layout.tsx) `TopNav` only — no site footer.
+ * Shell: [app/layout.tsx](app/layout.tsx) `Top` only — no site footer.
  * Template chip row: Figma 22078-809968 — one row, 16px gaps, 20px to hint (no inner scroll; page handles overflow if needed).
  * Hero pattern: behind the 404 + bar + h1; wide SVG is painted with overflow-x-clip on `main` so it does not widen the scrollport.
  */

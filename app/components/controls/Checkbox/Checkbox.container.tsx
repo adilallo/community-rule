@@ -6,7 +6,7 @@ import { CheckboxView } from "./Checkbox.view";
 import type { CheckboxProps } from "./Checkbox.types";
 
 /**
- * Figma: "Control / Checkbox" (TODO(figma)). Single boolean checkbox with
+ * Figma: "Control / Checkbox". Single boolean checkbox with
  * optional label, supporting standard and inverse modes.
  */
 const CheckboxContainer = memo<CheckboxProps>(

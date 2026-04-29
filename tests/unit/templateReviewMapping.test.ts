@@ -7,7 +7,7 @@ import {
 } from "../../lib/create/templateReviewMapping";
 
 describe("templateReviewMapping", () => {
-  it("maps body sections to RuleCard categories", () => {
+  it("maps body sections to Rule categories", () => {
     const body = {
       sections: [
         {

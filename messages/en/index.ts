@@ -1,13 +1,13 @@
 import common from "./common.json";
 import heroBanner from "./components/heroBanner.json";
-import numberedCards from "./components/numberedCards.json";
+import cardSteps from "./components/cardSteps.json";
 import askOrganizer from "./components/askOrganizer.json";
 import featureGrid from "./components/featureGrid.json";
 import footer from "./components/footer.json";
 import header from "./components/header.json";
 import homeHeader from "./components/homeHeader.json";
 import languageSwitcher from "./components/languageSwitcher.json";
-import menuBar from "./components/menuBar.json";
+import menu from "./components/menu.json";
 import quoteBlock from "./components/quoteBlock.json";
 import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
@@ -54,14 +54,14 @@ import createTemplateReview from "./create/templateReview.json";
 export default {
   common,
   heroBanner,
-  numberedCards,
+  cardSteps,
   askOrganizer,
   featureGrid,
   footer,
   header,
   homeHeader,
   languageSwitcher,
-  menuBar,
+  menu,
   quoteBlock,
   ruleCard,
   ruleStack,

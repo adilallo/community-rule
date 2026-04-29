@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import Logo from "../../app/components/asset/logo";
+import Logo from "../../app/components/asset/Logo";
 import {
   componentTestSuite,
   ComponentTestSuiteConfig,

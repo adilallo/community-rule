@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
-import InfoMessageBox from "../../app/components/utility/InfoMessageBox";
+import InfoMessageBox from "../../app/components/controls/InfoMessageBox";
 
 describe("InfoMessageBox", () => {
   const items = [

@@ -179,7 +179,7 @@ describe("RuleStack Component", () => {
     expect(grid).toHaveClass("min-[768px]:grid", "min-[768px]:grid-cols-2");
   });
 
-  test("renders RuleCard components with catalog surface colors", async () => {
+  test("renders Rule components with catalog surface colors", async () => {
     render(<RuleStack />);
     await waitForRuleStackCards();
 

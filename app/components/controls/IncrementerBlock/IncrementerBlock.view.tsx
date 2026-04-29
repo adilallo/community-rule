@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Incrementer from "../Incrementer";
-import InputLabel from "../../utility/InputLabel";
+import InputLabel from "../../type/InputLabel";
 import type { IncrementerBlockViewProps } from "./IncrementerBlock.types";
 
 function IncrementerBlockView({

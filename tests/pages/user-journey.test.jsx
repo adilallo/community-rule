@@ -57,7 +57,7 @@ describe("User Journey Integration", () => {
     const learnButton = learnButtons[0];
     await user.click(learnButton);
 
-    // Wait for dynamically imported NumberedCards component
+    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
     });
@@ -77,14 +77,14 @@ describe("User Journey Integration", () => {
     expect(screen.getByText("Petition")).toBeInTheDocument();
 
     // User clicks on a governance type to create a rule
-    const createButtons = screen.getAllByRole("button", {
-      name: "Create CommunityRule",
+    const seeHowButtons = screen.getAllByRole("button", {
+      name: "See how it works",
     });
-    expect(createButtons.length).toBeGreaterThan(0);
+    expect(seeHowButtons.length).toBeGreaterThan(0);
 
-    await user.click(createButtons[0]);
+    await user.click(seeHowButtons[0]);
     // Button should remain interactive
-    expect(createButtons[0]).toBeInTheDocument();
+    expect(seeHowButtons[0]).toBeInTheDocument();
   });
 
   test("user navigates through the application using header navigation", async () => {
@@ -127,10 +127,10 @@ describe("User Journey Integration", () => {
     expect(askLink).toHaveAttribute("href", "#contact");
   });
 
-  test("user explores the process through numbered cards", async () => {
+  test("user explores the process through CardSteps", async () => {
     render(<Page />);
 
-    // Wait for dynamically imported NumberedCards component
+    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       expect(
         screen.getByText("Document how your community makes decisions"),
@@ -278,10 +278,10 @@ describe("User Journey Integration", () => {
     ).toBeInTheDocument();
 
     // 6. User can take action
-    const createButtons = screen.getAllByRole("button", {
-      name: "Create CommunityRule",
+    const seeHowButtons = screen.getAllByRole("button", {
+      name: "See how it works",
     });
-    expect(createButtons.length).toBeGreaterThan(0);
+    expect(seeHowButtons.length).toBeGreaterThan(0);
 
     // 7. User can get help if needed
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();

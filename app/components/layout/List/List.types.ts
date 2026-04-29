@@ -1,4 +1,4 @@
-import type { IconName } from "../../asset/Icon";
+import type { IconName } from "../../asset/icon";
 import type {
   ListEntryVariant,
   ListSize,

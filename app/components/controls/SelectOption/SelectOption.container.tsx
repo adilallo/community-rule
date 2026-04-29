@@ -5,7 +5,7 @@ import { SelectOptionView } from "./SelectOption.view";
 import type { SelectOptionProps } from "./SelectOption.types";
 
 /**
- * Figma: "Control / SelectOption" (TODO(figma)). Single option row rendered
+ * Figma: "Control / SelectOption". Single option row rendered
  * inside `SelectInput`'s dropdown menu.
  */
 const SelectOptionContainer = forwardRef<HTMLDivElement, SelectOptionProps>(

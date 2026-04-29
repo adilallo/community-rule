@@ -24,7 +24,7 @@ import {
   useFacetRecommendations,
 } from "../../hooks/useFacetRecommendations";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
-import CardStack from "../../../../components/utility/CardStack";
+import CardStack from "../../../../components/cards/CardStack";
 import Create from "../../../../components/modals/Create";
 import InlineTextButton from "../../../../components/buttons/InlineTextButton";
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";

@@ -26,16 +26,15 @@ describe("Create flow decision-approaches page", () => {
   test("renders sidebar description with add link", () => {
     render(<DecisionApproachesScreen />);
 
-    const description = screen.getByText((content, element) => {
-      if (element?.tagName !== "P") return false;
-      const text = element.textContent ?? "";
-      return (
-        text.includes("Select as many as you need") &&
-        text.includes("add") &&
-        text.includes("new decision making approaches")
-      );
+    const addControl = screen.getByRole("button", {
+      name: /^add$/,
     });
-    expect(description).toBeInTheDocument();
+    expect(addControl).toBeInTheDocument();
+
+    const description = addControl.parentElement;
+    expect(description).not.toBeNull();
+    expect(description?.textContent).toMatch(/Select as many as you need/);
+    expect(description?.textContent).toMatch(/new decision making approaches/);
   });
 
   test("renders message box with title and checkboxes", () => {

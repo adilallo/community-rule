@@ -5,7 +5,7 @@ import { ToggleView } from "./Toggle.view";
 import type { ToggleProps } from "./Toggle.types";
 
 /**
- * Figma: "Control / Toggle" (TODO(figma)). Pill-shaped toggle button with
+ * Figma: "Control / Toggle". Pill-shaped toggle button with
  * checked/unchecked states and optional leading icon and text.
  */
 const ToggleContainer = forwardRef<HTMLButtonElement, ToggleProps>(

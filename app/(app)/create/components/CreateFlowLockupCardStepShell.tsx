@@ -8,8 +8,8 @@ import {
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
 } from "./createFlowLayoutTokens";
 
-/** Shared `RuleCard` / template card chrome: width + radius; padding comes from `RuleCard` (L+expanded = 24px). */
-export const CREATE_FLOW_REVIEW_RULE_CARD_LAYOUT_CLASS =
+/** Shared `Rule` / template card chrome: width + radius; padding comes from `Rule` (L+expanded = 24px). */
+export const CREATE_FLOW_REVIEW_RULE_LAYOUT_CLASS =
   "w-full min-w-0 rounded-[12px] md:rounded-[24px] md:max-w-[640px]";
 
 type CreateFlowLockupCardStepShellProps = {

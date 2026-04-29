@@ -3,7 +3,7 @@ import {
   componentTestSuite,
   type ComponentTestSuiteConfig,
 } from "../utils/componentTestSuite";
-import ModalHeader from "../../app/components/utility/ModalHeader";
+import ModalHeader from "../../app/components/modals/ModalHeader";
 
 type Props = React.ComponentProps<typeof ModalHeader>;
 
