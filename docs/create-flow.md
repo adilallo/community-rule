@@ -43,9 +43,19 @@ Order is defined in code by [`FLOW_STEP_ORDER`](../app/(app)/create/utils/flowSt
 | 15 | Review and complete | `final-review` | `/create/final-review` |
 | 16 | Review and complete | `completed` | `/create/completed` |
 
-**Primary entry:** marketing header “Create rule” navigates to **`/create`**, which redirects to **`/create/informational`** (see [`Top.container.tsx`](../app/components/navigation/Top/Top.container.tsx)).
+**Primary entry:** marketing header **Create rule** and profile **Create new custom Rule** both run **`prepareFreshCreateFlowEntry`** then navigate to **`/create`**, which redirects to **`/create/informational`** (see [`Top.container.tsx`](../app/components/navigation/Top/Top.container.tsx) and [`ProfilePageClient.tsx`](../app/(app)/profile/ProfilePageClient.tsx)).
 
 Active step for chrome and navigation is resolved from the pathname via [`parseCreateFlowScreenFromPathname`](../app/(app)/create/utils/flowSteps.ts) inside [`useCreateFlowNavigation`](../app/(app)/create/hooks/useCreateFlowNavigation.ts).
+
+### Fresh start vs continue draft (signed-in + sync)
+
+**Established pattern:** anonymous and signed-in users should see the **same** wizard when starting a **new** rule from marketing or profile: empty state at the first step, with no surprise reload of old work. Signed-in users additionally get **Save & Exit** and **publish**; their in-progress payload may also live on **`/api/drafts/me`** when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`.
+
+- **New rule entry** (always a clean slate): call [`prepareFreshCreateFlowEntry`](../app/(app)/create/utils/prepareFreshCreateFlowEntry.ts) **before** `router.push` into `/create` or `/create/review-template/...`. It clears **`create-flow-anonymous`** and the core-value-details `localStorage` key; when sync is on, it **`DELETE`s `/api/drafts/me`** so [`SignedInDraftHydration`](../app/(app)/create/SignedInDraftHydration.tsx) does not rehydrate a stale server draft after local storage was wiped.
+- **Continue saved draft** (profile): do **not** call `prepareFreshCreateFlowEntry`. Clear the same `localStorage` keys **only** (see [`ProfilePageClient`](../app/(app)/profile/ProfilePageClient.tsx) `handleContinueDraft`) so the client mirror is empty, then navigate to **`/create/{savedStep}`**. Hydration loads the server draft; the URL may be corrected to `currentStep` when it differs from the path.
+- **Local-only wipe** without touching the server: [`clearCreateFlowPersistedDrafts`](../app/(app)/create/utils/clearCreateFlowPersistedDrafts.ts) (same two `localStorage` keys). Prefer **`prepareFreshCreateFlowEntry`** for any user-facing “start new rule” navigation so signed-in + sync stays aligned with anonymous.
+
+Call sites for **`prepareFreshCreateFlowEntry`**: [`Top.container.tsx`](../app/components/navigation/Top/Top.container.tsx) (Create rule), profile **Create new custom Rule** ([`ProfilePageClient.tsx`](../app/(app)/profile/ProfilePageClient.tsx)), home **Popular templates** ([`RuleStack.container.tsx`](../app/components/sections/RuleStack/RuleStack.container.tsx)), and **direct** `/templates` template picks ([`TemplatesPageClient.tsx`](../app/(marketing)/templates/TemplatesPageClient.tsx)) when **`fromFlow` is absent**.
 
 ---
 
@@ -61,17 +71,17 @@ From that page, **Customize** pre-fills the custom-rule selections on the curren
 
 **Entering a template before community stage is done.** When `state.title` is empty, both handlers apply their side effects eagerly (prefill for Customize; `sections` + `summary` for Use without changes) *and* pin a `pendingTemplateAction: { slug, mode }` on `CreateFlowState` before routing to `/create/informational`. Once the user reaches `/create/review`, [`CommunityReviewScreen`](../app/(app)/create/screens/review/CommunityReviewScreen.tsx) reads the action on mount, clears it via `updateState`, and `router.replace`s past itself — to `/create/core-values` for `customize`, `/create/confirm-stakeholders` for `useWithoutChanges`. The user never sees the community-review page in that flow because their intent was already expressed at the template-review step. `replace` (not `push`) keeps `community-save` as the Back-button target from the destination. The action is cleared on the first fire so later direct visits to `/create/review` render normally.
 
-**Direct entry vs in-flow template pick.** The same `/create/review-template/[slug]` URL is reached from two different origins. We disambiguate at the *click site*, not on the review-template page, using [`clearCreateFlowPersistedDrafts`](../app/(app)/create/utils/clearCreateFlowPersistedDrafts.ts) — a tiny helper that wipes the anonymous draft from `localStorage` (both `create-flow-anonymous` and the core-value-details key) **before** the navigation fires. Because `CreateFlowProvider` reads `localStorage` in its `useState` initializer, the provider mounts empty and `handleCustomizeTemplate` / `handleUseTemplateWithoutChanges` naturally take the no-community branch — no per-handler marker plumbing needed.
+**Direct entry vs in-flow template pick.** The same `/create/review-template/[slug]` URL is reached from two different origins. We disambiguate at the *click site*, not on the review-template page. **Direct** picks call [`prepareFreshCreateFlowEntry`](../app/(app)/create/utils/prepareFreshCreateFlowEntry.ts) **before** navigation (local + server draft when sync is on — see **Fresh start vs continue draft** above). **In-flow** picks skip that call so the user’s community-stage state survives the detour. Because `CreateFlowProvider` reads `localStorage` in its `useState` initializer, clearing **before** `push` means a direct entry mounts without stale anonymous keys; signed-in users also avoid a stale server draft overwriting the empty mirror.
 
 | Origin | Click-site behavior | URL the user lands on |
 | --- | --- | --- |
-| Home marketing "Popular templates" ([`RuleStack.container.tsx`](../app/components/sections/RuleStack/RuleStack.container.tsx)) | always calls `clearCreateFlowPersistedDrafts()` | `/create/review-template/[slug]` |
-| `/templates` index ([`TemplatesPageClient.tsx`](../app/(marketing)/templates/TemplatesPageClient.tsx)) visited directly / via pasted URL | `fromFlow` absent → calls `clearCreateFlowPersistedDrafts()` | `/create/review-template/[slug]` |
-| In-flow: `/create/review` footer "Create from template" → `/templates?fromFlow=1` → template click | `fromFlow=1` → skips the clear | `/create/review-template/[slug]` |
+| Home marketing "Popular templates" ([`RuleStack.container.tsx`](../app/components/sections/RuleStack/RuleStack.container.tsx)) | always `await prepareFreshCreateFlowEntry()` then navigate | `/create/review-template/[slug]` |
+| `/templates` index ([`TemplatesPageClient.tsx`](../app/(marketing)/templates/TemplatesPageClient.tsx)) visited directly / via pasted URL | `fromFlow` absent → `await prepareFreshCreateFlowEntry()` then navigate | `/create/review-template/[slug]` |
+| In-flow: `/create/review` footer "Create from template" → `/templates?fromFlow=1` → template click | `fromFlow=1` → no fresh-entry prep | `/create/review-template/[slug]` |
 
 Only one `?fromFlow=1` marker exists, on one hop (`/create/review` → `/templates`). It is not forwarded onto the review-template URL. The review-template handlers branch solely on `state.title` — they don't need to know the origin.
 
-Server drafts (`/api/drafts/me`) are **not** touched here. Per product plan they are not auto-hydrated into the create flow; users select and load a specific saved draft from the profile page. So wiping `localStorage` is sufficient for the "fresh slate" invariant.
+**Resume from profile** remains explicit-only: **Continue** clears local mirrors then opens `/create/{step}` so [`SignedInDraftHydration`](../app/(app)/create/SignedInDraftHydration.tsx) can load `/api/drafts/me` when the client buffer is empty. There is no automatic “pick template from marketing → silently merge server draft” path.
 
 **Final-review Rule category chips** are derived from `CreateFlowState` via [`buildFinalReviewCategoriesFromState`](../lib/create/buildFinalReviewCategories.ts): for the Customize / plain custom-rule path it resolves `selected{Communication,Membership,DecisionApproach,ConflictManagement}MethodIds` against the curated method presets in `messages/en/create/customRule/*.json`, and `buildCoreValuesForDocument` supplies the `Values` row from `coreValuesChipsSnapshot` + `selectedCoreValueIds`. For the Use-without-changes path the template body lives in `state.sections`; the helper renders `categoryName` + entry titles directly. The demo chips shipped in `finalReview.json` remain the fallback only when nothing in state resolves to any chip (e.g. direct navigation for development).
 
@@ -92,7 +102,7 @@ Details and edge cases (conflict confirm, banners, `?syncDraft=1`) match **Ticke
 
 ## Known implementation gaps
 
-- **Profile + drafts (CR-86):** The profile page lists the server draft, **Continue** deep-links to `/create/{currentStep}`, and **Start new rule** clears local + server draft before opening the wizard. `SignedInDraftHydration` calls `router.replace` to the saved step when it applies a server draft so the URL matches hydrated state. Remaining edge cases (e.g. template review routes) are handled when they surface in QA.
+- **Profile + drafts (CR-86):** The profile page lists the server draft. **Continue** clears anonymous `localStorage` (and core-value details) then deep-links to `/create/{currentStep}` so hydration loads the server draft. **Create new custom Rule** and marketing **Create rule** use **`prepareFreshCreateFlowEntry`** (local + `DELETE /api/drafts/me` when sync is on) before opening the wizard so signed-in behavior matches a fresh anonymous start. `SignedInDraftHydration` may `router.replace` to the saved step when it applies a server draft so the URL matches hydrated state. Remaining edge cases (e.g. template review routes) are handled when they surface in QA.
 - **Inner “text/select shells”:** deferred until Create Community is stable; screens use **`CreateFlowStepShell`** only for Stage 1.
 
 ---

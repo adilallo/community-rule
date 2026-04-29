@@ -27,8 +27,10 @@ const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
  * server draft on top would clobber unsaved keystrokes with a stale snapshot.
  *
  * Server draft becomes authoritative only when localStorage is empty — i.e.
- * fresh device, after explicit Save & Exit (which clears localStorage), or
- * after Exit-from-completed clears local state.
+ * fresh device, after explicit Save & Exit (which clears localStorage),
+ * after Exit-from-completed clears local state, or after
+ * {@link prepareFreshCreateFlowEntry} (Create rule / new template entry) clears
+ * local + deletes the server draft when sync is on.
  *
  * Skips when `?syncDraft=1` or transfer-pending — {@link PostLoginDraftTransfer}
  * owns that path.

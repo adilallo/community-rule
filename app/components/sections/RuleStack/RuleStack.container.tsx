@@ -3,7 +3,7 @@
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { logger } from "../../../../lib/logger";
-import { clearCreateFlowPersistedDrafts } from "../../../(app)/create/utils/clearCreateFlowPersistedDrafts";
+import { prepareFreshCreateFlowEntry } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import {
   fetchTemplates,
   isTemplatesFetchAborted,
@@ -90,12 +90,12 @@ const RuleStackContainer = memo<RuleStackProps>(
       }
     }
     logger.debug(`${slug} template clicked`);
-    // Marketing entry is always a *fresh* create-flow start: wipe any
-    // in-progress anonymous draft so a stale community name/structure from
-    // an earlier abandoned session can't short-circuit the `state.title`
-    // check in `handleCustomizeTemplate` / `handleUseTemplateWithoutChanges`.
-    clearCreateFlowPersistedDrafts();
-    router.push(`/create/review-template/${encodeURIComponent(slug)}`);
+    // Marketing home “Popular templates”: same fresh start as Top “Create rule”
+    // (local + server draft when sync) so stale state cannot break template apply.
+    void (async () => {
+      await prepareFreshCreateFlowEntry();
+      router.push(`/create/review-template/${encodeURIComponent(slug)}`);
+    })();
   };
 
   return (

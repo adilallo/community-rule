@@ -1,6 +1,6 @@
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import Top from "../../app/components/navigation/Top";
@@ -92,10 +92,12 @@ describe('Top "Create rule" button', () => {
     });
     await userEvent.click(btn);
 
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith("/create");
+    });
     expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBeNull();
     expect(
       window.localStorage.getItem(CORE_VALUE_DETAILS_STORAGE_KEY),
     ).toBeNull();
-    expect(pushMock).toHaveBeenCalledWith("/create");
   });
 });

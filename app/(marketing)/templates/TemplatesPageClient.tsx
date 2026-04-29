@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import { GovernanceTemplateGrid } from "../../components/sections/GovernanceTemplateGrid";
 import type { TemplateGridCardEntry } from "../../../lib/templates/templateGridPresentation";
-import { clearCreateFlowPersistedDrafts } from "../../(app)/create/utils/clearCreateFlowPersistedDrafts";
+import { prepareFreshCreateFlowEntry } from "../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import { buildTemplateReviewHref } from "../../(app)/create/utils/flowSteps";
 import { useTranslation } from "../../contexts/MessagesContext";
 
@@ -83,11 +83,13 @@ function TemplatesGrid({
       entries={entries}
       onTemplateClick={(slug) => {
         if (!fromFlow) {
-          // Direct entry to `/templates`: treat template click as a fresh
-          // create-flow start and wipe any stale anonymous draft before
-          // navigating. In-flow entry (`?fromFlow=1`) skips the clear so
-          // the user's community stage survives the detour through here.
-          clearCreateFlowPersistedDrafts();
+          void (async () => {
+            await prepareFreshCreateFlowEntry();
+            router.push(
+              buildTemplateReviewHref(slug, { fromCreateWizard: fromFlow }),
+            );
+          })();
+          return;
         }
         router.push(
           buildTemplateReviewHref(slug, { fromCreateWizard: fromFlow }),

@@ -9,8 +9,7 @@ import Button from "../../buttons/Button";
 import AvatarContainer from "../../asset/AvatarContainer";
 import Avatar from "../../asset/Avatar";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
-import { clearAnonymousCreateFlowStorage } from "../../../(app)/create/utils/anonymousDraftStorage";
-import { clearCoreValueDetailsLocalStorage } from "../../../(app)/create/utils/coreValueDetailsLocalStorage";
+import { prepareFreshCreateFlowEntry } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import { TopView } from "./Top.view";
 import type { TopProps, NavSize } from "./Top.types";
 
@@ -45,16 +44,16 @@ const TopContainer = memo<TopProps>(
 
     /**
      * `Top` is hidden on `/create` routes by ConditionalNavigationClient, so
-     * this button is always clicked from outside the wizard — there is no
-     * mounted CreateFlowProvider to reset. Wiping the anonymous draft keys
-     * here guarantees a fresh start; the provider that mounts on `/create`
-     * will read empty storage. Server drafts (signed-in Save & Exit) are
-     * left alone — they're intentional persistence the user opted into.
+     * this button is always clicked from outside the wizard. Clears anonymous
+     * `localStorage` and, when backend sync is on, deletes the server draft
+     * so signed-in users get the same fresh start as guests (see
+     * {@link prepareFreshCreateFlowEntry}).
      */
     const handleCreateRuleClick = useCallback(() => {
-      clearAnonymousCreateFlowStorage();
-      clearCoreValueDetailsLocalStorage();
-      router.push("/create");
+      void (async () => {
+        await prepareFreshCreateFlowEntry();
+        router.push("/create");
+      })();
     }, [router]);
 
     // Schema markup for site navigation

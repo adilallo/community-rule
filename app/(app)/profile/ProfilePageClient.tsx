@@ -22,6 +22,8 @@ import {
 } from "../create/utils/flowSteps";
 import type { CreateFlowStep } from "../create/types";
 import { clearAnonymousCreateFlowStorage } from "../create/utils/anonymousDraftStorage";
+import { clearCoreValueDetailsLocalStorage } from "../create/utils/coreValueDetailsLocalStorage";
+import { prepareFreshCreateFlowEntry } from "../create/utils/prepareFreshCreateFlowEntry";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import {
   ProfilePageSignedOutView,
@@ -245,8 +247,17 @@ export default function ProfilePageClient() {
   const handleContinueDraft = useCallback(() => {
     if (draft == null || !draft.hasDraft) return;
     const step = resolveContinueStepState(draft.state);
+    clearAnonymousCreateFlowStorage();
+    clearCoreValueDetailsLocalStorage();
     router.push(`/create/${step}`);
   }, [draft, router]);
+
+  const handleStartNewCustomRule = useCallback(() => {
+    void (async () => {
+      await prepareFreshCreateFlowEntry();
+      router.push("/create");
+    })();
+  }, [router]);
 
   const handleRequestDeleteDraft = useCallback(() => {
     setActionError(null);
@@ -360,6 +371,7 @@ export default function ProfilePageClient() {
       }}
       onCloseDeleteAccount={() => setAccountDeleteOpen(false)}
       onConfirmDeleteAccount={handleConfirmDeleteAccount}
+      onStartNewCustomRule={handleStartNewCustomRule}
     />
   );
 }

@@ -72,6 +72,8 @@ export type ProfilePageViewProps = {
   onDismissProfileSuccess: () => void;
   onDismissActionError: () => void;
   onDismissRulesError: () => void;
+  /** Clears local + server draft (when sync) then routes to `/create` — same fresh start as marketing “Create rule”. */
+  onStartNewCustomRule: () => void;
 };
 
 /**
@@ -199,6 +201,7 @@ export function ProfilePageView({
   onDismissProfileSuccess,
   onDismissActionError,
   onDismissRulesError,
+  onStartNewCustomRule,
 }: ProfilePageViewProps) {
   const t = useTranslation("pages.profile");
   const tLogin = useTranslation("pages.login");
@@ -213,7 +216,7 @@ export function ProfilePageView({
         id: "create-custom",
         title: t("optionCreateCustom"),
         description: "",
-        href: "/create",
+        onClick: onStartNewCustomRule,
         leadingIcon: "edit",
         showDescription: false,
       },
@@ -251,7 +254,7 @@ export function ProfilePageView({
         showDescription: false,
       },
     ];
-  }, [t, onSignOut, onOpenDeleteAccount, onOpenEmailChange]);
+  }, [t, onSignOut, onOpenDeleteAccount, onOpenEmailChange, onStartNewCustomRule]);
 
   const ruleCardShellClass =
     "w-full !max-w-full cursor-default !gap-3 !rounded-[12px] shadow-[0_0_48px_rgba(0,0,0,0.1)] lg:!rounded-[24px] lg:shadow-[0_0_24px_rgba(0,0,0,0.1)]";
