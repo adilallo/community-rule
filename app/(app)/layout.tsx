@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-// Signed-in product surfaces (`/create/*`, `/login`, `/profile`) intentionally
-// run without the marketing footer. Per-route chrome (e.g. CreateFlow's own
-// header/footer lockup) is composed in nested layouts.
+// Signed-in product surfaces (`/create/*`, `/login`) run without the marketing
+// footer. `/profile` adds it via `profile/layout.tsx`. Per-route chrome (e.g.
+// CreateFlow) is composed in nested layouts.
 export default function AppLayout({ children }: { children: ReactNode }) {
   return <main className="flex-1">{children}</main>;
 }

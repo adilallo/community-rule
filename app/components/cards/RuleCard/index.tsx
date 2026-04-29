@@ -1,2 +1,5 @@
 export { default } from "./RuleCard.container";
-export type { RuleCardProps } from "./RuleCard.types";
+export type {
+  RuleCardBottomLink,
+  RuleCardProps,
+} from "./RuleCard.types";

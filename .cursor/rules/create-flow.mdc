@@ -31,7 +31,7 @@ Reach for these before writing new markup:
 | Mid-paragraph "expand / see all" link button | `app/components/buttons/InlineTextButton` |
 | Help-icon + label above a control | `app/components/utility/InputLabel` (`helpIcon` prop) |
 | Toggle chip (dim-but-clickable) | `Chip` with `state="Disabled" disabled={false}` |
-| Card-click → structured creation modal | `Create` with `backdropVariant="loginYellow"` |
+| Card-click → structured creation modal | `Create` with `backdropVariant="blurredYellow"` |
 
 If a screen grows a 2nd inline copy of any pattern above, **extract a shared
 component** rather than duplicate. Local section components inside a screen

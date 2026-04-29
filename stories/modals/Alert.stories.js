@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import Alert from "../../app/components/modals/Alert";
+import {
+  ALERT_SIZE_OPTIONS,
+  ALERT_STATUS_OPTIONS,
+  ALERT_TYPE_OPTIONS,
+} from "../../lib/propNormalization";
 
 export default {
   title: "Components/Modals/Alert",
@@ -7,12 +12,17 @@ export default {
   argTypes: {
     status: {
       control: { type: "select" },
-      options: ["default", "positive", "warning", "danger"],
+      options: [...ALERT_STATUS_OPTIONS],
     },
     type: {
       control: { type: "select" },
-      options: ["toast", "banner"],
+      options: [...ALERT_TYPE_OPTIONS],
     },
+    size: {
+      control: { type: "select" },
+      options: [...ALERT_SIZE_OPTIONS],
+    },
+    hasTrailingIcon: { control: { type: "boolean" } },
     title: {
       control: { type: "text" },
     },
@@ -109,6 +119,40 @@ TitleOnly.args = {
   title: "Short alert banner message goes here",
   status: "default",
   type: "toast",
+};
+
+export const ToastSmall = Template.bind({});
+ToastSmall.args = {
+  title: "Short alert toast message goes here",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  status: "default",
+  type: "toast",
+  size: "s",
+};
+
+export const BannerSmall = Template.bind({});
+BannerSmall.args = {
+  title: "Short alert banner message goes here",
+  description:
+    "Nascetur ipsum a nisi tempor cras nam neque volutpat. Aliquam id est faucibus nunc quis. Eleifend suspendisse.",
+  status: "positive",
+  type: "banner",
+  size: "s",
+};
+
+const NoDismissTemplate = (args) => (
+  <div className="p-8 max-w-[600px]">
+    <Alert {...args} />
+  </div>
+);
+export const BannerNoDismiss = NoDismissTemplate.bind({});
+BannerNoDismiss.args = {
+  title: "Non-dismissible banner (no onClose)",
+  description: "Used when the message clears via navigation or parent state only.",
+  status: "danger",
+  type: "banner",
+  size: "s",
 };
 
 export const AllStatuses = () => {

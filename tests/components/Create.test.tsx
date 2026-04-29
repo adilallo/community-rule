@@ -59,11 +59,11 @@ describe("Create", () => {
     }
   });
 
-  it("uses login yellow backdrop when backdropVariant is loginYellow", () => {
+  it("uses blurred yellow backdrop when backdropVariant is blurredYellow", () => {
     renderWithProviders(
       <Create
         {...defaultProps}
-        backdropVariant="loginYellow"
+        backdropVariant="blurredYellow"
         headerContent={<div>Header</div>}
       />,
     );

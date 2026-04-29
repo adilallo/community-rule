@@ -11,6 +11,7 @@ import { useCreateFlow } from "./context/CreateFlowContext";
 import { parseCreateFlowScreenFromPathname } from "./utils/flowSteps";
 import { saveDraftToServer } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
+import Alert from "../../components/modals/Alert";
 
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
@@ -139,12 +140,27 @@ export function PostLoginDraftTransfer({
 
   if (!transferError) return null;
 
+  const [titleLine, ...rest] = transferError.split(/\n\n+/);
+  const title = (titleLine ?? transferError).trim();
+  const description = rest.join("\n\n").trim() || undefined;
+
   return (
-    <div
-      role="alert"
-      className="mx-auto max-w-[640px] px-5 py-3 text-center font-inter text-sm text-[var(--color-border-default-utility-negative)]"
-    >
-      {transferError}
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[150] flex justify-center px-5 md:bottom-6">
+      <div className="pointer-events-auto w-full max-w-[640px]">
+        <Alert
+          type="banner"
+          status="danger"
+          size="s"
+          title={title}
+          description={description}
+          hasBodyText={Boolean(description)}
+          hasLeadingIcon
+          onClose={() => {
+            setTransferError(null);
+          }}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

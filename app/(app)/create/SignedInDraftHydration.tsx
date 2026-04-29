@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { CreateFlowState } from "./types";
 import { createFlowStateHasKeys } from "../../../lib/create/draftHydrationUtils";
 import {
@@ -11,6 +11,11 @@ import {
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { fetchDraftFromServer } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
+import Alert from "../../components/modals/Alert";
+import {
+  isValidStep,
+  parseCreateFlowScreenFromPathname,
+} from "./utils/flowSteps";
 
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
@@ -36,6 +41,8 @@ export function SignedInDraftHydration({
   sessionResolved: boolean;
 }) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const syncDraftParam = searchParams.get("syncDraft");
   const { replaceState, interactionTouched } = useCreateFlow();
   const touchedRef = useRef(interactionTouched);
@@ -82,7 +89,15 @@ export function SignedInDraftHydration({
         }
 
         if (serverDraft != null && createFlowStateHasKeys(serverDraft)) {
-          replaceState(serverDraft as CreateFlowState);
+          const next = serverDraft as CreateFlowState;
+          replaceState(next);
+          const saved = next.currentStep;
+          if (saved && isValidStep(saved)) {
+            const urlStep = parseCreateFlowScreenFromPathname(pathname ?? null);
+            if (urlStep !== saved) {
+              router.replace(`/create/${saved}`);
+            }
+          }
         }
         finishedUserIdRef.current = userId;
       } finally {
@@ -93,17 +108,31 @@ export function SignedInDraftHydration({
     return () => {
       cancelled = true;
     };
-  }, [sessionResolved, sessionUser, syncDraftParam, replaceState]);
+  }, [
+    sessionResolved,
+    sessionUser,
+    syncDraftParam,
+    replaceState,
+    pathname,
+    router,
+  ]);
 
   if (!loadingHydration) return null;
 
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className="w-full shrink-0 px-[var(--spacing-measures-spacing-500,20px)] py-[var(--spacing-measures-spacing-200,8px)] md:px-[var(--measures-spacing-1800,64px)] text-center font-inter text-sm text-[var(--color-text-default-secondary,#a3a3a3)]"
-    >
-      {messages.create.draftHydration.loadingSavedProgress}
+    <div className="pointer-events-none fixed left-0 right-0 top-14 z-[170] flex justify-center px-[var(--spacing-measures-spacing-500,20px)] pt-2 md:top-16 md:px-[var(--measures-spacing-1800,64px)]">
+      <div className="pointer-events-auto w-full max-w-[960px]">
+        <Alert
+          type="banner"
+          status="default"
+          size="s"
+          title={messages.create.draftHydration.loadingSavedProgress}
+          hasBodyText={false}
+          hasLeadingIcon={false}
+          hasTrailingIcon={false}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

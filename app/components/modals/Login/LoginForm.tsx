@@ -7,6 +7,7 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 import Button from "../../buttons/Button";
 import TextInput from "../../controls/TextInput";
 import ContentLockup from "../../type/ContentLockup";
+import Alert from "../Alert";
 import { requestMagicLink } from "../../../../lib/create/api";
 import { safeInternalPath } from "../../../../lib/safeInternalPath";
 import { setTransferPendingFlag } from "../../../(app)/create/utils/anonymousDraftStorage";
@@ -55,7 +56,6 @@ export default function LoginForm({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const formAlertId = useId();
   const emailErrorId = useId();
 
   const [email, setEmail] = useState("");
@@ -166,26 +166,40 @@ export default function LoginForm({
         />
       </div>
 
-      {urlErrorMessage ? (
-        <p
-          role="alert"
-          aria-live="polite"
-          className="text-center font-inter text-[14px] leading-[20px] text-[var(--color-border-default-utility-negative)]"
-        >
-          {urlErrorMessage}
-        </p>
-      ) : null}
-
-      {formError ? (
-        <p
-          id={formAlertId}
-          role="alert"
-          aria-live="polite"
-          className="font-inter text-[14px] leading-[20px] text-[var(--color-border-default-utility-negative)]"
-        >
-          {formError}
-        </p>
-      ) : null}
+      {(urlErrorMessage || formError) && (
+        <div className="pointer-events-none fixed inset-x-0 top-4 z-[10000] flex justify-center px-4 md:top-6">
+          <div className="pointer-events-auto flex w-full max-w-[560px] flex-col gap-2">
+            {urlErrorMessage ? (
+              <Alert
+                type="banner"
+                status="danger"
+                size="s"
+                title={urlErrorMessage}
+                hasBodyText={false}
+                hasLeadingIcon
+                onClose={() => {
+                  stripErrorQuery();
+                }}
+                className="w-full"
+              />
+            ) : null}
+            {formError ? (
+              <Alert
+                type="banner"
+                status="danger"
+                size="s"
+                title={formError}
+                hasBodyText={false}
+                hasLeadingIcon
+                onClose={() => {
+                  setFormError("");
+                }}
+                className="w-full"
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
 
       {!sent ? (
         <form

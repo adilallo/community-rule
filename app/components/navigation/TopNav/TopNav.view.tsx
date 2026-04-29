@@ -149,6 +149,12 @@ function TopNavView({
     );
   }
 
+  /**
+   * Standard marketing / app top nav.
+   * Figma: "Navigation / Top" (Community-Rule-System, node 22078-808559) — horizontal
+   * padding, logo ~200px left, menu cluster centered in the bar (`left-1/2` + translate),
+   * log in + create rule on the right. Breakpoints and MenuBar sizes unchanged from prior map.
+   */
   // Render standard variant (Header style)
   return (
     <>
@@ -157,52 +163,79 @@ function TopNavView({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
       />
       <header
-        className="sticky top-0 z-50 bg-[var(--color-surface-default-primary)] w-full border-b border-[var(--border-color-default-tertiary)]"
+        className="relative z-50 w-full border-b border-[var(--border-color-default-tertiary)] bg-[var(--color-surface-default-primary)]"
         role="banner"
         aria-label={t("ariaLabels.mainNavigationHeader")}
       >
         <nav
-          className="flex items-center gap-[var(--spacing-scale-002)] sm:justify-between mx-auto h-[var(--spacing-scale-040)] lg:h-[84px] xl:h-[88px] px-[var(--spacing-scale-016)] py-[var(--spacing-scale-008)] sm:px-[var(--spacing-measures-spacing-016)] sm:py-[var(--spacing-measures-spacing-008)] lg:px-[var(--spacing-measures-spacing-64,64px)] lg:py-[var(--spacing-measures-spacing-016,16px)] sm:gap-0"
-          role="navigation"
-          aria-label={t("ariaLabels.mainNavigation")}
+            className="relative flex w-full items-center
+            px-[var(--spacing-scale-016)]
+            py-[var(--spacing-scale-016)]
+            sm:px-[var(--spacing-measures-spacing-016)]
+            sm:py-[var(--spacing-scale-016)]
+            lg:px-[var(--spacing-measures-spacing-64,64px)]
+            lg:py-[var(--spacing-scale-016)]
+            xl:py-[var(--spacing-scale-016)]
+            min-h-[var(--spacing-scale-040)]"
+            role="navigation"
+            aria-label={t("ariaLabels.mainNavigation")}
         >
-          {/* Logo - Consistent left positioning across all breakpoints */}
-          <Logo
-            size={logoSize}
-            wordmark
-            palette={folderTop ? "inverse" : "default"}
-          />
+          <div
+            className="relative z-20 min-w-0 shrink-0 sm:w-[200px] sm:max-w-[200px] sm:shrink-0"
+            data-topnav="logo"
+          >
+            <Logo
+              size={logoSize}
+              wordmark
+              palette={folderTop ? "inverse" : "default"}
+            />
+          </div>
 
-          {/* Navigation Links - Consistent center positioning */}
-          <div className="flex items-center flex-1 justify-end sm:flex-none sm:justify-center">
-            {/* XSmall breakpoint - Navigation items in Actions section (flex-1, justify-end) */}
-            <div className="block sm:hidden" data-testid="nav-xs">
+          {/* XSmall: nav + login in flow (flex-1) — same as before */}
+          <div
+            className="flex min-w-0 flex-1 items-center justify-end sm:hidden"
+            data-topnav="nav-xs-flow"
+          >
+            <div className="block" data-testid="nav-xs">
               <MenuBar size="X Small">
                 {renderNavigationItems("xsmall")}
                 {logIn && renderLoginButton("xsmall")}
               </MenuBar>
             </div>
+          </div>
 
-            {/* 430-639px (sm: breakpoint): MenuBar X Small */}
-            <div className="hidden sm:block md:hidden" data-testid="nav-sm">
+          {/* sm+ — Figma: nav cluster centered in bar (not between logo and actions) */}
+          <div
+            className="pointer-events-none hidden sm:absolute sm:left-1/2 sm:top-1/2 sm:z-10 sm:flex sm:-translate-x-1/2 sm:-translate-y-1/2 sm:items-center sm:justify-center"
+            data-topnav="nav-center"
+          >
+            <div
+              className="pointer-events-auto hidden sm:flex md:hidden"
+              data-testid="nav-sm"
+            >
               <MenuBar size="X Small">
                 {renderNavigationItems("xsmall")}
                 {logIn && renderLoginButton("xsmall")}
               </MenuBar>
             </div>
-
-            {/* 640-1023px (md: breakpoint): MenuBar X Small (different from folderTop=true) */}
-            <div className="hidden md:block lg:hidden" data-testid="nav-md">
+            <div
+              className="pointer-events-auto hidden md:flex lg:hidden"
+              data-testid="nav-md"
+            >
               <MenuBar size="X Small">
                 {renderNavigationItems("xsmall")}
               </MenuBar>
             </div>
-
-            <div className="hidden lg:block xl:hidden" data-testid="nav-lg">
+            <div
+              className="pointer-events-auto hidden lg:flex xl:hidden"
+              data-testid="nav-lg"
+            >
               <MenuBar size="Large">{renderNavigationItems("large")}</MenuBar>
             </div>
-
-            <div className="hidden xl:block" data-testid="nav-xl">
+            <div
+              className="pointer-events-auto hidden xl:flex"
+              data-testid="nav-xl"
+            >
               <MenuBar size="X Large">
                 {renderNavigationItems("xlarge")}
               </MenuBar>
@@ -210,7 +243,7 @@ function TopNavView({
           </div>
 
           {/* Authentication Elements - Consistent right alignment across all breakpoints */}
-          <div className="flex items-center shrink-0">
+          <div className="relative z-20 ml-auto flex shrink-0 items-center">
             {/* XSmall breakpoint - Only Create Rule button */}
             <div className="block sm:hidden shrink-0" data-testid="auth-xs">
               {renderCreateRuleButton("xsmall", "small", "small")}

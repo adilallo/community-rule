@@ -383,7 +383,7 @@ export function CoreValuesSelectScreen() {
         <Create
           isOpen={activeModalChipId !== null}
           onClose={handleModalDismiss}
-          backdropVariant="loginYellow"
+          backdropVariant="blurredYellow"
           headerContent={
             <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
               <ContentLockup

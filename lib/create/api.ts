@@ -70,6 +70,39 @@ export async function logout(): Promise<void> {
   });
 }
 
+/** CR-103: send verify link to `newEmail` for the signed-in user. */
+export async function requestEmailChange(
+  newEmail: string,
+): Promise<{ ok: true } | { ok: false; error: string; retryAfterMs?: number }> {
+  const res = await fetch("/api/user/email-change/request", {
+    method: "POST",
+    credentials: "include",
+    headers: jsonHeaders,
+    body: JSON.stringify({ newEmail }),
+  });
+  const data: unknown = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    let retryAfterMs: number | undefined;
+    if (
+      res.status === 429 &&
+      data &&
+      typeof data === "object" &&
+      "details" in data
+    ) {
+      const d = (data as { details?: { retryAfterMs?: unknown } }).details;
+      if (d && typeof d.retryAfterMs === "number") {
+        retryAfterMs = d.retryAfterMs;
+      }
+    }
+    return {
+      ok: false,
+      error: readApiErrorMessage(data),
+      retryAfterMs,
+    };
+  }
+  return { ok: true };
+}
+
 export async function fetchDraftFromServer(): Promise<CreateFlowState | null> {
   const res = await fetch("/api/drafts/me", { credentials: "include" });
   if (res.status === 401) return null;
@@ -205,5 +238,215 @@ export async function publishRule(input: {
       ok: false as const,
       error: DRAFT_SAVE_NETWORK_ERROR,
     };
+  }
+}
+
+export type MyPublishedRule = {
+  id: string;
+  title: string;
+  summary: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/**
+ * Lists the signed-in user’s published rules (newest first). Returns `null` on
+ * network failure or unauthenticated response.
+ */
+export async function fetchMyPublishedRules(): Promise<
+  MyPublishedRule[] | null
+> {
+  try {
+    const res = await fetch("/api/rules/me", { credentials: "include" });
+    if (res.status === 401) return null;
+    if (!res.ok) return null;
+    const data = (await safeParseJsonResponse(res)) as {
+      rules?: MyPublishedRule[];
+    } | null;
+    if (!data || !Array.isArray(data.rules)) return null;
+    return data.rules;
+  } catch {
+    return null;
+  }
+}
+
+export type PublishedRuleDetailForClient = {
+  id: string;
+  title: string;
+  summary: string | null;
+  document: unknown;
+};
+
+export type FetchPublishedRuleDetailResult = {
+  rule: PublishedRuleDetailForClient;
+  viewerIsOwner: boolean;
+};
+
+/**
+ * Fetches a published rule for the browser (credentials included).
+ * Returns `null` on network failure or non-OK response.
+ */
+export async function fetchPublishedRuleDetail(
+  id: string,
+): Promise<FetchPublishedRuleDetailResult | null> {
+  try {
+    const res = await fetch(`/api/rules/${encodeURIComponent(id)}`, {
+      credentials: "include",
+    });
+    if (!res.ok) return null;
+    const data = (await safeParseJsonResponse(res)) as {
+      rule?: PublishedRuleDetailForClient;
+      viewerIsOwner?: unknown;
+    } | null;
+    if (
+      !data ||
+      !data.rule ||
+      typeof data.rule.id !== "string" ||
+      typeof data.rule.title !== "string" ||
+      typeof data.viewerIsOwner !== "boolean"
+    ) {
+      return null;
+    }
+    return { rule: data.rule, viewerIsOwner: data.viewerIsOwner };
+  } catch {
+    return null;
+  }
+}
+
+export type DeleteRuleResult =
+  | { ok: true }
+  | { ok: false; error: string; status: number };
+
+export async function deletePublishedRule(
+  id: string,
+): Promise<DeleteRuleResult> {
+  try {
+    const res = await fetch(`/api/rules/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (res.ok) {
+      return { ok: true as const };
+    }
+    const data = await safeParseJsonResponse(res);
+    return {
+      ok: false as const,
+      error: readApiErrorMessage(data),
+      status: res.status,
+    };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
+export type DuplicateRuleResult =
+  | { ok: true; id: string; title: string }
+  | { ok: false; error: string; status: number };
+
+export async function duplicatePublishedRule(
+  id: string,
+): Promise<DuplicateRuleResult> {
+  try {
+    const res = await fetch(
+      `/api/rules/${encodeURIComponent(id)}/duplicate`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
+    const data = (await safeParseJsonResponse(res)) as {
+      rule?: { id: string; title: string };
+    } | null;
+    const rule = data && typeof data === "object" ? data.rule : undefined;
+    if (!res.ok || !rule) {
+      const fromBody =
+        data && typeof data === "object" ? readApiErrorMessage(data) : null;
+      const msg =
+        fromBody && fromBody !== "Request failed"
+          ? fromBody
+          : PUBLISH_FAILED_FALLBACK;
+      return {
+        ok: false as const,
+        error: msg,
+        status: res.status,
+      };
+    }
+    return { ok: true, id: rule.id, title: rule.title };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
+export type DeleteAccountResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Permanently deletes the signed-in user. Caller should redirect and refresh UI.
+ */
+export async function deleteAccount(): Promise<DeleteAccountResult> {
+  try {
+    const res = await fetch("/api/user/me", {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (res.ok) {
+      return { ok: true as const };
+    }
+    const data = await safeParseJsonResponse(res);
+    return {
+      ok: false as const,
+      error: readApiErrorMessage(data),
+    };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+    };
+  }
+}
+
+export type ServerDraftForProfile =
+  | { hasDraft: false }
+  | { hasDraft: true; updatedAt: string; state: CreateFlowState };
+
+/**
+ * Fetches the signed-in user’s server draft for the profile page. Returns
+ * `null` on auth/transport failure.
+ */
+export async function fetchServerDraftForProfile(): Promise<
+  ServerDraftForProfile | null
+> {
+  try {
+    const res = await fetch("/api/drafts/me", { credentials: "include" });
+    if (res.status === 401) return null;
+    if (!res.ok) return null;
+    const data = (await parseJson(res)) as {
+      draft: { payload: unknown; updatedAt: string } | null;
+    };
+    if (!data.draft) {
+      return { hasDraft: false };
+    }
+    const payload = data.draft.payload;
+    const state: CreateFlowState =
+      payload && typeof payload === "object"
+        ? migrateLegacyCreateFlowState(
+            payload as Record<string, unknown>,
+          )
+        : {};
+    const rawUpdated = data.draft.updatedAt;
+    const updatedAt =
+      typeof rawUpdated === "string"
+        ? rawUpdated
+        : new Date().toISOString();
+    return { hasDraft: true, updatedAt, state };
+  } catch {
+    return null;
   }
 }

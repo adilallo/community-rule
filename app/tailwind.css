@@ -573,6 +573,26 @@
   --color-border-invert-warning-primary-light: var(--color-yellow-yellow300);
   --color-border-invert-negative-primary-light: var(--color-red-red300);
 
+  /* Navigation / Link — Figma "Link" (21861:21428) */
+  --color-link-primary: #090909;
+  --color-link-primary-hover: #6d6d6d;
+  --color-link-primary-focus: #6d6d6d;
+  --color-link-primary-active: #6d6d6d;
+  --color-link-secondary: #6d6d6d;
+  --color-link-secondary-hover: #373737;
+  --color-link-secondary-focus: #373737;
+  --color-link-secondary-active: #373737;
+  --color-link-invert-primary: #ffffff;
+  --color-link-invert-primary-hover: #b4b4b4;
+  --color-link-invert-primary-focus: #b4b4b4;
+  --color-link-invert-primary-active: #b4b4b4;
+  --color-link-invert-secondary: #b4b4b4;
+  --color-link-invert-secondary-hover: #f5f5f5;
+  --color-link-invert-secondary-focus: #f5f5f5;
+  --color-link-invert-secondary-active: #f5f5f5;
+  --color-border-link-focus: #090909;
+  --color-border-link-invert-focus: #ffffff;
+
   /* Content */
   --color-content-brand-darker-accent-2: var(--color-yellow-yellow200);
   --color-content-brand-kiwi: var(--color-kiwi-kiwi600);

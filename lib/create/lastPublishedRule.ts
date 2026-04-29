@@ -1,6 +1,6 @@
 /**
- * Bridges final-review → completed without query strings.
- * Replace with GET /api/rules/[id] (CR-81) when public rule fetch exists.
+ * Bridges final-review → completed without query strings, and re-opens a rule
+ * from profile (`/create/completed?ruleId=…`) after GET /api/rules/[id].
  */
 export const CREATE_FLOW_LAST_PUBLISHED_KEY = "createFlow.lastPublished";
 

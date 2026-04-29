@@ -1,19 +1,10 @@
 "use client";
 
-import { createPortal } from "react-dom";
 import ContentLockup from "../../type/ContentLockup";
 import ModalFooter from "../../utility/ModalFooter";
 import ModalHeader from "../../utility/ModalHeader";
+import { CreateModalFrameView } from "./CreateModalFrame.view";
 import type { CreateViewProps } from "./Create.types";
-
-const backdropOverlayClasses: Record<
-  CreateViewProps["backdropVariant"],
-  string
-> = {
-  default: "fixed inset-0 bg-black/50 z-[9998]",
-  loginYellow:
-    "fixed inset-0 z-[9998] bg-[var(--color-surface-inverse-brand-primary)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-surface-inverse-brand-primary)]/75",
-};
 
 export function CreateView({
   isOpen,
@@ -39,70 +30,48 @@ export function CreateView({
   overlayRef,
   backdropVariant,
 }: CreateViewProps) {
-  if (!isOpen) return null;
+  return (
+    <CreateModalFrameView
+      isOpen={isOpen}
+      onOverlayClick={onClose}
+      backdropVariant={backdropVariant}
+      className={className}
+      ariaLabel={ariaLabel}
+      ariaLabelledBy={ariaLabelledBy}
+      overlayRef={overlayRef}
+      dialogRef={createRef}
+    >
+      <ModalHeader onClose={onClose} onMoreOptions={onClose} />
 
-  const createContent = (
-    <>
-      {/* Overlay */}
-      <div
-        ref={overlayRef}
-        className={backdropOverlayClasses[backdropVariant]}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Create Dialog: max-h ensures modal fits viewport; content scrolls inside */}
-      <div
-        ref={createRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledBy}
-        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--color-surface-default-primary)] rounded-[var(--radius-500,20px)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] w-[560px] max-h-[90vh] flex min-h-0 flex-col overflow-hidden z-[9999] ${className}`}
-      >
-        {/* Header with close buttons */}
-        <ModalHeader onClose={onClose} onMoreOptions={onClose} />
-
-        {/* Header: custom headerContent (when provided) or default title/description */}
-        {headerContent !== undefined ? (
-          <div className="shrink-0">{headerContent}</div>
-        ) : title || description ? (
-          <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
-            <ContentLockup
-              title={title}
-              description={description}
-              variant="modal"
-              alignment="left"
-            />
-          </div>
-        ) : null}
-
-        {/* Content Area (scrollable when content overflows) */}
-        <div className="scrollbar-design flex min-h-0 flex-1 flex-col gap-[var(--spacing-scale-024)] overflow-x-clip overflow-y-auto px-[24px] pb-6 pt-0">
-          {children}
+      {headerContent !== undefined ? (
+        <div className="shrink-0">{headerContent}</div>
+      ) : title || description ? (
+        <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
+          <ContentLockup
+            title={title}
+            description={description}
+            variant="modal"
+            alignment="left"
+          />
         </div>
+      ) : null}
 
-        {/* Footer (always visible at bottom of modal) */}
-        <ModalFooter
-          showBackButton={showBackButton}
-          showNextButton={showNextButton}
-          onBack={onBack}
-          onNext={onNext}
-          backButtonText={backButtonText}
-          nextButtonText={nextButtonText}
-          nextButtonDisabled={nextButtonDisabled}
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          footerContent={footerContent}
-        />
+      <div className="scrollbar-design flex min-h-0 flex-1 flex-col gap-[var(--spacing-scale-024)] overflow-x-clip overflow-y-auto px-[24px] pb-6 pt-0">
+        {children}
       </div>
-    </>
+
+      <ModalFooter
+        showBackButton={showBackButton}
+        showNextButton={showNextButton}
+        onBack={onBack}
+        onNext={onNext}
+        backButtonText={backButtonText}
+        nextButtonText={nextButtonText}
+        nextButtonDisabled={nextButtonDisabled}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        footerContent={footerContent}
+      />
+    </CreateModalFrameView>
   );
-
-  // Portal to body
-  if (typeof window !== "undefined") {
-    return createPortal(createContent, document.body);
-  }
-
-  return null;
 }

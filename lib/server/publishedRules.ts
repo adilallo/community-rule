@@ -46,3 +46,44 @@ export async function getPublicPublishedRuleById(
     return null;
   }
 }
+
+/** Metadata for signed-in “my rules” profile list (no full `document` JSON). */
+const PUBLISHED_RULE_OWNER_LIST_SELECT = {
+  id: true,
+  title: true,
+  summary: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
+export type OwnerPublishedRuleListItem = {
+  id: string;
+  title: string;
+  summary: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Lists published rules owned by the given user (alphabetical by title, then id).
+ * Returns `null` when the database is not configured or the query throws.
+ */
+export async function listPublishedRulesForUser(
+  userId: string,
+  take: number,
+): Promise<OwnerPublishedRuleListItem[] | null> {
+  if (!isDatabaseConfigured()) return null;
+  if (typeof userId !== "string" || userId.trim() === "") return null;
+  const clamped = Math.min(Math.max(0, take), 100);
+  if (clamped === 0) return [];
+  try {
+    return await prisma.publishedRule.findMany({
+      where: { userId },
+      orderBy: [{ title: "asc" }, { id: "asc" }],
+      take: clamped,
+      select: PUBLISHED_RULE_OWNER_LIST_SELECT,
+    });
+  } catch {
+    return null;
+  }
+}

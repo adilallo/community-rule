@@ -15,7 +15,7 @@ the file tree without affecting URLs.
 | Group | URL surface | Audience | Chrome |
 |---|---|---|---|
 | `app/(marketing)/` | `/`, `/learn`, `/blog`, `/templates`, future public pages | Public, indexable | TopNav (via root) + marketing `<Footer />` |
-| `app/(app)/` | `/create/*`, `/login`, `/profile`, future signed-in surfaces | Authenticated product | TopNav (via root) — no footer |
+| `app/(app)/` | `/create/*`, `/login`, `/profile`, future signed-in surfaces | Authenticated product | TopNav (via root) — no footer except **`/profile`** (see `profile/layout.tsx`) |
 | `app/(admin)/` | `/monitor`, future ops dashboards | Operators | TopNav (via root) — no footer |
 | `app/(dev)/` | `/components-preview`, future dev previews | Local dev (NODE_ENV gated) | TopNav (via root) — no footer |
 | `app/api/` | API routes | n/a | n/a |
@@ -33,7 +33,8 @@ the folder next to `(marketing)/`.
 - **`app/(marketing)/layout.tsx`** — wraps with `<main className="flex-1">`
   and appends the public `<Footer />`.
 - **`app/(app)/layout.tsx`** / **`(admin)/layout.tsx`** / **`(dev)/layout.tsx`** —
-  wrap with `<main className="flex-1">`. No footer.
+  wrap with `<main className="flex-1">`. No footer by default; **`app/(app)/profile/layout.tsx`**
+  appends the marketing `<Footer />` for `/profile` only.
 - **Nested layouts** (e.g. `(app)/create/layout.tsx`) compose feature-specific
   chrome inside the group's `<main>` — never render `<html>`, `<body>`,
   `<main>`, or providers.

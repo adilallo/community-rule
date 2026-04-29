@@ -62,6 +62,10 @@ export function notFound(message = "Not found"): NextResponse {
   return errorJson("not_found", message, 404);
 }
 
+export function forbidden(message = "Forbidden"): NextResponse {
+  return errorJson("forbidden", message, 403);
+}
+
 export function rateLimited(retryAfterMs: number): NextResponse {
   const retryAfterSec = Math.max(1, Math.ceil(retryAfterMs / 1000));
   return errorJson("rate_limited", "Too many requests", 429, {

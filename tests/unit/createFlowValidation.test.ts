@@ -79,6 +79,13 @@ describe("createFlowStateSchema", () => {
     expect(r.success).toBe(false);
   });
 
+  it("rejects communityContext longer than 200 chars", () => {
+    const r = createFlowStateSchema.safeParse({
+      communityContext: "x".repeat(201),
+    });
+    expect(r.success).toBe(false);
+  });
+
   it("accepts communityStructureChipSnapshots with custom chip rows", () => {
     const r = createFlowStateSchema.safeParse({
       communityStructureChipSnapshots: {

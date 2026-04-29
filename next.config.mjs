@@ -5,6 +5,20 @@ import createMDX from "@next/mdx";
 const nextConfig = {
   output: "standalone",
   serverExternalPackages: ["@prisma/client"],
+  /**
+   * `next dev --turbopack` does not use `webpack()`; without this, `.svg`
+   * imports resolve as asset URLs and {@link app/components/asset/Icon.tsx}
+   * cannot render them as components.
+   */
+  turbopack: {
+    rules: {
+      "*.svg": {
+        condition: { not: "foreign" },
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
+      },
+    },
+  },
   // Performance optimizations
   experimental: {
     optimizeCss: true,

@@ -6,12 +6,12 @@ Copy each block into Linear (or your tracker) as a separate issue, **in order**.
 
 ### Review sync (relevant feedback only)
 
-A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), **passwordless email (magic-link request)** rate limits in-memory until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**, **profile / my rules / account** scope from Figma profile (`22143:900069`) as **Ticket 15** (change email deferred). **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors — **Done**), **CR-85** (session lifecycle — **Done**)—see **Linear** table at the end of this doc.
+A backend review was merged into **[docs/backend-roadmap.md](backend-roadmap.md)** after checking the repo. **Incorporated:** custom session lifecycle follow-ups (not a mandate to adopt Auth.js/Lucia), **passwordless email (magic-link request)** rate limits in-memory until multi-instance + shared store, `RuleDraft` already has `updatedAt` (no migration to add it), **prefer external web vitals** over product Postgres by default, API error shape + request-id observability targets, **authorization v1** aligned with `app/api/rules`, Prisma **never edit applied migrations**, **profile / my rules / account** scope from Figma profile (`22143:900069`) as **Ticket 15** (change email deferred). **Excluded:** requiring NextAuth/Lucia; “add `updatedAt` on drafts”; hard ban on DB for vitals (softened to default external). **Parallel Linear issues:** **CR-84** (API errors — **Done**), **CR-85** (session lifecycle — **Done**)—see **Linear** table at the end of this doc. **Change account email** is **Ticket 20 / [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** (split from Ticket 15 scope).
 
 ### Audit note (Linear CR-72+ vs repo, 2026-04)
 
 - **Done in Linear and shipped:** **CR-72–CR-76**, **CR-77** (publish from create flow), **CR-78** (template seed), **CR-79**, **CR-88**, **CR-89**. The **CR-72 → CR-83** numbering is the original **sequential plan**, not current blocking order; the **core product vertical** through publish + templates is effectively complete in-repo.
-- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing). **CR-82** (migrate smoke): **local** `npm run migrate:smoke` + [CONTRIBUTING.md](../../CONTRIBUTING.md) / [docs/testing-guide.md](../testing-guide.md) — in-repo Gitea workflow YAML **removed**; optional future remote job if hosted runners return. **CR-84 Done** — canonical error contract `{ error: { code, message }, details? }` and `x-request-id` propagation shipped via `lib/server/{responses,requestId,apiRoute}.ts`; auth + drafts + rules routes migrated, remaining `app/api/*` are a follow-up pass. **CR-85 Done** — multi-device session policy + lazy expired-row cleanup (per-user prune on every sign-in plus ~5% global sweep, no cron); ADR comment block in [`lib/server/session.ts`](../../lib/server/session.ts).
+- **Backlog (still open):** **CR-80** (web vitals — file-based route remains), **CR-81** (public rule detail — no `GET /api/rules/[id]` or marketing detail page yet), **CR-86** (profile + account + draft resume — UI mostly placeholder), **CR-103** (change account email — Ticket 20), **CR-90** / **CR-91**, **CR-93** (template grid facets on marketing). **CR-82** (migrate smoke): **local** `npm run migrate:smoke` + [CONTRIBUTING.md](../../CONTRIBUTING.md) / [docs/testing-guide.md](../testing-guide.md) — in-repo Gitea workflow YAML **removed**; optional future remote job if hosted runners return. **CR-84 Done** — canonical error contract `{ error: { code, message }, details? }` and `x-request-id` propagation shipped via `lib/server/{responses,requestId,apiRoute}.ts`; auth + drafts + rules routes migrated, remaining `app/api/*` are a follow-up pass. **CR-85 Done** — multi-device session policy + lazy expired-row cleanup (per-user prune on every sign-in plus ~5% global sweep, no cron); ADR comment block in [`lib/server/session.ts`](../../lib/server/session.ts).
 - **CR-83 Done (admin handoff + cutover plan):** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) shipped. Cloudron admin access on `cloud.medlab.host` granted; doc now covers (a) what's in place, (b) the side-by-side → apex cutover plan, and (c) the two open product questions + registry decision still outstanding. Steady-state operator runbook is split out into a follow-up — see [Ticket 12 / CR-83 follow-ups](#follow-up-tickets-filed-under-cr-83) below. Key new finding: legacy `communityrule.info` is a single Cloudron **LAMP** app (`lamp.cloudronapp.php74@5.1.2`) hosting marketing site + Express/MySQL backend + a broken Flask chatbot all in one container; all three retire together via CR-99 + CR-101.
 - **CR-86** is **no longer blocked** by publish — **CR-77** is **Done**; profile work is gated by **implementation**, not waiting on publish wiring.
 - **Not in this ticket list** but called out in **[docs/backend-roadmap.md](backend-roadmap.md):** shared **rate-limit store** (e.g. Redis) before multi-instance; **`GET /api/create-flow/methods`** exists for facet scoring (Ticket 16 / CR-88) but is not duplicated as a separate doc ticket.
@@ -459,6 +459,40 @@ _Section B — Final Review screen `+` button per category:_
 
 ---
 
+## Ticket 20 — Change account email (verified new address)
+
+**Depends on:** **Ticket 15 / [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)** (signed-in profile shell); **Ticket 3 / [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)** (magic-link + mail patterns).
+
+**Server / admin:** Same SMTP / DNS expectations as magic-link when email must work on **staging/production** (see Ticket 3 table).
+
+**Goal:** Let a signed-in user **change their login email** after **verifying control of the new address** (magic-link–style flow). Today `User.email` is **unique** and magic-link verify **upserts** on that field; profile shows **“Change email — coming soon”** only.
+
+**Context:** Explicitly **out of scope for Ticket 15**; this ticket is the dedicated backend + product slice. See [docs/backend-roadmap.md](backend-roadmap.md) §1 / §6. Canonical Linear body: **[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)**.
+
+**Implementation (sketch):**
+
+1. **Persistence:** Pending email-change token (`userId`, `newEmail`, `tokenHash`, `expiresAt`)—separate from sign-in `MagicLinkToken` or clearly discriminated so flows cannot be confused.
+2. **API:** Authenticated **request** (submit new email → mail link); **verify** (token → update `User.email` in a transaction, cleanup pending rows).
+3. **Conflicts:** If `newEmail` already belongs to another `User`, return a clear error (merge accounts out of scope unless product decides otherwise).
+4. **Sessions:** Decide whether successful change **invalidates other sessions** for that user; document in code + roadmap.
+5. **Rate limits:** Align with [`app/api/auth/magic-link/request/route.ts`](../../app/api/auth/magic-link/request/route.ts) patterns.
+6. **Mail:** Distinct template/copy from sign-in in [`lib/server/mail.ts`](../../lib/server/mail.ts).
+7. **UI:** Replace profile “coming soon” with real flow; i18n under `messages/`.
+8. **Tests:** Route tests for happy path, expired/invalid token, duplicate email, unauthenticated request.
+
+**Acceptance criteria:**
+
+- [x] New email is confirmed **only** after the user completes the link sent to that inbox; then `User.email` updates.
+- [x] Duplicate-email and rate-limit cases are handled with accessible errors (`CR-84` shape).
+- [x] Profile reflects the new address after success.
+- [x] Documented session policy after email change.
+
+**Files (expected):** `prisma/schema.prisma`, new `app/api/user/...` or `app/api/auth/...` routes, [`lib/server/mail.ts`](../../lib/server/mail.ts), [`app/(app)/profile/`](../../app/(app)/profile/), [`messages/en/pages/profile.json`](../../messages/en/pages/profile.json), tests under `tests/unit/`.
+
+**Linear:** [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session) (**Backlog**). **Related:** **CR-86** (profile); **CR-84** (errors).
+
+---
+
 ## Ticket 9 — Persist web vitals outside `.next` (prefer external RUM)
 
 **Depends on:** none (orthogonal).
@@ -648,7 +682,7 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 
 **Out of scope for this ticket**
 
-- **Change your account email** (shown in Figma options): **deferred**—no backend in this slice. Product may **hide** the row, show **“Coming soon,”** or backlog until a **future ticket** (verified email change, conflicts, sessions).
+- **Change your account email** (shown in Figma options): **Ticket 20 / [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)**—not part of this slice until that issue ships. Until then, product may keep **“Coming soon”** or hide the row.
 - **`displayName` / new `User` fields:** not required—use **static** welcome copy, generic greeting, or **email local-part in UI only** until a later schema/product decision.
 
 **Context:** Today `GET /api/rules` is a **public** list of all published rules; there is no authenticated **my rules** endpoint, no owner **DELETE** / **duplicate**, and no **delete user** API. See [docs/backend-roadmap.md](backend-roadmap.md) §1 “profile / account — not implemented yet” and §6.
@@ -666,7 +700,7 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 - [ ] Duplicate and delete actions work for **owner** only; errors are clear.
 - [ ] Logout still works from profile context.
 - [ ] Delete account flow matches agreed policy and is confirmed in UI.
-- [ ] No verified **email change** shipped in this ticket; Figma row handled per product (hide/disabled/backlog).
+- [ ] No verified **email change** in this ticket (tracked in **CR-103** / Ticket 20); Figma row handled per product (hide/disabled/coming soon).
 
 **Files:** new `app/` routes and components, `app/api/rules/...` (or new segment handlers), [lib/create/api.ts](lib/create/api.ts) as needed, [prisma/schema.prisma](prisma/schema.prisma) only if account-delete policy requires schema tweaks, [messages/en/](messages/en/) for copy.
 
@@ -697,16 +731,17 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 |    17 | 17     | Canon create-flow (custom path)     |
 |    18 | 18     | Stakeholder invites (confirm-stakeholders) |
 |    19 | 19     | `Add` button behavior (custom-rule pages + Final Review) |
+|    20 | 20     | Change account email (verified) **Backlog — CR-103** |
 
 **Follow-up (no doc ticket #):** **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)** — marketing template grids ranked by user facets (API-ready; tests deferred with that issue).
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 6 / CR-77** (publish) is **Done**. **Ticket 16** / **CR-88** (facet data + APIs + wizard method ranking) shipped **after 7–8**; **CR-93** tracks **marketing** template grids ranked by user facets (API-ready). **Ticket 17** / **CR-89** (**[Done](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) (progress bar, `[screenId]` routing). **Draft resume / hydration** follow-ups: **CR-86**. **Tickets 13–14** are parallel (**CR-84** / **CR-85** — both **Done**). **Ticket 15 / CR-86** is **parallel** (publish prerequisite met); implementation backlog. **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 6 / CR-77** (publish) is **Done**. **Ticket 16** / **CR-88** (facet data + APIs + wizard method ranking) shipped **after 7–8**; **CR-93** tracks **marketing** template grids ranked by user facets (API-ready). **Ticket 17** / **CR-89** (**[Done](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) (progress bar, `[screenId]` routing). **Draft resume / hydration** follow-ups: **CR-86**. **Tickets 13–14** are parallel (**CR-84** / **CR-85** — both **Done**). **Ticket 15 / CR-86** is **parallel** (publish prerequisite met); implementation backlog. **Ticket 20 / [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** tracks **verified change account email** (split from Ticket 15). **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -737,6 +772,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |          — | [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) | Template grid + facet ranking (product)   |
 |         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
 |         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) |
+|         20 | [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)   | Change account email (verify new address) **Backlog** |
 
 ---
 

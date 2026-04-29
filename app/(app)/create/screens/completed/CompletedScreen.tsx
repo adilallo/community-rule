@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import CommunityRuleDocument from "../../../../components/sections/CommunityRuleDocument";
 import type { CommunityRuleDocumentSection } from "../../../../components/sections/CommunityRuleDocument/CommunityRuleDocument.types";
 import Alert from "../../../../components/modals/Alert";
 import { useMessages } from "../../../../contexts/MessagesContext";
+import { fetchPublishedRuleDetail } from "../../../../../lib/create/api";
 import { parseDocumentSectionsForDisplay } from "../../../../../lib/create/buildPublishPayload";
-import { readLastPublishedRule } from "../../../../../lib/create/lastPublishedRule";
+import {
+  readLastPublishedRule,
+  writeLastPublishedRule,
+} from "../../../../../lib/create/lastPublishedRule";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import {
@@ -14,40 +19,112 @@ import {
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
 } from "../../components/createFlowLayoutTokens";
 
+function initialCompletedUi(
+  ruleIdFromUrl: string | null,
+): {
+  headerTitle: string;
+  headerDescription: string | undefined;
+  documentSections: CommunityRuleDocumentSection[];
+} {
+  if (ruleIdFromUrl) {
+    return {
+      headerTitle: "",
+      headerDescription: undefined,
+      documentSections: [],
+    };
+  }
+  if (typeof sessionStorage === "undefined") {
+    return {
+      headerTitle: "",
+      headerDescription: undefined,
+      documentSections: [],
+    };
+  }
+  const stored = readLastPublishedRule();
+  if (!stored) {
+    return {
+      headerTitle: "",
+      headerDescription: undefined,
+      documentSections: [],
+    };
+  }
+  const parsed = parseDocumentSectionsForDisplay(stored.document);
+  if (parsed.length === 0) {
+    return {
+      headerTitle: "",
+      headerDescription: undefined,
+      documentSections: [],
+    };
+  }
+  const sum =
+    typeof stored.summary === "string" ? stored.summary.trim() : "";
+  return {
+    headerTitle: stored.title,
+    headerDescription: sum.length > 0 ? sum : undefined,
+    documentSections: parsed,
+  };
+}
+
 export function CompletedScreen() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const ruleIdParam = searchParams.get("ruleId");
   const mdUp = useCreateFlowMdUp();
   const m = useMessages();
   const completed = m.create.reviewAndComplete.completed;
 
-  const fallbackSections = useMemo(
-    () =>
-      [...completed.fallbackDocumentSections] as CommunityRuleDocumentSection[],
-    [completed.fallbackDocumentSections],
-  );
-
+  const initial = initialCompletedUi(ruleIdParam);
   const [toastDismissed, setToastDismissed] = useState(false);
-  const [headerTitle, setHeaderTitle] = useState(
-    () => completed.fallbackTitle,
-  );
+  const [headerTitle, setHeaderTitle] = useState(initial.headerTitle);
   const [headerDescription, setHeaderDescription] = useState<
     string | undefined
-  >(() => completed.fallbackDescription);
+  >(initial.headerDescription);
   const [documentSections, setDocumentSections] =
-    useState<CommunityRuleDocumentSection[]>(fallbackSections);
+    useState<CommunityRuleDocumentSection[]>(initial.documentSections);
 
   useEffect(() => {
-    const stored = readLastPublishedRule();
-    if (!stored) return;
-    const parsed = parseDocumentSectionsForDisplay(stored.document);
-    if (parsed.length === 0) return;
-    queueMicrotask(() => {
-      setDocumentSections(parsed);
-      setHeaderTitle(stored.title);
-      const sum =
-        typeof stored.summary === "string" ? stored.summary.trim() : "";
-      setHeaderDescription(sum.length > 0 ? sum : undefined);
-    });
-  }, []);
+    if (!ruleIdParam) return;
+    let cancelled = false;
+    void (async () => {
+      const detail = await fetchPublishedRuleDetail(ruleIdParam);
+      if (cancelled) return;
+      if (
+        !detail ||
+        !detail.viewerIsOwner ||
+        detail.rule.document === null ||
+        typeof detail.rule.document !== "object" ||
+        Array.isArray(detail.rule.document)
+      ) {
+        router.replace(`/rules/${encodeURIComponent(ruleIdParam)}`);
+        return;
+      }
+      const doc = detail.rule.document as Record<string, unknown>;
+      writeLastPublishedRule({
+        id: detail.rule.id,
+        title: detail.rule.title,
+        summary: detail.rule.summary,
+        document: doc,
+      });
+      const parsed = parseDocumentSectionsForDisplay(doc);
+      if (parsed.length === 0) {
+        router.replace(`/rules/${encodeURIComponent(ruleIdParam)}`);
+        return;
+      }
+      queueMicrotask(() => {
+        setDocumentSections(parsed);
+        setHeaderTitle(detail.rule.title);
+        const sum =
+          typeof detail.rule.summary === "string"
+            ? detail.rule.summary.trim()
+            : "";
+        setHeaderDescription(sum.length > 0 ? sum : undefined);
+      });
+      router.replace("/create/completed");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [ruleIdParam, router]);
 
   const toast = !toastDismissed ? (
     <div

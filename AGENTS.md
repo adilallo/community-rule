@@ -15,6 +15,7 @@ Single-locale (English) today; designed for i18n via `messages/`.
 | If you're touching… | Load this rule |
 | --- | --- |
 | `app/components/**` | `component-structure.mdc`, `component-props.mdc`, `tailwind-styling.mdc` |
+| `Alert`, or user-visible notifications / shell errors / success banners | `alerts.mdc` (and `localization.mdc` for copy) |
 | `app/(app)/create/**` | `create-flow.mdc` (+ component rules) |
 | `app/api/**` | `api-routes.mdc` |
 | `app/hooks/**` | `hooks.mdc` |

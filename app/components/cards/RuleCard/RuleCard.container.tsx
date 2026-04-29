@@ -17,6 +17,10 @@ declare global {
   }
 }
 
+/**
+ * Figma: "Card / Rule" — e.g. profile `22143:900771` when **Has bottom link** is on
+ * (`hasBottomLinks` + `bottomLinks` / optional `bottomStatusLabel`).
+ */
 const RuleCardContainer = memo<RuleCardProps>(
   ({
     title,
@@ -32,10 +36,14 @@ const RuleCardContainer = memo<RuleCardProps>(
     logoAlt,
     communityInitials,
     hideCategoryAddButton = false,
+    hasBottomLinks = false,
+    bottomStatusLabel,
+    bottomLinks,
   }) => {
     const size = sizeProp ?? "L";
 
     const handleClick = () => {
+      if (hasBottomLinks) return;
       // Basic analytics event tracking
       if (typeof window !== "undefined" && window.gtag) {
         window.gtag("event", "template_selected", {
@@ -56,6 +64,7 @@ const RuleCardContainer = memo<RuleCardProps>(
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (hasBottomLinks) return;
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         handleClick();
@@ -69,8 +78,8 @@ const RuleCardContainer = memo<RuleCardProps>(
         icon={icon}
         backgroundColor={backgroundColor}
         className={className}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
+        onClick={hasBottomLinks ? undefined : handleClick}
+        onKeyDown={hasBottomLinks ? undefined : handleKeyDown}
         expanded={expanded}
         size={size}
         categories={categories}
@@ -78,6 +87,9 @@ const RuleCardContainer = memo<RuleCardProps>(
         logoAlt={logoAlt}
         communityInitials={communityInitials}
         hideCategoryAddButton={hideCategoryAddButton}
+        hasBottomLinks={hasBottomLinks}
+        bottomStatusLabel={bottomStatusLabel}
+        bottomLinks={bottomLinks}
       />
     );
   },
