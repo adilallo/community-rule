@@ -32,6 +32,8 @@ import {
   clearAnonymousCreateFlowStorage,
   setTransferPendingFlag,
 } from "./utils/anonymousDraftStorage";
+import { createFlowStateFromPublishedRule } from "../../../lib/create/publishedDocumentToCreateFlowState";
+import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
 import { deleteServerDraft } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
 import {
@@ -133,12 +135,23 @@ function CreateFlowLayoutContent({
   const [communitySaveMagicLinkSuccess, setCommunitySaveMagicLinkSuccess] =
     useState(false);
 
+  const loginReturnPath =
+    currentStep === "edit-rule"
+      ? "/create/edit-rule?syncDraft=1"
+      : "/create/final-review?syncDraft=1";
+
   const {
     publishBannerMessage,
     setPublishBannerMessage,
     isPublishing,
     finalize: handleFinalize,
-  } = useCreateFlowFinalize({ state, router, openLogin });
+  } = useCreateFlowFinalize({
+    state,
+    router,
+    openLogin,
+    updateState,
+    loginReturnPath,
+  });
 
   const {
     isTemplateReviewRoute,
@@ -221,6 +234,34 @@ function CreateFlowLayoutContent({
     }
   }, [currentStep]);
 
+  useEffect(() => {
+    if (currentStep !== "edit-rule") return;
+    const last = readLastPublishedRule();
+    if (!last) {
+      router.replace("/create/completed");
+      return;
+    }
+    const editingId = state.editingPublishedRuleId?.trim() ?? "";
+    if (editingId.length > 0 && editingId !== last.id) {
+      router.replace("/create/completed");
+      return;
+    }
+    const titleOk =
+      typeof state.title === "string" && state.title.trim().length > 0;
+    const sectionsClear = (state.sections?.length ?? 0) === 0;
+    /** Stale template `sections` (e.g. Values-only) makes final-review rows wrong; re-hydrate until cleared. */
+    if (titleOk && editingId === last.id && sectionsClear) {
+      return;
+    }
+    updateState(createFlowStateFromPublishedRule(last));
+  }, [
+    currentStep,
+    router,
+    updateState,
+    state.editingPublishedRuleId,
+    state.title,
+  ]);
+
   const handleCommunitySaveMagicLinkSubmit = useCallback(async () => {
     setCommunitySaveMagicLinkError(null);
     setCommunitySaveMagicLinkSuccess(false);
@@ -260,7 +301,8 @@ function CreateFlowLayoutContent({
 
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "decision-approaches";
-  const isFinalReviewStep = currentStep === "final-review";
+  const isFinalReviewLike =
+    currentStep === "final-review" || currentStep === "edit-rule";
   const isCardLayoutStep = createFlowStepUsesCardLayout(currentStep);
   /** Two-column select / right-rail: below `lg` main scrolls; at `lg+` only the right column scrolls. */
   const isSelectSplitScrollStep =
@@ -275,7 +317,7 @@ function CreateFlowLayoutContent({
     ? "items-stretch overflow-y-auto md:overflow-hidden"
     : isSelectSplitScrollStep
       ? "items-start justify-start overflow-y-auto max-lg:overflow-y-auto lg:min-h-0 lg:items-stretch lg:overflow-hidden"
-      : isFinalReviewStep || isCardLayoutStep || isTemplateReviewRoute
+      : isFinalReviewLike || isCardLayoutStep || isTemplateReviewRoute
         ? "items-start justify-center overflow-y-auto"
         : "items-start justify-center overflow-y-auto md:items-center";
 
@@ -289,7 +331,8 @@ function CreateFlowLayoutContent({
     : "max-md:flex-col max-md:items-center";
   const mainResponsiveLayout = `${mainMaxMdCross} ${mainMaxMdJustify} md:flex-row md:justify-center`;
   const saveDraftOnExit =
-    Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
+    Boolean(sessionUser) &&
+    (stepIdx >= SAVE_EXIT_FROM_STEP_INDEX || currentStep === "edit-rule");
 
   const proportionBarProgress = getProportionBarProgressForCreateFlowStep(
     currentStep,
@@ -408,7 +451,15 @@ function CreateFlowLayoutContent({
         saveDraftOnExit={saveDraftOnExit}
         onEdit={
           isCompletedStep
-            ? () => router.push("/create/final-review")
+            ? () => {
+                const last = readLastPublishedRule();
+                if (!last) return;
+                updateState({
+                  editingPublishedRuleId: last.id,
+                  sections: [],
+                });
+                router.push("/create/edit-rule");
+              }
             : undefined
         }
         onExit={(opts) => void handleExit(opts)}
@@ -425,7 +476,7 @@ function CreateFlowLayoutContent({
       {!isCompletedStep && (
         <CreateFlowFooter
           className="shrink-0"
-          progressBar={!isTemplateReviewRoute && !isFinalReviewStep}
+          progressBar={!isTemplateReviewRoute && !isFinalReviewLike}
           proportionBarProgress={proportionBarProgress}
           proportionBarVariant="segmented"
           secondButton={
@@ -555,7 +606,7 @@ function CreateFlowLayoutContent({
               >
                 {footer[customRuleConfirmFooter.footerMessageKey]}
               </Button>
-            ) : nextStep ? (
+            ) : nextStep || isFinalReviewLike ? (
               <Button
                 buttonType="filled"
                 palette="default"
@@ -563,14 +614,14 @@ function CreateFlowLayoutContent({
                 disabled={isPublishing}
                 className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
-                  if (currentStep === "final-review") {
+                  if (isFinalReviewLike) {
                     void handleFinalize();
                   } else {
                     goToNextStep();
                   }
                 }}
               >
-                {currentStep === "final-review"
+                {isFinalReviewLike
                   ? isPublishing
                     ? messages.create.reviewAndComplete.publish
                         .finalizeButtonPublishing

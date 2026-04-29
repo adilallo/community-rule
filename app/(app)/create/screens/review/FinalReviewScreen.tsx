@@ -21,6 +21,7 @@ import {
   type FinalReviewChipEditPatch,
   type FinalReviewChipEditTarget,
 } from "../../components/FinalReviewChipEditModal";
+import { FinalReviewCommunityContextEditModal } from "../../components/FinalReviewCommunityContextEditModal";
 import {
   getAssetPath,
   vectorMarkPath,
@@ -68,7 +69,11 @@ function readFallbackCategoryRows(
   };
 }
 
-export function FinalReviewScreen() {
+export function FinalReviewScreen({
+  variant = "default",
+}: {
+  variant?: "default" | "editPublished";
+} = {}) {
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.reviewAndComplete.finalReview");
@@ -93,6 +98,8 @@ export function FinalReviewScreen() {
     useState<FinalReviewChipEditTarget | null>(null);
   const [activeReadOnlyDetail, setActiveReadOnlyDetail] =
     useState<TemplateChipDetail | null>(null);
+  const [communityContextModalOpen, setCommunityContextModalOpen] =
+    useState(false);
 
   const handleSave = useCallback(
     (patch: FinalReviewChipEditPatch) => {
@@ -180,14 +187,37 @@ export function FinalReviewScreen() {
     return raw.length > 0 ? raw : undefined;
   }, [state.communityContext]);
 
+  const rawCommunityContextForModal =
+    typeof state.communityContext === "string" ? state.communityContext : "";
+
+  const descriptionEmptyHint =
+    variant === "editPublished" ? t("communityContextEditModal.emptyHint") : undefined;
+
   return (
     <CreateFlowLockupCardStepShell
-      lockupTitle={t("title")}
-      lockupDescription={t("description")}
+      lockupTitle={
+        variant === "editPublished" ? t("editPublishedTitle") : t("title")
+      }
+      lockupDescription={
+        variant === "editPublished"
+          ? t("editPublishedDescription")
+          : t("description")
+      }
     >
       <Rule
         title={ruleCardTitle}
         description={ruleCardDescription}
+        onDescriptionClick={
+          variant === "editPublished"
+            ? () => setCommunityContextModalOpen(true)
+            : undefined
+        }
+        descriptionEmptyHint={descriptionEmptyHint}
+        descriptionEditAriaLabel={
+          variant === "editPublished"
+            ? t("communityContextEditModal.ariaEditDescription")
+            : undefined
+        }
         size={mdUp ? "L" : "M"}
         expanded={true}
         backgroundColor="bg-[#c9fef9]"
@@ -209,6 +239,17 @@ export function FinalReviewScreen() {
         onClose={() => setActiveReadOnlyDetail(null)}
         detail={activeReadOnlyDetail}
       />
+      {variant === "editPublished" ? (
+        <FinalReviewCommunityContextEditModal
+          isOpen={communityContextModalOpen}
+          onClose={() => setCommunityContextModalOpen(false)}
+          initialValue={rawCommunityContextForModal}
+          onSave={(value) => {
+            markCreateFlowInteraction();
+            updateState({ communityContext: value, summary: value });
+          }}
+        />
+      ) : null}
     </CreateFlowLockupCardStepShell>
   );
 }

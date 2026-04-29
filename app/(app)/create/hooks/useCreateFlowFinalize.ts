@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { buildPublishPayload } from "../../../../lib/create/buildPublishPayload";
-import { publishRule } from "../../../../lib/create/api";
+import { publishRule, updatePublishedRule } from "../../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
 import messages from "../../../../messages/en/index";
 import type { CreateFlowState } from "../types";
@@ -23,12 +23,8 @@ export type UseCreateFlowFinalizeResult = {
   isPublishing: boolean;
   /**
    * Build a publish payload from the current `CreateFlowState`, post it to
-   * `publishRule`, and route to `/create/completed` on success.
-   *
-   * Failure modes:
-   * - Payload validation fails → surface the localized banner message.
-   * - 401 from the API → re-open the login modal targeting `/create/final-review?syncDraft=1` so the user can retry post-auth.
-   * - Any other failure → show either the trimmed server message or a generic localized fallback.
+   * `publishRule` (or PATCH when editing a published rule), and route to
+   * `/create/completed` on success.
    */
   finalize: () => Promise<void>;
 };
@@ -43,10 +39,15 @@ export function useCreateFlowFinalize({
   state,
   router,
   openLogin,
+  updateState,
+  loginReturnPath,
 }: {
   state: CreateFlowState;
   router: AppRouterLike;
   openLogin: OpenLogin;
+  updateState: (_patch: Partial<CreateFlowState>) => void;
+  /** Session gate return path (`?syncDraft=1`) — differs for `/create/edit-rule` vs `/create/final-review`. */
+  loginReturnPath: string;
 }): UseCreateFlowFinalizeResult {
   const [publishBannerMessage, setPublishBannerMessage] = useState<
     string | null
@@ -66,6 +67,46 @@ export function useCreateFlowFinalize({
     }
     const { title, summary, document: ruleDocument } = payloadResult;
     setIsPublishing(true);
+
+    const editingId =
+      typeof state.editingPublishedRuleId === "string"
+        ? state.editingPublishedRuleId.trim()
+        : "";
+
+    if (editingId.length > 0) {
+      const updateResult = await updatePublishedRule(editingId, {
+        title,
+        summary: summary ?? null,
+        document: ruleDocument,
+      });
+      setIsPublishing(false);
+      if (updateResult.ok === true) {
+        writeLastPublishedRule({
+          id: editingId,
+          title,
+          summary: summary ?? null,
+          document: ruleDocument,
+        });
+        updateState({ editingPublishedRuleId: undefined });
+        router.push("/create/completed");
+        return;
+      }
+      if (updateResult.status === 401) {
+        openLogin({
+          variant: "default",
+          nextPath: loginReturnPath,
+          backdropVariant: "blurredYellow",
+        });
+        return;
+      }
+      setPublishBannerMessage(
+        updateResult.error.trim() !== ""
+          ? updateResult.error
+          : messages.create.reviewAndComplete.publish.genericPublishFailed,
+      );
+      return;
+    }
+
     const publishResult = await publishRule({
       title,
       summary,
@@ -85,7 +126,7 @@ export function useCreateFlowFinalize({
     if (publishResult.status === 401) {
       openLogin({
         variant: "default",
-        nextPath: "/create/final-review?syncDraft=1",
+        nextPath: loginReturnPath,
         backdropVariant: "blurredYellow",
       });
       return;
@@ -95,7 +136,7 @@ export function useCreateFlowFinalize({
         ? publishResult.error
         : messages.create.reviewAndComplete.publish.genericPublishFailed,
     );
-  }, [state, router, openLogin]);
+  }, [state, router, openLogin, updateState, loginReturnPath]);
 
   return {
     publishBannerMessage,

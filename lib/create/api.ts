@@ -241,6 +241,48 @@ export async function publishRule(input: {
   }
 }
 
+export async function updatePublishedRule(
+  id: string,
+  input: {
+    title: string;
+    summary?: string | null;
+    document: Record<string, unknown>;
+  },
+): Promise<{ ok: true } | { ok: false; error: string; status?: number }> {
+  try {
+    const res = await fetch(`/api/rules/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: jsonHeaders,
+      body: JSON.stringify({
+        title: input.title,
+        summary: input.summary ?? null,
+        document: input.document,
+      }),
+    });
+    const data = await safeParseJsonResponse(res);
+    if (!res.ok) {
+      const fromBody =
+        data && typeof data === "object" ? readApiErrorMessage(data) : null;
+      const msg =
+        fromBody && fromBody !== "Request failed"
+          ? fromBody
+          : res.statusText?.trim() || PUBLISH_FAILED_FALLBACK;
+      return {
+        ok: false as const,
+        error: msg,
+        status: res.status,
+      };
+    }
+    return { ok: true as const };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+    };
+  }
+}
+
 export type MyPublishedRule = {
   id: string;
   title: string;

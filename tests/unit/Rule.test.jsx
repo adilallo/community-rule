@@ -106,6 +106,23 @@ describe("Rule Component", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("clicking editable description calls onDescriptionClick and does not fire card onClick", () => {
+    const onCard = vi.fn();
+    const onDesc = vi.fn();
+    render(
+      <Rule
+        {...defaultProps}
+        expanded={true}
+        onClick={onCard}
+        onDescriptionClick={onDesc}
+        descriptionEmptyHint="Add description"
+      />,
+    );
+    fireEvent.click(screen.getByTestId("rule-description-edit"));
+    expect(onDesc).toHaveBeenCalledTimes(1);
+    expect(onCard).not.toHaveBeenCalled();
+  });
+
   it("applies proper sizing for expanded states", () => {
     render(<Rule {...defaultProps} expanded={true} size="L" />);
 

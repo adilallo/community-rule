@@ -25,6 +25,18 @@ export interface RuleBottomLink {
 export interface RuleProps {
   title: string;
   description?: string;
+  /**
+   * When set, the description row (or {@link descriptionEmptyHint} when there
+   * is no body text) is clickable — caller handles modal / navigation.
+   */
+  onDescriptionClick?: () => void;
+  /**
+   * When {@link onDescriptionClick} is set, forwarded to the control’s
+   * `aria-label` (keyboard / SR).
+   */
+  descriptionEditAriaLabel?: string;
+  /** Shown when {@link onDescriptionClick} is set and `description` is empty. */
+  descriptionEmptyHint?: string;
   icon?: React.ReactNode;
   backgroundColor?: string;
   className?: string;
@@ -51,6 +63,9 @@ export interface RuleProps {
 export interface RuleViewProps {
   title: string;
   description?: string;
+  onDescriptionClick?: () => void;
+  descriptionEmptyHint?: string;
+  descriptionEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor: string;
   className: string;

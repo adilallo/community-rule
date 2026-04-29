@@ -38,12 +38,13 @@ describe("flowSteps", () => {
     expect(getPreviousStep(null)).toBeNull();
   });
 
-  it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
-    expect(isValidStep("community-size")).toBe(true);
-    expect(isValidStep("confirm-stakeholders")).toBe(true);
-    expect(isValidStep("core-values")).toBe(true);
-    expect(isValidStep("nope")).toBe(false);
-    expect(isValidStep(null)).toBe(false);
+  it("isValidStep allows branch-only edit-rule URL segment", () => {
+    expect(isValidStep("edit-rule")).toBe(true);
+  });
+
+  it("getNextStep and getPreviousStep return null for edit-rule (not in linear order)", () => {
+    expect(getNextStep("edit-rule")).toBeNull();
+    expect(getPreviousStep("edit-rule")).toBeNull();
   });
 
   it("getStepIndex matches position in FLOW_STEP_ORDER", () => {

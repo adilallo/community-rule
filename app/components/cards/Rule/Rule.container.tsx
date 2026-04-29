@@ -25,6 +25,9 @@ const RuleContainer = memo<RuleProps>(
   ({
     title,
     description,
+    onDescriptionClick,
+    descriptionEmptyHint,
+    descriptionEditAriaLabel,
     icon,
     backgroundColor = "bg-[var(--color-community-teal-100)]",
     className = "",
@@ -75,6 +78,9 @@ const RuleContainer = memo<RuleProps>(
       <RuleView
         title={title}
         description={description}
+        onDescriptionClick={onDescriptionClick}
+        descriptionEmptyHint={descriptionEmptyHint}
+        descriptionEditAriaLabel={descriptionEditAriaLabel}
         icon={icon}
         backgroundColor={backgroundColor}
         className={className}

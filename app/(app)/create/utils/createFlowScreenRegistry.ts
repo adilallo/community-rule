@@ -129,6 +129,12 @@ export const CREATE_FLOW_SCREEN_REGISTRY: Record<
     messageNamespace: "create.reviewAndComplete.finalReview",
     centeredBodyBelowMd: false,
   },
+  "edit-rule": {
+    layoutKind: "review",
+    figmaNodeId: "20907-212767",
+    messageNamespace: "create.reviewAndComplete.finalReview",
+    centeredBodyBelowMd: false,
+  },
   completed: {
     layoutKind: "completed",
     figmaNodeId: "20907-213286",

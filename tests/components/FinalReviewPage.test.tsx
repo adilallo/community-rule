@@ -401,3 +401,67 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
     expect(latest.communicationMethodDetailsById).toBeUndefined();
   });
 });
+
+function FinalReviewEditPublishedWithStateProbe({
+  onState,
+  initial,
+}: {
+  onState: (_state: CreateFlowState) => void;
+  initial: CreateFlowState;
+}) {
+  const { state, replaceState } = useCreateFlow();
+  useLayoutEffect(() => {
+    replaceState(initial);
+  }, [replaceState, initial]);
+  useEffect(() => {
+    onState(state);
+  }, [state, onState]);
+  return <FinalReviewScreen variant="editPublished" />;
+}
+
+describe("FinalReviewScreen — edit published description", () => {
+  it("does not expose click-to-edit description on default final review", () => {
+    render(
+      <FinalReviewWithFlowState
+        title="Oak"
+        communityContext="Visible body"
+      />,
+    );
+    expect(screen.queryByTestId("rule-description-edit")).not.toBeInTheDocument();
+  });
+
+  it("opens Save modal from description click and updates communityContext + summary", async () => {
+    let latest: CreateFlowState = {};
+    render(
+      <FinalReviewEditPublishedWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          title: "Oak Park Commons",
+          communityContext: "Original",
+          summary: "Original",
+          selectedCommunicationMethodIds: ["signal"],
+        }}
+      />,
+    );
+    void latest;
+
+    fireEvent.click(await screen.findByTestId("rule-description-edit"));
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).getByText(/Community description/i),
+    ).toBeInTheDocument();
+    const input = within(dialog).getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Updated copy" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(latest.communityContext).toBe("Updated copy");
+      expect(latest.summary).toBe("Updated copy");
+    });
+  });
+});

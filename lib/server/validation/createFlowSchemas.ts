@@ -121,6 +121,7 @@ export const createFlowStateSchema = z
       .optional(),
     templateReviewBackSlug: z.string().max(200).optional(),
     templateReviewEntryFromCreateFlow: z.boolean().optional(),
+    editingPublishedRuleId: z.string().max(200).optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

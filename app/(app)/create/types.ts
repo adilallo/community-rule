@@ -25,6 +25,8 @@ export type CreateFlowStep =
   | "conflict-management"
   | "confirm-stakeholders"
   | "final-review"
+  /** Branch-only URL: same UI as final-review; editing an already-published rule from completed. */
+  | "edit-rule"
   | "completed";
 
 /** String keys used by generic text-field steps for `CreateFlowState`. */
@@ -173,6 +175,11 @@ export interface CreateFlowState {
    * `confirm-stakeholders` can re-apply `?fromFlow=1` on the template URL.
    */
   templateReviewEntryFromCreateFlow?: boolean;
+  /**
+   * When set, **Finalize** and signed-in **Save & Exit** update this published
+   * rule (PATCH) instead of POSTing a new rule or only saving a draft.
+   */
+  editingPublishedRuleId?: string;
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];

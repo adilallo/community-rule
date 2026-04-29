@@ -31,9 +31,13 @@ export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
 ] as const;
 
 /**
- * Valid step IDs for the create flow (for validation)
+ * Valid URL segments for `/create/[screenId]` (includes branch-only `edit-rule`).
+ * Linear order for navigation remains {@link FLOW_STEP_ORDER}.
  */
-export const VALID_STEPS: readonly CreateFlowStep[] = FLOW_STEP_ORDER;
+export const VALID_STEPS: readonly CreateFlowStep[] = [
+  ...FLOW_STEP_ORDER,
+  "edit-rule",
+] as const;
 
 /**
  * First step in the flow (entry point)

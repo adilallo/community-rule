@@ -3,12 +3,16 @@
 import Image from "next/image";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import MultiSelect from "../../controls/MultiSelect";
+import InlineTextButton from "../../buttons/InlineTextButton";
 import NavigationLink from "../../navigation/Link";
 import type { RuleBottomLink, RuleViewProps } from "./Rule.types";
 
 export function RuleView({
   title,
   description,
+  onDescriptionClick,
+  descriptionEmptyHint,
+  descriptionEditAriaLabel,
   icon,
   backgroundColor,
   className,
@@ -314,6 +318,41 @@ export function RuleView({
         </div>
       ) : expanded ? (
         <>
+          {(description ||
+            (onDescriptionClick &&
+              typeof descriptionEmptyHint === "string")) && (
+            <div
+              className={`relative w-full shrink-0 border-b border-solid border-[var(--color-content-invert-primary)] pb-[16px] ${
+                expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"
+              }`}
+            >
+              {onDescriptionClick ? (
+                <InlineTextButton
+                  type="button"
+                  underline={false}
+                  data-testid="rule-description-edit"
+                  ariaLabel={descriptionEditAriaLabel}
+                  className={`${descriptionClass} w-full min-w-0 cursor-pointer whitespace-pre-wrap text-left text-[var(--color-content-invert-primary)] hover:!opacity-100 ${
+                    !description && descriptionEmptyHint ? "opacity-70" : ""
+                  }`.trim()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDescriptionClick();
+                  }}
+                >
+                  {description ?? descriptionEmptyHint ?? ""}
+                </InlineTextButton>
+              ) : (
+                description && (
+                  <p
+                    className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)]`}
+                  >
+                    {description}
+                  </p>
+                )
+              )}
+            </div>
+          )}
           {/* Categories Section - Using MultiSelect */}
           {categories && categories.length > 0 && (
             <div
@@ -350,16 +389,6 @@ export function RuleView({
                   className="w-full"
                 />
               ))}
-            </div>
-          )}
-          {/* Footer: Description */}
-          {description && (
-            <div className="border-t border-solid border-[var(--color-content-invert-primary)] pt-[16px] relative shrink-0 w-full">
-              <p
-                className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)]`}
-              >
-                {description}
-              </p>
             </div>
           )}
         </>

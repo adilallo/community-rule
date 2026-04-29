@@ -34,6 +34,9 @@ if (PROPORTION_BY_STEP_INDEX.length !== FLOW_STEP_ORDER.length) {
 export function getProportionBarProgressForCreateFlowStep(
   step: CreateFlowStep | null | undefined,
 ): ProportionBarState {
+  if (step === "edit-rule") {
+    return "3-2";
+  }
   const idx = getStepIndex(step);
   if (idx < 0) return "1-0";
   return PROPORTION_BY_STEP_INDEX[idx] ?? "1-0";

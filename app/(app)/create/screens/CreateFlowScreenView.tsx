@@ -83,6 +83,8 @@ export function CreateFlowScreenView({
       return <ConfirmStakeholdersScreen />;
     case "final-review":
       return <FinalReviewScreen />;
+    case "edit-rule":
+      return <FinalReviewScreen variant="editPublished" />;
     case "completed":
       return <CompletedScreen />;
     default: {
