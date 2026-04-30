@@ -1,16 +1,17 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import {
-  buildCoreValuesPrefillFromTemplateBody,
-  buildTemplateCustomizePrefill,
-} from "../../../../lib/create/applyTemplatePrefill";
+import { buildTemplateCustomizePrefill } from "../../../../lib/create/applyTemplatePrefill";
 import { loadTemplateReviewBySlug } from "../../../../lib/create/loadTemplateReviewBySlug";
+import { stripCustomRuleSelectionFields } from "../../../../lib/create/stripCustomRuleSelectionFields";
 import messages from "../../../../messages/en/index";
 import type { CreateFlowState } from "../types";
 
 type AppRouterLike = { push: (_href: string) => void };
 type UpdateState = (_patch: Partial<CreateFlowState>) => void;
+type ReplaceStateFn = (
+  _next: CreateFlowState | ((_prev: CreateFlowState) => CreateFlowState),
+) => void;
 
 export type UseTemplateReviewActionsResult = {
   /** True iff the current pathname is a template-review route (locale/basePath tolerant). */
@@ -30,11 +31,12 @@ export type UseTemplateReviewActionsResult = {
    */
   handleCustomize: () => Promise<void>;
   /**
-   * Use without changes: scrub any prior customize picks, seed the core-values
-   * snapshot from the template's Values section, drop that section from
-   * `state.sections`, and route to `/create/confirm-stakeholders` (or
-   * `/create/informational` with a pin to skip past `/create/review` to
-   * `/create/confirm-stakeholders` later).
+   * Use without changes: scrub any prior customize picks, seed core values +
+   * method-card selections from the template body (same id mapping as
+   * Customize) so drilling from final-review via + shows selected cards, drop
+   * the Values row from `state.sections`, and route to
+   * `/create/confirm-stakeholders` (or `/create/informational` with a pin to
+   * skip past `/create/review` to `/create/confirm-stakeholders` later).
    */
   handleUseWithoutChanges: () => Promise<void>;
 };
@@ -55,19 +57,19 @@ export type UseTemplateReviewActionsResult = {
  *   setTemplateReviewApplyError,
  *   handleCustomize,
  *   handleUseWithoutChanges,
- * } = useTemplateReviewActions({ pathname, state, updateState, resetCustomRuleSelections, router });
+ * } = useTemplateReviewActions({ pathname, state, updateState, replaceState, router });
  */
 export function useTemplateReviewActions({
   pathname,
   state,
   updateState,
-  resetCustomRuleSelections,
+  replaceState,
   router,
 }: {
   pathname: string | null | undefined;
   state: CreateFlowState;
   updateState: UpdateState;
-  resetCustomRuleSelections: () => void;
+  replaceState: ReplaceStateFn;
   router: AppRouterLike;
 }): UseTemplateReviewActionsResult {
   const [isApplyingTemplate, setIsApplyingTemplate] = useState(false);
@@ -143,18 +145,19 @@ export function useTemplateReviewActions({
       return;
     }
 
-    // Using the template verbatim: scrub any prior customize picks so they
-    // don't bleed into `document.coreValues` at publish time.
-    resetCustomRuleSelections();
+    const hasCommunityName =
+      typeof state.title === "string" && state.title.trim().length > 0;
 
-    // Seed the core-values snapshot from the Values section so the
-    // final-review chip modal can edit them (it keys edits by chip id).
-    // The Values entries themselves are then dropped from `sections` to
-    // avoid publishing `document.coreValues` and `document.sections.Values`
-    // for the same data — matches the "Customize" path's data shape.
-    const coreValuesPrefill = buildCoreValuesPrefillFromTemplateBody(doc);
-    const sectionsWithoutValues =
-      Object.keys(coreValuesPrefill).length > 0
+    // Atomic read-modify-write: strip prior custom-rule picks and merge template
+    // body in one replaceState so method ids are never lost across React batching
+    // (reset + update separately could leave selections undefined in Strict Mode).
+    replaceState((prev) => {
+      const base = stripCustomRuleSelectionFields(prev);
+      const customizePrefill = buildTemplateCustomizePrefill(doc);
+      const hasValuesSeed =
+        customizePrefill.selectedCoreValueIds !== undefined;
+
+      const sectionsWithoutValues = hasValuesSeed
         ? sections.filter((s) => {
             const name = (s as { categoryName?: unknown }).categoryName;
             if (typeof name !== "string") return true;
@@ -163,33 +166,60 @@ export function useTemplateReviewActions({
           })
         : sections;
 
-    const hasCommunityName =
-      typeof state.title === "string" && state.title.trim().length > 0;
-    updateState({
-      ...coreValuesPrefill,
-      sections: sectionsWithoutValues,
-      templateReviewBackSlug: templateReviewSlug,
-      ...(hasCommunityName
-        ? { pendingTemplateAction: undefined }
-        : {
-            pendingTemplateAction: {
-              slug: templateReviewSlug,
-              mode: "useWithoutChanges",
-            },
-          }),
+      const hasCommunityName =
+        typeof prev.title === "string" && prev.title.trim().length > 0;
+
+      return {
+        ...base,
+        ...(hasValuesSeed
+          ? {
+              selectedCoreValueIds: customizePrefill.selectedCoreValueIds,
+              coreValuesChipsSnapshot:
+                customizePrefill.coreValuesChipsSnapshot,
+            }
+          : {}),
+        ...(customizePrefill.selectedCommunicationMethodIds !== undefined
+          ? {
+              selectedCommunicationMethodIds:
+                customizePrefill.selectedCommunicationMethodIds,
+            }
+          : {}),
+        ...(customizePrefill.selectedMembershipMethodIds !== undefined
+          ? {
+              selectedMembershipMethodIds:
+                customizePrefill.selectedMembershipMethodIds,
+            }
+          : {}),
+        ...(customizePrefill.selectedDecisionApproachIds !== undefined
+          ? {
+              selectedDecisionApproachIds:
+                customizePrefill.selectedDecisionApproachIds,
+            }
+          : {}),
+        ...(customizePrefill.selectedConflictManagementIds !== undefined
+          ? {
+              selectedConflictManagementIds:
+                customizePrefill.selectedConflictManagementIds,
+            }
+          : {}),
+        sections: sectionsWithoutValues,
+        templateReviewBackSlug: templateReviewSlug,
+        ...(hasCommunityName
+          ? { pendingTemplateAction: undefined }
+          : {
+              pendingTemplateAction: {
+                slug: templateReviewSlug,
+                mode: "useWithoutChanges",
+              },
+            }),
+      };
     });
     router.push(
       hasCommunityName
         ? "/create/confirm-stakeholders"
         : "/create/informational",
     );
-  }, [
-    resetCustomRuleSelections,
-    router,
-    state.title,
-    templateReviewSlug,
-    updateState,
-  ]);
+  }, [replaceState, router, state.title, templateReviewSlug]);
 
   return {
     isTemplateReviewRoute,

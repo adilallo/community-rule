@@ -212,8 +212,15 @@ export interface CreateFlowContextValue {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
   updateState: (_updates: Partial<CreateFlowState>) => void;
-  /** Replace entire flow state (e.g. hydrate from server draft). */
-  replaceState: (_next: CreateFlowState) => void;
+  /**
+   * Replace entire flow state (e.g. hydrate from server draft), or compute the
+   * next state from the previous snapshot (atomic read-modify-write).
+   */
+  replaceState: (
+    _next:
+      | CreateFlowState
+      | ((_prev: CreateFlowState) => CreateFlowState),
+  ) => void;
   /** Reset flow state and clear anonymous localStorage draft keys when present. */
   clearState: () => void;
   /**

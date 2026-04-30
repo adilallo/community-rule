@@ -135,7 +135,7 @@ function CreateFlowLayoutContent({
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
-  const { state, clearState, updateState, resetCustomRuleSelections, setMethodSectionsPinCommitted } =
+  const { state, clearState, updateState, resetCustomRuleSelections, setMethodSectionsPinCommitted, replaceState } =
     useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
@@ -177,7 +177,7 @@ function CreateFlowLayoutContent({
     pathname,
     state,
     updateState,
-    resetCustomRuleSelections,
+    replaceState,
     router,
   });
 

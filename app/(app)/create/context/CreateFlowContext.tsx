@@ -21,6 +21,7 @@ import {
   readAnonymousCreateFlowState,
   writeAnonymousCreateFlowState,
 } from "../utils/anonymousDraftStorage";
+import { stripCustomRuleSelectionFields } from "../../../../lib/create/stripCustomRuleSelectionFields";
 import {
   clearCoreValueDetailsLocalStorage,
   readCoreValueDetailsFromLocalStorage,
@@ -170,9 +171,12 @@ export function CreateFlowProvider({
     });
   }, []);
 
-  const replaceState = useCallback((next: CreateFlowState) => {
-    setState(next);
-  }, []);
+  const replaceState = useCallback(
+    (next: CreateFlowState | ((prev: CreateFlowState) => CreateFlowState)) => {
+      setState(next);
+    },
+    [],
+  );
 
   const clearState = useCallback(() => {
     setState({});
@@ -184,20 +188,7 @@ export function CreateFlowProvider({
   // Keys produced by the Create Custom stage screens + `buildTemplateCustomizePrefill`.
   // Kept in sync with `CreateFlowState` comments marked "Create Custom —".
   const resetCustomRuleSelections = useCallback(() => {
-    setState((prev) => {
-      const {
-        selectedCoreValueIds: _a,
-        coreValuesChipsSnapshot: _b,
-        coreValueDetailsByChipId: _c,
-        selectedCommunicationMethodIds: _d,
-        selectedMembershipMethodIds: _e,
-        selectedDecisionApproachIds: _f,
-        selectedConflictManagementIds: _g,
-        methodSectionsPinCommitted: _h,
-        ...rest
-      } = prev;
-      return rest;
-    });
+    setState((prev) => stripCustomRuleSelectionFields(prev));
     // Effect on `state.coreValueDetailsByChipId` clears its dedicated
     // localStorage key when the field goes undefined, so we don't need to
     // touch `clearCoreValueDetailsLocalStorage()` directly here.
