@@ -5,6 +5,8 @@
  * including step types, state management, and context interfaces.
  */
 
+import type { MethodFacetApiSectionId } from "../../../lib/create/customRuleFacets";
+
 /**
  * Valid step IDs for the create rule flow (URL segment after `/create/`).
  * Create Community order matches Figma; `review` closes that stage per design.
@@ -36,12 +38,11 @@ export type CreateFlowTextStateField =
   | "communityContext"
   | "communitySaveEmail";
 
-/** Facet-backed method card stacks (`GET /api/create-flow/methods?section=`). */
-export type CreateFlowMethodCardFacetSection =
-  | "communication"
-  | "membership"
-  | "decisionApproaches"
-  | "conflictManagement";
+/**
+ * Facet-backed method card stacks (`GET /api/create-flow/methods?section=`).
+ * Canonical ids: {@link METHOD_FACET_API_SECTION_IDS} in `lib/create/customRuleFacets.ts`.
+ */
+export type CreateFlowMethodCardFacetSection = MethodFacetApiSectionId;
 
 /**
  * Serialized chip row for `community-structure` (preset + custom labels).

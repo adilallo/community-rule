@@ -20,12 +20,20 @@ import {
   getNextStep,
   getStepIndex,
   parseReviewReturnSearchParam,
-  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
+  createFlowStepUsesSelectSplitScroll,
   TEMPLATES_FACET_RECOMMEND_QUERY,
   TEMPLATES_FACET_RECOMMEND_VALUE,
   TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY,
   TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE,
 } from "./utils/flowSteps";
+import {
+  CREATE_FLOW_SYNC_DRAFT_QUERY,
+  CREATE_FLOW_SYNC_DRAFT_VALUE,
+  CREATE_ROUTES,
+  createFlowStepPath,
+  createFlowStepPathAfterStrippingReviewReturn,
+  createFlowStepPathWithSyncDraft,
+} from "./utils/createFlowPaths";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import {
   createFlowStepUsesCenteredTextLayout,
@@ -42,12 +50,12 @@ import {
   clearAnonymousCreateFlowStorage,
   setTransferPendingFlag,
 } from "./utils/anonymousDraftStorage";
-import type { CreateFlowMethodCardFacetSection } from "./types";
 import {
   createFlowStateFromPublishedRule,
   isPublishedRuleSelectionMissing,
   methodSectionsPinsFromPublishedHydratePatch,
 } from "../../../lib/create/publishedDocumentToCreateFlowState";
+import { METHOD_FACET_API_SECTION_IDS } from "../../../lib/create/customRuleFacets";
 import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
 import { deleteServerDraft } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
@@ -193,8 +201,8 @@ function CreateFlowLayoutContent({
 
   const loginReturnPath =
     currentStep === "edit-rule"
-      ? "/create/edit-rule?syncDraft=1"
-      : "/create/final-review?syncDraft=1";
+      ? createFlowStepPathWithSyncDraft("edit-rule")
+      : createFlowStepPathWithSyncDraft("final-review");
 
   const {
     publishBannerMessage,
@@ -248,7 +256,7 @@ function CreateFlowLayoutContent({
       if (sessionUser) {
         void deleteServerDraft();
       }
-      router.push("/");
+      router.push(CREATE_ROUTES.root);
       return;
     }
 
@@ -262,7 +270,7 @@ function CreateFlowLayoutContent({
         variant: "saveProgress",
         nextPath:
           returnToTemplateReview ??
-          `${pathname ?? "/create"}?syncDraft=1`,
+          `${pathname != null && pathname.length > 0 ? pathname : CREATE_ROUTES.createRoot}?${CREATE_FLOW_SYNC_DRAFT_QUERY}=${CREATE_FLOW_SYNC_DRAFT_VALUE}`,
         backdropVariant: "blurredYellow",
       });
       return;
@@ -278,7 +286,7 @@ function CreateFlowLayoutContent({
       sessionUser &&
       currentStep === "community-save"
     ) {
-      router.replace("/create/review");
+      router.replace(CREATE_ROUTES.review);
     }
   }, [sessionResolved, sessionUser, currentStep, router]);
 
@@ -294,12 +302,12 @@ function CreateFlowLayoutContent({
     if (currentStep !== "edit-rule") return;
     const last = readLastPublishedRule();
     if (!last) {
-      router.replace("/create/completed");
+      router.replace(CREATE_ROUTES.completed);
       return;
     }
     const editingId = state.editingPublishedRuleId?.trim() ?? "";
     if (editingId.length > 0 && editingId !== last.id) {
-      router.replace("/create/completed");
+      router.replace(CREATE_ROUTES.completed);
       return;
     }
     const titleOk =
@@ -307,9 +315,7 @@ function CreateFlowLayoutContent({
     const sectionsClear = (state.sections?.length ?? 0) === 0;
     const patch = createFlowStateFromPublishedRule(last);
     const pinPatch = methodSectionsPinsFromPublishedHydratePatch(patch);
-    const METHOD_CARD_PIN_FACETS: readonly CreateFlowMethodCardFacetSection[] =
-      ["communication", "membership", "decisionApproaches", "conflictManagement"];
-    const needsPinMerge = METHOD_CARD_PIN_FACETS.some(
+    const needsPinMerge = METHOD_FACET_API_SECTION_IDS.some(
       (key) =>
         pinPatch[key] === true &&
         state.methodSectionsPinCommitted?.[key] !== true,
@@ -406,11 +412,9 @@ function CreateFlowLayoutContent({
     currentStep === "final-review" || currentStep === "edit-rule";
   const isCardLayoutStep = createFlowStepUsesCardLayout(currentStep);
   /** Two-column select / right-rail: below `lg` main scrolls; at `lg+` only the right column scrolls. */
-  const isSelectSplitScrollStep =
-    currentStep === "community-size" ||
-    currentStep === "community-structure" ||
-    currentStep === "core-values" ||
-    currentStep === "decision-approaches";
+  const isSelectSplitScrollStep = createFlowStepUsesSelectSplitScroll(
+    currentStep,
+  );
   const stepIdx = currentStep != null ? getStepIndex(currentStep) : -1;
 
   /** At `md+`, main cross-axis: center by default; exceptions stay top-aligned (see product spec). */
@@ -586,7 +590,7 @@ function CreateFlowLayoutContent({
                   editingPublishedRuleId: last.id,
                   sections: [],
                 });
-                router.push("/create/edit-rule");
+                router.push(createFlowStepPath("edit-rule"));
               }
             : undefined
         }
@@ -738,15 +742,11 @@ function CreateFlowLayoutContent({
                     setMethodSectionsPinCommitted(facet, true);
                   }
                   if (reviewReturnTarget) {
-                    const params = new URLSearchParams(
-                      searchParams?.toString() ?? "",
-                    );
-                    params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
-                    const qs = params.toString();
                     router.push(
-                      qs.length > 0
-                        ? `/create/${reviewReturnTarget}?${qs}`
-                        : `/create/${reviewReturnTarget}`,
+                      createFlowStepPathAfterStrippingReviewReturn(
+                        reviewReturnTarget,
+                        searchParams,
+                      ),
                     );
                     return;
                   }
@@ -784,20 +784,16 @@ function CreateFlowLayoutContent({
               ? () =>
                   router.push(
                     templateReviewFooterBackToCreateReview
-                      ? "/create/review"
-                      : "/",
+                      ? CREATE_ROUTES.review
+                      : CREATE_ROUTES.root,
                   )
               : reviewReturnTarget
                 ? () => {
-                    const params = new URLSearchParams(
-                      searchParams?.toString() ?? "",
-                    );
-                    params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
-                    const qs = params.toString();
                     router.push(
-                      qs.length > 0
-                        ? `/create/${reviewReturnTarget}?${qs}`
-                        : `/create/${reviewReturnTarget}`,
+                      createFlowStepPathAfterStrippingReviewReturn(
+                        reviewReturnTarget,
+                        searchParams,
+                      ),
                     );
                   }
                 : previousStep

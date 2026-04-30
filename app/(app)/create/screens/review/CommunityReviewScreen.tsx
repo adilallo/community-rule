@@ -17,19 +17,7 @@ import {
   vectorMarkPath,
 } from "../../../../../lib/assetUtils";
 import { methodSectionsPinsForHydratedSelections } from "../../../../../lib/create/publishedDocumentToCreateFlowState";
-
-/**
- * Targets for a `pendingTemplateAction` redirect. Customize resumes the
- * custom-rule stage with chips already prefilled; useWithoutChanges jumps to
- * the review-and-complete stage since the template body is already in state.
- */
-const PENDING_TEMPLATE_REDIRECT_TARGET: Record<
-  "customize" | "useWithoutChanges",
-  string
-> = {
-  customize: "/create/core-values",
-  useWithoutChanges: "/create/confirm-stakeholders",
-};
+import { createFlowStepPath } from "../../utils/createFlowPaths";
 
 /** Create Community review — Figma `19706:12135` (`/create/review`; two columns from `lg:`; column caps in `createFlowLayoutTokens`). */
 export function CommunityReviewScreen() {
@@ -56,8 +44,10 @@ export function CommunityReviewScreen() {
     if (firedRedirectRef.current) return;
     const pending = state.pendingTemplateAction;
     if (!pending) return;
-    const target = PENDING_TEMPLATE_REDIRECT_TARGET[pending.mode];
-    if (!target) return;
+    const target =
+      pending.mode === "customize"
+        ? createFlowStepPath("core-values")
+        : createFlowStepPath("confirm-stakeholders");
     firedRedirectRef.current = true;
     const pinMerge =
       pending.mode === "customize"

@@ -62,7 +62,7 @@ export const ShareView = memo(function ShareView({
   onSlackShare,
   onDiscordShare,
   className = "",
-  backdropVariant = "default",
+  backdropVariant = "blurredYellow",
   dialogRef,
   overlayRef,
   titleId,

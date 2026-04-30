@@ -47,6 +47,14 @@ Order is defined in code by [`FLOW_STEP_ORDER`](../app/(app)/create/utils/flowSt
 
 Active step for chrome and navigation is resolved from the pathname via [`parseCreateFlowScreenFromPathname`](../app/(app)/create/utils/flowSteps.ts) inside [`useCreateFlowNavigation`](../app/(app)/create/hooks/useCreateFlowNavigation.ts).
 
+### Custom-rule facet catalog and `/create` path helpers (CR-92)
+
+**[`CUSTOM_RULE_FACETS`](../lib/create/customRuleFacets.ts)** is the single table for template category keys, `CreateFlowStep`, footer confirm bindings, `selected*` / strip keys, and the four `GET /api/create-flow/methods?section=` ids. Update that module (and related tests) when adding or renaming a custom-rule facet instead of scattering new switches across `applyTemplatePrefill`, `customRuleConfirmFooterSteps`, `buildFinalReviewCategories`, `stripCustomRuleSelectionFields`, etc.
+
+**[`createFlowPaths`](../app/(app)/create/utils/createFlowPaths.ts)** centralises `/create/{step}` builders and shared constants (`CREATE_ROUTES`, `syncDraft` helpers). Prefer these over raw string literals in layout, hooks, and redirects.
+
+Wizard step → React screen rendering lives in [`createFlowScreenComponents.tsx`](../app/(app)/create/screens/createFlowScreenComponents.tsx) (`renderCreateFlowScreen`), paired with [`CREATE_FLOW_SCREEN_REGISTRY`](../app/(app)/create/utils/createFlowScreenRegistry.ts) for Figma/layout metadata.
+
 ### Fresh start vs continue draft (signed-in + sync)
 
 **Established pattern:** anonymous and signed-in users should see the **same** wizard when starting a **new** rule from marketing or profile: empty state at the first step, with no surprise reload of old work. Signed-in users additionally get **Save & Exit** and **publish**; their in-progress payload may also live on **`/api/drafts/me`** when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`.

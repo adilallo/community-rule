@@ -2,20 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { CreateFlowStep } from "../types";
-import { InformationalScreen } from "./informational/InformationalScreen";
-import { CreateFlowTextFieldScreen } from "./text/CreateFlowTextFieldScreen";
-import { CommunitySizeSelectScreen } from "./select/CommunitySizeSelectScreen";
-import { CommunityStructureSelectScreen } from "./select/CommunityStructureSelectScreen";
-import { CoreValuesSelectScreen } from "./select/CoreValuesSelectScreen";
-import { ConfirmStakeholdersScreen } from "./select/ConfirmStakeholdersScreen";
-import { CommunityUploadScreen } from "./upload/CommunityUploadScreen";
-import { CommunityReviewScreen } from "./review/CommunityReviewScreen";
-import { FinalReviewScreen } from "./review/FinalReviewScreen";
-import { CommunicationMethodsScreen } from "./card/CommunicationMethodsScreen";
-import { MembershipMethodsScreen } from "./card/MembershipMethodsScreen";
-import { ConflictManagementScreen } from "./card/ConflictManagementScreen";
-import { DecisionApproachesScreen } from "./right-rail/DecisionApproachesScreen";
-import { CompletedScreen } from "./completed/CompletedScreen";
+import { renderCreateFlowScreen } from "./createFlowScreenComponents";
 
 /**
  * Maps each wizard `screenId` to its screen component.
@@ -23,73 +10,14 @@ import { CompletedScreen } from "./completed/CompletedScreen";
  * **Folder rule (Figma):** subfolders match `CREATE_FLOW_SCREEN_REGISTRY[].layoutKind`
  * — `select/` (two-column chip flows), `card/` (compact card-stack steps), `text/`, etc.
  * The URL segment (`communication-methods`) is not the folder name; see `createFlowScreenRegistry.ts`.
+ *
+ * Implementation lives in {@link renderCreateFlowScreen} (`createFlowScreenComponents.tsx`)
+ * so the registry metadata and this router stay easier to keep in sync (CR-92 §3).
  */
 export function CreateFlowScreenView({
   screenId,
 }: {
   screenId: CreateFlowStep;
 }): ReactNode {
-  switch (screenId) {
-    case "informational":
-      return <InformationalScreen />;
-    case "community-name":
-      return (
-        <CreateFlowTextFieldScreen
-          messageNamespace="create.community.communityName"
-          stateField="title"
-          maxLength={48}
-        />
-      );
-    case "community-structure":
-      return <CommunityStructureSelectScreen />;
-    case "community-context":
-      return (
-        <CreateFlowTextFieldScreen
-          messageNamespace="create.community.communityContext"
-          stateField="communityContext"
-          maxLength={200}
-          mainAlign="center"
-        />
-      );
-    case "community-size":
-      return <CommunitySizeSelectScreen />;
-    case "community-upload":
-      return <CommunityUploadScreen />;
-    case "community-save":
-      return (
-        <CreateFlowTextFieldScreen
-          messageNamespace="create.community.communitySave"
-          stateField="communitySaveEmail"
-          maxLength={254}
-          mainAlign="center"
-          inputType="email"
-          showCharacterCount={false}
-          headerJustification="center"
-        />
-      );
-    case "review":
-      return <CommunityReviewScreen />;
-    case "core-values":
-      return <CoreValuesSelectScreen />;
-    case "communication-methods":
-      return <CommunicationMethodsScreen />;
-    case "membership-methods":
-      return <MembershipMethodsScreen />;
-    case "decision-approaches":
-      return <DecisionApproachesScreen />;
-    case "conflict-management":
-      return <ConflictManagementScreen />;
-    case "confirm-stakeholders":
-      return <ConfirmStakeholdersScreen />;
-    case "final-review":
-      return <FinalReviewScreen />;
-    case "edit-rule":
-      return <FinalReviewScreen variant="editPublished" />;
-    case "completed":
-      return <CompletedScreen />;
-    default: {
-      const _exhaustive: never = screenId;
-      return _exhaustive;
-    }
-  }
+  return renderCreateFlowScreen(screenId);
 }

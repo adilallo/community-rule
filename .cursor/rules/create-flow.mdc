@@ -16,6 +16,9 @@ alwaysApply: false
   `app/(app)/create/utils/createFlowScreenRegistry.ts`. Never branch on layout kind
   inside a screen — pick the matching shell (`CreateFlowStepShell` /
   `CreateFlowTwoColumnSelectShell`).
+- Keep create-flow step routing centralized in
+  `app/(app)/create/utils/createFlowPaths.ts` (`createFlowStepPath`,
+  `CREATE_ROUTES`) — do not introduce new hardcoded `/create/...` literals.
 - Shared create-flow pieces go in `app/(app)/create/components/` (layout shells,
   field composites). Generic primitives go in `app/components/`.
 
@@ -49,8 +52,9 @@ file are a smell once they're used more than once.
   namespace (see `localization.mdc`).
 - Modal `sections` defaults are DB-shaped seed placeholders, not UI
   constants — expect replacement with live data.
-- Modal `sections` defaults are DB-shaped seed placeholders, not UI
-  constants — expect replacement with live data.
+- Custom-rule facet mappings (step ids, template-category aliases, selection
+  keys, strip keys) must be sourced from `lib/create/customRuleFacets.ts`
+  (`CUSTOM_RULE_FACETS`) instead of adding new ad-hoc switches/tables.
 
 ## Interaction tracking
 

@@ -1,8 +1,5 @@
 import type { CreateFlowState } from "../../app/(app)/create/types";
-import communicationMessages from "../../messages/en/create/customRule/communication.json";
-import conflictManagementMessages from "../../messages/en/create/customRule/conflictManagement.json";
-import decisionApproachesMessages from "../../messages/en/create/customRule/decisionApproaches.json";
-import membershipMessages from "../../messages/en/create/customRule/membership.json";
+import { readMethodPresetsForFacetGroup } from "./customRuleFacets";
 import {
   buildCoreValuesForDocument,
   parseSectionsFromCreateFlowState,
@@ -55,21 +52,6 @@ export type FinalReviewCategoryNames = {
 
 type MethodPreset = { id: string; label: string };
 
-function readMethodsArray(source: unknown): MethodPreset[] {
-  if (!source || typeof source !== "object") return [];
-  const methods = (source as { methods?: unknown }).methods;
-  if (!Array.isArray(methods)) return [];
-  const out: MethodPreset[] = [];
-  for (const raw of methods) {
-    if (!raw || typeof raw !== "object") continue;
-    const o = raw as Record<string, unknown>;
-    if (typeof o.id === "string" && typeof o.label === "string") {
-      out.push({ id: o.id, label: o.label });
-    }
-  }
-  return out;
-}
-
 /**
  * Resolve an ordered list of preset ids to `{label, id}` entries, filtering
  * missing/duplicate labels. The id is returned alongside so callers can key
@@ -115,18 +97,8 @@ function overrideKeyForLabel(
 function methodsForGroup(
   groupKey: TemplateFacetGroupKey | null,
 ): readonly MethodPreset[] {
-  switch (groupKey) {
-    case "communication":
-      return readMethodsArray(communicationMessages);
-    case "membership":
-      return readMethodsArray(membershipMessages);
-    case "decisionApproaches":
-      return readMethodsArray(decisionApproachesMessages);
-    case "conflictManagement":
-      return readMethodsArray(conflictManagementMessages);
-    default:
-      return [];
-  }
+  if (groupKey == null) return [];
+  return readMethodPresetsForFacetGroup(groupKey);
 }
 
 /**

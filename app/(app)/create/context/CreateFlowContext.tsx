@@ -185,8 +185,8 @@ export function CreateFlowProvider({
     clearCoreValueDetailsLocalStorage();
   }, []);
 
-  // Keys produced by the Create Custom stage screens + `buildTemplateCustomizePrefill`.
-  // Kept in sync with `CreateFlowState` comments marked "Create Custom —".
+  // Keys cleared here match `STRIP_CUSTOM_RULE_SELECTION_STATE_KEYS` from
+  // `lib/create/customRuleFacets.ts` (CUSTOM_RULE_FACETS / CR-92).
   const resetCustomRuleSelections = useCallback(() => {
     setState((prev) => stripCustomRuleSelectionFields(prev));
     // Effect on `state.coreValueDetailsByChipId` clears its dedicated

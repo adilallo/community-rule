@@ -2,16 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildFacetQueryString } from "../../../../lib/create/buildFacetQueryString";
+import type { MethodFacetApiSectionId } from "../../../../lib/create/customRuleFacets";
 import { useCreateFlow } from "../context/CreateFlowContext";
 
 /**
  * Card-deck section ids served by `/api/create-flow/methods` (CR-88 §9.2).
+ * Same tuple as {@link METHOD_FACET_API_SECTION_IDS} (`CUSTOM_RULE_FACETS`, CR-92).
  */
-export type RecommendationSection =
-  | "communication"
-  | "membership"
-  | "decisionApproaches"
-  | "conflictManagement";
+export type RecommendationSection = MethodFacetApiSectionId;
 
 export type FacetRecommendationsResult = {
   /** `true` once the network call completes (or short-circuits with no facets). */

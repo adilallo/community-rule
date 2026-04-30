@@ -2,16 +2,12 @@ import type {
   CreateFlowMethodCardFacetSection,
   CreateFlowState,
 } from "../../app/(app)/create/types";
+import {
+  CUSTOM_RULE_FACETS,
+  PUBLISHED_CUSTOM_RULE_SELECTION_KEYS,
+} from "./customRuleFacets";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
-
-const PUBLISHED_SELECTION_FIELD_KEYS: readonly (keyof CreateFlowState)[] = [
-  "selectedCoreValueIds",
-  "selectedCommunicationMethodIds",
-  "selectedMembershipMethodIds",
-  "selectedDecisionApproachIds",
-  "selectedConflictManagementIds",
-] as const;
 
 /**
  * True when `patch` (from {@link createFlowStateFromPublishedRule}) expects
@@ -25,7 +21,7 @@ export function isPublishedRuleSelectionMissing(
   state: CreateFlowState,
   patch: Partial<CreateFlowState>,
 ): boolean {
-  for (const k of PUBLISHED_SELECTION_FIELD_KEYS) {
+  for (const k of PUBLISHED_CUSTOM_RULE_SELECTION_KEYS) {
     const desired = patch[k];
     if (!Array.isArray(desired) || desired.length === 0) continue;
     const actualRaw = state[k];
@@ -49,17 +45,12 @@ export function methodSectionsPinsForHydratedSelections(
   patch: Partial<CreateFlowState>,
 ): Partial<Record<CreateFlowMethodCardFacetSection, boolean>> {
   const out: Partial<Record<CreateFlowMethodCardFacetSection, boolean>> = {};
-  if ((patch.selectedCommunicationMethodIds?.length ?? 0) > 0) {
-    out.communication = true;
-  }
-  if ((patch.selectedMembershipMethodIds?.length ?? 0) > 0) {
-    out.membership = true;
-  }
-  if ((patch.selectedDecisionApproachIds?.length ?? 0) > 0) {
-    out.decisionApproaches = true;
-  }
-  if ((patch.selectedConflictManagementIds?.length ?? 0) > 0) {
-    out.conflictManagement = true;
+  for (const row of CUSTOM_RULE_FACETS) {
+    if (row.kind !== "method" || row.apiMethodSectionId == null) continue;
+    const sel = patch[row.selectedIdsStateKey];
+    if (Array.isArray(sel) && sel.length > 0) {
+      out[row.apiMethodSectionId] = true;
+    }
   }
   return out;
 }

@@ -10,6 +10,7 @@ import {
   CREATE_FLOW_COMPLETED_CELEBRATE_QUERY,
   CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
 } from "../utils/flowSteps";
+import { createFlowStepPath } from "../utils/createFlowPaths";
 
 type AppRouterLike = { push: (_href: string) => void };
 
@@ -80,7 +81,7 @@ export function useCreateFlowFinalize({
           document: ruleDocument,
         });
         updateState({ editingPublishedRuleId: undefined });
-        router.push("/create/completed");
+        router.push(createFlowStepPath("completed"));
         return;
       }
       if (updateResult.status === 401) {
@@ -113,7 +114,10 @@ export function useCreateFlowFinalize({
         document: ruleDocument,
       });
       router.push(
-        `/create/completed?${CREATE_FLOW_COMPLETED_CELEBRATE_QUERY}=${CREATE_FLOW_COMPLETED_CELEBRATE_VALUE}`,
+        createFlowStepPath("completed", {
+          [CREATE_FLOW_COMPLETED_CELEBRATE_QUERY]:
+            CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
+        }),
       );
       return;
     }

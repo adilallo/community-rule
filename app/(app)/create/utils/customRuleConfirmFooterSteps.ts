@@ -1,3 +1,4 @@
+import { CUSTOM_RULE_FACETS } from "../../../../lib/create/customRuleFacets";
 import type {
   CreateFlowMethodCardFacetSection,
   CreateFlowState,
@@ -11,9 +12,9 @@ type FooterMessageKey = keyof typeof footerMessages;
  * Binding for each Custom Rule stage step whose footer primary button
  * gates the user on "has at least one chip selected?". All five screens
  * render the same `<Button …>`; only the disable predicate and the
- * footer message differ — this table is the single source of truth for
- * both, so `CreateFlowLayoutClient` can render one JSX block for the
- * whole group.
+ * footer message differ — rows are derived from {@link CUSTOM_RULE_FACETS}
+ * (Linear CR-92) so `CreateFlowLayoutClient` stays aligned with template
+ * prefill, strip keys, and API section ids.
  *
  * `selectionIds` returns the currently-selected ids array from flow
  * state for that step (empty array when nothing has been selected or
@@ -39,33 +40,11 @@ export type CustomRuleConfirmFooterStep = {
 };
 
 export const CUSTOM_RULE_CONFIRM_FOOTER_STEPS: readonly CustomRuleConfirmFooterStep[] =
-  [
-    {
-      step: "core-values",
-      footerMessageKey: "confirmCoreValues",
-      selectionIds: (s) => s.selectedCoreValueIds ?? [],
-    },
-    {
-      step: "communication-methods",
-      footerMessageKey: "confirmCommunication",
-      selectionIds: (s) => s.selectedCommunicationMethodIds ?? [],
-    },
-    {
-      step: "membership-methods",
-      footerMessageKey: "confirmMembership",
-      selectionIds: (s) => s.selectedMembershipMethodIds ?? [],
-    },
-    {
-      step: "decision-approaches",
-      footerMessageKey: "confirmDecisionApproaches",
-      selectionIds: (s) => s.selectedDecisionApproachIds ?? [],
-    },
-    {
-      step: "conflict-management",
-      footerMessageKey: "confirmConflictManagement",
-      selectionIds: (s) => s.selectedConflictManagementIds ?? [],
-    },
-  ] as const;
+  CUSTOM_RULE_FACETS.filter((r) => r.footerMessageKey != null).map((r) => ({
+    step: r.createFlowStep as CustomRuleConfirmFooterStep["step"],
+    footerMessageKey: r.footerMessageKey as FooterMessageKey,
+    selectionIds: r.selectionIds,
+  }));
 
 export const CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP: ReadonlyMap<
   CreateFlowStep,
@@ -79,16 +58,9 @@ export const CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP: ReadonlyMap<
 export function methodCardFacetSectionForConfirmStep(
   step: CustomRuleConfirmFooterStep["step"],
 ): CreateFlowMethodCardFacetSection | undefined {
-  switch (step) {
-    case "communication-methods":
-      return "communication";
-    case "membership-methods":
-      return "membership";
-    case "decision-approaches":
-      return "decisionApproaches";
-    case "conflict-management":
-      return "conflictManagement";
-    default:
-      return undefined;
+  const row = CUSTOM_RULE_FACETS.find((r) => r.createFlowStep === step);
+  if (row == null || row.kind !== "method" || row.apiMethodSectionId == null) {
+    return undefined;
   }
+  return row.apiMethodSectionId;
 }

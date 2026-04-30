@@ -3,6 +3,7 @@ import type {
   CreateFlowState,
 } from "../../app/(app)/create/types";
 import coreValuesMessages from "../../messages/en/create/customRule/coreValues.json";
+import { assignTemplateMethodSlugsToPrefill } from "./customRuleFacets";
 import { methodSlugFromTitle } from "./methodSlugFromTitle";
 
 type TemplateEntry = { title: unknown };
@@ -117,28 +118,7 @@ export function buildTemplateCustomizePrefill(
     const slugs = titles.map(methodSlugFromTitle).filter((s) => s.length > 0);
     if (slugs.length === 0) continue;
 
-    switch (key) {
-      case "communication":
-      case "communications":
-        prefill.selectedCommunicationMethodIds = slugs;
-        break;
-      case "membership":
-      case "memberships":
-        prefill.selectedMembershipMethodIds = slugs;
-        break;
-      case "decisionmaking":
-      case "decisionapproaches":
-      case "decisions":
-        prefill.selectedDecisionApproachIds = slugs;
-        break;
-      case "conflictmanagement":
-      case "conflict":
-      case "conflictresolution":
-        prefill.selectedConflictManagementIds = slugs;
-        break;
-      default:
-        break;
-    }
+    assignTemplateMethodSlugsToPrefill(prefill, key, slugs);
   }
 
   return prefill;

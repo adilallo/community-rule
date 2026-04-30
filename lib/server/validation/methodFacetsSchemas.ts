@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { METHOD_FACET_API_SECTION_IDS } from "../../create/customRuleFacets";
 
 /**
  * Zod schemas for the recommendation matrix (CR-88).
@@ -14,12 +15,8 @@ import { z } from "zod";
  * facet values), §6 (JSON shape), §7 (`MethodFacet` schema), §9 (API).
  */
 
-export const SECTION_IDS = [
-  "communication",
-  "membership",
-  "decisionApproaches",
-  "conflictManagement",
-] as const;
+/** Canonical ids — source: {@link METHOD_FACET_API_SECTION_IDS} in `lib/create/customRuleFacets.ts`. */
+export const SECTION_IDS = METHOD_FACET_API_SECTION_IDS;
 export type SectionId = (typeof SECTION_IDS)[number];
 export const sectionIdSchema = z.enum(SECTION_IDS);
 

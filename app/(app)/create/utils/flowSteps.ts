@@ -118,6 +118,26 @@ export function getStepIndex(step: CreateFlowStep | null | undefined): number {
 }
 
 /**
+ * Steps where below `lg` the main column scrolls with split layout
+ * (`CreateFlowLayoutClient` — Linear CR-92 §4).
+ */
+export const CREATE_FLOW_SELECT_SPLIT_SCROLL_STEPS: readonly CreateFlowStep[] = [
+  "community-size",
+  "community-structure",
+  "core-values",
+  "decision-approaches",
+] as const;
+
+export function createFlowStepUsesSelectSplitScroll(
+  step: CreateFlowStep | null | undefined,
+): boolean {
+  if (!step) return false;
+  return (CREATE_FLOW_SELECT_SPLIT_SCROLL_STEPS as readonly string[]).includes(
+    step,
+  );
+}
+
+/**
  * Whether the given string is a valid create flow step
  */
 export function isValidStep(
