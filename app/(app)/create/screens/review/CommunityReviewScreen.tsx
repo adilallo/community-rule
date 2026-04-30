@@ -16,6 +16,7 @@ import {
   getAssetPath,
   vectorMarkPath,
 } from "../../../../../lib/assetUtils";
+import { methodSectionsPinsForHydratedSelections } from "../../../../../lib/create/publishedDocumentToCreateFlowState";
 
 /**
  * Targets for a `pendingTemplateAction` redirect. Customize resumes the
@@ -58,9 +59,27 @@ export function CommunityReviewScreen() {
     const target = PENDING_TEMPLATE_REDIRECT_TARGET[pending.mode];
     if (!target) return;
     firedRedirectRef.current = true;
-    updateState({ pendingTemplateAction: undefined });
+    const pinMerge =
+      pending.mode === "customize"
+        ? {
+            methodSectionsPinCommitted: {
+              ...state.methodSectionsPinCommitted,
+              ...methodSectionsPinsForHydratedSelections(state),
+            },
+          }
+        : {};
+    updateState({ pendingTemplateAction: undefined, ...pinMerge });
     router.replace(target);
-  }, [router, state.pendingTemplateAction, updateState]);
+  }, [
+    router,
+    state.pendingTemplateAction,
+    state.methodSectionsPinCommitted,
+    state.selectedCommunicationMethodIds,
+    state.selectedMembershipMethodIds,
+    state.selectedDecisionApproachIds,
+    state.selectedConflictManagementIds,
+    updateState,
+  ]);
 
   const cardTitle =
     typeof state.title === "string" && state.title.trim().length > 0

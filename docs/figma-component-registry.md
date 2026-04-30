@@ -9,7 +9,7 @@ Quick map from the Figma file **Community Rule System** (`agv0VBLiBlcnSAaiAORgPR
 | [Button](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=497-3016) | `buttons/` | PascalCase package per primitive — **`Button/`**, **`InlineTextButton/`** (see conventions below). |
 | [Card](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=17865-24349) | `cards/` | One PascalCase package per surface—**`Selection/`** (Figma **Card / CardSelection**), **`CardStack/`**, **`Rule/`** (Figma **Card / Rule**), **`Icon/`**, **`Mini/`**, **`Step/`** (Figma **Card / Step**), **`TemplateReviewCard/`** (see conventions below). |
 | [Control](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=5944-58611) | `controls/` | Checkbox, radio, text field, select, toggle, switch, incrementer, upload, multi-select, chip, … (see **Control conventions** below). **`InfoMessageBox`** canonical here. |
-| [Layout](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21836-20542) | `layout/` | **`List/`**, **`ListEntry/`** + **`listSizeLayout.ts`**. **Tabs** / **Accordion** are in Figma only—**not** in code yet (see **Layout conventions**). |
+| [Layout](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21836-20542) | `layout/` | **`List/`**, **`ListEntry/`**, **`ListItem/`** + **`listSizeLayout.ts`**. **Tabs** / **Accordion** are in Figma only—**not** in code yet (see **Layout conventions**). |
 | [Modals](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=5944-47704) | `modals/` | Alert, Create, Dialog, Login, Tooltip, **`ModalHeader`** / **`ModalFooter`** (see **Modals conventions**). |
 | [Navigation](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=5944-69518) | `navigation/` | **Footer**, **Top**, **`Menu`** + **`MenuItem`**, **Link** matrix — plus create-flow chrome (see **Navigation conventions**, [**CR-104**](https://linear.app/community-rule/issue/CR-104/backlog-design-system-component-cleanup) §8). |
 | [Progress](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21163-24443) | `progress/` | **`Stepper`**, **`ProportionBar`** — see **Progress conventions**. |
@@ -65,6 +65,7 @@ Tracks [**CR-104**](https://linear.app/community-rule/issue/CR-104/backlog-desig
 | --- | --- | --- |
 | List / list container | **`List/`** | **`List.container.tsx`**, **`List.view.tsx`**, **`List.types.ts`**. |
 | List item / entry row | **`ListEntry/`** | **`ListEntry.container.tsx`**, **`ListEntry.view.tsx`**, **`ListEntry.types.ts`** (re-exports **`LIST_SIZE_OPTIONS`** consumed by **`List`**). |
+| Popover / menu list row (lockup) | **`ListItem/`** | **`ListItem.container.tsx`**, **`ListItem.view.tsx`**, **`ListItem.types.ts`** — icon + label **`menuitem`** row (used in **`Popover`**, **`CreateFlowTopNav`** export UI). Distinct from **`List.types`** **`ListItem`** data shape for **`List`**. |
 | Shared list sizing | **`listSizeLayout.ts`** | Layout constants / classes shared by **`List`** and **`ListEntry`**. |
 | List edit | — | No **`ListEdit`** package in this repo today; editing flows may be screen-local or future work—confirm in Figma vs product before introducing a shared primitive. |
 | Tabs | — | **Not implemented.** |

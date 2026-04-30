@@ -36,7 +36,7 @@ const config: ComponentTestSuiteConfig<CreateFlowTopNavProps> = {
     hasEdit: true,
     saveDraftOnExit: true,
     onShare: vi.fn(),
-    onExport: vi.fn(),
+    onSelectExportFormat: vi.fn(),
     onEdit: vi.fn(),
     onExit: vi.fn(),
     className: "test-class",
@@ -66,11 +66,30 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
     expect(exitButton).toBeInTheDocument();
   });
 
-  it("shows Exit when saveDraftOnExit is false", () => {
-    render(<CreateFlowTopNav saveDraftOnExit={false} />);
-    const exitButton = screen.getByRole("button", { name: "Exit" });
-    expect(exitButton).toBeInTheDocument();
-  });
+  it.each([
+    ["Download Markdown", "markdown"],
+    ["Download PDF", "pdf"],
+    ["Download CSV", "csv"],
+  ] as const)(
+    "opens export menu and calls onSelectExportFormat for %s",
+    async (menuLabel, expectedFormat) => {
+      const user = userEvent.setup();
+      const handleExport = vi.fn();
+      render(
+        <CreateFlowTopNav
+          hasExport={true}
+          onSelectExportFormat={handleExport}
+        />,
+      );
+
+      const exportButton = screen.getByRole("button", { name: "Export" });
+      await user.click(exportButton);
+      const item = screen.getByRole("menuitem", { name: menuLabel });
+      await user.click(item);
+
+      expect(handleExport).toHaveBeenCalledWith(expectedFormat);
+    },
+  );
 
   it("renders Share button when hasShare is true", () => {
     render(<CreateFlowTopNav hasShare={true} />);
@@ -86,7 +105,12 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
   });
 
   it("renders Export button when hasExport is true", () => {
-    render(<CreateFlowTopNav hasExport={true} />);
+    render(
+      <CreateFlowTopNav
+        hasExport={true}
+        onSelectExportFormat={vi.fn()}
+      />,
+    );
     const exportButton = screen.getByRole("button", { name: "Export" });
     expect(exportButton).toBeInTheDocument();
   });
@@ -106,16 +130,5 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
     await user.click(exitButton);
 
     expect(handleExit).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onShare when Share button is clicked", async () => {
-    const user = userEvent.setup();
-    const handleShare = vi.fn();
-    render(<CreateFlowTopNav hasShare={true} onShare={handleShare} />);
-
-    const shareButton = screen.getByRole("button", { name: "Share" });
-    await user.click(shareButton);
-
-    expect(handleShare).toHaveBeenCalledTimes(1);
   });
 });

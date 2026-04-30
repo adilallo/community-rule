@@ -9,6 +9,8 @@ export function ModalHeaderView({
   onMoreOptions,
   showCloseButton = true,
   showMoreOptionsButton = true,
+  closeButtonAriaLabel = "Close dialog",
+  moreOptionsAriaLabel = "More options",
   className = "",
 }: ModalHeaderProps) {
   return (
@@ -21,7 +23,7 @@ export function ModalHeaderView({
           type="button"
           onClick={onClose}
           className={`${iconButtonClass} left-[24px] top-[12px]`}
-          aria-label="Close dialog"
+          aria-label={closeButtonAriaLabel}
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
           <img
@@ -41,7 +43,7 @@ export function ModalHeaderView({
           type="button"
           onClick={onMoreOptions}
           className={`${iconButtonClass} right-[24px] top-[12px]`}
-          aria-label="More options"
+          aria-label={moreOptionsAriaLabel}
         >
           <svg
             width="16"

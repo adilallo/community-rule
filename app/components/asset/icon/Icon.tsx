@@ -7,18 +7,24 @@ import ContentCopyIcon from "./content_copy.svg";
 import EditIcon from "./edit.svg";
 import ExclamationIcon from "./exclamation.svg";
 import ChevronRightIcon from "./chevron_right.svg";
+import CsvIcon from "./csv.svg";
 import LogOutIcon from "./log_out.svg";
 import MailIcon from "./mail.svg";
+import MarkdownCopyIcon from "./markdown_copy.svg";
+import PictureAsPdfIcon from "./picture_as_pdf.svg";
 import WarningIcon from "./warning.svg";
 
 export const ICON_NAME_OPTIONS = [
   "arrow_back",
   "chevron_right",
   "content_copy",
+  "csv",
   "edit",
   "exclamation",
   "log_out",
   "mail",
+  "markdown_copy",
+  "picture_as_pdf",
   "warning",
 ] as const;
 
@@ -33,10 +39,13 @@ const iconMap: Record<IconName, SvgComponent> = {
   arrow_back: ArrowBackIcon,
   chevron_right: ChevronRightIcon,
   content_copy: ContentCopyIcon,
+  csv: CsvIcon,
   edit: EditIcon,
   exclamation: ExclamationIcon,
   log_out: LogOutIcon,
   mail: MailIcon,
+  markdown_copy: MarkdownCopyIcon,
+  picture_as_pdf: PictureAsPdfIcon,
   warning: WarningIcon,
 };
 

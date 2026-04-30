@@ -21,6 +21,8 @@ import profile from "./pages/profile.json";
 import notFoundPage from "./pages/notFoundPage.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
+import modalsShare from "./modals/share.json";
+import modalsPopoverExport from "./modals/popoverExport.json";
 
 // create – stage 1: community
 import createInformational from "./create/community/informational.json";
@@ -106,4 +108,8 @@ export default {
   },
   navigation,
   metadata,
+  modals: {
+    share: modalsShare,
+    popoverExport: modalsPopoverExport,
+  },
 };

@@ -1,6 +1,75 @@
-import type { CreateFlowState } from "../../app/(app)/create/types";
+import type {
+  CreateFlowMethodCardFacetSection,
+  CreateFlowState,
+} from "../../app/(app)/create/types";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
+
+const PUBLISHED_SELECTION_FIELD_KEYS: readonly (keyof CreateFlowState)[] = [
+  "selectedCoreValueIds",
+  "selectedCommunicationMethodIds",
+  "selectedMembershipMethodIds",
+  "selectedDecisionApproachIds",
+  "selectedConflictManagementIds",
+] as const;
+
+/**
+ * True when `patch` (from {@link createFlowStateFromPublishedRule}) expects
+ * non-empty facet selections but `state` still has none for that facet.
+ *
+ * Used so `/create/edit-rule` hydration is not skipped after TopNav **Edit**
+ * pre-clears `sections` (which made `sections?.length === 0` look like a
+ * finished hydrate even though method ids were never merged).
+ */
+export function isPublishedRuleSelectionMissing(
+  state: CreateFlowState,
+  patch: Partial<CreateFlowState>,
+): boolean {
+  for (const k of PUBLISHED_SELECTION_FIELD_KEYS) {
+    const desired = patch[k];
+    if (!Array.isArray(desired) || desired.length === 0) continue;
+    const actualRaw = state[k];
+    const actual = Array.isArray(actualRaw) ? actualRaw : [];
+    if (actual.length === 0) return true;
+  }
+  return false;
+}
+
+/**
+ * Pin flags for method-card facets: compact CardStack slots surface selections
+ * first only when `methodSectionsPinCommitted[facet]` is true (see
+ * `useMethodCardDeckOrdering`). Normal wizard flow sets that on facet **Confirm**.
+ * Hydration paths that seed `selected*` method ids without a confirm (edit-published,
+ * template customize) merge this alongside those ids so pinning matches UX after Confirm.
+ *
+ * Caller should spread onto existing `methodSectionsPinCommitted` so unrelated facets stay
+ * as-is (`{ ...prior, ...this }`).
+ */
+export function methodSectionsPinsForHydratedSelections(
+  patch: Partial<CreateFlowState>,
+): Partial<Record<CreateFlowMethodCardFacetSection, boolean>> {
+  const out: Partial<Record<CreateFlowMethodCardFacetSection, boolean>> = {};
+  if ((patch.selectedCommunicationMethodIds?.length ?? 0) > 0) {
+    out.communication = true;
+  }
+  if ((patch.selectedMembershipMethodIds?.length ?? 0) > 0) {
+    out.membership = true;
+  }
+  if ((patch.selectedDecisionApproachIds?.length ?? 0) > 0) {
+    out.decisionApproaches = true;
+  }
+  if ((patch.selectedConflictManagementIds?.length ?? 0) > 0) {
+    out.conflictManagement = true;
+  }
+  return out;
+}
+
+/** @see {@link methodSectionsPinsForHydratedSelections} — published-rule hydrate naming. */
+export function methodSectionsPinsFromPublishedHydratePatch(
+  patch: Partial<CreateFlowState>,
+): Partial<Record<CreateFlowMethodCardFacetSection, boolean>> {
+  return methodSectionsPinsForHydratedSelections(patch);
+}
 
 /**
  * Rehydrate create-flow fields from a stored published rule so `/create/edit-rule`

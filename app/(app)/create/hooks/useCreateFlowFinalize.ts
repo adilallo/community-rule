@@ -6,6 +6,10 @@ import { publishRule, updatePublishedRule } from "../../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
 import messages from "../../../../messages/en/index";
 import type { CreateFlowState } from "../types";
+import {
+  CREATE_FLOW_COMPLETED_CELEBRATE_QUERY,
+  CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
+} from "../utils/flowSteps";
 
 type AppRouterLike = { push: (_href: string) => void };
 
@@ -16,25 +20,13 @@ type OpenLogin = (args: {
 }) => void;
 
 export type UseCreateFlowFinalizeResult = {
-  /** Set when publish fails (validation, server error, or empty server message). Reset on each `finalize()` invocation. */
   publishBannerMessage: string | null;
   setPublishBannerMessage: (_message: string | null) => void;
-  /** True from the moment the publish request fires until the response resolves. */
   isPublishing: boolean;
-  /**
-   * Build a publish payload from the current `CreateFlowState`, post it to
-   * `publishRule` (or PATCH when editing a published rule), and route to
-   * `/create/completed` on success.
-   */
   finalize: () => Promise<void>;
 };
 
-/**
- * Encapsulates the Final Review → publish flow that previously lived inline
- * in `CreateFlowLayoutClient`. Keeps publish state (banner + in-flight flag)
- * co-located with the publish handler so the layout shell only has to wire
- * the resulting message into its banner stack.
- */
+/** Final Review → publish: banner + `isPublishing`, consumed by `CreateFlowLayoutClient`. */
 export function useCreateFlowFinalize({
   state,
   router,
@@ -120,7 +112,9 @@ export function useCreateFlowFinalize({
         summary: summary ?? null,
         document: ruleDocument,
       });
-      router.push("/create/completed");
+      router.push(
+        `/create/completed?${CREATE_FLOW_COMPLETED_CELEBRATE_QUERY}=${CREATE_FLOW_COMPLETED_CELEBRATE_VALUE}`,
+      );
       return;
     }
     if (publishResult.status === 401) {

@@ -1,0 +1,12 @@
+{
+  "title": "Share this CommunityRule",
+  "description": "Anyone with the link can view this rule.",
+  "copyLink": "Copy link",
+  "signal": "Signal",
+  "slack": "Slack",
+  "discord": "Discord",
+  "email": "Email",
+  "done": "Done",
+  "closeDialogAriaLabel": "Close share dialog",
+  "moreOptionsAriaLabel": "More share options"
+}

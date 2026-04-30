@@ -1,4 +1,18 @@
 {
   "toastTitle": "This is what folks see when you share your CommunityRule",
-  "toastDescription": "Your group can use this document as an operating manual."
+  "toastDescription": "Your group can use this document as an operating manual.",
+  "shareNoRuleTitle": "Nothing to share yet",
+  "shareNoRuleDescription": "Open this page from your profile after publishing, or publish a rule first.",
+  "shareLinkCopiedTitle": "Link copied",
+  "shareLinkCopiedDescription": "Paste the link anywhere to share your public CommunityRule.",
+  "shareCopyFailedTitle": "Could not copy link",
+  "shareCopyFailedDescription": "Copy the address from your browser bar, or try again.",
+  "shareSlackFallbackTitle": "Link copied",
+  "shareSlackFallbackDescription": "Slack didn't open in a new tab. Paste this link into Slack to share it.",
+  "shareDiscordPasteTitle": "Link copied",
+  "shareDiscordPasteDescription": "Paste the link into a channel or direct message in Discord.",
+  "exportFailedTitle": "Could not export",
+  "exportFailedDescription": "Something went wrong. Refresh the page and try again.",
+  "exportEmptyDocumentTitle": "Could not export",
+  "exportEmptyDocumentDescription": "Your rule document is not available to export yet."
 }

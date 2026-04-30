@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { buildTemplateCustomizePrefill } from "../../../../lib/create/applyTemplatePrefill";
 import { loadTemplateReviewBySlug } from "../../../../lib/create/loadTemplateReviewBySlug";
+import { methodSectionsPinsForHydratedSelections } from "../../../../lib/create/publishedDocumentToCreateFlowState";
 import { stripCustomRuleSelectionFields } from "../../../../lib/create/stripCustomRuleSelectionFields";
 import messages from "../../../../messages/en/index";
 import type {
@@ -98,10 +99,15 @@ export function useTemplateReviewActions({
       return;
     }
     const prefill = buildTemplateCustomizePrefill(loaded.template.body);
+    const pinPatch = methodSectionsPinsForHydratedSelections(prefill);
     const hasCommunityName =
       typeof state.title === "string" && state.title.trim().length > 0;
     updateState({
       ...prefill,
+      methodSectionsPinCommitted: {
+        ...state.methodSectionsPinCommitted,
+        ...pinPatch,
+      },
       templateReviewBackSlug: undefined,
       ...(hasCommunityName
         ? { pendingTemplateAction: undefined }
@@ -115,7 +121,13 @@ export function useTemplateReviewActions({
     router.push(
       hasCommunityName ? "/create/core-values" : "/create/informational",
     );
-  }, [router, state.title, templateReviewSlug, updateState]);
+  }, [
+    router,
+    state.methodSectionsPinCommitted,
+    state.title,
+    templateReviewSlug,
+    updateState,
+  ]);
 
   const handleUseWithoutChanges = useCallback(async () => {
     if (!templateReviewSlug) return;
@@ -170,6 +182,9 @@ export function useTemplateReviewActions({
       const hasCommunityName =
         typeof prev.title === "string" && prev.title.trim().length > 0;
 
+      const pinPatch =
+        methodSectionsPinsForHydratedSelections(customizePrefill);
+
       return {
         ...base,
         ...(hasValuesSeed
@@ -204,6 +219,7 @@ export function useTemplateReviewActions({
             }
           : {}),
         sections: sectionsWithoutValues,
+        methodSectionsPinCommitted: pinPatch,
         templateReviewBackSlug: templateReviewSlug,
         ...(hasCommunityName
           ? { pendingTemplateAction: undefined }

@@ -18,6 +18,22 @@ import {
   CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
 } from "../../components/createFlowLayoutTokens";
+import {
+  CREATE_FLOW_COMPLETED_CELEBRATE_QUERY,
+  CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
+} from "../../utils/flowSteps";
+
+function emptyCompletedDocumentState(): {
+  headerTitle: string;
+  headerDescription: string | undefined;
+  documentSections: CommunityRuleSection[];
+} {
+  return {
+    headerTitle: "",
+    headerDescription: undefined,
+    documentSections: [],
+  };
+}
 
 function initialCompletedUi(
   ruleIdFromUrl: string | null,
@@ -27,26 +43,14 @@ function initialCompletedUi(
   documentSections: CommunityRuleSection[];
 } {
   if (ruleIdFromUrl) {
-    return {
-      headerTitle: "",
-      headerDescription: undefined,
-      documentSections: [],
-    };
+    return emptyCompletedDocumentState();
   }
   if (typeof sessionStorage === "undefined") {
-    return {
-      headerTitle: "",
-      headerDescription: undefined,
-      documentSections: [],
-    };
+    return emptyCompletedDocumentState();
   }
   const stored = readLastPublishedRule();
   if (!stored) {
-    return {
-      headerTitle: "",
-      headerDescription: undefined,
-      documentSections: [],
-    };
+    return emptyCompletedDocumentState();
   }
   const parsed = parsePublishedDocumentForCommunityRuleDisplay(stored.document);
   if (parsed.length === 0) {
@@ -69,12 +73,17 @@ export function CompletedScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ruleIdParam = searchParams.get("ruleId");
+  const celebrateInUrl =
+    searchParams.get(CREATE_FLOW_COMPLETED_CELEBRATE_QUERY) ===
+    CREATE_FLOW_COMPLETED_CELEBRATE_VALUE;
   const mdUp = useCreateFlowMdUp();
   const m = useMessages();
   const completed = m.create.reviewAndComplete.completed;
 
   const initial = initialCompletedUi(ruleIdParam);
   const [toastDismissed, setToastDismissed] = useState(false);
+  /** Latch: toast copy should survive `router.replace` after we strip `?celebrate=1`. */
+  const [showCelebrateToast] = useState(celebrateInUrl);
   const [headerTitle, setHeaderTitle] = useState(initial.headerTitle);
   const [headerDescription, setHeaderDescription] = useState<
     string | undefined
@@ -126,7 +135,12 @@ export function CompletedScreen() {
     };
   }, [ruleIdParam, router]);
 
-  const toast = !toastDismissed ? (
+  useEffect(() => {
+    if (!celebrateInUrl) return;
+    router.replace("/create/completed");
+  }, [celebrateInUrl, router]);
+
+  const toast = showCelebrateToast && !toastDismissed ? (
     <div
       className="fixed bottom-0 left-0 right-0 z-10 w-full"
       role="status"

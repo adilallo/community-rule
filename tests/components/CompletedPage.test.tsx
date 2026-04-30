@@ -1,8 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { useSearchParams } from "next/navigation";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
 import { CompletedScreen } from "../../app/(app)/create/screens/completed/CompletedScreen";
 import { CREATE_FLOW_LAST_PUBLISHED_KEY } from "../../lib/create/lastPublishedRule";
+import {
+  CREATE_FLOW_COMPLETED_CELEBRATE_QUERY,
+  CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
+} from "../../app/(app)/create/utils/flowSteps";
 
 const storedRuleFixture = {
   id: "rule-fixture-1",
@@ -32,9 +37,18 @@ const storedRuleFixture = {
   },
 };
 
+function mockSearchParams(record?: Record<string, string>) {
+  vi.mocked(useSearchParams).mockReturnValue(
+    new URLSearchParams(record ?? undefined) as NonNullable<
+      ReturnType<typeof useSearchParams>
+    >,
+  );
+}
+
 describe("CompletedScreen", () => {
   beforeEach(() => {
     sessionStorage.removeItem(CREATE_FLOW_LAST_PUBLISHED_KEY);
+    mockSearchParams();
   });
 
   afterEach(() => {
@@ -70,7 +84,25 @@ describe("CompletedScreen", () => {
     expect(screen.getByText("Fixture value title")).toBeInTheDocument();
   });
 
-  it("renders toast alert when page loads", () => {
+  it("does not show post-finalize toast without celebrate query", () => {
+    render(<CompletedScreen />);
+    expect(
+      screen.queryByText(
+        "This is what folks see when you share your CommunityRule",
+      ),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "Your group can use this document as an operating manual.",
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows post-finalize toast in status region when celebrate query is set", () => {
+    mockSearchParams({
+      [CREATE_FLOW_COMPLETED_CELEBRATE_QUERY]:
+        CREATE_FLOW_COMPLETED_CELEBRATE_VALUE,
+    });
     render(<CompletedScreen />);
     expect(
       screen.getByText(
@@ -82,10 +114,6 @@ describe("CompletedScreen", () => {
         "Your group can use this document as an operating manual.",
       ),
     ).toBeInTheDocument();
-  });
-
-  it("renders toast with role status", () => {
-    render(<CompletedScreen />);
     const statusRegions = screen.getAllByRole("status");
     expect(statusRegions.length).toBeGreaterThanOrEqual(1);
     expect(

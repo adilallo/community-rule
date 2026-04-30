@@ -13,6 +13,7 @@ import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
+import { useCompletedRuleShareExport } from "./hooks/useCompletedRuleShareExport";
 import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
 import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
 import {
@@ -41,7 +42,12 @@ import {
   clearAnonymousCreateFlowStorage,
   setTransferPendingFlag,
 } from "./utils/anonymousDraftStorage";
-import { createFlowStateFromPublishedRule } from "../../../lib/create/publishedDocumentToCreateFlowState";
+import type { CreateFlowMethodCardFacetSection } from "./types";
+import {
+  createFlowStateFromPublishedRule,
+  isPublishedRuleSelectionMissing,
+  methodSectionsPinsFromPublishedHydratePatch,
+} from "../../../lib/create/publishedDocumentToCreateFlowState";
 import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
 import { deleteServerDraft } from "../../../lib/create/api";
 import messages from "../../../messages/en/index";
@@ -60,6 +66,7 @@ import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
 import Alert from "../../components/modals/Alert";
+import Share from "../../components/modals/Share";
 import {
   CreateFlowDraftSaveBannerProvider,
   useCreateFlowDraftSaveBanner,
@@ -152,6 +159,37 @@ function CreateFlowLayoutContent({
   >(null);
   const [communitySaveMagicLinkSuccess, setCommunitySaveMagicLinkSuccess] =
     useState(false);
+  const [completedFlowBanner, setCompletedFlowBanner] = useState<{
+    key: string;
+    status: "positive" | "danger";
+    title: string;
+    description?: string;
+  } | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+
+  const {
+    copyPublishedRuleLink,
+    mailtoPublishedRule,
+    sharePublishedRuleViaSignal,
+    sharePublishedRuleViaSlack,
+    sharePublishedRuleViaDiscord,
+    onSelectExportFormat: onCompletedExportFormat,
+  } = useCompletedRuleShareExport({
+    setActionBanner: setCompletedFlowBanner,
+  });
+
+  const handleOpenCompletedShareModal = () => {
+    if (!readLastPublishedRule()) {
+      setCompletedFlowBanner({
+        key: "completedShareNoRule",
+        status: "danger",
+        title: create.reviewAndComplete.completed.shareNoRuleTitle,
+        description: create.reviewAndComplete.completed.shareNoRuleDescription,
+      });
+      return;
+    }
+    setShareModalOpen(true);
+  };
 
   const loginReturnPath =
     currentStep === "edit-rule"
@@ -267,14 +305,47 @@ function CreateFlowLayoutContent({
     const titleOk =
       typeof state.title === "string" && state.title.trim().length > 0;
     const sectionsClear = (state.sections?.length ?? 0) === 0;
-    /** Stale template `sections` (e.g. Values-only) makes final-review rows wrong; re-hydrate until cleared. */
-    if (titleOk && editingId === last.id && sectionsClear) {
+    const patch = createFlowStateFromPublishedRule(last);
+    const pinPatch = methodSectionsPinsFromPublishedHydratePatch(patch);
+    const METHOD_CARD_PIN_FACETS: readonly CreateFlowMethodCardFacetSection[] =
+      ["communication", "membership", "decisionApproaches", "conflictManagement"];
+    const needsPinMerge = METHOD_CARD_PIN_FACETS.some(
+      (key) =>
+        pinPatch[key] === true &&
+        state.methodSectionsPinCommitted?.[key] !== true,
+    );
+    /**
+     * Skip repeat merges once template `sections` are cleared **and** published
+     * facet selections are present. Without the selection check, TopNav **Edit**
+     * (`sections: []` before navigate) matched only `sectionsClear` and skipped
+     * the merge — method-card steps saw empty `selected*Ids` until a confirm.
+     *
+     * Still merge {@link methodSectionsPinsFromPublishedHydratePatch}: selections
+     * may already match draft state while compact CardStack pins stayed false
+     * (pins are normally set only on facet **Confirm**).
+     */
+    if (
+      titleOk &&
+      editingId === last.id &&
+      sectionsClear &&
+      !isPublishedRuleSelectionMissing(state, patch)
+    ) {
+      if (needsPinMerge) {
+        updateState({
+          methodSectionsPinCommitted: {
+            ...state.methodSectionsPinCommitted,
+            ...pinPatch,
+          },
+        });
+      }
       return;
     }
     updateState({
-      ...createFlowStateFromPublishedRule(last),
-      /** Keep UI-only facet pin flags across published re-hydration (wizard draft field; not stored on publish). */
-      methodSectionsPinCommitted: state.methodSectionsPinCommitted,
+      ...patch,
+      methodSectionsPinCommitted: {
+        ...state.methodSectionsPinCommitted,
+        ...pinPatch,
+      },
     });
   }, [
     currentStep,
@@ -285,6 +356,12 @@ function CreateFlowLayoutContent({
     state.methodSectionsPinCommitted,
     state.sections?.length,
   ]);
+
+  useEffect(() => {
+    if (currentStep !== "completed") {
+      setCompletedFlowBanner(null);
+    }
+  }, [currentStep]);
 
   const handleCommunitySaveMagicLinkSubmit = useCallback(async () => {
     setCommunitySaveMagicLinkError(null);
@@ -381,11 +458,7 @@ function CreateFlowLayoutContent({
           undefined));
 
   /**
-   * Top banner stack rendered above the main column when any of the
-   * shell-level statuses are active. Each entry maps to one `<Alert>`;
-   * we filter out empty messages so the wrapper only mounts when at
-   * least one banner is actually showing. Order here is the visual
-   * stacking order (top → bottom).
+   * Top banner stack above the main column; order is top → bottom.
    */
   const topBanners: Array<{
     key: string;
@@ -440,6 +513,15 @@ function CreateFlowLayoutContent({
           onClose: () => setCommunitySaveMagicLinkSuccess(false),
         }
       : null,
+    completedFlowBanner
+      ? {
+          key: `completedFlow-${completedFlowBanner.key}`,
+          status: completedFlowBanner.status,
+          title: completedFlowBanner.title,
+          description: completedFlowBanner.description,
+          onClose: () => setCompletedFlowBanner(null),
+        }
+      : null,
   ].filter((b): b is NonNullable<typeof b> => b !== null);
 
   return (
@@ -475,11 +557,26 @@ function CreateFlowLayoutContent({
       <Suspense fallback={null}>
         <PostLoginDraftTransfer sessionUser={sessionUser} />
       </Suspense>
+      <Share
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        onCopyLink={() => void copyPublishedRuleLink()}
+        onEmailShare={mailtoPublishedRule}
+        onSignalShare={() => void sharePublishedRuleViaSignal()}
+        onSlackShare={() => void sharePublishedRuleViaSlack()}
+        onDiscordShare={() => void sharePublishedRuleViaDiscord()}
+      />
       <CreateFlowTopNav
         hasShare={isCompletedStep}
         hasExport={isCompletedStep}
         hasEdit={isCompletedStep}
         saveDraftOnExit={saveDraftOnExit}
+        onShare={
+          isCompletedStep ? () => void handleOpenCompletedShareModal() : undefined
+        }
+        onSelectExportFormat={
+          isCompletedStep ? onCompletedExportFormat : undefined
+        }
         onEdit={
           isCompletedStep
             ? () => {

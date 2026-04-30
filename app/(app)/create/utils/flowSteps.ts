@@ -161,6 +161,10 @@ export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE = "1" as const;
 export const TEMPLATES_FACET_RECOMMEND_QUERY = "recommendTemplates" as const;
 export const TEMPLATES_FACET_RECOMMEND_VALUE = "1" as const;
 
+/** `/create/completed?celebrate=1` — post-finalize toast; set only after **initial** POST publish, not PATCH updates. */
+export const CREATE_FLOW_COMPLETED_CELEBRATE_QUERY = "celebrate" as const;
+export const CREATE_FLOW_COMPLETED_CELEBRATE_VALUE = "1" as const;
+
 /** `/create/{step}?reviewReturn=…` — set when opening a custom-rule step from final-review or edit-rule via + */
 export const CREATE_FLOW_REVIEW_RETURN_QUERY_KEY = "reviewReturn" as const;
 
