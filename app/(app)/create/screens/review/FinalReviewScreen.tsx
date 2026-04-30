@@ -123,7 +123,7 @@ export function FinalReviewScreen({
     [markCreateFlowInteraction, updateState, state],
   );
 
-  const { categories: finalReviewCategories, chipLookup } = useMemo(() => {
+  const { categories: finalReviewCategories } = useMemo(() => {
     const { names, rows: fallbackRows } = readFallbackCategoryRows(
       m.create.reviewAndComplete.finalReview.categories,
     );
@@ -196,7 +196,7 @@ export function FinalReviewScreen({
             : undefined,
       };
     });
-    return { categories: cats, chipLookup: lookup };
+    return { categories: cats };
   }, [
     m.create.reviewAndComplete.finalReview.categories,
     state,
@@ -204,7 +204,6 @@ export function FinalReviewScreen({
     goToStep,
     variant,
   ]);
-  void chipLookup;
 
   const ruleCardTitle = useMemo(() => {
     const raw = typeof state.title === "string" ? state.title.trim() : "";

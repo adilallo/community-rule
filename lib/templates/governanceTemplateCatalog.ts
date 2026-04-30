@@ -14,9 +14,8 @@ export type GovernanceTemplateCatalogEntry = {
   /** Path under public/ for getAssetPath() — Figma Asset / Template Mark */
   iconPath: string;
   /**
-   * When true, the templates grid shows the “RECOMMENDED” tag (facet-based
-   * scores will set this in `ruleTemplateToGridEntry` when wired; catalog
-   * entries omit unless intentionally static).
+   * When true, static catalog rows show the “RECOMMENDED” tag. Facet-ranked
+   * `/templates` sets this in `gridEntriesWithFacetScores` instead.
    */
   recommended?: boolean;
 };

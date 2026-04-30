@@ -13,23 +13,6 @@ function chipRowsFromPresets(presets: readonly CoreValuePreset[]): ChipOption[] 
   }));
 }
 
-function applySavedSelectionToPresetsOnly(
-  options: ChipOption[],
-  saved: string[] | undefined,
-): ChipOption[] {
-  const selected = new Set(saved ?? []);
-  return options.map((opt) =>
-    opt.state === "custom"
-      ? opt
-      : {
-          ...opt,
-          state: selected.has(opt.id)
-            ? ("selected" as const)
-            : ("unselected" as const),
-        },
-  );
-}
-
 /** Valid MultiSelect chip state from snapshot JSON. */
 function normalizeChipState(s: unknown): ChipOption["state"] | undefined {
   return s === "selected" ||
@@ -58,7 +41,10 @@ export function buildCoreValueChipOptionsFromDraft(
   const selected = new Set(selectedCoreValueIds ?? []);
 
   if (!snapshot?.length) {
-    return applySavedSelectionToPresetsOnly(presetBase, selectedCoreValueIds);
+    return presetBase.map((opt) => ({
+      ...opt,
+      state: selected.has(opt.id) ? ("selected" as const) : ("unselected" as const),
+    }));
   }
 
   const snapById = new Map(snapshot.map((r) => [r.id, r] as const));

@@ -9,8 +9,9 @@ import { parseRequestedFacetsFromSearchParams } from "../../../lib/server/valida
  *
  * No params → curated ordering (`featured` desc, `sortOrder` asc, `title`
  * asc). With `facet.<group>=<value>` query params (repeatable per group),
- * templates are re-ranked by composed-method match count; ties fall back to
- * the curated order, score-0 templates remain at the end.
+ * templates are re-ranked by `TemplateFacet` matrix match when seeded for
+ * that slug, else by composed-method × `MethodFacet` match count; ties fall
+ * back to the curated order, score-0 templates remain at the end.
  *
  * See `docs/guides/template-recommendation-matrix.md` §9.1.
  */

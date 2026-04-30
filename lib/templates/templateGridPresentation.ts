@@ -115,22 +115,6 @@ const bySlug = (templates: RuleTemplateDto[]) =>
   new Map(templates.map((t) => [t.slug, t] as const));
 
 /**
- * Ordered subset for home: follow `slugOrder`; skip missing slugs.
- */
-export function gridEntriesForSlugOrder(
-  templates: RuleTemplateDto[],
-  slugOrder: readonly string[],
-): TemplateGridCardEntry[] {
-  const map = bySlug(templates);
-  const out: TemplateGridCardEntry[] = [];
-  for (const slug of slugOrder) {
-    const t = map.get(slug);
-    if (t) out.push(ruleTemplateToGridEntry(t));
-  }
-  return out;
-}
-
-/**
  * Home row: prefer API row per slug; if missing, use static Figma catalog entry.
  */
 export function gridEntriesForSlugOrderWithCatalogFallback(

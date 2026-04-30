@@ -135,8 +135,14 @@ function CreateFlowLayoutContent({
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
-  const { state, clearState, updateState, resetCustomRuleSelections, setMethodSectionsPinCommitted, replaceState } =
-    useCreateFlow();
+  const {
+    state,
+    clearState,
+    updateState,
+    resetCustomRuleSelections,
+    setMethodSectionsPinCommitted,
+    replaceState,
+  } = useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
   const [communitySaveMagicLinkSubmitting, setCommunitySaveMagicLinkSubmitting] =

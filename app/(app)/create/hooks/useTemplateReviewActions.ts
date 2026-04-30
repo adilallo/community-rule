@@ -5,13 +5,14 @@ import { buildTemplateCustomizePrefill } from "../../../../lib/create/applyTempl
 import { loadTemplateReviewBySlug } from "../../../../lib/create/loadTemplateReviewBySlug";
 import { stripCustomRuleSelectionFields } from "../../../../lib/create/stripCustomRuleSelectionFields";
 import messages from "../../../../messages/en/index";
-import type { CreateFlowState } from "../types";
+import type {
+  CreateFlowContextValue,
+  CreateFlowState,
+} from "../types";
 
 type AppRouterLike = { push: (_href: string) => void };
-type UpdateState = (_patch: Partial<CreateFlowState>) => void;
-type ReplaceStateFn = (
-  _next: CreateFlowState | ((_prev: CreateFlowState) => CreateFlowState),
-) => void;
+type UpdateState = CreateFlowContextValue["updateState"];
+type ReplaceStateFn = CreateFlowContextValue["replaceState"];
 
 export type UseTemplateReviewActionsResult = {
   /** True iff the current pathname is a template-review route (locale/basePath tolerant). */

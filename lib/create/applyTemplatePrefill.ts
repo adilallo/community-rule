@@ -77,36 +77,6 @@ function buildCoreValuePrefill(
 }
 
 /**
- * Variant of {@link buildTemplateCustomizePrefill} that pulls *only* the
- * Values section out of a template body. Used by the "Use without changes"
- * handler so the verbatim template flow still seeds
- * `coreValuesChipsSnapshot` + `selectedCoreValueIds` — without that, the
- * final-review screen has no per-chip ids to attach edits to and falls
- * back to the read-only chip modal for values.
- *
- * Returns an empty object when the body is malformed or has no Values
- * section.
- */
-export function buildCoreValuesPrefillFromTemplateBody(
-  body: unknown,
-): Partial<CreateFlowState> {
-  if (!body || typeof body !== "object") return {};
-  const sections = (body as { sections?: unknown }).sections;
-  if (!Array.isArray(sections)) return {};
-
-  for (const raw of sections) {
-    if (!isTemplateSection(raw)) continue;
-    const key = normaliseCategoryKey(raw.categoryName as string);
-    if (key !== "values" && key !== "corevalues") continue;
-    const titles = entryTitles(raw.entries);
-    if (titles.length === 0) continue;
-    return buildCoreValuePrefill(titles);
-  }
-
-  return {};
-}
-
-/**
  * Map a curated template `body` (DB shape — `sections[]` with `categoryName`
  * + `entries[].title`) to the `CreateFlowState` keys the Create Custom Rule
  * screens read for pre-selection. Used by the "Customize" handler on
@@ -172,4 +142,20 @@ export function buildTemplateCustomizePrefill(
   }
 
   return prefill;
+}
+
+/**
+ * Values section only — delegates to {@link buildTemplateCustomizePrefill}
+ * (same matching rules as Customize). Used by tests and any caller that
+ * needs core-value snapshot seeding without method fields.
+ */
+export function buildCoreValuesPrefillFromTemplateBody(
+  body: unknown,
+): Partial<CreateFlowState> {
+  const full = buildTemplateCustomizePrefill(body);
+  if (full.selectedCoreValueIds === undefined) return {};
+  return {
+    selectedCoreValueIds: full.selectedCoreValueIds,
+    coreValuesChipsSnapshot: full.coreValuesChipsSnapshot,
+  };
 }
