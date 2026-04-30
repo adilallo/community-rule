@@ -7,10 +7,32 @@
  */
 
 import { memo, useCallback } from "react";
+import { formatConflictApplicableScopeForTextarea } from "../../../../../lib/create/ruleSectionsFromMethodSelections";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import ModalTextAreaField from "../ModalTextAreaField";
-import ApplicableScopeField from "../ApplicableScopeField";
 import type { ConflictManagementDetailEntry } from "../../types";
+
+function conflictScopeTextareaValue(value: ConflictManagementDetailEntry): string {
+  return formatConflictApplicableScopeForTextarea(
+    value.selectedApplicableScope,
+    value.applicableScope,
+  );
+}
+
+function conflictDetailWithScopeTextarea(
+  value: ConflictManagementDetailEntry,
+  text: string,
+): ConflictManagementDetailEntry {
+  const lines = text
+    .split("\n")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+  return {
+    ...value,
+    applicableScope: lines,
+    selectedApplicableScope: [...lines],
+  };
+}
 
 export interface ConflictManagementEditFieldsProps {
   value: ConflictManagementDetailEntry;
@@ -41,22 +63,12 @@ function ConflictManagementEditFieldsComponent({
         value={value.corePrinciple}
         onChange={(v) => patch("corePrinciple", v)}
       />
-      <ApplicableScopeField
+      <ModalTextAreaField
         label={t.sectionHeadings.applicableScope}
-        addLabel={t.scopeAddButtonLabel}
-        scopes={value.applicableScope}
-        selectedScopes={value.selectedApplicableScope}
-        onToggleScope={(scope) =>
-          patch(
-            "selectedApplicableScope",
-            value.selectedApplicableScope.includes(scope)
-              ? value.selectedApplicableScope.filter((s) => s !== scope)
-              : [...value.selectedApplicableScope, scope],
-          )
-        }
-        onAddScope={(scope) =>
-          patch("applicableScope", [...value.applicableScope, scope])
-        }
+        value={conflictScopeTextareaValue(value)}
+        placeholder={t.applicableScopePlaceholder}
+        onChange={(v) => onChange(conflictDetailWithScopeTextarea(value, v))}
+        rows={4}
       />
       <ModalTextAreaField
         label={t.sectionHeadings.processProtocol}

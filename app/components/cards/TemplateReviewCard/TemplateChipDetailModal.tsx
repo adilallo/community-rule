@@ -8,6 +8,7 @@ import ContentLockup from "../../type/ContentLockup";
 import ModalTextAreaField from "../../../(app)/create/components/ModalTextAreaField";
 import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
 import type { TemplateChipDetail } from "../../../../lib/create/templateReviewMapping";
+import { formatConflictApplicableScopeForTextarea } from "../../../../lib/create/ruleSectionsFromMethodSelections";
 
 export interface TemplateChipDetailModalProps {
   isOpen: boolean;
@@ -235,9 +236,15 @@ function resolveChipContent(
               disabled
               rows={4}
             />
-            <ReadOnlyScopeField
+            <ModalTextAreaField
               label={cm.sectionHeadings.applicableScope}
-              scopes={preset.sections.applicableScope}
+              value={formatConflictApplicableScopeForTextarea(
+                [],
+                preset.sections.applicableScope,
+              )}
+              onChange={noop}
+              disabled
+              rows={4}
             />
             <ModalTextAreaField
               label={cm.sectionHeadings.processProtocol}

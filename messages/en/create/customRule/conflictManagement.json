@@ -24,6 +24,7 @@
     "restorationFallbacks": "Restoration & Fallbacks"
   },
   "scopeAddButtonLabel": "Add Applicable Scope",
+  "applicableScopePlaceholder": "Describe when and where this approach applies",
   "methods": [
     {
       "id": "peer-mediation",

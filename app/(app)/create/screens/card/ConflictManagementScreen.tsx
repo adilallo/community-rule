@@ -6,7 +6,7 @@
  *
  * Card click opens the Figma "Add Approach" create modal (node `20874-172292`)
  * with four controls rendered by {@link ConflictManagementEditFields}: Core
- * Principle, Applicable Scope (capsules), Process Protocol, and Restoration
+ * Principle, Applicable Scope (text area), Process Protocol, and Restoration
  * & Fallbacks. The same field set is reused on `/create/final-review` — see
  * `FinalReviewChipEditModal`. Confirm persists both the chip selection and
  * any user edits as a `conflictManagementDetailsById[id]` override.

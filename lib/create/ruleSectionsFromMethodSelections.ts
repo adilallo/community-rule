@@ -56,6 +56,27 @@ export function formatScopePayload(val: unknown): string | null {
   return lines.join("\n");
 }
 
+/**
+ * Conflict-management applicable scope is a single textarea; preset JSON often
+ * splits one sentence across multiple strings (legacy chip fragments). Join
+ * with ", " for normal sentence display. Prefer non-empty `selectedApplicableScope`
+ * when present, otherwise `applicableScope`.
+ */
+export function formatConflictApplicableScopeForTextarea(
+  selectedApplicableScope: readonly string[],
+  applicableScope: readonly string[],
+): string {
+  const sel = selectedApplicableScope.filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
+  const app = applicableScope.filter(
+    (x): x is string => typeof x === "string" && x.trim().length > 0,
+  );
+  const parts = sel.length > 0 ? sel : app;
+  if (parts.length === 0) return "";
+  return parts.join(", ");
+}
+
 export function blocksFromKeyedRecord(
   sections: Record<string, unknown>,
   labelByKey: Record<string, string>,

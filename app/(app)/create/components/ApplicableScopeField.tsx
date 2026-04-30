@@ -1,10 +1,11 @@
 "use client";
 
 /**
- * Shared "Applicable Scope" field used by the `decision-approaches` and
- * `conflict-management` create flow modals. Pairs an `InputLabel` with a
- * horizontally-wrapping list of toggle-chips plus an inline "+ Add" affordance
- * that reveals a pill text input for creating new scope values.
+ * Shared "Applicable Scope" field used by the `decision-approaches` create-flow
+ * modal. Pairs an `InputLabel` with a horizontally-wrapping list of
+ * toggle-chips plus an inline "+ Add" affordance that reveals a pill text input
+ * for creating new scope values. Conflict management uses
+ * `ModalTextAreaField` instead (Figma `20874:172292`).
  */
 
 import { memo, useState } from "react";
