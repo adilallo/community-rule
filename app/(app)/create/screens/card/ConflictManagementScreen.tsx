@@ -12,15 +12,11 @@
  * any user edits as a `conflictManagementDetailsById[id]` override.
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
-import {
-  deriveCompactCards,
-  rankMethodsByScore,
-  useFacetRecommendations,
-} from "../../hooks/useFacetRecommendations";
+import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../../components/cards/CardStack";
 import Create from "../../../../components/modals/Create";
@@ -47,32 +43,10 @@ export function ConflictManagementScreen() {
 
   const selectedIds = state.selectedConflictManagementIds ?? [];
 
-  const { scoresBySlug, hasAnyFacets } =
-    useFacetRecommendations("conflictManagement");
-  const rankedMethods = useMemo(
-    () => rankMethodsByScore(cm.methods, scoresBySlug),
-    [cm.methods, scoresBySlug],
-  );
-
-  const { compactCardIds, recommendedIds } = useMemo(
-    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
-    [rankedMethods, scoresBySlug, hasAnyFacets],
-  );
-
-  const sampleCards = useMemo(
-    () =>
-      rankedMethods.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        supportText: entry.supportText,
-        recommended: recommendedIds.has(entry.id),
-      })),
-    [rankedMethods, recommendedIds],
-  );
-
-  const methodById = useMemo(
-    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
-    [rankedMethods],
+  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+    "conflictManagement",
+    cm.methods,
+    selectedIds,
   );
 
   const title = expanded ? cm.page.expandedTitle : cm.page.compactTitle;

@@ -4,6 +4,8 @@ import type { RuleSizeValue } from "../../../../lib/propNormalization";
 export interface Category {
   name: string;
   chipOptions: ChipOption[];
+  /** When `false`, hide the row’s + affordance. Default: show when the Rule allows adds. */
+  addButton?: boolean;
   onChipClick?: (categoryName: string, chipId: string) => void;
   onAddClick?: (categoryName: string) => void;
   onCustomChipConfirm?: (
@@ -58,6 +60,12 @@ export interface RuleProps {
   /** Uppercase chip (e.g. IN PROGRESS); omit when no left badge. */
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
+  /**
+   * When set and the card is collapsed (`expanded` false), show the
+   * “RECOMMENDED” tag above the title (e.g. templates index). Ignored when
+   * `expanded` — Figma `22142:898446` compact `Card / Rule` only.
+   */
+  recommended?: boolean;
 }
 
 export interface RuleViewProps {
@@ -81,4 +89,5 @@ export interface RuleViewProps {
   hasBottomLinks?: boolean;
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
+  recommended?: boolean;
 }

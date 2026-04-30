@@ -23,6 +23,7 @@
   "createTemplateDescription": "Browse templates and adapt one for your community.",
   "createTemplateCta": "Browse templates",
   "viewPublic": "View",
+  "manageRule": "Manage",
   "duplicate": "Duplicate",
   "deleteRule": "Delete",
   "deleteRuleConfirm": "Delete this published rule? This cannot be undone.",

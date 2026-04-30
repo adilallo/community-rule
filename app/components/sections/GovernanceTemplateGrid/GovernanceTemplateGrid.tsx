@@ -57,6 +57,7 @@ export function GovernanceTemplateGrid({
           key={card.slug}
           title={card.title}
           description={card.description}
+          recommended={card.recommended === true}
           size={cardSize}
           className={`
               select-none

@@ -8,14 +8,14 @@ export default {
     docs: {
       description: {
         component:
-          "Small status tag with recommended (yellow) or selected (dark) variant. Default labels are RECOMMENDED and SELECTED; pass children for custom text.",
+          "Small status tag: recommended (yellow), selected (dark on light), templateRecommended (dark on pastel `Card / Rule`). Default labels are RECOMMENDED/SELECTED; pass children for custom text.",
       },
     },
   },
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["recommended", "selected"],
+      options: ["recommended", "selected", "templateRecommended"],
       description: "Visual variant",
     },
     children: {
@@ -34,6 +34,12 @@ export const Recommended = {
 export const Selected = {
   args: {
     variant: "selected",
+  },
+};
+
+export const TemplateRecommended = {
+  args: {
+    variant: "templateRecommended",
   },
 };
 

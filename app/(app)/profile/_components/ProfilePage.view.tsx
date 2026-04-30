@@ -351,6 +351,11 @@ export function ProfilePageView({
                       {
                         id: "view",
                         label: t("viewPublic"),
+                        href: `/rules/${encodeURIComponent(rule.id)}`,
+                      },
+                      {
+                        id: "manage",
+                        label: t("manageRule"),
                         href: `/create/completed?ruleId=${encodeURIComponent(rule.id)}`,
                       },
                       {

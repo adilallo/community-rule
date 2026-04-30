@@ -5,6 +5,7 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 import MultiSelect from "../../controls/MultiSelect";
 import InlineTextButton from "../../buttons/InlineTextButton";
 import NavigationLink from "../../navigation/Link";
+import Tag from "../../utility/Tag";
 import type { RuleBottomLink, RuleViewProps } from "./Rule.types";
 
 export function RuleView({
@@ -28,6 +29,7 @@ export function RuleView({
   hasBottomLinks = false,
   bottomStatusLabel,
   bottomLinks,
+  recommended = false,
 }: RuleViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
@@ -90,6 +92,7 @@ export function RuleView({
   `;
 
   // Title typography - use CSS responsive classes
+  const showRecommendedTag = recommended && !expanded;
   const titleClass = `
     max-[639px]:font-inter max-[639px]:font-bold max-[639px]:text-[20px] max-[639px]:leading-[28px]
     min-[640px]:max-[1023px]:font-bricolage-grotesque min-[640px]:max-[1023px]:font-bold min-[640px]:max-[1023px]:text-[28px] min-[640px]:max-[1023px]:leading-[36px]
@@ -256,12 +259,22 @@ export function RuleView({
             {/* Inner container for header text with padding */}
             <div
               className={`
-              flex items-center justify-center w-full
+              flex w-full
+              ${
+                showRecommendedTag
+                  ? "flex-col items-start justify-center gap-1"
+                  : "items-center justify-center"
+              }
               max-[639px]:pl-[8px] max-[639px]:py-[8px]
               min-[640px]:max-[1023px]:pl-[12px] min-[640px]:max-[1023px]:py-[12px]
               min-[1024px]:px-[16px] min-[1024px]:py-[24px]
             `}
             >
+              {showRecommendedTag ? (
+                <Tag variant="templateRecommended">
+                  {t("recommendedLabel")}
+                </Tag>
+              ) : null}
               <h3
                 className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
               >
@@ -384,7 +397,9 @@ export function RuleView({
                   onCustomChipClose={(chipId) => {
                     category.onCustomChipClose?.(category.name, chipId);
                   }}
-                  addButton={!hideCategoryAddButton}
+                  addButton={
+                    !hideCategoryAddButton && category.addButton !== false
+                  }
                   addButtonText="" // Empty text for icon-only circular button
                   className="w-full"
                 />

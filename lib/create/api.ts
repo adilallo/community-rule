@@ -292,8 +292,8 @@ export type MyPublishedRule = {
 };
 
 /**
- * Lists the signed-in user’s published rules (newest first). Returns `null` on
- * network failure or unauthenticated response.
+ * Lists the signed-in user’s published rules (**last updated first**, stable by id).
+ * Returns `null` on network failure or unauthenticated response.
  */
 export async function fetchMyPublishedRules(): Promise<
   MyPublishedRule[] | null

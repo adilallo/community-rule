@@ -112,6 +112,15 @@ export const createFlowStateSchema = z
     conflictManagementDetailsById: z
       .record(conflictManagementDetailEntrySchema)
       .optional(),
+    methodSectionsPinCommitted: z
+      .object({
+        communication: z.boolean().optional(),
+        membership: z.boolean().optional(),
+        decisionApproaches: z.boolean().optional(),
+        conflictManagement: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
     pendingTemplateAction: z
       .object({
         slug: z.string().max(200),

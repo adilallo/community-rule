@@ -36,6 +36,13 @@ export type CreateFlowTextStateField =
   | "communityContext"
   | "communitySaveEmail";
 
+/** Facet-backed method card stacks (`GET /api/create-flow/methods?section=`). */
+export type CreateFlowMethodCardFacetSection =
+  | "communication"
+  | "membership"
+  | "decisionApproaches"
+  | "conflictManagement";
+
 /**
  * Serialized chip row for `community-structure` (preset + custom labels).
  * Stored in drafts so custom chips survive refresh and server sync.
@@ -131,6 +138,14 @@ export interface CreateFlowState {
   /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.customRule.conflictManagement` presets. */
   selectedConflictManagementIds?: string[];
   /**
+   * After **Confirm** on a method card step (`communication-methods`, etc.)
+   * with ≥1 selection, reorder UI with selected cards first until the pin is
+   * cleared by an empty selection (or resetting custom-rule state).
+   */
+  methodSectionsPinCommitted?: Partial<
+    Record<CreateFlowMethodCardFacetSection, boolean>
+  >;
+  /**
    * User edits from the `final-review` edit modal, keyed by preset method id
    * (e.g. `"signal"`). Merged onto preset defaults at publish time so the
    * stored rule reflects the author's customizations. Edits persist to the
@@ -209,6 +224,14 @@ export interface CreateFlowContextValue {
    * after a prior "Customize template" prefill.
    */
   resetCustomRuleSelections: () => void;
+  /**
+   * Mark whether a facet method stack should pin the author’s selections to
+   * the head of expanded + compact order (set from the footer Confirm).
+   */
+  setMethodSectionsPinCommitted: (
+    section: CreateFlowMethodCardFacetSection,
+    committed: boolean,
+  ) => void;
   /**
    * True after the user has edited any control inside the wizard. Screens flip
    * it via {@link markCreateFlowInteraction} from their event handlers.

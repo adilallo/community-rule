@@ -205,4 +205,16 @@ describe("Rule Component", () => {
 
     expect(screen.getByText("CE")).toBeInTheDocument();
   });
+
+  it("shows template recommended tag when collapsed and recommended is true", () => {
+    render(<Rule {...defaultProps} recommended />);
+
+    expect(screen.getByText("RECOMMENDED")).toBeInTheDocument();
+  });
+
+  it("does not show template recommended tag when expanded", () => {
+    render(<Rule {...defaultProps} recommended expanded categories={[]} />);
+
+    expect(screen.queryByText("RECOMMENDED")).not.toBeInTheDocument();
+  });
 });

@@ -7,12 +7,17 @@ import type { TagViewProps } from "./Tag.types";
  */
 export function TagView({ variant, children, className }: TagViewProps) {
   const isRecommended = variant === "recommended";
-  const bgClass = isRecommended
-    ? "bg-[var(--color-surface-inverse-brand-accent)]"
-    : "bg-[var(--color-gray-1000)]";
-  const textClass = isRecommended
-    ? "text-[var(--color-content-inverse-brand-primary)]"
-    : "text-[var(--color-gray-000)]";
+  const isTemplateRecommended = variant === "templateRecommended";
+  const bgClass = isTemplateRecommended
+    ? "bg-[var(--color-surface-default-tertiary)]"
+    : isRecommended
+      ? "bg-[var(--color-surface-inverse-brand-accent)]"
+      : "bg-[var(--color-gray-1000)]";
+  const textClass = isTemplateRecommended
+    ? "text-[var(--color-gray-000)]"
+    : isRecommended
+      ? "text-[var(--color-content-inverse-brand-primary)]"
+      : "text-[var(--color-gray-000)]";
 
   return (
     <span

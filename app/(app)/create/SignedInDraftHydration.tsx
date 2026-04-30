@@ -77,6 +77,12 @@ export function SignedInDraftHydration({
       return;
     }
 
+    const urlStep = parseCreateFlowScreenFromPathname(pathname ?? null);
+    /** Owner “view published rule” shell — never merge server draft or redirect to `currentStep`. */
+    if (urlStep === "completed") {
+      return;
+    }
+
     let cancelled = false;
     setLoadingHydration(true);
 

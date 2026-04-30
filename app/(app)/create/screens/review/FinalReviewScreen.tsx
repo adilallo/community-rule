@@ -15,17 +15,30 @@ import {
   type FinalReviewCategoryRowDetailed,
 } from "../../../../../lib/create/buildFinalReviewCategories";
 import { applyFinalReviewChipEditPatch } from "../../../../../lib/create/applyFinalReviewChipEditPatch";
-import type { TemplateChipDetail } from "../../../../../lib/create/templateReviewMapping";
+import type {
+  TemplateChipDetail,
+  TemplateFacetGroupKey,
+} from "../../../../../lib/create/templateReviewMapping";
 import {
   FinalReviewChipEditModal,
   type FinalReviewChipEditPatch,
   type FinalReviewChipEditTarget,
 } from "../../components/FinalReviewChipEditModal";
 import { FinalReviewCommunityContextEditModal } from "../../components/FinalReviewCommunityContextEditModal";
+import { useCreateFlowNavigation } from "../../hooks/useCreateFlowNavigation";
+import { createFlowStepForFacetGroup } from "../../utils/facetGroupToCreateFlowStep";
 import {
   getAssetPath,
   vectorMarkPath,
 } from "../../../../../lib/assetUtils";
+
+const FACET_FALLBACK_ORDER: readonly TemplateFacetGroupKey[] = [
+  "coreValues",
+  "communication",
+  "membership",
+  "decisionApproaches",
+  "conflictManagement",
+] as const;
 
 /**
  * `finalReview.json.categories` ships a demo ordering + localized names
@@ -75,6 +88,7 @@ export function FinalReviewScreen({
   variant?: "default" | "editPublished";
 } = {}) {
   const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
+  const { goToStep } = useCreateFlowNavigation();
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.reviewAndComplete.finalReview");
   const m = useMessages();
@@ -116,13 +130,23 @@ export function FinalReviewScreen({
     const derived = buildFinalReviewCategoryRowsDetailed(state, names);
     const rowsToRender: readonly FinalReviewCategoryRowDetailed[] =
       derived.length > 0 ? derived : fallbackRows;
+    const usingFallbackRows = derived.length === 0;
 
     const lookup = new Map<
       string,
       { target: FinalReviewChipEditTarget | null; readOnly: TemplateChipDetail }
     >();
 
-    const cats: Category[] = rowsToRender.map((row) => {
+    const cats: Category[] = rowsToRender.map((row, rowIndex) => {
+      const effectiveGroupKey: TemplateFacetGroupKey | null =
+        row.groupKey ??
+        (usingFallbackRows && rowIndex < FACET_FALLBACK_ORDER.length
+          ? FACET_FALLBACK_ORDER[rowIndex]
+          : null);
+
+      const reviewReturn =
+        variant === "editPublished" ? ("edit-rule" as const) : ("final-review" as const);
+
       const chipOptions = row.entries.map((entry, idx) => {
         const chipId = `${row.name}-${idx}`;
         const readOnly: TemplateChipDetail = {
@@ -150,6 +174,7 @@ export function FinalReviewScreen({
       return {
         name: row.name,
         chipOptions,
+        addButton: effectiveGroupKey != null,
         onChipClick: (_categoryName: string, chipId: string) => {
           const hit = lookup.get(chipId);
           if (!hit) return;
@@ -160,6 +185,15 @@ export function FinalReviewScreen({
             setActiveReadOnlyDetail(hit.readOnly);
           }
         },
+        onAddClick:
+          effectiveGroupKey != null
+            ? () => {
+                markCreateFlowInteraction();
+                goToStep(createFlowStepForFacetGroup(effectiveGroupKey), {
+                  reviewReturn,
+                });
+              }
+            : undefined,
       };
     });
     return { categories: cats, chipLookup: lookup };
@@ -167,6 +201,8 @@ export function FinalReviewScreen({
     m.create.reviewAndComplete.finalReview.categories,
     state,
     markCreateFlowInteraction,
+    goToStep,
+    variant,
   ]);
   void chipLookup;
 

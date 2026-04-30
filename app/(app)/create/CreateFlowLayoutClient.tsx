@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
@@ -15,7 +15,7 @@ import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
 import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
 import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
-import { getNextStep, getStepIndex } from "./utils/flowSteps";
+import { getNextStep, getStepIndex, parseReviewReturnSearchParam, CREATE_FLOW_REVIEW_RETURN_QUERY_KEY } from "./utils/flowSteps";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import {
   createFlowStepUsesCenteredTextLayout,
@@ -42,6 +42,7 @@ import {
 } from "./utils/createFlowFooterClassNames";
 import {
   CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP,
+  methodCardFacetSectionForConfirmStep,
   type CustomRuleConfirmFooterStep,
 } from "./utils/customRuleConfirmFooterSteps";
 import { getDefaultFooterLabel } from "./utils/createFlowFooterLabels";
@@ -111,6 +112,8 @@ function CreateFlowLayoutContent({
   const tLogin = useTranslation("pages.login");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const reviewReturnTarget = parseReviewReturnSearchParam(searchParams);
   const { openLogin } = useAuthModal();
   const skipCommunitySave = sessionResolved && Boolean(sessionUser);
   const {
@@ -123,7 +126,7 @@ function CreateFlowLayoutContent({
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
-  const { state, clearState, updateState, resetCustomRuleSelections } =
+  const { state, clearState, updateState, resetCustomRuleSelections, setMethodSectionsPinCommitted } =
     useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
@@ -253,13 +256,19 @@ function CreateFlowLayoutContent({
     if (titleOk && editingId === last.id && sectionsClear) {
       return;
     }
-    updateState(createFlowStateFromPublishedRule(last));
+    updateState({
+      ...createFlowStateFromPublishedRule(last),
+      /** Keep UI-only facet pin flags across published re-hydration (wizard draft field; not stored on publish). */
+      methodSectionsPinCommitted: state.methodSectionsPinCommitted,
+    });
   }, [
     currentStep,
     router,
     updateState,
     state.editingPublishedRuleId,
     state.title,
+    state.methodSectionsPinCommitted,
+    state.sections?.length,
   ]);
 
   const handleCommunitySaveMagicLinkSubmit = useCallback(async () => {
@@ -348,6 +357,13 @@ function CreateFlowLayoutContent({
     currentStep != null
       ? CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP.get(currentStep)
       : undefined;
+  /** Method-card steps tolerate `reviewReturn={edit-rule}` when `edit-rule ∉ FLOW_STEP_ORDER` makes `nextStep` null. Core values stay gated on linear `nextStep`. */
+  const showCustomRuleFooterConfirm =
+    Boolean(customRuleConfirmFooter) &&
+    (nextStep != null ||
+      (reviewReturnTarget != null &&
+        methodCardFacetSectionForConfirmStep(customRuleConfirmFooter.step) !=
+          undefined));
 
   /**
    * Top banner stack rendered above the main column when any of the
@@ -590,7 +606,8 @@ function CreateFlowLayoutContent({
                   {footer.createFromTemplate}
                 </Button>
               </div>
-            ) : customRuleConfirmFooter && nextStep ? (
+            ) : showCustomRuleFooterConfirm &&
+              customRuleConfirmFooter ? (
               <Button
                 buttonType="filled"
                 palette="default"
@@ -601,6 +618,24 @@ function CreateFlowLayoutContent({
                 }
                 className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
+                  const cf = customRuleConfirmFooter;
+                  const facet = methodCardFacetSectionForConfirmStep(cf.step);
+                  if (facet != null && cf.selectionIds(state).length > 0) {
+                    setMethodSectionsPinCommitted(facet, true);
+                  }
+                  if (reviewReturnTarget) {
+                    const params = new URLSearchParams(
+                      searchParams?.toString() ?? "",
+                    );
+                    params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+                    const qs = params.toString();
+                    router.push(
+                      qs.length > 0
+                        ? `/create/${reviewReturnTarget}?${qs}`
+                        : `/create/${reviewReturnTarget}`,
+                    );
+                    return;
+                  }
                   goToNextStep();
                 }}
               >
@@ -638,9 +673,22 @@ function CreateFlowLayoutContent({
                       ? "/create/review"
                       : "/",
                   )
-              : previousStep
-                ? goToPreviousStep
-                : undefined
+              : reviewReturnTarget
+                ? () => {
+                    const params = new URLSearchParams(
+                      searchParams?.toString() ?? "",
+                    );
+                    params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+                    const qs = params.toString();
+                    router.push(
+                      qs.length > 0
+                        ? `/create/${reviewReturnTarget}?${qs}`
+                        : `/create/${reviewReturnTarget}`,
+                    );
+                  }
+                : previousStep
+                  ? goToPreviousStep
+                  : undefined
           }
         />
       )}

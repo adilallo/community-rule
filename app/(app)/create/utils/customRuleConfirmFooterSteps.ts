@@ -1,4 +1,8 @@
-import type { CreateFlowState, CreateFlowStep } from "../types";
+import type {
+  CreateFlowMethodCardFacetSection,
+  CreateFlowState,
+  CreateFlowStep,
+} from "../types";
 import type footerMessages from "../../../../messages/en/create/footer.json";
 
 type FooterMessageKey = keyof typeof footerMessages;
@@ -67,3 +71,24 @@ export const CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP: ReadonlyMap<
   CreateFlowStep,
   CustomRuleConfirmFooterStep
 > = new Map(CUSTOM_RULE_CONFIRM_FOOTER_STEPS.map((e) => [e.step, e]));
+
+/**
+ * Map a custom-rule Confirm footer step to the facet-backed method-card section
+ * (core values omit — chip MultiSelect uses a different ordering model).
+ */
+export function methodCardFacetSectionForConfirmStep(
+  step: CustomRuleConfirmFooterStep["step"],
+): CreateFlowMethodCardFacetSection | undefined {
+  switch (step) {
+    case "communication-methods":
+      return "communication";
+    case "membership-methods":
+      return "membership";
+    case "decision-approaches":
+      return "decisionApproaches";
+    case "conflict-management":
+      return "conflictManagement";
+    default:
+      return undefined;
+  }
+}

@@ -42,6 +42,7 @@ const RuleContainer = memo<RuleProps>(
     hasBottomLinks = false,
     bottomStatusLabel,
     bottomLinks,
+    recommended = false,
   }) => {
     const size = sizeProp ?? "L";
 
@@ -96,6 +97,7 @@ const RuleContainer = memo<RuleProps>(
         hasBottomLinks={hasBottomLinks}
         bottomStatusLabel={bottomStatusLabel}
         bottomLinks={bottomLinks}
+        recommended={recommended}
       />
     );
   },

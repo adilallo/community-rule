@@ -13,15 +13,11 @@
  * DB-driven content.
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
-import {
-  deriveCompactCards,
-  rankMethodsByScore,
-  useFacetRecommendations,
-} from "../../hooks/useFacetRecommendations";
+import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering";
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import CardStack from "../../../../components/cards/CardStack";
 import Create from "../../../../components/modals/Create";
@@ -48,32 +44,10 @@ export function MembershipMethodsScreen() {
 
   const selectedIds = state.selectedMembershipMethodIds ?? [];
 
-  const { scoresBySlug, hasAnyFacets } =
-    useFacetRecommendations("membership");
-  const rankedMethods = useMemo(
-    () => rankMethodsByScore(mem.methods, scoresBySlug),
-    [mem.methods, scoresBySlug],
-  );
-
-  const { compactCardIds, recommendedIds } = useMemo(
-    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
-    [rankedMethods, scoresBySlug, hasAnyFacets],
-  );
-
-  const sampleCards = useMemo(
-    () =>
-      rankedMethods.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        supportText: entry.supportText,
-        recommended: recommendedIds.has(entry.id),
-      })),
-    [rankedMethods, recommendedIds],
-  );
-
-  const methodById = useMemo(
-    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
-    [rankedMethods],
+  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+    "membership",
+    mem.methods,
+    selectedIds,
   );
 
   const title = expanded ? mem.page.expandedTitle : mem.page.compactTitle;

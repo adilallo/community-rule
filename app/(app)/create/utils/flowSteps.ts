@@ -153,6 +153,20 @@ export function parseCreateFlowScreenFromPathname(
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY = "fromFlow" as const;
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE = "1" as const;
 
+/** `/create/{step}?reviewReturn=…` — set when opening a custom-rule step from final-review or edit-rule via + */
+export const CREATE_FLOW_REVIEW_RETURN_QUERY_KEY = "reviewReturn" as const;
+
+export type CreateFlowReviewReturnTarget = "final-review" | "edit-rule";
+
+export function parseReviewReturnSearchParam(
+  searchParams: { get: (name: string) => string | null } | null | undefined,
+): CreateFlowReviewReturnTarget | null {
+  if (!searchParams) return null;
+  const raw = searchParams.get(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+  if (raw === "final-review" || raw === "edit-rule") return raw;
+  return null;
+}
+
 /**
  * `/create/review-template/{slug}` with optional marker so chrome can send
  * footer Back to `/create/review` instead of marketing home.

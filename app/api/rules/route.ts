@@ -20,8 +20,9 @@ export const GET = apiRoute("rules.list", async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const take = Math.min(Number(searchParams.get("limit") ?? "50") || 50, 100);
 
+  /** Public catalog: mirror profile “my rules” recency semantics (last touched first). */
   const rules = await prisma.publishedRule.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ updatedAt: "desc" }, { id: "asc" }],
     take,
     select: {
       id: true,

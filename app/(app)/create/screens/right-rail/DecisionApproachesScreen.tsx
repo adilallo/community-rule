@@ -23,15 +23,10 @@ import Create from "../../../../components/modals/Create";
 import InlineTextButton from "../../../../components/buttons/InlineTextButton";
 import InfoMessageBox from "../../../../components/controls/InfoMessageBox";
 import type { InfoMessageBoxItem } from "../../../../components/controls/InfoMessageBox/InfoMessageBox.types";
-import type { CardStackItem } from "../../../../components/cards/CardStack/CardStack.types";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
-import {
-  deriveCompactCards,
-  rankMethodsByScore,
-  useFacetRecommendations,
-} from "../../hooks/useFacetRecommendations";
+import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import { DecisionApproachEditFields } from "../../components/methodEditFields";
 import { decisionApproachPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
@@ -62,32 +57,10 @@ export function DecisionApproachesScreen() {
     [da.messageBox.items],
   );
 
-  const { scoresBySlug, hasAnyFacets } =
-    useFacetRecommendations("decisionApproaches");
-  const rankedMethods = useMemo(
-    () => rankMethodsByScore(da.methods, scoresBySlug),
-    [da.methods, scoresBySlug],
-  );
-
-  const { compactCardIds, recommendedIds } = useMemo(
-    () => deriveCompactCards(rankedMethods, scoresBySlug, hasAnyFacets, 5),
-    [rankedMethods, scoresBySlug, hasAnyFacets],
-  );
-
-  const sampleCards: CardStackItem[] = useMemo(
-    () =>
-      rankedMethods.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        supportText: entry.supportText,
-        recommended: recommendedIds.has(entry.id),
-      })),
-    [rankedMethods, recommendedIds],
-  );
-
-  const methodById = useMemo(
-    () => new Map(rankedMethods.map((entry) => [entry.id, entry])),
-    [rankedMethods],
+  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+    "decisionApproaches",
+    da.methods,
+    selectedIds,
   );
 
   const sidebarDescription = (

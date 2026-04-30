@@ -13,6 +13,12 @@ export type GovernanceTemplateCatalogEntry = {
   backgroundColor: string;
   /** Path under public/ for getAssetPath() — Figma Asset / Template Mark */
   iconPath: string;
+  /**
+   * When true, the templates grid shows the “RECOMMENDED” tag (facet-based
+   * scores will set this in `ruleTemplateToGridEntry` when wired; catalog
+   * entries omit unless intentionally static).
+   */
+  recommended?: boolean;
 };
 
 /** SVGs in `public/assets/template-mark/<slug>.svg` (kebab-case slug). */

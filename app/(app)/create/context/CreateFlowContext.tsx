@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type {
+  CreateFlowMethodCardFacetSection,
   CreateFlowState,
   CreateFlowContextValue,
   CreateFlowStep,
@@ -137,6 +138,19 @@ export function CreateFlowProvider({
     setInteractionTouched(true);
   }, []);
 
+  const setMethodSectionsPinCommitted = useCallback(
+    (section: CreateFlowMethodCardFacetSection, committed: boolean) => {
+      setState((prevState) => ({
+        ...prevState,
+        methodSectionsPinCommitted: {
+          ...(prevState.methodSectionsPinCommitted ?? {}),
+          [section]: committed,
+        },
+      }));
+    },
+    [],
+  );
+
   const updateState = useCallback((updates: Partial<CreateFlowState>) => {
     setState((prevState) => {
       const merged: CreateFlowState = { ...prevState, ...updates };
@@ -179,6 +193,7 @@ export function CreateFlowProvider({
         selectedMembershipMethodIds: _e,
         selectedDecisionApproachIds: _f,
         selectedConflictManagementIds: _g,
+        methodSectionsPinCommitted: _h,
         ...rest
       } = prev;
       return rest;
@@ -195,6 +210,7 @@ export function CreateFlowProvider({
     replaceState,
     clearState,
     resetCustomRuleSelections,
+    setMethodSectionsPinCommitted,
     interactionTouched,
     markCreateFlowInteraction,
   };

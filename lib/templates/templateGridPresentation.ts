@@ -11,16 +11,24 @@ import {
 export const TEMPLATE_GRID_FALLBACK_PRESENTATION = {
   iconPath: governanceTemplateIconPath("consensus"),
   backgroundColor: "bg-[var(--color-surface-invert-brand-teal)]",
+  recommended: false,
 } as const;
 
 export type TemplateGridCardEntry = GovernanceTemplateCatalogEntry;
 
 function presentationForSlug(slug: string): Pick<
   GovernanceTemplateCatalogEntry,
-  "iconPath" | "backgroundColor"
+  "iconPath" | "backgroundColor" | "recommended"
 > {
   const catalog = getGovernanceTemplateCatalogEntry(slug);
-  return catalog ?? TEMPLATE_GRID_FALLBACK_PRESENTATION;
+  if (catalog) {
+    return {
+      iconPath: catalog.iconPath,
+      backgroundColor: catalog.backgroundColor,
+      recommended: catalog.recommended === true,
+    };
+  }
+  return TEMPLATE_GRID_FALLBACK_PRESENTATION;
 }
 
 /**
@@ -35,6 +43,7 @@ export function ruleTemplateToGridEntry(template: RuleTemplateDto): TemplateGrid
     description,
     iconPath: pres.iconPath,
     backgroundColor: pres.backgroundColor,
+    recommended: pres.recommended,
   };
 }
 

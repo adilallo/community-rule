@@ -6,6 +6,7 @@ import {
   getPreviousStep,
   isValidStep,
   getStepIndex,
+  parseReviewReturnSearchParam,
   resolveCreateFlowBackTarget,
 } from "../../app/(app)/create/utils/flowSteps";
 
@@ -103,5 +104,22 @@ describe("flowSteps", () => {
     expect(buildTemplateReviewHref("mutual-aid", { fromCreateWizard: true })).toBe(
       "/create/review-template/mutual-aid?fromFlow=1",
     );
+  });
+
+  it("parseReviewReturnSearchParam accepts only final-review and edit-rule", () => {
+    expect(
+      parseReviewReturnSearchParam(
+        new URLSearchParams("reviewReturn=final-review"),
+      ),
+    ).toBe("final-review");
+    expect(
+      parseReviewReturnSearchParam(
+        new URLSearchParams("reviewReturn=edit-rule"),
+      ),
+    ).toBe("edit-rule");
+    expect(
+      parseReviewReturnSearchParam(new URLSearchParams("reviewReturn=nope")),
+    ).toBeNull();
+    expect(parseReviewReturnSearchParam(null)).toBeNull();
   });
 });

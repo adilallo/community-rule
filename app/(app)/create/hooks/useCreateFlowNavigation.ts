@@ -6,6 +6,8 @@ import { useCreateFlow } from "../context/CreateFlowContext";
 import type { CreateFlowStep } from "../types";
 import {
   type CreateFlowNavigationOptions,
+  type CreateFlowReviewReturnTarget,
+  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
   buildTemplateReviewHref,
   getNextStep,
   getPreviousStep,
@@ -46,7 +48,10 @@ export function useCreateFlowNavigation(
   currentStep: CreateFlowStep | null;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  goToStep: (_step: CreateFlowStep) => void;
+  goToStep: (
+    _step: CreateFlowStep,
+    _navOpts?: { reviewReturn?: CreateFlowReviewReturnTarget },
+  ) => void;
   canGoNext: () => boolean;
   canGoBack: () => boolean;
   nextStep: CreateFlowStep | null;
@@ -122,11 +127,21 @@ export function useCreateFlowNavigation(
   );
 
   const goToStep = useCallback(
-    (step: CreateFlowStep) => {
+    (
+      step: CreateFlowStep,
+      navOpts?: { reviewReturn?: CreateFlowReviewReturnTarget },
+    ) => {
       blurActiveElement();
-      router.push(`/create/${step}`);
+      const params = new URLSearchParams(searchParams?.toString() ?? "");
+      if (navOpts?.reviewReturn != null) {
+        params.set(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY, navOpts.reviewReturn);
+      } else {
+        params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+      }
+      const qs = params.toString();
+      router.push(qs.length > 0 ? `/create/${step}?${qs}` : `/create/${step}`);
     },
-    [router],
+    [router, searchParams],
   );
 
   const canGoNext = useCallback(() => nextStep !== null, [nextStep]);

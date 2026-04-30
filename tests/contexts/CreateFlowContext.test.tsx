@@ -12,12 +12,22 @@ import {
  * window globals. Keeps the test readable vs. threading refs everywhere.
  */
 function Harness() {
-  const { state, updateState, resetCustomRuleSelections } = useCreateFlow();
+  const {
+    state,
+    updateState,
+    resetCustomRuleSelections,
+    setMethodSectionsPinCommitted,
+  } = useCreateFlow();
   (window as unknown as { __updateState: typeof updateState }).__updateState =
     updateState;
   (
     window as unknown as { __resetCustomRule: typeof resetCustomRuleSelections }
   ).__resetCustomRule = resetCustomRuleSelections;
+  (
+    window as unknown as {
+      __setPin: typeof setMethodSectionsPinCommitted;
+    }
+  ).__setPin = setMethodSectionsPinCommitted;
   return (
     <>
       <div data-testid="title">{state.title ?? ""}</div>
@@ -32,6 +42,9 @@ function Harness() {
       </div>
       <div data-testid="snapshot">
         {(state.coreValuesChipsSnapshot ?? []).map((r) => r.id).join(",")}
+      </div>
+      <div data-testid="pin-method">
+        {state.methodSectionsPinCommitted?.communication ? "yes" : "no"}
       </div>
     </>
   );
@@ -80,6 +93,12 @@ describe("CreateFlowContext — resetCustomRuleSelections", () => {
     );
 
     act(() => {
+      (window as unknown as { __setPin: (s: unknown, v: boolean) => void })
+        .__setPin("communication", true);
+    });
+    expect(screen.getByTestId("pin-method").textContent).toBe("yes");
+
+    act(() => {
       getResetCustomRule()();
     });
 
@@ -88,6 +107,7 @@ describe("CreateFlowContext — resetCustomRuleSelections", () => {
     expect(screen.getByTestId("comm").textContent).toBe("");
     expect(screen.getByTestId("details").textContent).toBe("");
     expect(screen.getByTestId("snapshot").textContent).toBe("");
+    expect(screen.getByTestId("pin-method").textContent).toBe("no");
   });
 
   it("is a no-op when no custom-rule selections were set", () => {
