@@ -6,6 +6,7 @@ import type { ChipOption } from "../../../../components/controls/MultiSelect/Mul
 import Create from "../../../../components/modals/Create";
 import ContentLockup from "../../../../components/type/ContentLockup";
 import { useMessages } from "../../../../contexts/MessagesContext";
+import { buildCoreValueChipOptionsFromDraft } from "../../../../../lib/create/coreValueChipOptionsFromDraft";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import type {
   CommunityStructureChipSnapshotRow,
@@ -57,31 +58,6 @@ function normalizeCoreValuePresets(
   });
 }
 
-function chipRowsFromPresets(presets: readonly CoreValuePreset[]): ChipOption[] {
-  return presets.map((row, i) => ({
-    id: String(i + 1),
-    label: row.label,
-    state: "unselected" as const,
-  }));
-}
-
-function applySavedSelection(
-  options: ChipOption[],
-  saved: string[] | undefined,
-): ChipOption[] {
-  const selected = new Set(saved ?? []);
-  return options.map((opt) =>
-    opt.state === "custom"
-      ? opt
-      : {
-          ...opt,
-          state: selected.has(opt.id)
-            ? ("selected" as const)
-            : ("unselected" as const),
-        },
-  );
-}
-
 function selectedIdsFromOptions(options: ChipOption[]): string[] {
   return options
     .filter((o) => o.state === "selected")
@@ -98,19 +74,6 @@ function chipOptionsToSnapshotRows(
   }));
 }
 
-function snapshotRowsToChipOptions(
-  rows: CommunityStructureChipSnapshotRow[] | undefined,
-): ChipOption[] | null {
-  if (!Array.isArray(rows) || rows.length === 0) return null;
-  return rows.map((r) => ({
-    id: r.id,
-    label: r.label,
-    ...(r.state !== undefined
-      ? { state: r.state as ChipOption["state"] }
-      : {}),
-  }));
-}
-
 const EMPTY_DETAIL: CoreValueDetailEntry = { meaning: "", signals: "" };
 
 /** Create Custom — Core Values (Figma `20264:68378`). Up to five selections; preset list + custom chips. */
@@ -124,15 +87,12 @@ export function CoreValuesSelectScreen() {
 
   const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
 
-  const [coreValueOptions, setCoreValueOptions] = useState<ChipOption[]>(
-    () => {
-      const fromSnap = snapshotRowsToChipOptions(state.coreValuesChipsSnapshot);
-      if (fromSnap) return fromSnap;
-      return applySavedSelection(
-        chipRowsFromPresets(presets),
-        state.selectedCoreValueIds,
-      );
-    },
+  const [coreValueOptions, setCoreValueOptions] = useState<ChipOption[]>(() =>
+    buildCoreValueChipOptionsFromDraft(
+      presets,
+      state.coreValuesChipsSnapshot,
+      state.selectedCoreValueIds,
+    ),
   );
 
   const [activeModalChipId, setActiveModalChipId] = useState<string | null>(
@@ -142,15 +102,18 @@ export function CoreValuesSelectScreen() {
   const [draft, setDraft] = useState<CoreValueDetailEntry>(EMPTY_DETAIL);
 
   useEffect(() => {
-    const fromSnap = snapshotRowsToChipOptions(state.coreValuesChipsSnapshot);
-    if (fromSnap) {
-      setCoreValueOptions(fromSnap);
-      return;
-    }
-    setCoreValueOptions((prev) =>
-      applySavedSelection(prev, state.selectedCoreValueIds),
+    setCoreValueOptions(
+      buildCoreValueChipOptionsFromDraft(
+        presets,
+        state.coreValuesChipsSnapshot,
+        state.selectedCoreValueIds,
+      ),
     );
-  }, [state.coreValuesChipsSnapshot, state.selectedCoreValueIds]);
+  }, [
+    presets,
+    state.coreValuesChipsSnapshot,
+    state.selectedCoreValueIds,
+  ]);
 
   /** Sync chips to create-flow draft. Never call `updateState` from inside a `setCoreValueOptions` updater — defer with `queueMicrotask`. */
   const syncCoreValuesToDraft = useCallback(

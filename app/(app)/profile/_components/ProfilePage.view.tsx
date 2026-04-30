@@ -83,13 +83,6 @@ export type ProfilePageViewProps = {
 const profileSectionHeadingClass =
   "font-bricolage text-base font-bold leading-[22px] text-[var(--color-content-default-primary)] md:font-inter md:text-xl md:font-bold md:leading-7 xl:font-bricolage-grotesque xl:font-bold xl:text-[28px] xl:leading-9";
 
-/**
- * Sticky `top` for page content below the product {@link Top} (standard variant).
- * Must match `Top.view.tsx`: nav `h` 40px → `lg` 84px → `xl` 88px, plus `header` `border-b` (+1px).
- */
-const stickyBelowTopTopClass =
-  "top-[41px] lg:top-[85px] xl:top-[89px]";
-
 export type ProfilePageSignedOutViewProps = {
   onSignIn: () => void;
   /** `min-width: 1024px` — welcome uses {@link HeaderLockup} `L` per Figma `21962:17220`. */
@@ -113,8 +106,8 @@ export function ProfilePageSignedOutView({
         <header
           className={
             profileLgUp
-              ? `sticky z-10 bg-[var(--color-surface-default-primary)] ${stickyBelowTopTopClass}`
-              : `flex flex-col gap-1 py-3 md:sticky md:top-[41px] md:z-10 md:bg-[var(--color-surface-default-primary)]`
+              ? "sticky top-0 z-10 bg-[var(--color-surface-default-primary)]"
+              : "flex flex-col gap-1 py-3 md:sticky md:top-0 md:z-10 md:bg-[var(--color-surface-default-primary)]"
           }
         >
           {profileLgUp ? (
@@ -266,8 +259,8 @@ export function ProfilePageView({
           <header
             className={
               profileLgUp
-                ? `lg:sticky lg:z-10 lg:bg-[var(--color-surface-default-primary)] lg:top-[85px] xl:top-[89px]`
-                : `flex flex-col gap-1 py-3 md:sticky md:top-[41px] md:z-10 md:bg-[var(--color-surface-default-primary)]`
+                ? "lg:sticky lg:top-0 lg:z-10 lg:bg-[var(--color-surface-default-primary)]"
+                : "flex flex-col gap-1 py-3 md:sticky md:top-0 md:z-10 md:bg-[var(--color-surface-default-primary)]"
             }
           >
             {profileLgUp ? (

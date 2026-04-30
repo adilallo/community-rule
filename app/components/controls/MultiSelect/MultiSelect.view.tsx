@@ -89,9 +89,9 @@ function MultiSelectView({
             className={
               !addButtonText
                 ? // Circular button with border (Rule style)
-                  `bg-[var(--color-surface-default-transparent,rgba(0,0,0,0))] border-[1.25px] ${isInverse ? "border-[var(--color-border-default-primary,#141414)]" : "border-[var(--color-border-default-tertiary,#464646)]"} border-solid flex items-center justify-center ${isSmall ? "size-[30px]" : "size-[40px]"} rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity`
+                  `cursor-pointer bg-[var(--color-surface-default-transparent,rgba(0,0,0,0))] border-[1.25px] ${isInverse ? "border-[var(--color-border-default-primary,#141414)]" : "border-[var(--color-border-default-tertiary,#464646)]"} border-solid flex items-center justify-center ${isSmall ? "size-[30px]" : "size-[40px]"} rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity`
                 : // Text add control (default palette: white label + brand “+”; inverse: inverse primary for both)
-                  `flex items-center justify-center overflow-hidden rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity ${
+                  `cursor-pointer flex items-center justify-center overflow-hidden rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity ${
                     isSmall
                       ? "gap-[var(--measures-spacing-100,4px)] px-[var(--measures-spacing-300,12px)] py-[var(--measures-spacing-200,8px)]"
                       : "gap-[var(--measures-spacing-150,6px)] px-[var(--space-400,16px)] py-[var(--measures-spacing-300,12px)]"

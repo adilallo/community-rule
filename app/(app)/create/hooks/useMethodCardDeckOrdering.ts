@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useCreateFlow } from "../context/CreateFlowContext";
 import type { CreateFlowMethodCardFacetSection } from "../types";
 import {
@@ -18,31 +18,23 @@ type MethodEntry = { id: string; label: string; supportText: string };
 
 /**
  * Applies score ranking, compact-slot rules, optional “pinned selection” showcase
- * order, and clears the pin draft flag when a section loses all selections.
+ * order. Rows stay pinned across navigation while `methodSectionsPinCommitted` is true
+ * and the section still has selections; we do **not** clear the flag when selection
+ * arrays briefly go empty during draft hydration (`replaceState` / merge flashes) —
+ * display order already ignores the pin until `pinActive` is true again.
  */
 export function useMethodCardDeckOrdering(
   section: RecommendationSection,
   methods: readonly MethodEntry[],
   selectedIds: readonly string[],
 ) {
-  const { state, setMethodSectionsPinCommitted } = useCreateFlow();
+  const { state } = useCreateFlow();
   const facetKey = section as CreateFlowMethodCardFacetSection;
   const { scoresBySlug, hasAnyFacets } = useFacetRecommendations(section);
 
   const pinStored =
     state.methodSectionsPinCommitted?.[facetKey] === true;
   const pinActive = Boolean(pinStored && selectedIds.length > 0);
-
-  useEffect(() => {
-    if (selectedIds.length > 0) return;
-    if (!pinStored) return;
-    setMethodSectionsPinCommitted(facetKey, false);
-  }, [
-    facetKey,
-    pinStored,
-    selectedIds.length,
-    setMethodSectionsPinCommitted,
-  ]);
 
   const rankedMethods = useMemo(
     () => rankMethodsByScore(methods, scoresBySlug),
