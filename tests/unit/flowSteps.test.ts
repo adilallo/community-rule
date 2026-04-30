@@ -8,6 +8,10 @@ import {
   getStepIndex,
   parseReviewReturnSearchParam,
   resolveCreateFlowBackTarget,
+  TEMPLATES_FACET_RECOMMEND_QUERY,
+  TEMPLATES_FACET_RECOMMEND_VALUE,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE,
 } from "../../app/(app)/create/utils/flowSteps";
 
 describe("flowSteps", () => {
@@ -104,6 +108,12 @@ describe("flowSteps", () => {
     expect(buildTemplateReviewHref("mutual-aid", { fromCreateWizard: true })).toBe(
       "/create/review-template/mutual-aid?fromFlow=1",
     );
+  });
+
+  it("review Create from template uses fromFlow and recommendTemplates together", () => {
+    expect(
+      `/templates?${TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY}=${TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE}&${TEMPLATES_FACET_RECOMMEND_QUERY}=${TEMPLATES_FACET_RECOMMEND_VALUE}`,
+    ).toBe("/templates?fromFlow=1&recommendTemplates=1");
   });
 
   it("parseReviewReturnSearchParam accepts only final-review and edit-rule", () => {

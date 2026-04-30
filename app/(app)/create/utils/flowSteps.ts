@@ -153,6 +153,14 @@ export function parseCreateFlowScreenFromPathname(
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY = "fromFlow" as const;
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE = "1" as const;
 
+/**
+ * Only set from `/create/review` “Create from template” with `fromFlow=1`.
+ * Enables facet-ranked `GET /api/templates` + “RECOMMENDED” on the grid; omit
+ * on profile and marketing so stale localStorage facets never show badges.
+ */
+export const TEMPLATES_FACET_RECOMMEND_QUERY = "recommendTemplates" as const;
+export const TEMPLATES_FACET_RECOMMEND_VALUE = "1" as const;
+
 /** `/create/{step}?reviewReturn=…` — set when opening a custom-rule step from final-review or edit-rule via + */
 export const CREATE_FLOW_REVIEW_RETURN_QUERY_KEY = "reviewReturn" as const;
 

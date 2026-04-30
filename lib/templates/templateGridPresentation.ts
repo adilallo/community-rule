@@ -1,4 +1,4 @@
-import type { RuleTemplateDto } from "../create/fetchTemplates";
+import type { RuleTemplateDto, TemplateFacetScoreDto } from "../create/fetchTemplates";
 import { templateSummaryFromBody } from "../create/templateReviewMapping";
 import type { GovernanceTemplateCatalogEntry } from "./governanceTemplateCatalog";
 import {
@@ -45,6 +45,70 @@ export function ruleTemplateToGridEntry(template: RuleTemplateDto): TemplateGrid
     backgroundColor: pres.backgroundColor,
     recommended: pres.recommended,
   };
+}
+
+/**
+ * Max templates that show the “RECOMMENDED” tag when facet-ranked. Within the
+ * **top score tier** only: we do not pad with lower-scoring templates (e.g. two
+ * at score 4 and three at 3 → recommend the two 4s only), but if the top tier
+ * exceeds this cap we still take the first `limit` in API order.
+ */
+export const TEMPLATE_GRID_COMPACT_RECOMMENDED_LIMIT = 5;
+
+/**
+ * Among templates in **API rank order** (score desc) with `score > 0`, mark
+ * only those in the **maximum-score tier** (no lower tiers), at most `limit`
+ * (API order is the tie-break when many tie for first place).
+ */
+export function deriveRecommendedTemplateSlugs(
+  templatesInRankOrder: ReadonlyArray<{ slug: string }>,
+  scores: Record<string, { score?: number } | undefined>,
+  limit: number,
+): Set<string> {
+  if (limit <= 0) return new Set();
+  const matched = templatesInRankOrder.filter(
+    (t) => (scores[t.slug]?.score ?? 0) > 0,
+  );
+  if (matched.length === 0) return new Set();
+  let maxScore = 0;
+  for (const t of matched) {
+    const s = scores[t.slug]?.score ?? 0;
+    if (s > maxScore) maxScore = s;
+  }
+  const topTier = matched.filter(
+    (t) => (scores[t.slug]?.score ?? 0) === maxScore,
+  );
+  return new Set(topTier.slice(0, limit).map((t) => t.slug));
+}
+
+export type GridEntriesWithFacetScoresOptions = {
+  /** Default {@link TEMPLATE_GRID_COMPACT_RECOMMENDED_LIMIT}. */
+  compactRecommendedLimit?: number;
+};
+
+/**
+ * After `GET /api/templates?facet.*` with `scores`, mark `recommended` only
+ * for the top facet matches (see {@link deriveRecommendedTemplateSlugs}).
+ */
+export function gridEntriesWithFacetScores(
+  templates: RuleTemplateDto[],
+  scores: Record<string, TemplateFacetScoreDto>,
+  options?: GridEntriesWithFacetScoresOptions,
+): TemplateGridCardEntry[] {
+  const cap =
+    options?.compactRecommendedLimit ?? TEMPLATE_GRID_COMPACT_RECOMMENDED_LIMIT;
+  const recommendedSlugs = deriveRecommendedTemplateSlugs(
+    templates,
+    scores,
+    cap,
+  );
+  return templates.map((t) => {
+    const base = ruleTemplateToGridEntry(t);
+    return {
+      ...base,
+      recommended: recommendedSlugs.has(t.slug),
+    };
+  });
 }
 
 const bySlug = (templates: RuleTemplateDto[]) =>

@@ -15,7 +15,16 @@ import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
 import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
 import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
-import { getNextStep, getStepIndex, parseReviewReturnSearchParam, CREATE_FLOW_REVIEW_RETURN_QUERY_KEY } from "./utils/flowSteps";
+import {
+  getNextStep,
+  getStepIndex,
+  parseReviewReturnSearchParam,
+  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
+  TEMPLATES_FACET_RECOMMEND_QUERY,
+  TEMPLATES_FACET_RECOMMEND_VALUE,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE,
+} from "./utils/flowSteps";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import {
   createFlowStepUsesCenteredTextLayout,
@@ -600,7 +609,9 @@ function CreateFlowLayoutContent({
                     // detour. Direct entries to `/templates` (no marker) and
                     // home "Popular templates" clicks always start fresh by
                     // wiping anonymous draft storage at click time.
-                    router.push("/templates?fromFlow=1");
+                    router.push(
+                      `/templates?${TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY}=${TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE}&${TEMPLATES_FACET_RECOMMEND_QUERY}=${TEMPLATES_FACET_RECOMMEND_VALUE}`,
+                    );
                   }}
                 >
                   {footer.createFromTemplate}

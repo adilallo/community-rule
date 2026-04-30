@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import facetGroups from "../../../../data/create/customRule/_facetGroups.json";
-import {
-  type CreateFlowState,
-} from "../types";
+import { buildFacetQueryString } from "../../../../lib/create/buildFacetQueryString";
 import { useCreateFlow } from "../context/CreateFlowContext";
 
 /**
@@ -15,60 +12,6 @@ export type RecommendationSection =
   | "membership"
   | "decisionApproaches"
   | "conflictManagement";
-
-const FACET_GROUPS = ["size", "orgType", "scale", "maturity"] as const;
-type FacetGroupId = (typeof FACET_GROUPS)[number];
-
-/** Reverse map chipId → canonical facet value id, per group. */
-const CHIP_TO_VALUE_BY_GROUP: Record<FacetGroupId, Record<string, string>> = (() => {
-  const out: Record<FacetGroupId, Record<string, string>> = {
-    size: {},
-    orgType: {},
-    scale: {},
-    maturity: {},
-  };
-  for (const group of FACET_GROUPS) {
-    const block = (facetGroups as Record<string, unknown>)[group];
-    if (block && typeof block === "object" && "values" in block) {
-      const values = (block as { values: Record<string, { chipId: string }> })
-        .values;
-      for (const [valueId, entry] of Object.entries(values)) {
-        out[group][entry.chipId] = valueId;
-      }
-    }
-  }
-  return out;
-})();
-
-/** Chip-id state accessors per group. */
-const STATE_KEY_BY_GROUP: Record<FacetGroupId, keyof CreateFlowState> = {
-  size: "selectedCommunitySizeIds",
-  orgType: "selectedOrganizationTypeIds",
-  scale: "selectedScaleIds",
-  maturity: "selectedMaturityIds",
-};
-
-function readChipIds(
-  state: CreateFlowState,
-  group: FacetGroupId,
-): string[] {
-  const value = state[STATE_KEY_BY_GROUP[group]];
-  return Array.isArray(value) ? (value as string[]) : [];
-}
-
-function buildFacetQuery(state: CreateFlowState): string {
-  const params = new URLSearchParams();
-  for (const group of FACET_GROUPS) {
-    const valuesById = CHIP_TO_VALUE_BY_GROUP[group];
-    for (const chipId of readChipIds(state, group)) {
-      const valueId = valuesById[chipId];
-      if (valueId) {
-        params.append(`facet.${group}`, valueId);
-      }
-    }
-  }
-  return params.toString();
-}
 
 export type FacetRecommendationsResult = {
   /** `true` once the network call completes (or short-circuits with no facets). */
@@ -99,7 +42,10 @@ export function useFacetRecommendations(
   section: RecommendationSection,
 ): FacetRecommendationsResult {
   const { state } = useCreateFlow();
-  const queryString = useMemo(() => buildFacetQuery(state), [state]);
+  const queryString = useMemo(
+    () => buildFacetQueryString(state),
+    [state],
+  );
   const hasAnyFacets = queryString.length > 0;
 
   const [result, setResult] = useState<FacetRecommendationsResult>({

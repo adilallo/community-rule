@@ -6,8 +6,13 @@ import HeaderLockup from "../../components/type/HeaderLockup";
 import { GovernanceTemplateGrid } from "../../components/sections/GovernanceTemplateGrid";
 import type { TemplateGridCardEntry } from "../../../lib/templates/templateGridPresentation";
 import { prepareFreshCreateFlowEntry } from "../../(app)/create/utils/prepareFreshCreateFlowEntry";
-import { buildTemplateReviewHref } from "../../(app)/create/utils/flowSteps";
+import {
+  buildTemplateReviewHref,
+  TEMPLATES_FACET_RECOMMEND_QUERY,
+  TEMPLATES_FACET_RECOMMEND_VALUE,
+} from "../../(app)/create/utils/flowSteps";
 import { useTranslation } from "../../contexts/MessagesContext";
+import { useTemplatesFacetGridEntries } from "./useTemplatesFacetGridEntries";
 
 export interface TemplatesPageClientProps {
   initialGridEntries: TemplateGridCardEntry[];
@@ -44,9 +49,16 @@ export default function TemplatesPageClient({
           {/* Suspense boundary required by `useSearchParams` below
               (Next.js 15+ static-generation contract). */}
           <Suspense
-            fallback={<TemplatesGrid entries={initialGridEntries} fromFlow={false} />}
+            fallback={
+              <TemplatesGrid
+                entries={initialGridEntries}
+                fromFlow={false}
+              />
+            }
           >
-            <TemplatesGridWithSearchParams entries={initialGridEntries} />
+            <TemplatesGridWithSearchParams
+              initialGridEntries={initialGridEntries}
+            />
           </Suspense>
         </div>
       </div>
@@ -55,18 +67,25 @@ export default function TemplatesPageClient({
 }
 
 /**
- * Reads `fromFlow=1` off the URL so we can skip the fresh-slate clear when
- * the user arrived from `/create/review`'s "Create from template" button.
- * That button pushes `/templates?fromFlow=1` so their in-progress community
- * stage is preserved when they pick a template here.
+ * - `fromFlow=1` — skip `prepareFreshCreateFlowEntry` on template click
+ *   (draft preserved). Used by review “Create from template” and profile.
+ * - `recommendTemplates=1` (with review only) — rank templates + “RECOMMENDED”
+ *   from `GET /api/templates?facet.*` using the persisted community draft.
  */
 function TemplatesGridWithSearchParams({
-  entries,
+  initialGridEntries,
 }: {
-  entries: TemplateGridCardEntry[];
+  initialGridEntries: TemplateGridCardEntry[];
 }) {
   const searchParams = useSearchParams();
   const fromFlow = searchParams.get("fromFlow") === "1";
+  const enableFacetRecommendations =
+    searchParams.get(TEMPLATES_FACET_RECOMMEND_QUERY) ===
+    TEMPLATES_FACET_RECOMMEND_VALUE;
+  const entries = useTemplatesFacetGridEntries({
+    initialGridEntries,
+    enableFacetRecommendations,
+  });
   return <TemplatesGrid entries={entries} fromFlow={fromFlow} />;
 }
 

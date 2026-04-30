@@ -13,7 +13,21 @@ export type RuleTemplateDto = {
   featured: boolean;
 };
 
-type TemplatesResponse = { templates?: RuleTemplateDto[] };
+type TemplatesResponse = {
+  templates?: RuleTemplateDto[];
+  scores?: Record<string, TemplateFacetScoreDto>;
+};
+
+/** Matches `listRankedRuleTemplatesFromDb` / GET `/api/templates` with facet params. */
+export type TemplateFacetScoreDto = {
+  score: number;
+  matchedFacets: string[];
+};
+
+export type RankedTemplatesFetchResult = {
+  templates: RuleTemplateDto[];
+  scores: Record<string, TemplateFacetScoreDto>;
+};
 
 export type FetchTemplatesOptions = {
   signal?: AbortSignal;
@@ -49,6 +63,46 @@ export async function fetchTemplates(
       };
     }
     return Array.isArray(data.templates) ? data.templates : [];
+  } catch (e) {
+    if (isAbortError(e)) {
+      throw e;
+    }
+    return { error: "Could not load templates" };
+  }
+}
+
+/**
+ * Facet-ranked list + per-template scores (CR-88). Query must be non-empty
+ * `facet.size=…&…` from {@link buildFacetQueryString}.
+ */
+export async function fetchRankedTemplatesByFacets(options: {
+  facetQuery: string;
+  signal?: AbortSignal;
+}): Promise<RankedTemplatesFetchResult | { error: string }> {
+  if (options.facetQuery.length === 0) {
+    return { error: "Could not load templates" };
+  }
+  try {
+    const res = await fetch(`/api/templates?${options.facetQuery}`, {
+      credentials: "include",
+      signal: options.signal,
+    });
+    const data = (await res.json()) as TemplatesResponse & { error?: string };
+    if (!res.ok) {
+      return {
+        error:
+          typeof data.error === "string"
+            ? data.error
+            : "Could not load templates",
+      };
+    }
+    const templates = Array.isArray(data.templates) ? data.templates : [];
+    const raw = data.scores;
+    const scores: Record<string, TemplateFacetScoreDto> =
+      raw && typeof raw === "object" && !Array.isArray(raw)
+        ? (raw as Record<string, TemplateFacetScoreDto>)
+        : {};
+    return { templates, scores };
   } catch (e) {
     if (isAbortError(e)) {
       throw e;

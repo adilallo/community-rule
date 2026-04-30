@@ -1,0 +1,91 @@
+{
+  "consensus": {
+    "size": ["oneMember", "twoToFive", "sixToTwelve"],
+    "orgType": ["dao", "openSource", "mutualAid", "workersCoop"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "consensus-clusters": {
+    "size": ["sixToTwelve", "thirteenToOneHundred", "oneHundredToOneHundredK"],
+    "orgType": ["dao", "openSource", "mutualAid"],
+    "scale": ["global", "national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "solidarity-network": {
+    "size": ["oneMember"],
+    "orgType": ["dao", "openSource", "workersCoop"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established"]
+  },
+  "sortition-jury": {
+    "size": [],
+    "orgType": [],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["growthStage", "established", "enterprise"]
+  },
+  "liquid-democracy": {
+    "size": ["thirteenToOneHundred", "oneHundredToOneHundredK"],
+    "orgType": ["dao", "openSource"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "do-ocracy": {
+    "size": ["oneMember"],
+    "orgType": ["dao", "openSource", "workersCoop"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established"]
+  },
+  "quadratic-governance": {
+    "size": [
+      "twoToFive",
+      "sixToTwelve",
+      "thirteenToOneHundred",
+      "oneHundredToOneHundredK"
+    ],
+    "orgType": ["dao", "openSource", "workersCoop"],
+    "scale": ["global", "national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "federated-clusters": {
+    "size": ["sixToTwelve", "thirteenToOneHundred"],
+    "orgType": ["dao", "openSource", "mutualAid", "workersCoop"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "devolution": {
+    "size": ["oneMember"],
+    "orgType": ["forProfit", "nonprofit"],
+    "scale": ["global", "national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "benevolent-dictator": {
+    "size": ["oneMember"],
+    "orgType": ["forProfit", "nonprofit", "openSource"],
+    "scale": ["global", "national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established"]
+  },
+  "petition": {
+    "size": ["thirteenToOneHundred", "oneHundredToOneHundredK"],
+    "orgType": ["dao", "openSource", "workersCoop"],
+    "scale": ["global", "national", "regional"],
+    "maturity": ["growthStage", "established", "enterprise"]
+  },
+  "self-appointed-board": {
+    "size": [
+      "oneMember",
+      "twoToFive",
+      "sixToTwelve",
+      "thirteenToOneHundred",
+      "oneHundredToOneHundredK"
+    ],
+    "orgType": ["dao", "forProfit", "nonprofit", "openSource"],
+    "scale": ["global", "national", "regional", "local"],
+    "maturity": ["earlyStage", "growthStage", "established", "enterprise"]
+  },
+  "elected-board": {
+    "size": ["oneHundredToOneHundredK"],
+    "orgType": ["dao", "forProfit", "nonprofit"],
+    "scale": ["national", "regional", "local"],
+    "maturity": ["growthStage", "established", "enterprise"]
+  }
+}

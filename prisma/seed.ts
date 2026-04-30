@@ -1,5 +1,6 @@
 import { PrismaClient, type Prisma } from "@prisma/client";
 import { seedMethodFacets } from "./seed/methodFacets";
+import { seedTemplateFacets } from "./seed/templateFacets";
 
 /**
  * Curated rule templates for GET /api/templates.
@@ -392,6 +393,12 @@ async function main() {
     `Seeded MethodFacet rows: ${Object.entries(facetSeed.rowsBySection)
       .map(([section, count]) => `${section}=${count}`)
       .join(", ")}`,
+  );
+
+  const templateFacetSeed = await seedTemplateFacets(prisma);
+  // eslint-disable-next-line no-console -- seed CLI feedback
+  console.log(
+    `Seeded TemplateFacet rows: ${templateFacetSeed.rowCount}`,
   );
 }
 
