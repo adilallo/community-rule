@@ -8,13 +8,14 @@
  * two-column chip **select** frames. Future card-stack steps get their own `*Screen.tsx` here and
  * reuse `CardStack` / `CreateFlowStepShell` as needed.
  *
- * Card click opens the Figma "Add Platform" create modal (node `20246-15829`) with three
- * editable sections rendered by {@link CommunicationMethodEditFields}. The same field set is
- * reused on `/create/final-review` — see `FinalReviewChipEditModal`. Confirm persists both
- * the chip selection and any user edits as a `communicationMethodDetailsById[id]` override.
+ * Card click opens the Figma create modal (node `20246-15829`) with three
+ * editable sections rendered by {@link CommunicationMethodEditFields}. The primary
+ * action is **Add Platform** for an unselected card or **Remove** when the card is
+ * already selected — remove clears `selectedCommunicationMethodIds` and
+ * `communicationMethodDetailsById` via {@link removeMethodCardFromFacetSelection}.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
@@ -29,8 +30,16 @@ import {
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
 } from "../../components/createFlowLayoutTokens";
 import { CommunicationMethodEditFields } from "../../components/methodEditFields";
+import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
 import { communicationPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
+import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
+import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
+import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
+import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
 import type { CommunicationMethodDetailEntry } from "../../types";
+import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
+import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
 
 export function CommunicationMethodsScreen() {
   const m = useMessages();
@@ -42,28 +51,45 @@ export function CommunicationMethodsScreen() {
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
   const [pendingDraft, setPendingDraft] =
     useState<CommunicationMethodDetailEntry | null>(null);
+  const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
 
   const selectedIds = state.selectedCommunicationMethodIds ?? [];
 
+  const mergedMethods = useMemo(
+    () =>
+      mergePresetMethodsWithCustom(
+        comm.methods,
+        selectedIds,
+        state.customMethodCardMetaById,
+      ),
+    [comm.methods, selectedIds, state.customMethodCardMetaById],
+  );
+
   const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
     "communication",
-    comm.methods,
+    mergedMethods,
     selectedIds,
   );
+
+  const handleOpenAddWizard = useCallback(() => {
+    markCreateFlowInteraction();
+    setAddCustomWizardOpen(true);
+  }, [markCreateFlowInteraction]);
 
   const title = expanded ? comm.page.expandedTitle : comm.page.compactTitle;
 
   const description = expanded ? (
-    comm.page.expandedDescription
+    <>
+      {comm.page.expandedDescriptionBefore}
+      <InlineTextButton onClick={handleOpenAddWizard}>
+        {comm.page.compactDescriptionLinkLabel}
+      </InlineTextButton>
+      {comm.page.expandedDescriptionAfter}
+    </>
   ) : (
     <>
       {comm.page.compactDescriptionBefore}
-      <InlineTextButton
-        onClick={() => {
-          markCreateFlowInteraction();
-          setExpanded(true);
-        }}
-      >
+      <InlineTextButton onClick={handleOpenAddWizard}>
         {comm.page.compactDescriptionLinkLabel}
       </InlineTextButton>
       {comm.page.compactDescriptionAfter}
@@ -73,10 +99,13 @@ export function CommunicationMethodsScreen() {
   const modalConfig = pendingCardId
     ? (() => {
         const method = methodById.get(pendingCardId);
+        const alreadySelected = selectedIds.includes(pendingCardId);
         return {
           title: method?.label ?? comm.confirmModal.title,
           description: method?.supportText ?? comm.confirmModal.description,
-          nextButtonText: comm.addPlatform.nextButtonText,
+          nextButtonText: alreadySelected
+            ? comm.removePlatform.nextButtonText
+            : comm.addPlatform.nextButtonText,
         };
       })()
     : {
@@ -114,22 +143,87 @@ export function CommunicationMethodsScreen() {
     [markCreateFlowInteraction],
   );
 
+  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
+    createModalOpen ? pendingCardId : null,
+  );
+
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
     setPendingCardId(null);
     setPendingDraft(null);
   }, []);
 
-  const handleCreateModalConfirm = useCallback(() => {
-    if (!pendingCardId || !pendingDraft) {
+  const handleCloseAddWizard = useCallback(() => {
+    setAddCustomWizardOpen(false);
+  }, []);
+
+  const handleFinalizeCustomCard = useCallback(
+    ({
+      title,
+      description,
+      fieldBlocks,
+    }: {
+      title: string;
+      description: string;
+      fieldBlocks: CustomMethodCardFieldBlock[];
+    }) => {
+      markCreateFlowInteraction();
+      const id = crypto.randomUUID();
+      updateState({
+        selectedCommunicationMethodIds: moveFacetSelectionIdToFront(
+          selectedIds,
+          id,
+        ),
+        customMethodCardMetaById: {
+          ...(state.customMethodCardMetaById ?? {}),
+          [id]: { label: title, supportText: description },
+        },
+        communicationMethodDetailsById: {
+          ...(state.communicationMethodDetailsById ?? {}),
+          [id]: communicationPresetFor(id),
+        },
+        customMethodCardFieldBlocksById: {
+          ...(state.customMethodCardFieldBlocksById ?? {}),
+          [id]: fieldBlocks,
+        },
+      });
+    },
+    [
+      markCreateFlowInteraction,
+      selectedIds,
+      state.communicationMethodDetailsById,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+      updateState,
+    ],
+  );
+
+  const handleCreateModalPrimary = useCallback(() => {
+    if (!pendingCardId) {
       handleCreateModalClose();
       return;
     }
     markCreateFlowInteraction();
+    if (selectedIds.includes(pendingCardId)) {
+      updateState(
+        removeMethodCardFromFacetSelection(
+          state,
+          "communication",
+          pendingCardId,
+        ),
+      );
+      handleCreateModalClose();
+      return;
+    }
+    if (!pendingDraft) {
+      handleCreateModalClose();
+      return;
+    }
     updateState({
-      selectedCommunicationMethodIds: selectedIds.includes(pendingCardId)
-        ? selectedIds
-        : [...selectedIds, pendingCardId],
+      selectedCommunicationMethodIds: moveFacetSelectionIdToFront(
+        selectedIds,
+        pendingCardId,
+      ),
       communicationMethodDetailsById: {
         ...(state.communicationMethodDetailsById ?? {}),
         [pendingCardId]: pendingDraft,
@@ -142,11 +236,12 @@ export function CommunicationMethodsScreen() {
     pendingCardId,
     pendingDraft,
     selectedIds,
-    state.communicationMethodDetailsById,
+    state,
     updateState,
   ]);
 
   return (
+    <>
     <CreateFlowStepShell
       variant="wideGridLoosePadding"
       contentTopBelowMd="space-800"
@@ -182,7 +277,7 @@ export function CommunicationMethodsScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
-        onNext={handleCreateModalConfirm}
+        onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
@@ -190,13 +285,31 @@ export function CommunicationMethodsScreen() {
         backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
-          <CommunicationMethodEditFields
-            key={pendingCardId}
-            value={pendingDraft}
-            onChange={handleDraftChange}
-          />
+          isCustomMethodCardId(
+            pendingCardId,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              key={pendingCardId}
+              cardId={pendingCardId}
+              blocksById={state.customMethodCardFieldBlocksById}
+              onFieldBlocksChange={onCustomFieldBlocksChange}
+            />
+          ) : (
+            <CommunicationMethodEditFields
+              key={pendingCardId}
+              value={pendingDraft}
+              onChange={handleDraftChange}
+            />
+          )
         ) : null}
       </Create>
     </CreateFlowStepShell>
+      <CustomMethodCardWizard
+        isOpen={addCustomWizardOpen}
+        onClose={handleCloseAddWizard}
+        onFinalize={handleFinalizeCustomCard}
+      />
+    </>
   );
 }

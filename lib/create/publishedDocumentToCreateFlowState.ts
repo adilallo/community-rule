@@ -32,11 +32,10 @@ export function isPublishedRuleSelectionMissing(
 }
 
 /**
- * Pin flags for method-card facets: compact CardStack slots surface selections
- * first only when `methodSectionsPinCommitted[facet]` is true (see
- * `useMethodCardDeckOrdering`). Normal wizard flow sets that on facet **Confirm**.
- * Hydration paths that seed `selected*` method ids without a confirm (edit-published,
- * template customize) merge this alongside those ids so pinning matches UX after Confirm.
+ * Pin flags for method-card facets: persisted for hydration and footer Confirm.
+ * Card Stack display pulls selections to the top whenever `selected*` ids are
+ * non-empty (`useMethodCardDeckOrdering`); this map still merges on edit /
+ * template paths so drafts mirror post-Confirm expectations.
  *
  * Caller should spread onto existing `methodSectionsPinCommitted` so unrelated facets stay
  * as-is (`{ ...prior, ...this }`).

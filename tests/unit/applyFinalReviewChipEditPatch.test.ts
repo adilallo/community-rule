@@ -124,4 +124,46 @@ describe("applyFinalReviewChipEditPatch", () => {
 
     expect(Object.keys(result)).toEqual(["conflictManagementDetailsById"]);
   });
+
+  it("merges customMethodCardFieldBlocksById when the patch carries field blocks", () => {
+    const state: CreateFlowState = {
+      customMethodCardFieldBlocksById: {
+        other: [
+          {
+            kind: "text",
+            id: "x",
+            blockTitle: "T",
+            placeholderText: "keep",
+          },
+        ],
+      },
+    };
+    const patch: FinalReviewChipEditPatch = {
+      groupKey: "communication",
+      overrideKey: "550e8400-e29b-41d4-a716-446655440000",
+      value: {
+        corePrinciple: "a",
+        logisticsAdmin: "b",
+        codeOfConduct: "c",
+      },
+      customMethodCardFieldBlocks: [
+        {
+          kind: "text",
+          id: "f1",
+          blockTitle: "Notes",
+          placeholderText: "edited",
+        },
+      ],
+    };
+
+    const result = applyFinalReviewChipEditPatch(state, patch);
+
+    expect(result.communicationMethodDetailsById).toEqual({
+      "550e8400-e29b-41d4-a716-446655440000": patch.value,
+    });
+    expect(result.customMethodCardFieldBlocksById).toEqual({
+      other: state.customMethodCardFieldBlocksById?.other,
+      "550e8400-e29b-41d4-a716-446655440000": patch.customMethodCardFieldBlocks,
+    });
+  });
 });

@@ -400,6 +400,124 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
 
     expect(latest.communicationMethodDetailsById).toBeUndefined();
   });
+
+  it("shows consolidated placeholder for user-authored communication chips", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    render(
+      <FinalReviewWithStateProbe
+        onState={() => {}}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).getByText(/title and description you set/i),
+    ).toBeInTheDocument();
+    expect(within(dialog).queryByRole("textbox")).toBeNull();
+  });
+
+  it("shows editable field blocks for user-authored communication chips when configured", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    render(
+      <FinalReviewWithStateProbe
+        onState={() => {}}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+          customMethodCardFieldBlocksById: {
+            [customId]: [
+              {
+                kind: "text",
+                id: "f1",
+                blockTitle: "Notes",
+                placeholderText: "Detail here",
+              },
+            ],
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).queryByText(/title and description you set/i),
+    ).not.toBeInTheDocument();
+    const textarea = within(dialog).getByRole("textbox");
+    expect(textarea).not.toBeDisabled();
+    expect(textarea).toHaveValue("Detail here");
+  });
+
+  it("persists field block edits for user-authored communication chips on Save", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    let latest: CreateFlowState = {};
+    render(
+      <FinalReviewWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+          customMethodCardFieldBlocksById: {
+            [customId]: [
+              {
+                kind: "text",
+                id: "f1",
+                blockTitle: "Notes",
+                placeholderText: "Detail here",
+              },
+            ],
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    const textarea = within(dialog).getByRole("textbox");
+    fireEvent.change(textarea, { target: { value: "Saved detail" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    expect(
+      latest.customMethodCardFieldBlocksById?.[customId]?.[0],
+    ).toMatchObject({
+      kind: "text",
+      placeholderText: "Saved detail",
+    });
+  });
 });
 
 function FinalReviewEditPublishedWithStateProbe({

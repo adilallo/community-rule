@@ -6,7 +6,8 @@
     "compactDescriptionLinkLabel": "add",
     "compactDescriptionAfter": " new approaches to the list",
     "expandedTitle": "How should conflicts be managed in your group?",
-    "expandedDescription": "You can also combine or add new approaches to the list",
+    "expandedDescriptionBefore": "You can also combine or ",
+    "expandedDescriptionAfter": " new approaches to the list",
     "seeAllLink": "See all conflict management approaches"
   },
   "confirmModal": {
@@ -16,6 +17,9 @@
   },
   "addApproach": {
     "nextButtonText": "Add Approach"
+  },
+  "removeApproach": {
+    "nextButtonText": "Remove"
   },
   "sectionHeadings": {
     "corePrinciple": "Core Principle",

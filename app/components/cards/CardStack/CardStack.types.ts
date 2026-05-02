@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { HeaderLockupSizeValue } from "../../type/HeaderLockup/HeaderLockup.types";
 
 export interface CardStackItem {
@@ -18,7 +19,7 @@ export interface CardStackProps {
   toggleLabel?: string;
   showLessLabel?: string;
   title?: string;
-  description?: string;
+  description?: ReactNode;
   /** "default" = compact grid/column + expanded grid; "singleStack" = always one column, expand shows more in same stack */
   layout?: "default" | "singleStack";
   /**
@@ -45,6 +46,11 @@ export interface CardStackProps {
   /** Alignment of the expand/collapse control in `singleStack` layout (Figma right-rail: end). */
   toggleAlignment?: "center" | "end";
   className?: string;
+  /** Optional “Add” entry (e.g. custom method card wizard). */
+  showAddCard?: boolean;
+  addCardLabel?: string;
+  addCardAriaLabel?: string;
+  onAddCard?: () => void;
 }
 
 export interface CardStackViewProps {
@@ -57,7 +63,7 @@ export interface CardStackViewProps {
   toggleLabel: string;
   showLessLabel: string;
   title: string;
-  description: string;
+  description: ReactNode;
   layout: "default" | "singleStack";
   compactRecommendedLimit: number;
   compactCardIds: string[] | undefined;
@@ -65,4 +71,8 @@ export interface CardStackViewProps {
   headerLockupSize: HeaderLockupSizeValue | undefined;
   toggleAlignment: "center" | "end";
   className: string;
+  showAddCard: boolean;
+  addCardLabel: string;
+  addCardAriaLabel: string;
+  onAddCard?: () => void;
 }

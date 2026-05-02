@@ -29,7 +29,9 @@
   },
   "cardStack": {
     "toggleSeeAll": "See all decision approaches",
-    "toggleShowLess": "Show less"
+    "toggleShowLess": "Show less",
+    "expandedStackDescriptionBefore": "You can also ",
+    "expandedStackDescriptionAfter": " a custom decision approach."
   },
   "confirmModal": {
     "title": "Confirm selection",
@@ -38,6 +40,9 @@
   },
   "addApproach": {
     "nextButtonText": "Add Approach"
+  },
+  "removeApproach": {
+    "nextButtonText": "Remove"
   },
   "sectionHeadings": {
     "corePrinciple": "Core Principle",

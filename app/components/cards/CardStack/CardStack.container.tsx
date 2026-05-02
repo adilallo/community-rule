@@ -32,6 +32,10 @@ const CardStackContainer = memo<CardStackProps>(
     headerLockupSize,
     toggleAlignment = "center",
     className = "",
+    showAddCard = false,
+    addCardLabel = "",
+    addCardAriaLabel = "",
+    onAddCard,
   }) => {
     const [internalExpanded, setInternalExpanded] = useState(false);
     const [internalSelectedIds, setInternalSelectedIds] = useState<string[]>(
@@ -90,6 +94,10 @@ const CardStackContainer = memo<CardStackProps>(
         headerLockupSize={headerLockupSize}
         toggleAlignment={toggleAlignment}
         className={className}
+        showAddCard={showAddCard}
+        addCardLabel={addCardLabel}
+        addCardAriaLabel={addCardAriaLabel}
+        onAddCard={onAddCard}
       />
     );
   },

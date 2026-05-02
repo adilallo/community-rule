@@ -12,7 +12,7 @@
  * any user edits as a `conflictManagementDetailsById[id]` override.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
@@ -27,8 +27,16 @@ import {
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
 } from "../../components/createFlowLayoutTokens";
 import { ConflictManagementEditFields } from "../../components/methodEditFields";
+import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
 import { conflictManagementPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
+import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
+import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
+import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
+import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
 import type { ConflictManagementDetailEntry } from "../../types";
+import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
+import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
 
 export function ConflictManagementScreen() {
   const m = useMessages();
@@ -40,28 +48,45 @@ export function ConflictManagementScreen() {
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
   const [pendingDraft, setPendingDraft] =
     useState<ConflictManagementDetailEntry | null>(null);
+  const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
 
   const selectedIds = state.selectedConflictManagementIds ?? [];
 
+  const mergedMethods = useMemo(
+    () =>
+      mergePresetMethodsWithCustom(
+        cm.methods,
+        selectedIds,
+        state.customMethodCardMetaById,
+      ),
+    [cm.methods, selectedIds, state.customMethodCardMetaById],
+  );
+
   const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
     "conflictManagement",
-    cm.methods,
+    mergedMethods,
     selectedIds,
   );
+
+  const handleOpenAddWizard = useCallback(() => {
+    markCreateFlowInteraction();
+    setAddCustomWizardOpen(true);
+  }, [markCreateFlowInteraction]);
 
   const title = expanded ? cm.page.expandedTitle : cm.page.compactTitle;
 
   const description = expanded ? (
-    cm.page.expandedDescription
+    <>
+      {cm.page.expandedDescriptionBefore}
+      <InlineTextButton onClick={handleOpenAddWizard}>
+        {cm.page.compactDescriptionLinkLabel}
+      </InlineTextButton>
+      {cm.page.expandedDescriptionAfter}
+    </>
   ) : (
     <>
       {cm.page.compactDescriptionBefore}
-      <InlineTextButton
-        onClick={() => {
-          markCreateFlowInteraction();
-          setExpanded(true);
-        }}
-      >
+      <InlineTextButton onClick={handleOpenAddWizard}>
         {cm.page.compactDescriptionLinkLabel}
       </InlineTextButton>
       {cm.page.compactDescriptionAfter}
@@ -71,10 +96,13 @@ export function ConflictManagementScreen() {
   const modalConfig = pendingCardId
     ? (() => {
         const method = methodById.get(pendingCardId);
+        const alreadySelected = selectedIds.includes(pendingCardId);
         return {
           title: method?.label ?? cm.confirmModal.title,
           description: method?.supportText ?? cm.confirmModal.description,
-          nextButtonText: cm.addApproach.nextButtonText,
+          nextButtonText: alreadySelected
+            ? cm.removeApproach.nextButtonText
+            : cm.addApproach.nextButtonText,
         };
       })()
     : {
@@ -116,22 +144,87 @@ export function ConflictManagementScreen() {
     [markCreateFlowInteraction],
   );
 
+  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
+    createModalOpen ? pendingCardId : null,
+  );
+
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
     setPendingCardId(null);
     setPendingDraft(null);
   }, []);
 
-  const handleCreateModalConfirm = useCallback(() => {
-    if (!pendingCardId || !pendingDraft) {
+  const handleCloseAddWizard = useCallback(() => {
+    setAddCustomWizardOpen(false);
+  }, []);
+
+  const handleFinalizeCustomCard = useCallback(
+    ({
+      title,
+      description,
+      fieldBlocks,
+    }: {
+      title: string;
+      description: string;
+      fieldBlocks: CustomMethodCardFieldBlock[];
+    }) => {
+      markCreateFlowInteraction();
+      const id = crypto.randomUUID();
+      updateState({
+        selectedConflictManagementIds: moveFacetSelectionIdToFront(
+          selectedIds,
+          id,
+        ),
+        customMethodCardMetaById: {
+          ...(state.customMethodCardMetaById ?? {}),
+          [id]: { label: title, supportText: description },
+        },
+        conflictManagementDetailsById: {
+          ...(state.conflictManagementDetailsById ?? {}),
+          [id]: conflictManagementPresetFor(id),
+        },
+        customMethodCardFieldBlocksById: {
+          ...(state.customMethodCardFieldBlocksById ?? {}),
+          [id]: fieldBlocks,
+        },
+      });
+    },
+    [
+      markCreateFlowInteraction,
+      selectedIds,
+      state.conflictManagementDetailsById,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+      updateState,
+    ],
+  );
+
+  const handleCreateModalPrimary = useCallback(() => {
+    if (!pendingCardId) {
       handleCreateModalClose();
       return;
     }
     markCreateFlowInteraction();
+    if (selectedIds.includes(pendingCardId)) {
+      updateState(
+        removeMethodCardFromFacetSelection(
+          state,
+          "conflictManagement",
+          pendingCardId,
+        ),
+      );
+      handleCreateModalClose();
+      return;
+    }
+    if (!pendingDraft) {
+      handleCreateModalClose();
+      return;
+    }
     updateState({
-      selectedConflictManagementIds: selectedIds.includes(pendingCardId)
-        ? selectedIds
-        : [...selectedIds, pendingCardId],
+      selectedConflictManagementIds: moveFacetSelectionIdToFront(
+        selectedIds,
+        pendingCardId,
+      ),
       conflictManagementDetailsById: {
         ...(state.conflictManagementDetailsById ?? {}),
         [pendingCardId]: pendingDraft,
@@ -144,11 +237,12 @@ export function ConflictManagementScreen() {
     pendingCardId,
     pendingDraft,
     selectedIds,
-    state.conflictManagementDetailsById,
+    state,
     updateState,
   ]);
 
   return (
+    <>
     <CreateFlowStepShell
       variant="wideGridLoosePadding"
       contentTopBelowMd="space-800"
@@ -184,7 +278,7 @@ export function ConflictManagementScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
-        onNext={handleCreateModalConfirm}
+        onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
@@ -192,13 +286,31 @@ export function ConflictManagementScreen() {
         backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
-          <ConflictManagementEditFields
-            key={pendingCardId}
-            value={pendingDraft}
-            onChange={handleDraftChange}
-          />
+          isCustomMethodCardId(
+            pendingCardId,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              key={pendingCardId}
+              cardId={pendingCardId}
+              blocksById={state.customMethodCardFieldBlocksById}
+              onFieldBlocksChange={onCustomFieldBlocksChange}
+            />
+          ) : (
+            <ConflictManagementEditFields
+              key={pendingCardId}
+              value={pendingDraft}
+              onChange={handleDraftChange}
+            />
+          )
         ) : null}
       </Create>
     </CreateFlowStepShell>
+      <CustomMethodCardWizard
+        isOpen={addCustomWizardOpen}
+        onClose={handleCloseAddWizard}
+        onFinalize={handleFinalizeCustomCard}
+      />
+    </>
   );
 }

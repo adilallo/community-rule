@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FLOW_STEP_ORDER } from "../../../app/(app)/create/utils/flowSteps";
+import { customMethodCardFieldBlocksByIdSchema } from "../../../lib/create/customMethodCardFieldBlocks";
 import { assertPlainJsonValue, DEFAULT_PLAIN_JSON_LIMITS } from "./plainJson";
 
 const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];
@@ -58,6 +59,11 @@ const conflictManagementDetailEntrySchema = z.object({
   restorationFallbacks: z.string().max(8000),
 });
 
+const customMethodCardMetaEntrySchema = z.object({
+  label: z.string().max(48),
+  supportText: z.string().max(48),
+});
+
 /**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
  */
@@ -112,6 +118,10 @@ export const createFlowStateSchema = z
     conflictManagementDetailsById: z
       .record(conflictManagementDetailEntrySchema)
       .optional(),
+    customMethodCardMetaById: z
+      .record(z.string().max(80), customMethodCardMetaEntrySchema)
+      .optional(),
+    customMethodCardFieldBlocksById: customMethodCardFieldBlocksByIdSchema,
     methodSectionsPinCommitted: z
       .object({
         communication: z.boolean().optional(),

@@ -40,6 +40,7 @@ import createCommunication from "./create/customRule/communication.json";
 import createMembership from "./create/customRule/membership.json";
 import createDecisionApproaches from "./create/customRule/decisionApproaches.json";
 import createConflictManagement from "./create/customRule/conflictManagement.json";
+import createCustomMethodCardWizard from "./create/customRule/customMethodCardWizard.json";
 
 // create – stage 3: reviewAndComplete
 import createConfirmStakeholders from "./create/reviewAndComplete/confirmStakeholders.json";
@@ -94,6 +95,7 @@ export default {
       membership: createMembership,
       decisionApproaches: createDecisionApproaches,
       conflictManagement: createConflictManagement,
+      customMethodCardWizard: createCustomMethodCardWizard,
     },
     reviewAndComplete: {
       confirmStakeholders: createConfirmStakeholders,

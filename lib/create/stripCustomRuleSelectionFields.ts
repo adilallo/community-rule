@@ -15,5 +15,7 @@ export function stripCustomRuleSelectionFields(
   for (const key of STRIP_CUSTOM_RULE_SELECTION_STATE_KEYS) {
     delete (out as Record<string, unknown>)[key as string];
   }
+  delete (out as Record<string, unknown>).customMethodCardMetaById;
+  delete (out as Record<string, unknown>).customMethodCardFieldBlocksById;
   return out;
 }

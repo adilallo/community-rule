@@ -27,6 +27,7 @@ const CreateContainer = memo<CreateProps>(
     ariaLabel,
     ariaLabelledBy,
     backdropVariant = "default",
+    stepper,
   }) => {
     const createRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
@@ -58,6 +59,7 @@ const CreateContainer = memo<CreateProps>(
         createRef={createRef}
         overlayRef={overlayRef}
         backdropVariant={backdropVariant}
+        stepper={stepper}
       />
     );
   },

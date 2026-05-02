@@ -13,7 +13,7 @@
  * DB-driven content.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
@@ -28,8 +28,16 @@ import {
   CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS,
 } from "../../components/createFlowLayoutTokens";
 import { MembershipMethodEditFields } from "../../components/methodEditFields";
+import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
 import { membershipPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
+import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
+import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
+import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
+import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
 import type { MembershipMethodDetailEntry } from "../../types";
+import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
+import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
 
 export function MembershipMethodsScreen() {
   const m = useMessages();
@@ -41,28 +49,45 @@ export function MembershipMethodsScreen() {
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
   const [pendingDraft, setPendingDraft] =
     useState<MembershipMethodDetailEntry | null>(null);
+  const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
 
   const selectedIds = state.selectedMembershipMethodIds ?? [];
 
+  const mergedMethods = useMemo(
+    () =>
+      mergePresetMethodsWithCustom(
+        mem.methods,
+        selectedIds,
+        state.customMethodCardMetaById,
+      ),
+    [mem.methods, selectedIds, state.customMethodCardMetaById],
+  );
+
   const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
     "membership",
-    mem.methods,
+    mergedMethods,
     selectedIds,
   );
+
+  const handleOpenAddWizard = useCallback(() => {
+    markCreateFlowInteraction();
+    setAddCustomWizardOpen(true);
+  }, [markCreateFlowInteraction]);
 
   const title = expanded ? mem.page.expandedTitle : mem.page.compactTitle;
 
   const description = expanded ? (
-    mem.page.expandedDescription
+    <>
+      {mem.page.expandedDescriptionBefore}
+      <InlineTextButton onClick={handleOpenAddWizard}>
+        {mem.page.compactDescriptionLinkLabel}
+      </InlineTextButton>
+      {mem.page.expandedDescriptionAfter}
+    </>
   ) : (
     <>
       {mem.page.compactDescriptionBefore}
-      <InlineTextButton
-        onClick={() => {
-          markCreateFlowInteraction();
-          setExpanded(true);
-        }}
-      >
+      <InlineTextButton onClick={handleOpenAddWizard}>
         {mem.page.compactDescriptionLinkLabel}
       </InlineTextButton>
       {mem.page.compactDescriptionAfter}
@@ -72,10 +97,13 @@ export function MembershipMethodsScreen() {
   const modalConfig = pendingCardId
     ? (() => {
         const method = methodById.get(pendingCardId);
+        const alreadySelected = selectedIds.includes(pendingCardId);
         return {
           title: method?.label ?? mem.confirmModal.title,
           description: method?.supportText ?? mem.confirmModal.description,
-          nextButtonText: mem.addPlatform.nextButtonText,
+          nextButtonText: alreadySelected
+            ? mem.removePlatform.nextButtonText
+            : mem.addPlatform.nextButtonText,
         };
       })()
     : {
@@ -113,22 +141,83 @@ export function MembershipMethodsScreen() {
     [markCreateFlowInteraction],
   );
 
+  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
+    createModalOpen ? pendingCardId : null,
+  );
+
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
     setPendingCardId(null);
     setPendingDraft(null);
   }, []);
 
-  const handleCreateModalConfirm = useCallback(() => {
-    if (!pendingCardId || !pendingDraft) {
+  const handleCloseAddWizard = useCallback(() => {
+    setAddCustomWizardOpen(false);
+  }, []);
+
+  const handleFinalizeCustomCard = useCallback(
+    ({
+      title,
+      description,
+      fieldBlocks,
+    }: {
+      title: string;
+      description: string;
+      fieldBlocks: CustomMethodCardFieldBlock[];
+    }) => {
+      markCreateFlowInteraction();
+      const id = crypto.randomUUID();
+      updateState({
+        selectedMembershipMethodIds: moveFacetSelectionIdToFront(
+          selectedIds,
+          id,
+        ),
+        customMethodCardMetaById: {
+          ...(state.customMethodCardMetaById ?? {}),
+          [id]: { label: title, supportText: description },
+        },
+        membershipMethodDetailsById: {
+          ...(state.membershipMethodDetailsById ?? {}),
+          [id]: membershipPresetFor(id),
+        },
+        customMethodCardFieldBlocksById: {
+          ...(state.customMethodCardFieldBlocksById ?? {}),
+          [id]: fieldBlocks,
+        },
+      });
+    },
+    [
+      markCreateFlowInteraction,
+      selectedIds,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+      state.membershipMethodDetailsById,
+      updateState,
+    ],
+  );
+
+  const handleCreateModalPrimary = useCallback(() => {
+    if (!pendingCardId) {
       handleCreateModalClose();
       return;
     }
     markCreateFlowInteraction();
+    if (selectedIds.includes(pendingCardId)) {
+      updateState(
+        removeMethodCardFromFacetSelection(state, "membership", pendingCardId),
+      );
+      handleCreateModalClose();
+      return;
+    }
+    if (!pendingDraft) {
+      handleCreateModalClose();
+      return;
+    }
     updateState({
-      selectedMembershipMethodIds: selectedIds.includes(pendingCardId)
-        ? selectedIds
-        : [...selectedIds, pendingCardId],
+      selectedMembershipMethodIds: moveFacetSelectionIdToFront(
+        selectedIds,
+        pendingCardId,
+      ),
       membershipMethodDetailsById: {
         ...(state.membershipMethodDetailsById ?? {}),
         [pendingCardId]: pendingDraft,
@@ -141,11 +230,12 @@ export function MembershipMethodsScreen() {
     pendingCardId,
     pendingDraft,
     selectedIds,
-    state.membershipMethodDetailsById,
+    state,
     updateState,
   ]);
 
   return (
+    <>
     <CreateFlowStepShell
       variant="wideGridLoosePadding"
       contentTopBelowMd="space-800"
@@ -181,7 +271,7 @@ export function MembershipMethodsScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
-        onNext={handleCreateModalConfirm}
+        onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
@@ -189,13 +279,31 @@ export function MembershipMethodsScreen() {
         backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
-          <MembershipMethodEditFields
-            key={pendingCardId}
-            value={pendingDraft}
-            onChange={handleDraftChange}
-          />
+          isCustomMethodCardId(
+            pendingCardId,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              key={pendingCardId}
+              cardId={pendingCardId}
+              blocksById={state.customMethodCardFieldBlocksById}
+              onFieldBlocksChange={onCustomFieldBlocksChange}
+            />
+          ) : (
+            <MembershipMethodEditFields
+              key={pendingCardId}
+              value={pendingDraft}
+              onChange={handleDraftChange}
+            />
+          )
         ) : null}
       </Create>
     </CreateFlowStepShell>
+      <CustomMethodCardWizard
+        isOpen={addCustomWizardOpen}
+        onClose={handleCloseAddWizard}
+        onFinalize={handleFinalizeCustomCard}
+      />
+    </>
   );
 }

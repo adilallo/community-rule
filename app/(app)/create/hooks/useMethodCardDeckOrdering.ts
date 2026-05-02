@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { useCreateFlow } from "../context/CreateFlowContext";
-import type { CreateFlowMethodCardFacetSection } from "../types";
 import {
   mergeCompactCardIdsWithPinnedSelected,
   orderRankedMethodsWithPinnedSelection,
@@ -17,38 +15,33 @@ import {
 type MethodEntry = { id: string; label: string; supportText: string };
 
 /**
- * Applies score ranking, compact-slot rules, optional “pinned selection” showcase
- * order. Rows stay pinned across navigation while `methodSectionsPinCommitted` is true
- * and the section still has selections; we do **not** clear the flag when selection
- * arrays briefly go empty during draft hydration (`replaceState` / merge flashes) —
- * display order already ignores the pin until `pinActive` is true again.
+ * Applies score ranking, compact-slot rules, then surfaces selected ids first in
+ * `selected*Ids` order (most-recent add at index 0 via
+ * {@link moveFacetSelectionIdToFront}). Selection-first applies whenever the facet
+ * has any selection — not only after footer Confirm (`methodSectionsPinCommitted`).
  */
 export function useMethodCardDeckOrdering(
   section: RecommendationSection,
   methods: readonly MethodEntry[],
   selectedIds: readonly string[],
 ) {
-  const { state } = useCreateFlow();
-  const facetKey = section as CreateFlowMethodCardFacetSection;
   const { scoresBySlug, hasAnyFacets } = useFacetRecommendations(section);
-
-  const pinStored =
-    state.methodSectionsPinCommitted?.[facetKey] === true;
-  const pinActive = Boolean(pinStored && selectedIds.length > 0);
 
   const rankedMethods = useMemo(
     () => rankMethodsByScore(methods, scoresBySlug),
     [methods, scoresBySlug],
   );
 
+  const selectionShowcaseActive = selectedIds.length > 0;
+
   const displayMethods = useMemo(
     () =>
       orderRankedMethodsWithPinnedSelection(
         rankedMethods,
         selectedIds,
-        pinActive,
+        selectionShowcaseActive,
       ),
-    [rankedMethods, selectedIds, pinActive],
+    [rankedMethods, selectedIds, selectionShowcaseActive],
   );
 
   const { compactCardIds: baseCompactCardIds, recommendedIds } = useMemo(
@@ -68,10 +61,10 @@ export function useMethodCardDeckOrdering(
         displayMethods.map((m) => m.id),
         baseCompactCardIds,
         selectedIds,
-        pinActive,
+        selectionShowcaseActive,
         5,
       ),
-    [displayMethods, baseCompactCardIds, selectedIds, pinActive],
+    [displayMethods, baseCompactCardIds, selectedIds, selectionShowcaseActive],
   );
 
   const sampleCards = useMemo(

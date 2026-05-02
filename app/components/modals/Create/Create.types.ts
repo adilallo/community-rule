@@ -35,6 +35,8 @@ export interface CreateProps {
    * @default "default"
    */
   backdropVariant?: CreateModalBackdropVariant;
+  /** Passed through to ModalFooter; set explicitly when step visibility must not infer from steps alone. */
+  stepper?: boolean;
 }
 
 export interface CreateViewProps {
@@ -60,4 +62,5 @@ export interface CreateViewProps {
   createRef: RefObject<HTMLDivElement | null>;
   overlayRef: RefObject<HTMLDivElement | null>;
   backdropVariant: CreateModalBackdropVariant;
+  stepper?: boolean;
 }

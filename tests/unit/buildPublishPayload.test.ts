@@ -169,6 +169,25 @@ describe("buildPublishPayload — methodSelections", () => {
     expect(entries?.[0]?.blocks?.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("uses customMethodCardMetaById label when preset id is unknown", () => {
+    const customId = "00000000-0000-4000-8000-000000000002";
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: [customId],
+      customMethodCardMetaById: {
+        [customId]: { label: "Custom Comm", supportText: "More" },
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | { communication?: Array<{ id: string; label: string }> }
+      | undefined;
+    expect(ms?.communication?.length).toBe(1);
+    expect(ms?.communication?.[0]?.id).toBe(customId);
+    expect(ms?.communication?.[0]?.label).toBe("Custom Comm");
+  });
+
   it("emits preset-only sections when a method is selected without an override", () => {
     const r = buildPublishPayload({
       title: "T",

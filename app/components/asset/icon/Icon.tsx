@@ -3,15 +3,19 @@
 import Image from "next/image";
 import { memo } from "react";
 import ArrowBackIcon from "./arrow_back.svg";
+import ChevronRightIcon from "./chevron_right.svg";
 import ContentCopyIcon from "./content_copy.svg";
+import CsvIcon from "./csv.svg";
 import EditIcon from "./edit.svg";
 import ExclamationIcon from "./exclamation.svg";
-import ChevronRightIcon from "./chevron_right.svg";
-import CsvIcon from "./csv.svg";
+import ImageGlyphIcon from "./image.svg";
 import LogOutIcon from "./log_out.svg";
 import MailIcon from "./mail.svg";
 import MarkdownCopyIcon from "./markdown_copy.svg";
+import NumberIcon from "./number.svg";
 import PictureAsPdfIcon from "./picture_as_pdf.svg";
+import TagsIcon from "./tags.svg";
+import TextBlockIcon from "./text_block.svg";
 import WarningIcon from "./warning.svg";
 
 export const ICON_NAME_OPTIONS = [
@@ -21,10 +25,14 @@ export const ICON_NAME_OPTIONS = [
   "csv",
   "edit",
   "exclamation",
+  "image",
   "log_out",
   "mail",
   "markdown_copy",
+  "number",
   "picture_as_pdf",
+  "tags",
+  "text_block",
   "warning",
 ] as const;
 
@@ -42,10 +50,14 @@ const iconMap: Record<IconName, SvgComponent> = {
   csv: CsvIcon,
   edit: EditIcon,
   exclamation: ExclamationIcon,
+  image: ImageGlyphIcon,
   log_out: LogOutIcon,
   mail: MailIcon,
   markdown_copy: MarkdownCopyIcon,
+  number: NumberIcon,
   picture_as_pdf: PictureAsPdfIcon,
+  tags: TagsIcon,
+  text_block: TextBlockIcon,
   warning: WarningIcon,
 };
 

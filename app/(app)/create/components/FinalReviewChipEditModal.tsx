@@ -34,6 +34,7 @@ import {
   DecisionApproachEditFields,
   MembershipMethodEditFields,
 } from "./methodEditFields";
+import CustomMethodCardModalBody from "./CustomMethodCardModalBody";
 import {
   communicationPresetFor,
   conflictManagementPresetFor,
@@ -41,6 +42,8 @@ import {
   decisionApproachPresetFor,
   membershipPresetFor,
 } from "../../../../lib/create/finalReviewChipPresets";
+import { isCustomMethodCardId } from "../../../../lib/create/isCustomMethodCardId";
+import type { CustomMethodCardFieldBlock } from "../../../../lib/create/customMethodCardFieldBlocks";
 import type {
   CommunicationMethodDetailEntry,
   ConflictManagementDetailEntry,
@@ -66,21 +69,25 @@ export type FinalReviewChipEditPatch =
       groupKey: "communication";
       overrideKey: string;
       value: CommunicationMethodDetailEntry;
+      customMethodCardFieldBlocks?: CustomMethodCardFieldBlock[];
     }
   | {
       groupKey: "membership";
       overrideKey: string;
       value: MembershipMethodDetailEntry;
+      customMethodCardFieldBlocks?: CustomMethodCardFieldBlock[];
     }
   | {
       groupKey: "decisionApproaches";
       overrideKey: string;
       value: DecisionApproachDetailEntry;
+      customMethodCardFieldBlocks?: CustomMethodCardFieldBlock[];
     }
   | {
       groupKey: "conflictManagement";
       overrideKey: string;
       value: ConflictManagementDetailEntry;
+      customMethodCardFieldBlocks?: CustomMethodCardFieldBlock[];
     };
 
 export interface FinalReviewChipEditModalProps {
@@ -128,12 +135,16 @@ export function FinalReviewChipEditModal({
   );
 
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [fieldBlocksDraft, setFieldBlocksDraft] = useState<
+    CustomMethodCardFieldBlock[] | null
+  >(null);
   /**
    * JSON-stringified seed used for the cheap dirty check. Re-captured on
    * every (re)open so reopening a chip after a save shows Save-disabled
    * again until the user makes a fresh edit.
    */
   const initialSnapshotRef = useRef<string>("");
+  const initialFieldBlocksSnapshotRef = useRef<string>("");
   const seededTargetRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -144,6 +155,18 @@ export function FinalReviewChipEditModal({
     const seed = seedDraftForTarget(target, state);
     setDraft(seed);
     initialSnapshotRef.current = JSON.stringify(seed.value);
+    if (
+      target.groupKey !== "coreValues" &&
+      isCustomMethodCardId(target.overrideKey, state.customMethodCardMetaById)
+    ) {
+      const blocks =
+        state.customMethodCardFieldBlocksById?.[target.overrideKey] ?? [];
+      setFieldBlocksDraft(blocks);
+      initialFieldBlocksSnapshotRef.current = JSON.stringify(blocks);
+    } else {
+      setFieldBlocksDraft(null);
+      initialFieldBlocksSnapshotRef.current = "";
+    }
     seededTargetRef.current = targetKey;
   }, [isOpen, target, state]);
 
@@ -152,24 +175,86 @@ export function FinalReviewChipEditModal({
   }, [isOpen]);
 
   const isDirty = useMemo(() => {
-    if (!draft) return false;
-    return JSON.stringify(draft.value) !== initialSnapshotRef.current;
-  }, [draft]);
+    if (!draft || !target) return false;
+    const valueDirty =
+      JSON.stringify(draft.value) !== initialSnapshotRef.current;
+    const customMethod =
+      target.groupKey !== "coreValues" &&
+      isCustomMethodCardId(target.overrideKey, state.customMethodCardMetaById);
+    const blocksDirty =
+      customMethod &&
+      fieldBlocksDraft !== null &&
+      JSON.stringify(fieldBlocksDraft) !==
+        initialFieldBlocksSnapshotRef.current;
+    return valueDirty || Boolean(blocksDirty);
+  }, [draft, target, state.customMethodCardMetaById, fieldBlocksDraft]);
 
   const handleSave = () => {
     if (!target || !draft || !isDirty) return;
-    onSave({
-      groupKey: draft.groupKey,
-      overrideKey: target.overrideKey,
-      value: draft.value,
-    } as FinalReviewChipEditPatch);
+    const { overrideKey } = target;
+    const customBlocks =
+      draft.groupKey !== "coreValues" &&
+      isCustomMethodCardId(overrideKey, state.customMethodCardMetaById) &&
+      fieldBlocksDraft !== null
+        ? fieldBlocksDraft
+        : undefined;
+
+    switch (draft.groupKey) {
+      case "coreValues":
+        onSave({
+          groupKey: "coreValues",
+          overrideKey,
+          value: draft.value,
+        });
+        break;
+      case "communication":
+        onSave({
+          groupKey: "communication",
+          overrideKey,
+          value: draft.value,
+          ...(customBlocks !== undefined
+            ? { customMethodCardFieldBlocks: customBlocks }
+            : {}),
+        });
+        break;
+      case "membership":
+        onSave({
+          groupKey: "membership",
+          overrideKey,
+          value: draft.value,
+          ...(customBlocks !== undefined
+            ? { customMethodCardFieldBlocks: customBlocks }
+            : {}),
+        });
+        break;
+      case "decisionApproaches":
+        onSave({
+          groupKey: "decisionApproaches",
+          overrideKey,
+          value: draft.value,
+          ...(customBlocks !== undefined
+            ? { customMethodCardFieldBlocks: customBlocks }
+            : {}),
+        });
+        break;
+      case "conflictManagement":
+        onSave({
+          groupKey: "conflictManagement",
+          overrideKey,
+          value: draft.value,
+          ...(customBlocks !== undefined
+            ? { customMethodCardFieldBlocks: customBlocks }
+            : {}),
+        });
+        break;
+    }
     onClose();
   };
 
   const subtitle = useMemo(() => {
     if (!target) return "";
-    return subtitleForTarget(target, { tCv, tComm, tMem, tDa, tCm });
-  }, [target, tCv, tComm, tMem, tDa, tCm]);
+    return subtitleForTarget(target, { tCv, tComm, tMem, tDa, tCm }, state.customMethodCardMetaById);
+  }, [target, tCv, tComm, tMem, tDa, tCm, state.customMethodCardMetaById]);
 
   return (
     <Create
@@ -200,36 +285,84 @@ export function FinalReviewChipEditModal({
             onChange={(value) => setDraft({ groupKey: "coreValues", value })}
           />
         )}
-        {draft?.groupKey === "communication" && (
-          <CommunicationMethodEditFields
-            value={draft.value}
-            onChange={(value) =>
-              setDraft({ groupKey: "communication", value })
-            }
-          />
-        )}
-        {draft?.groupKey === "membership" && (
-          <MembershipMethodEditFields
-            value={draft.value}
-            onChange={(value) => setDraft({ groupKey: "membership", value })}
-          />
-        )}
-        {draft?.groupKey === "decisionApproaches" && (
-          <DecisionApproachEditFields
-            value={draft.value}
-            onChange={(value) =>
-              setDraft({ groupKey: "decisionApproaches", value })
-            }
-          />
-        )}
-        {draft?.groupKey === "conflictManagement" && (
-          <ConflictManagementEditFields
-            value={draft.value}
-            onChange={(value) =>
-              setDraft({ groupKey: "conflictManagement", value })
-            }
-          />
-        )}
+        {draft?.groupKey === "communication" &&
+          (target &&
+          isCustomMethodCardId(
+            target.overrideKey,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              cardId={target.overrideKey}
+              blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={fieldBlocksDraft}
+              onFieldBlocksChange={setFieldBlocksDraft}
+            />
+          ) : (
+            <CommunicationMethodEditFields
+              value={draft.value}
+              onChange={(value) =>
+                setDraft({ groupKey: "communication", value })
+              }
+            />
+          ))}
+        {draft?.groupKey === "membership" &&
+          (target &&
+          isCustomMethodCardId(
+            target.overrideKey,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              cardId={target.overrideKey}
+              blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={fieldBlocksDraft}
+              onFieldBlocksChange={setFieldBlocksDraft}
+            />
+          ) : (
+            <MembershipMethodEditFields
+              value={draft.value}
+              onChange={(value) => setDraft({ groupKey: "membership", value })}
+            />
+          ))}
+        {draft?.groupKey === "decisionApproaches" &&
+          (target &&
+          isCustomMethodCardId(
+            target.overrideKey,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              cardId={target.overrideKey}
+              blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={fieldBlocksDraft}
+              onFieldBlocksChange={setFieldBlocksDraft}
+            />
+          ) : (
+            <DecisionApproachEditFields
+              value={draft.value}
+              onChange={(value) =>
+                setDraft({ groupKey: "decisionApproaches", value })
+              }
+            />
+          ))}
+        {draft?.groupKey === "conflictManagement" &&
+          (target &&
+          isCustomMethodCardId(
+            target.overrideKey,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              cardId={target.overrideKey}
+              blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={fieldBlocksDraft}
+              onFieldBlocksChange={setFieldBlocksDraft}
+            />
+          ) : (
+            <ConflictManagementEditFields
+              value={draft.value}
+              onChange={(value) =>
+                setDraft({ groupKey: "conflictManagement", value })
+              }
+            />
+          ))}
       </div>
     </Create>
   );
@@ -309,18 +442,31 @@ type SubtitleMessages = {
 function subtitleForTarget(
   target: FinalReviewChipEditTarget,
   msgs: SubtitleMessages,
+  customMeta?: CreateFlowState["customMethodCardMetaById"],
 ): string {
   switch (target.groupKey) {
     case "coreValues":
       return msgs.tCv.detailModal.subtitle;
-    case "communication":
+    case "communication": {
+      const fromCustom = customMeta?.[target.overrideKey]?.supportText?.trim();
+      if (fromCustom) return fromCustom;
       return findMethodSupportText(msgs.tComm.methods, target.overrideKey);
-    case "membership":
+    }
+    case "membership": {
+      const fromCustom = customMeta?.[target.overrideKey]?.supportText?.trim();
+      if (fromCustom) return fromCustom;
       return findMethodSupportText(msgs.tMem.methods, target.overrideKey);
-    case "decisionApproaches":
+    }
+    case "decisionApproaches": {
+      const fromCustom = customMeta?.[target.overrideKey]?.supportText?.trim();
+      if (fromCustom) return fromCustom;
       return findMethodSupportText(msgs.tDa.methods, target.overrideKey);
-    case "conflictManagement":
+    }
+    case "conflictManagement": {
+      const fromCustom = customMeta?.[target.overrideKey]?.supportText?.trim();
+      if (fromCustom) return fromCustom;
       return findMethodSupportText(msgs.tCm.methods, target.overrideKey);
+    }
   }
 }
 

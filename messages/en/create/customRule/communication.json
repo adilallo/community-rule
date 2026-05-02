@@ -4,9 +4,10 @@
     "compactTitle": "How should this community communicate with each-other?",
     "compactDescriptionBefore": "You can select multiple methods for different needs or ",
     "compactDescriptionLinkLabel": "add",
-    "compactDescriptionAfter": " your own",
+    "compactDescriptionAfter": " your own.",
     "expandedTitle": "What method should this community use to communicate with eachother?",
-    "expandedDescription": "You can select multiple methods for different needs or add your own",
+    "expandedDescriptionBefore": "You can select multiple methods for different needs or ",
+    "expandedDescriptionAfter": " your own",
     "seeAllLink": "See all communication approaches"
   },
   "confirmModal": {
@@ -16,6 +17,9 @@
   },
   "addPlatform": {
     "nextButtonText": "Add Platform"
+  },
+  "removePlatform": {
+    "nextButtonText": "Remove"
   },
   "sectionHeadings": {
     "corePrinciple": "Core Principle & Scope",

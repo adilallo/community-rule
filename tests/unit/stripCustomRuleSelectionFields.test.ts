@@ -15,6 +15,19 @@ describe("stripCustomRuleSelectionFields", () => {
       selectedConflictManagementIds: ["z"],
       methodSectionsPinCommitted: { communication: true },
       coreValueDetailsByChipId: { "1": { meaning: "", signals: "" } },
+      customMethodCardMetaById: {
+        x: { label: "Custom", supportText: "S" },
+      },
+      customMethodCardFieldBlocksById: {
+        x: [
+          {
+            kind: "text",
+            id: "f1",
+            blockTitle: "T",
+            placeholderText: "",
+          },
+        ],
+      },
       sections: [{ categoryName: "Communication", entries: [] }],
     };
     const out = stripCustomRuleSelectionFields(prev);
@@ -28,5 +41,7 @@ describe("stripCustomRuleSelectionFields", () => {
     expect(out.selectedConflictManagementIds).toBeUndefined();
     expect(out.methodSectionsPinCommitted).toBeUndefined();
     expect(out.coreValueDetailsByChipId).toBeUndefined();
+    expect(out.customMethodCardMetaById).toBeUndefined();
+    expect(out.customMethodCardFieldBlocksById).toBeUndefined();
   });
 });

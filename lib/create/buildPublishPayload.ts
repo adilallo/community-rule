@@ -13,7 +13,7 @@ import {
   decisionApproachPresetFor,
   membershipPresetFor,
   mergeCoreValueDetailWithPresets,
-  methodLabelFor,
+  publishedMethodDisplayLabel,
 } from "./finalReviewChipPresets";
 import { isDocumentEntry } from "./documentEntryGuards";
 import { replaceMethodSectionsWithMethodSelections } from "./ruleSectionsFromMethodSelections";
@@ -254,7 +254,11 @@ export function buildMethodSelectionsForDocument(
       const override = state.communicationMethodDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("communication", id),
+        label: publishedMethodDisplayLabel(
+          "communication",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
@@ -270,7 +274,11 @@ export function buildMethodSelectionsForDocument(
       const override = state.membershipMethodDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("membership", id),
+        label: publishedMethodDisplayLabel(
+          "membership",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
@@ -286,7 +294,11 @@ export function buildMethodSelectionsForDocument(
       const override = state.decisionApproachDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("decisionApproaches", id),
+        label: publishedMethodDisplayLabel(
+          "decisionApproaches",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
@@ -302,7 +314,11 @@ export function buildMethodSelectionsForDocument(
       const override = state.conflictManagementDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("conflictManagement", id),
+        label: publishedMethodDisplayLabel(
+          "conflictManagement",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });

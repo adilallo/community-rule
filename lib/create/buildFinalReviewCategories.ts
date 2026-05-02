@@ -62,14 +62,22 @@ function entriesFromIds(
   ids: readonly string[] | undefined,
   methods: readonly MethodPreset[],
   groupKey: TemplateFacetGroupKey,
+  customMeta?: CreateFlowState["customMethodCardMetaById"],
 ): FinalReviewChipEntry[] {
   if (!ids || ids.length === 0) return [];
   const byId = new Map(methods.map((m) => [m.id, m.label] as const));
   const seen = new Set<string>();
   const out: FinalReviewChipEntry[] = [];
   for (const id of ids) {
-    const label = byId.get(id);
-    if (typeof label !== "string" || label.length === 0) continue;
+    const presetLabel = byId.get(id);
+    const fromCustom = customMeta?.[id]?.label?.trim();
+    const label =
+      typeof presetLabel === "string" && presetLabel.length > 0
+        ? presetLabel
+        : typeof fromCustom === "string" && fromCustom.length > 0
+          ? fromCustom
+          : "";
+    if (label.length === 0) continue;
     if (seen.has(label)) continue;
     seen.add(label);
     out.push({ label, groupKey, overrideKey: id });
@@ -181,6 +189,7 @@ export function buildFinalReviewCategoryRowsDetailed(
         state.selectedCommunicationMethodIds,
         methodsForGroup("communication"),
         "communication",
+        state.customMethodCardMetaById,
       ),
     },
     {
@@ -190,6 +199,7 @@ export function buildFinalReviewCategoryRowsDetailed(
         state.selectedMembershipMethodIds,
         methodsForGroup("membership"),
         "membership",
+        state.customMethodCardMetaById,
       ),
     },
     {
@@ -199,6 +209,7 @@ export function buildFinalReviewCategoryRowsDetailed(
         state.selectedDecisionApproachIds,
         methodsForGroup("decisionApproaches"),
         "decisionApproaches",
+        state.customMethodCardMetaById,
       ),
     },
     {
@@ -208,6 +219,7 @@ export function buildFinalReviewCategoryRowsDetailed(
         state.selectedConflictManagementIds,
         methodsForGroup("conflictManagement"),
         "conflictManagement",
+        state.customMethodCardMetaById,
       ),
     },
   ];

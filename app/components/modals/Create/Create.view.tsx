@@ -29,6 +29,7 @@ export function CreateView({
   createRef,
   overlayRef,
   backdropVariant,
+  stepper,
 }: CreateViewProps) {
   return (
     <CreateModalFrameView
@@ -70,6 +71,7 @@ export function CreateView({
         nextButtonDisabled={nextButtonDisabled}
         currentStep={currentStep}
         totalSteps={totalSteps}
+        stepper={stepper}
         footerContent={footerContent}
       />
     </CreateModalFrameView>

@@ -8,6 +8,7 @@ import type {
   CommunicationMethodDetailEntry,
   ConflictManagementDetailEntry,
   CoreValueDetailEntry,
+  CreateFlowState,
   DecisionApproachDetailEntry,
   MembershipMethodDetailEntry,
 } from "../../app/(app)/create/types";
@@ -231,4 +232,15 @@ export function methodLabelFor(
   if (!source) return "";
   const method = findMethod(source, id);
   return method?.label ?? "";
+}
+
+/** Label for publish / review: preset JSON row, else user-authored wizard meta. */
+export function publishedMethodDisplayLabel(
+  groupKey: TemplateFacetGroupKey,
+  id: string,
+  customMeta?: CreateFlowState["customMethodCardMetaById"],
+): string {
+  const preset = methodLabelFor(groupKey, id);
+  if (preset.length > 0) return preset;
+  return customMeta?.[id]?.label?.trim() ?? "";
 }

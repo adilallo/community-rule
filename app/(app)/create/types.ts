@@ -5,6 +5,7 @@
  * including step types, state management, and context interfaces.
  */
 
+import type { CustomMethodCardFieldBlock } from "../../../lib/create/customMethodCardFieldBlocks";
 import type { MethodFacetApiSectionId } from "../../../lib/create/customRuleFacets";
 
 /**
@@ -162,6 +163,19 @@ export interface CreateFlowState {
     string,
     ConflictManagementDetailEntry
   >;
+  /**
+   * Labels for user-authored method cards (UUID ids) added via the custom-method-card wizard.
+   * Preset rows resolve from messages JSON; these entries supply title/support for publish + final-review.
+   */
+  customMethodCardMetaById?: Record<
+    string,
+    { label: string; supportText: string }
+  >;
+  /**
+   * Custom data-field templates authored in the custom-method-card wizard (step 3).
+   * Keyed by the same UUID as `customMethodCardMetaById` for that card.
+   */
+  customMethodCardFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>;
   /**
    * Set when a user picks a template (Customize or Use without changes) before
    * completing the community stage. The community-review screen consumes this

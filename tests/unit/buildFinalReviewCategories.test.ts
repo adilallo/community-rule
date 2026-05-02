@@ -59,6 +59,19 @@ describe("buildFinalReviewCategoriesFromState", () => {
     expect(rows).toEqual([{ name: "Communication", chips: ["Signal"] }]);
   });
 
+  it("resolves user-authored method ids from customMethodCardMetaById", () => {
+    const customId = "00000000-0000-4000-8000-000000000001";
+    const state: CreateFlowState = {
+      selectedCommunicationMethodIds: ["signal", customId],
+      customMethodCardMetaById: {
+        [customId]: { label: "Our Slack Ritual", supportText: "desc" },
+      },
+    };
+    const rows = buildFinalReviewCategoriesFromState(state, NAMES);
+    const comm = rows.find((r) => r.name === "Communication");
+    expect(comm?.chips).toEqual(["Signal", "Our Slack Ritual"]);
+  });
+
   it("dedupes repeated labels from duplicate ids", () => {
     const state: CreateFlowState = {
       selectedCommunicationMethodIds: ["signal", "signal"],

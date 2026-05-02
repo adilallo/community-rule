@@ -113,4 +113,23 @@ describe("CardStack Component", () => {
 
     expect(screen.getAllByText("SELECTED").length).toBeGreaterThanOrEqual(1);
   });
+
+  test("calls onCardSelect when re-clicking an already selected card", () => {
+    const onCardSelect = vi.fn();
+    render(
+      <CardStack
+        cards={SAMPLE_CARDS}
+        selectedIds={["1"]}
+        onCardSelect={onCardSelect}
+        title="Pick an option"
+      />,
+    );
+
+    const cardButtons = screen.getAllByRole("button", {
+      name: "Option A: Description A",
+    });
+    fireEvent.click(cardButtons[0]);
+    expect(onCardSelect).toHaveBeenCalledWith("1");
+    expect(screen.queryByRole("button", { name: "Remove policy" })).not.toBeInTheDocument();
+  });
 });

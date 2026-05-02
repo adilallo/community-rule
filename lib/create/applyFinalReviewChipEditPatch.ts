@@ -30,10 +30,24 @@ export function applyFinalReviewChipEditPatch(
     current && typeof current === "object"
       ? (current as Record<string, unknown>)
       : {};
-  return {
+  const detailPatch: Partial<CreateFlowState> = {
     [stateKey]: {
       ...record,
       [patch.overrideKey]: patch.value,
     },
   };
+  if (
+    patch.groupKey !== "coreValues" &&
+    "customMethodCardFieldBlocks" in patch &&
+    patch.customMethodCardFieldBlocks !== undefined
+  ) {
+    return {
+      ...detailPatch,
+      customMethodCardFieldBlocksById: {
+        ...(state.customMethodCardFieldBlocksById ?? {}),
+        [patch.overrideKey]: patch.customMethodCardFieldBlocks,
+      },
+    };
+  }
+  return detailPatch;
 }

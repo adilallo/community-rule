@@ -29,8 +29,16 @@ import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
 import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import { DecisionApproachEditFields } from "../../components/methodEditFields";
+import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
 import { decisionApproachPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
+import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
+import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
+import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
+import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
 import type { DecisionApproachDetailEntry } from "../../types";
+import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
+import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
 
 export function DecisionApproachesScreen() {
   const m = useMessages();
@@ -45,6 +53,7 @@ export function DecisionApproachesScreen() {
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
   const [pendingDraft, setPendingDraft] =
     useState<DecisionApproachDetailEntry | null>(null);
+  const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
 
   const selectedIds = state.selectedDecisionApproachIds ?? [];
 
@@ -57,21 +66,31 @@ export function DecisionApproachesScreen() {
     [da.messageBox.items],
   );
 
+  const mergedMethods = useMemo(
+    () =>
+      mergePresetMethodsWithCustom(
+        da.methods,
+        selectedIds,
+        state.customMethodCardMetaById,
+      ),
+    [da.methods, selectedIds, state.customMethodCardMetaById],
+  );
+
   const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
     "decisionApproaches",
-    da.methods,
+    mergedMethods,
     selectedIds,
   );
+
+  const handleOpenAddWizard = useCallback(() => {
+    markCreateFlowInteraction();
+    setAddCustomWizardOpen(true);
+  }, [markCreateFlowInteraction]);
 
   const sidebarDescription = (
     <>
       {da.sidebar.descriptionBefore}
-      <InlineTextButton
-        onClick={() => {
-          markCreateFlowInteraction();
-          setExpanded(true);
-        }}
-      >
+      <InlineTextButton onClick={handleOpenAddWizard}>
         {da.sidebar.descriptionLinkLabel}
       </InlineTextButton>
       {da.sidebar.descriptionAfter}
@@ -121,6 +140,10 @@ export function DecisionApproachesScreen() {
     [markCreateFlowInteraction],
   );
 
+  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
+    createModalOpen ? pendingCardId : null,
+  );
+
   const handleToggleExpand = useCallback(() => {
     markCreateFlowInteraction();
     setExpanded((prev) => !prev);
@@ -132,16 +155,77 @@ export function DecisionApproachesScreen() {
     setPendingDraft(null);
   }, []);
 
-  const handleCreateModalConfirm = useCallback(() => {
-    if (!pendingCardId || !pendingDraft) {
+  const handleCloseAddWizard = useCallback(() => {
+    setAddCustomWizardOpen(false);
+  }, []);
+
+  const handleFinalizeCustomCard = useCallback(
+    ({
+      title,
+      description,
+      fieldBlocks,
+    }: {
+      title: string;
+      description: string;
+      fieldBlocks: CustomMethodCardFieldBlock[];
+    }) => {
+      markCreateFlowInteraction();
+      const id = crypto.randomUUID();
+      updateState({
+        selectedDecisionApproachIds: moveFacetSelectionIdToFront(
+          selectedIds,
+          id,
+        ),
+        customMethodCardMetaById: {
+          ...(state.customMethodCardMetaById ?? {}),
+          [id]: { label: title, supportText: description },
+        },
+        decisionApproachDetailsById: {
+          ...(state.decisionApproachDetailsById ?? {}),
+          [id]: decisionApproachPresetFor(id),
+        },
+        customMethodCardFieldBlocksById: {
+          ...(state.customMethodCardFieldBlocksById ?? {}),
+          [id]: fieldBlocks,
+        },
+      });
+    },
+    [
+      markCreateFlowInteraction,
+      selectedIds,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+      state.decisionApproachDetailsById,
+      updateState,
+    ],
+  );
+
+  const handleCreateModalPrimary = useCallback(() => {
+    if (!pendingCardId) {
       handleCreateModalClose();
       return;
     }
     markCreateFlowInteraction();
+    if (selectedIds.includes(pendingCardId)) {
+      updateState(
+        removeMethodCardFromFacetSelection(
+          state,
+          "decisionApproaches",
+          pendingCardId,
+        ),
+      );
+      handleCreateModalClose();
+      return;
+    }
+    if (!pendingDraft) {
+      handleCreateModalClose();
+      return;
+    }
     updateState({
-      selectedDecisionApproachIds: selectedIds.includes(pendingCardId)
-        ? selectedIds
-        : [...selectedIds, pendingCardId],
+      selectedDecisionApproachIds: moveFacetSelectionIdToFront(
+        selectedIds,
+        pendingCardId,
+      ),
       decisionApproachDetailsById: {
         ...(state.decisionApproachDetailsById ?? {}),
         [pendingCardId]: pendingDraft,
@@ -154,17 +238,20 @@ export function DecisionApproachesScreen() {
     pendingCardId,
     pendingDraft,
     selectedIds,
-    state.decisionApproachDetailsById,
+    state,
     updateState,
   ]);
 
   const modalConfig = pendingCardId
     ? (() => {
         const method = methodById.get(pendingCardId);
+        const alreadySelected = selectedIds.includes(pendingCardId);
         return {
           title: method?.label ?? da.confirmModal.title,
           description: method?.supportText ?? da.confirmModal.description,
-          nextButtonText: da.addApproach.nextButtonText,
+          nextButtonText: alreadySelected
+            ? da.removeApproach.nextButtonText
+            : da.addApproach.nextButtonText,
         };
       })()
     : {
@@ -174,6 +261,7 @@ export function DecisionApproachesScreen() {
       };
 
   return (
+    <>
     <CreateFlowTwoColumnSelectShell
       contentTopBelowMd="space-800"
       lgVerticalAlign="start"
@@ -205,7 +293,19 @@ export function DecisionApproachesScreen() {
           toggleLabel={da.cardStack.toggleSeeAll}
           showLessLabel={da.cardStack.toggleShowLess}
           title=""
-          description=""
+          description={
+            expanded ? (
+              <>
+                {da.cardStack.expandedStackDescriptionBefore}
+                <InlineTextButton onClick={handleOpenAddWizard}>
+                  {da.sidebar.descriptionLinkLabel}
+                </InlineTextButton>
+                {da.cardStack.expandedStackDescriptionAfter}
+              </>
+            ) : (
+              ""
+            )
+          }
           layout="singleStack"
           compactRecommendedLimit={5}
           compactCardIds={compactCardIds}
@@ -217,7 +317,7 @@ export function DecisionApproachesScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
-        onNext={handleCreateModalConfirm}
+        onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
@@ -225,13 +325,31 @@ export function DecisionApproachesScreen() {
         backdropVariant="blurredYellow"
       >
         {pendingCardId && pendingDraft ? (
-          <DecisionApproachEditFields
-            key={pendingCardId}
-            value={pendingDraft}
-            onChange={handleDraftChange}
-          />
+          isCustomMethodCardId(
+            pendingCardId,
+            state.customMethodCardMetaById,
+          ) ? (
+            <CustomMethodCardModalBody
+              key={pendingCardId}
+              cardId={pendingCardId}
+              blocksById={state.customMethodCardFieldBlocksById}
+              onFieldBlocksChange={onCustomFieldBlocksChange}
+            />
+          ) : (
+            <DecisionApproachEditFields
+              key={pendingCardId}
+              value={pendingDraft}
+              onChange={handleDraftChange}
+            />
+          )
         ) : null}
       </Create>
     </CreateFlowTwoColumnSelectShell>
+      <CustomMethodCardWizard
+        isOpen={addCustomWizardOpen}
+        onClose={handleCloseAddWizard}
+        onFinalize={handleFinalizeCustomCard}
+      />
+    </>
   );
 }
