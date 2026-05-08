@@ -113,6 +113,24 @@ export function createFlowStateFromPublishedRule(
     out.coreValueDetailsByChipId = coreValueDetailsByChipId;
   }
 
+  const avatarUrl =
+    typeof doc.communityAvatarUrl === "string"
+      ? doc.communityAvatarUrl.trim()
+      : "";
+  if (avatarUrl.length > 0) {
+    out.communityAvatarUrl = avatarUrl;
+  }
+
+  const blocksRaw = doc.customMethodCardFieldBlocksById;
+  if (
+    blocksRaw &&
+    typeof blocksRaw === "object" &&
+    !Array.isArray(blocksRaw)
+  ) {
+    out.customMethodCardFieldBlocksById =
+      blocksRaw as NonNullable<CreateFlowState["customMethodCardFieldBlocksById"]>;
+  }
+
   const msRaw = doc.methodSelections;
   if (!msRaw || typeof msRaw !== "object" || Array.isArray(msRaw)) {
     out.sections = [];

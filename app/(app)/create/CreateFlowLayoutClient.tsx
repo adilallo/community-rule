@@ -73,6 +73,7 @@ import { useAuthModal } from "../../contexts/AuthModalContext";
 import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
+import { CreateFlowPendingAvatarFlush } from "./components/CreateFlowPendingAvatarFlush";
 import Alert from "../../components/modals/Alert";
 import Share from "../../components/modals/Share";
 import {
@@ -560,6 +561,12 @@ function CreateFlowLayoutContent({
       </Suspense>
       <Suspense fallback={null}>
         <PostLoginDraftTransfer sessionUser={sessionUser} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <CreateFlowPendingAvatarFlush
+          sessionUser={sessionUser}
+          sessionResolved={sessionResolved}
+        />
       </Suspense>
       <Share
         isOpen={shareModalOpen}

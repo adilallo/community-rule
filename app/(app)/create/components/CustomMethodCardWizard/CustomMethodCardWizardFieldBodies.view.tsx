@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { getAssetPath } from "../../../../../lib/assetUtils";
 import InputWithCounter from "../../../../components/controls/InputWithCounter";
 import TextArea from "../../../../components/controls/TextArea";
 import TextInput from "../../../../components/controls/TextInput";
@@ -28,11 +29,19 @@ function CustomMethodCardWizardFieldBodiesViewComponent({
   onUploadBlockTitleChange,
   fileInputRef,
   onFileChosen,
+  onClearPendingUpload,
+  uploadAssetPreviewUrl = null,
+  uploadPersisting = false,
+  uploadBusyHint,
+  uploadErrorMessage = null,
   proportionBlockTitle,
   proportionDefault,
   onProportionBlockTitleChange,
   onProportionDefaultChange,
 }: CustomMethodCardWizardFieldBodiesViewProps) {
+  const uploadPreviewTrimmed = uploadAssetPreviewUrl?.trim() ?? "";
+  const hasUploadPreview = uploadPreviewTrimmed.length > 0;
+
   if (fieldType === "text") {
     return (
       <div className="flex flex-col gap-[var(--spacing-scale-024)]">
@@ -120,10 +129,53 @@ function CustomMethodCardWizardFieldBodiesViewComponent({
           maxLength={CUSTOM_METHOD_CARD_WIZARD_MAX_FIELD_CHARS}
           showHelpIcon
         />
-        <Upload
-          hintText={copy.upload.uploadHint}
-          onClick={() => fileInputRef.current?.click()}
-        />
+        {hasUploadPreview ? (
+          <div className="relative inline-block max-w-full">
+            <button
+              type="button"
+              onClick={onClearPendingUpload}
+              className="absolute right-[8px] top-[8px] z-[1] flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-full bg-[var(--color-surface-default-secondary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-invert-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-default-primary)]"
+              aria-label={copy.upload.clearPendingUploadAriaLabel}
+              title={copy.upload.clearPendingUploadTooltip}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- matches ModalHeader close control */}
+              <img
+                src={getAssetPath("assets/Icon_Close.svg")}
+                alt=""
+                className="h-[16px] w-[16px]"
+                style={{
+                  filter: "brightness(0) invert(1)",
+                }}
+              />
+            </button>
+            {/* eslint-disable-next-line @next/next/no-img-element -- blob or same-origin upload URL */}
+            <img
+              src={uploadPreviewTrimmed}
+              alt={copy.upload.uploadPreviewImageAlt}
+              className="max-h-[160px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
+            />
+          </div>
+        ) : (
+          <Upload
+            active={!uploadPersisting}
+            hintText={
+              uploadPersisting && uploadBusyHint
+                ? uploadBusyHint
+                : copy.upload.uploadHint
+            }
+            onClick={() => {
+              if (!uploadPersisting) fileInputRef.current?.click();
+            }}
+          />
+        )}
+        {uploadErrorMessage ? (
+          <p
+            className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-s)] text-[var(--color-content-default-secondary)]"
+            role="alert"
+          >
+            {uploadErrorMessage}
+          </p>
+        ) : null}
       </div>
     );
   }

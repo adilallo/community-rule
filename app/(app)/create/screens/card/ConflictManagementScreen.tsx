@@ -28,6 +28,7 @@ import {
 } from "../../components/createFlowLayoutTokens";
 import { ConflictManagementEditFields } from "../../components/methodEditFields";
 import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
+import { uploadCreateFlowFile } from "../../../../../lib/create/uploadToServer";
 import { conflictManagementPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
@@ -147,6 +148,8 @@ export function ConflictManagementScreen() {
   const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
     createModalOpen ? pendingCardId : null,
   );
+  const customModalReadOnly =
+    pendingCardId !== null && selectedIds.includes(pendingCardId);
 
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
@@ -294,7 +297,9 @@ export function ConflictManagementScreen() {
               key={pendingCardId}
               cardId={pendingCardId}
               blocksById={state.customMethodCardFieldBlocksById}
-              onFieldBlocksChange={onCustomFieldBlocksChange}
+              onFieldBlocksChange={
+                customModalReadOnly ? undefined : onCustomFieldBlocksChange
+              }
             />
           ) : (
             <ConflictManagementEditFields
@@ -310,6 +315,9 @@ export function ConflictManagementScreen() {
         isOpen={addCustomWizardOpen}
         onClose={handleCloseAddWizard}
         onFinalize={handleFinalizeCustomCard}
+        onPersistCustomUploadFile={(file) =>
+          uploadCreateFlowFile(file, "customMethodAttachment")
+        }
       />
     </>
   );

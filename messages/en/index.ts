@@ -53,6 +53,7 @@ import createFooter from "./create/footer.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
 import createTemplateReview from "./create/templateReview.json";
+import createUpload from "./create/upload.json";
 
 export default {
   common,
@@ -107,6 +108,7 @@ export default {
     topNav: createTopNav,
     draftHydration: createDraftHydration,
     templateReview: createTemplateReview,
+    upload: createUpload,
   },
   navigation,
   metadata,

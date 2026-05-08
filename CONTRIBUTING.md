@@ -40,6 +40,8 @@ deployment-pipeline work.
 | GET | `/api/auth/magic-link/verify` | Validate token, set cookie, redirect. |
 | POST | `/api/auth/logout` | Clear session. |
 | GET / PUT | `/api/drafts/me` | Load or save the create-flow draft. |
+| POST | `/api/uploads` | Authenticated multipart upload (create-flow images / PDFs); requires `UPLOAD_ROOT`. |
+| GET | `/api/uploads/[id]` | Stream a previously uploaded file by opaque id (public read). |
 | GET / POST | `/api/rules` | List or publish rules. |
 | GET | `/api/templates` | List curated templates. Optional repeatable `facet.<group>=<value>` query params re-rank results (and may include `scores` in the JSON). See [docs/guides/template-recommendation-matrix.md](docs/guides/template-recommendation-matrix.md) §9.1. |
 | GET | `/api/create-flow/methods` | Facet-aware scores for custom-rule card steps: required `section` (`communication` \| `membership` \| `decisionApproaches` \| `conflictManagement`) and optional `facet.*` params (same facet groups as `/api/templates`). Returns `methods` with match metadata for re-ordering in the wizard. |

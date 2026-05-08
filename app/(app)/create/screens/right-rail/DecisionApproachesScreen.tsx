@@ -30,6 +30,7 @@ import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import { DecisionApproachEditFields } from "../../components/methodEditFields";
 import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
+import { uploadCreateFlowFile } from "../../../../../lib/create/uploadToServer";
 import { decisionApproachPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
@@ -143,6 +144,8 @@ export function DecisionApproachesScreen() {
   const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
     createModalOpen ? pendingCardId : null,
   );
+  const customModalReadOnly =
+    pendingCardId !== null && selectedIds.includes(pendingCardId);
 
   const handleToggleExpand = useCallback(() => {
     markCreateFlowInteraction();
@@ -333,7 +336,9 @@ export function DecisionApproachesScreen() {
               key={pendingCardId}
               cardId={pendingCardId}
               blocksById={state.customMethodCardFieldBlocksById}
-              onFieldBlocksChange={onCustomFieldBlocksChange}
+              onFieldBlocksChange={
+                customModalReadOnly ? undefined : onCustomFieldBlocksChange
+              }
             />
           ) : (
             <DecisionApproachEditFields
@@ -349,6 +354,9 @@ export function DecisionApproachesScreen() {
         isOpen={addCustomWizardOpen}
         onClose={handleCloseAddWizard}
         onFinalize={handleFinalizeCustomCard}
+        onPersistCustomUploadFile={(file) =>
+          uploadCreateFlowFile(file, "customMethodAttachment")
+        }
       />
     </>
   );

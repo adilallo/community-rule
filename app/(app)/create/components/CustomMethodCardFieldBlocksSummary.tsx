@@ -10,8 +10,8 @@
  * {@link ApplicableScopeField} chip rows, {@link IncrementerBlock}.
  */
 
-import { memo, useCallback, useRef } from "react";
-import { useMessages } from "../../../contexts/MessagesContext";
+import { memo, useCallback, useRef, useState } from "react";
+import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
 import Chip from "../../../components/controls/Chip";
 import IncrementerBlock from "../../../components/controls/IncrementerBlock";
 import InlineTextButton from "../../../components/buttons/InlineTextButton";
@@ -20,6 +20,7 @@ import ApplicableScopeField from "./ApplicableScopeField";
 import InputLabel from "../../../components/type/InputLabel";
 import type { CustomMethodCardFieldBlock } from "../../../../lib/create/customMethodCardFieldBlocks";
 import ModalTextAreaField from "./ModalTextAreaField";
+import { uploadCreateFlowFile } from "../../../../lib/create/uploadToServer";
 
 const TEXT_VALUE_MAX = 8000;
 
@@ -55,7 +56,12 @@ function CustomMethodCardUploadBlockRow({
   noFileChosen: string;
 }) {
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
+  const tUpload = useTranslation("create.upload");
+  const [busy, setBusy] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const displayName = block.fileName?.trim() ? block.fileName : noFileChosen;
+  const hasAsset = Boolean(block.assetUrl?.trim());
+  const previewAlt = block.fileName?.trim() || block.blockTitle || noFileChosen;
 
   return (
     <div className="flex flex-col gap-2">
@@ -65,41 +71,81 @@ function CustomMethodCardUploadBlockRow({
         size="s"
         palette="default"
       />
-      <p className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-m)] text-[var(--color-content-default-secondary)]">
-        {displayName}
-      </p>
+      {!hasAsset ? (
+        <p className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-m)] text-[var(--color-content-default-secondary)]">
+          {displayName}
+        </p>
+      ) : null}
+      {hasAsset ? (
+        // eslint-disable-next-line @next/next/no-img-element -- same-origin upload URL
+        <img
+          src={block.assetUrl!.trim()}
+          alt={previewAlt}
+          className="max-h-[160px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
+        />
+      ) : null}
       <input
         ref={uploadInputRef}
         type="file"
         className="sr-only"
         tabIndex={-1}
+        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
         aria-label={uploadFileInputAriaLabel}
         onChange={(e) => {
           const file = e.target.files?.[0];
-          const name = file?.name?.trim();
-          patch(
-            mapBlockById(blocks, block.id, (b) =>
-              b.kind === "upload"
-                ? {
-                    ...b,
-                    ...(name ? { fileName: name } : {}),
-                  }
-                : b,
-            ),
-          );
           e.target.value = "";
+          if (!file) return;
+          setErrorMessage(null);
+          setBusy(true);
+          void (async () => {
+            try {
+              const { url } = await uploadCreateFlowFile(
+                file,
+                "customMethodAttachment",
+              );
+              const name = file.name?.trim();
+              patch(
+                mapBlockById(blocks, block.id, (b) =>
+                  b.kind === "upload"
+                    ? {
+                        ...b,
+                        ...(name ? { fileName: name } : {}),
+                        assetUrl: url,
+                      }
+                    : b,
+                ),
+              );
+            } catch {
+              setErrorMessage(tUpload("errors.generic"));
+            } finally {
+              setBusy(false);
+            }
+          })();
         }}
       />
       <Upload
-        hintText={uploadHint}
-        onClick={() => uploadInputRef.current?.click()}
+        active={!busy}
+        hintText={busy ? tUpload("uploading") : uploadHint}
+        onClick={() => {
+          if (!busy) uploadInputRef.current?.click();
+        }}
       />
-      {block.fileName?.trim() ? (
+      {errorMessage ? (
+        <p
+          className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-s)] text-[var(--color-content-default-secondary)]"
+          role="alert"
+        >
+          {errorMessage}
+        </p>
+      ) : null}
+      {block.fileName?.trim() || block.assetUrl?.trim() ? (
         <InlineTextButton
           onClick={() =>
             patch(
               mapBlockById(blocks, block.id, (b) =>
-                b.kind === "upload" ? { ...b, fileName: undefined } : b,
+                b.kind === "upload"
+                  ? { ...b, fileName: undefined, assetUrl: undefined }
+                  : b,
               ),
             )
           }
@@ -220,15 +266,30 @@ function CustomMethodCardFieldBlocksSummaryComponent({
           return (
             <div key={block.id}>
               {readOnly ? (
-                <ModalTextAreaField
-                  label={block.blockTitle}
-                  rows={2}
-                  value={
-                    block.fileName?.trim() ? block.fileName : noFileChosen
-                  }
-                  onChange={() => {}}
-                  disabled
-                />
+                <div className="flex flex-col gap-2">
+                  <InputLabel
+                    label={block.blockTitle}
+                    helpIcon
+                    size="s"
+                    palette="default"
+                  />
+                  {block.assetUrl?.trim() ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={block.assetUrl.trim()}
+                      alt={
+                        block.fileName?.trim() ||
+                        block.blockTitle ||
+                        noFileChosen
+                      }
+                      className="max-h-[160px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
+                    />
+                  ) : (
+                    <p className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-m)] text-[var(--color-content-default-secondary)]">
+                      {noFileChosen}
+                    </p>
+                  )}
+                </div>
               ) : (
                 <CustomMethodCardUploadBlockRow
                   block={block}

@@ -17,6 +17,9 @@ npm-cache/
 # testing
 /coverage
 
+# Local user uploads (see UPLOAD_ROOT in .env.example)
+/var/uploads
+
 # Playwright
 /test-results/
 /playwright-report/

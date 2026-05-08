@@ -6,6 +6,7 @@ import InputWithCounter from "../../../../components/controls/InputWithCounter";
 import TextArea from "../../../../components/controls/TextArea";
 import AddCustomField from "../../../../components/controls/AddCustomField";
 import { CustomMethodCardWizardFieldBodiesView } from "./CustomMethodCardWizardFieldBodies.view";
+import { CustomMethodCardWizardBlocksListView } from "./CustomMethodCardWizardBlocksList.view";
 import type { CustomMethodCardWizardViewProps } from "./CustomMethodCardWizard.types";
 
 function CustomMethodCardWizardViewComponent({
@@ -32,6 +33,8 @@ function CustomMethodCardWizardViewComponent({
   onBack,
   onNext,
   stepper,
+  draftFieldBlocks,
+  onDraftFieldBlocksReorder,
 }: CustomMethodCardWizardViewProps) {
   return (
     <Create
@@ -79,11 +82,22 @@ function CustomMethodCardWizardViewComponent({
         />
       ) : null}
       {!fieldTypeModal && wizardStep === 3 ? (
-        <AddCustomField
-          active={addFieldExpanded}
-          onPressAdd={onPressAddCustomField}
-          onSelectFieldType={onSelectFieldType}
-        />
+        <div className="flex w-full flex-col gap-4">
+          {draftFieldBlocks.length > 0 ? (
+            <CustomMethodCardWizardBlocksListView
+              blocks={draftFieldBlocks}
+              fieldTypeLabels={copy.fieldTypeLabels}
+              dragHandleAriaLabel={copy.step3BlocksList.dragHandleAriaLabel}
+              listLabel={copy.step3BlocksList.listLabel}
+              onBlocksReorder={onDraftFieldBlocksReorder}
+            />
+          ) : null}
+          <AddCustomField
+            active={addFieldExpanded}
+            onPressAdd={onPressAddCustomField}
+            onSelectFieldType={onSelectFieldType}
+          />
+        </div>
       ) : null}
     </Create>
   );

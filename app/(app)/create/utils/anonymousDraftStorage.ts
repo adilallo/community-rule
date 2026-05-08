@@ -1,5 +1,6 @@
 import type { CreateFlowState } from "../types";
 import { migrateLegacyCreateFlowState } from "../../../../lib/create/migrateLegacyCreateFlowState";
+import { clearPendingCommunityAvatarFile } from "../../../../lib/create/pendingCommunityAvatarUpload";
 
 /** Anonymous in-progress create flow (local only until magic-link transfer). */
 export const CREATE_FLOW_ANONYMOUS_KEY = "create-flow-anonymous" as const;
@@ -53,6 +54,7 @@ export function clearAnonymousCreateFlowStorage(): void {
   } catch {
     // ignore
   }
+  void clearPendingCommunityAvatarFile();
 }
 
 export function setTransferPendingFlag(): void {

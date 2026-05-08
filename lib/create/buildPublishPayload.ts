@@ -161,6 +161,20 @@ export function buildPublishPayload(
     document.methodSelections = methodSelections;
   }
 
+  const avatar =
+    typeof state.communityAvatarUrl === "string" &&
+    state.communityAvatarUrl.trim().length > 0
+      ? state.communityAvatarUrl.trim()
+      : undefined;
+  if (avatar) {
+    document.communityAvatarUrl = avatar;
+  }
+
+  const fieldBlocks = state.customMethodCardFieldBlocksById;
+  if (fieldBlocks && Object.keys(fieldBlocks).length > 0) {
+    document.customMethodCardFieldBlocksById = fieldBlocks;
+  }
+
   if (summary !== undefined) {
     return { ok: true, title, summary, document };
   }

@@ -21,6 +21,9 @@ export interface CustomMethodCardWizardFieldBodiesCopy {
     blockTitlePlaceholder: string;
     uploadFileInputAriaLabel: string;
     uploadHint: string;
+    uploadPreviewImageAlt: string;
+    clearPendingUploadAriaLabel: string;
+    clearPendingUploadTooltip: string;
   };
   proportion: {
     blockTitleLabel: string;
@@ -35,6 +38,11 @@ export interface CustomMethodCardWizardCopy {
   step1: { title: string; description: string; fieldPlaceholder: string };
   step2: { title: string; description: string; fieldPlaceholder: string };
   step3: { title: string; description: string };
+  step3BlocksList: {
+    listLabel: string;
+    dragHandleAriaLabel: string;
+  };
+  fieldTypeLabels: Record<AddCustomFieldType, string>;
   footerFinalize: string;
   fieldModals: {
     addField: string;
@@ -67,6 +75,11 @@ export interface CustomMethodCardWizardProps {
     description: string;
     fieldBlocks: CustomMethodCardFieldBlock[];
   }) => void;
+  /**
+   * Persists custom-method upload files to `POST /api/uploads` (purpose
+   * `customMethodAttachment`). When omitted, upload field only stores `fileName`.
+   */
+  onPersistCustomUploadFile?: (file: File) => Promise<{ url: string }>;
 }
 
 export interface CustomMethodCardWizardFieldBodiesViewProps {
@@ -84,6 +97,15 @@ export interface CustomMethodCardWizardFieldBodiesViewProps {
   onUploadBlockTitleChange: (_v: string) => void;
   fileInputRef: RefObject<HTMLInputElement | null>;
   onFileChosen: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Clears chosen file, preview URL, and related errors so the user can pick again. */
+  onClearPendingUpload: () => void;
+  /** When set after a successful upload, shows an inline image preview in the modal. */
+  uploadAssetPreviewUrl?: string | null;
+  /** Shown under the upload control while saving to the server. */
+  uploadPersisting?: boolean;
+  /** Replaces upload hint text while `uploadPersisting` is true. */
+  uploadBusyHint?: string;
+  uploadErrorMessage?: string | null;
   proportionBlockTitle: string;
   proportionDefault: number;
   onProportionBlockTitleChange: (_v: string) => void;
@@ -111,6 +133,8 @@ export interface CustomMethodCardWizardViewProps {
     CustomMethodCardWizardFieldBodiesViewProps,
     "fieldType" | "copy"
   >;
+  draftFieldBlocks: CustomMethodCardFieldBlock[];
+  onDraftFieldBlocksReorder: (_next: CustomMethodCardFieldBlock[]) => void;
   nextDisabled: boolean;
   nextLabel: string;
   showBackButton: boolean;

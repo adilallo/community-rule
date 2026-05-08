@@ -31,6 +31,7 @@ import {
 } from "../../components/createFlowLayoutTokens";
 import { CommunicationMethodEditFields } from "../../components/methodEditFields";
 import CustomMethodCardWizard from "../../components/CustomMethodCardWizard";
+import { uploadCreateFlowFile } from "../../../../../lib/create/uploadToServer";
 import { communicationPresetFor } from "../../../../../lib/create/finalReviewChipPresets";
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
@@ -146,6 +147,8 @@ export function CommunicationMethodsScreen() {
   const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
     createModalOpen ? pendingCardId : null,
   );
+  const customModalReadOnly =
+    pendingCardId !== null && selectedIds.includes(pendingCardId);
 
   const handleCreateModalClose = useCallback(() => {
     setCreateModalOpen(false);
@@ -293,7 +296,9 @@ export function CommunicationMethodsScreen() {
               key={pendingCardId}
               cardId={pendingCardId}
               blocksById={state.customMethodCardFieldBlocksById}
-              onFieldBlocksChange={onCustomFieldBlocksChange}
+              onFieldBlocksChange={
+                customModalReadOnly ? undefined : onCustomFieldBlocksChange
+              }
             />
           ) : (
             <CommunicationMethodEditFields
@@ -309,6 +314,9 @@ export function CommunicationMethodsScreen() {
         isOpen={addCustomWizardOpen}
         onClose={handleCloseAddWizard}
         onFinalize={handleFinalizeCustomCard}
+        onPersistCustomUploadFile={(file) =>
+          uploadCreateFlowFile(file, "customMethodAttachment")
+        }
       />
     </>
   );

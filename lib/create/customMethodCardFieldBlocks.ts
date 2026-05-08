@@ -19,6 +19,8 @@ export type CustomMethodCardFieldBlock =
       id: string;
       blockTitle: string;
       fileName?: string;
+      /** App path from `POST /api/uploads` (e.g. `/api/uploads/{uuid}`). */
+      assetUrl?: string;
     }
   | {
       kind: "proportion";
@@ -51,6 +53,7 @@ const customMethodUploadBlockSchema = z
     id: z.string().max(80),
     blockTitle: z.string().max(200),
     fileName: z.string().max(500).optional(),
+    assetUrl: z.string().max(512).optional(),
   })
   .strict();
 

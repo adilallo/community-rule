@@ -86,6 +86,12 @@ export function CommunityReviewScreen() {
       ? state.communityContext.trim()
       : undefined;
 
+  const avatarUrl =
+    typeof state.communityAvatarUrl === "string" &&
+    state.communityAvatarUrl.trim().length > 0
+      ? state.communityAvatarUrl.trim()
+      : null;
+
   return (
     <CreateFlowStepShell
       variant="wideGridLoosePadding"
@@ -109,7 +115,9 @@ export function CommunityReviewScreen() {
             size={lgUp ? "L" : "M"}
             expanded={false}
             backgroundColor="bg-[var(--color-teal-teal50,#c9fef9)]"
-            logoUrl={getAssetPath(vectorMarkPath("mutual-aid"))}
+            logoUrl={
+              avatarUrl ?? getAssetPath(vectorMarkPath("mutual-aid"))
+            }
             logoAlt={cardTitle}
             className="rounded-[24px]"
           />

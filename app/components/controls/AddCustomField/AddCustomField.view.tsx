@@ -1,19 +1,13 @@
 "use client";
 
 import { memo } from "react";
-import Icon, { type IconName } from "../../asset/icon";
+import Icon from "../../asset/icon";
 import Vertical from "../../buttons/Vertical";
-import type {
-  AddCustomFieldType,
-  AddCustomFieldViewProps,
+import {
+  ADD_CUSTOM_FIELD_TYPE_ICONS,
+  type AddCustomFieldType,
+  type AddCustomFieldViewProps,
 } from "./AddCustomField.types";
-
-const FIELD_TYPE_ICONS: Record<AddCustomFieldType, IconName> = {
-  text: "text_block",
-  badges: "tags", // tag / chip list (filename: tags.svg)
-  upload: "image", // image / file upload (filename: image.svg)
-  proportion: "number", // numeric / proportion field (closest asset: number.svg)
-};
 
 function FieldTypeButton({
   type,
@@ -32,7 +26,7 @@ function FieldTypeButton({
     >
       <span className="flex h-8 w-8 shrink-0 items-center justify-center">
         <Icon
-          name={FIELD_TYPE_ICONS[type]}
+          name={ADD_CUSTOM_FIELD_TYPE_ICONS[type]}
           size={32}
           className="text-[var(--color-content-default-brand-primary,#fefcc9)]"
         />

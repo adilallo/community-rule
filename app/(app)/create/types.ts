@@ -108,6 +108,11 @@ export interface CreateFlowState {
   communityContext?: string;
   /** Email collected on the “Save your progress” step (Figma Flow — Text `20097:14948`). */
   communitySaveEmail?: string;
+  /**
+   * Public app path for the uploaded community image (e.g. `/api/uploads/{uuid}`).
+   * Set after successful `POST /api/uploads` with purpose `communityAvatar`.
+   */
+  communityAvatarUrl?: string;
   /** Selected chip ids from `community-size` (MultiSelect). */
   selectedCommunitySizeIds?: string[];
   /** Selected chip ids from `community-structure` (organization types). */

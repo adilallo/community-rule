@@ -19,8 +19,12 @@
       "description": "Configure a custom data structure for this policy by adding fields for text, proportions, multi-select options, or file uploads. This creates a reusable template with placeholders that allows your group to standardize how policy definitions are edited in the future."
     }
   },
+  "step3BlocksList": {
+    "listLabel": "Fields added to this policy",
+    "dragHandleAriaLabel": "Drag to reorder this field"
+  },
   "footer": {
-    "finalize": "Finalize policy"
+    "finalize": "Finalize"
   },
   "editModal": {
     "placeholderBody": "This policy uses the title and description you set when you created it. Extra section fields from preset templates are hidden here so you are not shown empty boxes that do not match what you configured.",
@@ -64,7 +68,10 @@
       "blockTitleLabel": "Upload Block Title",
       "blockTitlePlaceholder": "Add your upload block title",
       "uploadFileInputAriaLabel": "Choose file for this upload block",
-      "uploadHint": "Add images, PDFs, and other files to the policy"
+      "uploadHint": "Add images, PDFs, and other files to the policy",
+      "uploadPreviewImageAlt": "Preview of uploaded file",
+      "clearPendingUploadAriaLabel": "Remove uploaded file",
+      "clearPendingUploadTooltip": "Remove file"
     },
     "proportion": {
       "title": "Add proportion block",

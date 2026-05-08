@@ -1,7 +1,10 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMessages, useTranslation } from "../../../../contexts/MessagesContext";
+import {
+  useMessages,
+  useTranslation,
+} from "../../../../contexts/MessagesContext";
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 import { CUSTOM_METHOD_CARD_WIZARD_MAX_FIELD_CHARS } from "../../../../../lib/create/customMethodCardWizardConstants";
 import type { AddCustomFieldType } from "../../../../components/controls/AddCustomField/AddCustomField.types";
@@ -13,9 +16,10 @@ import type { CustomMethodCardWizardProps } from "./CustomMethodCardWizard.types
  * `20066:14748`, `20094:48551`, `20066:14361`).
  */
 const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
-  ({ isOpen, onClose, onFinalize }) => {
+  ({ isOpen, onClose, onFinalize, onPersistCustomUploadFile }) => {
     const m = useMessages();
     const t = useTranslation("common");
+    const tUpload = useTranslation("create.upload");
     const w = m.create.customRule.customMethodCardWizard;
 
     const copy = useMemo(
@@ -23,10 +27,23 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
         step1: w.steps["1"],
         step2: w.steps["2"],
         step3: w.steps["3"],
+        step3BlocksList: w.step3BlocksList,
+        fieldTypeLabels: {
+          text: w.addCustomField.fieldTypes.text,
+          badges: w.addCustomField.fieldTypes.badges,
+          upload: w.addCustomField.fieldTypes.upload,
+          proportion: w.addCustomField.fieldTypes.proportion,
+        },
         footerFinalize: w.footer.finalize,
         fieldModals: w.fieldModals,
       }),
-      [w.fieldModals, w.footer.finalize, w.steps],
+      [
+        w.addCustomField.fieldTypes,
+        w.fieldModals,
+        w.footer.finalize,
+        w.step3BlocksList,
+        w.steps,
+      ],
     );
 
     const fieldBodiesCopy = useMemo(
@@ -58,6 +75,13 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
     const [uploadFileName, setUploadFileName] = useState<string | undefined>(
       undefined,
     );
+    const [uploadAssetUrl, setUploadAssetUrl] = useState<string | undefined>(
+      undefined,
+    );
+    const [uploadFieldBusy, setUploadFieldBusy] = useState(false);
+    const [uploadFieldError, setUploadFieldError] = useState<string | null>(
+      null,
+    );
     const [proportionBlockTitle, setProportionBlockTitle] = useState("");
     const [proportionDefault, setProportionDefault] = useState(50);
 
@@ -70,6 +94,9 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
       setBadgeOptions([]);
       setUploadBlockTitle("");
       setUploadFileName(undefined);
+      setUploadAssetUrl(undefined);
+      setUploadFieldBusy(false);
+      setUploadFieldError(null);
       setProportionBlockTitle("");
       setProportionDefault(50);
       if (fileInputRef.current) {
@@ -135,10 +162,14 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
       }
       if (fieldTypeModal === "upload") {
         const t0 = uploadBlockTitle.trim();
-        return (
+        const titleOk =
           t0.length > 0 &&
-          t0.length <= CUSTOM_METHOD_CARD_WIZARD_MAX_FIELD_CHARS
-        );
+          t0.length <= CUSTOM_METHOD_CARD_WIZARD_MAX_FIELD_CHARS;
+        if (!titleOk) return false;
+        if (onPersistCustomUploadFile) {
+          return Boolean(uploadAssetUrl?.trim());
+        }
+        return true;
       }
       const t0 = proportionBlockTitle.trim();
       return (
@@ -154,6 +185,8 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
       proportionDefault,
       textBlockTitle,
       uploadBlockTitle,
+      uploadAssetUrl,
+      onPersistCustomUploadFile,
     ]);
 
     const headerTitle =
@@ -213,12 +246,34 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
     }, [resetFieldTypeDrafts]);
 
     const handleFileChosen = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+      async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         setUploadFileName(file?.name);
+        setUploadAssetUrl(undefined);
+        setUploadFieldError(null);
+        if (!file || !onPersistCustomUploadFile) return;
+        setUploadFieldBusy(true);
+        try {
+          const { url } = await onPersistCustomUploadFile(file);
+          setUploadAssetUrl(url);
+        } catch {
+          setUploadFieldError(tUpload("errors.generic"));
+        } finally {
+          setUploadFieldBusy(false);
+        }
       },
-      [],
+      [onPersistCustomUploadFile, tUpload],
     );
+
+    const handleClearPendingUpload = useCallback(() => {
+      setUploadFileName(undefined);
+      setUploadAssetUrl(undefined);
+      setUploadFieldError(null);
+      setUploadFieldBusy(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }, []);
 
     const handleBadgeAddOption = useCallback((label: string) => {
       setBadgeOptions((prev) =>
@@ -253,6 +308,9 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
             id,
             blockTitle: uploadBlockTitle.trim(),
             fileName: uploadFileName,
+            ...(uploadAssetUrl?.trim()
+              ? { assetUrl: uploadAssetUrl.trim() }
+              : {}),
           };
           break;
         default:
@@ -276,6 +334,7 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
       textPlaceholderBody,
       uploadBlockTitle,
       uploadFileName,
+      uploadAssetUrl,
     ]);
 
     const handleNext = useCallback(() => {
@@ -337,6 +396,13 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
           onUploadBlockTitleChange: setUploadBlockTitle,
           fileInputRef,
           onFileChosen: handleFileChosen,
+          onClearPendingUpload: handleClearPendingUpload,
+          uploadAssetPreviewUrl: uploadAssetUrl,
+          uploadPersisting:
+            Boolean(fieldTypeModal === "upload" && uploadFieldBusy),
+          uploadBusyHint: tUpload("uploading"),
+          uploadErrorMessage:
+            fieldTypeModal === "upload" ? uploadFieldError : null,
           proportionBlockTitle,
           proportionDefault,
           onProportionBlockTitleChange: setProportionBlockTitle,
@@ -348,6 +414,8 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
         onBack={handleBack}
         onNext={handleNext}
         stepper={!fieldTypeModal}
+        draftFieldBlocks={draftFieldBlocks}
+        onDraftFieldBlocksReorder={setDraftFieldBlocks}
       />
     );
   },

@@ -89,6 +89,7 @@ export const createFlowStateSchema = z
     summary: z.string().max(8000).optional(),
     communityContext: z.string().max(200).optional(),
     communitySaveEmail: z.string().max(320).optional(),
+    communityAvatarUrl: z.string().max(512).optional(),
     selectedCommunitySizeIds: z.array(z.string()).optional(),
     selectedOrganizationTypeIds: z.array(z.string()).optional(),
     selectedScaleIds: z.array(z.string()).optional(),
