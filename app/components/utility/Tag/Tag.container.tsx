@@ -7,6 +7,7 @@ import type { TagProps } from "./Tag.types";
 const DEFAULT_LABELS: Record<TagProps["variant"], string> = {
   recommended: "RECOMMENDED",
   selected: "SELECTED",
+  templateRecommended: "RECOMMENDED",
 };
 
 /**

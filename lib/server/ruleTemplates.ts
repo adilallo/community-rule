@@ -1,7 +1,11 @@
 import type { RuleTemplateDto } from "../create/fetchTemplates";
 import { prisma } from "./db";
 import { isDatabaseConfigured } from "./env";
-import { scoreTemplatesByFacets } from "./methodRecommendations";
+import {
+  getTemplateFacetSlugSet,
+  scoreTemplatesByFacets,
+  scoreTemplatesByTemplateFacets,
+} from "./methodRecommendations";
 import { templateMethodsFromBody } from "./templateMethods";
 import type { RequestedFacets } from "./validation/methodFacetsSchemas";
 import { flattenRequestedFacets } from "./validation/methodFacetsSchemas";
@@ -53,8 +57,11 @@ export type RankedTemplatesResult = {
 };
 
 /**
- * Curated templates ranked by how many of `facets` each composed method
- * matches (§9.1). When `facets` is empty, returns the curated ordering with
+ * Curated templates ranked by facet match. Templates with a row in
+ * `TemplateFacet` (seeded from `data/templates/templateFacet.json`, Template
+ * Composition-2, cols G–Y) use that matrix; others fall back to
+ * composed-method × `MethodFacet`
+ * scoring (§9.1). When `facets` is empty, returns the curated ordering with
  * an empty `scores` map (caller can omit it from the API response).
  *
  * Ties (and zero-score templates) fall back to the curated
@@ -83,22 +90,51 @@ export async function listRankedRuleTemplatesFromDb(
     return { templates: [], scores: {} };
   }
 
+  const slugs = templates.map((t) => t.slug);
   const templateMethods = templates.map((t) => ({
     templateSlug: t.slug,
     methods: templateMethodsFromBody(t.body),
   }));
 
-  const ranked = await scoreTemplatesByFacets({ templateMethods, facets });
-  if (!ranked) {
+  const [matrixRanked, facetSlugSet, methodRanked] = await Promise.all([
+    scoreTemplatesByTemplateFacets({ templateSlugs: slugs, facets }),
+    getTemplateFacetSlugSet(),
+    scoreTemplatesByFacets({ templateMethods, facets }),
+  ]);
+
+  if (!methodRanked) {
     return { templates, scores: {} };
   }
 
+  const matrixBySlug =
+    matrixRanked == null
+      ? new Map()
+      : new Map(matrixRanked.map((r) => [r.templateSlug, r] as const));
+  const methodBySlug = new Map(
+    methodRanked.map((r) => [r.templateSlug, r] as const),
+  );
+
   const scores: Record<string, TemplateScore> = {};
-  for (const r of ranked) {
-    scores[r.templateSlug] = {
-      score: r.score,
-      matchedFacets: r.matchedFacets,
-    };
+  for (const t of templates) {
+    const useMatrix =
+      matrixRanked != null && (facetSlugSet?.has(t.slug) ?? false);
+    if (useMatrix) {
+      const m = matrixBySlug.get(t.slug);
+      if (m) {
+        scores[t.slug] = {
+          score: m.score,
+          matchedFacets: m.matchedFacets,
+        };
+      }
+    } else {
+      const m = methodBySlug.get(t.slug);
+      if (m) {
+        scores[t.slug] = {
+          score: m.score,
+          matchedFacets: m.matchedFacets,
+        };
+      }
+    }
   }
 
   // Stable sort: scoreDesc, then preserve curated index order.

@@ -21,6 +21,8 @@ import profile from "./pages/profile.json";
 import notFoundPage from "./pages/notFoundPage.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
+import modalsShare from "./modals/share.json";
+import modalsPopoverExport from "./modals/popoverExport.json";
 
 // create – stage 1: community
 import createInformational from "./create/community/informational.json";
@@ -38,6 +40,8 @@ import createCommunication from "./create/customRule/communication.json";
 import createMembership from "./create/customRule/membership.json";
 import createDecisionApproaches from "./create/customRule/decisionApproaches.json";
 import createConflictManagement from "./create/customRule/conflictManagement.json";
+import createCustomMethodCardWizard from "./create/customRule/customMethodCardWizard.json";
+import createModalKebabMenu from "./create/customRule/modalKebabMenu.json";
 
 // create – stage 3: reviewAndComplete
 import createConfirmStakeholders from "./create/reviewAndComplete/confirmStakeholders.json";
@@ -50,6 +54,7 @@ import createFooter from "./create/footer.json";
 import createTopNav from "./create/topNav.json";
 import createDraftHydration from "./create/draftHydration.json";
 import createTemplateReview from "./create/templateReview.json";
+import createUpload from "./create/upload.json";
 
 export default {
   common,
@@ -92,6 +97,8 @@ export default {
       membership: createMembership,
       decisionApproaches: createDecisionApproaches,
       conflictManagement: createConflictManagement,
+      customMethodCardWizard: createCustomMethodCardWizard,
+      modalKebabMenu: createModalKebabMenu,
     },
     reviewAndComplete: {
       confirmStakeholders: createConfirmStakeholders,
@@ -103,7 +110,12 @@ export default {
     topNav: createTopNav,
     draftHydration: createDraftHydration,
     templateReview: createTemplateReview,
+    upload: createUpload,
   },
   navigation,
   metadata,
+  modals: {
+    share: modalsShare,
+    popoverExport: modalsPopoverExport,
+  },
 };

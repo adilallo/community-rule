@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { fireEvent, within } from "@testing-library/react";
 import {
   renderWithProviders as render,
@@ -185,6 +185,26 @@ describe("FinalReviewScreen — prefilled selections", () => {
 });
 
 describe("FinalReviewScreen — chip detail modal", () => {
+  async function enterMethodCustomizeFromDialog(dialog: HTMLElement) {
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /more options/i }),
+    );
+    const customize = await screen.findByRole("menuitem", {
+      name: /^customize$/i,
+    });
+    fireEvent.click(customize);
+  }
+
+  async function enterCoreValueCustomizeFromDialog(dialog: HTMLElement) {
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /more options/i }),
+    );
+    const customize = await screen.findByRole("menuitem", {
+      name: /^customize$/i,
+    });
+    fireEvent.click(customize);
+  }
+
   it("opens the read-only detail modal when a chip is clicked, matching the preset copy", async () => {
     render(<FinalReviewWithCustomizeSelections />);
 
@@ -206,6 +226,83 @@ describe("FinalReviewScreen — chip detail modal", () => {
     expect(
       screen.getAllByText(/core principle/i).length,
     ).toBeGreaterThanOrEqual(1);
+  });
+
+  it("method chip modal kebab offers Customize but not Duplicate", async () => {
+    render(<FinalReviewWithCustomizeSelections />);
+    fireEvent.click(await screen.findByRole("button", { name: "Signal" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /more options/i }),
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("menuitem", { name: /^customize$/i }),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.queryByRole("menuitem", { name: /^duplicate$/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("values chip modal kebab offers Customize and Duplicate under the cap", async () => {
+    function CoreValuesHarness() {
+      const { replaceState } = useCreateFlow();
+      useLayoutEffect(() => {
+        replaceState({
+          selectedCoreValueIds: ["1"],
+          coreValuesChipsSnapshot: [
+            { id: "1", label: "Accessibility", state: "selected" },
+          ],
+        });
+      }, [replaceState]);
+      return <FinalReviewScreen />;
+    }
+    render(<CoreValuesHarness />);
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Accessibility" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /more options/i }),
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("menuitem", { name: /^customize$/i }),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.getByRole("menuitem", { name: /^duplicate$/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("opens method chip modal read-only until Customize, then enables Save after an edit", async () => {
+    render(<FinalReviewWithCustomizeSelections />);
+
+    fireEvent.click(await screen.findByRole("button", { name: "Signal" }));
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).queryByRole("button", { name: "Save" }),
+    ).not.toBeInTheDocument();
+
+    const principleField = within(dialog).getByRole("textbox", {
+      name: /core principle/i,
+    });
+    expect(principleField).toBeDisabled();
+
+    await enterMethodCustomizeFromDialog(dialog);
+
+    expect(
+      within(dialog).getByRole("button", { name: "Save" }),
+    ).toBeDisabled();
+
+    fireEvent.change(principleField, { target: { value: "Edited principle" } });
+    await waitFor(() => {
+      expect(
+        within(dialog).getByRole("button", { name: "Save" }),
+      ).not.toBeDisabled();
+    });
   });
 
   it("opens a core-values chip with the matching preset meaning/signals", async () => {
@@ -236,7 +333,7 @@ describe("FinalReviewScreen — chip detail modal", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens the editable Save modal for a values chip (parity with method chips)", async () => {
+  it("opens the editable Save modal for a values chip after Customize", async () => {
     // Customize / plain custom-rule path: snapshot is set, sections is not.
     function CoreValuesHarness() {
       const { replaceState } = useCreateFlow();
@@ -257,6 +354,10 @@ describe("FinalReviewScreen — chip detail modal", () => {
     );
     const dialog = await screen.findByRole("dialog");
     expect(
+      within(dialog).queryByRole("button", { name: "Save" }),
+    ).not.toBeInTheDocument();
+    await enterCoreValueCustomizeFromDialog(dialog);
+    expect(
       within(dialog).getByRole("button", { name: "Save" }),
     ).toBeInTheDocument();
     expect(
@@ -264,7 +365,7 @@ describe("FinalReviewScreen — chip detail modal", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("opens the editable Save modal for a values chip in the use-without-changes flow", async () => {
+  it("opens Save for values chip after Customize (use-without-changes seeded snapshot)", async () => {
     // Mirrors the post-fix payload from `handleUseTemplateWithoutChanges`:
     // template Values section is stripped from `sections`, snapshot +
     // selected ids are seeded so the chip carries an `overrideKey`.
@@ -295,6 +396,10 @@ describe("FinalReviewScreen — chip detail modal", () => {
     );
     const dialog = await screen.findByRole("dialog");
     expect(
+      within(dialog).queryByRole("button", { name: "Save" }),
+    ).not.toBeInTheDocument();
+    await enterCoreValueCustomizeFromDialog(dialog);
+    expect(
       within(dialog).getByRole("button", { name: "Save" }),
     ).toBeInTheDocument();
   });
@@ -312,6 +417,16 @@ describe("FinalReviewScreen — chip detail modal", () => {
  * 3. Closing without Save discards every typed change.
  */
 describe("FinalReviewScreen — chip edit modal save semantics", () => {
+  async function enterMethodCustomizeFromDialog(dialog: HTMLElement) {
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: /more options/i }),
+    );
+    const customize = await screen.findByRole("menuitem", {
+      name: /^customize$/i,
+    });
+    fireEvent.click(customize);
+  }
+
   const baseSelections: CreateFlowState = {
     title: "Oak Park Commons",
     selectedCommunicationMethodIds: ["signal"],
@@ -331,11 +446,14 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Signal" }));
     const dialog = await screen.findByRole("dialog");
+    await enterMethodCustomizeFromDialog(dialog);
     const saveButton = within(dialog).getByRole("button", { name: "Save" });
     expect(saveButton).toBeDisabled();
+    const principleField = within(dialog).getByRole("textbox", {
+      name: /core principle/i,
+    });
 
-    const [firstTextarea] = within(dialog).getAllByRole("textbox");
-    fireEvent.change(firstTextarea, {
+    fireEvent.change(principleField, {
       target: { value: "Edited principle" },
     });
 
@@ -359,14 +477,21 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Signal" }));
     const dialog = await screen.findByRole("dialog");
-    const [firstTextarea] = within(dialog).getAllByRole("textbox");
-    fireEvent.change(firstTextarea, {
+    await enterMethodCustomizeFromDialog(dialog);
+    const principleField = within(dialog).getByRole("textbox", {
+      name: /core principle/i,
+    });
+    fireEvent.change(principleField, {
       target: { value: "Edited principle" },
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
 
     await waitFor(() => {
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(
+        within(screen.getByRole("dialog")).queryByRole("button", {
+          name: "Save",
+        }),
+      ).not.toBeInTheDocument();
     });
     await waitFor(() => {
       expect(
@@ -388,16 +513,238 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Signal" }));
     const dialog = await screen.findByRole("dialog");
-    const [firstTextarea] = within(dialog).getAllByRole("textbox");
-    fireEvent.change(firstTextarea, {
+    await enterMethodCustomizeFromDialog(dialog);
+    const principleField = within(dialog).getByRole("textbox", {
+      name: /core principle/i,
+    });
+    fireEvent.change(principleField, {
       target: { value: "Should NOT persist" },
     });
 
-    fireEvent.keyDown(document, { key: "Escape" });
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    try {
+      fireEvent.keyDown(document, { key: "Escape" });
+      await waitFor(() => {
+        expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      });
+    } finally {
+      confirmSpy.mockRestore();
+    }
+
+    expect(latest.communicationMethodDetailsById).toBeUndefined();
+  });
+
+  it("shows consolidated placeholder for user-authored communication chips", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    render(
+      <FinalReviewWithStateProbe
+        onState={() => {}}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).getByText(/no custom fields yet/i),
+    ).toBeInTheDocument();
+    expect(within(dialog).queryByRole("textbox")).toBeNull();
+  });
+
+  it("shows custom communication chip when template sections exist (customize-from-template)", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440999";
+    render(
+      <FinalReviewWithStateProbe
+        onState={() => {}}
+        initial={{
+          title: "Oak Park Commons",
+          sections: [
+            {
+              categoryName: "Communication",
+              entries: [{ title: "Signal", body: "…" }],
+            },
+          ],
+          selectedCommunicationMethodIds: ["signal", customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Garden IRC",
+              supportText: "Support line from wizard",
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("button", { name: "Garden IRC" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Signal" })).toBeInTheDocument();
+  });
+
+  it("shows editable field blocks for user-authored communication chips when configured", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    render(
+      <FinalReviewWithStateProbe
+        onState={() => {}}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+          customMethodCardFieldBlocksById: {
+            [customId]: [
+              {
+                kind: "text",
+                id: "f1",
+                blockTitle: "Notes",
+                placeholderText: "Detail here",
+              },
+            ],
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    await enterMethodCustomizeFromDialog(dialog);
+    expect(
+      within(dialog).queryByText(/no custom fields yet/i),
+    ).not.toBeInTheDocument();
+    const notesField = within(dialog).getByRole("textbox", { name: /notes/i });
+    expect(notesField).not.toBeDisabled();
+    expect(notesField).toHaveValue("Detail here");
+  });
+
+  it("persists field block edits for user-authored communication chips on Save", async () => {
+    const customId = "550e8400-e29b-41d4-a716-446655440000";
+    let latest: CreateFlowState = {};
+    render(
+      <FinalReviewWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          title: "Oak Park Commons",
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: {
+              label: "Custom Comm",
+              supportText: "Support line from wizard",
+            },
+          },
+          customMethodCardFieldBlocksById: {
+            [customId]: [
+              {
+                kind: "text",
+                id: "f1",
+                blockTitle: "Notes",
+                placeholderText: "Detail here",
+              },
+            ],
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Custom Comm" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    await enterMethodCustomizeFromDialog(dialog);
+    const notesField = within(dialog).getByRole("textbox", { name: /notes/i });
+    fireEvent.change(notesField, { target: { value: "Saved detail" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(
+        latest.customMethodCardFieldBlocksById?.[customId]?.[0],
+      ).toMatchObject({
+        kind: "text",
+        placeholderText: "Saved detail",
+      });
+    });
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+});
+
+function FinalReviewEditPublishedWithStateProbe({
+  onState,
+  initial,
+}: {
+  onState: (_state: CreateFlowState) => void;
+  initial: CreateFlowState;
+}) {
+  const { state, replaceState } = useCreateFlow();
+  useLayoutEffect(() => {
+    replaceState(initial);
+  }, [replaceState, initial]);
+  useEffect(() => {
+    onState(state);
+  }, [state, onState]);
+  return <FinalReviewScreen variant="editPublished" />;
+}
+
+describe("FinalReviewScreen — edit published description", () => {
+  it("does not expose click-to-edit description on default final review", () => {
+    render(
+      <FinalReviewWithFlowState
+        title="Oak"
+        communityContext="Visible body"
+      />,
+    );
+    expect(screen.queryByTestId("rule-description-edit")).not.toBeInTheDocument();
+  });
+
+  it("opens Save modal from description click and updates communityContext + summary", async () => {
+    let latest: CreateFlowState = {};
+    render(
+      <FinalReviewEditPublishedWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          title: "Oak Park Commons",
+          communityContext: "Original",
+          summary: "Original",
+          selectedCommunicationMethodIds: ["signal"],
+        }}
+      />,
+    );
+    void latest;
+
+    fireEvent.click(await screen.findByTestId("rule-description-edit"));
+    const dialog = await screen.findByRole("dialog");
+    expect(
+      within(dialog).getByText(/Community description/i),
+    ).toBeInTheDocument();
+    const input = within(dialog).getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Updated copy" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
-
-    expect(latest.communicationMethodDetailsById).toBeUndefined();
+    await waitFor(() => {
+      expect(latest.communityContext).toBe("Updated copy");
+      expect(latest.summary).toBe("Updated copy");
+    });
   });
 });

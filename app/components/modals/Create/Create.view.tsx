@@ -29,6 +29,10 @@ export function CreateView({
   createRef,
   overlayRef,
   backdropVariant,
+  stepper,
+  kebabTriggerAriaLabel,
+  kebabMenuAriaLabel,
+  kebabMenuItems,
 }: CreateViewProps) {
   return (
     <CreateModalFrameView
@@ -41,7 +45,13 @@ export function CreateView({
       overlayRef={overlayRef}
       dialogRef={createRef}
     >
-      <ModalHeader onClose={onClose} onMoreOptions={onClose} />
+      <ModalHeader
+        onClose={onClose}
+        moreOptionsAriaLabel={kebabTriggerAriaLabel}
+        menuAriaLabel={kebabMenuAriaLabel}
+        menuItems={kebabMenuItems}
+        showMoreOptionsButton={(kebabMenuItems?.length ?? 0) > 0}
+      />
 
       {headerContent !== undefined ? (
         <div className="shrink-0">{headerContent}</div>
@@ -70,6 +80,7 @@ export function CreateView({
         nextButtonDisabled={nextButtonDisabled}
         currentStep={currentStep}
         totalSteps={totalSteps}
+        stepper={stepper}
         footerContent={footerContent}
       />
     </CreateModalFrameView>

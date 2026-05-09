@@ -65,7 +65,8 @@ export type OwnerPublishedRuleListItem = {
 };
 
 /**
- * Lists published rules owned by the given user (alphabetical by title, then id).
+ * Lists published rules owned by the given user (**most recently updated first**,
+ * then stable `id` tie-break).
  * Returns `null` when the database is not configured or the query throws.
  */
 export async function listPublishedRulesForUser(
@@ -79,7 +80,7 @@ export async function listPublishedRulesForUser(
   try {
     return await prisma.publishedRule.findMany({
       where: { userId },
-      orderBy: [{ title: "asc" }, { id: "asc" }],
+      orderBy: [{ updatedAt: "desc" }, { id: "asc" }],
       take: clamped,
       select: PUBLISHED_RULE_OWNER_LIST_SELECT,
     });

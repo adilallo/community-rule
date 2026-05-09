@@ -1,0 +1,16 @@
+{
+  "_comment": "Shared kebab popover labels for create custom-rule modals.",
+  "triggerAriaLabel": "More options",
+  "menuAriaLabel": "Custom rule options",
+  "items": {
+    "customize": "Customize",
+    "duplicate": "Duplicate",
+    "remove": "Remove"
+  },
+  "duplicateTitleSuffix": " (copy)",
+  "saveEdits": "Save",
+  "customizePolicyTitleLabel": "Policy title",
+  "customizePolicyDescriptionLabel": "Description",
+  "cancelCustomize": "Cancel",
+  "discardUnsavedCustomizeChanges": "Discard unsaved changes?"
+}

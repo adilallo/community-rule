@@ -16,19 +16,8 @@ import {
   getAssetPath,
   vectorMarkPath,
 } from "../../../../../lib/assetUtils";
-
-/**
- * Targets for a `pendingTemplateAction` redirect. Customize resumes the
- * custom-rule stage with chips already prefilled; useWithoutChanges jumps to
- * the review-and-complete stage since the template body is already in state.
- */
-const PENDING_TEMPLATE_REDIRECT_TARGET: Record<
-  "customize" | "useWithoutChanges",
-  string
-> = {
-  customize: "/create/core-values",
-  useWithoutChanges: "/create/confirm-stakeholders",
-};
+import { methodSectionsPinsForHydratedSelections } from "../../../../../lib/create/publishedDocumentToCreateFlowState";
+import { createFlowStepPath } from "../../utils/createFlowPaths";
 
 /** Create Community review — Figma `19706:12135` (`/create/review`; two columns from `lg:`; column caps in `createFlowLayoutTokens`). */
 export function CommunityReviewScreen() {
@@ -55,12 +44,32 @@ export function CommunityReviewScreen() {
     if (firedRedirectRef.current) return;
     const pending = state.pendingTemplateAction;
     if (!pending) return;
-    const target = PENDING_TEMPLATE_REDIRECT_TARGET[pending.mode];
-    if (!target) return;
+    const target =
+      pending.mode === "customize"
+        ? createFlowStepPath("core-values")
+        : createFlowStepPath("confirm-stakeholders");
     firedRedirectRef.current = true;
-    updateState({ pendingTemplateAction: undefined });
+    const pinMerge =
+      pending.mode === "customize"
+        ? {
+            methodSectionsPinCommitted: {
+              ...state.methodSectionsPinCommitted,
+              ...methodSectionsPinsForHydratedSelections(state),
+            },
+          }
+        : {};
+    updateState({ pendingTemplateAction: undefined, ...pinMerge });
     router.replace(target);
-  }, [router, state.pendingTemplateAction, updateState]);
+  }, [
+    router,
+    state.pendingTemplateAction,
+    state.methodSectionsPinCommitted,
+    state.selectedCommunicationMethodIds,
+    state.selectedMembershipMethodIds,
+    state.selectedDecisionApproachIds,
+    state.selectedConflictManagementIds,
+    updateState,
+  ]);
 
   const cardTitle =
     typeof state.title === "string" && state.title.trim().length > 0
@@ -76,6 +85,12 @@ export function CommunityReviewScreen() {
     state.communityContext.trim().length > 0
       ? state.communityContext.trim()
       : undefined;
+
+  const avatarUrl =
+    typeof state.communityAvatarUrl === "string" &&
+    state.communityAvatarUrl.trim().length > 0
+      ? state.communityAvatarUrl.trim()
+      : null;
 
   return (
     <CreateFlowStepShell
@@ -100,7 +115,9 @@ export function CommunityReviewScreen() {
             size={lgUp ? "L" : "M"}
             expanded={false}
             backgroundColor="bg-[var(--color-teal-teal50,#c9fef9)]"
-            logoUrl={getAssetPath(vectorMarkPath("mutual-aid"))}
+            logoUrl={
+              avatarUrl ?? getAssetPath(vectorMarkPath("mutual-aid"))
+            }
             logoAlt={cardTitle}
             className="rounded-[24px]"
           />

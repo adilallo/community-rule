@@ -1,6 +1,7 @@
 /**
  * Bridges final-review → completed without query strings, and re-opens a rule
- * from profile (`/create/completed?ruleId=…`) after GET /api/rules/[id].
+ * from profile (`/create/completed?ruleId=…`) after GET /api/rules/[id]. Profile
+ * "Manage" links here; "View" uses `/rules/[id]`.
  */
 export const CREATE_FLOW_LAST_PUBLISHED_KEY = "createFlow.lastPublished";
 

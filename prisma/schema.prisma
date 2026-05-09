@@ -111,3 +111,24 @@ model MethodFacet {
   @@index([section])
   @@index([group, value, matches])
 }
+
+/// Template-level recommendation matrix (Template Composition, cols G–Y). Canonical
+/// JSON in `data/templates/templateFacet.json`; rebuilt at seed like
+/// `MethodFacet`. One row per `(templateSlug, group, value)` where the matrix
+/// marks a fit (✓). `GET /api/templates?facet.*` joins these rows to user facets.
+/// See `docs/guides/template-recommendation-matrix.md` (parallel to `MethodFacet` §7).
+model TemplateFacet {
+  id           String  @id @default(cuid())
+  /// `RuleTemplate.slug` (e.g. `consensus`, `do-ocracy`).
+  templateSlug String
+  /// `size` | `orgType` | `scale` | `maturity` — same as `MethodFacet.group`.
+  group        String
+  /// Canonical facet value id, e.g. `workersCoop`, `local`.
+  value        String
+  /// `true` iff the JSON marks a fit; seed only writes `true` rows.
+  matches      Boolean
+
+  @@unique([templateSlug, group, value])
+  @@index([templateSlug])
+  @@index([group, value, matches])
+}

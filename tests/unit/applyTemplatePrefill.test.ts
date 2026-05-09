@@ -3,6 +3,7 @@ import {
   buildCoreValuesPrefillFromTemplateBody,
   buildTemplateCustomizePrefill,
 } from "../../lib/create/applyTemplatePrefill";
+import { methodSectionsPinsForHydratedSelections } from "../../lib/create/publishedDocumentToCreateFlowState";
 import coreValuesMessages from "../../messages/en/create/customRule/coreValues.json";
 
 function coreValuePresetId(label: string): string {
@@ -151,5 +152,49 @@ describe("buildCoreValuesPrefillFromTemplateBody", () => {
     expect(selected).toContain(coreValuePresetId("Community Care"));
     // Methods should not be touched by the values-only helper.
     expect(prefill.selectedCommunicationMethodIds).toBeUndefined();
+  });
+});
+
+describe("buildTemplateCustomizePrefill + method card pins", () => {
+  it("derives compact-deck pins for each non-empty method facet prefill", () => {
+    const body = {
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [{ title: "In-Person Meetings", body: "x" }],
+        },
+        {
+          categoryName: "Membership",
+          entries: [{ title: "Peer Sponsorship", body: "m" }],
+        },
+        {
+          categoryName: "Decision-making",
+          entries: [{ title: "Consensus Decision-Making", body: "d" }],
+        },
+        {
+          categoryName: "Conflict management",
+          entries: [{ title: "Restorative Justice", body: "c" }],
+        },
+      ],
+    };
+    const prefill = buildTemplateCustomizePrefill(body);
+    expect(methodSectionsPinsForHydratedSelections(prefill)).toEqual({
+      communication: true,
+      membership: true,
+      decisionApproaches: true,
+      conflictManagement: true,
+    });
+  });
+
+  it("does not set pins when template supplies values only", () => {
+    const prefill = buildTemplateCustomizePrefill({
+      sections: [
+        {
+          categoryName: "Values",
+          entries: [{ title: "Consensus", body: "" }],
+        },
+      ],
+    });
+    expect(methodSectionsPinsForHydratedSelections(prefill)).toEqual({});
   });
 });

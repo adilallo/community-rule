@@ -19,6 +19,9 @@ export interface InlineTextButtonProps {
   disabled?: boolean;
   ariaLabel?: string;
   type?: "button" | "submit" | "reset";
+  /** When set, removes the default underline (e.g. inverse surfaces). */
+  underline?: boolean;
+  "data-testid"?: string;
 }
 
 /**
@@ -37,9 +40,16 @@ function InlineTextButtonComponent({
   disabled = false,
   ariaLabel,
   type = "button",
+  underline = true,
+  "data-testid": dataTestId,
 }: InlineTextButtonProps) {
-  const baseClasses =
-    "cursor-pointer border-none bg-transparent p-0 font-inter font-normal text-[length:inherit] leading-[inherit] text-[color:var(--color-content-default-tertiary,#b4b4b4)] underline decoration-solid underline-offset-[3px] hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-border-invert-primary)] disabled:cursor-not-allowed disabled:opacity-60";
+  const baseClasses = [
+    "cursor-pointer border-none bg-transparent p-0",
+    underline
+      ? "font-inter font-normal text-[length:inherit] leading-[inherit] text-[color:var(--color-content-default-tertiary,#b4b4b4)] underline decoration-solid underline-offset-[3px]"
+      : "text-[length:inherit] leading-[inherit] text-[color:inherit] no-underline",
+    "hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-border-invert-primary)] disabled:cursor-not-allowed disabled:opacity-60",
+  ].join(" ");
 
   return (
     <button
@@ -47,6 +57,7 @@ function InlineTextButtonComponent({
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
+      data-testid={dataTestId}
       className={`${baseClasses} ${className}`.trim()}
     >
       {children}

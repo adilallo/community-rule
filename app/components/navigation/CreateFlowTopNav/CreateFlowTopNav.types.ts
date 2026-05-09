@@ -32,9 +32,9 @@ export interface CreateFlowTopNavProps {
    */
   onShare?: () => void;
   /**
-   * Callback when Export button is clicked
+   * Callback when user picks an export format from the Export menu.
    */
-  onExport?: () => void;
+  onSelectExportFormat?: (_format: "pdf" | "csv" | "markdown") => void;
   /**
    * Callback when Edit button is clicked
    */
@@ -54,3 +54,11 @@ export interface CreateFlowTopNavProps {
    */
   className?: string;
 }
+
+/** Resolved copy for the export popover; supplied by the container. */
+export type CreateFlowTopNavViewProps = CreateFlowTopNavProps & {
+  exportPopoverMenuAriaLabel: string;
+  exportPopoverPdfLabel: string;
+  exportPopoverCsvLabel: string;
+  exportPopoverMarkdownLabel: string;
+};

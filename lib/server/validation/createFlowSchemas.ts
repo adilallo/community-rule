@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FLOW_STEP_ORDER } from "../../../app/(app)/create/utils/flowSteps";
+import { customMethodCardFieldBlocksByIdSchema } from "../../../lib/create/customMethodCardFieldBlocks";
 import { assertPlainJsonValue, DEFAULT_PLAIN_JSON_LIMITS } from "./plainJson";
 
 const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];
@@ -58,6 +59,11 @@ const conflictManagementDetailEntrySchema = z.object({
   restorationFallbacks: z.string().max(8000),
 });
 
+const customMethodCardMetaEntrySchema = z.object({
+  label: z.string().max(48),
+  supportText: z.string().max(48),
+});
+
 /**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
  */
@@ -83,6 +89,7 @@ export const createFlowStateSchema = z
     summary: z.string().max(8000).optional(),
     communityContext: z.string().max(200).optional(),
     communitySaveEmail: z.string().max(320).optional(),
+    communityAvatarUrl: z.string().max(512).optional(),
     selectedCommunitySizeIds: z.array(z.string()).optional(),
     selectedOrganizationTypeIds: z.array(z.string()).optional(),
     selectedScaleIds: z.array(z.string()).optional(),
@@ -112,6 +119,19 @@ export const createFlowStateSchema = z
     conflictManagementDetailsById: z
       .record(conflictManagementDetailEntrySchema)
       .optional(),
+    customMethodCardMetaById: z
+      .record(z.string().max(80), customMethodCardMetaEntrySchema)
+      .optional(),
+    customMethodCardFieldBlocksById: customMethodCardFieldBlocksByIdSchema,
+    methodSectionsPinCommitted: z
+      .object({
+        communication: z.boolean().optional(),
+        membership: z.boolean().optional(),
+        decisionApproaches: z.boolean().optional(),
+        conflictManagement: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
     pendingTemplateAction: z
       .object({
         slug: z.string().max(200),
@@ -121,6 +141,7 @@ export const createFlowStateSchema = z
       .optional(),
     templateReviewBackSlug: z.string().max(200).optional(),
     templateReviewEntryFromCreateFlow: z.boolean().optional(),
+    editingPublishedRuleId: z.string().max(200).optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
     stakeholders: z.array(z.unknown()).optional(),

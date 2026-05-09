@@ -1,0 +1,87 @@
+{
+  "_comment": "Shared 3-step add-custom-method-card wizard (Create modal) for communication, membership, decision approaches, conflict management.",
+  "cardStack": {
+    "addCardLabel": "Add"
+  },
+  "steps": {
+    "1": {
+      "title": "What do you call your group's new policy?",
+      "description": "This will be the title of the policy",
+      "fieldPlaceholder": "Policy name"
+    },
+    "2": {
+      "title": "How do you want to describe your new policy?",
+      "description": "This description will show up with the title to offer additional context about what the policy is how it should be applied.",
+      "fieldPlaceholder": "Policy description"
+    },
+    "3": {
+      "title": "Custom policy details",
+      "description": "Configure a custom data structure for this policy by adding fields for text, proportions, multi-select options, or file uploads. This creates a reusable template with placeholders that allows your group to standardize how policy definitions are edited in the future."
+    }
+  },
+  "step3BlocksList": {
+    "listLabel": "Fields added to this policy",
+    "dragHandleAriaLabel": "Drag to reorder this field"
+  },
+  "footer": {
+    "finalize": "Finalize"
+  },
+  "editModal": {
+    "noCustomFieldsYet": "No custom fields yet.",
+    "placeholderBody": "This policy uses the title and description you set when you created it. Extra section fields from preset templates are hidden here so you are not shown empty boxes that do not match what you configured.",
+    "readout": {
+      "emptyValue": "—",
+      "noFileChosen": "No file chosen yet"
+    },
+    "clearFileLabel": "Clear file"
+  },
+  "addCustomField": {
+    "cta": "Add",
+    "fieldTypes": {
+      "text": "Text",
+      "badges": "Badges",
+      "upload": "Upload",
+      "proportion": "Proportion"
+    }
+  },
+  "fieldModals": {
+    "addField": "Add field",
+    "requiredHint": "Required",
+    "text": {
+      "title": "Add text block",
+      "description": "Text blocks let people write out policies and guidelines in detail. You can choose a title for the block and prefill it with placeholder text that members of your group can change or adjust as needed.",
+      "blockTitleLabel": "Text Block Title",
+      "blockTitlePlaceholder": "Add your text block title",
+      "placeholderLabel": "Text Block Placeholder",
+      "placeholderFieldPlaceholder": "Add optional prefilled text"
+    },
+    "badges": {
+      "title": "Add badge block",
+      "description": "Badge blocks let people choose between a list of prefilled items and add their own",
+      "blockTitleLabel": "Badge Block Title",
+      "blockTitlePlaceholder": "Describe the badge block",
+      "optionsLabel": "Prefilled Badge Options",
+      "addOptionLabel": "Add badge option"
+    },
+    "upload": {
+      "title": "Add upload block",
+      "description": "Upload blocks allow users to add images, PDFs, and other files to the policy",
+      "blockTitleLabel": "Upload Block Title",
+      "blockTitlePlaceholder": "Add your upload block title",
+      "uploadFileInputAriaLabel": "Choose file for this upload block",
+      "uploadHint": "Add images, PDFs, and other files to the policy",
+      "uploadPreviewImageAlt": "Preview of uploaded file",
+      "clearPendingUploadAriaLabel": "Remove uploaded file",
+      "clearPendingUploadTooltip": "Remove file"
+    },
+    "proportion": {
+      "title": "Add proportion block",
+      "description": "Proportion blocks help users choose a percentage value between one and one hundred",
+      "blockTitleLabel": "Proportion Block Title",
+      "blockTitlePlaceholder": "Add your proportion block title",
+      "defaultLabel": "Default proportion",
+      "decrementAriaLabel": "Decrease default proportion",
+      "incrementAriaLabel": "Increase default proportion"
+    }
+  }
+}

@@ -75,6 +75,10 @@ per-app in the manifest and provisioned at install time.
   with the legacy service; SES relay accepts it).
 - `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` — turns on Postgres draft
   persistence for signed-in users. Required in production.
+- `UPLOAD_ROOT` — absolute path to a writable directory (typically on the
+  Cloudron **localstorage** mount) for `POST /api/uploads` (community photo +
+  custom-method attachments). When unset, upload routes return
+  `server_misconfigured`. See [CONTRIBUTING.md](../../CONTRIBUTING.md) API table.
 
 ## 4. Platform settings
 

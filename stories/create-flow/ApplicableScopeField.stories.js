@@ -9,7 +9,7 @@ export default {
     docs: {
       description: {
         component:
-          "Shared 'Applicable Scope' field used by the `decision-approaches` and `conflict-management` create-flow modals. Pairs an `InputLabel` with a row of toggle-chips plus an inline pill input for adding new scope values.",
+          "Shared 'Applicable Scope' field used by the `decision-approaches` create-flow modal. Toggle-chips plus an inline pill input for adding new scope values. Conflict management uses `ModalTextAreaField` (see Figma `20874:172292`).",
       },
     },
   },

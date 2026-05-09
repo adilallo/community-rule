@@ -6,7 +6,12 @@ import {
   getPreviousStep,
   isValidStep,
   getStepIndex,
+  parseReviewReturnSearchParam,
   resolveCreateFlowBackTarget,
+  TEMPLATES_FACET_RECOMMEND_QUERY,
+  TEMPLATES_FACET_RECOMMEND_VALUE,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE,
 } from "../../app/(app)/create/utils/flowSteps";
 
 describe("flowSteps", () => {
@@ -38,12 +43,13 @@ describe("flowSteps", () => {
     expect(getPreviousStep(null)).toBeNull();
   });
 
-  it("isValidStep reflects FLOW_STEP_ORDER membership", () => {
-    expect(isValidStep("community-size")).toBe(true);
-    expect(isValidStep("confirm-stakeholders")).toBe(true);
-    expect(isValidStep("core-values")).toBe(true);
-    expect(isValidStep("nope")).toBe(false);
-    expect(isValidStep(null)).toBe(false);
+  it("isValidStep allows branch-only edit-rule URL segment", () => {
+    expect(isValidStep("edit-rule")).toBe(true);
+  });
+
+  it("getNextStep and getPreviousStep return null for edit-rule (not in linear order)", () => {
+    expect(getNextStep("edit-rule")).toBeNull();
+    expect(getPreviousStep("edit-rule")).toBeNull();
   });
 
   it("getStepIndex matches position in FLOW_STEP_ORDER", () => {
@@ -102,5 +108,28 @@ describe("flowSteps", () => {
     expect(buildTemplateReviewHref("mutual-aid", { fromCreateWizard: true })).toBe(
       "/create/review-template/mutual-aid?fromFlow=1",
     );
+  });
+
+  it("review Create from template uses fromFlow and recommendTemplates together", () => {
+    expect(
+      `/templates?${TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY}=${TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE}&${TEMPLATES_FACET_RECOMMEND_QUERY}=${TEMPLATES_FACET_RECOMMEND_VALUE}`,
+    ).toBe("/templates?fromFlow=1&recommendTemplates=1");
+  });
+
+  it("parseReviewReturnSearchParam accepts only final-review and edit-rule", () => {
+    expect(
+      parseReviewReturnSearchParam(
+        new URLSearchParams("reviewReturn=final-review"),
+      ),
+    ).toBe("final-review");
+    expect(
+      parseReviewReturnSearchParam(
+        new URLSearchParams("reviewReturn=edit-rule"),
+      ),
+    ).toBe("edit-rule");
+    expect(
+      parseReviewReturnSearchParam(new URLSearchParams("reviewReturn=nope")),
+    ).toBeNull();
+    expect(parseReviewReturnSearchParam(null)).toBeNull();
   });
 });

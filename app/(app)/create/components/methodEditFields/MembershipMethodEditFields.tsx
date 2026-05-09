@@ -15,6 +15,7 @@ import type { MembershipMethodDetailEntry } from "../../types";
 export interface MembershipMethodEditFieldsProps {
   value: MembershipMethodDetailEntry;
   onChange: (_next: MembershipMethodDetailEntry) => void;
+  readOnly?: boolean;
 }
 
 const FIELDS: ReadonlyArray<keyof MembershipMethodDetailEntry> = [
@@ -26,6 +27,7 @@ const FIELDS: ReadonlyArray<keyof MembershipMethodDetailEntry> = [
 function MembershipMethodEditFieldsComponent({
   value,
   onChange,
+  readOnly = false,
 }: MembershipMethodEditFieldsProps) {
   const m = useMessages();
   const t = m.create.customRule.membership;
@@ -49,6 +51,7 @@ function MembershipMethodEditFieldsComponent({
           rows={6}
           value={value[field]}
           onChange={(v) => patch(field, v)}
+          disabled={readOnly}
         />
       ))}
     </div>

@@ -13,6 +13,11 @@ export type GovernanceTemplateCatalogEntry = {
   backgroundColor: string;
   /** Path under public/ for getAssetPath() — Figma Asset / Template Mark */
   iconPath: string;
+  /**
+   * When true, static catalog rows show the “RECOMMENDED” tag. Facet-ranked
+   * `/templates` sets this in `gridEntriesWithFacetScores` instead.
+   */
+  recommended?: boolean;
 };
 
 /** SVGs in `public/assets/template-mark/<slug>.svg` (kebab-case slug). */

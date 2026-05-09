@@ -126,6 +126,40 @@ describe("createFlowStateSchema", () => {
     expect(r.success).toBe(true);
   });
 
+  it("accepts customMethodCardFieldBlocksById", () => {
+    const r = createFlowStateSchema.safeParse({
+      customMethodCardFieldBlocksById: {
+        "card-uuid": [
+          {
+            kind: "text",
+            id: "f1",
+            blockTitle: "Notes",
+            placeholderText: "Optional",
+          },
+          {
+            kind: "badges",
+            id: "f2",
+            blockTitle: "Tags",
+            options: ["a", "b"],
+          },
+          {
+            kind: "upload",
+            id: "f3",
+            blockTitle: "Attachment",
+            fileName: "doc.pdf",
+          },
+          {
+            kind: "proportion",
+            id: "f4",
+            blockTitle: "Share",
+            defaultPercent: 50,
+          },
+        ],
+      },
+    });
+    expect(r.success).toBe(true);
+  });
+
   it("accepts templateReviewEntryFromCreateFlow", () => {
     const r = createFlowStateSchema.safeParse({
       templateReviewEntryFromCreateFlow: true,

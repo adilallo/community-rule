@@ -4,6 +4,8 @@ import type { RuleSizeValue } from "../../../../lib/propNormalization";
 export interface Category {
   name: string;
   chipOptions: ChipOption[];
+  /** When `false`, hide the row’s + affordance. Default: show when the Rule allows adds. */
+  addButton?: boolean;
   onChipClick?: (categoryName: string, chipId: string) => void;
   onAddClick?: (categoryName: string) => void;
   onCustomChipConfirm?: (
@@ -25,6 +27,18 @@ export interface RuleBottomLink {
 export interface RuleProps {
   title: string;
   description?: string;
+  /**
+   * When set, the description row (or {@link descriptionEmptyHint} when there
+   * is no body text) is clickable — caller handles modal / navigation.
+   */
+  onDescriptionClick?: () => void;
+  /**
+   * When {@link onDescriptionClick} is set, forwarded to the control’s
+   * `aria-label` (keyboard / SR).
+   */
+  descriptionEditAriaLabel?: string;
+  /** Shown when {@link onDescriptionClick} is set and `description` is empty. */
+  descriptionEmptyHint?: string;
   icon?: React.ReactNode;
   backgroundColor?: string;
   className?: string;
@@ -46,11 +60,20 @@ export interface RuleProps {
   /** Uppercase chip (e.g. IN PROGRESS); omit when no left badge. */
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
+  /**
+   * When set and the card is collapsed (`expanded` false), show the
+   * “RECOMMENDED” tag above the title (e.g. templates index). Ignored when
+   * `expanded` — Figma `22142:898446` compact `Card / Rule` only.
+   */
+  recommended?: boolean;
 }
 
 export interface RuleViewProps {
   title: string;
   description?: string;
+  onDescriptionClick?: () => void;
+  descriptionEmptyHint?: string;
+  descriptionEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor: string;
   className: string;
@@ -66,4 +89,5 @@ export interface RuleViewProps {
   hasBottomLinks?: boolean;
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
+  recommended?: boolean;
 }

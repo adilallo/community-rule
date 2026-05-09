@@ -31,7 +31,7 @@ export default {
         "After user input (or completed step), use Save & Exit and pass saveDraft: true to onExit",
     },
     onShare: { action: "share clicked" },
-    onExport: { action: "export clicked" },
+    onSelectExportFormat: { action: "export format" },
     onEdit: { action: "edit clicked" },
     onExit: { action: "exit clicked" },
   },

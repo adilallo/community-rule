@@ -1,10 +1,11 @@
 "use client";
 
 /**
- * Shared "Applicable Scope" field used by the `decision-approaches` and
- * `conflict-management` create flow modals. Pairs an `InputLabel` with a
- * horizontally-wrapping list of toggle-chips plus an inline "+ Add" affordance
- * that reveals a pill text input for creating new scope values.
+ * Shared "Applicable Scope" field used by the `decision-approaches` create-flow
+ * modal. Pairs an `InputLabel` with a horizontally-wrapping list of
+ * toggle-chips plus an inline "+ Add" affordance that reveals a pill text input
+ * for creating new scope values. Conflict management uses
+ * `ModalTextAreaField` instead (Figma `20874:172292`).
  */
 
 import { memo, useState } from "react";
@@ -34,6 +35,8 @@ export interface ApplicableScopeFieldProps {
    * Optional placeholder for the inline input. Defaults to `addLabel`.
    */
   inputPlaceholder?: string;
+  /** When true, scope chips and add affordance are non-interactive. */
+  readOnly?: boolean;
   className?: string;
 }
 
@@ -45,6 +48,7 @@ function ApplicableScopeFieldComponent({
   onToggleScope,
   onAddScope,
   inputPlaceholder,
+  readOnly = false,
   className = "",
 }: ApplicableScopeFieldProps) {
   const [draft, setDraft] = useState("");
@@ -77,13 +81,13 @@ function ApplicableScopeFieldComponent({
               state={isSelected ? "selected" : "disabled"}
               palette="default"
               size="s"
-              disabled={false}
-              onClick={() => onToggleScope(scope)}
+              disabled={readOnly}
+              onClick={() => !readOnly && onToggleScope(scope)}
               ariaLabel={`${isSelected ? "Deselect" : "Select"} ${scope}`}
             />
           );
         })}
-        {isAdding ? (
+        {readOnly ? null : isAdding ? (
           <input
             type="text"
             autoFocus

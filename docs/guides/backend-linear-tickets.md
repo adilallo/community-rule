@@ -493,6 +493,43 @@ _Section B — Final Review screen `+` button per category:_
 
 ---
 
+## Ticket 21 — Create flow file uploads (community photo + custom method attachments)
+
+**Depends on:** **Ticket 3 / [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)** (session for authenticated routes); **Ticket 5 / [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)** (draft JSON carries new URL fields). **Related:** **[CR-58](https://linear.app/community-rule/issue/CR-58)** (Figma Avatar / broader upload routing — may share `/api/uploads` later).
+
+**Server / admin:** Persist uploads on disk under **`UPLOAD_ROOT`** (document in [`.env.example`](../../.env.example)); production aligns with Cloudron **localstorage** mount ([`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md)). **Not** storing binaries inside `RuleDraft.payload` / publish JSON — only **HTTPS-relative URLs** (or opaque ids served by the app).
+
+**Goal:** Replace **filename-only** / **stub** upload UX with real files for (1) **Create Community** `community-upload` and (2) **custom method** wizard / modal **upload** field blocks. Draft and publish JSON carry stable URLs like other strings.
+
+**Context (repo today):**
+
+- [`CommunityUploadScreen.tsx`](../../app/(app)/create/screens/upload/CommunityUploadScreen.tsx) has no `<input type="file">` or `CreateFlowState` image field.
+- [`lib/create/customMethodCardFieldBlocks.ts`](../../lib/create/customMethodCardFieldBlocks.ts) upload blocks have optional **`fileName`** only.
+- **Anonymous uploads:** `POST` must stay **`getSessionUser()` required** (same as [`PUT /api/drafts/me`](../../app/api/drafts/me/route.ts)). **Do not** ship unauthenticated multipart without abuse controls. **Recommended:** client **staging** (prefer **IndexedDB**) + **flush** after session via one helper (e.g. after [`PostLoginDraftTransfer`](../../app/(app)/create/PostLoginDraftTransfer.tsx) / session-ready); **alt:** gate picker until signed in.
+
+**Implementation (sketch):**
+
+1. **`lib/server/uploads/`** — save stream to UUID filename under `UPLOAD_ROOT`; resolve path safely (no traversal).
+2. **`POST /api/uploads`** — `apiRoute`, multipart `formData`, `purpose` enum (`communityAvatar` | `customMethodAttachment` or similar), MIME + size allowlists, optional rate limit alignment with magic-link patterns.
+3. **`GET /api/uploads/[id]`** (or equivalent) — stream file by opaque id; document **public vs session-gated** read policy for v1.
+4. **Client:** thin `uploadCreateFlowFile(file, purpose)` (e.g. under `lib/create/`); i18n for errors; loading UX per alerts rules.
+5. **State + Zod:** `communityAvatarUrl` (name TBD) on [`CreateFlowState`](../../app/(app)/create/types.ts); upload blocks gain **`assetUrl`** (keep `fileName` for display); [`createFlowSchemas.ts`](../../lib/server/validation/createFlowSchemas.ts) updated.
+6. **UI:** wire [`CommunityUploadScreen`](../../app/(app)/create/screens/upload/CommunityUploadScreen.tsx); wizard + [`CustomMethodCardFieldBlocksSummary`](../../app/(app)/create/components/CustomMethodCardFieldBlocksSummary.tsx).
+7. **Publish:** extend [`buildPublishPayload.ts`](../../lib/create/buildPublishPayload.ts) / `document` **if** product needs URLs for readers; else TODO in ticket / PR.
+
+**Acceptance criteria:**
+
+- [ ] Signed-in user completes upload on community step; URL persists in draft when sync is on.
+- [ ] Custom-method upload block stores `assetUrl` after upload; visible in modal / final review paths.
+- [ ] Anonymous flow does not claim server upload without session; agreed staging strategy works or picker is gated with copy.
+- [ ] Unit tests: validation, path safety; targeted Vitest for happy path where practical.
+
+**Linear:** [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method) (**Backlog**).
+
+**Internal plan:** Cursor plan `create_flow_real_uploads_ebeecca5.plan.md` (workspace `.cursor/plans/`) expands sequence diagrams and rollout order.
+
+---
+
 ## Ticket 9 — Persist web vitals outside `.next` (prefer external RUM)
 
 **Depends on:** none (orthogonal).
@@ -732,16 +769,17 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 |    18 | 18     | Stakeholder invites (confirm-stakeholders) |
 |    19 | 19     | `Add` button behavior (custom-rule pages + Final Review) |
 |    20 | 20     | Change account email (verified) **Backlog — CR-103** |
+|    21 | 21     | Create flow file uploads **Backlog — [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** |
 
 **Follow-up (no doc ticket #):** **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)** — marketing template grids ranked by user facets (API-ready; tests deferred with that issue).
 
-Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 6 / CR-77** (publish) is **Done**. **Ticket 16** / **CR-88** (facet data + APIs + wizard method ranking) shipped **after 7–8**; **CR-93** tracks **marketing** template grids ranked by user facets (API-ready). **Ticket 17** / **CR-89** (**[Done](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) (progress bar, `[screenId]` routing). **Draft resume / hydration** follow-ups: **CR-86**. **Tickets 13–14** are parallel (**CR-84** / **CR-85** — both **Done**). **Ticket 15 / CR-86** is **parallel** (publish prerequisite met); implementation backlog. **Ticket 20 / [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** tracks **verified change account email** (split from Ticket 15). **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands.
+Tickets **10–11** can be deferred without blocking the core “auth + drafts + publish + templates” vertical slice. **Ticket 6 / CR-77** (publish) is **Done**. **Ticket 16** / **CR-88** (facet data + APIs + wizard method ranking) shipped **after 7–8**; **CR-93** tracks **marketing** template grids ranked by user facets (API-ready). **Ticket 17** / **CR-89** (**[Done](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)**) canonizes the **custom** wizard in [`docs/create-flow.md`](create-flow.md) (progress bar, `[screenId]` routing). **Draft resume / hydration** follow-ups: **CR-86**. **Tickets 13–14** are parallel (**CR-84** / **CR-85** — both **Done**). **Ticket 15 / CR-86** is **parallel** (publish prerequisite met); implementation backlog. **Ticket 20 / [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** tracks **verified change account email** (split from Ticket 15). **Ticket 18** (**[CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)**) adds real **email-based stakeholder invites** to the `confirm-stakeholders` step — currently ships as a label-only chip list despite copy promising invites; **parallel** to the main chain, awaits design + product brief before implementation. **Ticket 19** (**[CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)**) is a **product/design** clarification ticket: the `Add` affordance is inconsistent across custom-rule pages (full custom-chip flow only on `core-values`; an `add` link that just expands the card stack on the four card-style pages) and the Final Review screen renders a `+` button per category that today is a no-op; needs a brief + Figma before any implementation lands. **Ticket 21** (**[CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)**) — create-flow **authenticated file uploads** for community photo + custom-method attachment blocks; see Ticket 21 body in this doc. Implementation follows [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md) localstorage guidance and avoids unauthenticated multipart in v1.
 
 ---
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior); **Ticket 21 / [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** (create-flow file uploads).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
@@ -773,6 +811,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
 |         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) |
 |         20 | [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)   | Change account email (verify new address) **Backlog** |
+|         21 | [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method) | Create flow file uploads (community + custom blocks) **Backlog** |
 
 ---
 

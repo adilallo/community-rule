@@ -1,11 +1,19 @@
 {
   "title": "Review your CommunityRule",
   "description": "Here's what other people will see. Make sure everything looks good before you finalize everything. Once the rule is finalized, you must use one of your decision-making mechanisms to edit it again.",
+  "editPublishedTitle": "Edit your CommunityRule",
+  "editPublishedDescription": "Update what others see on your public rule. Save & Exit or Finalize applies changes to your published CommunityRule.",
   "ruleCardTitleFallback": "Your community",
   "chipEditModal": {
     "saveButton": "Save",
     "readOnlyCloseButton": "Close",
     "readOnlyNote": "Details for this entry aren't editable yet."
+  },
+  "communityContextEditModal": {
+    "title": "Community description",
+    "description": "Update how your organization is described on your public CommunityRule.",
+    "emptyHint": "Add a community description",
+    "ariaEditDescription": "Edit community description"
   },
   "categories": [
     {

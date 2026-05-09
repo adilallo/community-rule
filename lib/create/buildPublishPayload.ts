@@ -1,20 +1,23 @@
 import type {
   CommunicationMethodDetailEntry,
   ConflictManagementDetailEntry,
-  CoreValueDetailEntry,
   CreateFlowState,
   DecisionApproachDetailEntry,
   MembershipMethodDetailEntry,
 } from "../../app/(app)/create/types";
 import type { CommunityRuleSection } from "../../app/components/type/CommunityRule/CommunityRule.types";
+import { resolveMethodPresetIdFromLabel } from "./buildFinalReviewCategories";
 import {
   communicationPresetFor,
   conflictManagementPresetFor,
   decisionApproachPresetFor,
   membershipPresetFor,
-  methodLabelFor,
+  mergeCoreValueDetailWithPresets,
+  publishedMethodDisplayLabel,
 } from "./finalReviewChipPresets";
 import { isDocumentEntry } from "./documentEntryGuards";
+import { replaceMethodSectionsWithMethodSelections } from "./ruleSectionsFromMethodSelections";
+import { templateCategoryToGroupKey } from "./templateReviewMapping";
 
 export { isDocumentEntry } from "./documentEntryGuards";
 
@@ -53,12 +56,12 @@ export function buildCoreValuesForDocument(state: CreateFlowState): Array<{
   return snap
     .filter((r) => selected.has(r.id))
     .map((r) => {
-      const d: CoreValueDetailEntry | undefined = details[r.id];
+      const merged = mergeCoreValueDetailWithPresets(r.id, r.label, details[r.id]);
       return {
         chipId: r.id,
         label: r.label,
-        meaning: d?.meaning ?? "",
-        signals: d?.signals ?? "",
+        meaning: merged.meaning,
+        signals: merged.signals,
       };
     });
 }
@@ -102,7 +105,9 @@ export type BuildPublishPayloadResult =
     }
   | { ok: false; error: string };
 
-const FALLBACK_CATEGORY = "Overview";
+export const PUBLISH_FALLBACK_OVERVIEW_CATEGORY = "Overview";
+
+const FALLBACK_CATEGORY = PUBLISH_FALLBACK_OVERVIEW_CATEGORY;
 
 const DEFAULT_FALLBACK_BODY =
   "This CommunityRule was created in the create flow. Add more detail in a future edit.";
@@ -124,7 +129,8 @@ export function buildPublishPayload(
     return undefined;
   };
 
-  let summary = firstNonEmpty(state.summary, state.communityContext);
+  /** Community context wins over `summary` (template review no longer copies template description into `summary`). */
+  let summary = firstNonEmpty(state.communityContext, state.summary);
 
   let sections = parseSectionsFromCreateFlowState(state);
   if (sections.length === 0) {
@@ -138,11 +144,39 @@ export function buildPublishPayload(
   }
 
   const coreValues = buildCoreValuesForDocument(state);
+  if (coreValues.length > 0) {
+    sections = sections.filter(
+      (s) => templateCategoryToGroupKey(s.categoryName) !== "coreValues",
+    );
+  }
+
   const methodSelections = buildMethodSelectionsForDocument(state);
+
+  if (hasAnyMethodSelection(methodSelections)) {
+    sections = replaceMethodSectionsWithMethodSelections(
+      sections,
+      methodSelections,
+      state.customMethodCardFieldBlocksById,
+    );
+  }
 
   const document: Record<string, unknown> = { sections, coreValues };
   if (hasAnyMethodSelection(methodSelections)) {
     document.methodSelections = methodSelections;
+  }
+
+  const avatar =
+    typeof state.communityAvatarUrl === "string" &&
+    state.communityAvatarUrl.trim().length > 0
+      ? state.communityAvatarUrl.trim()
+      : undefined;
+  if (avatar) {
+    document.communityAvatarUrl = avatar;
+  }
+
+  const fieldBlocks = state.customMethodCardFieldBlocksById;
+  if (fieldBlocks && Object.keys(fieldBlocks).length > 0) {
+    document.customMethodCardFieldBlocksById = fieldBlocks;
   }
 
   if (summary !== undefined) {
@@ -160,6 +194,59 @@ function hasAnyMethodSelection(m: PublishedMethodSelections): boolean {
   );
 }
 
+function deriveMethodPresetIdsFromSections(
+  sections: CommunityRuleSection[],
+): {
+  communication: string[];
+  membership: string[];
+  decisionApproaches: string[];
+  conflictManagement: string[];
+} {
+  const out = {
+    communication: [] as string[],
+    membership: [] as string[],
+    decisionApproaches: [] as string[],
+    conflictManagement: [] as string[],
+  };
+  for (const s of sections) {
+    const gk = templateCategoryToGroupKey(s.categoryName);
+    if (!gk || gk === "coreValues") continue;
+    const ids: string[] = [];
+    for (const e of s.entries) {
+      const title = typeof e.title === "string" ? e.title.trim() : "";
+      if (title.length === 0) continue;
+      const id = resolveMethodPresetIdFromLabel(title, gk);
+      if (id) ids.push(id);
+    }
+    if (ids.length === 0) continue;
+    switch (gk) {
+      case "communication":
+        out.communication = ids;
+        break;
+      case "membership":
+        out.membership = ids;
+        break;
+      case "decisionApproaches":
+        out.decisionApproaches = ids;
+        break;
+      case "conflictManagement":
+        out.conflictManagement = ids;
+        break;
+      default:
+        break;
+    }
+  }
+  return out;
+}
+
+function pickMethodIds(
+  fromState: string[] | undefined,
+  derived: string[],
+): string[] {
+  if (fromState && fromState.length > 0) return fromState;
+  return derived;
+}
+
 /**
  * Merge `selected*MethodIds` with any saved `{group}MethodDetailsById`
  * overrides authored on the final-review screen. Preset defaults from the
@@ -170,55 +257,86 @@ function hasAnyMethodSelection(m: PublishedMethodSelections): boolean {
 export function buildMethodSelectionsForDocument(
   state: CreateFlowState,
 ): PublishedMethodSelections {
+  const derived = deriveMethodPresetIdsFromSections(
+    parseSectionsFromCreateFlowState(state),
+  );
   const out: PublishedMethodSelections = {};
 
-  const commIds = state.selectedCommunicationMethodIds ?? [];
+  const commIds = pickMethodIds(
+    state.selectedCommunicationMethodIds,
+    derived.communication,
+  );
   if (commIds.length > 0) {
     out.communication = commIds.map((id) => {
       const preset = communicationPresetFor(id);
       const override = state.communicationMethodDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("communication", id),
+        label: publishedMethodDisplayLabel(
+          "communication",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
   }
 
-  const memIds = state.selectedMembershipMethodIds ?? [];
+  const memIds = pickMethodIds(
+    state.selectedMembershipMethodIds,
+    derived.membership,
+  );
   if (memIds.length > 0) {
     out.membership = memIds.map((id) => {
       const preset = membershipPresetFor(id);
       const override = state.membershipMethodDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("membership", id),
+        label: publishedMethodDisplayLabel(
+          "membership",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
   }
 
-  const daIds = state.selectedDecisionApproachIds ?? [];
+  const daIds = pickMethodIds(
+    state.selectedDecisionApproachIds,
+    derived.decisionApproaches,
+  );
   if (daIds.length > 0) {
     out.decisionApproaches = daIds.map((id) => {
       const preset = decisionApproachPresetFor(id);
       const override = state.decisionApproachDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("decisionApproaches", id),
+        label: publishedMethodDisplayLabel(
+          "decisionApproaches",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });
   }
 
-  const cmIds = state.selectedConflictManagementIds ?? [];
+  const cmIds = pickMethodIds(
+    state.selectedConflictManagementIds,
+    derived.conflictManagement,
+  );
   if (cmIds.length > 0) {
     out.conflictManagement = cmIds.map((id) => {
       const preset = conflictManagementPresetFor(id);
       const override = state.conflictManagementDetailsById?.[id];
       return {
         id,
-        label: methodLabelFor("conflictManagement", id),
+        label: publishedMethodDisplayLabel(
+          "conflictManagement",
+          id,
+          state.customMethodCardMetaById,
+        ),
         sections: override ? { ...preset, ...override } : preset,
       };
     });

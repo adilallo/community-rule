@@ -1,7 +1,11 @@
 import type { Category } from "../../app/components/cards/Rule";
 import type { ChipOption } from "../../app/components/controls/MultiSelect/MultiSelect.types";
 import type { CommunityRuleSection } from "../../app/components/type/CommunityRule/CommunityRule.types";
+import type { TemplateFacetGroupKey } from "./customRuleFacets";
+import { templateCategoryToFacetGroupKey } from "./customRuleFacets";
 import { isDocumentEntry } from "./documentEntryGuards";
+
+export type { TemplateFacetGroupKey } from "./customRuleFacets";
 
 function isDocumentSection(x: unknown): x is CommunityRuleSection {
   if (!x || typeof x !== "object") return false;
@@ -12,17 +16,6 @@ function isDocumentSection(x: unknown): x is CommunityRuleSection {
 }
 
 /**
- * Known facet groups that template sections map to. Matches the five modals on
- * the custom-rule create flow (`m.create.customRule.*`).
- */
-export type TemplateFacetGroupKey =
-  | "coreValues"
-  | "communication"
-  | "membership"
-  | "decisionApproaches"
-  | "conflictManagement";
-
-/**
  * Normalize a section `categoryName` (as it appears in a template's `body`)
  * to the custom-rule facet-group key. Returns `null` for unknown categories.
  * Keys are matched case- and punctuation-insensitively so variations like
@@ -31,28 +24,7 @@ export type TemplateFacetGroupKey =
 export function templateCategoryToGroupKey(
   categoryName: string,
 ): TemplateFacetGroupKey | null {
-  const key = categoryName.toLowerCase().replace(/[^a-z]+/g, "");
-  switch (key) {
-    case "values":
-    case "corevalues":
-      return "coreValues";
-    case "communication":
-    case "communications":
-      return "communication";
-    case "membership":
-    case "memberships":
-      return "membership";
-    case "decisionmaking":
-    case "decisionapproaches":
-    case "decisions":
-      return "decisionApproaches";
-    case "conflictmanagement":
-    case "conflict":
-    case "conflictresolution":
-      return "conflictManagement";
-    default:
-      return null;
-  }
+  return templateCategoryToFacetGroupKey(categoryName);
 }
 
 /**

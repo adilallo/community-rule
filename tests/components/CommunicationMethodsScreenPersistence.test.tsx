@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import {
   renderWithProviders as render,
   screen,
@@ -63,17 +63,22 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
     );
 
     const dialog = await screen.findByRole("dialog");
-    const textareas = within(dialog).getAllByRole("textbox");
-    expect(textareas.length).toBe(3);
-    // Preset corePrinciple must seed into the first textarea so the user
-    // edits a real starting point rather than an empty field.
-    expect((textareas[0] as HTMLTextAreaElement).value.length).toBeGreaterThan(
-      0,
-    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
 
-    fireEvent.change(textareas[0], { target: { value: "Custom principle" } });
+    const textboxes = within(screen.getByRole("dialog")).getAllByRole("textbox");
+    expect(textboxes.length).toBe(5);
+    const corePrincipleField = textboxes[2] as HTMLTextAreaElement;
+    // Preset corePrinciple must seed into the first body textarea so the user
+    // edits a real starting point rather than an empty field.
+    expect(corePrincipleField.value.length).toBeGreaterThan(0);
+
+    fireEvent.change(corePrincipleField, { target: { value: "Custom principle" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
     fireEvent.click(
-      within(dialog).getByRole("button", { name: "Add Platform" }),
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Add Platform",
+      }),
     );
 
     await waitFor(() => {
@@ -101,11 +106,7 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
       screen.getAllByRole("button", { name: /Signal: Encrypted messaging/ })[0],
     );
     const dialog = await screen.findByRole("dialog");
-    const [firstTextarea] = within(dialog).getAllByRole("textbox");
-    fireEvent.change(firstTextarea, {
-      target: { value: "Should NOT persist" },
-    });
-
+    void dialog;
     fireEvent.keyDown(document, { key: "Escape" });
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -143,8 +144,201 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
     const textareas = within(dialog).getAllByRole(
       "textbox",
     ) as HTMLTextAreaElement[];
+    expect(textareas.length).toBe(3);
     expect(textareas[0].value).toBe("Saved principle");
     expect(textareas[1].value).toBe("Saved logistics");
     expect(textareas[2].value).toBe("Saved coc");
+  });
+
+  it("Cancel customize reverts edited preset without persisting (no confirm when unchanged)", async () => {
+    let latest: CreateFlowState = {};
+    const confirmSpy = vi.spyOn(window, "confirm").mockImplementation(() => {
+      throw new Error("confirm should not run when customize session is clean");
+    });
+    render(
+      <ScreenWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Signal: Encrypted messaging/ })[0],
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(
+      (within(screen.getByRole("dialog")).getAllByRole(
+        "textbox",
+      )[0] as HTMLTextAreaElement).disabled,
+    ).toBe(true);
+    expect(latest.communicationMethodDetailsById).toBeUndefined();
+
+    confirmSpy.mockRestore();
+  });
+
+  it("Cancel customize with edits restores snapshot after confirm", async () => {
+    let latest: CreateFlowState = {};
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+    render(
+      <ScreenWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          selectedCommunicationMethodIds: ["signal"],
+          communicationMethodDetailsById: {
+            signal: {
+              corePrinciple: "Saved principle",
+              logisticsAdmin: "Saved logistics",
+              codeOfConduct: "Saved coc",
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Signal: Encrypted messaging/ })[0],
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
+
+    const textboxes = within(dialog).getAllByRole(
+      "textbox",
+    ) as HTMLTextAreaElement[];
+    fireEvent.change(textboxes[2], { target: { value: "Edited principle" } });
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(
+      (
+        within(screen.getByRole("dialog")).getAllByRole(
+          "textbox",
+        )[0] as HTMLTextAreaElement
+      ).value,
+    ).toBe("Saved principle");
+    expect(
+      latest.communicationMethodDetailsById?.signal?.corePrinciple,
+    ).toBe("Saved principle");
+
+    confirmSpy.mockRestore();
+  });
+
+  it("dirty Escape close stays open when user declines discard confirm", async () => {
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
+    render(
+      <ScreenWithStateProbe
+        onState={() => {
+          /* noop */
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Signal: Encrypted messaging/ })[0],
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
+
+    const textboxes = within(dialog).getAllByRole(
+      "textbox",
+    ) as HTMLTextAreaElement[];
+    fireEvent.change(textboxes[2], { target: { value: "Edited principle" } });
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(confirmSpy).toHaveBeenCalled();
+
+    confirmSpy.mockRestore();
+  });
+
+  it("persists customized policy title for a custom UUID card on Save", async () => {
+    const customId = "00000000-0000-4000-8000-0000000000aa";
+    let latest: CreateFlowState = {};
+    render(
+      <ScreenWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          selectedCommunicationMethodIds: [customId],
+          customMethodCardMetaById: {
+            [customId]: { label: "Original title", supportText: "Sub" },
+          },
+          communicationMethodDetailsById: {
+            [customId]: {
+              corePrinciple: "p",
+              logisticsAdmin: "l",
+              codeOfConduct: "c",
+            },
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Original title/ })[0],
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
+
+    const titleInput = within(screen.getByRole("dialog")).getAllByRole(
+      "textbox",
+    )[0] as HTMLInputElement;
+    fireEvent.change(titleInput, { target: { value: "Renamed policy" } });
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", { name: "Save" }),
+    );
+
+    await waitFor(() => {
+      expect(latest.customMethodCardMetaById?.[customId]?.label).toBe(
+        "Renamed policy",
+      );
+    });
+  });
+
+  it("stores preset id title override in customMethodCardMetaById on Save", async () => {
+    let latest: CreateFlowState = {};
+    render(
+      <ScreenWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Signal: Encrypted messaging/ })[0],
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "More options" }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
+
+    const titleInput = within(screen.getByRole("dialog")).getAllByRole(
+      "textbox",
+    )[0] as HTMLInputElement;
+    fireEvent.change(titleInput, {
+      target: { value: "Custom Signal header" },
+    });
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", { name: "Save" }),
+    );
+
+    await waitFor(() => {
+      expect(latest.customMethodCardMetaById?.signal?.label).toBe(
+        "Custom Signal header",
+      );
+    });
   });
 });

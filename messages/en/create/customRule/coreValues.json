@@ -12,7 +12,8 @@
     "subtitle": "Edit or add to this description to describe what this value means to your community.",
     "meaningLabel": "What does this value mean to your group?",
     "signalsLabel": "Signals of Violation",
-    "addValueButton": "Add Value"
+    "addValueButton": "Add Value",
+    "customizeValueNameLabel": "Value name"
   },
   "values": [
     {

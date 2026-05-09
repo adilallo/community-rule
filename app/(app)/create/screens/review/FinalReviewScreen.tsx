@@ -15,16 +15,30 @@ import {
   type FinalReviewCategoryRowDetailed,
 } from "../../../../../lib/create/buildFinalReviewCategories";
 import { applyFinalReviewChipEditPatch } from "../../../../../lib/create/applyFinalReviewChipEditPatch";
-import type { TemplateChipDetail } from "../../../../../lib/create/templateReviewMapping";
+import type {
+  TemplateChipDetail,
+  TemplateFacetGroupKey,
+} from "../../../../../lib/create/templateReviewMapping";
 import {
   FinalReviewChipEditModal,
   type FinalReviewChipEditPatch,
   type FinalReviewChipEditTarget,
 } from "../../components/FinalReviewChipEditModal";
+import { FinalReviewCommunityContextEditModal } from "../../components/FinalReviewCommunityContextEditModal";
+import { useCreateFlowNavigation } from "../../hooks/useCreateFlowNavigation";
+import { createFlowStepForFacetGroup } from "../../utils/facetGroupToCreateFlowStep";
 import {
   getAssetPath,
   vectorMarkPath,
 } from "../../../../../lib/assetUtils";
+
+const FACET_FALLBACK_ORDER: readonly TemplateFacetGroupKey[] = [
+  "coreValues",
+  "communication",
+  "membership",
+  "decisionApproaches",
+  "conflictManagement",
+] as const;
 
 /**
  * `finalReview.json.categories` ships a demo ordering + localized names
@@ -68,8 +82,13 @@ function readFallbackCategoryRows(
   };
 }
 
-export function FinalReviewScreen() {
-  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
+export function FinalReviewScreen({
+  variant = "default",
+}: {
+  variant?: "default" | "editPublished";
+} = {}) {
+  const { state, updateState, replaceState, markCreateFlowInteraction } = useCreateFlow();
+  const { goToStep } = useCreateFlowNavigation();
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.reviewAndComplete.finalReview");
   const m = useMessages();
@@ -77,11 +96,11 @@ export function FinalReviewScreen() {
   /**
    * Two modals coexist on this screen:
    *
-   * - {@link FinalReviewChipEditModal} — editable Save-button version used
-   *   whenever the chip resolves to a stable `overrideKey` (core-value
-   *   chip id, or a method preset id). Writes through to
-   *   `{group}DetailsById` state fields on Save; close-without-save is a
-   *   no-op so any typed edits are discarded.
+   * - {@link FinalReviewChipEditModal} — core values + method chips: kebab
+   *   Customize / Remove; values also offer Duplicate under the five-chip cap.
+   *   Save respects the same unlock/dirty rules as the facet create modals;
+   *   writes `{group}DetailsById`, snapshot label (values), `customMethodCardMetaById`,
+   *   and field blocks on Save.
    * - {@link TemplateChipDetailModal} — read-only fallback for chips we
    *   can't map to an override key (e.g. template body entries on the
    *   "Use without changes" path where no preset matches the title).
@@ -93,6 +112,8 @@ export function FinalReviewScreen() {
     useState<FinalReviewChipEditTarget | null>(null);
   const [activeReadOnlyDetail, setActiveReadOnlyDetail] =
     useState<TemplateChipDetail | null>(null);
+  const [communityContextModalOpen, setCommunityContextModalOpen] =
+    useState(false);
 
   const handleSave = useCallback(
     (patch: FinalReviewChipEditPatch) => {
@@ -102,20 +123,30 @@ export function FinalReviewScreen() {
     [markCreateFlowInteraction, updateState, state],
   );
 
-  const { categories: finalReviewCategories, chipLookup } = useMemo(() => {
+  const { categories: finalReviewCategories } = useMemo(() => {
     const { names, rows: fallbackRows } = readFallbackCategoryRows(
       m.create.reviewAndComplete.finalReview.categories,
     );
     const derived = buildFinalReviewCategoryRowsDetailed(state, names);
     const rowsToRender: readonly FinalReviewCategoryRowDetailed[] =
       derived.length > 0 ? derived : fallbackRows;
+    const usingFallbackRows = derived.length === 0;
 
     const lookup = new Map<
       string,
       { target: FinalReviewChipEditTarget | null; readOnly: TemplateChipDetail }
     >();
 
-    const cats: Category[] = rowsToRender.map((row) => {
+    const cats: Category[] = rowsToRender.map((row, rowIndex) => {
+      const effectiveGroupKey: TemplateFacetGroupKey | null =
+        row.groupKey ??
+        (usingFallbackRows && rowIndex < FACET_FALLBACK_ORDER.length
+          ? FACET_FALLBACK_ORDER[rowIndex]
+          : null);
+
+      const reviewReturn =
+        variant === "editPublished" ? ("edit-rule" as const) : ("final-review" as const);
+
       const chipOptions = row.entries.map((entry, idx) => {
         const chipId = `${row.name}-${idx}`;
         const readOnly: TemplateChipDetail = {
@@ -143,6 +174,7 @@ export function FinalReviewScreen() {
       return {
         name: row.name,
         chipOptions,
+        addButton: effectiveGroupKey != null,
         onChipClick: (_categoryName: string, chipId: string) => {
           const hit = lookup.get(chipId);
           if (!hit) return;
@@ -153,15 +185,25 @@ export function FinalReviewScreen() {
             setActiveReadOnlyDetail(hit.readOnly);
           }
         },
+        onAddClick:
+          effectiveGroupKey != null
+            ? () => {
+                markCreateFlowInteraction();
+                goToStep(createFlowStepForFacetGroup(effectiveGroupKey), {
+                  reviewReturn,
+                });
+              }
+            : undefined,
       };
     });
-    return { categories: cats, chipLookup: lookup };
+    return { categories: cats };
   }, [
     m.create.reviewAndComplete.finalReview.categories,
     state,
     markCreateFlowInteraction,
+    goToStep,
+    variant,
   ]);
-  void chipLookup;
 
   const ruleCardTitle = useMemo(() => {
     const raw = typeof state.title === "string" ? state.title.trim() : "";
@@ -170,8 +212,7 @@ export function FinalReviewScreen() {
 
   /**
    * Match {@link CommunityReviewScreen}: the card body is the free-text
-   * `community-context` field only — not `summary` (template / one-line
-   * rule summary can carry template-review copy).
+   * `community-context` field only — not `summary`.
    */
   const ruleCardDescription = useMemo(() => {
     const raw =
@@ -181,14 +222,37 @@ export function FinalReviewScreen() {
     return raw.length > 0 ? raw : undefined;
   }, [state.communityContext]);
 
+  const rawCommunityContextForModal =
+    typeof state.communityContext === "string" ? state.communityContext : "";
+
+  const descriptionEmptyHint =
+    variant === "editPublished" ? t("communityContextEditModal.emptyHint") : undefined;
+
   return (
     <CreateFlowLockupCardStepShell
-      lockupTitle={t("title")}
-      lockupDescription={t("description")}
+      lockupTitle={
+        variant === "editPublished" ? t("editPublishedTitle") : t("title")
+      }
+      lockupDescription={
+        variant === "editPublished"
+          ? t("editPublishedDescription")
+          : t("description")
+      }
     >
       <Rule
         title={ruleCardTitle}
         description={ruleCardDescription}
+        onDescriptionClick={
+          variant === "editPublished"
+            ? () => setCommunityContextModalOpen(true)
+            : undefined
+        }
+        descriptionEmptyHint={descriptionEmptyHint}
+        descriptionEditAriaLabel={
+          variant === "editPublished"
+            ? t("communityContextEditModal.ariaEditDescription")
+            : undefined
+        }
         size={mdUp ? "L" : "M"}
         expanded={true}
         backgroundColor="bg-[#c9fef9]"
@@ -204,12 +268,26 @@ export function FinalReviewScreen() {
         target={activeEditTarget}
         state={state}
         onSave={handleSave}
+        replaceState={replaceState}
+        onInteract={markCreateFlowInteraction}
+        onEditTargetChange={setActiveEditTarget}
       />
       <TemplateChipDetailModal
         isOpen={activeReadOnlyDetail !== null}
         onClose={() => setActiveReadOnlyDetail(null)}
         detail={activeReadOnlyDetail}
       />
+      {variant === "editPublished" ? (
+        <FinalReviewCommunityContextEditModal
+          isOpen={communityContextModalOpen}
+          onClose={() => setCommunityContextModalOpen(false)}
+          initialValue={rawCommunityContextForModal}
+          onSave={(value) => {
+            markCreateFlowInteraction();
+            updateState({ communityContext: value, summary: value });
+          }}
+        />
+      ) : null}
     </CreateFlowLockupCardStepShell>
   );
 }

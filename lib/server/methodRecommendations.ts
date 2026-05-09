@@ -169,3 +169,72 @@ export async function scoreTemplatesByFacets(args: {
     return null;
   }
 }
+
+/**
+ * Slugs that have at least one `TemplateFacet` row (Template Composition
+ * matrix, cols G–Y) — use {@link scoreTemplatesByTemplateFacets} for these;
+ * others use {@link scoreTemplatesByFacets}.
+ */
+export async function getTemplateFacetSlugSet(): Promise<Set<string> | null> {
+  if (!isDatabaseConfigured()) return null;
+  try {
+    const rows = await prisma.templateFacet.findMany({
+      where: { matches: true },
+      distinct: ["templateSlug"],
+      select: { templateSlug: true },
+    });
+    return new Set(rows.map((r) => r.templateSlug));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Per-template score from the `TemplateFacet` table: one point per
+ * user-requested `(group, value)` that exists for that `templateSlug`.
+ * Same counting semantics as the pre-DB matrix JSON path.
+ */
+export async function scoreTemplatesByTemplateFacets(args: {
+  templateSlugs: ReadonlyArray<string>;
+  facets: RequestedFacets;
+}): Promise<TemplateRanking[] | null> {
+  if (!isDatabaseConfigured()) return null;
+  const requested = flattenRequestedFacets(args.facets);
+  if (requested.length === 0) {
+    return args.templateSlugs.map((templateSlug) => ({
+      templateSlug,
+      score: 0,
+      matchedFacets: [] as string[],
+    }));
+  }
+  if (args.templateSlugs.length === 0) {
+    return [];
+  }
+
+  try {
+    const rows = await prisma.templateFacet.findMany({
+      where: {
+        matches: true,
+        templateSlug: { in: [...args.templateSlugs] },
+        OR: requested.map(({ group, value }) => ({ group, value })),
+      },
+      select: { templateSlug: true, group: true, value: true },
+    });
+
+    const pairSet = new Set(
+      rows.map((r) => `${r.templateSlug}\0${r.group}\0${r.value}` as const),
+    );
+
+    return args.templateSlugs.map((templateSlug) => {
+      const matched: string[] = [];
+      for (const { group, value } of requested) {
+        if (pairSet.has(`${templateSlug}\0${group}\0${value}`)) {
+          matched.push(`${group}:${value}`);
+        }
+      }
+      return { templateSlug, score: matched.length, matchedFacets: matched };
+    });
+  } catch {
+    return null;
+  }
+}

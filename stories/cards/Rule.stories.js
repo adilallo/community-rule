@@ -37,6 +37,11 @@ export default {
       control: { type: "boolean" },
       description: "Whether the card is in expanded state",
     },
+    recommended: {
+      control: { type: "boolean" },
+      description:
+        "When true and collapsed, show RECOMMENDED tag above the title (templates grid)",
+    },
     size: {
       control: { type: "select" },
       options: ["XS", "S", "M", "L", "xs", "s", "m", "l"],
@@ -54,6 +59,7 @@ export const Default = {
       "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
     backgroundColor: "bg-[var(--color-surface-default-brand-lime)]",
     expanded: false,
+    recommended: false,
     size: "L",
     icon: (
       <Image
@@ -64,6 +70,18 @@ export const Default = {
         className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
       />
     ),
+  },
+};
+
+/** Figma `22142:898446` — compact `Card / Rule` with template recommendation tag. */
+export const CollapsedWithRecommended = {
+  args: {
+    ...Default.args,
+    title: "Do-ocracy",
+    description:
+      "Authority is granted to those doing the work. If you do the task, you decide how it gets done.",
+    backgroundColor: "bg-[var(--color-surface-invert-brand-royal)]",
+    recommended: true,
   },
 };
 

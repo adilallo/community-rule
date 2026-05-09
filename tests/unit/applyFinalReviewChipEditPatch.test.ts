@@ -124,4 +124,94 @@ describe("applyFinalReviewChipEditPatch", () => {
 
     expect(Object.keys(result)).toEqual(["conflictManagementDetailsById"]);
   });
+
+  it("merges customMethodCardFieldBlocksById when the patch carries field blocks", () => {
+    const state: CreateFlowState = {
+      customMethodCardFieldBlocksById: {
+        other: [
+          {
+            kind: "text",
+            id: "x",
+            blockTitle: "T",
+            placeholderText: "keep",
+          },
+        ],
+      },
+    };
+    const patch: FinalReviewChipEditPatch = {
+      groupKey: "communication",
+      overrideKey: "550e8400-e29b-41d4-a716-446655440000",
+      value: {
+        corePrinciple: "a",
+        logisticsAdmin: "b",
+        codeOfConduct: "c",
+      },
+      customMethodCardFieldBlocks: [
+        {
+          kind: "text",
+          id: "f1",
+          blockTitle: "Notes",
+          placeholderText: "edited",
+        },
+      ],
+    };
+
+    const result = applyFinalReviewChipEditPatch(state, patch);
+
+    expect(result.communicationMethodDetailsById).toEqual({
+      "550e8400-e29b-41d4-a716-446655440000": patch.value,
+    });
+    expect(result.customMethodCardFieldBlocksById).toEqual({
+      other: state.customMethodCardFieldBlocksById?.other,
+      "550e8400-e29b-41d4-a716-446655440000": patch.customMethodCardFieldBlocks,
+    });
+  });
+
+  it("merges customMethodCardMetaById when the patch carries methodCardMeta", () => {
+    const state: CreateFlowState = {
+      customMethodCardMetaById: {
+        signal: { label: "Signal", supportText: "Old" },
+      },
+    };
+    const patch: FinalReviewChipEditPatch = {
+      groupKey: "communication",
+      overrideKey: "signal",
+      value: {
+        corePrinciple: "p",
+        logisticsAdmin: "l",
+        codeOfConduct: "c",
+      },
+      methodCardMeta: { label: "Signal (edited)", supportText: "New sub" },
+    };
+
+    const result = applyFinalReviewChipEditPatch(state, patch);
+
+    expect(result.customMethodCardMetaById).toEqual({
+      signal: { label: "Signal (edited)", supportText: "New sub" },
+    });
+  });
+
+  it("updates coreValuesChipsSnapshot label when patch carries chipLabel", () => {
+    const state: CreateFlowState = {
+      coreValuesChipsSnapshot: [
+        { id: "1", label: "Accessibility", state: "selected" },
+      ],
+      coreValueDetailsByChipId: { "1": { meaning: "m", signals: "s" } },
+    };
+    const patch: FinalReviewChipEditPatch = {
+      groupKey: "coreValues",
+      overrideKey: "1",
+      value: { meaning: "m2", signals: "s2" },
+      chipLabel: "A11y renamed",
+    };
+
+    const result = applyFinalReviewChipEditPatch(state, patch);
+
+    expect(result.coreValuesChipsSnapshot).toEqual([
+      { id: "1", label: "A11y renamed", state: "selected" },
+    ]);
+    expect(result.coreValueDetailsByChipId).toEqual({
+      "1": { meaning: "m2", signals: "s2" },
+    });
+  });
 });

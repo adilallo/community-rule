@@ -31,9 +31,13 @@ export const FLOW_STEP_ORDER: readonly CreateFlowStep[] = [
 ] as const;
 
 /**
- * Valid step IDs for the create flow (for validation)
+ * Valid URL segments for `/create/[screenId]` (includes branch-only `edit-rule`).
+ * Linear order for navigation remains {@link FLOW_STEP_ORDER}.
  */
-export const VALID_STEPS: readonly CreateFlowStep[] = FLOW_STEP_ORDER;
+export const VALID_STEPS: readonly CreateFlowStep[] = [
+  ...FLOW_STEP_ORDER,
+  "edit-rule",
+] as const;
 
 /**
  * First step in the flow (entry point)
@@ -114,6 +118,26 @@ export function getStepIndex(step: CreateFlowStep | null | undefined): number {
 }
 
 /**
+ * Steps where below `lg` the main column scrolls with split layout
+ * (`CreateFlowLayoutClient` — Linear CR-92 §4).
+ */
+export const CREATE_FLOW_SELECT_SPLIT_SCROLL_STEPS: readonly CreateFlowStep[] = [
+  "community-size",
+  "community-structure",
+  "core-values",
+  "decision-approaches",
+] as const;
+
+export function createFlowStepUsesSelectSplitScroll(
+  step: CreateFlowStep | null | undefined,
+): boolean {
+  if (!step) return false;
+  return (CREATE_FLOW_SELECT_SPLIT_SCROLL_STEPS as readonly string[]).includes(
+    step,
+  );
+}
+
+/**
  * Whether the given string is a valid create flow step
  */
 export function isValidStep(
@@ -148,6 +172,32 @@ export function parseCreateFlowScreenFromPathname(
 /** Same query as `/templates?fromFlow=1` — template was picked after `/create/review`. */
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY = "fromFlow" as const;
 export const TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE = "1" as const;
+
+/**
+ * Only set from `/create/review` “Create from template” with `fromFlow=1`.
+ * Enables facet-ranked `GET /api/templates` + “RECOMMENDED” on the grid; omit
+ * on profile and marketing so stale localStorage facets never show badges.
+ */
+export const TEMPLATES_FACET_RECOMMEND_QUERY = "recommendTemplates" as const;
+export const TEMPLATES_FACET_RECOMMEND_VALUE = "1" as const;
+
+/** `/create/completed?celebrate=1` — post-finalize toast; set only after **initial** POST publish, not PATCH updates. */
+export const CREATE_FLOW_COMPLETED_CELEBRATE_QUERY = "celebrate" as const;
+export const CREATE_FLOW_COMPLETED_CELEBRATE_VALUE = "1" as const;
+
+/** `/create/{step}?reviewReturn=…` — set when opening a custom-rule step from final-review or edit-rule via + */
+export const CREATE_FLOW_REVIEW_RETURN_QUERY_KEY = "reviewReturn" as const;
+
+export type CreateFlowReviewReturnTarget = "final-review" | "edit-rule";
+
+export function parseReviewReturnSearchParam(
+  searchParams: { get: (name: string) => string | null } | null | undefined,
+): CreateFlowReviewReturnTarget | null {
+  if (!searchParams) return null;
+  const raw = searchParams.get(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+  if (raw === "final-review" || raw === "edit-rule") return raw;
+  return null;
+}
 
 /**
  * `/create/review-template/{slug}` with optional marker so chrome can send

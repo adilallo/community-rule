@@ -5,6 +5,9 @@
  * including step types, state management, and context interfaces.
  */
 
+import type { CustomMethodCardFieldBlock } from "../../../lib/create/customMethodCardFieldBlocks";
+import type { MethodFacetApiSectionId } from "../../../lib/create/customRuleFacets";
+
 /**
  * Valid step IDs for the create rule flow (URL segment after `/create/`).
  * Create Community order matches Figma; `review` closes that stage per design.
@@ -25,6 +28,8 @@ export type CreateFlowStep =
   | "conflict-management"
   | "confirm-stakeholders"
   | "final-review"
+  /** Branch-only URL: same UI as final-review; editing an already-published rule from completed. */
+  | "edit-rule"
   | "completed";
 
 /** String keys used by generic text-field steps for `CreateFlowState`. */
@@ -33,6 +38,12 @@ export type CreateFlowTextStateField =
   | "summary"
   | "communityContext"
   | "communitySaveEmail";
+
+/**
+ * Facet-backed method card stacks (`GET /api/create-flow/methods?section=`).
+ * Canonical ids: {@link METHOD_FACET_API_SECTION_IDS} in `lib/create/customRuleFacets.ts`.
+ */
+export type CreateFlowMethodCardFacetSection = MethodFacetApiSectionId;
 
 /**
  * Serialized chip row for `community-structure` (preset + custom labels).
@@ -97,6 +108,11 @@ export interface CreateFlowState {
   communityContext?: string;
   /** Email collected on the “Save your progress” step (Figma Flow — Text `20097:14948`). */
   communitySaveEmail?: string;
+  /**
+   * Public app path for the uploaded community image (e.g. `/api/uploads/{uuid}`).
+   * Set after successful `POST /api/uploads` with purpose `communityAvatar`.
+   */
+  communityAvatarUrl?: string;
   /** Selected chip ids from `community-size` (MultiSelect). */
   selectedCommunitySizeIds?: string[];
   /** Selected chip ids from `community-structure` (organization types). */
@@ -129,6 +145,14 @@ export interface CreateFlowState {
   /** Create Custom — conflict management (`/create/conflict-management`); card ids from `create.customRule.conflictManagement` presets. */
   selectedConflictManagementIds?: string[];
   /**
+   * After **Confirm** on a method card step (`communication-methods`, etc.)
+   * with ≥1 selection, reorder UI with selected cards first until the pin is
+   * cleared by an empty selection (or resetting custom-rule state).
+   */
+  methodSectionsPinCommitted?: Partial<
+    Record<CreateFlowMethodCardFacetSection, boolean>
+  >;
+  /**
    * User edits from the `final-review` edit modal, keyed by preset method id
    * (e.g. `"signal"`). Merged onto preset defaults at publish time so the
    * stored rule reflects the author's customizations. Edits persist to the
@@ -144,6 +168,19 @@ export interface CreateFlowState {
     string,
     ConflictManagementDetailEntry
   >;
+  /**
+   * Labels for user-authored method cards (UUID ids) added via the custom-method-card wizard.
+   * Preset rows resolve from messages JSON; these entries supply title/support for publish + final-review.
+   */
+  customMethodCardMetaById?: Record<
+    string,
+    { label: string; supportText: string }
+  >;
+  /**
+   * Custom data-field templates authored in the custom-method-card wizard (step 3).
+   * Keyed by the same UUID as `customMethodCardMetaById` for that card.
+   */
+  customMethodCardFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>;
   /**
    * Set when a user picks a template (Customize or Use without changes) before
    * completing the community stage. The community-review screen consumes this
@@ -173,6 +210,11 @@ export interface CreateFlowState {
    * `confirm-stakeholders` can re-apply `?fromFlow=1` on the template URL.
    */
   templateReviewEntryFromCreateFlow?: boolean;
+  /**
+   * When set, **Finalize** and signed-in **Save & Exit** update this published
+   * rule (PATCH) instead of POSTing a new rule or only saving a draft.
+   */
+  editingPublishedRuleId?: string;
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];
@@ -190,8 +232,15 @@ export interface CreateFlowContextValue {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
   updateState: (_updates: Partial<CreateFlowState>) => void;
-  /** Replace entire flow state (e.g. hydrate from server draft). */
-  replaceState: (_next: CreateFlowState) => void;
+  /**
+   * Replace entire flow state (e.g. hydrate from server draft), or compute the
+   * next state from the previous snapshot (atomic read-modify-write).
+   */
+  replaceState: (
+    _next:
+      | CreateFlowState
+      | ((_prev: CreateFlowState) => CreateFlowState),
+  ) => void;
   /** Reset flow state and clear anonymous localStorage draft keys when present. */
   clearState: () => void;
   /**
@@ -202,6 +251,14 @@ export interface CreateFlowContextValue {
    * after a prior "Customize template" prefill.
    */
   resetCustomRuleSelections: () => void;
+  /**
+   * Mark whether a facet method stack should pin the author’s selections to
+   * the head of expanded + compact order (set from the footer Confirm).
+   */
+  setMethodSectionsPinCommitted: (
+    section: CreateFlowMethodCardFacetSection,
+    committed: boolean,
+  ) => void;
   /**
    * True after the user has edited any control inside the wizard. Screens flip
    * it via {@link markCreateFlowInteraction} from their event handlers.

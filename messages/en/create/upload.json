@@ -1,4 +1,9 @@
 {
-  "title": "How should conflicts be resolved?",
-  "description": "Upload supporting materials or examples that help describe how your community handles conflict."
+  "errors": {
+    "generic": "Something went wrong while uploading. Try again.",
+    "tooLarge": "That file is too large. Try a smaller image or PDF.",
+    "unauthorized": "Sign in to upload files. Use Save progress if you started without an account.",
+    "misconfigured": "Uploads are not available on this server yet."
+  },
+  "uploading": "Uploading…"
 }

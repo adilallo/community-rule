@@ -1,3 +1,5 @@
+import ListItem from "../../layout/ListItem";
+import Popover from "../Popover";
 import { getAssetPath } from "../../../../lib/assetUtils";
 import type { ModalHeaderProps } from "./ModalHeader.types";
 
@@ -9,8 +11,18 @@ export function ModalHeaderView({
   onMoreOptions,
   showCloseButton = true,
   showMoreOptionsButton = true,
+  closeButtonAriaLabel = "Close dialog",
+  moreOptionsAriaLabel = "More options",
+  menuAriaLabel = "More options menu",
+  menuItems = [],
+  menuId,
+  menuOpen = false,
+  onToggleMenu,
+  onMenuItemClick,
   className = "",
 }: ModalHeaderProps) {
+  const hasMenu = menuItems.length > 0;
+
   return (
     <div
       className={`border-b border-[var(--color-border-default-secondary)] h-[48px] shrink-0 sticky top-0 bg-[var(--color-surface-default-primary)] z-[2] ${className}`}
@@ -21,7 +33,7 @@ export function ModalHeaderView({
           type="button"
           onClick={onClose}
           className={`${iconButtonClass} left-[24px] top-[12px]`}
-          aria-label="Close dialog"
+          aria-label={closeButtonAriaLabel}
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
           <img
@@ -39,9 +51,12 @@ export function ModalHeaderView({
       {showMoreOptionsButton && (
         <button
           type="button"
-          onClick={onMoreOptions}
+          onClick={hasMenu ? onToggleMenu : onMoreOptions}
           className={`${iconButtonClass} right-[24px] top-[12px]`}
-          aria-label="More options"
+          aria-label={moreOptionsAriaLabel}
+          aria-haspopup={hasMenu ? "menu" : undefined}
+          aria-expanded={hasMenu ? menuOpen : undefined}
+          aria-controls={hasMenu ? menuId : undefined}
         >
           <svg
             width="16"
@@ -56,6 +71,22 @@ export function ModalHeaderView({
           </svg>
         </button>
       )}
+      {showMoreOptionsButton && hasMenu && menuOpen ? (
+        <div className="absolute right-[24px] top-[44px] z-[300]">
+          <Popover id={menuId} menuAriaLabel={menuAriaLabel}>
+            {menuItems.map((item, index) => (
+              <ListItem
+                key={item.id}
+                showDivider={index < menuItems.length - 1}
+                leadingIcon={item.leadingIcon}
+                label={item.label}
+                variant={item.variant}
+                onClick={() => onMenuItemClick?.(item)}
+              />
+            ))}
+          </Popover>
+        </div>
+      ) : null}
     </div>
   );
 }

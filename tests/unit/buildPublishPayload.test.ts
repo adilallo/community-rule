@@ -4,6 +4,7 @@ import {
   parseDocumentSectionsForDisplay,
   parseSectionsFromCreateFlowState,
 } from "../../lib/create/buildPublishPayload";
+import { mergeCoreValueDetailWithPresets } from "../../lib/create/finalReviewChipPresets";
 import type { CreateFlowState } from "../../app/(app)/create/types";
 
 describe("buildPublishPayload", () => {
@@ -63,6 +64,17 @@ describe("buildPublishPayload", () => {
     });
   });
 
+  it("prefers communityContext over summary for the published summary field", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      summary: "One-liner or leftover",
+      communityContext: "  Full community context.  ",
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.summary).toBe("Full community context.");
+  });
+
   it("uses valid state.sections when present", () => {
     const sections: CreateFlowState["sections"] = [
       {
@@ -106,9 +118,15 @@ describe("buildPublishPayload", () => {
     });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
+    const preset2 = mergeCoreValueDetailWithPresets("2", "Beta", undefined);
     expect(r.document.coreValues).toEqual([
       { chipId: "1", label: "Alpha", meaning: "m1", signals: "s1" },
-      { chipId: "2", label: "Beta", meaning: "", signals: "" },
+      {
+        chipId: "2",
+        label: "Beta",
+        meaning: preset2.meaning,
+        signals: preset2.signals,
+      },
     ]);
   });
 });
@@ -119,6 +137,92 @@ describe("buildPublishPayload — methodSelections", () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.document.methodSelections).toBeUndefined();
+  });
+
+  it("derives methodSelections from template sections when selected ids are empty", () => {
+    const r = buildPublishPayload({
+      title: "T",
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [{ title: "Slack", body: "" }],
+        },
+      ],
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | {
+          communication?: Array<{
+            id: string;
+            sections: { corePrinciple: string };
+          }>;
+        }
+      | undefined;
+    expect(ms?.communication?.length).toBe(1);
+    expect(ms?.communication?.[0]?.id).toBe("slack");
+    const first = ms?.communication?.[0];
+    expect(first?.sections.corePrinciple.length).toBeGreaterThan(10);
+    const entries =
+      (r.document.sections as Array<{ entries: Array<{ blocks?: unknown[] }> }>)[0]
+        ?.entries;
+    expect(entries?.[0]?.blocks?.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("uses customMethodCardMetaById label when preset id is unknown", () => {
+    const customId = "00000000-0000-4000-8000-000000000002";
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: [customId],
+      customMethodCardMetaById: {
+        [customId]: { label: "Custom Comm", supportText: "More" },
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const ms = r.document.methodSelections as
+      | { communication?: Array<{ id: string; label: string }> }
+      | undefined;
+    expect(ms?.communication?.length).toBe(1);
+    expect(ms?.communication?.[0]?.id).toBe(customId);
+    expect(ms?.communication?.[0]?.label).toBe("Custom Comm");
+  });
+
+  it("embeds wizard field blocks in published Communication sections for custom UUID ids", () => {
+    const customId = "00000000-0000-4000-8000-000000000099";
+    const r = buildPublishPayload({
+      title: "T",
+      selectedCommunicationMethodIds: [customId],
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [{ title: "Template row", body: "placeholder" }],
+        },
+      ],
+      customMethodCardMetaById: {
+        [customId]: { label: "Wizard title", supportText: "" },
+      },
+      customMethodCardFieldBlocksById: {
+        [customId]: [
+          {
+            kind: "text",
+            id: "b1",
+            blockTitle: "Field A",
+            placeholderText: "User-authored body",
+          },
+        ],
+      },
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const secs = r.document.sections as Array<{
+      categoryName: string;
+      entries: Array<{ blocks?: Array<{ label: string; body: string }> }>;
+    }>;
+    const comm = secs.find((s) => s.categoryName === "Communication");
+    expect(comm?.entries[0]?.blocks).toEqual([
+      { label: "Field A", body: "User-authored body" },
+    ]);
   });
 
   it("emits preset-only sections when a method is selected without an override", () => {

@@ -7,15 +7,33 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
 import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
+import { useCompletedRuleShareExport } from "./hooks/useCompletedRuleShareExport";
 import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
 import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
-import { getNextStep, getStepIndex } from "./utils/flowSteps";
+import {
+  getNextStep,
+  getStepIndex,
+  parseReviewReturnSearchParam,
+  createFlowStepUsesSelectSplitScroll,
+  TEMPLATES_FACET_RECOMMEND_QUERY,
+  TEMPLATES_FACET_RECOMMEND_VALUE,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY,
+  TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE,
+} from "./utils/flowSteps";
+import {
+  CREATE_FLOW_SYNC_DRAFT_QUERY,
+  CREATE_FLOW_SYNC_DRAFT_VALUE,
+  CREATE_ROUTES,
+  createFlowStepPath,
+  createFlowStepPathAfterStrippingReviewReturn,
+  createFlowStepPathWithSyncDraft,
+} from "./utils/createFlowPaths";
 import { getProportionBarProgressForCreateFlowStep } from "./utils/createFlowProportionProgress";
 import {
   createFlowStepUsesCenteredTextLayout,
@@ -32,7 +50,14 @@ import {
   clearAnonymousCreateFlowStorage,
   setTransferPendingFlag,
 } from "./utils/anonymousDraftStorage";
-import { deleteServerDraft } from "../../../lib/create/api";
+import {
+  createFlowStateFromPublishedRule,
+  isPublishedRuleHydratePatchIncomplete,
+  methodSectionsPinsFromPublishedHydratePatch,
+} from "../../../lib/create/publishedDocumentToCreateFlowState";
+import { METHOD_FACET_API_SECTION_IDS } from "../../../lib/create/customRuleFacets";
+import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
+import { runCompletedStepExit } from "./utils/runCompletedStepExit";
 import messages from "../../../messages/en/index";
 import {
   CREATE_FLOW_FOOTER_BUTTON_CLASS,
@@ -40,6 +65,7 @@ import {
 } from "./utils/createFlowFooterClassNames";
 import {
   CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP,
+  methodCardFacetSectionForConfirmStep,
   type CustomRuleConfirmFooterStep,
 } from "./utils/customRuleConfirmFooterSteps";
 import { getDefaultFooterLabel } from "./utils/createFlowFooterLabels";
@@ -47,7 +73,9 @@ import { useAuthModal } from "../../contexts/AuthModalContext";
 import { useMessages, useTranslation } from "../../contexts/MessagesContext";
 import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
+import { CreateFlowPendingAvatarFlush } from "./components/CreateFlowPendingAvatarFlush";
 import Alert from "../../components/modals/Alert";
+import Share from "../../components/modals/Share";
 import {
   CreateFlowDraftSaveBannerProvider,
   useCreateFlowDraftSaveBanner,
@@ -109,6 +137,8 @@ function CreateFlowLayoutContent({
   const tLogin = useTranslation("pages.login");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const reviewReturnTarget = parseReviewReturnSearchParam(searchParams);
   const { openLogin } = useAuthModal();
   const skipCommunitySave = sessionResolved && Boolean(sessionUser);
   const {
@@ -121,8 +151,14 @@ function CreateFlowLayoutContent({
   } = useCreateFlowNavigation(
     skipCommunitySave ? { skipCommunitySave: true } : undefined,
   );
-  const { state, clearState, updateState, resetCustomRuleSelections } =
-    useCreateFlow();
+  const {
+    state,
+    clearState,
+    updateState,
+    resetCustomRuleSelections,
+    setMethodSectionsPinCommitted,
+    replaceState,
+  } = useCreateFlow();
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
   const [communitySaveMagicLinkSubmitting, setCommunitySaveMagicLinkSubmitting] =
@@ -132,13 +168,55 @@ function CreateFlowLayoutContent({
   >(null);
   const [communitySaveMagicLinkSuccess, setCommunitySaveMagicLinkSuccess] =
     useState(false);
+  const [completedFlowBanner, setCompletedFlowBanner] = useState<{
+    key: string;
+    status: "positive" | "danger";
+    title: string;
+    description?: string;
+  } | null>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+
+  const {
+    copyPublishedRuleLink,
+    mailtoPublishedRule,
+    sharePublishedRuleViaSignal,
+    sharePublishedRuleViaSlack,
+    sharePublishedRuleViaDiscord,
+    onSelectExportFormat: onCompletedExportFormat,
+  } = useCompletedRuleShareExport({
+    setActionBanner: setCompletedFlowBanner,
+  });
+
+  const handleOpenCompletedShareModal = () => {
+    if (!readLastPublishedRule()) {
+      setCompletedFlowBanner({
+        key: "completedShareNoRule",
+        status: "danger",
+        title: create.reviewAndComplete.completed.shareNoRuleTitle,
+        description: create.reviewAndComplete.completed.shareNoRuleDescription,
+      });
+      return;
+    }
+    setShareModalOpen(true);
+  };
+
+  const loginReturnPath =
+    currentStep === "edit-rule"
+      ? createFlowStepPathWithSyncDraft("edit-rule")
+      : createFlowStepPathWithSyncDraft("final-review");
 
   const {
     publishBannerMessage,
     setPublishBannerMessage,
     isPublishing,
     finalize: handleFinalize,
-  } = useCreateFlowFinalize({ state, router, openLogin });
+  } = useCreateFlowFinalize({
+    state,
+    router,
+    openLogin,
+    updateState,
+    loginReturnPath,
+  });
 
   const {
     isTemplateReviewRoute,
@@ -152,7 +230,7 @@ function CreateFlowLayoutContent({
     pathname,
     state,
     updateState,
-    resetCustomRuleSelections,
+    replaceState,
     router,
   });
 
@@ -174,12 +252,11 @@ function CreateFlowLayoutContent({
     // For signed-in users we also DELETE the server draft so a future visit to
     // /create starts fresh instead of rehydrating yesterday's work.
     if (currentStep === "completed") {
-      clearState();
-      clearAnonymousCreateFlowStorage();
-      if (sessionUser) {
-        void deleteServerDraft();
-      }
-      router.push("/");
+      runCompletedStepExit({
+        clearState,
+        clearAnonymousCreateFlowStorage,
+        router,
+      });
       return;
     }
 
@@ -193,7 +270,7 @@ function CreateFlowLayoutContent({
         variant: "saveProgress",
         nextPath:
           returnToTemplateReview ??
-          `${pathname ?? "/create"}?syncDraft=1`,
+          `${pathname != null && pathname.length > 0 ? pathname : CREATE_ROUTES.createRoot}?${CREATE_FLOW_SYNC_DRAFT_QUERY}=${CREATE_FLOW_SYNC_DRAFT_VALUE}`,
         backdropVariant: "blurredYellow",
       });
       return;
@@ -209,7 +286,7 @@ function CreateFlowLayoutContent({
       sessionUser &&
       currentStep === "community-save"
     ) {
-      router.replace("/create/review");
+      router.replace(CREATE_ROUTES.review);
     }
   }, [sessionResolved, sessionUser, currentStep, router]);
 
@@ -218,6 +295,78 @@ function CreateFlowLayoutContent({
       setCommunitySaveMagicLinkError(null);
       setCommunitySaveMagicLinkSuccess(false);
       setCommunitySaveMagicLinkSubmitting(false);
+    }
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (currentStep !== "edit-rule") return;
+    const last = readLastPublishedRule();
+    if (!last) {
+      router.replace(CREATE_ROUTES.completed);
+      return;
+    }
+    const editingId = state.editingPublishedRuleId?.trim() ?? "";
+    if (editingId.length > 0 && editingId !== last.id) {
+      router.replace(CREATE_ROUTES.completed);
+      return;
+    }
+    const titleOk =
+      typeof state.title === "string" && state.title.trim().length > 0;
+    const sectionsClear = (state.sections?.length ?? 0) === 0;
+    const patch = createFlowStateFromPublishedRule(last);
+    const pinPatch = methodSectionsPinsFromPublishedHydratePatch(patch);
+    const needsPinMerge = METHOD_FACET_API_SECTION_IDS.some(
+      (key) =>
+        pinPatch[key] === true &&
+        state.methodSectionsPinCommitted?.[key] !== true,
+    );
+    /**
+     * Skip repeat merges once template `sections` are cleared **and** published
+     * facet selections are present. Without the selection check, TopNav **Edit**
+     * (`sections: []` before navigate) matched only `sectionsClear` and skipped
+     * the merge — method-card steps saw empty `selected*Ids` until a confirm.
+     *
+     * Still merge {@link methodSectionsPinsFromPublishedHydratePatch}: selections
+     * may already match draft state while compact CardStack pins stayed false
+     * (pins are normally set only on facet **Confirm**).
+     */
+    if (
+      titleOk &&
+      editingId === last.id &&
+      sectionsClear &&
+      !isPublishedRuleHydratePatchIncomplete(state, patch)
+    ) {
+      if (needsPinMerge) {
+        updateState({
+          methodSectionsPinCommitted: {
+            ...state.methodSectionsPinCommitted,
+            ...pinPatch,
+          },
+        });
+      }
+      return;
+    }
+    updateState({
+      ...patch,
+      methodSectionsPinCommitted: {
+        ...state.methodSectionsPinCommitted,
+        ...pinPatch,
+      },
+    });
+  }, [
+    currentStep,
+    router,
+    updateState,
+    state.editingPublishedRuleId,
+    state.title,
+    state.methodSectionsPinCommitted,
+    state.sections?.length,
+    state.customMethodCardMetaById,
+  ]);
+
+  useEffect(() => {
+    if (currentStep !== "completed") {
+      setCompletedFlowBanner(null);
     }
   }, [currentStep]);
 
@@ -260,14 +409,13 @@ function CreateFlowLayoutContent({
 
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "decision-approaches";
-  const isFinalReviewStep = currentStep === "final-review";
+  const isFinalReviewLike =
+    currentStep === "final-review" || currentStep === "edit-rule";
   const isCardLayoutStep = createFlowStepUsesCardLayout(currentStep);
   /** Two-column select / right-rail: below `lg` main scrolls; at `lg+` only the right column scrolls. */
-  const isSelectSplitScrollStep =
-    currentStep === "community-size" ||
-    currentStep === "community-structure" ||
-    currentStep === "core-values" ||
-    currentStep === "decision-approaches";
+  const isSelectSplitScrollStep = createFlowStepUsesSelectSplitScroll(
+    currentStep,
+  );
   const stepIdx = currentStep != null ? getStepIndex(currentStep) : -1;
 
   /** At `md+`, main cross-axis: center by default; exceptions stay top-aligned (see product spec). */
@@ -275,7 +423,7 @@ function CreateFlowLayoutContent({
     ? "items-stretch overflow-y-auto md:overflow-hidden"
     : isSelectSplitScrollStep
       ? "items-start justify-start overflow-y-auto max-lg:overflow-y-auto lg:min-h-0 lg:items-stretch lg:overflow-hidden"
-      : isFinalReviewStep || isCardLayoutStep || isTemplateReviewRoute
+      : isFinalReviewLike || isCardLayoutStep || isTemplateReviewRoute
         ? "items-start justify-center overflow-y-auto"
         : "items-start justify-center overflow-y-auto md:items-center";
 
@@ -289,7 +437,8 @@ function CreateFlowLayoutContent({
     : "max-md:flex-col max-md:items-center";
   const mainResponsiveLayout = `${mainMaxMdCross} ${mainMaxMdJustify} md:flex-row md:justify-center`;
   const saveDraftOnExit =
-    Boolean(sessionUser) && stepIdx >= SAVE_EXIT_FROM_STEP_INDEX;
+    Boolean(sessionUser) &&
+    (stepIdx >= SAVE_EXIT_FROM_STEP_INDEX || currentStep === "edit-rule");
 
   const proportionBarProgress = getProportionBarProgressForCreateFlowStep(
     currentStep,
@@ -305,13 +454,16 @@ function CreateFlowLayoutContent({
     currentStep != null
       ? CUSTOM_RULE_CONFIRM_FOOTER_STEP_BY_STEP.get(currentStep)
       : undefined;
+  /** Method-card steps tolerate `reviewReturn={edit-rule}` when `edit-rule ∉ FLOW_STEP_ORDER` makes `nextStep` null. Core values stay gated on linear `nextStep`. */
+  const showCustomRuleFooterConfirm =
+    Boolean(customRuleConfirmFooter) &&
+    (nextStep != null ||
+      (reviewReturnTarget != null &&
+        methodCardFacetSectionForConfirmStep(customRuleConfirmFooter.step) !=
+          undefined));
 
   /**
-   * Top banner stack rendered above the main column when any of the
-   * shell-level statuses are active. Each entry maps to one `<Alert>`;
-   * we filter out empty messages so the wrapper only mounts when at
-   * least one banner is actually showing. Order here is the visual
-   * stacking order (top → bottom).
+   * Top banner stack above the main column; order is top → bottom.
    */
   const topBanners: Array<{
     key: string;
@@ -366,6 +518,15 @@ function CreateFlowLayoutContent({
           onClose: () => setCommunitySaveMagicLinkSuccess(false),
         }
       : null,
+    completedFlowBanner
+      ? {
+          key: `completedFlow-${completedFlowBanner.key}`,
+          status: completedFlowBanner.status,
+          title: completedFlowBanner.title,
+          description: completedFlowBanner.description,
+          onClose: () => setCompletedFlowBanner(null),
+        }
+      : null,
   ].filter((b): b is NonNullable<typeof b> => b !== null);
 
   return (
@@ -401,14 +562,43 @@ function CreateFlowLayoutContent({
       <Suspense fallback={null}>
         <PostLoginDraftTransfer sessionUser={sessionUser} />
       </Suspense>
+      <Suspense fallback={null}>
+        <CreateFlowPendingAvatarFlush
+          sessionUser={sessionUser}
+          sessionResolved={sessionResolved}
+        />
+      </Suspense>
+      <Share
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        onCopyLink={() => void copyPublishedRuleLink()}
+        onEmailShare={mailtoPublishedRule}
+        onSignalShare={() => void sharePublishedRuleViaSignal()}
+        onSlackShare={() => void sharePublishedRuleViaSlack()}
+        onDiscordShare={() => void sharePublishedRuleViaDiscord()}
+      />
       <CreateFlowTopNav
         hasShare={isCompletedStep}
         hasExport={isCompletedStep}
         hasEdit={isCompletedStep}
         saveDraftOnExit={saveDraftOnExit}
+        onShare={
+          isCompletedStep ? () => void handleOpenCompletedShareModal() : undefined
+        }
+        onSelectExportFormat={
+          isCompletedStep ? onCompletedExportFormat : undefined
+        }
         onEdit={
           isCompletedStep
-            ? () => router.push("/create/final-review")
+            ? () => {
+                const last = readLastPublishedRule();
+                if (!last) return;
+                updateState({
+                  editingPublishedRuleId: last.id,
+                  sections: [],
+                });
+                router.push(createFlowStepPath("edit-rule"));
+              }
             : undefined
         }
         onExit={(opts) => void handleExit(opts)}
@@ -425,7 +615,7 @@ function CreateFlowLayoutContent({
       {!isCompletedStep && (
         <CreateFlowFooter
           className="shrink-0"
-          progressBar={!isTemplateReviewRoute && !isFinalReviewStep}
+          progressBar={!isTemplateReviewRoute && !isFinalReviewLike}
           proportionBarProgress={proportionBarProgress}
           proportionBarVariant="segmented"
           secondButton={
@@ -533,13 +723,16 @@ function CreateFlowLayoutContent({
                     // detour. Direct entries to `/templates` (no marker) and
                     // home "Popular templates" clicks always start fresh by
                     // wiping anonymous draft storage at click time.
-                    router.push("/templates?fromFlow=1");
+                    router.push(
+                      `/templates?${TEMPLATE_REVIEW_FROM_CREATE_FLOW_QUERY}=${TEMPLATE_REVIEW_FROM_CREATE_FLOW_VALUE}&${TEMPLATES_FACET_RECOMMEND_QUERY}=${TEMPLATES_FACET_RECOMMEND_VALUE}`,
+                    );
                   }}
                 >
                   {footer.createFromTemplate}
                 </Button>
               </div>
-            ) : customRuleConfirmFooter && nextStep ? (
+            ) : showCustomRuleFooterConfirm &&
+              customRuleConfirmFooter ? (
               <Button
                 buttonType="filled"
                 palette="default"
@@ -550,12 +743,26 @@ function CreateFlowLayoutContent({
                 }
                 className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
+                  const cf = customRuleConfirmFooter;
+                  const facet = methodCardFacetSectionForConfirmStep(cf.step);
+                  if (facet != null && cf.selectionIds(state).length > 0) {
+                    setMethodSectionsPinCommitted(facet, true);
+                  }
+                  if (reviewReturnTarget) {
+                    router.push(
+                      createFlowStepPathAfterStrippingReviewReturn(
+                        reviewReturnTarget,
+                        searchParams,
+                      ),
+                    );
+                    return;
+                  }
                   goToNextStep();
                 }}
               >
                 {footer[customRuleConfirmFooter.footerMessageKey]}
               </Button>
-            ) : nextStep ? (
+            ) : nextStep || isFinalReviewLike ? (
               <Button
                 buttonType="filled"
                 palette="default"
@@ -563,14 +770,14 @@ function CreateFlowLayoutContent({
                 disabled={isPublishing}
                 className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
                 onClick={() => {
-                  if (currentStep === "final-review") {
+                  if (isFinalReviewLike) {
                     void handleFinalize();
                   } else {
                     goToNextStep();
                   }
                 }}
               >
-                {currentStep === "final-review"
+                {isFinalReviewLike
                   ? isPublishing
                     ? messages.create.reviewAndComplete.publish
                         .finalizeButtonPublishing
@@ -584,12 +791,21 @@ function CreateFlowLayoutContent({
               ? () =>
                   router.push(
                     templateReviewFooterBackToCreateReview
-                      ? "/create/review"
-                      : "/",
+                      ? CREATE_ROUTES.review
+                      : CREATE_ROUTES.root,
                   )
-              : previousStep
-                ? goToPreviousStep
-                : undefined
+              : reviewReturnTarget
+                ? () => {
+                    router.push(
+                      createFlowStepPathAfterStrippingReviewReturn(
+                        reviewReturnTarget,
+                        searchParams,
+                      ),
+                    );
+                  }
+                : previousStep
+                  ? goToPreviousStep
+                  : undefined
           }
         />
       )}

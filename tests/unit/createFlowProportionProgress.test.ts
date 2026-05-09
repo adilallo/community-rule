@@ -50,4 +50,8 @@ describe("getProportionBarProgressForCreateFlowStep", () => {
       getProportionBarProgressForCreateFlowStep("conflict-management"),
     ).toBe("3-0");
   });
+
+  it("uses 3-2 on edit-rule (same as final-review segment)", () => {
+    expect(getProportionBarProgressForCreateFlowStep("edit-rule")).toBe("3-2");
+  });
 });
