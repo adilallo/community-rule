@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 
 import type {
   CommunityRuleEntry,
+  CommunityRuleLabeledBlock,
   CommunityRuleSection,
 } from "../../app/components/type/CommunityRule/CommunityRule.types";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
@@ -23,20 +24,30 @@ export function exportFilenameBase(rule: StoredLastPublishedRule): string {
   return fromTitle.length > 0 ? fromTitle : `rule-${rule.id.slice(0, 8)}`;
 }
 
+function labeledBlockMedia(b: CommunityRuleLabeledBlock): {
+  img?: string;
+  file?: string;
+  bodyTrim: string;
+} {
+  const imgRaw = b.imageUrl?.trim();
+  const fileRaw = b.fileUrl?.trim();
+  return {
+    img: imgRaw && imgRaw.length > 0 ? imgRaw : undefined,
+    file: fileRaw && fileRaw.length > 0 ? fileRaw : undefined,
+    bodyTrim: b.body.trim(),
+  };
+}
+
 function entryToMarkdown(entry: CommunityRuleEntry): string {
   const lines: string[] = [`### ${entry.title}`, ""];
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
       lines.push(`#### ${b.label}`, "");
-      const img = b.imageUrl?.trim();
-      const file = b.fileUrl?.trim();
+      const { img, file, bodyTrim } = labeledBlockMedia(b);
       if (img) {
-        lines.push(
-          `![${b.body.trim() || b.label}](${img})`,
-          "",
-        );
+        lines.push(`![${bodyTrim || b.label}](${img})`, "");
       } else if (file) {
-        lines.push(`[${b.body.trim() || "file"}](${file})`, "");
+        lines.push(`[${bodyTrim || "file"}](${file})`, "");
       } else {
         lines.push(b.body, "");
       }
@@ -98,16 +109,14 @@ export function sectionsToCsv(
     for (const ent of sec.entries) {
       if (ent.blocks && ent.blocks.length > 0) {
         for (const b of ent.blocks) {
-          const img = b.imageUrl?.trim();
-          const file = b.fileUrl?.trim();
-          const content =
-            img != null && img.length > 0
-              ? b.body.trim().length > 0
-                ? `${b.body}\n${img}`
-                : img
-              : file != null && file.length > 0
-                ? `${b.body}\n${file}`
-                : b.body;
+          const { img, file, bodyTrim } = labeledBlockMedia(b);
+          const content = img
+            ? bodyTrim.length > 0
+              ? `${b.body}\n${img}`
+              : img
+            : file
+              ? `${b.body}\n${file}`
+              : b.body;
           rows.push([sec.categoryName, ent.title, b.label, content]);
         }
       } else {
@@ -158,15 +167,14 @@ function entryToPrintHtml(entry: CommunityRuleEntry): string {
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
       inner += `<h4 class="block-label">${escapeHtml(b.label)}</h4>`;
-      const img = b.imageUrl?.trim();
-      const file = b.fileUrl?.trim();
+      const { img, file, bodyTrim } = labeledBlockMedia(b);
       if (img) {
-        inner += `<p><img src="${escapeHtml(img)}" alt="${escapeHtml(b.body.trim() || b.label)}" /></p>`;
-        if (b.body.trim().length > 0) {
+        inner += `<p><img src="${escapeHtml(img)}" alt="${escapeHtml(bodyTrim || b.label)}" /></p>`;
+        if (bodyTrim.length > 0) {
           inner += paragraphsHtml(b.body);
         }
       } else if (file) {
-        inner += `<p><a href="${escapeHtml(file)}">${escapeHtml(b.body.trim() || file)}</a></p>`;
+        inner += `<p><a href="${escapeHtml(file)}">${escapeHtml(bodyTrim || file)}</a></p>`;
       } else {
         inner += paragraphsHtml(b.body);
       }

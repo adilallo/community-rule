@@ -16,6 +16,7 @@ export function wizardUploadDisplaysAsImage(
   if (assetUrl && /\.(jpe?g|png|gif|webp)(\?|#|$)/i.test(assetUrl)) return true;
   return false;
 }
+
 /**
  * Serialize wizard-authored field blocks into Community Rule labeled rows for
  * read-only surfaces (completed step, exported views). Matches how those blocks
