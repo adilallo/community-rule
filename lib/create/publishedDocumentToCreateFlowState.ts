@@ -8,6 +8,38 @@ import {
 } from "./customRuleFacets";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
+import { methodLabelFor } from "./finalReviewChipPresets";
+import type { TemplateFacetGroupKey } from "./templateReviewMapping";
+
+function customMethodCardMetaFromPublishedSelections(
+  ms: PublishedMethodSelections,
+): CreateFlowState["customMethodCardMetaById"] | undefined {
+  const meta: NonNullable<CreateFlowState["customMethodCardMetaById"]> = {};
+  const absorb = (
+    groupKey: TemplateFacetGroupKey,
+    rows:
+      | Array<{
+          id: string;
+          label: string;
+        }>
+      | undefined,
+  ) => {
+    if (!rows) return;
+    for (const row of rows) {
+      const id = typeof row.id === "string" ? row.id.trim() : "";
+      if (!id) continue;
+      if (methodLabelFor(groupKey, id).length > 0) continue;
+      const label = typeof row.label === "string" ? row.label.trim() : "";
+      if (!label) continue;
+      meta[id] = { label, supportText: "" };
+    }
+  };
+  absorb("communication", ms.communication);
+  absorb("membership", ms.membership);
+  absorb("decisionApproaches", ms.decisionApproaches);
+  absorb("conflictManagement", ms.conflictManagement);
+  return Object.keys(meta).length > 0 ? meta : undefined;
+}
 
 /**
  * True when `patch` (from {@link createFlowStateFromPublishedRule}) expects
@@ -27,6 +59,26 @@ export function isPublishedRuleSelectionMissing(
     const actualRaw = state[k];
     const actual = Array.isArray(actualRaw) ? actualRaw : [];
     if (actual.length === 0) return true;
+  }
+  return false;
+}
+
+/**
+ * True when published-rule hydration should run (or continue) — facet ids still
+ * empty, or {@link createFlowStateFromPublishedRule} produced
+ * `customMethodCardMetaById` for user-authored method UUIDs that `state` does
+ * not have yet (final-review chips use meta + id when no preset label exists).
+ */
+export function isPublishedRuleHydratePatchIncomplete(
+  state: CreateFlowState,
+  patch: Partial<CreateFlowState>,
+): boolean {
+  if (isPublishedRuleSelectionMissing(state, patch)) return true;
+  const pm = patch.customMethodCardMetaById;
+  if (!pm || Object.keys(pm).length === 0) return false;
+  const sm = state.customMethodCardMetaById ?? {};
+  for (const key of Object.keys(pm)) {
+    if (!sm[key]) return true;
   }
   return false;
 }
@@ -169,6 +221,11 @@ export function createFlowStateFromPublishedRule(
     out.conflictManagementDetailsById = Object.fromEntries(
       ms.conflictManagement.map((x) => [x.id, x.sections]),
     );
+  }
+
+  const customMeta = customMethodCardMetaFromPublishedSelections(ms);
+  if (customMeta) {
+    out.customMethodCardMetaById = customMeta;
   }
 
   /** Drop template `sections` so final-review uses `methodSelections` / selected ids (edit path). */

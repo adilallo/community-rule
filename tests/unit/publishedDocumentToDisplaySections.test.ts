@@ -116,4 +116,96 @@ describe("parsePublishedDocumentForCommunityRuleDisplay", () => {
       doc.sections,
     );
   });
+
+  it("replaces stale document.sections method category with full methodSelections (custom rules)", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000001";
+    const doc = {
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [
+            {
+              title: "Slack",
+              body: "Only template row; custom card missing from sections.",
+            },
+          ],
+        },
+      ],
+      methodSelections: {
+        communication: [
+          {
+            id: "slack",
+            label: "Slack",
+            sections: {
+              corePrinciple: "Slack principle",
+              logisticsAdmin: "Slack logistics",
+              codeOfConduct: "Slack conduct",
+            },
+          },
+          {
+            id: customId,
+            label: "My custom comms",
+            sections: {
+              corePrinciple: "Custom principle",
+              logisticsAdmin: "",
+              codeOfConduct: "",
+            },
+          },
+        ],
+      },
+    };
+    const out = parsePublishedDocumentForCommunityRuleDisplay(doc);
+    const comm = out.find((s) => s.categoryName === "Communication");
+    expect(comm).toBeDefined();
+    expect(comm?.entries.map((e) => e.title)).toEqual([
+      "Slack",
+      "My custom comms",
+    ]);
+    expect(
+      comm?.entries.some(
+        (e) => e.title === "My custom comms" && e.blocks?.length,
+      ),
+    ).toBe(true);
+  });
+
+  it("includes wizard field blocks when methodSelections preset sections are empty (custom UUID)", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000001";
+    const doc = {
+      sections: [
+        {
+          categoryName: "Communication",
+          entries: [{ title: "Stale template row", body: "ignored after merge" }],
+        },
+      ],
+      methodSelections: {
+        communication: [
+          {
+            id: customId,
+            label: "Custom method title",
+            sections: {
+              corePrinciple: "",
+              logisticsAdmin: "",
+              codeOfConduct: "",
+            },
+          },
+        ],
+      },
+      customMethodCardFieldBlocksById: {
+        [customId]: [
+          {
+            kind: "text" as const,
+            id: "f1",
+            blockTitle: "Expectations",
+            placeholderText: "Answer stored only on field blocks.",
+          },
+        ],
+      },
+    };
+    const out = parsePublishedDocumentForCommunityRuleDisplay(doc);
+    const comm = out.find((s) => s.categoryName === "Communication");
+    expect(comm?.entries.map((e) => e.title)).toEqual(["Custom method title"]);
+    expect(comm?.entries[0]?.blocks).toEqual([
+      { label: "Expectations", body: "Answer stored only on field blocks." },
+    ]);
+  });
 });

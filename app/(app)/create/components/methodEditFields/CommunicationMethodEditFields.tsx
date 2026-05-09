@@ -15,6 +15,8 @@ import type { CommunicationMethodDetailEntry } from "../../types";
 export interface CommunicationMethodEditFieldsProps {
   value: CommunicationMethodDetailEntry;
   onChange: (_next: CommunicationMethodDetailEntry) => void;
+  /** When true, fields are not editable (view mode). */
+  readOnly?: boolean;
 }
 
 const FIELDS: ReadonlyArray<keyof CommunicationMethodDetailEntry> = [
@@ -26,6 +28,7 @@ const FIELDS: ReadonlyArray<keyof CommunicationMethodDetailEntry> = [
 function CommunicationMethodEditFieldsComponent({
   value,
   onChange,
+  readOnly = false,
 }: CommunicationMethodEditFieldsProps) {
   const m = useMessages();
   const t = m.create.customRule.communication;
@@ -49,6 +52,7 @@ function CommunicationMethodEditFieldsComponent({
           rows={6}
           value={value[field]}
           onChange={(v) => patch(field, v)}
+          disabled={readOnly}
         />
       ))}
     </div>

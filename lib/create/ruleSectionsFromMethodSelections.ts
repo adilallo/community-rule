@@ -4,7 +4,55 @@ import type {
   CommunityRuleSection,
 } from "../../app/components/type/CommunityRule/CommunityRule.types";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
+import type { CustomMethodCardFieldBlock } from "./customMethodCardFieldBlocks";
 import { templateCategoryToGroupKey } from "./templateReviewMapping";
+
+/**
+ * Serialize wizard-authored field blocks into Community Rule labeled rows for
+ * read-only surfaces (completed step, exported views). Matches how those blocks
+ * are edited in-app; `placeholderText` holds the author's answer for text blocks.
+ */
+export function labeledBlocksFromCustomMethodCardFieldBlocks(
+  blocks: CustomMethodCardFieldBlock[],
+): CommunityRuleLabeledBlock[] {
+  const out: CommunityRuleLabeledBlock[] = [];
+  for (const b of blocks) {
+    switch (b.kind) {
+      case "text": {
+        const body = nonEmptyTrimmed(b.placeholderText);
+        if (body) out.push({ label: b.blockTitle, body });
+        break;
+      }
+      case "badges": {
+        const opts = b.options.filter((x) => typeof x === "string" && x.trim().length > 0);
+        if (opts.length === 0) break;
+        out.push({ label: b.blockTitle, body: opts.join(", ") });
+        break;
+      }
+      case "upload": {
+        const name = nonEmptyTrimmed(b.fileName);
+        const url = nonEmptyTrimmed(b.assetUrl);
+        const body = name ?? url;
+        if (body) out.push({ label: b.blockTitle, body });
+        break;
+      }
+      case "proportion":
+        out.push({
+          label: b.blockTitle,
+          body: `${b.defaultPercent}%`,
+        });
+        break;
+      default:
+        break;
+    }
+  }
+  return out;
+}
+
+export type CommunityRuleEntryFromChipOptions = {
+  consensusLevelKey?: string;
+  customFieldBlocks?: CustomMethodCardFieldBlock[];
+};
 
 /** Canonical `categoryName` strings for method groups in published documents. */
 export const RULE_SECTION_CATEGORY = {
@@ -107,21 +155,35 @@ export function communityRuleEntryFromMethodChip(
   title: string,
   sections: Record<string, unknown>,
   labelByKey: Record<string, string>,
-  options?: { consensusLevelKey?: string },
+  options?: CommunityRuleEntryFromChipOptions,
 ): CommunityRuleEntry | null {
-  const blocks = blocksFromKeyedRecord(sections, labelByKey, options);
+  const presetBlocks = blocksFromKeyedRecord(
+    sections,
+    labelByKey,
+    options?.consensusLevelKey
+      ? { consensusLevelKey: options.consensusLevelKey }
+      : undefined,
+  );
+  const wizardBlocks =
+    options?.customFieldBlocks && options.customFieldBlocks.length > 0
+      ? labeledBlocksFromCustomMethodCardFieldBlocks(options.customFieldBlocks)
+      : [];
+  const blocks = [...presetBlocks, ...wizardBlocks];
   if (blocks.length === 0) return null;
   return { title, body: "", blocks };
 }
 
 export function sectionFromCommunication(
   ms: NonNullable<PublishedMethodSelections["communication"]>,
+  customFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>,
 ): CommunityRuleSection | null {
   if (ms.length === 0) return null;
   const entries: CommunityRuleEntry[] = [];
   for (const m of ms) {
     const sec = m.sections as unknown as Record<string, unknown>;
-    const e = communityRuleEntryFromMethodChip(m.label, sec, COMM_LABELS);
+    const e = communityRuleEntryFromMethodChip(m.label, sec, COMM_LABELS, {
+      customFieldBlocks: customFieldBlocksById?.[m.id],
+    });
     if (e) entries.push(e);
   }
   return entries.length > 0
@@ -131,12 +193,15 @@ export function sectionFromCommunication(
 
 export function sectionFromMembership(
   ms: NonNullable<PublishedMethodSelections["membership"]>,
+  customFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>,
 ): CommunityRuleSection | null {
   if (ms.length === 0) return null;
   const entries: CommunityRuleEntry[] = [];
   for (const m of ms) {
     const sec = m.sections as unknown as Record<string, unknown>;
-    const e = communityRuleEntryFromMethodChip(m.label, sec, MEM_LABELS);
+    const e = communityRuleEntryFromMethodChip(m.label, sec, MEM_LABELS, {
+      customFieldBlocks: customFieldBlocksById?.[m.id],
+    });
     if (e) entries.push(e);
   }
   return entries.length > 0
@@ -146,6 +211,7 @@ export function sectionFromMembership(
 
 export function sectionFromDecision(
   ms: NonNullable<PublishedMethodSelections["decisionApproaches"]>,
+  customFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>,
 ): CommunityRuleSection | null {
   if (ms.length === 0) return null;
   const entries: CommunityRuleEntry[] = [];
@@ -159,6 +225,7 @@ export function sectionFromDecision(
     delete merged.selectedApplicableScope;
     const e = communityRuleEntryFromMethodChip(m.label, merged, DEC_LABELS, {
       consensusLevelKey: "consensusLevel",
+      customFieldBlocks: customFieldBlocksById?.[m.id],
     });
     if (e) entries.push(e);
   }
@@ -169,6 +236,7 @@ export function sectionFromDecision(
 
 export function sectionFromConflict(
   ms: NonNullable<PublishedMethodSelections["conflictManagement"]>,
+  customFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>,
 ): CommunityRuleSection | null {
   if (ms.length === 0) return null;
   const entries: CommunityRuleEntry[] = [];
@@ -180,7 +248,9 @@ export function sectionFromConflict(
       formatScopePayload(sec.applicableScope);
     if (scope) merged.applicableScope = scope;
     delete merged.selectedApplicableScope;
-    const e = communityRuleEntryFromMethodChip(m.label, merged, CM_LABELS);
+    const e = communityRuleEntryFromMethodChip(m.label, merged, CM_LABELS, {
+      customFieldBlocks: customFieldBlocksById?.[m.id],
+    });
     if (e) entries.push(e);
   }
   return entries.length > 0
@@ -195,20 +265,21 @@ export function sectionFromConflict(
 export function replaceMethodSectionsWithMethodSelections(
   sections: CommunityRuleSection[],
   ms: PublishedMethodSelections,
+  customFieldBlocksById?: Record<string, CustomMethodCardFieldBlock[]>,
 ): CommunityRuleSection[] {
   return sections.map((s) => {
     const gk = templateCategoryToGroupKey(s.categoryName);
     if (gk === "communication" && ms.communication?.length) {
-      return sectionFromCommunication(ms.communication) ?? s;
+      return sectionFromCommunication(ms.communication, customFieldBlocksById) ?? s;
     }
     if (gk === "membership" && ms.membership?.length) {
-      return sectionFromMembership(ms.membership) ?? s;
+      return sectionFromMembership(ms.membership, customFieldBlocksById) ?? s;
     }
     if (gk === "decisionApproaches" && ms.decisionApproaches?.length) {
-      return sectionFromDecision(ms.decisionApproaches) ?? s;
+      return sectionFromDecision(ms.decisionApproaches, customFieldBlocksById) ?? s;
     }
     if (gk === "conflictManagement" && ms.conflictManagement?.length) {
-      return sectionFromConflict(ms.conflictManagement) ?? s;
+      return sectionFromConflict(ms.conflictManagement, customFieldBlocksById) ?? s;
     }
     return s;
   });

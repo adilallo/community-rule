@@ -13,6 +13,15 @@ export function mergePresetMethodsWithCustom<
   meta: Record<string, { label: string; supportText: string }> | undefined,
 ): T[] {
   const presetIds = new Set(presets.map((p) => p.id));
+  const presetRows = presets.map((p) => {
+    const row = meta?.[p.id];
+    if (!row) return p;
+    return {
+      ...p,
+      label: row.label,
+      supportText: row.supportText,
+    } as T;
+  });
   const customRows: T[] = [];
   const seenCustom = new Set<string>();
 
@@ -28,5 +37,5 @@ export function mergePresetMethodsWithCustom<
     } as T);
   }
 
-  return [...presets, ...customRows];
+  return [...presetRows, ...customRows];
 }

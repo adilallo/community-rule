@@ -181,7 +181,7 @@ describe("Create flow decision-approaches page", () => {
     expect(screen.getByText("SELECTED")).toBeInTheDocument();
   });
 
-  test("re-opening a selected approach shows Remove as the modal primary action", async () => {
+  test("re-opening a selected approach shows no modal primary; Remove is in the kebab", async () => {
     const user = userEvent.setup();
     render(<DecisionApproachesScreen />);
 
@@ -199,11 +199,17 @@ describe("Create flow decision-approaches page", () => {
     await user.click(card);
     const dialogAgain = screen.getByRole("dialog");
     expect(
-      within(dialogAgain).getByRole("button", { name: "Remove" }),
-    ).toBeInTheDocument();
+      within(dialogAgain).queryByRole("button", { name: "Remove" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(dialogAgain).queryByRole("button", { name: "Add Approach" }),
+    ).not.toBeInTheDocument();
+
+    await user.click(within(dialogAgain).getByRole("button", { name: "More options" }));
+    expect(screen.getByRole("menuitem", { name: "Remove" })).toBeInTheDocument();
   });
 
-  test("Remove in the modal deselects the approach", async () => {
+  test("Remove from the kebab deselects the approach", async () => {
     const user = userEvent.setup();
     render(<DecisionApproachesScreen />);
 
@@ -221,10 +227,35 @@ describe("Create flow decision-approaches page", () => {
 
     await user.click(card);
     await user.click(
-      within(screen.getByRole("dialog")).getByRole("button", { name: "Remove" }),
+      within(screen.getByRole("dialog")).getByRole("button", { name: "More options" }),
     );
+    await user.click(screen.getByRole("menuitem", { name: "Remove" }));
 
     expect(card).not.toHaveTextContent("SELECTED");
+  });
+
+  test("when editing a published rule, method modal kebab has no Duplicate", async () => {
+    const user = userEvent.setup();
+    render(
+      <DecisionApproachesScreenWithState
+        initial={{
+          editingPublishedRuleId: "published-rule-1",
+          selectedDecisionApproachIds: ["lazy-consensus"],
+        }}
+      />,
+    );
+
+    const card = screen.getByRole("button", {
+      name: /Lazy Consensus: A decision is assumed approved/,
+    });
+    await user.click(card);
+    const dialog = await screen.findByRole("dialog");
+    await user.click(
+      within(dialog).getByRole("button", { name: "More options" }),
+    );
+    expect(
+      screen.queryByRole("menuitem", { name: "Duplicate" }),
+    ).not.toBeInTheDocument();
   });
 
   test("message box checkboxes are interactive", async () => {

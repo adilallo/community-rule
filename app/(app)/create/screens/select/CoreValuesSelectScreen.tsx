@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import MultiSelect from "../../../../components/controls/MultiSelect";
 import type { ChipOption } from "../../../../components/controls/MultiSelect/MultiSelect.types";
 import Create from "../../../../components/modals/Create";
@@ -15,8 +15,23 @@ import type {
 import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import { CoreValueEditFields } from "../../components/methodEditFields";
+import MethodCardCustomizeModalHeader from "../../components/MethodCardCustomizeModalHeader";
+import { buildCustomRuleModalKebabMenu } from "../../components/customRuleModalKebabMenu";
+import {
+  captureMethodCardCustomizeSnapshot,
+  confirmDiscardMethodCardCustomizeSession,
+  isMethodCardCustomizeSessionDirty,
+  type MethodCardCustomizeSnapshot,
+  type MethodCardHeaderDraft,
+} from "../../../../../lib/create/methodCardCustomizeSession";
+import {
+  duplicateCoreValueChipInDraft,
+  MAX_SELECTED_CORE_VALUES,
+  removeCoreValueChipFromDraft,
+} from "../../../../../lib/create/coreValueChipFacet";
+import { omitIdFromStringRecord } from "../../../../../lib/create/duplicateMethodCardModalDraft";
 
-const MAX_CORE_VALUES = 5;
+const MAX_CORE_VALUES = MAX_SELECTED_CORE_VALUES;
 
 /**
  * Why three sessions, not two:
@@ -80,12 +95,18 @@ const EMPTY_DETAIL: CoreValueDetailEntry = { meaning: "", signals: "" };
 export function CoreValuesSelectScreen() {
   const m = useMessages();
   const cv = m.create.customRule.coreValues;
+  const modalKebabMenu = m.create.customRule.modalKebabMenu;
   const presets = useMemo(
     () => normalizeCoreValuePresets(cv.values as CoreValuePresetJson[]),
     [cv.values],
   );
 
-  const { markCreateFlowInteraction, updateState, state } = useCreateFlow();
+  const { markCreateFlowInteraction, updateState, replaceState, state } =
+    useCreateFlow();
+
+  const coreCustomizeSnapshotRef =
+    useRef<MethodCardCustomizeSnapshot<CoreValueDetailEntry> | null>(null);
+  const pendingEphemeralCoreDuplicateRef = useRef<string | null>(null);
 
   const [coreValueOptions, setCoreValueOptions] = useState<ChipOption[]>(() =>
     buildCoreValueChipOptionsFromDraft(
@@ -100,6 +121,9 @@ export function CoreValuesSelectScreen() {
   );
   const [modalSession, setModalSession] = useState<ModalSession | null>(null);
   const [draft, setDraft] = useState<CoreValueDetailEntry>(EMPTY_DETAIL);
+  const [modalEditUnlocked, setModalEditUnlocked] = useState(false);
+  const [customizeHeaderDraft, setCustomizeHeaderDraft] =
+    useState<MethodCardHeaderDraft | null>(null);
 
   useEffect(() => {
     setCoreValueOptions(
@@ -158,10 +182,18 @@ export function CoreValuesSelectScreen() {
   );
 
   const openModal = useCallback(
-    (chipId: string, session: ModalSession, valueLabel: string) => {
-      setDraft(getInitialTexts(chipId, valueLabel));
+    (
+      chipId: string,
+      session: ModalSession,
+      valueLabel: string,
+      seedDetail?: CoreValueDetailEntry,
+    ) => {
+      setDraft(seedDetail ?? getInitialTexts(chipId, valueLabel));
       setActiveModalChipId(chipId);
       setModalSession(session);
+      setModalEditUnlocked(false);
+      setCustomizeHeaderDraft(null);
+      coreCustomizeSnapshotRef.current = null;
       markCreateFlowInteraction();
     },
     [getInitialTexts, markCreateFlowInteraction],
@@ -175,46 +207,347 @@ export function CoreValuesSelectScreen() {
     [markCreateFlowInteraction],
   );
 
-  const handleModalDismiss = useCallback(() => {
-    if (activeModalChipId && modalSession === "pending") {
+  const resetCustomizeSession = useCallback(() => {
+    coreCustomizeSnapshotRef.current = null;
+    setModalEditUnlocked(false);
+    setCustomizeHeaderDraft(null);
+  }, []);
+
+  const finalizeModalDismiss = useCallback(() => {
+    pendingEphemeralCoreDuplicateRef.current = null;
+    resetCustomizeSession();
+    setActiveModalChipId(null);
+    setModalSession(null);
+  }, [resetCustomizeSession]);
+
+  const handleCustomize = useCallback(() => {
+    if (!activeModalChipId) return;
+    const chipLabelNow =
+      coreValueOptions.find((o) => o.id === activeModalChipId)?.label ?? "";
+    if (!chipLabelNow) return;
+    markCreateFlowInteraction();
+    const headerDraft: MethodCardHeaderDraft = {
+      title: chipLabelNow,
+      description: "",
+    };
+    coreCustomizeSnapshotRef.current = captureMethodCardCustomizeSnapshot(
+      draft,
+      null,
+      headerDraft,
+    );
+    setCustomizeHeaderDraft(headerDraft);
+    setModalEditUnlocked(true);
+  }, [activeModalChipId, coreValueOptions, draft, markCreateFlowInteraction]);
+
+  const handleCancelCustomize = useCallback(() => {
+    if (!modalEditUnlocked) return;
+    const snap = coreCustomizeSnapshotRef.current;
+    if (!snap) {
+      resetCustomizeSession();
+      return;
+    }
+    if (
+      isMethodCardCustomizeSessionDirty(snap, draft, null, customizeHeaderDraft) &&
+      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+    ) {
+      return;
+    }
+    setDraft(structuredClone(snap.pendingDraft));
+    resetCustomizeSession();
+  }, [
+    customizeHeaderDraft,
+    draft,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    resetCustomizeSession,
+  ]);
+
+  const syncLabelFromCustomizeHeaderToOptions = useCallback(() => {
+    if (!activeModalChipId || !customizeHeaderDraft) return coreValueOptions;
+    const trimmed = customizeHeaderDraft.title.trim();
+    if (!trimmed) return coreValueOptions;
+    return coreValueOptions.map((opt) =>
+      opt.id === activeModalChipId ? { ...opt, label: trimmed } : opt,
+    );
+  }, [activeModalChipId, customizeHeaderDraft, coreValueOptions]);
+
+  const handleDuplicateCoreChip = useCallback(() => {
+    if (!activeModalChipId || !modalSession) return;
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        coreCustomizeSnapshotRef.current,
+        draft,
+        null,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    markCreateFlowInteraction();
+    const priorEphemeral = pendingEphemeralCoreDuplicateRef.current;
+    let outcome: ReturnType<typeof duplicateCoreValueChipInDraft> | null = null;
+    replaceState((prev) => {
+      const base =
+        priorEphemeral != null
+          ? { ...prev, ...removeCoreValueChipFromDraft(prev, priorEphemeral) }
+          : prev;
+      const res = duplicateCoreValueChipInDraft(
+        base,
+        activeModalChipId,
+        modalKebabMenu.duplicateTitleSuffix,
+      );
+      if (!res) {
+        return base;
+      }
+      outcome = res;
+      return { ...base, ...res.patch };
+    });
+    if (!outcome) {
+      return;
+    }
+    resetCustomizeSession();
+    pendingEphemeralCoreDuplicateRef.current = outcome.newId;
+    openModal(
+      outcome.newId,
+      "editing",
+      outcome.newLabel,
+      structuredClone(draft),
+    );
+  }, [
+    activeModalChipId,
+    customizeHeaderDraft,
+    draft,
+    markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    modalKebabMenu.duplicateTitleSuffix,
+    modalSession,
+    openModal,
+    replaceState,
+    resetCustomizeSession,
+  ]);
+
+  const handleRemoveFromKebab = useCallback(() => {
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        coreCustomizeSnapshotRef.current,
+        draft,
+        null,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    markCreateFlowInteraction();
+
+    const ep = pendingEphemeralCoreDuplicateRef.current;
+    if (ep && activeModalChipId === ep) {
+      replaceState((prev) => ({
+        ...prev,
+        ...removeCoreValueChipFromDraft(prev, ep),
+      }));
+      finalizeModalDismiss();
+      return;
+    }
+
+    if (modalSession === "pending") {
       const next = coreValueOptions.map((opt) =>
         opt.id === activeModalChipId
           ? { ...opt, state: "unselected" as const }
           : opt,
       );
       persistCoreValues(next);
-    } else if (activeModalChipId && modalSession === "customPending") {
-      // Custom chip never confirmed via Add Value — drop it from both
-      // the local options and the create-flow draft so refresh / back
-      // navigation doesn't resurrect a phantom chip.
+    } else if (modalSession === "customPending") {
+      const next = coreValueOptions.filter((opt) => opt.id !== activeModalChipId);
+      persistCoreValues(next);
+    } else if (modalSession === "editing" && activeModalChipId) {
+      const nextFiltered = coreValueOptions.filter(
+        (opt) => opt.id !== activeModalChipId,
+      );
+      markCreateFlowInteraction();
+      replaceState((prev) => ({
+        ...prev,
+        selectedCoreValueIds: selectedIdsFromOptions(nextFiltered),
+        coreValuesChipsSnapshot:
+          chipOptionsToSnapshotRows(nextFiltered),
+        coreValueDetailsByChipId:
+          omitIdFromStringRecord(prev.coreValueDetailsByChipId, activeModalChipId),
+      }));
+      setCoreValueOptions(nextFiltered);
+    }
+    finalizeModalDismiss();
+  }, [
+    activeModalChipId,
+    coreValueOptions,
+    customizeHeaderDraft,
+    draft,
+    finalizeModalDismiss,
+    markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    modalSession,
+    persistCoreValues,
+    replaceState,
+    modalSession,
+    persistCoreValues,
+  ]);
+
+  const handleModalDismiss = useCallback(() => {
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        coreCustomizeSnapshotRef.current,
+        draft,
+        null,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+
+    const ep = pendingEphemeralCoreDuplicateRef.current;
+    if (ep) {
+      replaceState((prev) => ({
+        ...prev,
+        ...removeCoreValueChipFromDraft(prev, ep),
+      }));
+    }
+
+    if (modalSession === "pending" && activeModalChipId) {
+      const next = coreValueOptions.map((opt) =>
+        opt.id === activeModalChipId
+          ? { ...opt, state: "unselected" as const }
+          : opt,
+      );
+      persistCoreValues(next);
+    } else if (modalSession === "customPending" && activeModalChipId) {
       const next = coreValueOptions.filter(
         (opt) => opt.id !== activeModalChipId,
       );
       persistCoreValues(next);
     }
-    setActiveModalChipId(null);
-    setModalSession(null);
-  }, [activeModalChipId, modalSession, coreValueOptions, persistCoreValues]);
 
-  const handleModalConfirm = useCallback(() => {
-    if (!activeModalChipId) return;
-    markCreateFlowInteraction();
-    updateState({
-      coreValueDetailsByChipId: {
-        ...(state.coreValueDetailsByChipId ?? {}),
-        [activeModalChipId]: draft,
-      },
-    });
-    setActiveModalChipId(null);
-    setModalSession(null);
+    finalizeModalDismiss();
   }, [
     activeModalChipId,
+    coreValueOptions,
+    customizeHeaderDraft,
+    draft,
+    finalizeModalDismiss,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    modalSession,
+    persistCoreValues,
+    replaceState,
+  ]);
+
+  const coreCustomizeSaveDisabled = useMemo(() => {
+    if (!modalEditUnlocked) return false;
+    const snap = coreCustomizeSnapshotRef.current;
+    if (!snap) return true;
+    return !isMethodCardCustomizeSessionDirty(
+      snap,
+      draft,
+      null,
+      customizeHeaderDraft,
+    );
+  }, [customizeHeaderDraft, draft, modalEditUnlocked]);
+
+  const handleModalConfirm = useCallback(() => {
+    if (!activeModalChipId || !modalSession) return;
+
+    if (modalEditUnlocked && customizeHeaderDraft) {
+      if (coreCustomizeSaveDisabled) {
+        return;
+      }
+      markCreateFlowInteraction();
+      pendingEphemeralCoreDuplicateRef.current = null;
+      const nextOpts = syncLabelFromCustomizeHeaderToOptions();
+      persistCoreValues(nextOpts);
+      updateState({
+        coreValueDetailsByChipId: {
+          ...(state.coreValueDetailsByChipId ?? {}),
+          [activeModalChipId]: draft,
+        },
+      });
+      resetCustomizeSession();
+      return;
+    }
+
+    if (modalSession === "pending" || modalSession === "customPending") {
+      markCreateFlowInteraction();
+      pendingEphemeralCoreDuplicateRef.current = null;
+      updateState({
+        coreValueDetailsByChipId: {
+          ...(state.coreValueDetailsByChipId ?? {}),
+          [activeModalChipId]: draft,
+        },
+      });
+      resetCustomizeSession();
+      setActiveModalChipId(null);
+      setModalSession(null);
+    }
+  }, [
+    activeModalChipId,
+    coreCustomizeSaveDisabled,
+    customizeHeaderDraft,
     draft,
     markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalSession,
+    persistCoreValues,
+    resetCustomizeSession,
     state.coreValueDetailsByChipId,
+    syncLabelFromCustomizeHeaderToOptions,
     updateState,
   ]);
 
+  const modalChipLabel =
+    coreValueOptions.find((o) => o.id === activeModalChipId)?.label ?? "";
+
+  const modalFieldsLocked =
+    !modalEditUnlocked &&
+    Boolean(
+      modalSession === "pending" ||
+        modalSession === "customPending" ||
+        modalSession === "editing",
+    );
+
+  const showFooterPrimary =
+    modalEditUnlocked ||
+    modalSession === "pending" ||
+    modalSession === "customPending";
+
+  const kebabMenuItems = useMemo(() => {
+    if (!modalSession || !activeModalChipId) return [];
+    const selectedCount = coreValueOptions.filter(
+      (o) => o.state === "selected",
+    ).length;
+    return buildCustomRuleModalKebabMenu(modalKebabMenu, {
+      showCustomize: !modalEditUnlocked,
+      onCustomize: handleCustomize,
+      onDuplicate:
+        modalSession !== "editing" || selectedCount >= MAX_CORE_VALUES
+          ? undefined
+          : handleDuplicateCoreChip,
+      showRemove: true,
+      onRemove: handleRemoveFromKebab,
+    });
+  }, [
+    activeModalChipId,
+    coreValueOptions,
+    handleCustomize,
+    handleDuplicateCoreChip,
+    handleRemoveFromKebab,
+    modalEditUnlocked,
+    modalKebabMenu,
+    modalSession,
+  ]);
   const handleChipClick = (chipId: string) => {
     const target = coreValueOptions.find((o) => o.id === chipId);
     if (!target || target.state === "custom") return;
@@ -224,12 +557,7 @@ export function CoreValuesSelectScreen() {
     ).length;
 
     if (target.state === "selected") {
-      const next: ChipOption[] = coreValueOptions.map((opt) =>
-        opt.id === chipId
-          ? { ...opt, state: "unselected" as const }
-          : opt,
-      );
-      persistCoreValues(next);
+      openModal(chipId, "editing", target.label);
       return;
     }
 
@@ -295,9 +623,6 @@ export function CoreValuesSelectScreen() {
     },
   };
 
-  const modalChipLabel =
-    coreValueOptions.find((o) => o.id === activeModalChipId)?.label ?? "";
-
   const description = (
     <>
       <span className="leading-[1.3] text-[color:var(--color-content-default-tertiary,#b4b4b4)]">
@@ -348,22 +673,54 @@ export function CoreValuesSelectScreen() {
           onClose={handleModalDismiss}
           backdropVariant="blurredYellow"
           headerContent={
-            <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
-              <ContentLockup
-                title={modalChipLabel}
-                description={detailModal.subtitle}
-                variant="modal"
-                alignment="left"
+            modalEditUnlocked && customizeHeaderDraft ? (
+              <MethodCardCustomizeModalHeader
+                titleLabel={detailModal.customizeValueNameLabel}
+                descriptionLabel=""
+                titleValue={customizeHeaderDraft.title}
+                descriptionValue=""
+                onTitleChange={(title) =>
+                  setCustomizeHeaderDraft((prev) =>
+                    prev ? { ...prev, title } : null,
+                  )
+                }
+                onDescriptionChange={() => {}}
+                showDescription={false}
               />
-            </div>
+            ) : (
+              <div className="bg-[var(--color-surface-default-primary)] px-[24px] py-[12px] shrink-0">
+                <ContentLockup
+                  title={modalChipLabel}
+                  description={detailModal.subtitle}
+                  variant="modal"
+                  alignment="left"
+                />
+              </div>
+            )
           }
-          showBackButton={false}
-          showNextButton
+          showBackButton={modalEditUnlocked}
+          onBack={handleCancelCustomize}
+          backButtonText={modalKebabMenu.cancelCustomize}
+          showNextButton={showFooterPrimary}
+          nextButtonDisabled={
+            modalEditUnlocked && coreCustomizeSaveDisabled
+          }
           onNext={handleModalConfirm}
-          nextButtonText={detailModal.addValueButton}
+          nextButtonText={
+            modalEditUnlocked ? modalKebabMenu.saveEdits : detailModal.addValueButton
+          }
+          kebabTriggerAriaLabel={modalKebabMenu.triggerAriaLabel}
+          kebabMenuAriaLabel={modalKebabMenu.menuAriaLabel}
+          kebabMenuItems={
+            kebabMenuItems.length > 0 ? kebabMenuItems : undefined
+          }
           ariaLabel={modalChipLabel || "Core value details"}
         >
-          <CoreValueEditFields value={draft} onChange={handleDraftChange} />
+          <CoreValueEditFields
+            readOnly={modalFieldsLocked}
+            value={draft}
+            onChange={handleDraftChange}
+          />
         </Create>
       )}
     </CreateFlowTwoColumnSelectShell>

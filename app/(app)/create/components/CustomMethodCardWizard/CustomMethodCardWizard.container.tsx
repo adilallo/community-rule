@@ -8,6 +8,7 @@ import {
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 import { CUSTOM_METHOD_CARD_WIZARD_MAX_FIELD_CHARS } from "../../../../../lib/create/customMethodCardWizardConstants";
 import type { AddCustomFieldType } from "../../../../components/controls/AddCustomField/AddCustomField.types";
+import type { ModalHeaderMenuItem } from "../../../../components/modals/ModalHeader/ModalHeader.types";
 import { CustomMethodCardWizardView } from "./CustomMethodCardWizard.view";
 import type { CustomMethodCardWizardProps } from "./CustomMethodCardWizard.types";
 
@@ -21,6 +22,7 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
     const t = useTranslation("common");
     const tUpload = useTranslation("create.upload");
     const w = m.create.customRule.customMethodCardWizard;
+    const menuCopy = m.create.customRule.modalKebabMenu;
 
     const copy = useMemo(
       () => ({
@@ -228,6 +230,8 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
       dismiss();
     }, [dismiss, fieldTypeModal]);
 
+    const kebabMenuItems = useMemo<ModalHeaderMenuItem[]>(() => [], []);
+
     const handleBack = useCallback(() => {
       if (fieldTypeModal) {
         setFieldTypeModal(null);
@@ -416,6 +420,9 @@ const CustomMethodCardWizardContainer = memo<CustomMethodCardWizardProps>(
         stepper={!fieldTypeModal}
         draftFieldBlocks={draftFieldBlocks}
         onDraftFieldBlocksReorder={setDraftFieldBlocks}
+        kebabMoreOptionsAriaLabel={menuCopy.triggerAriaLabel}
+        kebabMenuAriaLabel={menuCopy.menuAriaLabel}
+        kebabMenuItems={kebabMenuItems}
       />
     );
   },

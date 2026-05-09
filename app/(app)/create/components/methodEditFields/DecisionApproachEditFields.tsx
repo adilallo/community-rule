@@ -17,6 +17,7 @@ import type { DecisionApproachDetailEntry } from "../../types";
 export interface DecisionApproachEditFieldsProps {
   value: DecisionApproachDetailEntry;
   onChange: (_next: DecisionApproachDetailEntry) => void;
+  readOnly?: boolean;
 }
 
 const CONSENSUS_LEVEL_MIN = 0;
@@ -26,6 +27,7 @@ const CONSENSUS_LEVEL_STEP = 5;
 function DecisionApproachEditFieldsComponent({
   value,
   onChange,
+  readOnly = false,
 }: DecisionApproachEditFieldsProps) {
   const m = useMessages();
   const t = m.create.customRule.decisionApproaches;
@@ -46,12 +48,14 @@ function DecisionApproachEditFieldsComponent({
         label={t.sectionHeadings.corePrinciple}
         value={value.corePrinciple}
         onChange={(v) => patch("corePrinciple", v)}
+        disabled={readOnly}
       />
       <ApplicableScopeField
         label={t.sectionHeadings.applicableScope}
         addLabel={t.scopeAddButtonLabel}
         scopes={value.applicableScope}
         selectedScopes={value.selectedApplicableScope}
+        readOnly={readOnly}
         onToggleScope={(scope) =>
           patch(
             "selectedApplicableScope",
@@ -68,6 +72,7 @@ function DecisionApproachEditFieldsComponent({
         label={t.sectionHeadings.stepByStepInstructions}
         value={value.stepByStepInstructions}
         onChange={(v) => patch("stepByStepInstructions", v)}
+        disabled={readOnly}
       />
       <IncrementerBlock
         label={t.sectionHeadings.consensusLevel}
@@ -79,11 +84,13 @@ function DecisionApproachEditFieldsComponent({
         formatValue={(v) => `${v}%`}
         decrementAriaLabel="Decrease consensus level"
         incrementAriaLabel="Increase consensus level"
+        disabled={readOnly}
       />
       <ModalTextAreaField
         label={t.sectionHeadings.objectionsDeadlocks}
         value={value.objectionsDeadlocks}
         onChange={(v) => patch("objectionsDeadlocks", v)}
+        disabled={readOnly}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import type { AddCustomFieldType } from "../../../../components/controls/AddCustomField/AddCustomField.types";
+import type { ModalHeaderMenuItem } from "../../../../components/modals/ModalHeader/ModalHeader.types";
 import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
 
 export interface CustomMethodCardWizardFieldBodiesCopy {
@@ -141,4 +142,7 @@ export interface CustomMethodCardWizardViewProps {
   onBack: () => void;
   onNext: () => void;
   stepper: boolean;
+  kebabMoreOptionsAriaLabel: string;
+  kebabMenuAriaLabel: string;
+  kebabMenuItems: ModalHeaderMenuItem[];
 }

@@ -27,6 +27,7 @@
     "finalize": "Finalize"
   },
   "editModal": {
+    "noCustomFieldsYet": "No custom fields yet.",
     "placeholderBody": "This policy uses the title and description you set when you created it. Extra section fields from preset templates are hidden here so you are not shown empty boxes that do not match what you configured.",
     "readout": {
       "emptyValue": "—",

@@ -30,12 +30,44 @@ export function applyFinalReviewChipEditPatch(
     current && typeof current === "object"
       ? (current as Record<string, unknown>)
       : {};
+  const snapshotLabelPatch =
+    patch.groupKey === "coreValues" &&
+    "chipLabel" in patch &&
+    typeof patch.chipLabel === "string"
+      ? (() => {
+          const trim = patch.chipLabel.trim();
+          if (trim.length === 0) {
+            return {} as Partial<CreateFlowState>;
+          }
+          const snap = [...(state.coreValuesChipsSnapshot ?? [])];
+          const i = snap.findIndex((r) => r.id === patch.overrideKey);
+          if (i < 0) {
+            return {} as Partial<CreateFlowState>;
+          }
+          snap[i] = { ...snap[i], label: trim };
+          return {
+            coreValuesChipsSnapshot: snap,
+          } satisfies Partial<CreateFlowState>;
+        })()
+      : ({} as Partial<CreateFlowState>);
   const detailPatch: Partial<CreateFlowState> = {
     [stateKey]: {
       ...record,
       [patch.overrideKey]: patch.value,
     },
+    ...snapshotLabelPatch,
   };
+  const metaFromPatch =
+    patch.groupKey !== "coreValues" &&
+    "methodCardMeta" in patch &&
+    patch.methodCardMeta !== undefined
+      ? {
+          customMethodCardMetaById: {
+            ...(state.customMethodCardMetaById ?? {}),
+            [patch.overrideKey]: patch.methodCardMeta,
+          } satisfies NonNullable<CreateFlowState["customMethodCardMetaById"]>,
+        }
+      : {};
   if (
     patch.groupKey !== "coreValues" &&
     "customMethodCardFieldBlocks" in patch &&
@@ -43,11 +75,15 @@ export function applyFinalReviewChipEditPatch(
   ) {
     return {
       ...detailPatch,
+      ...metaFromPatch,
       customMethodCardFieldBlocksById: {
         ...(state.customMethodCardFieldBlocksById ?? {}),
         [patch.overrideKey]: patch.customMethodCardFieldBlocks,
       },
     };
+  }
+  if (Object.keys(metaFromPatch).length > 0) {
+    return { ...detailPatch, ...metaFromPatch };
   }
   return detailPatch;
 }

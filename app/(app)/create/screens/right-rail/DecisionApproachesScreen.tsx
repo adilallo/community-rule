@@ -16,7 +16,7 @@
  * replaced with DB-driven content.
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import CardStack from "../../../../components/cards/CardStack";
 import HeaderLockup from "../../../../components/type/HeaderLockup";
 import Create from "../../../../components/modals/Create";
@@ -36,16 +36,40 @@ import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/custo
 import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
 import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
 import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { decisionApproachFacetMatchesPreset } from "../../../../../lib/create/methodCardFacetMatchesPresetForId";
+import { usesWizardFieldBlocksModalBody } from "../../../../../lib/create/usesWizardFieldBlocksModalBody";
 import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
+import {
+  cloneMethodCardBlocksForDuplicate,
+  cloneMethodCardDetailsForDuplicate,
+  duplicateMethodCardTitle,
+  forkMethodCardFacetMapsForDuplicate,
+  omitIdFromStringRecord,
+} from "../../../../../lib/create/duplicateMethodCardModalDraft";
 import type { DecisionApproachDetailEntry } from "../../types";
 import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
-import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
+import { buildCustomRuleModalKebabMenu } from "../../components/customRuleModalKebabMenu";
+import { methodCardMetaWithCustomizeHeader } from "../../../../../lib/create/methodCardCustomizeMetaPatch";
+import {
+  captureMethodCardCustomizeSnapshot,
+  confirmDiscardMethodCardCustomizeSession,
+  isMethodCardCustomizeSessionDirty,
+  type MethodCardCustomizeSnapshot,
+  type MethodCardHeaderDraft,
+} from "../../../../../lib/create/methodCardCustomizeSession";
+import MethodCardCustomizeModalHeader from "../../components/MethodCardCustomizeModalHeader";
 
 export function DecisionApproachesScreen() {
   const m = useMessages();
   const da = m.create.customRule.decisionApproaches;
+  const modalKebabMenu = m.create.customRule.modalKebabMenu;
   const mdUp = useCreateFlowMdUp();
-  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
+  const { state, updateState, replaceState, markCreateFlowInteraction } =
+    useCreateFlow();
+  const pendingEphemeralDuplicateIdRef = useRef<string | null>(null);
+  const customizeSnapshotRef = useRef<
+    MethodCardCustomizeSnapshot<DecisionApproachDetailEntry> | null
+  >(null);
   const [messageBoxCheckedIds, setMessageBoxCheckedIds] = useState<string[]>(
     [],
   );
@@ -55,6 +79,12 @@ export function DecisionApproachesScreen() {
   const [pendingDraft, setPendingDraft] =
     useState<DecisionApproachDetailEntry | null>(null);
   const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
+  const [modalEditUnlocked, setModalEditUnlocked] = useState(false);
+  const [draftFieldBlocks, setDraftFieldBlocks] = useState<
+    CustomMethodCardFieldBlock[] | null
+  >(null);
+  const [customizeHeaderDraft, setCustomizeHeaderDraft] =
+    useState<MethodCardHeaderDraft | null>(null);
 
   const selectedIds = state.selectedDecisionApproachIds ?? [];
 
@@ -126,6 +156,10 @@ export function DecisionApproachesScreen() {
   const handleCardSelect = useCallback(
     (id: string) => {
       markCreateFlowInteraction();
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
       setPendingCardId(id);
       setPendingDraft(seedDraft(id));
       setCreateModalOpen(true);
@@ -141,22 +175,377 @@ export function DecisionApproachesScreen() {
     [markCreateFlowInteraction],
   );
 
-  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
-    createModalOpen ? pendingCardId : null,
-  );
-  const customModalReadOnly =
+  const isSelectedCardModal =
     pendingCardId !== null && selectedIds.includes(pendingCardId);
+  const fieldsLocked = !modalEditUnlocked;
+
+  const showMethodModalPrimary = !isSelectedCardModal || modalEditUnlocked;
+
+  const customFacetDetailsMatchPreset = useMemo(() => {
+    if (!pendingCardId || !pendingDraft) return false;
+    if (!isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)) {
+      return false;
+    }
+    return decisionApproachFacetMatchesPreset(pendingDraft, pendingCardId);
+  }, [
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardMetaById,
+  ]);
+
+  const modalUsesWizardFieldBlocksBody = useMemo(
+    () =>
+      Boolean(
+        pendingCardId &&
+          usesWizardFieldBlocksModalBody({
+            methodId: pendingCardId,
+            meta: state.customMethodCardMetaById,
+            fieldBlocksById: state.customMethodCardFieldBlocksById,
+            modalEditUnlocked,
+            draftFieldBlocks,
+            customFacetDetailsMatchPreset,
+          }),
+      ),
+    [
+      customFacetDetailsMatchPreset,
+      draftFieldBlocks,
+      modalEditUnlocked,
+      pendingCardId,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+    ],
+  );
+
+  const handleCreateModalClose = useCallback(() => {
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        customizeSnapshotRef.current,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    customizeSnapshotRef.current = null;
+    const ephemeralId = pendingEphemeralDuplicateIdRef.current;
+    if (ephemeralId) {
+      pendingEphemeralDuplicateIdRef.current = null;
+      replaceState((prev) => ({
+        ...prev,
+        customMethodCardMetaById: omitIdFromStringRecord(
+          prev.customMethodCardMetaById,
+          ephemeralId,
+        ),
+        decisionApproachDetailsById: omitIdFromStringRecord(
+          prev.decisionApproachDetailsById,
+          ephemeralId,
+        ),
+        customMethodCardFieldBlocksById: omitIdFromStringRecord(
+          prev.customMethodCardFieldBlocksById,
+          ephemeralId,
+        ),
+      }));
+    }
+    setCreateModalOpen(false);
+    setPendingCardId(null);
+    setPendingDraft(null);
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+    replaceState,
+  ]);
+
+  const handleCancelCustomize = useCallback(() => {
+    if (!modalEditUnlocked) {
+      return;
+    }
+    const snap = customizeSnapshotRef.current;
+    if (!snap) {
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
+      return;
+    }
+    if (
+      isMethodCardCustomizeSessionDirty(
+        snap,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+      ) &&
+      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+    ) {
+      return;
+    }
+    setPendingDraft(structuredClone(snap.pendingDraft));
+    setDraftFieldBlocks(null);
+    setModalEditUnlocked(false);
+    customizeSnapshotRef.current = null;
+    setCustomizeHeaderDraft(null);
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+  ]);
+
+  const handleRemoveSelectedFromModal = useCallback(() => {
+    if (!pendingCardId || !selectedIds.includes(pendingCardId)) {
+      return;
+    }
+    markCreateFlowInteraction();
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        customizeSnapshotRef.current,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    customizeSnapshotRef.current = null;
+    updateState(
+      removeMethodCardFromFacetSelection(
+        state,
+        "decisionApproaches",
+        pendingCardId,
+      ),
+    );
+    handleCreateModalClose();
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    handleCreateModalClose,
+    markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+    pendingCardId,
+    selectedIds,
+    state,
+    updateState,
+  ]);
+
+  const handleCustomize = useCallback(() => {
+    markCreateFlowInteraction();
+    if (!pendingDraft || !pendingCardId) {
+      return;
+    }
+    const initialFieldBlocks =
+      isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+        ? structuredClone(
+            state.customMethodCardFieldBlocksById?.[pendingCardId] ?? [],
+          )
+        : null;
+    const method = methodById.get(pendingCardId);
+    const meta = state.customMethodCardMetaById?.[pendingCardId];
+    const headerDraft: MethodCardHeaderDraft = {
+      title: meta?.label ?? method?.label ?? da.confirmModal.title,
+      description:
+        meta?.supportText ??
+        method?.supportText ??
+        da.confirmModal.description,
+    };
+    setCustomizeHeaderDraft(headerDraft);
+    customizeSnapshotRef.current = captureMethodCardCustomizeSnapshot(
+      pendingDraft,
+      initialFieldBlocks,
+      headerDraft,
+    );
+    setDraftFieldBlocks(initialFieldBlocks);
+    setModalEditUnlocked(true);
+  }, [
+    da.confirmModal.description,
+    da.confirmModal.title,
+    markCreateFlowInteraction,
+    methodById,
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+  ]);
+
+  const handleDuplicateCustomCard = useCallback(() => {
+    if (
+      !pendingCardId ||
+      !isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+    ) {
+      return;
+    }
+    markCreateFlowInteraction();
+    const newId = crypto.randomUUID();
+    const meta = state.customMethodCardMetaById![pendingCardId]!;
+    const detailsClone = cloneMethodCardDetailsForDuplicate(
+      pendingDraft,
+      state.decisionApproachDetailsById?.[pendingCardId],
+      () => decisionApproachPresetFor(newId),
+    );
+    const blocksClone = structuredClone(
+      modalEditUnlocked &&
+        draftFieldBlocks !== null &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+        ? draftFieldBlocks
+        : cloneMethodCardBlocksForDuplicate(
+            state.customMethodCardFieldBlocksById,
+            pendingCardId,
+          ),
+    );
+    const suffix = modalKebabMenu.duplicateTitleSuffix;
+    const priorEphemeral = pendingEphemeralDuplicateIdRef.current;
+    const maps = forkMethodCardFacetMapsForDuplicate({
+      customMethodCardMetaById: state.customMethodCardMetaById,
+      facetDetailsById: state.decisionApproachDetailsById,
+      customMethodCardFieldBlocksById: state.customMethodCardFieldBlocksById,
+      omitId: priorEphemeral,
+    });
+    maps.customMethodCardMetaById[newId] = {
+      label: duplicateMethodCardTitle(meta.label, suffix),
+      supportText: meta.supportText,
+    };
+    maps.facetDetailsById[newId] = detailsClone;
+    maps.customMethodCardFieldBlocksById[newId] = blocksClone;
+    updateState({
+      customMethodCardMetaById: maps.customMethodCardMetaById,
+      decisionApproachDetailsById: maps.facetDetailsById,
+      customMethodCardFieldBlocksById: maps.customMethodCardFieldBlocksById,
+    });
+    pendingEphemeralDuplicateIdRef.current = newId;
+    customizeSnapshotRef.current = null;
+    setPendingCardId(newId);
+    setPendingDraft(structuredClone(detailsClone));
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    draftFieldBlocks,
+    markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalKebabMenu.duplicateTitleSuffix,
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+    state.decisionApproachDetailsById,
+    updateState,
+  ]);
+
+  const handleDuplicatePrefabCard = useCallback(() => {
+    if (
+      !pendingCardId ||
+      isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+    ) {
+      return;
+    }
+    const method = methodById.get(pendingCardId);
+    if (!method || !pendingDraft) {
+      return;
+    }
+    markCreateFlowInteraction();
+    const newId = crypto.randomUUID();
+    const detailsClone = cloneMethodCardDetailsForDuplicate(
+      pendingDraft,
+      state.decisionApproachDetailsById?.[pendingCardId],
+      () => decisionApproachPresetFor(newId),
+    );
+    const blocksClone = structuredClone(
+      modalEditUnlocked &&
+        draftFieldBlocks !== null &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+        ? draftFieldBlocks
+        : cloneMethodCardBlocksForDuplicate(
+            state.customMethodCardFieldBlocksById,
+            pendingCardId,
+          ),
+    );
+    const suffix = modalKebabMenu.duplicateTitleSuffix;
+    const priorEphemeral = pendingEphemeralDuplicateIdRef.current;
+    const maps = forkMethodCardFacetMapsForDuplicate({
+      customMethodCardMetaById: state.customMethodCardMetaById,
+      facetDetailsById: state.decisionApproachDetailsById,
+      customMethodCardFieldBlocksById: state.customMethodCardFieldBlocksById,
+      omitId: priorEphemeral,
+    });
+    maps.customMethodCardMetaById[newId] = {
+      label: duplicateMethodCardTitle(method.label, suffix),
+      supportText: method.supportText,
+    };
+    maps.facetDetailsById[newId] = detailsClone;
+    maps.customMethodCardFieldBlocksById[newId] = blocksClone;
+    updateState({
+      customMethodCardMetaById: maps.customMethodCardMetaById,
+      decisionApproachDetailsById: maps.facetDetailsById,
+      customMethodCardFieldBlocksById: maps.customMethodCardFieldBlocksById,
+    });
+    pendingEphemeralDuplicateIdRef.current = newId;
+    customizeSnapshotRef.current = null;
+    setPendingCardId(newId);
+    setPendingDraft(structuredClone(detailsClone));
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    draftFieldBlocks,
+    markCreateFlowInteraction,
+    methodById,
+    modalEditUnlocked,
+    modalKebabMenu.duplicateTitleSuffix,
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+    state.decisionApproachDetailsById,
+    updateState,
+  ]);
+
+  const kebabMenuItems = useMemo(
+    () =>
+      buildCustomRuleModalKebabMenu(modalKebabMenu, {
+        showCustomize: !modalEditUnlocked,
+        onCustomize: handleCustomize,
+        onDuplicate:
+          (state.editingPublishedRuleId?.trim() ?? "") !== "" || !pendingCardId
+            ? undefined
+            : isCustomMethodCardId(
+                  pendingCardId,
+                  state.customMethodCardMetaById,
+                )
+              ? handleDuplicateCustomCard
+              : handleDuplicatePrefabCard,
+        showRemove: isSelectedCardModal,
+        onRemove: handleRemoveSelectedFromModal,
+      }),
+    [
+      handleCustomize,
+      handleDuplicateCustomCard,
+      handleDuplicatePrefabCard,
+      handleRemoveSelectedFromModal,
+      isSelectedCardModal,
+      modalEditUnlocked,
+      modalKebabMenu,
+      pendingCardId,
+      state.customMethodCardMetaById,
+      state.editingPublishedRuleId,
+    ],
+  );
 
   const handleToggleExpand = useCallback(() => {
     markCreateFlowInteraction();
     setExpanded((prev) => !prev);
   }, [markCreateFlowInteraction]);
-
-  const handleCreateModalClose = useCallback(() => {
-    setCreateModalOpen(false);
-    setPendingCardId(null);
-    setPendingDraft(null);
-  }, []);
 
   const handleCloseAddWizard = useCallback(() => {
     setAddCustomWizardOpen(false);
@@ -209,17 +598,98 @@ export function DecisionApproachesScreen() {
       return;
     }
     markCreateFlowInteraction();
+
     if (selectedIds.includes(pendingCardId)) {
-      updateState(
-        removeMethodCardFromFacetSelection(
-          state,
-          "decisionApproaches",
+      if (modalEditUnlocked) {
+        if (!customizeHeaderDraft) {
+          return;
+        }
+        const nextMeta = methodCardMetaWithCustomizeHeader(
+          state.customMethodCardMetaById,
           pendingCardId,
-        ),
-      );
-      handleCreateModalClose();
+          customizeHeaderDraft,
+        );
+        if (
+          pendingCardId &&
+          isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById) &&
+          usesWizardFieldBlocksModalBody({
+            methodId: pendingCardId,
+            meta: state.customMethodCardMetaById,
+            fieldBlocksById: state.customMethodCardFieldBlocksById,
+            modalEditUnlocked,
+            draftFieldBlocks,
+            customFacetDetailsMatchPreset,
+          })
+        ) {
+          updateState({
+            customMethodCardMetaById: nextMeta,
+            customMethodCardFieldBlocksById: {
+              ...(state.customMethodCardFieldBlocksById ?? {}),
+              [pendingCardId]: structuredClone(draftFieldBlocks ?? []),
+            },
+          });
+        } else if (pendingDraft) {
+          updateState({
+            customMethodCardMetaById: nextMeta,
+            decisionApproachDetailsById: {
+              ...(state.decisionApproachDetailsById ?? {}),
+              [pendingCardId]: pendingDraft,
+            },
+          });
+        }
+        customizeSnapshotRef.current = null;
+        setModalEditUnlocked(false);
+        setDraftFieldBlocks(null);
+        setCustomizeHeaderDraft(null);
+        return;
+      }
       return;
     }
+
+    if (modalEditUnlocked) {
+      if (!customizeHeaderDraft) {
+        return;
+      }
+      const nextMeta = methodCardMetaWithCustomizeHeader(
+        state.customMethodCardMetaById,
+        pendingCardId,
+        customizeHeaderDraft,
+      );
+      if (
+        pendingCardId &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById) &&
+        usesWizardFieldBlocksModalBody({
+          methodId: pendingCardId,
+          meta: state.customMethodCardMetaById,
+          fieldBlocksById: state.customMethodCardFieldBlocksById,
+          modalEditUnlocked,
+          draftFieldBlocks,
+          customFacetDetailsMatchPreset,
+        })
+      ) {
+        updateState({
+          customMethodCardMetaById: nextMeta,
+          customMethodCardFieldBlocksById: {
+            ...(state.customMethodCardFieldBlocksById ?? {}),
+            [pendingCardId]: structuredClone(draftFieldBlocks ?? []),
+          },
+        });
+      } else if (pendingDraft) {
+        updateState({
+          customMethodCardMetaById: nextMeta,
+          decisionApproachDetailsById: {
+            ...(state.decisionApproachDetailsById ?? {}),
+            [pendingCardId]: pendingDraft,
+          },
+        });
+      }
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
+      return;
+    }
+
     if (!pendingDraft) {
       handleCreateModalClose();
       return;
@@ -234,10 +704,14 @@ export function DecisionApproachesScreen() {
         [pendingCardId]: pendingDraft,
       },
     });
+    pendingEphemeralDuplicateIdRef.current = null;
     handleCreateModalClose();
   }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
     handleCreateModalClose,
     markCreateFlowInteraction,
+    modalEditUnlocked,
     pendingCardId,
     pendingDraft,
     selectedIds,
@@ -246,14 +720,18 @@ export function DecisionApproachesScreen() {
   ]);
 
   const modalConfig = pendingCardId
-    ? (() => {
+      ? (() => {
         const method = methodById.get(pendingCardId);
-        const alreadySelected = selectedIds.includes(pendingCardId);
+        const meta = state.customMethodCardMetaById?.[pendingCardId];
+        const saveLabel = modalKebabMenu.saveEdits;
         return {
-          title: method?.label ?? da.confirmModal.title,
-          description: method?.supportText ?? da.confirmModal.description,
-          nextButtonText: alreadySelected
-            ? da.removeApproach.nextButtonText
+          title: meta?.label ?? method?.label ?? da.confirmModal.title,
+          description:
+            meta?.supportText ??
+            method?.supportText ??
+            da.confirmModal.description,
+          nextButtonText: modalEditUnlocked
+            ? saveLabel
             : da.addApproach.nextButtonText,
         };
       })()
@@ -320,31 +798,62 @@ export function DecisionApproachesScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
+        headerContent={
+          modalEditUnlocked && customizeHeaderDraft ? (
+            <MethodCardCustomizeModalHeader
+              titleLabel={modalKebabMenu.customizePolicyTitleLabel}
+              descriptionLabel={modalKebabMenu.customizePolicyDescriptionLabel}
+              titleValue={customizeHeaderDraft.title}
+              descriptionValue={customizeHeaderDraft.description}
+              onTitleChange={(title) =>
+                setCustomizeHeaderDraft((prev) =>
+                  prev ? { ...prev, title } : null,
+                )
+              }
+              onDescriptionChange={(description) =>
+                setCustomizeHeaderDraft((prev) =>
+                  prev ? { ...prev, description } : null,
+                )
+              }
+            />
+          ) : undefined
+        }
         onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
-        showBackButton={false}
+        showBackButton={modalEditUnlocked}
+        onBack={handleCancelCustomize}
+        backButtonText={modalKebabMenu.cancelCustomize}
+        showNextButton={showMethodModalPrimary}
         backdropVariant="blurredYellow"
+        kebabTriggerAriaLabel={modalKebabMenu.triggerAriaLabel}
+        kebabMenuAriaLabel={modalKebabMenu.menuAriaLabel}
+        kebabMenuItems={kebabMenuItems}
       >
         {pendingCardId && pendingDraft ? (
-          isCustomMethodCardId(
-            pendingCardId,
-            state.customMethodCardMetaById,
-          ) ? (
+          modalUsesWizardFieldBlocksBody ? (
             <CustomMethodCardModalBody
-              key={pendingCardId}
               cardId={pendingCardId}
               blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={
+                modalEditUnlocked && draftFieldBlocks !== null
+                  ? draftFieldBlocks
+                  : undefined
+              }
+              policyMeta={state.customMethodCardMetaById?.[pendingCardId]}
+              showPolicyContentLockupWhenNoBlocks={!modalEditUnlocked}
               onFieldBlocksChange={
-                customModalReadOnly ? undefined : onCustomFieldBlocksChange
+                fieldsLocked
+                  ? undefined
+                  : (next) => setDraftFieldBlocks(next)
               }
             />
           ) : (
             <DecisionApproachEditFields
-              key={pendingCardId}
               value={pendingDraft}
               onChange={handleDraftChange}
+              readOnly={fieldsLocked}
             />
           )
         ) : null}

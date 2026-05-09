@@ -52,12 +52,12 @@ import {
 } from "./utils/anonymousDraftStorage";
 import {
   createFlowStateFromPublishedRule,
-  isPublishedRuleSelectionMissing,
+  isPublishedRuleHydratePatchIncomplete,
   methodSectionsPinsFromPublishedHydratePatch,
 } from "../../../lib/create/publishedDocumentToCreateFlowState";
 import { METHOD_FACET_API_SECTION_IDS } from "../../../lib/create/customRuleFacets";
 import { readLastPublishedRule } from "../../../lib/create/lastPublishedRule";
-import { deleteServerDraft } from "../../../lib/create/api";
+import { runCompletedStepExit } from "./utils/runCompletedStepExit";
 import messages from "../../../messages/en/index";
 import {
   CREATE_FLOW_FOOTER_BUTTON_CLASS,
@@ -252,12 +252,11 @@ function CreateFlowLayoutContent({
     // For signed-in users we also DELETE the server draft so a future visit to
     // /create starts fresh instead of rehydrating yesterday's work.
     if (currentStep === "completed") {
-      clearState();
-      clearAnonymousCreateFlowStorage();
-      if (sessionUser) {
-        void deleteServerDraft();
-      }
-      router.push(CREATE_ROUTES.root);
+      runCompletedStepExit({
+        clearState,
+        clearAnonymousCreateFlowStorage,
+        router,
+      });
       return;
     }
 
@@ -335,7 +334,7 @@ function CreateFlowLayoutContent({
       titleOk &&
       editingId === last.id &&
       sectionsClear &&
-      !isPublishedRuleSelectionMissing(state, patch)
+      !isPublishedRuleHydratePatchIncomplete(state, patch)
     ) {
       if (needsPinMerge) {
         updateState({
@@ -362,6 +361,7 @@ function CreateFlowLayoutContent({
     state.title,
     state.methodSectionsPinCommitted,
     state.sections?.length,
+    state.customMethodCardMetaById,
   ]);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import type { CreateModalBackdropVariant } from "./CreateModalFrame.view";
+import type { ModalHeaderMenuItem } from "../ModalHeader/ModalHeader.types";
 
 export interface CreateProps {
   isOpen: boolean;
@@ -37,6 +38,9 @@ export interface CreateProps {
   backdropVariant?: CreateModalBackdropVariant;
   /** Passed through to ModalFooter; set explicitly when step visibility must not infer from steps alone. */
   stepper?: boolean;
+  kebabTriggerAriaLabel?: string;
+  kebabMenuAriaLabel?: string;
+  kebabMenuItems?: ModalHeaderMenuItem[];
 }
 
 export interface CreateViewProps {
@@ -63,4 +67,7 @@ export interface CreateViewProps {
   overlayRef: RefObject<HTMLDivElement | null>;
   backdropVariant: CreateModalBackdropVariant;
   stepper?: boolean;
+  kebabTriggerAriaLabel?: string;
+  kebabMenuAriaLabel?: string;
+  kebabMenuItems?: ModalHeaderMenuItem[];
 }

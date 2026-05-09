@@ -109,6 +109,33 @@ function methodsForGroup(
   return readMethodPresetsForFacetGroup(groupKey);
 }
 
+function selectedMethodIdsForGroup(
+  state: CreateFlowState,
+  groupKey: TemplateFacetGroupKey,
+): string[] | undefined {
+  switch (groupKey) {
+    case "communication":
+      return state.selectedCommunicationMethodIds;
+    case "membership":
+      return state.selectedMembershipMethodIds;
+    case "decisionApproaches":
+      return state.selectedDecisionApproachIds;
+    case "conflictManagement":
+      return state.selectedConflictManagementIds;
+    default:
+      return undefined;
+  }
+}
+
+/** Mirrors {@link buildPublishPayload}'s `pickMethodIds` — state wins when set. */
+function pickMethodIdsForReview(
+  fromState: string[] | undefined,
+  derived: readonly string[],
+): string[] {
+  if (fromState && fromState.length > 0) return [...fromState];
+  return [...derived];
+}
+
 /**
  * Resolve a preset method id from a chip label (template sections / display
  * enrichment where entries carry titles but not stable ids).
@@ -161,18 +188,44 @@ export function buildFinalReviewCategoryRowsDetailed(
       if (groupKey === "coreValues" && coreValueEntries.length > 0) continue;
       const methods = methodsForGroup(groupKey);
       const entries: FinalReviewChipEntry[] = [];
-      for (const e of s.entries) {
-        const title = e.title.trim();
-        if (title.length === 0) continue;
-        // For the Values section inside template bodies we can't recover a
-        // stable chip id (no snapshot), so override is unavailable — the
-        // modal will render read-only. Method sections fall back to label
-        // → preset-id resolution so matching titles stay editable.
-        let overrideKey: string | null = null;
-        if (groupKey && groupKey !== "coreValues") {
-          overrideKey = overrideKeyForLabel(title, methods);
+
+      if (groupKey && groupKey !== "coreValues") {
+        const stateSel = selectedMethodIdsForGroup(state, groupKey);
+        const derivedIds: string[] = [];
+        for (const e of s.entries) {
+          const title = typeof e.title === "string" ? e.title.trim() : "";
+          if (title.length === 0) continue;
+          const id = resolveMethodPresetIdFromLabel(title, groupKey);
+          if (id) derivedIds.push(id);
         }
-        entries.push({ label: title, groupKey, overrideKey });
+        // Customize flow keeps `sections` from the template but writes real
+        // facet picks into `selected*MethodIds` (including custom UUID cards).
+        // Match publish (`pickMethodIds`): when those ids exist, drive chips
+        // from state + `customMethodCardMetaById`, not from section titles alone.
+        if (stateSel && stateSel.length > 0) {
+          const ids = pickMethodIdsForReview(stateSel, derivedIds);
+          entries.push(
+            ...entriesFromIds(
+              ids,
+              methods,
+              groupKey,
+              state.customMethodCardMetaById,
+            ),
+          );
+        } else {
+          for (const e of s.entries) {
+            const title = typeof e.title === "string" ? e.title.trim() : "";
+            if (title.length === 0) continue;
+            const overrideKey = overrideKeyForLabel(title, methods);
+            entries.push({ label: title, groupKey, overrideKey });
+          }
+        }
+      } else {
+        for (const e of s.entries) {
+          const title = typeof e.title === "string" ? e.title.trim() : "";
+          if (title.length === 0) continue;
+          entries.push({ label: title, groupKey, overrideKey: null });
+        }
       }
       if (entries.length === 0) continue;
       rows.push({ name: s.categoryName, groupKey, entries });
@@ -230,11 +283,11 @@ export function buildFinalReviewCategoryRowsDetailed(
  * Derive the final-review Rule category rows from the current
  * {@link CreateFlowState}.
  *
- * Two-mode contract, mirroring the two template entry points:
+ * Contract across template + customize paths:
  * 1. **Use without changes** — `state.sections` carries the applied template
- *    body; we render it verbatim (`categoryName` + entry `title`s). Core
- *    values still come from `buildCoreValuesForDocument` when they were
- *    captured separately.
+ *    body; method facets render from section titles when `selected*MethodIds`
+ *    were cleared (see `stripCustomRuleSelectionFields`). Core values still
+ *    come from `buildCoreValuesForDocument` when captured separately.
  * 2. **Customize / plain custom-rule flow** — each Create Custom screen writes
  *    its selection ids into a dedicated state field. We resolve those ids
  *    against the curated message `methods[]` list to get the display labels,

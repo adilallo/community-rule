@@ -22,4 +22,23 @@ describe("mergePresetMethodsWithCustom", () => {
       supportText: "cx",
     });
   });
+
+  it("overlays meta label/supportText onto preset ids for card display", () => {
+    const presets = [
+      { id: "signal", label: "Signal", supportText: "preset sub" },
+    ];
+    const merged = mergePresetMethodsWithCustom(
+      presets,
+      ["signal"],
+      {
+        signal: { label: "Renamed", supportText: "user sub" },
+      },
+    );
+    expect(merged).toHaveLength(1);
+    expect(merged[0]).toEqual({
+      id: "signal",
+      label: "Renamed",
+      supportText: "user sub",
+    });
+  });
 });

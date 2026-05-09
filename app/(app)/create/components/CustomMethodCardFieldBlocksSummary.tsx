@@ -14,8 +14,8 @@ import { memo, useCallback, useRef, useState } from "react";
 import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
 import Chip from "../../../components/controls/Chip";
 import IncrementerBlock from "../../../components/controls/IncrementerBlock";
-import InlineTextButton from "../../../components/buttons/InlineTextButton";
 import Upload from "../../../components/controls/Upload";
+import { getAssetPath } from "../../../../lib/assetUtils";
 import ApplicableScopeField from "./ApplicableScopeField";
 import InputLabel from "../../../components/type/InputLabel";
 import type { CustomMethodCardFieldBlock } from "../../../../lib/create/customMethodCardFieldBlocks";
@@ -44,7 +44,9 @@ function CustomMethodCardUploadBlockRow({
   patch,
   uploadFileInputAriaLabel,
   uploadHint,
-  clearFileLabel,
+  clearPendingUploadAriaLabel,
+  clearPendingUploadTooltip,
+  uploadPreviewImageAlt,
   noFileChosen,
 }: {
   block: Extract<CustomMethodCardFieldBlock, { kind: "upload" }>;
@@ -52,7 +54,9 @@ function CustomMethodCardUploadBlockRow({
   patch: (_next: CustomMethodCardFieldBlock[]) => void;
   uploadFileInputAriaLabel: string;
   uploadHint: string;
-  clearFileLabel: string;
+  clearPendingUploadAriaLabel: string;
+  clearPendingUploadTooltip: string;
+  uploadPreviewImageAlt: string;
   noFileChosen: string;
 }) {
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
@@ -60,8 +64,17 @@ function CustomMethodCardUploadBlockRow({
   const [busy, setBusy] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const displayName = block.fileName?.trim() ? block.fileName : noFileChosen;
-  const hasAsset = Boolean(block.assetUrl?.trim());
-  const previewAlt = block.fileName?.trim() || block.blockTitle || noFileChosen;
+  const assetUrlTrimmed = block.assetUrl?.trim() ?? "";
+  const hasAsset = assetUrlTrimmed.length > 0;
+
+  const clearUpload = () =>
+    patch(
+      mapBlockById(blocks, block.id, (b) =>
+        b.kind === "upload"
+          ? { ...b, fileName: undefined, assetUrl: undefined }
+          : b,
+      ),
+    );
 
   return (
     <div className="flex flex-col gap-2">
@@ -75,14 +88,6 @@ function CustomMethodCardUploadBlockRow({
         <p className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-m)] text-[var(--color-content-default-secondary)]">
           {displayName}
         </p>
-      ) : null}
-      {hasAsset ? (
-        // eslint-disable-next-line @next/next/no-img-element -- same-origin upload URL
-        <img
-          src={block.assetUrl!.trim()}
-          alt={previewAlt}
-          className="max-h-[160px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
-        />
       ) : null}
       <input
         ref={uploadInputRef}
@@ -123,13 +128,41 @@ function CustomMethodCardUploadBlockRow({
           })();
         }}
       />
-      <Upload
-        active={!busy}
-        hintText={busy ? tUpload("uploading") : uploadHint}
-        onClick={() => {
-          if (!busy) uploadInputRef.current?.click();
-        }}
-      />
+      {hasAsset ? (
+        <div className="relative inline-block max-w-full">
+          <button
+            type="button"
+            onClick={clearUpload}
+            className="absolute right-[8px] top-[8px] z-[1] flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-full bg-[var(--color-surface-default-secondary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-invert-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-default-primary)]"
+            aria-label={clearPendingUploadAriaLabel}
+            title={clearPendingUploadTooltip}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- matches ModalHeader close control */}
+            <img
+              src={getAssetPath("assets/Icon_Close.svg")}
+              alt=""
+              className="h-[16px] w-[16px]"
+              style={{
+                filter: "brightness(0) invert(1)",
+              }}
+            />
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element -- same-origin upload URL */}
+          <img
+            src={assetUrlTrimmed}
+            alt={uploadPreviewImageAlt}
+            className="max-h-[160px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
+          />
+        </div>
+      ) : (
+        <Upload
+          active={!busy}
+          hintText={busy ? tUpload("uploading") : uploadHint}
+          onClick={() => {
+            if (!busy) uploadInputRef.current?.click();
+          }}
+        />
+      )}
       {errorMessage ? (
         <p
           className="font-[family-name:var(--font-body)] text-[length:var(--font-size-body-s)] text-[var(--color-content-default-secondary)]"
@@ -137,21 +170,6 @@ function CustomMethodCardUploadBlockRow({
         >
           {errorMessage}
         </p>
-      ) : null}
-      {block.fileName?.trim() || block.assetUrl?.trim() ? (
-        <InlineTextButton
-          onClick={() =>
-            patch(
-              mapBlockById(blocks, block.id, (b) =>
-                b.kind === "upload"
-                  ? { ...b, fileName: undefined, assetUrl: undefined }
-                  : b,
-              ),
-            )
-          }
-        >
-          {clearFileLabel}
-        </InlineTextButton>
       ) : null}
     </div>
   );
@@ -297,7 +315,13 @@ function CustomMethodCardFieldBlocksSummaryComponent({
                   patch={patch}
                   uploadFileInputAriaLabel={fm.upload.uploadFileInputAriaLabel}
                   uploadHint={fm.upload.uploadHint}
-                  clearFileLabel={em.clearFileLabel}
+                  clearPendingUploadAriaLabel={
+                    fm.upload.clearPendingUploadAriaLabel
+                  }
+                  clearPendingUploadTooltip={
+                    fm.upload.clearPendingUploadTooltip
+                  }
+                  uploadPreviewImageAlt={fm.upload.uploadPreviewImageAlt}
                   noFileChosen={noFileChosen}
                 />
               )}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   createFlowStateFromPublishedRule,
+  isPublishedRuleHydratePatchIncomplete,
   isPublishedRuleSelectionMissing,
   methodSectionsPinsForHydratedSelections,
   methodSectionsPinsFromPublishedHydratePatch,
@@ -65,6 +66,72 @@ describe("isPublishedRuleSelectionMissing", () => {
       selectedCommunicationMethodIds: ["slack"],
     } as CreateFlowState;
     expect(isPublishedRuleSelectionMissing(state, patch)).toBe(false);
+  });
+});
+
+describe("isPublishedRuleHydratePatchIncomplete", () => {
+  it("is true when facet ids are present but custom method meta from patch is missing in state", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000001";
+    const patch = createFlowStateFromPublishedRule({
+      id: "r",
+      title: "T",
+      summary: "",
+      document: {
+        methodSelections: {
+          communication: [
+            {
+              id: customId,
+              label: "My custom comms method",
+              sections: {
+                corePrinciple: "x",
+                logisticsAdmin: "",
+                codeOfConduct: "",
+              },
+            },
+          ],
+        },
+      },
+    });
+    const state = {
+      sections: [],
+      title: "T",
+      editingPublishedRuleId: "r",
+      selectedCommunicationMethodIds: [customId],
+    } as CreateFlowState;
+    expect(isPublishedRuleSelectionMissing(state, patch)).toBe(false);
+    expect(isPublishedRuleHydratePatchIncomplete(state, patch)).toBe(true);
+  });
+
+  it("is false when patch meta keys exist on state", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000001";
+    const patch = createFlowStateFromPublishedRule({
+      id: "r",
+      title: "T",
+      summary: "",
+      document: {
+        methodSelections: {
+          communication: [
+            {
+              id: customId,
+              label: "My custom comms method",
+              sections: {
+                corePrinciple: "",
+                logisticsAdmin: "",
+                codeOfConduct: "",
+              },
+            },
+          ],
+        },
+      },
+    });
+    const state = {
+      sections: [],
+      title: "T",
+      editingPublishedRuleId: "r",
+      selectedCommunicationMethodIds: [customId],
+      customMethodCardMetaById: patch.customMethodCardMetaById,
+    } as CreateFlowState;
+    expect(isPublishedRuleHydratePatchIncomplete(state, patch)).toBe(false);
   });
 });
 
@@ -216,6 +283,35 @@ describe("createFlowStateFromPublishedRule", () => {
       "p",
     );
     expect(partial.sections).toEqual([]);
+  });
+
+  it("hydrates customMethodCardMetaById for user-authored method ids from methodSelections", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000001";
+    const partial = createFlowStateFromPublishedRule({
+      id: "rule-custom",
+      title: "C",
+      summary: "",
+      document: {
+        methodSelections: {
+          communication: [
+            {
+              id: customId,
+              label: "Custom channel policy",
+              sections: {
+                corePrinciple: "cp",
+                logisticsAdmin: "la",
+                codeOfConduct: "cc",
+              },
+            },
+          ],
+        },
+      },
+    });
+    expect(partial.selectedCommunicationMethodIds).toEqual([customId]);
+    expect(partial.customMethodCardMetaById?.[customId]).toEqual({
+      label: "Custom channel policy",
+      supportText: "",
+    });
   });
 
   it("sets sections to [] even when methodSelections is missing (edit hydrate)", () => {

@@ -6,6 +6,7 @@ import ArrowBackIcon from "./arrow_back.svg";
 import ChevronRightIcon from "./chevron_right.svg";
 import ContentCopyIcon from "./content_copy.svg";
 import CsvIcon from "./csv.svg";
+import CustomIcon from "./custom.svg";
 import EditIcon from "./edit.svg";
 import ExclamationIcon from "./exclamation.svg";
 import ImageGlyphIcon from "./image.svg";
@@ -23,6 +24,7 @@ export const ICON_NAME_OPTIONS = [
   "chevron_right",
   "content_copy",
   "csv",
+  "custom",
   "edit",
   "exclamation",
   "image",
@@ -48,6 +50,7 @@ const iconMap: Record<IconName, SvgComponent> = {
   chevron_right: ChevronRightIcon,
   content_copy: ContentCopyIcon,
   csv: CsvIcon,
+  custom: CustomIcon,
   edit: EditIcon,
   exclamation: ExclamationIcon,
   image: ImageGlyphIcon,

@@ -37,11 +37,13 @@ function conflictDetailWithScopeTextarea(
 export interface ConflictManagementEditFieldsProps {
   value: ConflictManagementDetailEntry;
   onChange: (_next: ConflictManagementDetailEntry) => void;
+  readOnly?: boolean;
 }
 
 function ConflictManagementEditFieldsComponent({
   value,
   onChange,
+  readOnly = false,
 }: ConflictManagementEditFieldsProps) {
   const m = useMessages();
   const t = m.create.customRule.conflictManagement;
@@ -62,6 +64,7 @@ function ConflictManagementEditFieldsComponent({
         label={t.sectionHeadings.corePrinciple}
         value={value.corePrinciple}
         onChange={(v) => patch("corePrinciple", v)}
+        disabled={readOnly}
       />
       <ModalTextAreaField
         label={t.sectionHeadings.applicableScope}
@@ -69,16 +72,19 @@ function ConflictManagementEditFieldsComponent({
         placeholder={t.applicableScopePlaceholder}
         onChange={(v) => onChange(conflictDetailWithScopeTextarea(value, v))}
         rows={4}
+        disabled={readOnly}
       />
       <ModalTextAreaField
         label={t.sectionHeadings.processProtocol}
         value={value.processProtocol}
         onChange={(v) => patch("processProtocol", v)}
+        disabled={readOnly}
       />
       <ModalTextAreaField
         label={t.sectionHeadings.restorationFallbacks}
         value={value.restorationFallbacks}
         onChange={(v) => patch("restorationFallbacks", v)}
+        disabled={readOnly}
       />
     </div>
   );

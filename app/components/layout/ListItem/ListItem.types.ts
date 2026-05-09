@@ -7,4 +7,5 @@ export type ListItemProps = {
   /** Bottom divider between rows — false on the final row per Figma. */
   showDivider: boolean;
   className?: string;
+  variant?: "default" | "destructive";
 };

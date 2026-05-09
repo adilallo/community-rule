@@ -41,6 +41,7 @@ import createMembership from "./create/customRule/membership.json";
 import createDecisionApproaches from "./create/customRule/decisionApproaches.json";
 import createConflictManagement from "./create/customRule/conflictManagement.json";
 import createCustomMethodCardWizard from "./create/customRule/customMethodCardWizard.json";
+import createModalKebabMenu from "./create/customRule/modalKebabMenu.json";
 
 // create – stage 3: reviewAndComplete
 import createConfirmStakeholders from "./create/reviewAndComplete/confirmStakeholders.json";
@@ -97,6 +98,7 @@ export default {
       decisionApproaches: createDecisionApproaches,
       conflictManagement: createConflictManagement,
       customMethodCardWizard: createCustomMethodCardWizard,
+      modalKebabMenu: createModalKebabMenu,
     },
     reviewAndComplete: {
       confirmStakeholders: createConfirmStakeholders,

@@ -15,11 +15,14 @@ import type { CoreValueDetailEntry } from "../../types";
 export interface CoreValueEditFieldsProps {
   value: CoreValueDetailEntry;
   onChange: (_next: CoreValueDetailEntry) => void;
+  /** View mode until the user taps **Customize**. */
+  readOnly?: boolean;
 }
 
 function CoreValueEditFieldsComponent({
   value,
   onChange,
+  readOnly = false,
 }: CoreValueEditFieldsProps) {
   const m = useMessages();
   const t = m.create.customRule.coreValues.detailModal;
@@ -41,12 +44,14 @@ function CoreValueEditFieldsComponent({
         value={value.meaning}
         onChange={(v) => patch("meaning", v)}
         rows={4}
+        disabled={readOnly}
       />
       <ModalTextAreaField
         label={t.signalsLabel}
         value={value.signals}
         onChange={(v) => patch("signals", v)}
         rows={4}
+        disabled={readOnly}
       />
     </div>
   );

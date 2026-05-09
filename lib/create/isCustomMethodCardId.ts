@@ -1,9 +1,9 @@
 import type { CreateFlowState } from "../../app/(app)/create/types";
 
 /**
- * User-authored method cards (UUID ids) register a meta row when finalized
- * from {@link CustomMethodCardWizard}. Preset rows from `methods[]` never
- * appear here — keeps edit surfaces from treating custom ids like presets.
+ * True when `customMethodCardMetaById` has an entry for this id: wizard-finalized
+ * custom UUIDs, duplicate prefab clones, and **preset display overrides** after the
+ * user saves title/description in Customize mode (see {@link mergePresetMethodsWithCustom}).
  */
 export function isCustomMethodCardId(
   methodId: string,

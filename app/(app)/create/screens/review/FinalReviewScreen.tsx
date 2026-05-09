@@ -87,7 +87,7 @@ export function FinalReviewScreen({
 }: {
   variant?: "default" | "editPublished";
 } = {}) {
-  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
+  const { state, updateState, replaceState, markCreateFlowInteraction } = useCreateFlow();
   const { goToStep } = useCreateFlowNavigation();
   const mdUp = useCreateFlowMdUp();
   const t = useTranslation("create.reviewAndComplete.finalReview");
@@ -96,11 +96,11 @@ export function FinalReviewScreen({
   /**
    * Two modals coexist on this screen:
    *
-   * - {@link FinalReviewChipEditModal} — editable Save-button version used
-   *   whenever the chip resolves to a stable `overrideKey` (core-value
-   *   chip id, or a method preset id). Writes through to
-   *   `{group}DetailsById` state fields on Save; close-without-save is a
-   *   no-op so any typed edits are discarded.
+   * - {@link FinalReviewChipEditModal} — core values + method chips: kebab
+   *   Customize / Remove; values also offer Duplicate under the five-chip cap.
+   *   Save respects the same unlock/dirty rules as the facet create modals;
+   *   writes `{group}DetailsById`, snapshot label (values), `customMethodCardMetaById`,
+   *   and field blocks on Save.
    * - {@link TemplateChipDetailModal} — read-only fallback for chips we
    *   can't map to an override key (e.g. template body entries on the
    *   "Use without changes" path where no preset matches the title).
@@ -268,6 +268,9 @@ export function FinalReviewScreen({
         target={activeEditTarget}
         state={state}
         onSave={handleSave}
+        replaceState={replaceState}
+        onInteract={markCreateFlowInteraction}
+        onEditTargetChange={setActiveEditTarget}
       />
       <TemplateChipDetailModal
         isOpen={activeReadOnlyDetail !== null}

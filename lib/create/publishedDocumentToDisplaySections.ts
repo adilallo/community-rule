@@ -3,6 +3,7 @@ import type {
   CommunityRuleSection,
 } from "../../app/components/type/CommunityRule/CommunityRule.types";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
+import type { CustomMethodCardFieldBlock } from "./customMethodCardFieldBlocks";
 import {
   PUBLISH_FALLBACK_OVERVIEW_CATEGORY,
   parseDocumentSectionsForDisplay,
@@ -221,6 +222,14 @@ function parseMethodSelectionsLoose(
   return ms as PublishedMethodSelections;
 }
 
+function parseCustomFieldBlocksByIdLoose(
+  document: Record<string, unknown>,
+): Record<string, CustomMethodCardFieldBlock[]> | undefined {
+  const raw = document.customMethodCardFieldBlocksById;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  return raw as Record<string, CustomMethodCardFieldBlock[]>;
+}
+
 /**
  * Full `CommunityRule` sections for a published `document` JSON blob: validated
  * `document.sections` plus synthesized categories from `document.coreValues` and
@@ -253,30 +262,49 @@ export function parsePublishedDocumentForCommunityRuleDisplay(
     seen.add(valuesSection.categoryName);
   }
 
+  let displaySections = [...base, ...extra];
+
   const methodSelections = parseMethodSelectionsLoose(doc);
+  const customFieldBlocksById = parseCustomFieldBlocksByIdLoose(doc);
   if (methodSelections) {
-    const comm = sectionFromCommunication(methodSelections.communication ?? []);
-    if (comm && !seen.has(comm.categoryName)) {
-      extra.push(comm);
-      seen.add(comm.categoryName);
-    }
-    const mem = sectionFromMembership(methodSelections.membership ?? []);
-    if (mem && !seen.has(mem.categoryName)) {
-      extra.push(mem);
-      seen.add(mem.categoryName);
-    }
-    const dec = sectionFromDecision(methodSelections.decisionApproaches ?? []);
-    if (dec && !seen.has(dec.categoryName)) {
-      extra.push(dec);
-      seen.add(dec.categoryName);
-    }
-    const cm = sectionFromConflict(methodSelections.conflictManagement ?? []);
-    if (cm && !seen.has(cm.categoryName)) {
-      extra.push(cm);
-      seen.add(cm.categoryName);
-    }
+    /**
+     * `document.sections` can lag `document.methodSelections` (e.g. API responses
+     * or older rows). Do not skip merging when the category already exists —
+     * that hid user-authored method cards on `/create/completed`.
+     */
+    const replaceCategory = (fresh: CommunityRuleSection | null) => {
+      if (!fresh) return;
+      displaySections = displaySections.filter(
+        (s) => s.categoryName !== fresh.categoryName,
+      );
+      displaySections.push(fresh);
+    };
+    replaceCategory(
+      sectionFromCommunication(
+        methodSelections.communication ?? [],
+        customFieldBlocksById,
+      ),
+    );
+    replaceCategory(
+      sectionFromMembership(
+        methodSelections.membership ?? [],
+        customFieldBlocksById,
+      ),
+    );
+    replaceCategory(
+      sectionFromDecision(
+        methodSelections.decisionApproaches ?? [],
+        customFieldBlocksById,
+      ),
+    );
+    replaceCategory(
+      sectionFromConflict(
+        methodSelections.conflictManagement ?? [],
+        customFieldBlocksById,
+      ),
+    );
   }
 
-  const combined = [...base, ...extra].map(enrichDisplaySection);
+  const combined = displaySections.map(enrichDisplaySection);
   return sortSectionsCanonical(combined);
 }

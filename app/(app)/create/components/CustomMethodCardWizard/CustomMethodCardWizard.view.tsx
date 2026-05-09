@@ -35,6 +35,9 @@ function CustomMethodCardWizardViewComponent({
   stepper,
   draftFieldBlocks,
   onDraftFieldBlocksReorder,
+  kebabMoreOptionsAriaLabel,
+  kebabMenuAriaLabel,
+  kebabMenuItems,
 }: CustomMethodCardWizardViewProps) {
   return (
     <Create
@@ -52,6 +55,9 @@ function CustomMethodCardWizardViewComponent({
       totalSteps={3}
       stepper={stepper}
       backdropVariant="blurredYellow"
+      kebabTriggerAriaLabel={kebabMoreOptionsAriaLabel}
+      kebabMenuAriaLabel={kebabMenuAriaLabel}
+      kebabMenuItems={kebabMenuItems}
     >
       {fieldTypeModal ? (
         <CustomMethodCardWizardFieldBodiesView

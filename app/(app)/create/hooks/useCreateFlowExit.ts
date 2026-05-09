@@ -3,11 +3,7 @@
 import { useCallback } from "react";
 import type { CreateFlowState, CreateFlowStep } from "../types";
 import { buildPublishPayload } from "../../../../lib/create/buildPublishPayload";
-import {
-  deleteServerDraft,
-  saveDraftToServer,
-  updatePublishedRule,
-} from "../../../../lib/create/api";
+import { saveDraftToServer, updatePublishedRule } from "../../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
 import messages from "../../../../messages/en/index";
 
@@ -79,7 +75,6 @@ export function useCreateFlowExit({
               document,
             });
             setDraftSaveBannerMessage?.(null);
-            void deleteServerDraft();
           } else {
             setDraftSaveBannerMessage?.(updateResult.error);
             return;

@@ -28,6 +28,9 @@ const CreateContainer = memo<CreateProps>(
     ariaLabelledBy,
     backdropVariant = "default",
     stepper,
+    kebabTriggerAriaLabel,
+    kebabMenuAriaLabel,
+    kebabMenuItems,
   }) => {
     const createRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
@@ -60,6 +63,9 @@ const CreateContainer = memo<CreateProps>(
         overlayRef={overlayRef}
         backdropVariant={backdropVariant}
         stepper={stepper}
+        kebabTriggerAriaLabel={kebabTriggerAriaLabel}
+        kebabMenuAriaLabel={kebabMenuAriaLabel}
+        kebabMenuItems={kebabMenuItems}
       />
     );
   },

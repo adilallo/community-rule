@@ -10,12 +10,12 @@
  *
  * Card click opens the Figma create modal (node `20246-15829`) with three
  * editable sections rendered by {@link CommunicationMethodEditFields}. The primary
- * action is **Add Platform** for an unselected card or **Remove** when the card is
- * already selected — remove clears `selectedCommunicationMethodIds` and
- * `communicationMethodDetailsById` via {@link removeMethodCardFromFacetSelection}.
+ * action is **Add Platform** for an unselected card; a selected card in view mode has
+ * no footer primary — **Remove** is available from the kebab (same behavior as legacy
+ * footer remove via {@link removeMethodCardFromFacetSelection}).
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
@@ -37,22 +37,52 @@ import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/custo
 import { mergePresetMethodsWithCustom } from "../../../../../lib/create/mergePresetMethodsWithCustom";
 import { moveFacetSelectionIdToFront } from "../../../../../lib/create/methodCardSelectionOrder";
 import { isCustomMethodCardId } from "../../../../../lib/create/isCustomMethodCardId";
+import { communicationMethodFacetMatchesPreset } from "../../../../../lib/create/methodCardFacetMatchesPresetForId";
+import { usesWizardFieldBlocksModalBody } from "../../../../../lib/create/usesWizardFieldBlocksModalBody";
 import { removeMethodCardFromFacetSelection } from "../../../../../lib/create/removeMethodCardFromFacetSelection";
+import {
+  cloneMethodCardBlocksForDuplicate,
+  cloneMethodCardDetailsForDuplicate,
+  duplicateMethodCardTitle,
+  forkMethodCardFacetMapsForDuplicate,
+  omitIdFromStringRecord,
+} from "../../../../../lib/create/duplicateMethodCardModalDraft";
 import type { CommunicationMethodDetailEntry } from "../../types";
 import CustomMethodCardModalBody from "../../components/CustomMethodCardModalBody";
-import { useCustomMethodCardFieldBlocksChange } from "../../hooks/useCustomMethodCardFieldBlocksChange";
+import { buildCustomRuleModalKebabMenu } from "../../components/customRuleModalKebabMenu";
+import { methodCardMetaWithCustomizeHeader } from "../../../../../lib/create/methodCardCustomizeMetaPatch";
+import {
+  captureMethodCardCustomizeSnapshot,
+  confirmDiscardMethodCardCustomizeSession,
+  isMethodCardCustomizeSessionDirty,
+  type MethodCardCustomizeSnapshot,
+  type MethodCardHeaderDraft,
+} from "../../../../../lib/create/methodCardCustomizeSession";
+import MethodCardCustomizeModalHeader from "../../components/MethodCardCustomizeModalHeader";
 
 export function CommunicationMethodsScreen() {
   const m = useMessages();
   const comm = m.create.customRule.communication;
+  const modalKebabMenu = m.create.customRule.modalKebabMenu;
   const mdUp = useCreateFlowMdUp();
-  const { state, updateState, markCreateFlowInteraction } = useCreateFlow();
+  const { state, updateState, replaceState, markCreateFlowInteraction } =
+    useCreateFlow();
+  const pendingEphemeralDuplicateIdRef = useRef<string | null>(null);
+  const customizeSnapshotRef = useRef<
+    MethodCardCustomizeSnapshot<CommunicationMethodDetailEntry> | null
+  >(null);
   const [expanded, setExpanded] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [pendingCardId, setPendingCardId] = useState<string | null>(null);
   const [pendingDraft, setPendingDraft] =
     useState<CommunicationMethodDetailEntry | null>(null);
   const [addCustomWizardOpen, setAddCustomWizardOpen] = useState(false);
+  const [modalEditUnlocked, setModalEditUnlocked] = useState(false);
+  const [draftFieldBlocks, setDraftFieldBlocks] = useState<
+    CustomMethodCardFieldBlock[] | null
+  >(null);
+  const [customizeHeaderDraft, setCustomizeHeaderDraft] =
+    useState<MethodCardHeaderDraft | null>(null);
 
   const selectedIds = state.selectedCommunicationMethodIds ?? [];
 
@@ -97,24 +127,6 @@ export function CommunicationMethodsScreen() {
     </>
   );
 
-  const modalConfig = pendingCardId
-    ? (() => {
-        const method = methodById.get(pendingCardId);
-        const alreadySelected = selectedIds.includes(pendingCardId);
-        return {
-          title: method?.label ?? comm.confirmModal.title,
-          description: method?.supportText ?? comm.confirmModal.description,
-          nextButtonText: alreadySelected
-            ? comm.removePlatform.nextButtonText
-            : comm.addPlatform.nextButtonText,
-        };
-      })()
-    : {
-        title: comm.confirmModal.title,
-        description: comm.confirmModal.description,
-        nextButtonText: comm.confirmModal.nextButtonText,
-      };
-
   const seedDraft = useCallback(
     (id: string): CommunicationMethodDetailEntry => {
       const saved = state.communicationMethodDetailsById?.[id];
@@ -129,6 +141,10 @@ export function CommunicationMethodsScreen() {
   const handleCardClick = useCallback(
     (id: string) => {
       markCreateFlowInteraction();
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
       setPendingCardId(id);
       setPendingDraft(seedDraft(id));
       setCreateModalOpen(true);
@@ -144,17 +160,396 @@ export function CommunicationMethodsScreen() {
     [markCreateFlowInteraction],
   );
 
-  const onCustomFieldBlocksChange = useCustomMethodCardFieldBlocksChange(
-    createModalOpen ? pendingCardId : null,
-  );
-  const customModalReadOnly =
+  const isSelectedCardModal =
     pendingCardId !== null && selectedIds.includes(pendingCardId);
+  const fieldsLocked = !modalEditUnlocked;
+
+  const showMethodModalPrimary = !isSelectedCardModal || modalEditUnlocked;
+
+  const customFacetDetailsMatchPreset = useMemo(() => {
+    if (!pendingCardId || !pendingDraft) return false;
+    if (!isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)) {
+      return false;
+    }
+    return communicationMethodFacetMatchesPreset(pendingDraft, pendingCardId);
+  }, [
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardMetaById,
+  ]);
+
+  const modalUsesWizardFieldBlocksBody = useMemo(
+    () =>
+      Boolean(
+        pendingCardId &&
+          usesWizardFieldBlocksModalBody({
+            methodId: pendingCardId,
+            meta: state.customMethodCardMetaById,
+            fieldBlocksById: state.customMethodCardFieldBlocksById,
+            modalEditUnlocked,
+            draftFieldBlocks,
+            customFacetDetailsMatchPreset,
+          }),
+      ),
+    [
+      customFacetDetailsMatchPreset,
+      draftFieldBlocks,
+      modalEditUnlocked,
+      pendingCardId,
+      state.customMethodCardFieldBlocksById,
+      state.customMethodCardMetaById,
+    ],
+  );
 
   const handleCreateModalClose = useCallback(() => {
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        customizeSnapshotRef.current,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    customizeSnapshotRef.current = null;
+    const ephemeralId = pendingEphemeralDuplicateIdRef.current;
+    if (ephemeralId) {
+      pendingEphemeralDuplicateIdRef.current = null;
+      replaceState((prev) => ({
+        ...prev,
+        customMethodCardMetaById: omitIdFromStringRecord(
+          prev.customMethodCardMetaById,
+          ephemeralId,
+        ),
+        communicationMethodDetailsById: omitIdFromStringRecord(
+          prev.communicationMethodDetailsById,
+          ephemeralId,
+        ),
+        customMethodCardFieldBlocksById: omitIdFromStringRecord(
+          prev.customMethodCardFieldBlocksById,
+          ephemeralId,
+        ),
+      }));
+    }
     setCreateModalOpen(false);
     setPendingCardId(null);
     setPendingDraft(null);
-  }, []);
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+    replaceState,
+  ]);
+
+  const handleCancelCustomize = useCallback(() => {
+    if (!modalEditUnlocked) {
+      return;
+    }
+    const snap = customizeSnapshotRef.current;
+    if (!snap) {
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
+      return;
+    }
+    if (
+      isMethodCardCustomizeSessionDirty(
+        snap,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+      ) &&
+      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+    ) {
+      return;
+    }
+    setPendingDraft(structuredClone(snap.pendingDraft));
+    setDraftFieldBlocks(null);
+    setModalEditUnlocked(false);
+    customizeSnapshotRef.current = null;
+    setCustomizeHeaderDraft(null);
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+  ]);
+
+  const handleRemoveSelectedFromModal = useCallback(() => {
+    if (!pendingCardId || !selectedIds.includes(pendingCardId)) {
+      return;
+    }
+    markCreateFlowInteraction();
+    if (
+      !confirmDiscardMethodCardCustomizeSession(
+        modalEditUnlocked,
+        customizeSnapshotRef.current,
+        pendingDraft,
+        draftFieldBlocks,
+        customizeHeaderDraft,
+        modalKebabMenu.discardUnsavedCustomizeChanges,
+      )
+    ) {
+      return;
+    }
+    customizeSnapshotRef.current = null;
+    updateState(
+      removeMethodCardFromFacetSelection(
+        state,
+        "communication",
+        pendingCardId,
+      ),
+    );
+    handleCreateModalClose();
+  }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
+    handleCreateModalClose,
+    markCreateFlowInteraction,
+    modalEditUnlocked,
+    modalKebabMenu.discardUnsavedCustomizeChanges,
+    pendingDraft,
+    pendingCardId,
+    selectedIds,
+    state,
+    updateState,
+  ]);
+
+  const handleCustomize = useCallback(() => {
+    markCreateFlowInteraction();
+    if (!pendingDraft || !pendingCardId) {
+      return;
+    }
+    const persistedBlocks =
+      state.customMethodCardFieldBlocksById?.[pendingCardId] ?? [];
+    const initialFieldBlocks =
+      persistedBlocks.length > 0
+        ? structuredClone(persistedBlocks)
+        : isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+          ? []
+          : null;
+    const method = methodById.get(pendingCardId);
+    const meta = state.customMethodCardMetaById?.[pendingCardId];
+    const headerDraft: MethodCardHeaderDraft = {
+      title: meta?.label ?? method?.label ?? comm.confirmModal.title,
+      description:
+        meta?.supportText ??
+        method?.supportText ??
+        comm.confirmModal.description,
+    };
+    setCustomizeHeaderDraft(headerDraft);
+    customizeSnapshotRef.current = captureMethodCardCustomizeSnapshot(
+      pendingDraft,
+      initialFieldBlocks,
+      headerDraft,
+    );
+    setDraftFieldBlocks(initialFieldBlocks);
+    setModalEditUnlocked(true);
+  }, [
+    comm.confirmModal.description,
+    comm.confirmModal.title,
+    markCreateFlowInteraction,
+    methodById,
+    pendingCardId,
+    pendingDraft,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+  ]);
+
+  const handleDuplicateCustomCard = useCallback(() => {
+    if (
+      !pendingCardId ||
+      !isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+    ) {
+      return;
+    }
+    markCreateFlowInteraction();
+    const newId = crypto.randomUUID();
+    const meta = state.customMethodCardMetaById![pendingCardId]!;
+    const detailsClone = cloneMethodCardDetailsForDuplicate(
+      pendingDraft,
+      state.communicationMethodDetailsById?.[pendingCardId],
+      () => communicationPresetFor(newId),
+    );
+    const blocksClone = structuredClone(
+      modalEditUnlocked &&
+        draftFieldBlocks !== null &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+        ? draftFieldBlocks
+        : cloneMethodCardBlocksForDuplicate(
+            state.customMethodCardFieldBlocksById,
+            pendingCardId,
+          ),
+    );
+    const suffix = modalKebabMenu.duplicateTitleSuffix;
+    const priorEphemeral = pendingEphemeralDuplicateIdRef.current;
+    const maps = forkMethodCardFacetMapsForDuplicate({
+      customMethodCardMetaById: state.customMethodCardMetaById,
+      facetDetailsById: state.communicationMethodDetailsById,
+      customMethodCardFieldBlocksById: state.customMethodCardFieldBlocksById,
+      omitId: priorEphemeral,
+    });
+    maps.customMethodCardMetaById[newId] = {
+      label: duplicateMethodCardTitle(meta.label, suffix),
+      supportText: meta.supportText,
+    };
+    maps.facetDetailsById[newId] = detailsClone;
+    maps.customMethodCardFieldBlocksById[newId] = blocksClone;
+    updateState({
+      customMethodCardMetaById: maps.customMethodCardMetaById,
+      communicationMethodDetailsById: maps.facetDetailsById,
+      customMethodCardFieldBlocksById: maps.customMethodCardFieldBlocksById,
+    });
+    pendingEphemeralDuplicateIdRef.current = newId;
+    customizeSnapshotRef.current = null;
+    setPendingCardId(newId);
+    setPendingDraft(structuredClone(detailsClone));
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    markCreateFlowInteraction,
+    modalKebabMenu.duplicateTitleSuffix,
+    pendingCardId,
+    pendingDraft,
+    draftFieldBlocks,
+    modalEditUnlocked,
+    state.communicationMethodDetailsById,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+    updateState,
+  ]);
+
+  const handleDuplicatePrefabCard = useCallback(() => {
+    if (
+      !pendingCardId ||
+      isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+    ) {
+      return;
+    }
+    const method = methodById.get(pendingCardId);
+    if (!method || !pendingDraft) {
+      return;
+    }
+    markCreateFlowInteraction();
+    const newId = crypto.randomUUID();
+    const detailsClone = cloneMethodCardDetailsForDuplicate(
+      pendingDraft,
+      state.communicationMethodDetailsById?.[pendingCardId],
+      () => communicationPresetFor(newId),
+    );
+    const blocksClone = structuredClone(
+      modalEditUnlocked &&
+        draftFieldBlocks !== null &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById)
+        ? draftFieldBlocks
+        : cloneMethodCardBlocksForDuplicate(
+            state.customMethodCardFieldBlocksById,
+            pendingCardId,
+          ),
+    );
+    const suffix = modalKebabMenu.duplicateTitleSuffix;
+    const priorEphemeral = pendingEphemeralDuplicateIdRef.current;
+    const maps = forkMethodCardFacetMapsForDuplicate({
+      customMethodCardMetaById: state.customMethodCardMetaById,
+      facetDetailsById: state.communicationMethodDetailsById,
+      customMethodCardFieldBlocksById: state.customMethodCardFieldBlocksById,
+      omitId: priorEphemeral,
+    });
+    maps.customMethodCardMetaById[newId] = {
+      label: duplicateMethodCardTitle(method.label, suffix),
+      supportText: method.supportText,
+    };
+    maps.facetDetailsById[newId] = detailsClone;
+    maps.customMethodCardFieldBlocksById[newId] = blocksClone;
+    updateState({
+      customMethodCardMetaById: maps.customMethodCardMetaById,
+      communicationMethodDetailsById: maps.facetDetailsById,
+      customMethodCardFieldBlocksById: maps.customMethodCardFieldBlocksById,
+    });
+    pendingEphemeralDuplicateIdRef.current = newId;
+    customizeSnapshotRef.current = null;
+    setPendingCardId(newId);
+    setPendingDraft(structuredClone(detailsClone));
+    setModalEditUnlocked(false);
+    setDraftFieldBlocks(null);
+    setCustomizeHeaderDraft(null);
+  }, [
+    draftFieldBlocks,
+    markCreateFlowInteraction,
+    methodById,
+    modalEditUnlocked,
+    modalKebabMenu.duplicateTitleSuffix,
+    pendingCardId,
+    pendingDraft,
+    state.communicationMethodDetailsById,
+    state.customMethodCardFieldBlocksById,
+    state.customMethodCardMetaById,
+    updateState,
+  ]);
+
+  const kebabMenuItems = useMemo(
+    () =>
+      buildCustomRuleModalKebabMenu(modalKebabMenu, {
+        showCustomize: !modalEditUnlocked,
+        onCustomize: handleCustomize,
+        onDuplicate:
+          (state.editingPublishedRuleId?.trim() ?? "") !== "" || !pendingCardId
+            ? undefined
+            : isCustomMethodCardId(
+                  pendingCardId,
+                  state.customMethodCardMetaById,
+                )
+              ? handleDuplicateCustomCard
+              : handleDuplicatePrefabCard,
+        showRemove: isSelectedCardModal,
+        onRemove: handleRemoveSelectedFromModal,
+      }),
+    [
+      handleCustomize,
+      handleDuplicateCustomCard,
+      handleDuplicatePrefabCard,
+      handleRemoveSelectedFromModal,
+      isSelectedCardModal,
+      modalEditUnlocked,
+      modalKebabMenu,
+      pendingCardId,
+      state.customMethodCardMetaById,
+      state.editingPublishedRuleId,
+    ],
+  );
+
+  const modalConfig = pendingCardId
+      ? (() => {
+        const method = methodById.get(pendingCardId);
+        const meta = state.customMethodCardMetaById?.[pendingCardId];
+        const saveLabel = modalKebabMenu.saveEdits;
+        return {
+          title: meta?.label ?? method?.label ?? comm.confirmModal.title,
+          description:
+            meta?.supportText ??
+            method?.supportText ??
+            comm.confirmModal.description,
+          nextButtonText: modalEditUnlocked
+            ? saveLabel
+            : comm.addPlatform.nextButtonText,
+        };
+      })()
+    : {
+        title: comm.confirmModal.title,
+        description: comm.confirmModal.description,
+        nextButtonText: comm.confirmModal.nextButtonText,
+      };
 
   const handleCloseAddWizard = useCallback(() => {
     setAddCustomWizardOpen(false);
@@ -207,17 +602,98 @@ export function CommunicationMethodsScreen() {
       return;
     }
     markCreateFlowInteraction();
+
     if (selectedIds.includes(pendingCardId)) {
-      updateState(
-        removeMethodCardFromFacetSelection(
-          state,
-          "communication",
+      if (modalEditUnlocked) {
+        if (!customizeHeaderDraft) {
+          return;
+        }
+        const nextMeta = methodCardMetaWithCustomizeHeader(
+          state.customMethodCardMetaById,
           pendingCardId,
-        ),
-      );
-      handleCreateModalClose();
+          customizeHeaderDraft,
+        );
+        if (
+          pendingCardId &&
+          isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById) &&
+          usesWizardFieldBlocksModalBody({
+            methodId: pendingCardId,
+            meta: state.customMethodCardMetaById,
+            fieldBlocksById: state.customMethodCardFieldBlocksById,
+            modalEditUnlocked,
+            draftFieldBlocks,
+            customFacetDetailsMatchPreset,
+          })
+        ) {
+          updateState({
+            customMethodCardMetaById: nextMeta,
+            customMethodCardFieldBlocksById: {
+              ...(state.customMethodCardFieldBlocksById ?? {}),
+              [pendingCardId]: structuredClone(draftFieldBlocks ?? []),
+            },
+          });
+        } else if (pendingDraft) {
+          updateState({
+            customMethodCardMetaById: nextMeta,
+            communicationMethodDetailsById: {
+              ...(state.communicationMethodDetailsById ?? {}),
+              [pendingCardId]: pendingDraft,
+            },
+          });
+        }
+        customizeSnapshotRef.current = null;
+        setModalEditUnlocked(false);
+        setDraftFieldBlocks(null);
+        setCustomizeHeaderDraft(null);
+        return;
+      }
       return;
     }
+
+    if (modalEditUnlocked) {
+      if (!customizeHeaderDraft) {
+        return;
+      }
+      const nextMeta = methodCardMetaWithCustomizeHeader(
+        state.customMethodCardMetaById,
+        pendingCardId,
+        customizeHeaderDraft,
+      );
+      if (
+        pendingCardId &&
+        isCustomMethodCardId(pendingCardId, state.customMethodCardMetaById) &&
+        usesWizardFieldBlocksModalBody({
+          methodId: pendingCardId,
+          meta: state.customMethodCardMetaById,
+          fieldBlocksById: state.customMethodCardFieldBlocksById,
+          modalEditUnlocked,
+          draftFieldBlocks,
+          customFacetDetailsMatchPreset,
+        })
+      ) {
+        updateState({
+          customMethodCardMetaById: nextMeta,
+          customMethodCardFieldBlocksById: {
+            ...(state.customMethodCardFieldBlocksById ?? {}),
+            [pendingCardId]: structuredClone(draftFieldBlocks ?? []),
+          },
+        });
+      } else if (pendingDraft) {
+        updateState({
+          customMethodCardMetaById: nextMeta,
+          communicationMethodDetailsById: {
+            ...(state.communicationMethodDetailsById ?? {}),
+            [pendingCardId]: pendingDraft,
+          },
+        });
+      }
+      customizeSnapshotRef.current = null;
+      setModalEditUnlocked(false);
+      setDraftFieldBlocks(null);
+      setCustomizeHeaderDraft(null);
+      return;
+    }
+
     if (!pendingDraft) {
       handleCreateModalClose();
       return;
@@ -232,10 +708,14 @@ export function CommunicationMethodsScreen() {
         [pendingCardId]: pendingDraft,
       },
     });
+    pendingEphemeralDuplicateIdRef.current = null;
     handleCreateModalClose();
   }, [
+    customizeHeaderDraft,
+    draftFieldBlocks,
     handleCreateModalClose,
     markCreateFlowInteraction,
+    modalEditUnlocked,
     pendingCardId,
     pendingDraft,
     selectedIds,
@@ -280,31 +760,62 @@ export function CommunicationMethodsScreen() {
       <Create
         isOpen={createModalOpen}
         onClose={handleCreateModalClose}
+        headerContent={
+          modalEditUnlocked && customizeHeaderDraft ? (
+            <MethodCardCustomizeModalHeader
+              titleLabel={modalKebabMenu.customizePolicyTitleLabel}
+              descriptionLabel={modalKebabMenu.customizePolicyDescriptionLabel}
+              titleValue={customizeHeaderDraft.title}
+              descriptionValue={customizeHeaderDraft.description}
+              onTitleChange={(title) =>
+                setCustomizeHeaderDraft((prev) =>
+                  prev ? { ...prev, title } : null,
+                )
+              }
+              onDescriptionChange={(description) =>
+                setCustomizeHeaderDraft((prev) =>
+                  prev ? { ...prev, description } : null,
+                )
+              }
+            />
+          ) : undefined
+        }
         onNext={handleCreateModalPrimary}
         title={modalConfig.title}
         description={modalConfig.description}
         nextButtonText={modalConfig.nextButtonText}
-        showBackButton={false}
+        showBackButton={modalEditUnlocked}
+        onBack={handleCancelCustomize}
+        backButtonText={modalKebabMenu.cancelCustomize}
+        showNextButton={showMethodModalPrimary}
         backdropVariant="blurredYellow"
+        kebabTriggerAriaLabel={modalKebabMenu.triggerAriaLabel}
+        kebabMenuAriaLabel={modalKebabMenu.menuAriaLabel}
+        kebabMenuItems={kebabMenuItems}
       >
         {pendingCardId && pendingDraft ? (
-          isCustomMethodCardId(
-            pendingCardId,
-            state.customMethodCardMetaById,
-          ) ? (
+          modalUsesWizardFieldBlocksBody ? (
             <CustomMethodCardModalBody
-              key={pendingCardId}
               cardId={pendingCardId}
               blocksById={state.customMethodCardFieldBlocksById}
+              blocksOverride={
+                modalEditUnlocked && draftFieldBlocks !== null
+                  ? draftFieldBlocks
+                  : undefined
+              }
+              policyMeta={state.customMethodCardMetaById?.[pendingCardId]}
+              showPolicyContentLockupWhenNoBlocks={!modalEditUnlocked}
               onFieldBlocksChange={
-                customModalReadOnly ? undefined : onCustomFieldBlocksChange
+                fieldsLocked
+                  ? undefined
+                  : (next) => setDraftFieldBlocks(next)
               }
             />
           ) : (
             <CommunicationMethodEditFields
-              key={pendingCardId}
               value={pendingDraft}
               onChange={handleDraftChange}
+              readOnly={fieldsLocked}
             />
           )
         ) : null}

@@ -153,7 +153,11 @@ export function buildPublishPayload(
   const methodSelections = buildMethodSelectionsForDocument(state);
 
   if (hasAnyMethodSelection(methodSelections)) {
-    sections = replaceMethodSectionsWithMethodSelections(sections, methodSelections);
+    sections = replaceMethodSectionsWithMethodSelections(
+      sections,
+      methodSelections,
+      state.customMethodCardFieldBlocksById,
+    );
   }
 
   const document: Record<string, unknown> = { sections, coreValues };
