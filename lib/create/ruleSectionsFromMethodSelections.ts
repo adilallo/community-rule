@@ -7,6 +7,15 @@ import type { PublishedMethodSelections } from "./buildPublishPayload";
 import type { CustomMethodCardFieldBlock } from "./customMethodCardFieldBlocks";
 import { templateCategoryToGroupKey } from "./templateReviewMapping";
 
+/** Uses filename extension and/or URL path so uploads render as `<img>` vs file link on read-only surfaces. */
+export function wizardUploadDisplaysAsImage(
+  fileName: string | null,
+  assetUrl: string | null,
+): boolean {
+  if (fileName && /\.(jpe?g|png|gif|webp)$/i.test(fileName)) return true;
+  if (assetUrl && /\.(jpe?g|png|gif|webp)(\?|#|$)/i.test(assetUrl)) return true;
+  return false;
+}
 /**
  * Serialize wizard-authored field blocks into Community Rule labeled rows for
  * read-only surfaces (completed step, exported views). Matches how those blocks
@@ -32,8 +41,23 @@ export function labeledBlocksFromCustomMethodCardFieldBlocks(
       case "upload": {
         const name = nonEmptyTrimmed(b.fileName);
         const url = nonEmptyTrimmed(b.assetUrl);
-        const body = name ?? url;
-        if (body) out.push({ label: b.blockTitle, body });
+        if (url) {
+          if (wizardUploadDisplaysAsImage(name, url)) {
+            out.push({
+              label: b.blockTitle,
+              body: "",
+              imageUrl: url,
+            });
+          } else {
+            out.push({
+              label: b.blockTitle,
+              body: name ?? url,
+              fileUrl: url,
+            });
+          }
+        } else if (name) {
+          out.push({ label: b.blockTitle, body: name });
+        }
         break;
       }
       case "proportion":

@@ -6,7 +6,10 @@ import type {
 function isLabeledBlock(x: unknown): x is CommunityRuleLabeledBlock {
   if (!x || typeof x !== "object") return false;
   const o = x as Record<string, unknown>;
-  return typeof o.label === "string" && typeof o.body === "string";
+  if (typeof o.label !== "string" || typeof o.body !== "string") return false;
+  if (o.imageUrl !== undefined && typeof o.imageUrl !== "string") return false;
+  if (o.fileUrl !== undefined && typeof o.fileUrl !== "string") return false;
+  return true;
 }
 
 /** Shared by publish payload parsing and template body parsing — keep in sync. */

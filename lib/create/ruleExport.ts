@@ -27,7 +27,19 @@ function entryToMarkdown(entry: CommunityRuleEntry): string {
   const lines: string[] = [`### ${entry.title}`, ""];
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
-      lines.push(`#### ${b.label}`, "", b.body, "");
+      lines.push(`#### ${b.label}`, "");
+      const img = b.imageUrl?.trim();
+      const file = b.fileUrl?.trim();
+      if (img) {
+        lines.push(
+          `![${b.body.trim() || b.label}](${img})`,
+          "",
+        );
+      } else if (file) {
+        lines.push(`[${b.body.trim() || "file"}](${file})`, "");
+      } else {
+        lines.push(b.body, "");
+      }
     }
   } else {
     const body = (entry.body ?? "").trim();
@@ -86,7 +98,17 @@ export function sectionsToCsv(
     for (const ent of sec.entries) {
       if (ent.blocks && ent.blocks.length > 0) {
         for (const b of ent.blocks) {
-          rows.push([sec.categoryName, ent.title, b.label, b.body]);
+          const img = b.imageUrl?.trim();
+          const file = b.fileUrl?.trim();
+          const content =
+            img != null && img.length > 0
+              ? b.body.trim().length > 0
+                ? `${b.body}\n${img}`
+                : img
+              : file != null && file.length > 0
+                ? `${b.body}\n${file}`
+                : b.body;
+          rows.push([sec.categoryName, ent.title, b.label, content]);
         }
       } else {
         rows.push([sec.categoryName, ent.title, "", ent.body ?? ""]);
@@ -136,7 +158,18 @@ function entryToPrintHtml(entry: CommunityRuleEntry): string {
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
       inner += `<h4 class="block-label">${escapeHtml(b.label)}</h4>`;
-      inner += paragraphsHtml(b.body);
+      const img = b.imageUrl?.trim();
+      const file = b.fileUrl?.trim();
+      if (img) {
+        inner += `<p><img src="${escapeHtml(img)}" alt="${escapeHtml(b.body.trim() || b.label)}" /></p>`;
+        if (b.body.trim().length > 0) {
+          inner += paragraphsHtml(b.body);
+        }
+      } else if (file) {
+        inner += `<p><a href="${escapeHtml(file)}">${escapeHtml(b.body.trim() || file)}</a></p>`;
+      } else {
+        inner += paragraphsHtml(b.body);
+      }
     }
   } else {
     inner += paragraphsHtml(entry.body ?? "");
