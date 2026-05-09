@@ -112,10 +112,12 @@ export function sectionsToCsv(
           const { img, file, bodyTrim } = labeledBlockMedia(b);
           const content = img
             ? bodyTrim.length > 0
-              ? `${b.body}\n${img}`
+              ? `${bodyTrim}\n${img}`
               : img
             : file
-              ? `${b.body}\n${file}`
+              ? bodyTrim.length > 0
+                ? `${bodyTrim}\n${file}`
+                : file
               : b.body;
           rows.push([sec.categoryName, ent.title, b.label, content]);
         }
@@ -235,6 +237,29 @@ export function sectionsToPdfBlob(
     }
   }
 
+  function writeBlockBodyParagraphs(body: string): void {
+    for (const p of splitDisplayParagraphs(body)) {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      const lines = doc.splitTextToSize(p, maxW);
+      const dim = doc.getTextDimensions(lines.join("\n"), { maxWidth: maxW });
+      ensureSpace(dim.h + 1);
+      doc.text(lines, margin, y);
+      y += dim.h + 2;
+    }
+  }
+
+  /** Plain URL line(s); italic for images so captions vs URL read distinctly in print. */
+  function writeMediaUrlLines(url: string, fontStyle: "normal" | "italic"): void {
+    doc.setFont("helvetica", fontStyle);
+    doc.setFontSize(10);
+    const urlLines = doc.splitTextToSize(url, maxW);
+    const urlDim = doc.getTextDimensions(urlLines.join("\n"), { maxWidth: maxW });
+    ensureSpace(urlDim.h + 1);
+    doc.text(urlLines, margin, y);
+    y += urlDim.h + 2;
+  }
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   {
@@ -294,16 +319,15 @@ export function sectionsToPdfBlob(
             doc.text(lines, margin, y);
             y += dim.h + 2;
           }
-          for (const p of splitDisplayParagraphs(b.body)) {
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(11);
-            const lines = doc.splitTextToSize(p, maxW);
-            const dim = doc.getTextDimensions(lines.join("\n"), {
-              maxWidth: maxW,
-            });
-            ensureSpace(dim.h + 1);
-            doc.text(lines, margin, y);
-            y += dim.h + 2;
+          const { img, file } = labeledBlockMedia(b);
+          if (img) {
+            writeBlockBodyParagraphs(b.body);
+            writeMediaUrlLines(img, "italic");
+          } else if (file) {
+            writeBlockBodyParagraphs(b.body);
+            writeMediaUrlLines(file, "normal");
+          } else {
+            writeBlockBodyParagraphs(b.body);
           }
         }
       } else {

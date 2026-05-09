@@ -6,6 +6,7 @@ import {
   exportFilenameBase,
   sectionsToCsv,
   sectionsToMarkdown,
+  sectionsToPdfBlob,
 } from "../../../lib/create/ruleExport";
 import type { CommunityRuleSection } from "../../../app/components/type/CommunityRule/CommunityRule.types";
 
@@ -132,6 +133,37 @@ describe("ruleExport", () => {
     expect(html).toContain("Caption");
     expect(html).toContain('href="https://cdn.example.com/guidance.pdf"');
     expect(html).toContain("Download");
+  });
+
+  it("sectionsToPdfBlob embeds image and file URLs as text for labeled blocks", async () => {
+    const sections: CommunityRuleSection[] = [
+      {
+        categoryName: "Values",
+        entries: [
+          {
+            title: "Entry",
+            body: "",
+            blocks: [
+              {
+                label: "Photo",
+                body: "Caption",
+                imageUrl: "https://cdn.example.com/pic.jpg",
+              },
+              {
+                label: "Handbook",
+                body: "Download",
+                fileUrl: "https://cdn.example.com/guidance.pdf",
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const blob = sectionsToPdfBlob("Rule", null, sections);
+    const buf = new Uint8Array(await readBlobAsArrayBuffer(blob));
+    const raw = new TextDecoder("latin1").decode(buf);
+    expect(raw).toContain("https://cdn.example.com/pic.jpg");
+    expect(raw).toContain("https://cdn.example.com/guidance.pdf");
   });
 
   it("buildPrintableRuleHtmlDocument escapes HTML in user content", () => {
