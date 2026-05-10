@@ -14,7 +14,7 @@ describe("ConfirmStakeholdersScreen", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Adding people at this step will invite them to see your proposed CommunityRule/i,
+        /Add their email addresses\. When you publish, we'll send each person a one-time link/i,
       ),
     ).toBeInTheDocument();
   });

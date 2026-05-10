@@ -21,7 +21,8 @@ export type ApiErrorCode =
   | "rate_limited"
   | "server_misconfigured"
   | "mail_failed"
-  | "internal_error";
+  | "internal_error"
+  | "conflict";
 
 export interface ApiErrorBody {
   error: { code: ApiErrorCode; message: string };
@@ -64,6 +65,10 @@ export function notFound(message = "Not found"): NextResponse {
 
 export function forbidden(message = "Forbidden"): NextResponse {
   return errorJson("forbidden", message, 403);
+}
+
+export function conflict(message = "Conflict"): NextResponse {
+  return errorJson("conflict", message, 409);
 }
 
 export function rateLimited(retryAfterMs: number): NextResponse {

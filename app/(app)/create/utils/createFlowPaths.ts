@@ -4,7 +4,10 @@
  */
 
 import type { CreateFlowStep } from "../types";
-import { CREATE_FLOW_REVIEW_RETURN_QUERY_KEY } from "./flowSteps";
+import {
+  CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY,
+  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
+} from "./flowSteps";
 
 export const CREATE_ROUTES = {
   root: "/",
@@ -59,7 +62,7 @@ export function createCompletedPath(query?: CreateFlowPathQuery): string {
 
 /**
  * Navigate back from a facet step to final-review / edit-rule, dropping
- * `reviewReturn` from the current query while preserving other params.
+ * `reviewReturn` and `manageStakeholders` from the current query while preserving other params.
  */
 export function createFlowStepPathAfterStrippingReviewReturn(
   step: CreateFlowStep,
@@ -67,6 +70,7 @@ export function createFlowStepPathAfterStrippingReviewReturn(
 ): string {
   const params = new URLSearchParams(searchParams?.toString() ?? "");
   params.delete(CREATE_FLOW_REVIEW_RETURN_QUERY_KEY);
+  params.delete(CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY);
   const query: CreateFlowPathQuery = {};
   params.forEach((value, key) => {
     query[key] = value;

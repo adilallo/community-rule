@@ -340,28 +340,38 @@ export function ProfilePageView({
                     expanded
                     size={ruleCardSize}
                     hasBottomLinks
-                    bottomLinks={[
-                      {
-                        id: "view",
-                        label: t("viewPublic"),
-                        href: `/rules/${encodeURIComponent(rule.id)}`,
-                      },
-                      {
-                        id: "manage",
-                        label: t("manageRule"),
-                        href: `/create/completed?ruleId=${encodeURIComponent(rule.id)}`,
-                      },
-                      {
-                        id: "dup",
-                        label: t("duplicate"),
-                        onClick: () => onDuplicateRule(rule.id),
-                      },
-                      {
-                        id: "del",
-                        label: t("deleteRule"),
-                        onClick: () => onDeleteRule(rule.id),
-                      },
-                    ]}
+                    bottomLinks={
+                      rule.role === "stakeholder"
+                        ? [
+                            {
+                              id: "view",
+                              label: t("viewPublic"),
+                              href: `/rules/${encodeURIComponent(rule.id)}`,
+                            },
+                          ]
+                        : [
+                            {
+                              id: "view",
+                              label: t("viewPublic"),
+                              href: `/rules/${encodeURIComponent(rule.id)}`,
+                            },
+                            {
+                              id: "manage",
+                              label: t("manageRule"),
+                              href: `/create/completed?ruleId=${encodeURIComponent(rule.id)}`,
+                            },
+                            {
+                              id: "dup",
+                              label: t("duplicate"),
+                              onClick: () => onDuplicateRule(rule.id),
+                            },
+                            {
+                              id: "del",
+                              label: t("deleteRule"),
+                              onClick: () => onDeleteRule(rule.id),
+                            },
+                          ]
+                    }
                     communityInitials={
                       rule.title.trim().charAt(0).toUpperCase() || "·"
                     }

@@ -27,6 +27,35 @@ export async function sendMagicLinkEmail(
 }
 
 /** CR-103: confirm control of the new inbox before `User.email` is updated. */
+/** Stakeholder invite after rule publish (one-time link, same dev/Mailhog pattern as magic link). */
+export async function sendRuleStakeholderInviteEmail(
+  to: string,
+  verifyUrl: string,
+  ruleTitle: string,
+): Promise<void> {
+  const url = process.env.SMTP_URL;
+
+  if (!url) {
+    if (process.env.NODE_ENV === "development") {
+      logger.info(
+        `[dev] Rule stakeholder invite (${ruleTitle}) for ${to}: ${verifyUrl}`,
+      );
+      return;
+    }
+    throw new Error("SMTP_URL is not configured");
+  }
+
+  const transporter = nodemailer.createTransport(url);
+  const from = process.env.SMTP_FROM ?? "noreply@localhost";
+
+  await transporter.sendMail({
+    from,
+    to,
+    subject: `You're invited to view a Community Rule: ${ruleTitle}`,
+    text: `You've been invited to view "${ruleTitle}" on Community Rule.\n\nOpen this link to create your account (or sign in) and open the rule. The link expires in 15 minutes and works once:\n\n${verifyUrl}\n\nIf you did not expect this, you can ignore this email.`,
+  });
+}
+
 export async function sendEmailChangeEmail(
   to: string,
   verifyUrl: string,

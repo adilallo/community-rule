@@ -16,10 +16,12 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
     hasShare = false,
     hasExport = false,
     hasEdit = false,
+    hasManageStakeholders = false,
     saveDraftOnExit = false,
     onShare,
     onSelectExportFormat,
     onEdit,
+    onManageStakeholders,
     onExit,
     buttonPalette,
     className = "",
@@ -41,10 +43,12 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         hasShare={hasShare}
         hasExport={hasExport}
         hasEdit={hasEdit}
+        hasManageStakeholders={hasManageStakeholders}
         saveDraftOnExit={saveDraftOnExit}
         onShare={onShare}
         onSelectExportFormat={onSelectExportFormat}
         onEdit={onEdit}
+        onManageStakeholders={onManageStakeholders}
         onExit={handleExit}
         buttonPalette={buttonPalette}
         className={className}

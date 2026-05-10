@@ -17,6 +17,9 @@ import { useCompletedRuleShareExport } from "./hooks/useCompletedRuleShareExport
 import CreateFlowFooter from "../../components/navigation/CreateFlowFooter";
 import CreateFlowTopNav from "../../components/navigation/CreateFlowTopNav";
 import {
+  CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY,
+  CREATE_FLOW_MANAGE_STAKEHOLDERS_VALUE,
+  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
   getNextStep,
   getStepIndex,
   parseReviewReturnSearchParam,
@@ -158,7 +161,17 @@ function CreateFlowLayoutContent({
     resetCustomRuleSelections,
     setMethodSectionsPinCommitted,
     replaceState,
+    markCreateFlowInteraction,
   } = useCreateFlow();
+  const manageStakeholdersIntent =
+    searchParams?.get(CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY) ===
+    CREATE_FLOW_MANAGE_STAKEHOLDERS_VALUE;
+  const editingPublishedRuleIdTrimmed =
+    state.editingPublishedRuleId?.trim() ?? "";
+  const isConfirmStakeholdersManagePublished =
+    currentStep === "confirm-stakeholders" &&
+    manageStakeholdersIntent &&
+    editingPublishedRuleIdTrimmed.length > 0;
   const { draftSaveBannerMessage, setDraftSaveBannerMessage } =
     useCreateFlowDraftSaveBanner();
   const [communitySaveMagicLinkSubmitting, setCommunitySaveMagicLinkSubmitting] =
@@ -411,6 +424,7 @@ function CreateFlowLayoutContent({
   const isRightRailStep = currentStep === "decision-approaches";
   const isFinalReviewLike =
     currentStep === "final-review" || currentStep === "edit-rule";
+  const isEditRuleStep = currentStep === "edit-rule";
   const isCardLayoutStep = createFlowStepUsesCardLayout(currentStep);
   /** Two-column select / right-rail: below `lg` main scrolls; at `lg+` only the right column scrolls. */
   const isSelectSplitScrollStep = createFlowStepUsesSelectSplitScroll(
@@ -581,6 +595,7 @@ function CreateFlowLayoutContent({
         hasShare={isCompletedStep}
         hasExport={isCompletedStep}
         hasEdit={isCompletedStep}
+        hasManageStakeholders={isEditRuleStep}
         saveDraftOnExit={saveDraftOnExit}
         onShare={
           isCompletedStep ? () => void handleOpenCompletedShareModal() : undefined
@@ -598,6 +613,20 @@ function CreateFlowLayoutContent({
                   sections: [],
                 });
                 router.push(createFlowStepPath("edit-rule"));
+              }
+            : undefined
+        }
+        onManageStakeholders={
+          isEditRuleStep
+            ? () => {
+                markCreateFlowInteraction();
+                router.push(
+                  createFlowStepPath("confirm-stakeholders", {
+                    [CREATE_FLOW_REVIEW_RETURN_QUERY_KEY]: "edit-rule",
+                    [CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY]:
+                      CREATE_FLOW_MANAGE_STAKEHOLDERS_VALUE,
+                  }),
+                );
               }
             : undefined
         }
@@ -761,6 +790,27 @@ function CreateFlowLayoutContent({
                 }}
               >
                 {footer[customRuleConfirmFooter.footerMessageKey]}
+              </Button>
+            ) : isConfirmStakeholdersManagePublished ? (
+              <Button
+                buttonType="filled"
+                palette="default"
+                size="xsmall"
+                disabled={isPublishing}
+                className={CREATE_FLOW_FOOTER_BUTTON_CLASS}
+                onClick={() => {
+                  router.push(
+                    createFlowStepPathAfterStrippingReviewReturn(
+                      "edit-rule",
+                      searchParams,
+                    ),
+                  );
+                }}
+              >
+                {
+                  create.reviewAndComplete.confirmStakeholders.managePublished
+                    .footerDone
+                }
               </Button>
             ) : nextStep || isFinalReviewLike ? (
               <Button

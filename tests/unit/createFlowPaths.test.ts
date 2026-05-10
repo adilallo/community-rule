@@ -7,7 +7,10 @@ import {
   createFlowStepPathAfterStrippingReviewReturn,
   createFlowStepPathWithSyncDraft,
 } from "../../app/(app)/create/utils/createFlowPaths";
-import { CREATE_FLOW_REVIEW_RETURN_QUERY_KEY } from "../../app/(app)/create/utils/flowSteps";
+import {
+  CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY,
+  CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
+} from "../../app/(app)/create/utils/flowSteps";
 
 describe("createFlowPaths (CR-92 §2)", () => {
   it("createFlowStepPath builds segment path", () => {
@@ -26,9 +29,9 @@ describe("createFlowPaths (CR-92 §2)", () => {
     );
   });
 
-  it("createFlowStepPathAfterStrippingReviewReturn drops reviewReturn only", () => {
+  it("createFlowStepPathAfterStrippingReviewReturn drops reviewReturn and manageStakeholders", () => {
     const sp = new URLSearchParams(
-      `a=1&${CREATE_FLOW_REVIEW_RETURN_QUERY_KEY}=final-review&b=2`,
+      `a=1&${CREATE_FLOW_REVIEW_RETURN_QUERY_KEY}=final-review&${CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY}=1&b=2`,
     );
     expect(createFlowStepPathAfterStrippingReviewReturn("final-review", sp)).toBe(
       "/create/final-review?a=1&b=2",

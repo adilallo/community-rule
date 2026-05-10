@@ -218,8 +218,11 @@ export interface CreateFlowState {
   currentStep?: CreateFlowStep;
   /** Section drafts; structure will tighten as steps persist real shapes. */
   sections?: Record<string, unknown>[];
-  /** Stakeholder placeholders until the confirm-stakeholders step defines a schema. */
-  stakeholders?: Record<string, unknown>[];
+  /**
+   * Stakeholder invite emails (confirm-stakeholders step). Normalized on the server;
+   * invites are sent at first publish (`POST /api/rules`).
+   */
+  stakeholderEmails?: string[];
   /** Extra step-specific fields (must be JSON-serializable for server draft sync). */
   [key: string]: unknown;
 }

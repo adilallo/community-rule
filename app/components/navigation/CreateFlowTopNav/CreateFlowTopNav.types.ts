@@ -22,6 +22,12 @@ export interface CreateFlowTopNavProps {
    */
   hasEdit?: boolean;
   /**
+   * Whether to show **Manage Stakeholders** (published-rule invite management).
+   * Used on `/create/edit-rule` only.
+   * @default false
+   */
+  hasManageStakeholders?: boolean;
+  /**
    * When true, exit control is "Save & Exit" and `onExit` receives `{ saveDraft: true }`.
    * When false, shows "Exit" and `{ saveDraft: false }` (caller may confirm data loss).
    * @default false
@@ -39,6 +45,10 @@ export interface CreateFlowTopNavProps {
    * Callback when Edit button is clicked
    */
   onEdit?: () => void;
+  /**
+   * Callback when Manage Stakeholders is clicked
+   */
+  onManageStakeholders?: () => void;
   /**
    * Callback when Exit/Save & Exit button is clicked.
    * When `saveDraftOnExit` is true, called with `{ saveDraft: true }`.

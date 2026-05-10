@@ -8,7 +8,7 @@ export default {
     docs: {
       description: {
         component:
-          "Top navigation bar for the create rule flow. Includes logo and action buttons (Share, Export, Edit, Exit/Save & Exit).",
+          "Top navigation bar for the create rule flow. Includes logo and action buttons (Share, Export, Edit, Manage Stakeholders, Exit/Save & Exit).",
       },
     },
   },
@@ -25,6 +25,11 @@ export default {
       control: "boolean",
       description: "Whether to show the Edit button",
     },
+    hasManageStakeholders: {
+      control: "boolean",
+      description:
+        "Whether to show Manage Stakeholders (edit published rule invites)",
+    },
     saveDraftOnExit: {
       control: "boolean",
       description:
@@ -33,6 +38,7 @@ export default {
     onShare: { action: "share clicked" },
     onSelectExportFormat: { action: "export format" },
     onEdit: { action: "edit clicked" },
+    onManageStakeholders: { action: "manage stakeholders clicked" },
     onExit: { action: "exit clicked" },
   },
   tags: ["autodocs"],
@@ -61,6 +67,16 @@ export const SaveDraftOnExit = {
     hasShare: true,
     hasExport: true,
     hasEdit: true,
+    saveDraftOnExit: true,
+  },
+};
+
+export const EditRuleHeader = {
+  args: {
+    hasShare: false,
+    hasExport: false,
+    hasEdit: false,
+    hasManageStakeholders: true,
     saveDraftOnExit: true,
   },
 };

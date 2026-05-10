@@ -15,10 +15,12 @@ export function CreateFlowTopNavView({
   hasShare = false,
   hasExport = false,
   hasEdit = false,
+  hasManageStakeholders = false,
   saveDraftOnExit = false,
   onShare,
   onSelectExportFormat,
   onEdit,
+  onManageStakeholders,
   onExit,
   buttonPalette = "default",
   className = "",
@@ -164,6 +166,20 @@ export function CreateFlowTopNavView({
               {t("edit")}
             </Button>
           )}
+
+          {hasManageStakeholders && onManageStakeholders ? (
+            <Button
+              buttonType="outline"
+              palette={buttonPalette}
+              size="xsmall"
+              type="button"
+              onClick={onManageStakeholders}
+              ariaLabel={t("manageStakeholdersAriaLabel")}
+              className="md:!text-[12px] md:!leading-[14px] !text-[10px] !leading-[12px] !px-[var(--spacing-scale-006,6px)] md:!px-[var(--spacing-scale-008,8px)] !py-[6px] md:!py-[8px] !border md:!border-[1.5px]"
+            >
+              {t("manageStakeholders")}
+            </Button>
+          ) : null}
 
           <Button
             buttonType="outline"

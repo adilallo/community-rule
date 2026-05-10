@@ -18,6 +18,10 @@ model User {
   rules             PublishedRule[]
   /// At most one pending verified email change (CR-103).
   emailChangeToken  EmailChangeToken?
+  /// Rules this user was invited to as a stakeholder (after accepting invite).
+  ruleStakeholders  RuleStakeholder[] @relation("RuleStakeholderUser")
+  /// Stakeholder rows where this user sent the invite.
+  stakeholderInvitesSent RuleStakeholder[] @relation("RuleStakeholderInvitedBy")
 }
 
 /// Pending email change: user must open verify link sent to `newEmail` (CR-103).
@@ -74,7 +78,33 @@ model PublishedRule {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  stakeholders RuleStakeholder[]
+
   @@index([userId])
+}
+
+/// Invite + access for a published rule: email invite at publish; userId set after magic-link-style accept.
+model RuleStakeholder {
+  id        String   @id @default(cuid())
+  ruleId    String
+  rule      PublishedRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  /// Normalized lowercase email (invite target).
+  email     String
+  /// Publisher at invite time; null if that account was removed.
+  invitedByUserId String?
+  invitedBy User? @relation("RuleStakeholderInvitedBy", fields: [invitedByUserId], references: [id], onDelete: SetNull)
+  /// Set when the invitee completes the verify link (same account as `email`).
+  userId    String?
+  user      User? @relation("RuleStakeholderUser", fields: [userId], references: [id], onDelete: SetNull)
+  /// One-time invite token (hashed); null after accept or revoke path (consume on verify).
+  inviteTokenHash String? @unique
+  inviteExpiresAt DateTime?
+  invitedAt DateTime @default(now())
+  acceptedAt DateTime?
+
+  @@unique([ruleId, email])
+  @@index([userId])
+  @@index([email])
 }
 
 model RuleTemplate {

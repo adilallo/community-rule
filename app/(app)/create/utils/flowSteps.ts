@@ -188,6 +188,13 @@ export const CREATE_FLOW_COMPLETED_CELEBRATE_VALUE = "1" as const;
 /** `/create/{step}?reviewReturn=…` — set when opening a custom-rule step from final-review or edit-rule via + */
 export const CREATE_FLOW_REVIEW_RETURN_QUERY_KEY = "reviewReturn" as const;
 
+/**
+ * `/create/confirm-stakeholders?manageStakeholders=1` — edit published rule invites (requires `state.editingPublishedRuleId`).
+ * Typically paired with `reviewReturn=edit-rule`.
+ */
+export const CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY = "manageStakeholders" as const;
+export const CREATE_FLOW_MANAGE_STAKEHOLDERS_VALUE = "1" as const;
+
 export type CreateFlowReviewReturnTarget = "final-review" | "edit-rule";
 
 export function parseReviewReturnSearchParam(
