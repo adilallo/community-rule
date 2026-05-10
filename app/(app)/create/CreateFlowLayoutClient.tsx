@@ -644,7 +644,11 @@ function CreateFlowLayoutContent({
       {!isCompletedStep && (
         <CreateFlowFooter
           className="shrink-0"
-          progressBar={!isTemplateReviewRoute && !isFinalReviewLike}
+          progressBar={
+            !isTemplateReviewRoute &&
+            !isFinalReviewLike &&
+            reviewReturnTarget !== "edit-rule"
+          }
           proportionBarProgress={proportionBarProgress}
           proportionBarVariant="segmented"
           secondButton={
