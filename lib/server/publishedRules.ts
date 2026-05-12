@@ -88,3 +88,68 @@ export async function listPublishedRulesForUser(
     return null;
   }
 }
+
+export type ProfileRuleListItem = OwnerPublishedRuleListItem & {
+  role: "owner" | "stakeholder";
+};
+
+/**
+ * Published rules the user can access as an **accepted** stakeholder (`userId` set).
+ * Same metadata shape as {@link listPublishedRulesForUser}; no `document`.
+ */
+export async function listStakeholderRulesForUser(
+  userId: string,
+  take: number,
+): Promise<OwnerPublishedRuleListItem[] | null> {
+  if (!isDatabaseConfigured()) return null;
+  if (typeof userId !== "string" || userId.trim() === "") return null;
+  const clamped = Math.min(Math.max(0, take), 100);
+  if (clamped === 0) return [];
+  try {
+    const rows = await prisma.ruleStakeholder.findMany({
+      where: { userId },
+      take: clamped,
+      orderBy: [{ rule: { updatedAt: "desc" } }, { id: "asc" }],
+      select: {
+        rule: { select: PUBLISHED_RULE_OWNER_LIST_SELECT },
+      },
+    });
+    return rows.map((r) => r.rule);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Profile list: owned rules plus stakeholder access, **owner wins** if both,
+ * sorted by `updatedAt` desc (then `id`).
+ */
+export async function listProfileRulesForUser(
+  userId: string,
+  take: number,
+): Promise<ProfileRuleListItem[] | null> {
+  const cap = Math.min(Math.max(0, take), 100);
+  if (cap === 0) return [];
+  /** Merge then slice so ordering is global by `updatedAt`. */
+  const fetchCap = 100;
+  const [owned, stakeholderRules] = await Promise.all([
+    listPublishedRulesForUser(userId, fetchCap),
+    listStakeholderRulesForUser(userId, fetchCap),
+  ]);
+  if (owned === null || stakeholderRules === null) return null;
+  const ownerIds = new Set(owned.map((r) => r.id));
+  const stakeholderOnly = stakeholderRules.filter((r) => !ownerIds.has(r.id));
+  const combined: ProfileRuleListItem[] = [
+    ...owned.map((r) => ({ ...r, role: "owner" as const })),
+    ...stakeholderOnly.map((r) => ({
+      ...r,
+      role: "stakeholder" as const,
+    })),
+  ];
+  combined.sort((a, b) => {
+    const t = b.updatedAt.getTime() - a.updatedAt.getTime();
+    if (t !== 0) return t;
+    return a.id.localeCompare(b.id);
+  });
+  return combined.slice(0, cap);
+}

@@ -43,13 +43,14 @@ function AskOrganizerView({
         {/* Button */}
         <div className={buttonContainerClass}>
           <Button
-            href={buttonHref}
+            {...(buttonHref ? { href: buttonHref } : {})}
             size="large"
             buttonType="filled"
             palette={variant === "inverse" ? "inverse" : "default"}
             className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}
+            data-testid="ask-organizer-cta"
           >
             {buttonText}
           </Button>

@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 
 import type {
   CommunityRuleEntry,
+  CommunityRuleLabeledBlock,
   CommunityRuleSection,
 } from "../../app/components/type/CommunityRule/CommunityRule.types";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
@@ -23,11 +24,33 @@ export function exportFilenameBase(rule: StoredLastPublishedRule): string {
   return fromTitle.length > 0 ? fromTitle : `rule-${rule.id.slice(0, 8)}`;
 }
 
+function labeledBlockMedia(b: CommunityRuleLabeledBlock): {
+  img?: string;
+  file?: string;
+  bodyTrim: string;
+} {
+  const imgRaw = b.imageUrl?.trim();
+  const fileRaw = b.fileUrl?.trim();
+  return {
+    img: imgRaw && imgRaw.length > 0 ? imgRaw : undefined,
+    file: fileRaw && fileRaw.length > 0 ? fileRaw : undefined,
+    bodyTrim: b.body.trim(),
+  };
+}
+
 function entryToMarkdown(entry: CommunityRuleEntry): string {
   const lines: string[] = [`### ${entry.title}`, ""];
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
-      lines.push(`#### ${b.label}`, "", b.body, "");
+      lines.push(`#### ${b.label}`, "");
+      const { img, file, bodyTrim } = labeledBlockMedia(b);
+      if (img) {
+        lines.push(`![${bodyTrim || b.label}](${img})`, "");
+      } else if (file) {
+        lines.push(`[${bodyTrim || "file"}](${file})`, "");
+      } else {
+        lines.push(b.body, "");
+      }
     }
   } else {
     const body = (entry.body ?? "").trim();
@@ -86,7 +109,17 @@ export function sectionsToCsv(
     for (const ent of sec.entries) {
       if (ent.blocks && ent.blocks.length > 0) {
         for (const b of ent.blocks) {
-          rows.push([sec.categoryName, ent.title, b.label, b.body]);
+          const { img, file, bodyTrim } = labeledBlockMedia(b);
+          const content = img
+            ? bodyTrim.length > 0
+              ? `${bodyTrim}\n${img}`
+              : img
+            : file
+              ? bodyTrim.length > 0
+                ? `${bodyTrim}\n${file}`
+                : file
+              : b.body;
+          rows.push([sec.categoryName, ent.title, b.label, content]);
         }
       } else {
         rows.push([sec.categoryName, ent.title, "", ent.body ?? ""]);
@@ -136,7 +169,17 @@ function entryToPrintHtml(entry: CommunityRuleEntry): string {
   if (entry.blocks && entry.blocks.length > 0) {
     for (const b of entry.blocks) {
       inner += `<h4 class="block-label">${escapeHtml(b.label)}</h4>`;
-      inner += paragraphsHtml(b.body);
+      const { img, file, bodyTrim } = labeledBlockMedia(b);
+      if (img) {
+        inner += `<p><img src="${escapeHtml(img)}" alt="${escapeHtml(bodyTrim || b.label)}" /></p>`;
+        if (bodyTrim.length > 0) {
+          inner += paragraphsHtml(b.body);
+        }
+      } else if (file) {
+        inner += `<p><a href="${escapeHtml(file)}">${escapeHtml(bodyTrim || file)}</a></p>`;
+      } else {
+        inner += paragraphsHtml(b.body);
+      }
     }
   } else {
     inner += paragraphsHtml(entry.body ?? "");
@@ -192,6 +235,29 @@ export function sectionsToPdfBlob(
       doc.addPage();
       y = margin;
     }
+  }
+
+  function writeBlockBodyParagraphs(body: string): void {
+    for (const p of splitDisplayParagraphs(body)) {
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+      const lines = doc.splitTextToSize(p, maxW);
+      const dim = doc.getTextDimensions(lines.join("\n"), { maxWidth: maxW });
+      ensureSpace(dim.h + 1);
+      doc.text(lines, margin, y);
+      y += dim.h + 2;
+    }
+  }
+
+  /** Plain URL line(s); italic for images so captions vs URL read distinctly in print. */
+  function writeMediaUrlLines(url: string, fontStyle: "normal" | "italic"): void {
+    doc.setFont("helvetica", fontStyle);
+    doc.setFontSize(10);
+    const urlLines = doc.splitTextToSize(url, maxW);
+    const urlDim = doc.getTextDimensions(urlLines.join("\n"), { maxWidth: maxW });
+    ensureSpace(urlDim.h + 1);
+    doc.text(urlLines, margin, y);
+    y += urlDim.h + 2;
   }
 
   doc.setFont("helvetica", "bold");
@@ -253,16 +319,15 @@ export function sectionsToPdfBlob(
             doc.text(lines, margin, y);
             y += dim.h + 2;
           }
-          for (const p of splitDisplayParagraphs(b.body)) {
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(11);
-            const lines = doc.splitTextToSize(p, maxW);
-            const dim = doc.getTextDimensions(lines.join("\n"), {
-              maxWidth: maxW,
-            });
-            ensureSpace(dim.h + 1);
-            doc.text(lines, margin, y);
-            y += dim.h + 2;
+          const { img, file } = labeledBlockMedia(b);
+          if (img) {
+            writeBlockBodyParagraphs(b.body);
+            writeMediaUrlLines(img, "italic");
+          } else if (file) {
+            writeBlockBodyParagraphs(b.body);
+            writeMediaUrlLines(file, "normal");
+          } else {
+            writeBlockBodyParagraphs(b.body);
           }
         }
       } else {

@@ -7,6 +7,7 @@ import {
   createFlowStateSchema,
   publishRuleBodySchema,
   putDraftBodySchema,
+  uniqueStakeholderEmailsForPublish,
 } from "../../lib/server/validation/createFlowSchemas";
 
 describe("assertPlainJsonValue", () => {
@@ -175,6 +176,16 @@ describe("createFlowStateSchema", () => {
     });
     expect(r.success).toBe(false);
   });
+
+  it("accepts stakeholderEmails on draft payload", () => {
+    const r = createFlowStateSchema.safeParse({
+      stakeholderEmails: ["  one@example.com  "],
+    });
+    expect(r.success).toBe(true);
+    if (r.success) {
+      expect(r.data.stakeholderEmails).toEqual(["one@example.com"]);
+    }
+  });
 });
 
 describe("putDraftBodySchema", () => {
@@ -223,5 +234,28 @@ describe("publishRuleBodySchema", () => {
       document: "nope",
     });
     expect(r.success).toBe(false);
+  });
+
+  it("normalizes stakeholderEmails", () => {
+    const r = publishRuleBodySchema.safeParse({
+      title: "Ok",
+      document: {},
+      stakeholderEmails: ["  A@Example.COM ", "b@example.com"],
+    });
+    expect(r.success).toBe(true);
+    if (r.success) {
+      expect(r.data.stakeholderEmails).toEqual(["a@example.com", "b@example.com"]);
+    }
+  });
+});
+
+describe("uniqueStakeholderEmailsForPublish", () => {
+  it("dedupes and drops publisher email", () => {
+    expect(
+      uniqueStakeholderEmailsForPublish(
+        ["a@b.c", "A@B.C", "x@y.z"],
+        "a@b.c",
+      ),
+    ).toEqual(["x@y.z"]);
   });
 });

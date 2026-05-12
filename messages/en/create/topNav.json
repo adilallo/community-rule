@@ -6,9 +6,11 @@
   "share": "Share",
   "export": "Export",
   "edit": "Edit",
+  "manageStakeholders": "Manage Stakeholders",
   "shareAriaLabel": "Share",
   "exportAriaLabel": "Export",
   "editAriaLabel": "Edit",
+  "manageStakeholdersAriaLabel": "Manage Stakeholders",
   "leaveConfirmLoss": "Leave create flow? Your progress will be lost.",
   "draftSaveBannerTitle": "Couldn't save draft",
   "postLoginSaveFailedWithReason": "Could not save your draft to your account. Your progress is still stored on this device.\n\n{reason}"

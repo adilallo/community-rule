@@ -1,7 +1,12 @@
 /** Labeled paragraph group (Figma “Text” stacks under Membership / Decision-making, etc.). */
 export interface CommunityRuleLabeledBlock {
   label: string;
+  /** With {@link imageUrl}, optional caption paragraphs only (not the uploaded file name). */
   body: string;
+  /** Image URL (e.g. custom method upload). Rendered as `<img>` when set. */
+  imageUrl?: string;
+  /** Non-image attachment URL. Rendered as a link when set and {@link imageUrl} is absent. */
+  fileUrl?: string;
 }
 
 export interface CommunityRuleEntry {

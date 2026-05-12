@@ -3,6 +3,8 @@
 import { memo } from "react";
 import type { TextBlockProps } from "./TextBlock.types";
 
+type TextRow = NonNullable<TextBlockProps["rows"]>[number];
+
 /**
  * Figma: Utility / **Community Rule / Text Block** (22001:29793).
  * Title + body paragraphs and/or labeled rows (12px between stacks, 8px label→body).
@@ -38,6 +40,45 @@ function ParagraphGroup({ text }: { text: string }) {
   );
 }
 
+function LabeledRowView({ row }: { row: TextRow }) {
+  const imageSrc = row.imageUrl?.trim();
+  const fileHref = row.fileUrl?.trim();
+  const caption = row.body.trim();
+  const hasCaption = caption.length > 0;
+  const alt = hasCaption ? caption : row.label;
+  const linkText = hasCaption ? caption : fileHref;
+
+  return (
+    <div className="flex min-w-0 flex-col gap-2">
+      <p className={ROW_LABEL_CLASS}>{row.label}</p>
+      {imageSrc ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- same-origin or absolute upload URL */}
+          <img
+            src={imageSrc}
+            alt={alt}
+            className="max-h-[240px] max-w-full rounded-[var(--measures-radius-200,8px)] object-contain"
+          />
+          {hasCaption ? <ParagraphGroup text={row.body} /> : null}
+        </>
+      ) : fileHref ? (
+        <p className={`${PARAGRAPH_CLASS} whitespace-pre-wrap`}>
+          <a
+            href={fileHref}
+            className="underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {linkText}
+          </a>
+        </p>
+      ) : (
+        <ParagraphGroup text={row.body} />
+      )}
+    </div>
+  );
+}
+
 function TextBlockView({
   title,
   body = "",
@@ -54,12 +95,7 @@ function TextBlockView({
       <p className={`${ENTRY_TITLE_CLASS} w-full min-w-0`}>{title}</p>
       <div className="flex min-w-0 flex-col gap-3">
         {hasRows
-          ? rows!.map((row, i) => (
-              <div key={i} className="flex min-w-0 flex-col gap-2">
-                <p className={ROW_LABEL_CLASS}>{row.label}</p>
-                <ParagraphGroup text={row.body} />
-              </div>
-            ))
+          ? rows!.map((row, i) => <LabeledRowView key={i} row={row} />)
           : body.trim().length > 0 && <ParagraphGroup text={body} />}
       </div>
     </div>

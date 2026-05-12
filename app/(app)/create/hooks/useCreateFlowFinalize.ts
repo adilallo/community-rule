@@ -100,10 +100,14 @@ export function useCreateFlowFinalize({
       return;
     }
 
+    const stakeholderEmails = (state.stakeholderEmails ?? []).filter(
+      (e) => typeof e === "string" && e.trim() !== "",
+    );
     const publishResult = await publishRule({
       title,
       summary,
       document: ruleDocument,
+      ...(stakeholderEmails.length > 0 ? { stakeholderEmails } : {}),
     });
     setIsPublishing(false);
     if (publishResult.ok === true) {

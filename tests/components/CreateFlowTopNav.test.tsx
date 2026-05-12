@@ -38,6 +38,8 @@ const config: ComponentTestSuiteConfig<CreateFlowTopNavProps> = {
     onShare: vi.fn(),
     onSelectExportFormat: vi.fn(),
     onEdit: vi.fn(),
+    hasManageStakeholders: true,
+    onManageStakeholders: vi.fn(),
     onExit: vi.fn(),
     className: "test-class",
   },
@@ -119,6 +121,33 @@ describe("CreateFlowTopNav (behavioral tests)", () => {
     render(<CreateFlowTopNav hasEdit={true} />);
     const editButton = screen.getByRole("button", { name: "Edit" });
     expect(editButton).toBeInTheDocument();
+  });
+
+  it("renders Manage Stakeholders when hasManageStakeholders is true", () => {
+    render(
+      <CreateFlowTopNav
+        hasManageStakeholders={true}
+        onManageStakeholders={vi.fn()}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Manage Stakeholders" }),
+    ).toBeInTheDocument();
+  });
+
+  it("calls onManageStakeholders when Manage Stakeholders is clicked", async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(
+      <CreateFlowTopNav
+        hasManageStakeholders={true}
+        onManageStakeholders={handler}
+      />,
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Manage Stakeholders" }),
+    );
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it("calls onExit when Exit button is clicked", async () => {

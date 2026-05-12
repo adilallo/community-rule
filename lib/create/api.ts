@@ -199,6 +199,7 @@ export async function publishRule(input: {
   title: string;
   summary?: string;
   document: Record<string, unknown>;
+  stakeholderEmails?: string[];
 }): Promise<
   | { ok: true; id: string; title: string }
   | { ok: false; error: string; status?: number }
@@ -212,6 +213,9 @@ export async function publishRule(input: {
         title: input.title,
         summary: input.summary,
         document: input.document,
+        ...(input.stakeholderEmails?.length
+          ? { stakeholderEmails: input.stakeholderEmails }
+          : {}),
       }),
     });
     const data = (await safeParseJsonResponse(res)) as {
@@ -289,6 +293,8 @@ export type MyPublishedRule = {
   summary: string | null;
   createdAt: string;
   updatedAt: string;
+  /** `owner` = authored rule; `stakeholder` = accepted invite (view only). */
+  role: "owner" | "stakeholder";
 };
 
 /**
@@ -306,7 +312,16 @@ export async function fetchMyPublishedRules(): Promise<
       rules?: MyPublishedRule[];
     } | null;
     if (!data || !Array.isArray(data.rules)) return null;
-    return data.rules;
+    const rules = data.rules.filter(
+      (r): r is MyPublishedRule =>
+        r != null &&
+        typeof r === "object" &&
+        typeof (r as MyPublishedRule).id === "string" &&
+        typeof (r as MyPublishedRule).title === "string" &&
+        ((r as MyPublishedRule).role === "owner" ||
+          (r as MyPublishedRule).role === "stakeholder"),
+    );
+    return rules;
   } catch {
     return null;
   }
@@ -352,6 +367,173 @@ export async function fetchPublishedRuleDetail(
     return { rule: data.rule, viewerIsOwner: data.viewerIsOwner };
   } catch {
     return null;
+  }
+}
+
+export type RuleStakeholderListItem = {
+  id: string;
+  email: string;
+  invitedAt: string;
+  acceptedAt: string | null;
+  status: "pending" | "accepted";
+};
+
+function parseStakeholdersPayload(data: unknown): RuleStakeholderListItem[] | null {
+  if (!data || typeof data !== "object" || !("stakeholders" in data)) {
+    return null;
+  }
+  const raw = (data as { stakeholders: unknown }).stakeholders;
+  if (!Array.isArray(raw)) return null;
+  const out: RuleStakeholderListItem[] = [];
+  for (const x of raw) {
+    if (
+      !x ||
+      typeof x !== "object" ||
+      typeof (x as { id?: unknown }).id !== "string" ||
+      typeof (x as { email?: unknown }).email !== "string" ||
+      typeof (x as { invitedAt?: unknown }).invitedAt !== "string" ||
+      ((x as { status?: unknown }).status !== "pending" &&
+        (x as { status?: unknown }).status !== "accepted")
+    ) {
+      continue;
+    }
+    const acceptedRaw = (x as { acceptedAt?: unknown }).acceptedAt;
+    const acceptedAt =
+      acceptedRaw === null
+        ? null
+        : typeof acceptedRaw === "string"
+          ? acceptedRaw
+          : null;
+    out.push({
+      id: (x as { id: string }).id,
+      email: (x as { email: string }).email,
+      invitedAt: (x as { invitedAt: string }).invitedAt,
+      acceptedAt,
+      status: (x as { status: "pending" | "accepted" }).status,
+    });
+  }
+  return out;
+}
+
+export async function fetchRuleStakeholders(
+  ruleId: string,
+): Promise<RuleStakeholderListItem[] | null> {
+  try {
+    const res = await fetch(
+      `/api/rules/${encodeURIComponent(ruleId)}/stakeholders`,
+      { credentials: "include" },
+    );
+    if (!res.ok) return null;
+    const data = await safeParseJsonResponse(res);
+    return parseStakeholdersPayload(data);
+  } catch {
+    return null;
+  }
+}
+
+export type RuleStakeholderMutationResult =
+  | { ok: true }
+  | { ok: false; error: string; status: number; retryAfterMs?: number };
+
+function retryAfterFromResponse(
+  res: Response,
+  data: unknown,
+): number | undefined {
+  if (res.status !== 429) return undefined;
+  if (data && typeof data === "object" && "details" in data) {
+    const d = (data as { details?: unknown }).details;
+    if (d && typeof d === "object" && "retryAfterMs" in d) {
+      const ms = (d as { retryAfterMs?: unknown }).retryAfterMs;
+      if (typeof ms === "number" && ms > 0) return ms;
+    }
+  }
+  const h = res.headers.get("retry-after");
+  if (h) {
+    const sec = Number.parseInt(h, 10);
+    if (!Number.isNaN(sec)) return sec * 1000;
+  }
+  return undefined;
+}
+
+export async function addRuleStakeholder(
+  ruleId: string,
+  email: string,
+): Promise<RuleStakeholderMutationResult> {
+  try {
+    const res = await fetch(
+      `/api/rules/${encodeURIComponent(ruleId)}/stakeholders`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: jsonHeaders,
+        body: JSON.stringify({ email }),
+      },
+    );
+    if (res.ok) return { ok: true };
+    const data = await safeParseJsonResponse(res);
+    return {
+      ok: false as const,
+      error: readApiErrorMessage(data),
+      status: res.status,
+      retryAfterMs: retryAfterFromResponse(res, data),
+    };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
+export async function deleteRuleStakeholder(
+  ruleId: string,
+  stakeholderId: string,
+): Promise<RuleStakeholderMutationResult> {
+  try {
+    const res = await fetch(
+      `/api/rules/${encodeURIComponent(ruleId)}/stakeholders/${encodeURIComponent(stakeholderId)}`,
+      { method: "DELETE", credentials: "include" },
+    );
+    if (res.ok) return { ok: true };
+    const data = await safeParseJsonResponse(res);
+    return {
+      ok: false as const,
+      error: readApiErrorMessage(data),
+      status: res.status,
+    };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
+export async function resendRuleStakeholderInvite(
+  ruleId: string,
+  stakeholderId: string,
+): Promise<RuleStakeholderMutationResult> {
+  try {
+    const res = await fetch(
+      `/api/rules/${encodeURIComponent(ruleId)}/stakeholders/${encodeURIComponent(stakeholderId)}/resend`,
+      { method: "POST", credentials: "include" },
+    );
+    if (res.ok) return { ok: true };
+    const data = await safeParseJsonResponse(res);
+    return {
+      ok: false as const,
+      error: readApiErrorMessage(data),
+      status: res.status,
+      retryAfterMs: retryAfterFromResponse(res, data),
+    };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
   }
 }
 

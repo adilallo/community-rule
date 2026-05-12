@@ -80,6 +80,37 @@ describe("useCreateFlowFinalize", () => {
     });
   });
 
+  it("passes stakeholderEmails to publishRule on initial publish", async () => {
+    vi.mocked(publishRule).mockResolvedValue({
+      ok: true,
+      id: "new-rule-id",
+      title: "Published title",
+    });
+
+    const { result } = renderHook(() =>
+      useCreateFlowFinalize({
+        state: {
+          ...emptyState,
+          stakeholderEmails: ["invitee@example.com"],
+        },
+        router,
+        openLogin,
+        updateState,
+        loginReturnPath: "/create/final-review",
+      }),
+    );
+
+    await act(async () => {
+      await result.current.finalize();
+    });
+
+    expect(publishRule).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stakeholderEmails: ["invitee@example.com"],
+      }),
+    );
+  });
+
   it("routes to /create/completed without celebrate after PATCH update", async () => {
     vi.mocked(updatePublishedRule).mockResolvedValue({ ok: true });
 

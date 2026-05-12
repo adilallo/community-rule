@@ -69,15 +69,13 @@ test.describe("Critical User Journeys", () => {
     // 8. User reads testimonial
     await expect(page.locator("text=Jo Freeman")).toBeVisible();
 
-    // 9. User decides to contact organizer
-    const askButton = page.locator(
-      'a:has-text("Ask an organizer"), button:has-text("Ask an organizer")',
-    );
-    if (
-      (await askButton.count()) > 0 &&
-      (await askButton.first().isVisible())
-    ) {
-      await askButton.first().click();
+    // 9. User decides to contact organizer (opens modal)
+    const askButton = page.getByTestId("ask-organizer-cta").first();
+    if ((await askButton.count()) > 0 && (await askButton.isVisible())) {
+      await askButton.click();
+      await expect(
+        page.getByRole("dialog", { name: /ask an organizer/i }),
+      ).toBeVisible();
     }
   });
 

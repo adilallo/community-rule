@@ -125,11 +125,13 @@ export default function LoginForm({
   const urlErrorMessage =
     errorParam === "expired_link"
       ? t("errors.expiredLink")
-      : errorParam === "invalid_link" || errorParam === "server"
-        ? errorParam === "server"
-          ? t("errors.serverError")
-          : t("errors.invalidLink")
-        : "";
+      : errorParam === "stakeholder_wrong_account"
+        ? t("errors.stakeholderWrongAccount")
+        : errorParam === "invalid_link" || errorParam === "server"
+          ? errorParam === "server"
+            ? t("errors.serverError")
+            : t("errors.invalidLink")
+          : "";
 
   const titleId = "login-modal-heading";
 

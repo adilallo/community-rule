@@ -208,4 +208,44 @@ describe("parsePublishedDocumentForCommunityRuleDisplay", () => {
       { label: "Expectations", body: "Answer stored only on field blocks." },
     ]);
   });
+
+  it("exposes custom upload image blocks with imageUrl for CommunityRule display", () => {
+    const customId = "b7c0a9f3-0000-4000-8000-000000000002";
+    const doc = {
+      sections: [],
+      methodSelections: {
+        communication: [
+          {
+            id: customId,
+            label: "Policy with photo",
+            sections: {
+              corePrinciple: "",
+              logisticsAdmin: "",
+              codeOfConduct: "",
+            },
+          },
+        ],
+      },
+      customMethodCardFieldBlocksById: {
+        [customId]: [
+          {
+            kind: "upload" as const,
+            id: "u1",
+            blockTitle: "Site photo",
+            fileName: "garden.jpg",
+            assetUrl: "/api/uploads/11111111-1111-4111-8111-111111111111",
+          },
+        ],
+      },
+    };
+    const out = parsePublishedDocumentForCommunityRuleDisplay(doc);
+    const comm = out.find((s) => s.categoryName === "Communication");
+    expect(comm?.entries[0]?.blocks).toEqual([
+      {
+        label: "Site photo",
+        body: "",
+        imageUrl: "/api/uploads/11111111-1111-4111-8111-111111111111",
+      },
+    ]);
+  });
 });

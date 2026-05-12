@@ -55,6 +55,10 @@ Active step for chrome and navigation is resolved from the pathname via [`parseC
 
 Wizard step → React screen rendering lives in [`createFlowScreenComponents.tsx`](../app/(app)/create/screens/createFlowScreenComponents.tsx) (`renderCreateFlowScreen`), paired with [`CREATE_FLOW_SCREEN_REGISTRY`](../app/(app)/create/utils/createFlowScreenRegistry.ts) for Figma/layout metadata.
 
+### Stakeholder emails (`confirm-stakeholders`)
+
+The step persists **`stakeholderEmails`** on `CreateFlowState` (validated on `PUT /api/drafts/me`). On **first publish** (`POST /api/rules`), the server records [`RuleStakeholder`](../prisma/schema.prisma) rows and emails each address a one-time link to [`GET /api/invites/rule-stakeholder/verify`](../app/api/invites/rule-stakeholder/verify/route.ts). Opening the link creates or signs in the account for that email and redirects to the public rule; the rule also appears on the invitee’s **profile** with **view** access (not manage). **After publish**, owners manage invites from **`/create/edit-rule`** via **Manage Stakeholders**, which opens **`/create/confirm-stakeholders?reviewReturn=edit-rule&manageStakeholders=1`** (same screen layout as the pre-publish step, backed by [`GET` / `POST` `DELETE` / resend](../app/api/rules/[id]/stakeholders/route.ts)). **`PATCH /api/rules/[id]`** still does not read stakeholder emails from the wizard draft.
+
 ### Fresh start vs continue draft (signed-in + sync)
 
 **Established pattern:** anonymous and signed-in users should see the **same** wizard when starting a **new** rule from marketing or profile: empty state at the first step, with no surprise reload of old work. Signed-in users additionally get **Save & Exit** and **publish**; their in-progress payload may also live on **`/api/drafts/me`** when `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`.

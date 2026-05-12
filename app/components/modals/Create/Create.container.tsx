@@ -14,6 +14,7 @@ const CreateContainer = memo<CreateProps>(
     headerContent,
     children,
     footerContent,
+    footerClassName,
     showBackButton = true,
     showNextButton = true,
     onBack,
@@ -47,6 +48,7 @@ const CreateContainer = memo<CreateProps>(
         // eslint-disable-next-line react/no-children-prop
         children={children}
         footerContent={footerContent}
+        footerClassName={footerClassName}
         showBackButton={showBackButton}
         showNextButton={showNextButton}
         onBack={onBack}

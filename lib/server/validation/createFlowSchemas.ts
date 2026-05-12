@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { FLOW_STEP_ORDER } from "../../../app/(app)/create/utils/flowSteps";
 import { customMethodCardFieldBlocksByIdSchema } from "../../../lib/create/customMethodCardFieldBlocks";
+import { MAX_STAKEHOLDER_EMAILS } from "../../../lib/create/stakeholderLimits";
 import { assertPlainJsonValue, DEFAULT_PLAIN_JSON_LIMITS } from "./plainJson";
 
 const flowStepTuple = FLOW_STEP_ORDER as unknown as [string, ...string[]];
@@ -63,6 +64,15 @@ const customMethodCardMetaEntrySchema = z.object({
   label: z.string().max(48),
   supportText: z.string().max(48),
 });
+
+/** Normalized (trim + lowercase) stakeholder email for drafts + publish. */
+const stakeholderEmailSchema = z
+  .string()
+  .max(320)
+  .transform((s) => s.trim().toLowerCase())
+  .pipe(z.string().email());
+
+export { MAX_STAKEHOLDER_EMAILS } from "../../../lib/create/stakeholderLimits";
 
 /**
  * Published rule `document` column: arbitrary JSON object with safety bounds.
@@ -144,7 +154,10 @@ export const createFlowStateSchema = z
     editingPublishedRuleId: z.string().max(200).optional(),
     currentStep: createFlowStepSchema.optional(),
     sections: z.array(z.unknown()).optional(),
-    stakeholders: z.array(z.unknown()).optional(),
+    stakeholderEmails: z
+      .array(stakeholderEmailSchema)
+      .max(MAX_STAKEHOLDER_EMAILS)
+      .optional(),
   })
   .passthrough()
   .superRefine((data, ctx) => {
@@ -171,9 +184,39 @@ export const publishRuleBodySchema = z.object({
       return t.length > 0 ? t : null;
     }),
   document: publishedRuleDocumentSchema,
+  stakeholderEmails: z
+    .array(stakeholderEmailSchema)
+    .max(MAX_STAKEHOLDER_EMAILS)
+    .optional(),
 });
 
 export type PublishRuleBody = z.infer<typeof publishRuleBodySchema>;
+
+export const postRuleStakeholderBodySchema = z.object({
+  email: stakeholderEmailSchema,
+});
+
+export type PostRuleStakeholderBody = z.infer<
+  typeof postRuleStakeholderBodySchema
+>;
+
+/** Dedupe and drop the publisher’s own email (`emails` need not be pre-normalized). */
+export function uniqueStakeholderEmailsForPublish(
+  emails: string[] | undefined,
+  publisherEmailNormalized: string,
+): string[] {
+  if (!emails?.length) return [];
+  const pub = publisherEmailNormalized.trim().toLowerCase();
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of emails) {
+    const e = raw.trim().toLowerCase();
+    if (e === pub || seen.has(e)) continue;
+    seen.add(e);
+    out.push(e);
+  }
+  return out;
+}
 
 export const putDraftBodySchema = z.object({
   payload: createFlowStateSchema,

@@ -1,6 +1,29 @@
 {
   "title": "Do other stakeholders need to be involved in creating your community?",
-  "description": "Adding people at this step will invite them to see your proposed CommunityRule and make their own proposals.",
+  "description": "Add their email addresses. When you publish, we'll send each person a one-time link to join Community Rule and view this rule in their profile (they won't be able to manage it unless they created it).",
   "addStakeholder": "Add stakeholder",
-  "draftToastTitle": "Congratulations! You've drafted your CommunityRule!"
+  "draftToastTitle": "Congratulations! You've drafted your CommunityRule!",
+  "invalidEmail": "Enter a valid email address.",
+  "duplicateEmail": "That email is already on the list.",
+  "maxStakeholders": "You can add up to 30 stakeholder emails.",
+  "managePublished": {
+    "lockupTitle": "Stakeholders",
+    "lockupDescription": "Invite people by email. They get a one-time link to view this rule in their profile.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "colleague@example.com",
+    "addInvite": "Send invite",
+    "loading": "Loading…",
+    "loadFailed": "Could not load stakeholders. Refresh and try again.",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "remove": "Remove",
+    "resend": "Resend invite",
+    "empty": "No stakeholders yet.",
+    "invalidEmail": "Enter a valid email address.",
+    "actionFailed": "Something went wrong. Try again.",
+    "rateLimited": "Too many requests. Try again in {seconds} seconds.",
+    "removeAria": "Remove {email}",
+    "resendAria": "Resend invite to {email}",
+    "footerDone": "Done"
+  }
 }

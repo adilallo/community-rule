@@ -14,6 +14,7 @@ export function CreateView({
   headerContent,
   children,
   footerContent,
+  footerClassName,
   showBackButton,
   showNextButton,
   onBack,
@@ -82,6 +83,7 @@ export function CreateView({
         totalSteps={totalSteps}
         stepper={stepper}
         footerContent={footerContent}
+        className={footerClassName}
       />
     </CreateModalFrameView>
   );

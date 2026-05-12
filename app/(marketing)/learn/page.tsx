@@ -24,7 +24,6 @@ export default function LearnPage() {
     subtitle: t("pages.learn.askOrganizer.subtitle"),
     description: t("pages.learn.askOrganizer.description"),
     buttonText: t("pages.learn.askOrganizer.buttonText"),
-    buttonHref: t("pages.learn.askOrganizer.buttonHref"),
     variant: "centered" as const,
   };
 

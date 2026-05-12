@@ -121,10 +121,11 @@ describe("User Journey Integration", () => {
       screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
 
-    // User clicks the ask organizer button (it's actually a link, not a button)
-    const askLink = screen.getByRole("link", { name: /Ask an organizer/i });
-    await user.click(askLink);
-    expect(askLink).toHaveAttribute("href", "#contact");
+    const askCta = screen.getByTestId("ask-organizer-cta");
+    await user.click(askCta);
+    expect(
+      await screen.findByRole("dialog", { name: /ask an organizer/i }),
+    ).toBeInTheDocument();
   });
 
   test("user explores the process through CardSteps", async () => {
