@@ -28,7 +28,6 @@ const askOrganizerData = {
   title: "Still have questions?",
   subtitle: "Get answers from an experienced organizer",
   buttonText: "Ask an organizer",
-  buttonHref: "#contact",
 };
 
 interface PageProps {

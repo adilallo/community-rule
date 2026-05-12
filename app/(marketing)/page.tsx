@@ -87,7 +87,6 @@ export default function Page() {
     title: t("pages.home.askOrganizer.title"),
     subtitle: t("pages.home.askOrganizer.subtitle"),
     buttonText: t("pages.home.askOrganizer.buttonText"),
-    buttonHref: t("pages.home.askOrganizer.buttonHref"),
   };
 
   return (

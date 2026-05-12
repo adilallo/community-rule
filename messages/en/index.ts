@@ -23,6 +23,7 @@ import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import modalsShare from "./modals/share.json";
 import modalsPopoverExport from "./modals/popoverExport.json";
+import modalsAskOrganizerInquiry from "./modals/askOrganizerInquiry.json";
 
 // create – stage 1: community
 import createInformational from "./create/community/informational.json";
@@ -117,5 +118,6 @@ export default {
   modals: {
     share: modalsShare,
     popoverExport: modalsPopoverExport,
+    askOrganizerInquiry: modalsAskOrganizerInquiry,
   },
 };

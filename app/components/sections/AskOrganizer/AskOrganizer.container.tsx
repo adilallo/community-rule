@@ -1,8 +1,9 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import { useAnalytics } from "../../../hooks";
+import AskOrganizerInquiryModal from "../../modals/AskOrganizerInquiry";
 import AskOrganizerView from "./AskOrganizer.view";
 import type {
   AskOrganizerProps,
@@ -45,8 +46,9 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     const variant = variantProp;
     const t = useTranslation();
     const defaultButtonText = buttonText ?? t("askOrganizer.buttonText");
-    const defaultButtonHref = buttonHref ?? t("askOrganizer.buttonHref");
+    const analyticsHref = buttonHref ?? "modal";
     const { trackEvent, trackCustomEvent } = useAnalytics();
+    const [inquiryOpen, setInquiryOpen] = useState(false);
 
     const resolvedVariant: AskOrganizerVariant = variant ?? "centered";
     const styles = VARIANT_STYLES[resolvedVariant] ?? VARIANT_STYLES.centered;
@@ -66,6 +68,31 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     const handleContactClick = (
       event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
     ) => {
+      if (buttonHref) {
+        // Legacy link CTA: do not intercept navigation.
+        trackEvent({
+          event: "contact_button_click",
+          category: "engagement",
+          label: "ask_organizer",
+          component: "AskOrganizer",
+          variant: resolvedVariant,
+        });
+        trackCustomEvent(
+          "contact_button_click",
+          {
+            component: "AskOrganizer",
+            variant: resolvedVariant,
+            buttonText: defaultButtonText,
+            buttonHref: analyticsHref,
+          },
+          onContactClick as
+            | ((_data: Record<string, unknown>) => void)
+            | undefined,
+        );
+        return event;
+      }
+
+      event.preventDefault();
       trackEvent({
         event: "contact_button_click",
         category: "engagement",
@@ -80,33 +107,39 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
           component: "AskOrganizer",
           variant: resolvedVariant,
           buttonText: defaultButtonText,
-          buttonHref: defaultButtonHref,
+          buttonHref: analyticsHref,
         },
         onContactClick as
           | ((_data: Record<string, unknown>) => void)
           | undefined,
       );
 
-      // Preserve existing button behavior (no preventDefault here)
-      // while still tracking analytics.
+      setInquiryOpen(true);
       return event;
     };
 
+    const closeInquiry = useCallback(() => {
+      setInquiryOpen(false);
+    }, []);
+
     return (
-      <AskOrganizerView
-        title={title}
-        subtitle={subtitle}
-        description={description}
-        buttonText={defaultButtonText}
-        buttonHref={defaultButtonHref}
-        className={className}
-        sectionPadding={sectionPadding}
-        contentGap={`${contentGap} ${styles.container}`}
-        buttonContainerClass={styles.buttonContainer}
-        variant={resolvedVariant}
-        labelledBy={labelledBy}
-        onContactClick={handleContactClick}
-      />
+      <>
+        <AskOrganizerView
+          title={title}
+          subtitle={subtitle}
+          description={description}
+          buttonText={defaultButtonText}
+          buttonHref={buttonHref}
+          className={className}
+          sectionPadding={sectionPadding}
+          contentGap={`${contentGap} ${styles.container}`}
+          buttonContainerClass={styles.buttonContainer}
+          variant={resolvedVariant}
+          labelledBy={labelledBy}
+          onContactClick={handleContactClick}
+        />
+        <AskOrganizerInquiryModal isOpen={inquiryOpen} onClose={closeInquiry} />
+      </>
     );
   },
 );

@@ -11,6 +11,9 @@ export interface AskOrganizerProps {
   subtitle?: string;
   description?: string;
   buttonText?: string;
+  /**
+   * @deprecated Modal-only flow (CR-107). Omit; kept optional for Storybook overrides.
+   */
   buttonHref?: string;
   className?: string;
   /**
@@ -22,7 +25,7 @@ export interface AskOrganizerProps {
     component: string;
     variant: string;
     buttonText: string;
-    buttonHref: string;
+    buttonHref?: string;
     timestamp: string;
   }) => void;
 }
@@ -32,7 +35,7 @@ export interface AskOrganizerViewProps {
   subtitle?: string;
   description?: string;
   buttonText: string;
-  buttonHref: string;
+  buttonHref?: string;
   className: string;
   sectionPadding: string;
   contentGap: string;

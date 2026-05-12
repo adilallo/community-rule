@@ -1,4 +1,5 @@
 import React from "react";
+import userEvent from "@testing-library/user-event";
 import { renderWithProviders as render, screen } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
 import AskOrganizer from "../../app/components/sections/AskOrganizer";
@@ -52,12 +53,21 @@ describe("AskOrganizer (behavioral tests)", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders button with default text", () => {
+  it("renders CTA button with default label", () => {
     render(<AskOrganizer title="Test" />);
     expect(
-      screen.getByRole("link", {
+      screen.getByRole("button", {
         name: /ask an organizer/i,
       }),
+    ).toBeInTheDocument();
+  });
+
+  it("opens inquiry modal when CTA is clicked", async () => {
+    const user = userEvent.setup();
+    render(<AskOrganizer title="Test" />);
+    await user.click(screen.getByTestId("ask-organizer-cta"));
+    expect(
+      await screen.findByRole("dialog", { name: /ask an organizer/i }),
     ).toBeInTheDocument();
   });
 

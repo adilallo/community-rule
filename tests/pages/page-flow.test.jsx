@@ -130,7 +130,7 @@ describe("Page Flow Integration", () => {
       screen.getByText("Get answers from an experienced organizer"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Ask an organizer/i }),
+      screen.getByRole("button", { name: /ask an organizer/i }),
     ).toBeInTheDocument();
   });
 
@@ -198,9 +198,9 @@ describe("Page Flow Integration", () => {
   test("ask organizer section has proper call-to-action", () => {
     render(<Page />);
 
-    const askLink = screen.getByRole("link", { name: /Ask an organizer/i });
-    expect(askLink).toBeInTheDocument();
-    expect(askLink).toHaveAttribute("href", "#contact");
+    const askCta = screen.getByRole("button", { name: /ask an organizer/i });
+    expect(askCta).toBeInTheDocument();
+    expect(askCta).not.toHaveAttribute("href");
   });
 
   test("page maintains proper semantic structure", async () => {
@@ -223,16 +223,22 @@ describe("Page Flow Integration", () => {
     expect(mainContent).toBeInTheDocument();
   });
 
-  test("all interactive elements are accessible", () => {
+  test("all interactive elements are accessible", async () => {
     render(<Page />);
 
-    // Check all buttons have proper roles
+    await waitFor(() => {
+      expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
+    });
+
     const buttons = screen.getAllByRole("button");
     buttons.forEach((button) => {
       expect(button).toBeInTheDocument();
     });
 
-    // Check all links have proper roles
+    await waitFor(() => {
+      expect(screen.getAllByRole("link").length).toBeGreaterThan(0);
+    });
+
     const links = screen.getAllByRole("link");
     links.forEach((link) => {
       expect(link).toBeInTheDocument();

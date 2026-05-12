@@ -49,7 +49,6 @@ export const Default = {
     title: "Still have questions?",
     subtitle: "Get answers from an experienced organizer",
     buttonText: "Ask an organizer",
-    buttonHref: "#contact",
     variant: "centered",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
@@ -60,7 +59,6 @@ export const LeftAligned = {
     title: "Still have questions?",
     subtitle: "Get answers from an experienced organizer",
     buttonText: "Ask an organizer",
-    buttonHref: "#contact",
     variant: "left-aligned",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
@@ -71,7 +69,6 @@ export const Compact = {
     title: "Still have questions?",
     subtitle: "Get answers from an experienced organizer",
     buttonText: "Ask an organizer",
-    buttonHref: "#contact",
     variant: "compact",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
@@ -82,8 +79,19 @@ export const Inverse = {
     title: "Still have questions?",
     subtitle: "Get answers from an experienced organizer",
     buttonText: "Ask an organizer",
-    buttonHref: "#contact",
     variant: "inverse",
+    onContactClick: (data) => console.log("Contact clicked:", data),
+  },
+};
+
+/** Legacy: CTA is a link (no inquiry modal). */
+export const LinkCta = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an organizer",
+    buttonHref: "/contact",
+    variant: "centered",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
 };

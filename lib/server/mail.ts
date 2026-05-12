@@ -56,6 +56,39 @@ export async function sendRuleStakeholderInviteEmail(
   });
 }
 
+/** CR-107: notify support/organizers when a visitor submits the Ask an organizer form. */
+export async function sendOrganizerInquiryNotification(params: {
+  /** Destination inbox (e.g. from ORGANIZER_INQUIRY_TO). */
+  to: string;
+  fromEmail: string;
+  visitorEmail: string;
+  message: string;
+  requestId: string;
+}): Promise<void> {
+  const { to, fromEmail, visitorEmail, message, requestId } = params;
+  const url = process.env.SMTP_URL;
+
+  if (!url) {
+    if (process.env.NODE_ENV === "development") {
+      logger.info(
+        `[dev] Organizer inquiry (request ${requestId}) from ${visitorEmail} to ${to}:\n${message}`,
+      );
+      return;
+    }
+    throw new Error("SMTP_URL is not configured");
+  }
+
+  const transporter = nodemailer.createTransport(url);
+
+  await transporter.sendMail({
+    from: fromEmail,
+    to,
+    replyTo: visitorEmail,
+    subject: `Ask an organizer inquiry from ${visitorEmail}`,
+    text: `Request ID: ${requestId}\nFrom: ${visitorEmail}\n\n${message}\n`,
+  });
+}
+
 export async function sendEmailChangeEmail(
   to: string,
   verifyUrl: string,

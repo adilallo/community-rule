@@ -53,8 +53,7 @@
   "askOrganizer": {
     "title": "Still have questions?",
     "subtitle": "Get answers from an experienced organizer",
-    "buttonText": "Ask an organizer",
-    "buttonHref": "#contact"
+    "buttonText": "Ask an organizer"
   },
   "ruleStack": {
     "title": "Popular templates",

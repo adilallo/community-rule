@@ -1,0 +1,17 @@
+{
+  "_comment": "CR-107 Ask an organizer modal (Figma 22078-587823)",
+  "title": "Ask an Organizer",
+  "description": "Have a question about organizing? Send it over and an experienced organizer will get back to you.",
+  "emailLabel": "Email address",
+  "emailPlaceholder": "you@example.com",
+  "questionLabel": "Your question",
+  "questionPlaceholder": "What would you like to know?",
+  "submitButton": "Confirm Question",
+  "closeAfterSuccess": "Close",
+  "successTitle": "Thanks, we received your question",
+  "successDescription": "Check your inbox and an organizer will reply when they can.",
+  "genericError": "Something went wrong. Please try again.",
+  "rateLimitedError": "Too many attempts. Please wait a bit and try again.",
+  "ariaDialog": "Ask an organizer",
+  "honeypotLabel": "Company"
+}

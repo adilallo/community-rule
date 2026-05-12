@@ -12,6 +12,8 @@ export interface CreateProps {
   headerContent?: React.ReactNode;
   children?: React.ReactNode;
   footerContent?: React.ReactNode;
+  /** Optional class on {@link ModalFooter} shell (e.g. taller custom footer). */
+  footerClassName?: string;
   showBackButton?: boolean;
   showNextButton?: boolean;
   onBack?: () => void;
@@ -51,6 +53,7 @@ export interface CreateViewProps {
   headerContent?: React.ReactNode;
   children?: React.ReactNode;
   footerContent?: React.ReactNode;
+  footerClassName?: string;
   showBackButton: boolean;
   showNextButton: boolean;
   onBack?: () => void;
