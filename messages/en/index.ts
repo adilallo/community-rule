@@ -15,6 +15,7 @@ import webVitalsDashboard from "./components/webVitalsDashboard.json";
 import home from "./pages/home.json";
 import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
+import about from "./pages/about.json";
 import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
@@ -76,6 +77,7 @@ export default {
     home,
     templates,
     learn,
+    about,
     monitor,
     login,
     profile,

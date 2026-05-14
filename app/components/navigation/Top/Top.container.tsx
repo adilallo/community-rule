@@ -79,7 +79,7 @@ const TopContainer = memo<TopProps>(
     const navigationItems = [
       { href: "#", text: t("navigation.useCases"), extraPadding: true },
       { href: "/learn", text: t("navigation.learn") },
-      { href: "#", text: t("navigation.about") },
+      { href: "/about", text: t("navigation.about") },
     ];
 
     const renderNavigationItems = (size: NavSize) => {

@@ -56,7 +56,7 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     const sectionPadding =
       resolvedVariant === "compact"
         ? "py-[var(--spacing-scale-016)] px-[var(--spacing-scale-016)] md:py-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-032)]"
-        : "py-[var(--spacing-scale-032)] px-[var(--spacing-scale-032)] md:py-[var(--spacing-scale-096)] md:px-[var(--spacing-scale-064)]";
+        : "py-[var(--spacing-scale-096)] px-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-064)]";
 
     const contentGap =
       resolvedVariant === "compact"

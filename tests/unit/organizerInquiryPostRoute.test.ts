@@ -9,11 +9,16 @@ vi.mock("../../lib/server/mail", () => ({
 }));
 
 const rateLimitKeyMock = vi.hoisted(() =>
-  vi.fn(() => ({ ok: true as const })),
+  vi.fn(
+    (_key: string, _minIntervalMs: number): { ok: true } | { ok: false; retryAfterMs: number } => ({
+      ok: true,
+    }),
+  ),
 );
 
 vi.mock("../../lib/server/rateLimit", () => ({
-  rateLimitKey: (...args: unknown[]) => rateLimitKeyMock(...args),
+  rateLimitKey: (key: string, minIntervalMs: number) =>
+    rateLimitKeyMock(key, minIntervalMs),
 }));
 
 import { POST } from "../../app/api/organizer-inquiry/route";

@@ -16,6 +16,7 @@ function ContentLockupView({
   linkHref,
   alignment,
   titleId,
+  titleContent,
   styles,
 }: ContentLockupViewProps) {
   return (
@@ -57,7 +58,14 @@ function ContentLockupView({
           <div className={styles.titleGroup}>
             {/* Title container */}
             <div className={styles.titleContainer}>
-              {title ? (
+              {titleContent ? (
+                <h1
+                  id={titleId}
+                  className={`${styles.title} flex flex-wrap items-center gap-[var(--spacing-scale-008)] md:gap-[var(--spacing-scale-010)]`}
+                >
+                  {titleContent}
+                </h1>
+              ) : title ? (
                 <h1 id={titleId} className={styles.title}>
                   {title}
                 </h1>

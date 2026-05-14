@@ -149,7 +149,7 @@ const Footer = memo(() => {
                   {t("navigation.learn")}
                 </Link>
                 <Link
-                  href="#"
+                  href="/about"
                   className={`w-full text-left ${primaryLinkClass} md:w-auto md:text-right`}
                 >
                   {t("navigation.about")}

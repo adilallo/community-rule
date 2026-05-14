@@ -81,6 +81,7 @@ export function AskOrganizerInquiryModalView({
     <Create
       isOpen={isOpen}
       onClose={onClose}
+      backdropVariant="blurredYellow"
       title={t("title")}
       description={t("description")}
       showBackButton={false}

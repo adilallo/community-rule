@@ -47,7 +47,7 @@ function AskOrganizerView({
             size="large"
             buttonType="filled"
             palette={variant === "inverse" ? "inverse" : "default"}
-            className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
+            className="md:!px-[var(--spacing-scale-020)] md:!py-[var(--spacing-scale-012)] md:!text-[24px] md:!leading-[28px]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}
             data-testid="ask-organizer-cta"

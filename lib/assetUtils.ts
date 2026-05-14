@@ -35,6 +35,21 @@ export function vectorMarkPath(slug: string): string {
 }
 
 /**
+ * Stat card decorative shapes in `public/assets/shapes/`
+ * (`stat-shape-1.svg` … `stat-shape-4.svg`, kebab-case — Figma **Card / Stat**).
+ */
+export function statShapeAssetPath(index: 1 | 2 | 3 | 4): string {
+  return `assets/shapes/stat-shape-${index}.svg`;
+}
+
+/**
+ * Statement / Section-Quote flanking ornaments (`public/assets/shapes/shape-qoute.svg`).
+ */
+export function quoteStatementShapePath(): string {
+  return "assets/shapes/shape-qoute.svg";
+}
+
+/**
  * Asset paths for common components
  */
 export const ASSETS = {
@@ -64,6 +79,9 @@ export const ASSETS = {
   // Content page decorative shapes
   CONTENT_SHAPE_1: "assets/Content_Shape_1.svg",
   CONTENT_SHAPE_2: "assets/Content_Shape_2.svg",
+
+  /** Sections / Book cover (Figma **22137:891197**). */
+  COMMUNITYRULES_COVER: "assets/communityrules-cover.svg",
 
   // Alert icons
   ICON_ALERT: "assets/Icon_Alert.svg",

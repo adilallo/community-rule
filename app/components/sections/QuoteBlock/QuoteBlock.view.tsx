@@ -4,11 +4,13 @@ import { memo } from "react";
 import Image from "next/image";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import QuoteDecor from "./QuoteDecor";
+import QuoteStatementDecor from "./QuoteStatementDecor";
 import type { QuoteBlockViewProps } from "./QuoteBlock.types";
 
 function QuoteBlockView({
   className,
   quote,
+  quoteSecondary,
   author,
   source,
   quoteId,
@@ -22,6 +24,37 @@ function QuoteBlockView({
 }: QuoteBlockViewProps) {
   const t = useTranslation("quoteBlock");
   const avatarAlt = t("avatarAlt").replace("{author}", author);
+
+  if (config.statementLayout) {
+    if (!quoteSecondary?.trim()) {
+      return null;
+    }
+
+    const statementTextClass =
+      "font-bricolage-grotesque text-[28px] font-bold leading-9 tracking-[var(--text-xx-large-heading--letter-spacing)] text-[var(--color-surface-default-tertiary)] md:text-[length:var(--text-xx-large-heading)] md:leading-[length:var(--text-xx-large-heading--line-height)]";
+
+    return (
+      <section
+        className={`${config.container} ${className}`.trim()}
+        aria-labelledby={quoteId}
+        role="region"
+      >
+        <div
+          className="relative box-border flex w-full max-w-[1440px] shrink-0 flex-col items-center justify-center gap-[var(--space-800)] overflow-hidden rounded-[var(--spacing-scale-020)] bg-[var(--color-surface-invert-brand-primary,#fefcc9)] px-[var(--spacing-scale-032)] py-[var(--spacing-scale-048)] md:px-[var(--space-1800)] md:py-[var(--space-2400)]"
+        >
+          <QuoteStatementDecor />
+          <div className="relative z-10 flex w-full min-w-0 shrink-0 flex-col items-center gap-9 text-center md:gap-[length:var(--text-xx-large-heading--line-height)]">
+            <p id={quoteId} className={`${statementTextClass} mb-0 w-full min-w-0`}>
+              {quote}
+            </p>
+            <p className={`${statementTextClass} mb-0 w-full min-w-0`}>
+              {quoteSecondary}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
