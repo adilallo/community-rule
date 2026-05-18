@@ -50,6 +50,25 @@ export function quoteStatementShapePath(): string {
 }
 
 /**
+ * How-it-works body ornaments (`public/assets/shapes/how-shape-*.svg`,
+ * Figma **22078:791901**).
+ */
+export function howItWorksOrnamentRightPath(): string {
+  return "assets/shapes/how-shape-2.svg";
+}
+
+export function howItWorksOrnamentLeftPath(): string {
+  return "assets/shapes/how-shape-1.svg";
+}
+
+/**
+ * Guide ContentBanner logo mark (Figma **22078:806960**).
+ */
+export function guideBannerLogoArrowPath(): string {
+  return "assets/shapes/guide-banner-logo-arrow.svg";
+}
+
+/**
  * Asset paths for common components
  */
 export const ASSETS = {

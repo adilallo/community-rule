@@ -11,6 +11,8 @@ export interface CardStepsProps {
   steps: CardStepsItem[];
   /** Large-screen heading split: line 1–3 (e.g. How / CommunityRule / helps). */
   headingDesktopLines?: readonly [string, string, string];
+  /** When set, the section CTA renders as a link. */
+  seeHowItWorksHref?: string;
 }
 
 export interface CardStepsViewProps extends CardStepsProps {

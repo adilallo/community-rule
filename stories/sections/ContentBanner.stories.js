@@ -1,3 +1,4 @@
+import React from "react";
 import ContentBanner from "../../app/components/sections/ContentBanner";
 
 const mockBlogPost = {
@@ -20,6 +21,21 @@ const mockBlogPost = {
     "<p>This is the main content of the sample article.</p><p>It has multiple paragraphs.</p>",
 };
 
+const guidePost = {
+  slug: "__how-it-works__",
+  frontmatter: {
+    title: "A Guide to CommunityRule",
+    description:
+      "CommunityRule is a modular governance toolkit designed to help democratic groups build, customize, and publish their own Operating Manual.",
+    author: "CommunityRule",
+    date: "2026-01-15",
+  },
+  content: "",
+  htmlContent: "",
+  filePath: "messages/en/pages/howItWorks.json",
+  lastModified: new Date("2026-01-15"),
+};
+
 export default {
   title: "Components/Sections/ContentBanner",
   component: ContentBanner,
@@ -27,22 +43,42 @@ export default {
     docs: {
       description: {
         component:
-          "The ContentBanner component displays the header information for blog articles, including title, description, author, and date.\n\nImages: sm uses thumbnail.horizontal; md+ uses banner.horizontal when provided, otherwise falls back to thumbnail.horizontal; final fallback is assets/Content_Banner_2.svg.\n\nNote: page background colors are applied at the blog page level using a hex color from frontmatter (background.color), not inside this component. Thumbnail and banner images should be uploaded via the content pipeline to public/content/blog/ and referenced in frontmatter.",
+          "Section / ContentBanner — `article` variant for blog posts (thumbnail/banner imagery, icon, author, date); `guide` variant for static content pages (left: title + description, right: logo mark — Figma 22078:791901 + 22078:806960).",
       },
     },
+    layout: "fullscreen",
   },
   argTypes: {
     post: {
       control: "object",
       description: "Blog post object with frontmatter and content",
     },
+    variant: {
+      control: "select",
+      options: ["article", "guide"],
+    },
   },
 };
 
-export const Default = {
+export const Article = {
   args: {
     post: mockBlogPost,
+    variant: "article",
   },
+};
+
+export const Guide = {
+  args: {
+    post: guidePost,
+    variant: "guide",
+  },
+  decorators: [
+    (Story) => (
+      <div className="bg-[var(--color-surface-default-primary)]">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const NoBannerFallbackToThumbnail = {

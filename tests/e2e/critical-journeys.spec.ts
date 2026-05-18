@@ -15,11 +15,13 @@ test.describe("Critical User Journeys", () => {
     ).toBeVisible();
 
     // 3. User clicks CTA to learn more
-    const learnButton = page
-      .locator('button:has-text("Learn how CommunityRule works")')
+    const learnCta = page
+      .getByRole("link", { name: /Learn how CommunityRule works/i })
+      .or(page.getByRole("button", { name: /Learn how CommunityRule works/i }))
       .first();
-    if ((await learnButton.count()) > 0 && (await learnButton.isVisible())) {
-      await learnButton.click();
+    if ((await learnCta.count()) > 0 && (await learnCta.isVisible())) {
+      await learnCta.click();
+      await expect(page).toHaveURL(/\/how-it-works/);
     }
 
     // 4. User scrolls to CardSteps section (home)

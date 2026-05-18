@@ -9,6 +9,10 @@ export interface ContentContainerProps {
    * Content container size.
    */
   size?: ContentContainerSizeValue;
+  /** When set, replaces the default slug-based thumbnail icon. */
+  leadingImageSrc?: string;
+  /** Alt text for `leadingImageSrc`; defaults to post title. */
+  leadingImageAlt?: string;
 }
 
 export interface ContentContainerViewProps {
@@ -16,6 +20,7 @@ export interface ContentContainerViewProps {
   width: string;
   size: "xs" | "responsive";
   iconImage: string;
+  iconAlt: string;
   containerClasses: string;
   contentGapClasses: string;
   textGapClasses: string;

@@ -68,6 +68,10 @@ describe("Page", () => {
     expect(
       screen.getAllByText("Learn how CommunityRule works").length,
     ).toBeGreaterThan(0);
+    const learnLinks = screen.getAllByRole("link", {
+      name: "Learn how CommunityRule works",
+    });
+    expect(learnLinks[0]).toHaveAttribute("href", "/how-it-works");
   });
 
   test("renders CardSteps section with correct data", async () => {

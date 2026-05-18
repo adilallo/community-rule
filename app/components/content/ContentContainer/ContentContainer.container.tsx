@@ -6,7 +6,13 @@ import ContentContainerView from "./ContentContainer.view";
 import type { ContentContainerProps } from "./ContentContainer.types";
 
 const ContentContainerContainer = memo<ContentContainerProps>(
-  ({ post, width = "200px", size: sizeProp = "responsive" }) => {
+  ({
+    post,
+    width = "200px",
+    size: sizeProp = "responsive",
+    leadingImageSrc,
+    leadingImageAlt,
+  }) => {
     const size = sizeProp;
     // Get the corresponding icon based on the same logic as background images
     const getIconImage = (slug: string): string => {
@@ -30,7 +36,9 @@ const ContentContainerContainer = memo<ContentContainerProps>(
       return icons[finalIndex];
     };
 
-    const iconImage = getIconImage(post.slug);
+    const iconImage = leadingImageSrc ?? getIconImage(post.slug);
+    const iconAlt =
+      leadingImageAlt ?? `Icon for ${post.frontmatter.title}`;
 
     // Format date
     const formattedDate = new Date(post.frontmatter.date).toLocaleDateString(
@@ -83,6 +91,7 @@ const ContentContainerContainer = memo<ContentContainerProps>(
         width={width}
         size={size}
         iconImage={iconImage}
+        iconAlt={iconAlt}
         containerClasses={containerClasses}
         contentGapClasses={contentGapClasses}
         textGapClasses={textGapClasses}

@@ -10,6 +10,7 @@ const ContentLockupContainer = memo<ContentLockupProps>(
     subtitle,
     description,
     ctaText,
+    ctaHref,
     buttonClassName = "",
     variant: variantProp = "hero",
     linkText,
@@ -166,6 +167,7 @@ const ContentLockupContainer = memo<ContentLockupProps>(
         subtitle={subtitle}
         description={description}
         ctaText={ctaText}
+        ctaHref={ctaHref}
         buttonClassName={buttonClassName}
         variant={variant}
         linkText={linkText}

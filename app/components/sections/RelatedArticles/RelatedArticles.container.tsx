@@ -12,6 +12,8 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
     currentPostSlug,
     slugOrder = [],
     variant = "default",
+    headingSurface = "onDark",
+    heading,
   }) => {
     const messages = useMessages();
     // Memoize filtered posts to prevent unnecessary re-computations
@@ -116,6 +118,8 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
         getProgressStyle={getProgressStyle}
         onMouseDown={handleMouseDown}
         variant={variant}
+        headingSurface={headingSurface}
+        heading={heading}
         useCasesHeadingLines={useCasesHeadingLines}
       />
     );

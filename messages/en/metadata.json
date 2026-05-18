@@ -19,5 +19,15 @@
       "community governance",
       "operating manual"
     ]
+  },
+  "howItWorks": {
+    "title": "A Guide to CommunityRule — CommunityRule",
+    "description": "CommunityRule is a modular governance toolkit designed to help democratic groups build, customize, and publish their own Operating Manual.",
+    "keywords": [
+      "how it works",
+      "community governance",
+      "operating manual",
+      "decision-making"
+    ]
   }
 }

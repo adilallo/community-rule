@@ -6,6 +6,7 @@ function ContentContainerView({
   width,
   size,
   iconImage,
+  iconAlt,
   containerClasses,
   contentGapClasses,
   textGapClasses,
@@ -27,7 +28,7 @@ function ContentContainerView({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={iconImage}
-            alt={`Icon for ${post.frontmatter.title}`}
+            alt={iconAlt}
             className="w-[60px] h-[30px] object-contain"
           />
         </div>

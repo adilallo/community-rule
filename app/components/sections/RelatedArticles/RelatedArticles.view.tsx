@@ -9,6 +9,8 @@ export function RelatedArticlesView({
   getProgressStyle,
   onMouseDown,
   variant = "default",
+  headingSurface = "onDark",
+  heading = "Related Articles",
   useCasesHeadingLines,
 }: RelatedArticlesViewProps) {
   if (filteredPosts.length === 0) {
@@ -49,8 +51,14 @@ export function RelatedArticlesView({
             </span>
           </h2>
         ) : (
-          <h2 className="text-center text-[32px] font-medium leading-[110%] text-[var(--color-content-inverse-primary)] lg:text-[44px]">
-            Related Articles
+          <h2
+            className={`text-center text-[32px] font-medium leading-[110%] lg:text-[44px] ${
+              headingSurface === "onLight"
+                ? "text-[var(--color-content-default-primary)]"
+                : "text-[var(--color-content-inverse-primary)]"
+            }`}
+          >
+            {heading}
           </h2>
         )}
 

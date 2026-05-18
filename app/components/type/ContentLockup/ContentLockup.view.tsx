@@ -10,6 +10,7 @@ function ContentLockupView({
   subtitle,
   description,
   ctaText,
+  ctaHref,
   buttonClassName,
   variant,
   linkText,
@@ -111,6 +112,7 @@ function ContentLockupView({
               buttonType="filled"
               palette={variant === "hero" ? "default" : "inverse"}
               size="small"
+              href={ctaHref}
             >
               {ctaText}
             </Button>
@@ -122,6 +124,7 @@ function ContentLockupView({
               palette={variant === "hero" ? "default" : "inverse"}
               size="large"
               className={buttonClassName}
+              href={ctaHref}
             >
               {ctaText}
             </Button>
@@ -132,6 +135,7 @@ function ContentLockupView({
               buttonType="filled"
               palette={variant === "hero" ? "default" : "inverse"}
               size="xlarge"
+              href={ctaHref}
             >
               {ctaText}
             </Button>

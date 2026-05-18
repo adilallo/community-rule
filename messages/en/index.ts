@@ -17,6 +17,7 @@ import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
 import about from "./pages/about.json";
 import useCases from "./pages/useCases.json";
+import howItWorks from "./pages/howItWorks.json";
 import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
@@ -80,6 +81,7 @@ export default {
     learn,
     about,
     useCases,
+    howItWorks,
     monitor,
     login,
     profile,

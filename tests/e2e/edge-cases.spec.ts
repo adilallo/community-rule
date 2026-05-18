@@ -61,27 +61,28 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should continue to function
     await expect(page.locator("text=Collaborate")).toBeVisible();
 
-    const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")',
-    );
-    const buttonCount = await learnButtons.count();
-    let visibleButton = null;
+    const learnCta = page
+      .getByRole("link", { name: /Learn how CommunityRule works/i })
+      .or(page.getByRole("button", { name: /Learn how CommunityRule works/i }));
+    const ctaCount = await learnCta.count();
+    let visibleCta = null;
 
-    for (let i = 0; i < buttonCount; i++) {
-      const button = learnButtons.nth(i);
-      if (await button.isVisible()) {
-        visibleButton = button;
+    for (let i = 0; i < ctaCount; i++) {
+      const cta = learnCta.nth(i);
+      if (await cta.isVisible()) {
+        visibleCta = cta;
         break;
       }
     }
 
-    if (!visibleButton) {
+    if (!visibleCta) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found',
+        'No visible "Learn how CommunityRule works" CTA found',
       );
     }
 
-    await visibleButton.click();
+    await visibleCta.click();
+    await expect(page).toHaveURL(/\/how-it-works/);
   });
 
   test("handles missing images gracefully", async ({ page }) => {
@@ -97,26 +98,27 @@ test.describe("Edge Cases and Error Scenarios", () => {
     // Page should still function without images
     await expect(page.locator("text=Collaborate")).toBeVisible();
 
-    const learnButtons = page.locator(
-      'button:has-text("Learn how CommunityRule works")',
-    );
-    const buttonCount = await learnButtons.count();
-    let visibleButton = null;
+    const learnCta = page
+      .getByRole("link", { name: /Learn how CommunityRule works/i })
+      .or(page.getByRole("button", { name: /Learn how CommunityRule works/i }));
+    const ctaCount = await learnCta.count();
+    let visibleCta = null;
 
-    for (let i = 0; i < buttonCount; i++) {
-      const button = learnButtons.nth(i);
-      if (await button.isVisible()) {
-        visibleButton = button;
+    for (let i = 0; i < ctaCount; i++) {
+      const cta = learnCta.nth(i);
+      if (await cta.isVisible()) {
+        visibleCta = cta;
         break;
       }
     }
 
-    if (!visibleButton) {
+    if (!visibleCta) {
       throw new Error(
-        'No visible "Learn how CommunityRule works" button found',
+        'No visible "Learn how CommunityRule works" CTA found',
       );
     }
 
-    await visibleButton.click();
+    await visibleCta.click();
+    await expect(page).toHaveURL(/\/how-it-works/);
   });
 });

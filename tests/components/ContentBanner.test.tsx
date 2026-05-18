@@ -60,4 +60,26 @@ describe("ContentBanner", () => {
     render(<ContentBanner post={mockPost} />);
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
+
+  it("renders guide variant with left-aligned copy and logo mark", () => {
+    const { container } = render(
+      <ContentBanner post={mockPost} variant="guide" />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Test Article" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Test description")).toBeInTheDocument();
+    expect(screen.queryByText("Test Author")).not.toBeInTheDocument();
+
+    const bannerRow = container.querySelector('[data-node-id="19189:9358"]');
+    expect(bannerRow).toHaveClass("md:flex-row");
+
+    const logoMark = container.querySelector(
+      '[data-node-id="22078:806960"] img',
+    );
+    expect(logoMark).toHaveAttribute(
+      "src",
+      expect.stringContaining("guide-banner-logo-arrow.svg"),
+    );
+  });
 });
