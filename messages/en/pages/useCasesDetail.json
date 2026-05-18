@@ -1,0 +1,92 @@
+{
+  "mutualAidColorado": {
+    "pageBackground": "var(--color-content-default-brand-lavender)",
+    "banner": {
+      "title": "Mutual Aid Colorado",
+      "description": "How a statewide mutual aid network used CommunityRule to clarify resource sharing, volunteer coordination, and decision-making before a crisis.",
+      "author": "CommunityRule",
+      "date": "2026-01-10"
+    },
+    "ruleCard": {
+      "title": "Mutual Aid Colorado",
+      "description": "Mutual Aid Colorado is a statewide network that empowers frontline community efforts by connecting independent mutual aid groups and building shared logistical infrastructure like supply chains and print shops.",
+      "backgroundColor": "bg-[var(--color-surface-invert-brand-lavender)]",
+      "iconPath": "assets/case-study/case-study-mutual-aid.svg"
+    },
+    "leadingImage": {
+      "src": "assets/case-study/case-study-mutual-aid.svg",
+      "alt": "Mutual Aid Colorado logo"
+    },
+    "bodyMarkdown": "Coordinating a statewide network of autonomous mutual aid groups introduces complex logistical challenges. When an organization scales to managing regional supply chains and shared physical infrastructure like print shops informal networking is no longer sufficient. Without explicit agreements regional hubs risk transforming into the very top-down bureaucracies they aim to subvert. Mutual Aid Colorado utilized CommunityRule to address this tension directly. The platform provided a modular vocabulary to design a legible governance framework. This allowed the network to establish reliable statewide coordination while fiercely protecting the autonomy of individual local chapters.\n\nA core advantage of this modular approach is the ability to engineer a polycentric system capable of operating at multiple scales. Mutual Aid Colorado used the platform to differentiate the decision-making speeds required for various projects. Managing a statewide logistics operation requires rapid coordination to move physical goods efficiently. Conversely establishing the shared values of the broader network necessitates a slow and deeply participatory consensus model. By explicitly mapping these different arenas the organization ensures that the volunteers running the print shop can make immediate operational choices without waiting for a statewide assembly to approve their paper orders.\n\nUltimately formalizing these structural relationships transforms a loose coalition into a highly resilient piece of civic infrastructure. Regional organizing frequently struggles with operational bottlenecks as the immense labor of coordinating across vast geographies falls onto a few central nodes. By documenting their resource sharing protocols and logistical agreements through CommunityRule the network constructed a durable commons. This explicit architecture ensures that knowledge regarding supply routes and shared assets is accessible to any participating group. It provides a practical blueprint for how distributed networks can build massive material power without centralizing authority.",
+    "bodyFooter": {
+      "title": "Ready to document how your group operates?",
+      "description": "Start from proven mutual aid patterns and customize them for your community."
+    },
+    "askOrganizer": {
+      "title": "Still have questions?",
+      "subtitle": "Get answers from an experienced organizer",
+      "buttonText": "Ask an Organizer",
+      "variant": "use-case-detail"
+    }
+  },
+  "foodNotBombs": {
+    "pageBackground": "var(--color-surface-invert-secondary)",
+    "banner": {
+      "title": "Food Not Bombs Boulder",
+      "description": "Food Not Bombs used CommunityRule to translate implicit organizing norms into explicit democratic processes.",
+      "author": "CommunityRule",
+      "date": "2025-04-15"
+    },
+    "ruleCard": {
+      "title": "Food Not Bombs Boulder",
+      "description": "Food Not Bombs Boulder is a mutual aid collective that recovers surplus food to share free, public meals with the community, protesting war and poverty while advocating for food as a fundamental human right.",
+      "backgroundColor": "bg-[var(--color-surface-invert-secondary)]",
+      "iconPath": "assets/use-cases/case-study-food-not-bombs.png"
+    },
+    "leadingImage": {
+      "src": "assets/use-cases/case-study-food-not-bombs.png",
+      "alt": "Food Not Bombs logo"
+    },
+    "bodyMarkdown": "Food Not Bombs operates on a fundamentally decentralized model. However it is a well documented phenomenon that organizations relying entirely on informal networks often develop unspoken power dynamics. When rules remain unstated the individuals with the most experience or social capital tend to direct operations by default. The Boulder chapter utilized CommunityRule to address this structural vulnerability. The platform offers a modular approach to organizational design that allows groups to select and adapt established governance patterns. By applying this toolkit the chapter successfully translated their implicit cultural norms into an explicit operating manual without adopting a rigid corporate hierarchy.\n\nA central advantage of this approach is the ability to construct a polycentric governance system. Rather than relying on a single central committee the organization distributes authority across multiple overlapping domains. CommunityRule helped the Boulder chapter map out these distinct operational needs by defining different speeds of decision making. For example broad constitutional amendments require a slow lazy consensus period to ensure comprehensive agreement. In contrast daily logistical tasks are delegated to autonomous working groups like the Finance team. This structural differentiation allows the chapter to maintain democratic participation while efficiently managing the routine demands of food recovery and distribution.\n\nFinally formalizing these operational agreements provides a critical foundation for organizational continuity. Grassroots initiatives frequently experience high participant turnover which can lead to a rapid loss of operational knowledge. By using CommunityRule to document their financial protocols and conflict escalation pathways in a legible format the chapter created a highly resilient shared resource. This explicit documentation functions as a stabilizing technology that outlasts the tenure of any individual founder or core member. It offers a practical template for how horizontal organizations can balance their ideological commitments to shared leadership with the practical necessity of maintaining a reliable infrastructure over time.",
+    "bodyFooter": {
+      "title": "Ready to document how your group operates?",
+      "description": "Adapt open-source and mutual aid patterns for your local chapter."
+    },
+    "askOrganizer": {
+      "title": "Still have questions?",
+      "subtitle": "Get answers from an experienced organizer",
+      "buttonText": "Ask an Organizer",
+      "variant": "use-case-detail"
+    }
+  },
+  "boulderCountyStreetMedics": {
+    "pageBackground": "var(--color-content-default-brand-red)",
+    "banner": {
+      "title": "Boulder County Street Medics",
+      "description": "CommunityRule helped the Street Medics define their operational process both on the streets and off.",
+      "author": "CommunityRule",
+      "date": "2025-04-15"
+    },
+    "ruleCard": {
+      "title": "BoCo Street Medics",
+      "description": "Boulder County Street Medics is a grassroots, volunteer-run organization focused on providing first aid and medical support to marginalized communities and activists in the Boulder area.",
+      "backgroundColor": "bg-[var(--color-surface-invert-brand-red)]",
+      "iconPath": "assets/use-cases/case-study-boulder-county-street-medics.png"
+    },
+    "leadingImage": {
+      "src": "assets/use-cases/case-study-boulder-county-street-medics.png",
+      "alt": "Boulder County Street Medics logo"
+    },
+    "bodyMarkdown": "When communities like the BoCo Street Medics operate in high-stakes, legally precarious environments, the classic \"tyranny of structurelessness\" isn't just an academic critique. It is a massive operational risk. What these medics recognized is that relying on implicit norms and unspoken hierarchies quickly leads to burnout, fragmented trust, and compromised safety. This is exactly where a tool like CommunityRule becomes vital. By providing a legible, modular framework for democratic design, it allowed the collective to step back from the adrenaline of the streets and intentionally translate their core values of radical solidarity into explicit, accountable processes. They didn't have to reinvent the wheel of governance because they could select and adapt proven patterns to fit their unique reality.\n\nWhat CommunityRule facilitates so beautifully is the understanding that a single community can and often must operate at different speeds of democracy. The BoCo Street Medics utilized this modular approach to map out their distinct operational modes, making it crystal clear to every member when to rely on the slow, deeply participatory \"15-Day Lazy Consensus\" for strategic policy, and when to pivot to a rigid Incident Command System for tactical safety during a deployment. By charting these different pathways, the medics created a constitution that balances the deep, deliberate work of egalitarian community-building with the rapid, authoritative action required to keep people safe on the ground.\n\nUltimately, formalizing these processes through CommunityRule is an act of institutional care. It shifts the burden of conflict management, onboarding, and decision-making away from the exhausted shoulders of a few founders and distributes it into a resilient, shared architecture. By defining clear boundaries around membership access, escalation ladders for conflict, and even mandated leaves of absence, the BoCo Street Medics have built a culture of true stewardship. They've proven that radical, grassroots work doesn't have to be chaotic. When we design our governance with intention, we build a solidarity that can actually outlast us.",
+    "bodyFooter": {
+      "title": "Ready to document how your group operates?",
+      "description": "Build safety-first governance that volunteers can read before they deploy."
+    },
+    "askOrganizer": {
+      "title": "Still have questions?",
+      "subtitle": "Get answers from an experienced organizer",
+      "buttonText": "Ask an Organizer",
+      "variant": "use-case-detail"
+    }
+  }
+}

@@ -31,6 +31,7 @@ export function RuleView({
   bottomLinks,
   recommended = false,
   templateGridFigmaShell = false,
+  fluidWidth = false,
 }: RuleViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
@@ -74,13 +75,16 @@ export function RuleView({
         : isMedium
           ? "gap-[12px]"
           : "gap-[18px]"; // XS and S: 18px gap
-  const cardWidth = expanded
-    ? isLarge
-      ? "w-[568px]"
-      : isMedium
-        ? "w-[398px]"
-        : "" // XS and S: no fixed width
-    : "";
+  const cardWidth =
+    fluidWidth && expanded
+      ? ""
+      : expanded
+        ? isLarge
+          ? "w-[568px]"
+          : isMedium
+            ? "w-[398px]"
+            : ""
+        : "";
 
   // Logo/Icon dimensions (inner circle) after Figma header `pl-1 pr-2 py-2` in icon cell
   // (Card / Rule — e.g. `22143:900771` / `19706:12110`); outer column width holds padding + this.
@@ -363,9 +367,11 @@ export function RuleView({
             (onDescriptionClick &&
               typeof descriptionEmptyHint === "string")) && (
             <div
-              className={`relative w-full shrink-0 border-b border-solid border-[var(--color-content-invert-primary)] pb-[16px] ${
-                expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"
-              }`}
+              className={`relative w-full shrink-0 ${
+                categories && categories.length > 0
+                  ? "border-b border-solid border-[var(--color-content-invert-primary)] pb-[16px]"
+                  : ""
+              } ${expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"}`}
             >
               {onDescriptionClick ? (
                 <InlineTextButton

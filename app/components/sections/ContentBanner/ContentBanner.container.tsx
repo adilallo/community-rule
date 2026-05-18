@@ -13,6 +13,8 @@ const ContentBannerContainer = memo<ContentBannerProps>(
     variant: variantProp = "article",
     leadingImageSrc,
     leadingImageAlt,
+    rulePreview,
+    contentTone,
   }) => {
     const variant = variantProp;
 
@@ -46,6 +48,8 @@ const ContentBannerContainer = memo<ContentBannerProps>(
         leadingImageAlt={leadingImageAlt}
         backgroundImageSm={backgroundImageSm}
         backgroundImageMd={backgroundImageMd}
+        rulePreview={rulePreview}
+        contentTone={contentTone}
       />
     );
   },

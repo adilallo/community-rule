@@ -81,4 +81,21 @@ describe("AskOrganizer (behavioral tests)", () => {
       }),
     ).toBeInTheDocument();
   });
+
+  it("use-case-detail variant uses inverse lockup and figma node", () => {
+    const { container } = render(
+      <AskOrganizer
+        title="Still have questions?"
+        subtitle="Get answers from an experienced organizer"
+        buttonText="Ask an Organizer"
+        variant="use-case-detail"
+      />,
+    );
+    expect(
+      container.querySelector('[data-figma-node="22015-42624"]'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Still have questions?" }),
+    ).toBeInTheDocument();
+  });
 });

@@ -21,6 +21,13 @@ function AskOrganizerView({
 }: AskOrganizerViewProps) {
   const t = useTranslation();
   const ariaLabel = t("askOrganizer.ariaLabel");
+  const isUseCaseDetail = variant === "use-case-detail";
+  const lockupVariant =
+    variant === "inverse" || isUseCaseDetail ? "ask-inverse" : "ask";
+  const lockupAlignment =
+    variant === "left-aligned" ? "left" : "center";
+  const buttonPalette =
+    variant === "inverse" || isUseCaseDetail ? "inverse" : "default";
 
   return (
     <section
@@ -28,16 +35,18 @@ function AskOrganizerView({
       aria-labelledby={labelledBy}
       aria-label={labelledBy ? undefined : ariaLabel}
       tabIndex={-1}
-      data-figma-node="18116-15960"
+      data-figma-node={isUseCaseDetail ? "22015-42624" : "18116-15960"}
     >
-      <div className={`flex flex-col ${contentGap}`}>
+      <div
+        className={`mx-auto flex w-full min-w-[358px] max-w-[1280px] flex-col ${contentGap} ${isUseCaseDetail ? "items-center" : ""}`}
+      >
         {/* Content Lockup */}
         <ContentLockup
           title={title}
           subtitle={subtitle}
           description={description}
-          variant={variant === "inverse" ? "ask-inverse" : "ask"}
-          alignment={variant === "left-aligned" ? "left" : "center"}
+          variant={lockupVariant}
+          alignment={lockupAlignment}
           titleId={labelledBy}
         />
 
@@ -49,7 +58,7 @@ function AskOrganizerView({
             {...(buttonHref ? { href: buttonHref } : {})}
             size="large"
             buttonType="filled"
-            palette={variant === "inverse" ? "inverse" : "default"}
+            palette={buttonPalette}
             className="!px-[var(--spacing-scale-016)] !py-[var(--spacing-scale-012)]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}

@@ -1,6 +1,7 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+import { renderWithProviders as render } from "../utils/test-utils";
 import ContentBanner from "../../app/components/sections/ContentBanner";
 import type { BlogPost } from "../../lib/content";
 
@@ -59,6 +60,29 @@ describe("ContentBanner", () => {
   it("renders article description", () => {
     render(<ContentBanner post={mockPost} />);
     expect(screen.getByText("Test description")).toBeInTheDocument();
+  });
+
+  it("renders useCase variant with ContentContainer copy and rule preview", () => {
+    const { container } = render(
+      <ContentBanner
+        post={mockPost}
+        variant="useCase"
+        rulePreview={{
+          title: "Sample Operating Manual",
+          description: "Governance preview for the case study.",
+          backgroundColor: "bg-[var(--color-surface-invert-brand-lavender)]",
+          iconPath: "assets/case-study/case-study-mutual-aid.svg",
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Test Article" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Sample Operating Manual")).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-figma-node="22015:42621"]'),
+    ).toBeInTheDocument();
   });
 
   it("renders guide variant with left-aligned copy and logo mark", () => {

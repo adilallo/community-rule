@@ -55,7 +55,11 @@ export default {
     },
     variant: {
       control: "select",
-      options: ["article", "guide"],
+      options: ["article", "guide", "useCase"],
+    },
+    rulePreview: {
+      control: "object",
+      description: "useCase variant only",
     },
   },
 };
@@ -65,6 +69,34 @@ export const Article = {
     post: mockBlogPost,
     variant: "article",
   },
+};
+
+const useCaseRulePreview = {
+  title: "Mutual Aid Colorado Operating Manual",
+  description:
+    "Shared values, resource distribution, volunteer shifts, and consensus-minus-one decisions.",
+  backgroundColor: "bg-[var(--color-surface-invert-brand-lavender)]",
+  iconPath: "assets/case-study/case-study-mutual-aid.svg",
+};
+
+export const UseCase = {
+  args: {
+    post: guidePost,
+    variant: "useCase",
+    rulePreview: useCaseRulePreview,
+    leadingImageAlt: "Mutual Aid Colorado logo",
+    contentTone: "onLight",
+  },
+  decorators: [
+    (Story) => (
+      <div
+        className="min-h-screen"
+        style={{ background: "var(--color-content-default-brand-lavender)" }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Guide = {

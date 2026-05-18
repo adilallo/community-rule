@@ -70,6 +70,8 @@ export interface RuleProps {
    * Marketing **GovernanceTemplateGrid** / RuleStack shell (Figma [22085:860413](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-860413&m=dev); card shell **18375:22616**).
    */
   templateGridFigmaShell?: boolean;
+  /** When true, expanded cards fill their container instead of a fixed Figma width. */
+  fluidWidth?: boolean;
 }
 
 export interface RuleViewProps {
@@ -95,4 +97,5 @@ export interface RuleViewProps {
   bottomLinks?: RuleBottomLink[];
   recommended?: boolean;
   templateGridFigmaShell?: boolean;
+  fluidWidth?: boolean;
 }

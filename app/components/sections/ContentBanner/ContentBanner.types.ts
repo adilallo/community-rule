@@ -1,17 +1,31 @@
 import type { BlogPost } from "../../../../lib/content";
+import type { ContentContainerToneValue } from "../../content/ContentContainer/ContentContainer.types";
 
-export type ContentBannerVariant = "article" | "guide";
+export type ContentBannerVariant = "article" | "guide" | "useCase";
+
+/** Rule column for `useCase` variant (Figma 22015:42621). */
+export interface ContentBannerRulePreview {
+  title: string;
+  description: string;
+  backgroundColor: string;
+  iconPath: string;
+}
 
 export interface ContentBannerProps {
   post: BlogPost;
   /**
    * `article` — blog post hero with thumbnail/banner imagery and metadata.
    * `guide` — static guide pages (Figma ContentBanner on content page template).
+   * `useCase` — use case detail: ContentContainer + Rule preview.
    */
   variant?: ContentBannerVariant;
-  /** Article variant only: replaces slug-based thumbnail icon in ContentContainer. */
+  /** Article / useCase: replaces slug-based thumbnail icon in ContentContainer. */
   leadingImageSrc?: string;
   leadingImageAlt?: string;
+  /** `useCase` only: expanded Rule preview in the right column. */
+  rulePreview?: ContentBannerRulePreview;
+  /** `useCase` only: ContentContainer text tokens (default `onLight`). */
+  contentTone?: ContentContainerToneValue;
 }
 
 export interface ContentBannerViewProps {
@@ -21,4 +35,6 @@ export interface ContentBannerViewProps {
   leadingImageAlt?: string;
   backgroundImageSm?: string;
   backgroundImageMd?: string;
+  rulePreview?: ContentBannerRulePreview;
+  contentTone?: ContentContainerToneValue;
 }

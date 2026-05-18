@@ -118,14 +118,14 @@ const ContentLockupContainer = memo<ContentLockupProps>(
           "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
       },
       "ask-inverse": {
-        container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10",
+        container: "flex flex-col gap-[var(--spacing-scale-008)] relative z-10 w-full",
         textContainer: "flex flex-col gap-[var(--spacing-scale-008)]",
-        titleGroup: "flex flex-col gap-[var(--spacing-scale-008)]",
+        titleGroup: "flex flex-col gap-[var(--spacing-scale-008)] w-full",
         titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
         title:
           "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] lg:text-[44px] lg:leading-[1.1] text-[var(--color-content-inverse-primary)]",
         subtitle:
-          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-inverse-primary)]",
+          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-invert-secondary)]",
         shape:
           "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
       },

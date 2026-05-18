@@ -5,7 +5,21 @@
   "caseStudyTiles": {
     "mutualAidColoradoAlt": "Mutual Aid Colorado logo",
     "foodNotBombsAlt": "Food Not Bombs logo",
-    "boulderCountyStreetMedicsAlt": "Boulder County Street Medics logo"
+    "boulderCountyStreetMedicsAlt": "Boulder County Street Medics logo",
+    "links": [
+      {
+        "href": "/use-cases/mutual-aid-colorado",
+        "ariaLabel": "View Mutual Aid Colorado use case"
+      },
+      {
+        "href": "/use-cases/food-not-bombs",
+        "ariaLabel": "View Food Not Bombs use case"
+      },
+      {
+        "href": "/use-cases/boulder-county-street-medics",
+        "ariaLabel": "View Boulder County Street Medics use case"
+      }
+    ]
   },
   "quote": {
     "paragraph1": "Most communities don't fail because of a lack of passion, they fail because of undefined processes.",

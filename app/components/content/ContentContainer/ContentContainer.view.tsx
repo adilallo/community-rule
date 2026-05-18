@@ -7,6 +7,7 @@ function ContentContainerView({
   size,
   iconImage,
   iconAlt,
+  showLeadingImage,
   containerClasses,
   contentGapClasses,
   textGapClasses,
@@ -23,15 +24,16 @@ function ContentContainerView({
     >
       {/* Content Container - gap between icon and text */}
       <div className={contentGapClasses}>
-        {/* Icon */}
-        <div className="w-[60px] h-[30px] flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={iconImage}
-            alt={iconAlt}
-            className="w-[60px] h-[30px] object-contain"
-          />
-        </div>
+        {showLeadingImage ? (
+          <div className="flex h-[30px] w-[60px] items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={iconImage}
+              alt={iconAlt}
+              className="h-[30px] w-[60px] object-contain"
+            />
+          </div>
+        ) : null}
 
         {/* Text Container */}
         <div className={textGapClasses}>

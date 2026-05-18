@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { memo } from "react";
 import ContentContainer from "../../content/ContentContainer";
+import Rule from "../../cards/Rule";
 import {
   getAssetPath,
   guideBannerLogoArrowPath,
@@ -115,9 +117,89 @@ function ContentBannerArticleView({
   );
 }
 
+/**
+ * Figma: use case detail ContentBanner (22015:42621) — copy left, Rule preview right.
+ */
+function ContentBannerUseCaseView({
+  post,
+  rulePreview,
+}: Pick<ContentBannerViewProps, "post" | "rulePreview">) {
+  if (!rulePreview) {
+    return null;
+  }
+
+  const { title, description, author, date } = post.frontmatter;
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
+
+  return (
+    <section
+      className="relative w-full overflow-clip"
+      aria-label={title}
+    >
+      <div
+        data-figma-node="22015:42621"
+        className="mx-auto flex w-full max-w-[1024px] flex-col items-center gap-[var(--space-800)] px-[var(--space-1200)] py-[var(--space-1000)] md:flex-row md:items-center"
+      >
+        <div
+          data-node-id="19189:9171"
+          className="flex w-full max-w-[365px] shrink-0 flex-col gap-[var(--spacing-scale-024)]"
+        >
+          <div className="flex w-full flex-col gap-[var(--measures-spacing-016)]">
+            <div className="flex w-full flex-col gap-[var(--measures-spacing-004)] text-[var(--color-content-inverse-brand-royal)]">
+              <h1 className="w-full font-bricolage font-medium text-[32px] leading-[110%] sm:text-[40px] lg:text-[44px]">
+                {title}
+              </h1>
+              {description ? (
+                <p className="w-full font-inter font-normal text-[16px] leading-[130%] sm:text-[18px]">
+                  {description}
+                </p>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex w-full items-end gap-[var(--measures-spacing-008)] font-inter text-[14px] leading-[20px] text-[var(--color-content-inverse-brand-royal)]">
+            <span>{author}</span>
+            <span>{formattedDate}</span>
+          </div>
+        </div>
+
+        <div className="flex min-w-0 w-full flex-1">
+          <Rule
+            title={rulePreview.title}
+            description={rulePreview.description}
+            expanded
+            fluidWidth
+            size="L"
+            templateGridFigmaShell
+            backgroundColor={rulePreview.backgroundColor}
+            className="pointer-events-none w-full select-none rounded-[24px]"
+            icon={
+              <Image
+                src={getAssetPath(rulePreview.iconPath)}
+                alt=""
+                width={103}
+                height={103}
+                draggable={false}
+                unoptimized={rulePreview.iconPath.endsWith(".svg")}
+                className="aspect-square size-full max-h-[103px] max-w-[103px] object-contain mix-blend-luminosity"
+              />
+            }
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ContentBannerView(props: ContentBannerViewProps) {
   if (props.variant === "guide") {
     return <ContentBannerGuideView post={props.post} />;
+  }
+
+  if (props.variant === "useCase") {
+    return <ContentBannerUseCaseView {...props} />;
   }
 
   return <ContentBannerArticleView {...props} />;

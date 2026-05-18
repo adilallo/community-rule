@@ -20,6 +20,23 @@
       "operating manual"
     ]
   },
+  "useCasesDetail": {
+    "mutualAidColorado": {
+      "title": "Mutual Aid Colorado — CommunityRule",
+      "description": "How Mutual Aid Colorado used CommunityRule to clarify resource sharing, volunteer coordination, and decision-making.",
+      "keywords": ["mutual aid", "use case", "community governance", "operating manual"]
+    },
+    "foodNotBombs": {
+      "title": "Food Not Bombs Boulder — CommunityRule",
+      "description": "How Food Not Bombs Boulder used CommunityRule to translate implicit organizing norms into explicit democratic processes.",
+      "keywords": ["food not bombs", "use case", "community governance", "operating manual"]
+    },
+    "boulderCountyStreetMedics": {
+      "title": "Boulder County Street Medics — CommunityRule",
+      "description": "How CommunityRule helped Boulder County Street Medics define operational process on the streets and off.",
+      "keywords": ["street medics", "use case", "community governance", "operating manual"]
+    }
+  },
   "howItWorks": {
     "title": "A Guide to CommunityRule — CommunityRule",
     "description": "CommunityRule is a modular governance toolkit designed to help democratic groups build, customize, and publish their own Operating Manual.",

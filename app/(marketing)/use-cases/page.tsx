@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { Suspense } from "react";
 import messages from "../../../messages/en/index";
 import { getAllBlogPosts } from "../../../lib/content";
@@ -29,6 +30,16 @@ const RelatedArticles = dynamic(
 function asArray<T>(value: unknown): T[] {
   return Array.isArray(value) ? value : [];
 }
+
+const CASE_STUDY_TILE_RADIUS_CLASS = "rounded-[23.093px]";
+
+const CASE_STUDY_LINK_CLASS = [
+  CASE_STUDY_TILE_RADIUS_CLASS,
+  "block shrink-0 cursor-pointer outline-none transition-transform duration-200",
+  "hover:scale-[1.02] hover:opacity-95",
+  "focus-visible:ring-2 focus-visible:ring-[var(--color-border-default-brand-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface-default-primary)]",
+  "active:scale-[0.98]",
+].join(" ");
 
 /** Matches `pages.useCases.groups.items` order ↔ `public/assets/vector/*.svg`. */
 const USE_CASES_GROUP_VECTOR_SLUGS = [
@@ -99,6 +110,16 @@ export default function UseCasesPage() {
     page.tripleStep.steps,
   );
 
+  const caseStudyLinks = asArray<{ href: string; ariaLabel: string }>(
+    page.caseStudyTiles.links,
+  );
+  const caseStudySurfaces = ["lavender", "neutral", "rose"] as const;
+  const caseStudyAlts = [
+    page.caseStudyTiles.mutualAidColoradoAlt,
+    page.caseStudyTiles.foodNotBombsAlt,
+    page.caseStudyTiles.boulderCountyStreetMedicsAlt,
+  ];
+
   return (
     <div className="min-h-screen bg-[var(--color-surface-default-primary)]">
       <PageHeader
@@ -109,18 +130,27 @@ export default function UseCasesPage() {
       />
 
       <UseCasesOrgs>
-        <CaseStudy
-          surface="lavender"
-          imageAlt={page.caseStudyTiles.mutualAidColoradoAlt}
-        />
-        <CaseStudy
-          surface="neutral"
-          imageAlt={page.caseStudyTiles.foodNotBombsAlt}
-        />
-        <CaseStudy
-          surface="rose"
-          imageAlt={page.caseStudyTiles.boulderCountyStreetMedicsAlt}
-        />
+        {caseStudySurfaces.map((surface, index) => {
+          const link = caseStudyLinks[index];
+          const card = (
+            <CaseStudy surface={surface} imageAlt={caseStudyAlts[index]} />
+          );
+
+          if (!link?.href) {
+            return <div key={surface}>{card}</div>;
+          }
+
+          return (
+            <Link
+              key={surface}
+              href={link.href}
+              aria-label={link.ariaLabel}
+              className={CASE_STUDY_LINK_CLASS}
+            >
+              {card}
+            </Link>
+          );
+        })}
       </UseCasesOrgs>
 
       <QuoteBlock

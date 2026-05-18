@@ -130,6 +130,14 @@ describe("Rule Component", () => {
     expect(card).toHaveClass("w-[568px]");
   });
 
+  it("fluidWidth expanded cards fill the container", () => {
+    render(<Rule {...defaultProps} expanded={true} size="L" fluidWidth />);
+
+    const card = screen.getByRole("button");
+    expect(card).not.toHaveClass("w-[568px]");
+    expect(card).toHaveClass("w-full");
+  });
+
   it("applies proper accessibility attributes", () => {
     render(<Rule {...defaultProps} expanded={true} />);
 
