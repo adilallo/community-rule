@@ -28,7 +28,7 @@ declare global {
 }
 
 const RuleStackContainer = memo<RuleStackProps>(
-  ({ className = "", initialGridEntries }) => {
+  ({ className = "", initialGridEntries, translationNamespace, twoColumnsFromMd }) => {
   const router = useRouter();
   const [gridEntries, setGridEntries] = useState<TemplateGridCardEntry[] | null>(
     () => initialGridEntries ?? null,
@@ -103,6 +103,8 @@ const RuleStackContainer = memo<RuleStackProps>(
       className={className}
       onTemplateClick={handleTemplateClick}
       gridEntries={gridEntries}
+      translationNamespace={translationNamespace ?? "pages.home.ruleStack"}
+      twoColumnsFromMd={twoColumnsFromMd}
     />
   );
   },

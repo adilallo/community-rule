@@ -17,14 +17,9 @@ type MenuClusterSize = "X Small" | "Small" | "Medium" | "Large" | "X Large";
 
 /** Map responsive `NavSize` breakpoints to Figma menu item sizes (shared by nav links + login). */
 const NAV_SIZE_TO_MENU_ITEM_SIZE: Record<NavSize, MenuClusterSize> = {
-  default: "Small",
   xsmall: "X Small",
-  xsmallUseCases: "X Small",
-  home: "X Small",
   homeMd: "Medium",
-  homeUseCases: "Small",
   large: "Large",
-  largeUseCases: "Large",
   homeXlarge: "X Large",
   xlarge: "X Large",
 };
@@ -77,7 +72,7 @@ const TopContainer = memo<TopProps>(
 
     // Navigation items with translations
     const navigationItems = [
-      { href: "#", text: t("navigation.useCases"), extraPadding: true },
+      { href: "/use-cases", text: t("navigation.useCases"), extraPadding: true },
       { href: "/learn", text: t("navigation.learn") },
       { href: "/about", text: t("navigation.about") },
     ];
@@ -134,7 +129,7 @@ const TopContainer = memo<TopProps>(
       // folderTop: inverse mode (black text) for smallest breakpoints (xsmall/home)
       // folderTop: default mode (yellow text) for 640px+ breakpoints (homeMd/large/homeXlarge/xlarge)
       // false folderTop: always default mode (yellow text on dark background)
-      const isSmallBreakpoint = size === "xsmall" || size === "home";
+      const isSmallBreakpoint = size === "xsmall";
       const mode = folderTop && isSmallBreakpoint ? "inverse" : "default";
 
       const label = loggedIn ? t("buttons.profile") : t("buttons.logIn");

@@ -28,6 +28,7 @@ function AskOrganizerView({
       aria-labelledby={labelledBy}
       aria-label={labelledBy ? undefined : ariaLabel}
       tabIndex={-1}
+      data-figma-node="18116-15960"
     >
       <div className={`flex flex-col ${contentGap}`}>
         {/* Content Lockup */}
@@ -41,13 +42,15 @@ function AskOrganizerView({
         />
 
         {/* Button */}
-        <div className={buttonContainerClass}>
+        <div
+          className={`${buttonContainerClass} flex-wrap gap-y-[var(--spacing-scale-016)]`}
+        >
           <Button
             {...(buttonHref ? { href: buttonHref } : {})}
             size="large"
             buttonType="filled"
             palette={variant === "inverse" ? "inverse" : "default"}
-            className="md:!px-[var(--spacing-scale-020)] md:!py-[var(--spacing-scale-012)] md:!text-[24px] md:!leading-[28px]"
+            className="!px-[var(--spacing-scale-016)] !py-[var(--spacing-scale-012)]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}
             data-testid="ask-organizer-cta"

@@ -2,11 +2,18 @@
 
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { useIsMobile } from "../../../hooks";
+import { useMessages } from "../../../contexts/MessagesContext";
 import { RelatedArticlesView } from "./RelatedArticles.view";
 import type { RelatedArticlesProps } from "./RelatedArticles.types";
 
 const RelatedArticlesContainer = memo<RelatedArticlesProps>(
-  ({ relatedPosts, currentPostSlug, slugOrder = [] }) => {
+  ({
+    relatedPosts,
+    currentPostSlug,
+    slugOrder = [],
+    variant = "default",
+  }) => {
+    const messages = useMessages();
     // Memoize filtered posts to prevent unnecessary re-computations
     const filteredPosts = useMemo(
       () => relatedPosts.filter((post) => post.slug !== currentPostSlug),
@@ -95,6 +102,11 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
       return () => clearInterval(progressInterval);
     }, [currentIndex, filteredPosts.length, isMobile]);
 
+    const useCasesHeadingLines =
+      variant === "useCases"
+        ? messages.pages.useCases.relatedArticles.title
+        : undefined;
+
     return (
       <RelatedArticlesView
         filteredPosts={filteredPosts}
@@ -103,6 +115,8 @@ const RelatedArticlesContainer = memo<RelatedArticlesProps>(
         transformStyle={transformStyle}
         getProgressStyle={getProgressStyle}
         onMouseDown={handleMouseDown}
+        variant={variant}
+        useCasesHeadingLines={useCasesHeadingLines}
       />
     );
   },

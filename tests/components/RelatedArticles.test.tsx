@@ -1,8 +1,11 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import RelatedArticles from "../../app/components/sections/RelatedArticles";
 import type { BlogPost } from "../../lib/content";
+import {
+  renderWithProviders as render,
+  screen,
+} from "../utils/test-utils";
 
 vi.mock("next/link", () => ({
   default: ({
@@ -63,7 +66,7 @@ const mockPosts: BlogPost[] = [
   },
 ];
 
-// Pure presentational; no provider context needed (mocked thumbnail + useIsMobile).
+// MessagesProvider required — container uses useMessages().
 describe("RelatedArticles", () => {
   it("renders without crashing", () => {
     render(
@@ -85,5 +88,21 @@ describe("RelatedArticles", () => {
     );
     expect(screen.queryByTestId("thumbnail-article-1")).not.toBeInTheDocument();
     expect(screen.getByTestId("thumbnail-article-2")).toBeInTheDocument();
+  });
+
+  it("useCases variant shows localized stacked title", () => {
+    render(
+      <RelatedArticles
+        relatedPosts={mockPosts}
+        currentPostSlug="current"
+        variant="useCases"
+      />,
+    );
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: /Tools to set your group up for success/,
+      }),
+    ).toBeInTheDocument();
   });
 });

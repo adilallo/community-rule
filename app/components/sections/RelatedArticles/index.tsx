@@ -1,2 +1,5 @@
 export { default } from "./RelatedArticles.container";
-export type { RelatedArticlesProps } from "./RelatedArticles.types";
+export type {
+  RelatedArticlesProps,
+  RelatedArticlesVariant,
+} from "./RelatedArticles.types";

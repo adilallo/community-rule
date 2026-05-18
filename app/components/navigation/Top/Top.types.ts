@@ -9,15 +9,11 @@ export interface TopProps {
   logIn?: boolean;
 }
 
+/** Breakpoint slot passed from {@link Top.view} into nav render helpers. */
 export type NavSize =
-  | "default"
   | "xsmall"
-  | "xsmallUseCases"
-  | "home"
   | "homeMd"
-  | "homeUseCases"
   | "large"
-  | "largeUseCases"
   | "homeXlarge"
   | "xlarge";
 

@@ -43,6 +43,7 @@ const RuleContainer = memo<RuleProps>(
     bottomStatusLabel,
     bottomLinks,
     recommended = false,
+    templateGridFigmaShell = false,
   }) => {
     const size = sizeProp ?? "L";
 
@@ -98,6 +99,7 @@ const RuleContainer = memo<RuleProps>(
         bottomStatusLabel={bottomStatusLabel}
         bottomLinks={bottomLinks}
         recommended={recommended}
+        templateGridFigmaShell={templateGridFigmaShell}
       />
     );
   },

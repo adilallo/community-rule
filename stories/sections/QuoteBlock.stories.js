@@ -11,7 +11,7 @@ export default {
 A responsive quote section component that displays inspirational governance quotes with author attribution and decorative geometric elements.
 
 ## Features
-- **Four variants**: compact, standard, extended, and **statement** (Section/Quote yellow band, dual paragraphs)
+- **Four variants**: compact, standard, extended, and **statement** (Section/Quote yellow band; two paragraphs below \`lg\`, one paragraph from \`lg\` on /about and /use-cases — [21967-24638](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21967-24638&m=dev))
 - **Responsive design**: Adapts across all breakpoints
 - **Error handling**: Graceful fallbacks for image loading failures
 - **Accessibility**: WCAG 2.1 AA compliant with proper ARIA labels
@@ -39,12 +39,11 @@ A responsive quote section component that displays inspirational governance quot
     },
     quote: {
       control: { type: "text" },
-      description:
-        "Main quote / first paragraph (for `statement`, pair with quoteSecondary)",
+      description: "Main quote — first statement paragraph",
     },
     quoteSecondary: {
       control: { type: "text" },
-      description: "Second paragraph when `variant` is `statement`",
+      description: "Second statement paragraph",
     },
     author: {
       control: { type: "text" },
@@ -129,7 +128,7 @@ export const AllVariants = {
   },
 };
 
-// Statement band (About page / Figma Section/Quote)
+// Statement band (Section/Quote — same layout as /about + /use-cases)
 export const StatementAbout = {
   args: {
     variant: "statement",

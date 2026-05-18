@@ -9,5 +9,15 @@
       "decision-making",
       "operating manual"
     ]
+  },
+  "useCases": {
+    "title": "Use cases — CommunityRule",
+    "description": "See how mutual aid groups, cooperatives, open source projects, and other communities use CommunityRule to define structure before they need it.",
+    "keywords": [
+      "use cases",
+      "mutual aid",
+      "community governance",
+      "operating manual"
+    ]
   }
 }

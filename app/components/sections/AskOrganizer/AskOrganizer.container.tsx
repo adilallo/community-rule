@@ -32,6 +32,7 @@ const VARIANT_STYLES: Record<
   },
 };
 
+/** Figma **Section/AskOrganizer** [18116:15960](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=18116-15960&m=dev) (`lg` shell + type + button). */
 const AskOrganizerContainer = memo<AskOrganizerProps>(
   ({
     title,

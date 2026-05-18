@@ -5,7 +5,7 @@ import { logger } from "../../../../lib/logger";
 import QuoteBlockView from "./QuoteBlock.view";
 import type { QuoteBlockProps, VariantConfig } from "./QuoteBlock.types";
 
-/** Figma: portrait variants standard | compact | extended; statement = Section/Quote (22137:890679, copy scale 22135:889716 from md). */
+/** Figma: portrait variants standard | compact | extended; **`statement`** = Section/Quote (22137‑890679; **`lg`** single paragraph **21967‑24638** — About + use cases). */
 const QuoteBlockContainer = memo<QuoteBlockProps>(
   ({
     variant: variantProp = "standard",
@@ -19,7 +19,6 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     fallbackAvatarSrc = "/assets/Quote_Avatar.svg",
     onError,
   }) => {
-    const variant = variantProp;
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
@@ -86,12 +85,12 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
       },
     };
 
-    const config = variants[variant] || variants.standard;
+    const config = variants[variantProp] || variants.standard;
 
     // Use provided ID or generate a stable one based on content
     const baseId =
       id ||
-      (variant === "statement"
+      (variantProp === "statement"
         ? "statement-quote"
         : `quote-${author.toLowerCase().replace(/\s+/g, "-")}`);
     const quoteId = `${baseId}-content`;
@@ -124,7 +123,7 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     };
 
     // Validate required props
-    if (variant === "statement") {
+    if (variantProp === "statement") {
       if (!quote?.trim() || !quoteSecondary?.trim()) {
         logger.error(
           "QuoteBlock: statement variant requires non-empty quote and quoteSecondary",
@@ -134,7 +133,7 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
             type: "missing_props",
             message:
               "QuoteBlock statement variant requires quote and quoteSecondary",
-            quote: !!quote?.trim() && !!quoteSecondary?.trim(),
+            quote: !!(quote?.trim() && quoteSecondary?.trim()),
           });
         }
         return null;

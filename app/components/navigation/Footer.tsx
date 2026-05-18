@@ -137,7 +137,7 @@ const Footer = memo(() => {
                 md:gap-[var(--spacing-scale-032)]"
               >
                 <Link
-                  href="#"
+                  href="/use-cases"
                   className={`w-full text-left ${primaryLinkClass} md:w-auto md:text-right`}
                 >
                   {t("navigation.useCases")}

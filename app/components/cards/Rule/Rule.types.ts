@@ -66,6 +66,10 @@ export interface RuleProps {
    * `expanded` — Figma `22142:898446` compact `Card / Rule` only.
    */
   recommended?: boolean;
+  /**
+   * Marketing **GovernanceTemplateGrid** / RuleStack shell (Figma [22085:860413](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-860413&m=dev); card shell **18375:22616**).
+   */
+  templateGridFigmaShell?: boolean;
 }
 
 export interface RuleViewProps {
@@ -90,4 +94,5 @@ export interface RuleViewProps {
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
   recommended?: boolean;
+  templateGridFigmaShell?: boolean;
 }

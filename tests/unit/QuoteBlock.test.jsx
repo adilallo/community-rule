@@ -223,7 +223,7 @@ describe("QuoteBlock Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("statement variant renders dual paragraphs without attribution", () => {
+  test("statement variant uses one paragraph with responsive stack (Figma 21967-24638)", () => {
     render(
       <QuoteBlock
         variant="statement"
@@ -237,10 +237,14 @@ describe("QuoteBlock Component", () => {
       name: /first paragraph of the statement/i,
     });
     expect(region).toBeInTheDocument();
+    expect(region).toHaveAttribute("data-figma-node", "21967-24638");
     expect(
       screen.getByText("Second paragraph of the statement."),
     ).toBeInTheDocument();
     expect(screen.queryByRole("cite")).not.toBeInTheDocument();
+
+    const heading = region.querySelector("#about-test-quote-content");
+    expect(heading?.querySelectorAll("span.block.lg\\:inline").length).toBe(2);
   });
 
   test("statement variant logs when quoteSecondary is missing", () => {

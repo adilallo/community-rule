@@ -7,6 +7,15 @@ export interface RuleStackProps {
    * the client skips the `/api/templates` request.
    */
   initialGridEntries?: TemplateGridCardEntry[];
+  /**
+   * Prefix for `title`, `subtitle`, `button.seeAllTemplates` keys (default
+   * matches home: `pages.home.ruleStack`).
+   */
+  translationNamespace?: string;
+  /**
+   * Use **`md`** (640px) for two template columns — `/use-cases` Rule Stack.
+   */
+  twoColumnsFromMd?: boolean;
 }
 
 export interface RuleStackViewProps {
@@ -14,4 +23,6 @@ export interface RuleStackViewProps {
   onTemplateClick: (_slug: string) => void;
   /** `null` while loading curated templates from the API. */
   gridEntries: TemplateGridCardEntry[] | null;
+  translationNamespace: string;
+  twoColumnsFromMd?: boolean;
 }

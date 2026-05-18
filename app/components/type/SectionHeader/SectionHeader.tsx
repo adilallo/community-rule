@@ -10,6 +10,11 @@ interface SectionHeaderProps {
   variant?: SectionHeaderVariantValue;
   /** When set with `variant="multi-line"`, large screens show three title lines (Figma SectionCardSteps). */
   stackedDesktopLines?: readonly [string, string, string];
+  /**
+   * With `variant="multi-line"`, keep **Rule stack** desktop type: title **32/40** at `lg`, **40/52** at `xl`;
+   * subtitle **18 / 1.3** at `lg`, **24/32** at `xl`, **left-aligned** in its column from `lg` (Figma **22085:860413**).
+   */
+  ruleStackDesktopTypeScale?: boolean;
 }
 
 /**
@@ -23,6 +28,7 @@ const SectionHeader = memo<SectionHeaderProps>(
     titleLg,
     variant: variantProp = "default",
     stackedDesktopLines,
+    ruleStackDesktopTypeScale = false,
   }) => {
     const variant = variantProp;
     const useStackedDesktop =
@@ -47,7 +53,9 @@ const SectionHeader = memo<SectionHeaderProps>(
           <h2
             className={
               variant === "multi-line"
-                ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-[410px] lg:text-left xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
+                ? ruleStackDesktopTypeScale
+                  ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-full lg:max-w-none lg:text-left lg:text-[32px] lg:leading-[40px] xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
+                  : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-[410px] lg:text-left xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
                 : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px] lg:text-[32px] lg:leading-[40px] lg:w-[369px] lg:pr-[var(--spacing-scale-096)] xl:text-[40px] xl:leading-[52px] xl:w-[452px] xl:pr-[var(--spacing-scale-096)] text-[var(--color-content-default-primary)]"
             }
           >
@@ -68,14 +76,18 @@ const SectionHeader = memo<SectionHeaderProps>(
         <div
           className={
             variant === "multi-line"
-              ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-end"
+              ? ruleStackDesktopTypeScale
+                ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-start lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-start"
+                : "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-end"
               : "lg:w-[928px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end xl:h-[156px] xl:flex xl:items-center xl:justify-end"
           }
         >
           <p
             className={
               variant === "multi-line"
-                ? "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-default-tertiary)] lg:text-right"
+                ? ruleStackDesktopTypeScale
+                  ? "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] lg:text-left lg:text-[18px] lg:leading-[130%] text-[var(--color-content-default-tertiary)] xl:text-[24px] xl:leading-[32px]"
+                  : "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-default-tertiary)] lg:text-right"
                 : "font-inter font-normal text-[18px] leading-[130%] sm:text-[18px] sm:leading-[32px] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] xl:text-right text-[#484848] sm:text-[var(--color-content-default-tertiary)] lg:text-[var(--color-content-default-tertiary)] xl:text-[var(--color-content-default-tertiary)] tracking-[0px]"
             }
           >
