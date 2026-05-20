@@ -62,6 +62,28 @@ describe("ContentBanner", () => {
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
+  it("renders useCase variant rule preview as link when href is set", () => {
+    const { container } = render(
+      <ContentBanner
+        post={mockPost}
+        variant="useCase"
+        rulePreview={{
+          title: "Sample Operating Manual",
+          description: "Governance preview for the case study.",
+          backgroundColor: "bg-[var(--color-surface-invert-brand-lavender)]",
+          iconPath: "assets/case-study/case-study-mutual-aid.svg",
+          href: "/use-cases/mutual-aid-colorado/rule",
+        }}
+      />,
+    );
+
+    const link = screen.getByRole("link", {
+      name: /view sample operating manual community rule/i,
+    });
+    expect(link).toHaveAttribute("href", "/use-cases/mutual-aid-colorado/rule");
+    expect(container.querySelector(".pointer-events-none")).toBeNull();
+  });
+
   it("renders useCase variant with ContentContainer copy and rule preview", () => {
     const { container } = render(
       <ContentBanner
@@ -76,13 +98,18 @@ describe("ContentBanner", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("heading", { name: "Test Article" }),
-    ).toBeInTheDocument();
+    const title = screen.getByRole("heading", { name: "Test Article" });
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveClass("sm:text-[24px]", "md:text-[32px]");
     expect(screen.getByText("Sample Operating Manual")).toBeInTheDocument();
-    expect(
-      container.querySelector('[data-figma-node="22015:42621"]'),
-    ).toBeInTheDocument();
+    const copyColumn = container.querySelector('[data-node-id="19189:9171"]');
+    expect(copyColumn).toHaveClass("lg:max-w-[365px]");
+    expect(copyColumn).not.toHaveClass("max-w-[365px]");
+    const bannerRow = container.querySelector(
+      '[data-figma-node="22015:42621"]',
+    );
+    expect(bannerRow).toBeInTheDocument();
+    expect(bannerRow).toHaveClass("lg:grid-cols-2");
   });
 
   it("renders guide variant with left-aligned copy and logo mark", () => {

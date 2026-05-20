@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentContainer from "../../content/ContentContainer";
 import Rule from "../../cards/Rule";
 import {
@@ -123,16 +125,23 @@ function ContentBannerArticleView({
 function ContentBannerUseCaseView({
   post,
   rulePreview,
-}: Pick<ContentBannerViewProps, "post" | "rulePreview">) {
+  contentTone = "inverse",
+  leadingImageSrc,
+  leadingImageAlt,
+}: Pick<
+  ContentBannerViewProps,
+  | "post"
+  | "rulePreview"
+  | "contentTone"
+  | "leadingImageSrc"
+  | "leadingImageAlt"
+>) {
+  const t = useTranslation("pages.useCasesCompletedRule");
   if (!rulePreview) {
     return null;
   }
 
-  const { title, description, author, date } = post.frontmatter;
-  const formattedDate = new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-  });
+  const { title } = post.frontmatter;
 
   return (
     <section
@@ -141,52 +150,77 @@ function ContentBannerUseCaseView({
     >
       <div
         data-figma-node="22015:42621"
-        className="mx-auto flex w-full max-w-[1024px] flex-col items-center gap-[var(--space-800)] px-[var(--space-1200)] py-[var(--space-1000)] md:flex-row md:items-center"
+        className="mx-auto grid w-full max-w-[1024px] grid-cols-1 items-center gap-[var(--space-800)] px-[var(--space-1200)] py-[var(--space-1000)] lg:grid-cols-2 lg:items-center"
       >
         <div
           data-node-id="19189:9171"
-          className="flex w-full max-w-[365px] shrink-0 flex-col gap-[var(--spacing-scale-024)]"
+          className="flex w-full min-w-0 shrink-0 flex-col lg:max-w-[365px]"
         >
-          <div className="flex w-full flex-col gap-[var(--measures-spacing-016)]">
-            <div className="flex w-full flex-col gap-[var(--measures-spacing-004)] text-[var(--color-content-inverse-brand-royal)]">
-              <h1 className="w-full font-bricolage font-medium text-[32px] leading-[110%] sm:text-[40px] lg:text-[44px]">
-                {title}
-              </h1>
-              {description ? (
-                <p className="w-full font-inter font-normal text-[16px] leading-[130%] sm:text-[18px]">
-                  {description}
-                </p>
-              ) : null}
-            </div>
-          </div>
-          <div className="flex w-full items-end gap-[var(--measures-spacing-008)] font-inter text-[14px] leading-[20px] text-[var(--color-content-inverse-brand-royal)]">
-            <span>{author}</span>
-            <span>{formattedDate}</span>
-          </div>
+          <ContentContainer
+            post={post}
+            size="responsive"
+            tone={contentTone}
+            showLeadingImage={false}
+            leadingImageSrc={leadingImageSrc}
+            leadingImageAlt={leadingImageAlt}
+          />
         </div>
 
-        <div className="flex min-w-0 w-full flex-1">
-          <Rule
-            title={rulePreview.title}
-            description={rulePreview.description}
-            expanded
-            fluidWidth
-            size="L"
-            templateGridFigmaShell
-            backgroundColor={rulePreview.backgroundColor}
-            className="pointer-events-none w-full select-none rounded-[24px]"
-            icon={
-              <Image
-                src={getAssetPath(rulePreview.iconPath)}
-                alt=""
-                width={103}
-                height={103}
-                draggable={false}
-                unoptimized={rulePreview.iconPath.endsWith(".svg")}
-                className="aspect-square size-full max-h-[103px] max-w-[103px] object-contain mix-blend-luminosity"
+        <div className="flex min-w-0 w-full">
+          {rulePreview.href ? (
+            <Link
+              href={rulePreview.href}
+              className="block w-full rounded-[24px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default-brand-primary)] focus-visible:ring-offset-2"
+              aria-label={t("ruleCardLinkAriaLabel").replace(
+                "{title}",
+                rulePreview.title,
+              )}
+            >
+              <Rule
+                title={rulePreview.title}
+                description={rulePreview.description}
+                expanded
+                fluidWidth
+                size="L"
+                templateGridFigmaShell
+                backgroundColor={rulePreview.backgroundColor}
+                className="w-full cursor-pointer rounded-[24px] transition-opacity hover:opacity-95"
+                icon={
+                  <Image
+                    src={getAssetPath(rulePreview.iconPath)}
+                    alt=""
+                    width={103}
+                    height={103}
+                    draggable={false}
+                    unoptimized={rulePreview.iconPath.endsWith(".svg")}
+                    className="aspect-square size-full max-h-[103px] max-w-[103px] object-contain mix-blend-luminosity"
+                  />
+                }
               />
-            }
-          />
+            </Link>
+          ) : (
+            <Rule
+              title={rulePreview.title}
+              description={rulePreview.description}
+              expanded
+              fluidWidth
+              size="L"
+              templateGridFigmaShell
+              backgroundColor={rulePreview.backgroundColor}
+              className="pointer-events-none w-full select-none rounded-[24px]"
+              icon={
+                <Image
+                  src={getAssetPath(rulePreview.iconPath)}
+                  alt=""
+                  width={103}
+                  height={103}
+                  draggable={false}
+                  unoptimized={rulePreview.iconPath.endsWith(".svg")}
+                  className="aspect-square size-full max-h-[103px] max-w-[103px] object-contain mix-blend-luminosity"
+                />
+              }
+            />
+          )}
         </div>
       </div>
     </section>

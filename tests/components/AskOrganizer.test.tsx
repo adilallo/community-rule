@@ -91,11 +91,35 @@ describe("AskOrganizer (behavioral tests)", () => {
         variant="use-case-detail"
       />,
     );
-    expect(
-      container.querySelector('[data-figma-node="22015-42624"]'),
-    ).toBeInTheDocument();
+    const section = container.querySelector('[data-figma-node="22015-42624"]');
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveClass("py-[var(--spacing-scale-032)]");
+    expect(section).not.toHaveClass("py-[var(--spacing-scale-096)]");
     expect(
       screen.getByRole("heading", { name: "Still have questions?" }),
     ).toBeInTheDocument();
+  });
+
+  it("centered variant uses baseline section padding per Figma 17487-12288", () => {
+    const { container } = render(
+      <AskOrganizer
+        title="Still have questions?"
+        subtitle="Get answers from an experienced organizer"
+        variant="centered"
+      />,
+    );
+    const section = container.querySelector('[data-figma-node="18116-15960"]');
+    expect(section).toHaveClass(
+      "py-[var(--spacing-scale-040)]",
+      "px-[var(--spacing-scale-032)]",
+    );
+    expect(section).not.toHaveClass("py-[var(--spacing-scale-096)]");
+  });
+
+  it("does not force 358px min-width below md (fits 320px baseline)", () => {
+    const { container } = render(<AskOrganizer title="Test Title" />);
+    const inner = container.querySelector("section > div");
+    expect(inner).toHaveClass("min-w-0", "md:min-w-[358px]");
+    expect(inner?.className).not.toContain(" min-w-[358px]");
   });
 });

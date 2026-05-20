@@ -29,10 +29,10 @@ function HeaderLockupView({
       }`}
     >
       {/* Title */}
-      <div className="flex items-center relative shrink-0 w-full">
+      <div className="flex w-full shrink-0 items-center">
         <h1
           id={titleId}
-          className={`flex-[1_0_0] min-h-px min-w-px overflow-hidden relative ${titleColorClass} text-ellipsis whitespace-pre-wrap ${
+          className={`relative w-full min-w-0 ${titleColorClass} whitespace-pre-wrap ${
             isLeft ? "text-left" : "text-center"
           } ${
             isL
@@ -49,7 +49,7 @@ function HeaderLockupView({
         !(typeof description === "string" && description.length === 0) &&
         (typeof description === "string" ? (
           <p
-            className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
+            className={`font-inter font-normal max-w-[640px] overflow-visible relative shrink-0 ${descriptionColorClass} w-full whitespace-pre-wrap ${
               isLeft ? "" : "text-center"
             } ${
               isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"
@@ -59,7 +59,7 @@ function HeaderLockupView({
           </p>
         ) : (
           <div
-            className={`font-inter font-normal max-w-[640px] overflow-hidden relative shrink-0 ${descriptionColorClass} text-ellipsis w-full whitespace-pre-wrap ${
+            className={`font-inter font-normal max-w-[640px] overflow-visible relative shrink-0 ${descriptionColorClass} w-full whitespace-pre-wrap ${
               isLeft ? "" : "text-center"
             } ${
               isL ? "text-[18px] leading-[1.3]" : "text-[14px] leading-[20px]"

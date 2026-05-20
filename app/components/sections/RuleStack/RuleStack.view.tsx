@@ -39,6 +39,7 @@ export function RuleStackView({
         subtitle={t("subtitle")}
         variant="multi-line"
         ruleStackDesktopTypeScale
+        twoColumnsFromMd={twoColumnsFromMd}
       />
 
       {gridEntries === null ? (

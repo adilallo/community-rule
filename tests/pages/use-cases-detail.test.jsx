@@ -18,6 +18,9 @@ vi.mock("../../app/components/sections/ContentBanner", () => ({
         <>
           <p>{rulePreview.title}</p>
           <p>{rulePreview.description}</p>
+          {rulePreview.href ? (
+            <a href={rulePreview.href}>View community rule</a>
+          ) : null}
         </>
       ) : null}
     </section>
@@ -61,6 +64,9 @@ describe("UseCaseDetailPage", () => {
         screen.getByRole("heading", { name: entry.banner.title }),
       ).toBeInTheDocument();
       expect(screen.getByText(entry.ruleCard.description)).toBeInTheDocument();
+      expect(
+        screen.getByRole("link", { name: /view community rule/i }),
+      ).toHaveAttribute("href", `/use-cases/${slug}/rule`);
 
       const bodySnippet =
         slug === "mutual-aid-colorado"

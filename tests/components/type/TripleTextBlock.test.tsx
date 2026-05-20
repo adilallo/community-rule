@@ -66,9 +66,10 @@ describe("TripleTextBlock", () => {
       />,
     );
 
-    expect(
-      container.querySelector('[data-figma-node="22085-860414"]'),
-    ).toBeTruthy();
+    const section = container.querySelector('[data-figma-node="22085-860414"]');
+    expect(section).toBeTruthy();
+    expect(section).toHaveClass("px-[var(--spacing-scale-032)]");
+    expect(section).not.toHaveClass("px-[calc(var(--spacing-scale-032)+var(--spacing-scale-096))]");
 
     expect(
       screen.getByRole("heading", {
@@ -84,6 +85,9 @@ describe("TripleTextBlock", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("First paragraph.")).toBeInTheDocument();
     expect(screen.getByText("Second paragraph.")).toBeInTheDocument();
+    expect(screen.getByText("Second paragraph.")).toHaveClass(
+      "mt-[var(--spacing-scale-024)]",
+    );
     expect(screen.getByRole("link", { name: "Setup your community" })).toHaveAttribute(
       "href",
       "/create",

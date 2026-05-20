@@ -1,0 +1,15 @@
+{
+  "topNav": {
+    "duplicate": "Duplicate",
+    "return": "Return",
+    "duplicateAriaLabel": "Save a copy of this community rule to your profile",
+    "duplicateFailedTitle": "Could not duplicate",
+    "duplicateNotFoundDescription": "This use case template is no longer available.",
+    "returnAriaLabel": "Return to use case",
+    "shareLinkCopiedTitle": "Link copied",
+    "shareLinkCopiedDescription": "The link to this community rule is on your clipboard.",
+    "shareCopyFailedTitle": "Could not copy link",
+    "shareCopyFailedDescription": "Copy the URL from your browser address bar instead."
+  },
+  "ruleCardLinkAriaLabel": "View {title} community rule"
+}

@@ -125,6 +125,7 @@ export default async function UseCaseDetailPage({ params }: PageProps) {
             description: ruleCard.description,
             backgroundColor: ruleCard.backgroundColor,
             iconPath: ruleCard.iconPath,
+            href: `/use-cases/${slug}/rule`,
           }}
         />
         <article

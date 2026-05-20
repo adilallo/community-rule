@@ -38,7 +38,7 @@ function AskOrganizerView({
       data-figma-node={isUseCaseDetail ? "22015-42624" : "18116-15960"}
     >
       <div
-        className={`mx-auto flex w-full min-w-[358px] max-w-[1280px] flex-col ${contentGap} ${isUseCaseDetail ? "items-center" : ""}`}
+        className={`mx-auto flex w-full min-w-0 max-w-[1280px] flex-col md:min-w-[358px] ${contentGap} ${isUseCaseDetail ? "items-center" : ""}`}
       >
         {/* Content Lockup */}
         <ContentLockup
@@ -56,10 +56,10 @@ function AskOrganizerView({
         >
           <Button
             {...(buttonHref ? { href: buttonHref } : {})}
-            size="large"
+            size="small"
             buttonType="filled"
             palette={buttonPalette}
-            className="!px-[var(--spacing-scale-016)] !py-[var(--spacing-scale-012)]"
+            className="!px-[var(--spacing-scale-010)] md:!px-[var(--spacing-scale-016)] md:!py-[var(--spacing-scale-012)] md:!text-[16px] md:!leading-[20px]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}
             data-testid="ask-organizer-cta"

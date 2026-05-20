@@ -170,6 +170,27 @@ export function coreValuePresetFor(chipId: string): CoreValueDetailEntry {
   };
 }
 
+/**
+ * Preset chip id for a core value label (`"1"` … `"n"` from
+ * `CoreValuesSelectScreen`), or `null` when the label is bespoke.
+ */
+export function resolveCoreValueChipIdFromLabel(label: string): string | null {
+  const t = label.trim();
+  if (!t) return null;
+  const values = (coreValuesMessages as { values?: unknown }).values;
+  if (!Array.isArray(values)) return null;
+  for (let i = 0; i < values.length; i++) {
+    const row = values[i];
+    if (typeof row === "string" && row.trim() === t) return String(i + 1);
+    if (!row || typeof row !== "object") continue;
+    const o = row as Record<string, unknown>;
+    if (typeof o.label === "string" && o.label.trim() === t) {
+      return String(i + 1);
+    }
+  }
+  return null;
+}
+
 /** Match `coreValues.json` row by trimmed label (custom chip id / drift fallbacks). */
 export function coreValuePresetForLabel(label: string): CoreValueDetailEntry {
   const t = label.trim();

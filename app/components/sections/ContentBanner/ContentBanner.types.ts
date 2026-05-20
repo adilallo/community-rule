@@ -9,6 +9,8 @@ export interface ContentBannerRulePreview {
   description: string;
   backgroundColor: string;
   iconPath: string;
+  /** When set, the rule preview links to the completed community rule screen. */
+  href?: string;
 }
 
 export interface ContentBannerProps {

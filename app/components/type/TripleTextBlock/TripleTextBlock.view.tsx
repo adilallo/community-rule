@@ -14,19 +14,19 @@ function columnUsesLargeBreakpointCopy(column: TripleTextBlockColumn): boolean {
 
 function TripleTextUseCasesColumn({ column }: { column: TripleTextBlockColumn }) {
   return (
-    <div className="flex w-full flex-col gap-[var(--spacing-scale-020)] lg:gap-0 xl:gap-[var(--spacing-scale-020)]">
-      <div className="flex flex-col gap-[var(--spacing-scale-008)] lg:gap-[var(--spacing-scale-004)] xl:gap-[var(--spacing-scale-008)]">
-        <h3 className="text-left font-bricolage-grotesque text-[24px] font-medium leading-8 text-[var(--color-content-default-primary,white)] md:text-[32px] md:leading-[1.1] lg:text-[18px] lg:leading-[var(--spacing-scale-022)] xl:text-[32px] xl:leading-[1.1]">
-          {column.title}
-        </h3>
-        <div className="flex flex-col gap-[var(--spacing-scale-024)] font-inter text-[16px] font-normal leading-6 text-[var(--color-content-default-secondary)] md:text-[24px] md:leading-8 lg:gap-[var(--spacing-scale-020)] lg:text-[14px] lg:leading-5 xl:gap-[var(--spacing-scale-032)] xl:text-[24px] xl:leading-8">
-          <p>{column.description}</p>
-          {column.descriptionSecondary ? (
-            <p>{column.descriptionSecondary}</p>
-          ) : null}
-        </div>
+    <article className="flex w-full flex-col gap-[var(--spacing-scale-006)] md:gap-[var(--spacing-scale-008)] lg:gap-[var(--spacing-scale-004)] xl:gap-[var(--spacing-scale-008)]">
+      <h3 className="text-left font-bricolage-grotesque text-[24px] font-medium leading-8 text-[var(--color-content-default-primary,white)] md:text-[32px] md:leading-[1.1] lg:text-[18px] lg:leading-[var(--spacing-scale-022)] xl:text-[32px] xl:leading-[1.1]">
+        {column.title}
+      </h3>
+      <div className="flex flex-col font-inter text-[16px] font-normal leading-6 text-[var(--color-content-default-secondary)] md:text-[24px] md:leading-8 lg:text-[14px] lg:leading-5 xl:text-[24px] xl:leading-8">
+        <p>{column.description}</p>
+        {column.descriptionSecondary ? (
+          <p className="mt-[var(--spacing-scale-024)] md:mt-[var(--spacing-scale-032)] lg:mt-0 lg:pt-[var(--spacing-scale-020)] xl:mt-[var(--spacing-scale-032)]">
+            {column.descriptionSecondary}
+          </p>
+        ) : null}
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -82,7 +82,7 @@ function TripleTextBlockColumnLockup({
  * Section horizontal padding adds **+ Scale/096** below `xl` (outer frame inset); **use cases `xl`** uses **Scale/160** only ([22085:860414](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-860414&m=dev)).
  *
  * Figma: use cases **`lg`** [22037:26994](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22037-26994&m=dev);
- * **`md`** [22085:862437](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-862437&m=dev); stacked **22137:890676**;
+ * baseline **22112:871529** / **22085:860366**; **`md`** [22085:862437](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-862437&m=dev); stacked **22137:890676**;
  * lg 3-col **22128:888715**; xl **22135:889705** (default preset).
  */
 function TripleTextBlockView({
@@ -102,11 +102,11 @@ function TripleTextBlockView({
     <section
       {...(isUseCases ? { "data-figma-node": "22085-860414" } : {})}
       aria-labelledby={hasSectionTitle ? headingId : undefined}
-      className={`bg-black px-[calc(var(--spacing-scale-032)+var(--spacing-scale-096))] py-[var(--spacing-scale-064)] md:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] md:py-[var(--spacing-scale-064)] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] lg:py-[var(--spacing-scale-064)] ${
+      className={`bg-black py-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] ${
         isUseCases
-          ? "xl:px-[var(--spacing-scale-160)]"
-          : "xl:px-[calc(var(--spacing-scale-160)+var(--spacing-scale-096))]"
-      } xl:py-[var(--spacing-scale-064)] ${className}`.trim()}
+          ? "px-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-096)] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] xl:px-[var(--spacing-scale-160)]"
+          : "px-[calc(var(--spacing-scale-032)+var(--spacing-scale-096))] md:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] xl:px-[calc(var(--spacing-scale-160)+var(--spacing-scale-096))]"
+      } ${className}`.trim()}
     >
       <div
         className={

@@ -702,15 +702,46 @@ function FinalReviewEditPublishedWithStateProbe({
   return <FinalReviewScreen variant="editPublished" />;
 }
 
-describe("FinalReviewScreen — edit published description", () => {
-  it("does not expose click-to-edit description on default final review", () => {
+describe("FinalReviewScreen — edit published title and description", () => {
+  it("does not expose click-to-edit title or description on default final review", () => {
     render(
       <FinalReviewWithFlowState
         title="Oak"
         communityContext="Visible body"
       />,
     );
+    expect(screen.queryByTestId("rule-title-edit")).not.toBeInTheDocument();
     expect(screen.queryByTestId("rule-description-edit")).not.toBeInTheDocument();
+  });
+
+  it("opens Save modal from title click and updates title", async () => {
+    let latest: CreateFlowState = {};
+    render(
+      <FinalReviewEditPublishedWithStateProbe
+        onState={(s) => {
+          latest = s;
+        }}
+        initial={{
+          title: "Oak Park Commons",
+          communityContext: "Original",
+          selectedCommunicationMethodIds: ["signal"],
+        }}
+      />,
+    );
+
+    fireEvent.click(await screen.findByTestId("rule-title-edit"));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText(/Community name/i)).toBeInTheDocument();
+    const input = within(dialog).getByRole("textbox");
+    fireEvent.change(input, { target: { value: "Renamed Commons" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(latest.title).toBe("Renamed Commons");
+    });
   });
 
   it("opens Save modal from description click and updates communityContext + summary", async () => {

@@ -37,6 +37,23 @@
       "keywords": ["street medics", "use case", "community governance", "operating manual"]
     }
   },
+  "useCasesCompletedRule": {
+    "mutualAidColorado": {
+      "title": "Mutual Aid Colorado community rule — CommunityRule",
+      "description": "Read the completed community rule Mutual Aid Colorado built with CommunityRule.",
+      "keywords": ["mutual aid", "community rule", "operating manual", "use case"]
+    },
+    "foodNotBombs": {
+      "title": "Food Not Bombs Boulder community rule — CommunityRule",
+      "description": "Read the completed community rule Food Not Bombs Boulder built with CommunityRule.",
+      "keywords": ["food not bombs", "community rule", "operating manual", "use case"]
+    },
+    "boulderCountyStreetMedics": {
+      "title": "Boulder County Street Medics community rule — CommunityRule",
+      "description": "Read the completed community rule Boulder County Street Medics built with CommunityRule.",
+      "keywords": ["street medics", "community rule", "operating manual", "use case"]
+    }
+  },
   "howItWorks": {
     "title": "A Guide to CommunityRule — CommunityRule",
     "description": "CommunityRule is a modular governance toolkit designed to help democratic groups build, customize, and publish their own Operating Manual.",

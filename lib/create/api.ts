@@ -609,6 +609,44 @@ export async function duplicatePublishedRule(
   }
 }
 
+export async function duplicateUseCaseTemplate(
+  slug: string,
+): Promise<DuplicateRuleResult> {
+  try {
+    const res = await fetch(
+      `/api/use-cases/${encodeURIComponent(slug)}/duplicate`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
+    const data = (await safeParseJsonResponse(res)) as {
+      rule?: { id: string; title: string };
+    } | null;
+    const rule = data && typeof data === "object" ? data.rule : undefined;
+    if (!res.ok || !rule) {
+      const fromBody =
+        data && typeof data === "object" ? readApiErrorMessage(data) : null;
+      const msg =
+        fromBody && fromBody !== "Request failed"
+          ? fromBody
+          : PUBLISH_FAILED_FALLBACK;
+      return {
+        ok: false as const,
+        error: msg,
+        status: res.status,
+      };
+    }
+    return { ok: true, id: rule.id, title: rule.title };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
 export type DeleteAccountResult = { ok: true } | { ok: false; error: string };
 
 /**

@@ -106,6 +106,22 @@ describe("Rule Component", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("clicking editable title calls onTitleClick and does not fire card onClick", () => {
+    const onCard = vi.fn();
+    const onTitle = vi.fn();
+    render(
+      <Rule
+        {...defaultProps}
+        expanded={true}
+        onClick={onCard}
+        onTitleClick={onTitle}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("rule-title-edit"));
+    expect(onTitle).toHaveBeenCalledTimes(1);
+    expect(onCard).not.toHaveBeenCalled();
+  });
+
   it("clicking editable description calls onDescriptionClick and does not fire card onClick", () => {
     const onCard = vi.fn();
     const onDesc = vi.fn();

@@ -1,0 +1,644 @@
+{
+  "mutualAidColorado": {
+    "pageBackground": "var(--color-surface-invert-brand-lavender)",
+    "title": "Mutual Aid Colorado",
+    "summary": "Mutual Aid Colorado is a statewide network that empowers frontline community efforts by connecting independent mutual aid groups and building shared logistical infrastructure like supply chains and print shops.",
+    "document": {
+      "sections": [
+        {
+          "categoryName": "Values",
+          "entries": [
+            {
+              "title": "Mutual Aid, Not Charity",
+              "body": "We act in political solidarity rather than charity. We are building systems of community care and resilience, recognizing that our liberation is bound together.\n\n“Change needs all of us.”\n\nFood Not Bombs is not a charity. It is a project of solidarity. Charity is vertical. It moves from those who have to those who have not and maintains the hierarchy between them. Solidarity is horizontal. It moves between equals who recognize that our liberation is bound together. We do not help the poor. We share resources among community members because access to food is a human right rather than a privilege of wealth."
+            },
+            {
+              "title": "Local Autonomy",
+              "body": "We fiercely protect the autonomy of individual local chapters. We exist to support and connect local work, not to dictate it, ensuring we do not transform into the very top-down bureaucracies we aim to subvert.\n\n“Everyone contributes, no one controls.”\n\nWe operate without bosses or managers. This does not mean we are disorganized. It means we are self-organized. Authority in this chapter is temporary and task-specific rather than permanent or personal. We believe the people doing the work should make the decisions about that work. By distributing responsibility we prevent burnout and ensure the movement survives beyond any single leader."
+            },
+            {
+              "title": "Action Over Bureaucracy",
+              "body": "We prioritize moving physical goods and supporting local groups efficiently over unnecessary administration. We use our explicit agreements to prevent operational bottlenecks and keep the work moving.\n\n“Relationships over algorithms.”\n\nWe use digital tools to coordinate but we build power in the physical world. An algorithm cannot cook a meal and a group chat cannot look someone in the eye. We prioritize face-to-face interaction and physical presence at distributions. We resist the temptation to let digital metrics replace tangible impact."
+            },
+            {
+              "title": "Durable Commons",
+              "body": "We explicitly document our resource sharing protocols and logistical agreements. This ensures that knowledge regarding supply routes and shared assets is accessible to any participating group, functioning as a true commons rather than being hoarded by a few central organizers.\n\n“Rescued food doesn't add carbon.”\n\nOur logistics are an ecological intervention. Food waste is a major driver of climate change. By intercepting food that would otherwise be discarded and redirecting it to hungry neighbors we close the loop. We view food recovery as stewarding a resource that the industrial food system has abandoned. Every pound of food we rescue is a pound of carbon kept out of the atmosphere."
+            },
+            {
+              "title": "Decentralized Power",
+              "body": "We are committed to building massive material power without centralizing authority. We engineer our structures to distribute responsibility and prevent the consolidation of control within the network.\n\n“Collective giving builds collective power.”\n\nOur budget is labor rather than capital. We rely on the time and care of our volunteers rather than large grants or corporate sponsorships. This independence gives us the political freedom to operate according to our values. When we pool our small individual capacities we create a collective power that money cannot buy."
+            }
+          ]
+        },
+        {
+          "categoryName": "Membership",
+          "entries": [
+            {
+              "title": "Membership Agreement or Pledge",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "We are a small, experimental group building civic infrastructure to connect mutual aid groups across Colorado. Access to shared physical infrastructure (like the print shop and supply vehicles) comes with the responsibility of stewardship."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "Participating groups and core organizers gain access by agreeing to follow the modular vocabulary of agreements we have designed."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "Members are expected to actively steward and maintain these shared assets. This ensures that the equipment remains in good working order for the next autonomous group that needs it."
+                }
+              ]
+            },
+            {
+              "title": "Contribution Based",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "Roles are tiered between Volunteers and Core Members. Core Membership is not a status symbol, it grants access privileges (keys, door codes, independent pickups, internal Signal chats) required to facilitate logistics."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "Local groups and regional hubs become part of the network by actively participating in the supply chains, contributing labor to the print shops, or sharing their logistical resources."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "Membership is inherently tied to active contribution. Maintaining standing requires continuous participation in the statewide infrastructure and shared operations."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Decision-Making",
+          "entries": [
+            {
+              "title": "Consensus Decision-Making",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "We make the big decisions together. For strategic changes, the core organizing team takes the time to have deep conversations and build genuine agreement. This ensures our infrastructure is guided by our collective values, rather than just being driven by whoever speaks the loudest."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Strategic decisions, shared network values, and organization-wide policy changes."
+                },
+                {
+                  "label": "Consensus Level",
+                  "body": "100%"
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "Core members openly discuss strategic issues and collaboratively shape proposals. Once a proposal is drafted, it is presented to the full core organizing team. We deliberate, address concerns, and refine the proposal together until every core member can consent to its adoption."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "If a core member objects to a proposal, the group must make a good faith effort to resolve their concerns and modify the plan. However, we do not let the perfect be the enemy of the good. If multiple good faith attempts to find consensus fail, and a decision must be made to keep the infrastructure functioning, we trigger a fallback mechanism: the proposal can be passed with a 75% supermajority vote of the core organizing team."
+                }
+              ]
+            },
+            {
+              "title": "Delegated Do-ocracy",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "To manage a statewide logistics operation without bottlenecks, authority must be distributed. By formalizing structural relationships and empowering the volunteers running the shared infrastructure, we ensure the network can move quickly and resiliently."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Statewide logistics, specialized operational domains, and day-to-day physical infrastructure (e.g., operating the print shop, driving supply routes, managing the warehouse floor)."
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "We explicitly map our arenas of operation so specialized working groups have full authority over their specific domains. Within these domains, individual volunteers are empowered to make immediate operational choices (like organizing inventory or adjusting a supply route) to keep goods moving efficiently, without waiting for a statewide assembly's approval."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "Authority has limits based on impact. If an individual's logistical experiment is irreversible, highly costly, or could permanently alter the shared infrastructure, they must pause and seek guidance from the relevant Working Group. If a Working Group's decision will have a material, network-wide impact or disrupt another team, they must coordinate with the affected groups or escalate to a broader coordination body."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Conflict Management",
+          "entries": [
+            {
+              "title": "Peer Mediation",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Conflict and miscommunication are inevitable when coordinating logistics across a large region. The goal is to manage behavior and communication so the supply chain flows smoothly and infrastructure remains functional, without requiring everyone to be close friends."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Day-to-day friction, miscommunications, or minor interpersonal disputes over operational tasks (e.g., scheduling conflicts, route overlaps, or minor workflow disagreements)."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "We handle friction at the lowest possible level to prevent disrupting the supply chain.\n\nLevel 1: Direct Engagement between the organizers involved to clarify misunderstandings quickly.\n\nLevel 2: Supported Conversation with neutral witnesses acting purely to keep the conversation calm, clear, and focused on operational solutions."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "If the friction cannot be resolved at these lower levels and begins to threaten operational continuity, it escalates to Level 3 (Formal Facilitation by a designated Conflict Management Working Group)."
+                }
+              ]
+            },
+            {
+              "title": "Conflict Resolution Council",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "The Conflict Management Working Group acts as facilitators rather than judges. They prioritize the integrity of the shared infrastructure and the sustainable capacity of the volunteer base."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Level 3 conflicts, severe organizer burnout, and the misuse of shared regional assets."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "If a conflict reaches Level 3, the working group investigates the behavioral facts and how they are impacting operations. They draft a boundary plan and present a factual, redacted summary to the rest of the core organizers for collective ratification.\n\nCapacity & Burnout Clause: Operating statewide infrastructure can lead to severe exhaustion. The working group can mandate a temporary leave of absence for a core organizer as a mechanism of care to address burnout, preventing them from dropping the ball on critical logistics or becoming overwhelmed."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "Misuse of shared statewide assets for personal gain, hoarding supplies, or intentional sabotage of the supply chain bypasses the escalation ladder entirely. These severe breaches of trust trigger an Immediate Precautionary Suspension, temporarily restricting the organizer's access to warehouses, vehicles, and coordination channels while a formal investigation takes place."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Communication",
+          "entries": [
+            {
+              "title": "Signal",
+              "blocks": [
+                {
+                  "label": "Core Principle & Scope",
+                  "body": "All communication for Mutual Aid Colorado happens on Signal. Protecting our network and local chapters is vital."
+                },
+                {
+                  "label": "Logistics, Admin & Norms",
+                  "body": "We maintain highly structured channels to keep our digital workspace organized. A designated Announcements channel serves as our persistent library for documenting explicit architecture, resource-sharing protocols, and agreements. Day-to-day management of regional supply chains (moving physical goods, coordinating print shop shifts, handling logistical emergencies) happens in specific, encrypted group chats or shared platforms."
+                },
+                {
+                  "label": "Code of Conduct",
+                  "body": "Tactical channels must be kept absolutely clear of policy debates or social chatter. This ensures drivers and logistics volunteers can quickly access the real-time information they need to keep people safe and supplied."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "foodNotBombs": {
+    "pageBackground": "var(--color-surface-invert-secondary)",
+    "title": "Food Not Bombs Boulder",
+    "summary": "Food Not Bombs Boulder is a mutual aid collective that recovers surplus food to share free, public meals with the community, protesting war and poverty while advocating for food as a fundamental human right.",
+    "document": {
+      "sections": [
+        {
+          "categoryName": "Values",
+          "entries": [
+            {
+              "title": "Solidarity Forever",
+              "body": "“Change needs all of us.”\n\nFood Not Bombs is not a charity. It is a project of solidarity. Charity is vertical. It moves from those who have to those who have not and maintains the hierarchy between them. Solidarity is horizontal. It moves between equals who recognize that our liberation is bound together. We do not help the poor. We share resources among community members because access to food is a human right rather than a privilege of wealth."
+            },
+            {
+              "title": "Shared Leadership",
+              "body": "We operate without bosses or managers. This does not mean we are disorganized. It means we are self-organized. Authority in this chapter is temporary and task-specific rather than permanent or personal. We believe the people doing the work should make the decisions about that work. By distributing responsibility we prevent burnout and ensure the movement survives beyond any single leader.\n\n“Everyone contributes, no one controls.”\n\nWe operate without bosses or managers. This does not mean we are disorganized. It means we are self-organized. Authority in this chapter is temporary and task-specific rather than permanent or personal. We believe the people doing the work should make the decisions about that work. By distributing responsibility we prevent burnout and ensure the movement survives beyond any single leader."
+            },
+            {
+              "title": "Organizing Offline",
+              "body": "We use digital tools to coordinate but we build power in the physical world. An algorithm cannot cook a meal and a group chat cannot look someone in the eye. We prioritize face-to-face interaction and physical presence at distributions. We resist the temptation to let digital metrics replace tangible impact.\n\n“Relationships over algorithms.”\n\nWe use digital tools to coordinate but we build power in the physical world. An algorithm cannot cook a meal and a group chat cannot look someone in the eye. We prioritize face-to-face interaction and physical presence at distributions. We resist the temptation to let digital metrics replace tangible impact."
+            },
+            {
+              "title": "Circular Food Systems",
+              "body": "Our logistics are an ecological intervention. Food waste is a major driver of climate change. By intercepting food that would otherwise be discarded and redirecting it to hungry neighbors we close the loop. We view food recovery as stewarding a resource that the industrial food system has abandoned. Every pound of food we rescue is a pound of carbon kept out of the atmosphere.\n\n“Rescued food doesn't add carbon.”\n\nOur logistics are an ecological intervention. Food waste is a major driver of climate change. By intercepting food that would otherwise be discarded and redirecting it to hungry neighbors we close the loop. We view food recovery as stewarding a resource that the industrial food system has abandoned. Every pound of food we rescue is a pound of carbon kept out of the atmosphere."
+            },
+            {
+              "title": "Powered by People",
+              "body": "“Collective giving builds collective power.”\n\nOur budget is labor rather than capital. We rely on the time and care of our volunteers rather than large grants or corporate sponsorships. This independence gives us the political freedom to operate according to our values. When we pool our small individual capacities we create a collective power that money cannot buy."
+            }
+          ]
+        },
+        {
+          "categoryName": "Membership",
+          "entries": [
+            {
+              "title": "Consensus or Vote-Based Approval",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "Access to critical resources is restricted to safeguard the project. Safety and accountability are prioritized."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "Volunteers who have completed two full Saturday distributions can submit a request via the Stewardship & Process Working Group form. The request is subject to a 15-day lazy consensus period. If an existing Core Member raises a concern, the volunteer must address it. If the objection stands, the volunteer can reapply after 15 days."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "Any single Core Member may immediately ask a participant to leave for physical safety threats. For non-emergent issues:\n\nVolunteers: Exclusion requires agreement from at least five Core Members or a ratified conflict management plan.\n\nCore Members: Revoking membership requires a 3/4 supermajority vote of the full Core Membership, excluding the member in question."
+                }
+              ]
+            },
+            {
+              "title": "Weighted or Tiered Membership",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "Roles are tiered between Volunteers and Core Members. Core Membership is not a status symbol, it grants access privileges (keys, door codes, independent pickups, internal Signal chats) required to facilitate logistics."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "Volunteers advance to Core Membership through sustained contribution. Once a Core Member, individuals can sign up to \"bottom-line\" (take responsibility for) shifts via the roll call channel in the week leading up to a distribution."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "Labor Requirements: Core Members must complete at least one shift, pickup, or two hours of labor (distribution, cleaning, admin, or working group participation) every month to maintain standing.\n\nShift Coverage & Bottom-Lining: Ensuring coverage is a collective responsibility; members must proactively monitor the schedule for gaps. Bottom-liners (experienced Core Members) must ensure all operational checklists are completed.\n\nHand-off Protocol: The last Core Member on-site must not leave until a new bottom-liner is confirmed or all checklist items are complete. If leaving early, they must ping the chat immediately to request coverage.\n\nLoss of Standing: The Stewardship & Process Working Group posts potentially inactive members to the chat. If an individual's activity is not verified, they revert to volunteer status and must restart the entry process."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Decision-Making",
+          "entries": [
+            {
+              "title": "Lazy Consensus",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Consensus is assumed if no specific concerns are raised within a set timeframe."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Decisions that cannot be easily reverted, Amendments to the governance manuial"
+                },
+                {
+                  "label": "Consensus Level",
+                  "body": "100%"
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "Any Core Member can propose an amendment or global decision by posting it to the Core Member chat. If no concern is raised within 15 days, it is adopted. To protect shared time, facilitators strictly enforce this model during meetings, redirecting complex policy debates to async written deliberation or authorized ad-hoc breakout meetings."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "If objections occur, the group must make a good faith effort to resolve them. If attempts fail and the decision is critical, the Stewardship & Process Working Group must certify that efforts are exhausted and organize a vote. A 3/4 supermajority of the full Core Membership is required to override the objection and pass the decision."
+                }
+              ]
+            },
+            {
+              "title": "Do-ocracy",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Distribute authority and operate on trust to move efficiently. Decisions are made by those doing the work or by specific empowered groups. It is better to try a solution and adjust later than to do nothing."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Reversible Implementation Details, Low-Risk Experiments"
+                },
+                {
+                  "label": "Consensus Level",
+                  "body": "0%"
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "Core Members and Bottom-liners possess a broad mandate to act and can immediately try new approaches to solve problems. Simultaneously, Working Groups execute binding decisions within their domains independently, without seeking chapter-wide consent."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "If an individual's experiment is permanent, costly, or hard to undo, they must seek advice first. Working Groups must seek consent from the full Core Membership if a decision has a material impact on the broader group (e.g., unbudgeted Finance expenses over $500, or actions that fundamentally change chapter operations or public reputation)."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Conflict Management",
+          "entries": [
+            {
+              "title": "Peer Mediation",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Manage behavior so the project functions safely, establishing boundaries rather than forcing friendship. Handle conflicts at the lowest possible level to preserve capacity for serious issues."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Lower-level disputes, initial conflicts."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "Level 1 requires Direct Engagement to communicate clearly without triangulation. Level 2 utilizes Supported Conversations where each person brings a sympathetic third-party witness to help them remain calm and clear, not to argue or advocate."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "If direct engagement feels unsafe, or if third-party witnesses begin to argue, the meeting is considered a failure and the process escalates immediately to Formal Facilitation."
+                }
+              ]
+            },
+            {
+              "title": "Judicial Committees",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "The Conflict Management Working Group acts as facilitators and investigators, not judges. They do not unilaterally punish, but propose solutions for the broader group to ratify."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Serious violations, conflicts that fail lower-level resolution."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "The Working Group interviews parties to establish a behavioral timeline, focusing on facts rather than blame. They draft a Conflict Management Plan outlining specific consequences or boundaries. A dry, factual Redacted Summary, explicitly stating any disputed facts—is presented to the Core Membership for ratification under a standard 15-day lazy consensus."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "The Working Group can issue an immediate Precautionary Suspension (restricting access to keys/chats) if safety is a concern. If a plan faces unresolved objections or recommends removing a Core Member, ratification requires a 3/4 supermajority vote of the full Core Membership."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Communication",
+          "entries": [
+            {
+              "title": "Signal",
+              "blocks": [
+                {
+                  "label": "Core Principle & Scope",
+                  "body": "Signal is the primary platform for operational communication. Group chats are strictly for logistics, sensitive coordination, and governance. Social conversations and community building should happen elsewhere."
+                },
+                {
+                  "label": "Logistics, Admin & Norms",
+                  "body": "Structure: Official channels are prepended with the 🥗 emoji. Public Channels are for active volunteers; Core Channels are restricted to Core Members.\n\nAdministration: All Core Members are admins (strictly a technical role). All channels use a standard 4-week disappearing message timer.\n\nAccess: The Stewardship & Process Working Group manages rosters, removing inactive volunteers with a \"soft touch\" message so they know they are welcome back.\n\nNorms: Use emoji reactions for acknowledgments to prevent notification spam. Only join channels where you actively contribute; do not lurk."
+                },
+                {
+                  "label": "Code of Conduct",
+                  "body": "The In-person Code of Conduct applies equally to all off-platform and synchronous interactions. Always assume good intentions and give others the benefit of the doubt before reacting."
+                }
+              ]
+            },
+            {
+              "title": "In-Person Meetings",
+              "blocks": [
+                {
+                  "label": "Core Principle & Scope",
+                  "body": "Synchronous mediums are the dedicated spaces for social connection, community building, and navigating emotionally nuanced conversations."
+                },
+                {
+                  "label": "Logistics, Admin & Norms",
+                  "body": "Members are strongly encouraged to meet up outside of official operations to build friendship. If a text chat in Signal becomes heated or controversial, members must immediately transition the conversation to a synchronous medium (phone, video chat, or in-person meeting)."
+                },
+                {
+                  "label": "Code of Conduct",
+                  "body": "We don't have strict rules but we aspire to operate within these principles:\n\n1. We don't need to see eye to eye on everything, but the core point of unity that ties this group together is the belief that the world can be improved by both individual and collective action.\n\n2. Willfully spreading obviously false or misleading information will not be tolerated.\n\n3. We have zero tolerance for racism, sexism, and bigotry. We explicitly reject all identity-based hierarchies. No group is singled out for priority, special classification, or unique levels of responsibility. We do not create segregated spaces based on race, gender, or sexuality.\n\n4. Aspire to do no harm, especially to members of this community. We distinguish actual harm from intellectual discomfort. Vigorous disagreement is encouraged and does not constitute harm. We face difficult topics directly and minimize the use of content warnings."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "boulderCountyStreetMedics": {
+    "pageBackground": "var(--color-surface-invert-brand-red)",
+    "title": "BoCo Street Medics",
+    "summary": "Boulder County Street Medics is a grassroots, volunteer-run organization focused on providing first aid and medical support to marginalized communities and activists in the Boulder area.",
+    "document": {
+      "sections": [
+        {
+          "categoryName": "Values",
+          "entries": [
+            {
+              "title": "Radical Solidarity",
+              "body": "We provide care as an act of political solidarity rather than charity. We are not apolitical. Our presence is a commitment to community liberation.\n\nWe provide care as an act of political solidarity rather than charity. We are not apolitical. Our presence is a commitment to community liberation."
+            },
+            {
+              "title": "Integrity of Skill",
+              "body": "Good intentions do not stop bleeding. We only provide care we are trained to provide. Operating outside our scope is dangerous.\n\nGood intentions do not stop bleeding. We only provide care we are trained to provide. Operating outside our scope is dangerous."
+            },
+            {
+              "title": "Caring for Caregivers",
+              "body": "You cannot pour from an empty flush. We reject the martyr complex. Rest is mandatory rather than a weakness.\n\nYou cannot pour from an empty flush. We reject the martyr complex. Rest is mandatory rather than a weakness."
+            },
+            {
+              "title": "Consent and Autonomy",
+              "body": "We prioritize bodily autonomy. We secure consent before touching anyone.\n\nWe prioritize bodily autonomy. We secure consent before touching anyone."
+            },
+            {
+              "title": "Inter-Organizational Solidarity",
+              "body": "We coordinate with organizers but retain ultimate tactical control. We are healers rather than security guards.\n\nWe coordinate with organizers but retain ultimate tactical control. We are healers rather than security guards."
+            }
+          ]
+        },
+        {
+          "categoryName": "Membership",
+          "entries": [
+            {
+              "title": "Tiered Membership",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "Access is restricted to ensure safety; trust is verified rather than assumed. Roles are tiered based on age and experience. Field operations and gear cache access (which are strictly for logistical work, not social hubs) are limited to individuals 18 or older. Minors are restricted to off-site logistics. Access is a responsibility to steward resources, not a status symbol."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "New volunteers enter the pipeline as Provisional Members for a skill verification phase. Once proven, they can advance to Core Members, who steward the collective. Experienced Core Members can act as Bottom-Liners, serving as the tactical safety anchors who ensure buddy pairs, proper PPE, and comms."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "Provisional Members: Never deploy alone. They must be tethered to a Core Member, operate from collective trainee bags, and do not vote or hold keys.\n\nBottom-Liners & Safety: The Bottom-Liner has absolute authority to pull a team out of danger and will immediately remove anyone under the influence of drugs or alcohol (zero-tolerance policy).\n\nRoster Maintenance: The Membership Working Group monitors activity to prevent burnout and ghosting. They manage sabbaticals, send check-in messages to inactive members, and facilitate graceful offboarding (retrieving keys/gear) if there is no response."
+                }
+              ]
+            },
+            {
+              "title": "Skill-Based Evaluation",
+              "blocks": [
+                {
+                  "label": "Eligibility & Philosophy",
+                  "body": "Roles are tiered between Volunteers and Core Members. Core Membership is not a status symbol, it grants access privileges (keys, door codes, independent pickups, internal Signal chats) required to facilitate logistics."
+                },
+                {
+                  "label": "Joining Process",
+                  "body": "To move from Provisional to Core status, a volunteer must pass three strict skill-verification prerequisites:\n\nField Experience: Complete 5 field operations shadowed by a Core Member.\n\nSkill Verification: Gain approval from existing Core Members confirming tactical and medical competency.\n\nProof of Certification: Present a valid medical credential (e.g., 20-hour Street Medic course certificate, WFA, EMT, Paramedic, or Nursing license)."
+                },
+                {
+                  "label": "Expectations & Removal",
+                  "body": "You may only deploy if your skills are current and practiced. If your certification or skills have lapsed, you must refresh them before deploying again or temporarily transition to non-deployment roles."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Decision-Making",
+          "entries": [
+            {
+              "title": "Lazy Consensus",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Move slowly on policy to build deep agreement. This prevents burnout and ensures decisions are not made only by the loudest voices."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Strategic decisions (peacetime manual amendments, onboarding, broad policy changes). Standard Operating Procedures (packing lists, radio frequencies) live in a separate \"Living Archive\" and are exempt, updating instantly."
+                },
+                {
+                  "label": "Consensus Level",
+                  "body": "100%"
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "Standard policy proposals are subjected to the 15-day model for review and adoption."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "Emergency policies are strictly temporary. If they are not ratified through this standard 15-day process within two weeks, they automatically expire."
+                }
+              ]
+            },
+            {
+              "title": "Supermajority Rule",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Move fast on tactics and crises to keep people safe, without allowing emergency powers to become permanent policy."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Urgent crises that cannot wait 15 days (e.g., legal threats, lease losses)."
+                },
+                {
+                  "label": "Consensus Level",
+                  "body": "75%"
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "Any Core Member can trigger an Emergency Vote. Voting takes place within a 24-hour window."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "To prevent abuse, any decision passed via Emergency Vote must be formally ratified by the standard 15-day lazy consensus process within two weeks, or it is automatically voided."
+                }
+              ]
+            },
+            {
+              "title": "Delegated Decision-Making",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Comply on the street, debrief in the living room. Rely on specialized groups for daily operations and an Incident Command System (ICS) for tactical safety. We explicitly reject funding that compromises political autonomy."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Tactical field operations and daily operations (e.g., Finance Working Group managing routine purchasing via ethical, grassroots crowdfunding)."
+                },
+                {
+                  "label": "Step-by-Step Instructions",
+                  "body": "The Bottom-Liner acts as Incident Commander during deployments. Specialized Working Groups independently handle daily operations. Every action requires a mandated, rigorous debrief so the collective can learn and adapt."
+                },
+                {
+                  "label": "Objections & Deadlocks",
+                  "body": "If the Bottom-Liner loses the confidence of the entire deployment team, they must immediately designate a new leader on the spot to safely evacuate."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Conflict Management",
+          "entries": [
+            {
+              "title": "Peer Mediation",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "Conflict is inevitable in high-stress environments. The goal is to manage behavior to keep the project functional rather than forcing friendship."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Initial interpersonal friction, handled at the lowest level possible."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "Level 1: Direct Engagement.\n\nLevel 2: Supported Conversation with neutral witnesses."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "If friction cannot be managed at lower levels, it escalates to Level 3 (Formal Facilitation)."
+                }
+              ]
+            },
+            {
+              "title": "Conflict Resolution Council",
+              "blocks": [
+                {
+                  "label": "Core Principle",
+                  "body": "The Working Group acts as facilitators and a mechanism of care rather than judges, relying on collective ratification for boundary plans while maintaining strict zero-tolerance for severe clinical or ethical violations."
+                },
+                {
+                  "label": "Applicable Scope",
+                  "body": "Level 3 Formal Facilitation, burnout/trauma concerns, formal external reviews (community complaints against medics), and clinical malpractice."
+                },
+                {
+                  "label": "Process Protocol",
+                  "body": "The group investigates facts and drafts a boundary plan. This group can mandate a leave of absence to address secondary trauma and burnout. They also handle external reviews and grievances. Once drafted, a dry, factual Redacted Summary of the boundary plan is presented to the broader Core Membership for ratification through consensus."
+                },
+                {
+                  "label": "Restoration & Fallbacks",
+                  "body": "Operating outside of scope, practicing without a license, or violating patient privacy completely bypasses the standard escalation ladder. These severe violations trigger an Immediate Precautionary Suspension rather than standard mediation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "categoryName": "Communication",
+          "entries": [
+            {
+              "title": "Signal",
+              "blocks": [
+                {
+                  "label": "Core Principle & Scope",
+                  "body": "Digital security is physical safety. We operate in a legally precarious environment; these protocols exist to protect our patients and ourselves from surveillance and criminalization."
+                },
+                {
+                  "label": "Logistics, Admin & Norms",
+                  "body": "Official channels use the 🩹 emoji. Deployments utilize a dedicated Off-Site Dispatcher who holds legal names and triggers jail support protocols if a medic misses a check-in."
+                },
+                {
+                  "label": "Code of Conduct",
+                  "body": "Patient Health Information is never broadcast unencrypted. Field photography is strictly forbidden."
+                }
+              ]
+            },
+            {
+              "title": "In-Person Meetings",
+              "blocks": [
+                {
+                  "label": "Core Principle & Scope",
+                  "body": "Prioritize patient safety and maintain absolute operational security during active deployments."
+                },
+                {
+                  "label": "Logistics, Admin & Norms",
+                  "body": "Radio & Chatter: Radio operation requires proper training and licensing (inform the Bottom-Liner immediately if you cannot confidently use issued gear). Tactical channels must remain absolutely silent during deployments except for vital updates, as clutter hides calls for help.\n\nState EMS: The Bottom-Liner manages or delegates dispatch communication when activating state EMS to minimize police interception risks (unless it is a time-sensitive emergency)."
+                },
+                {
+                  "label": "Code of Conduct",
+                  "body": "Media: Strict No Comment policy in the field. Medics treat patients rather than give soundbites.\n\nLaw Enforcement: We do not consent to warrantless searches and we do not volunteer patient identities to police."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

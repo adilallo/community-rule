@@ -38,7 +38,13 @@ export default {
     },
     useCardStyle: {
       control: "boolean",
-      description: "When true, wraps the rule body in a white card with a teal bar",
+      description:
+        "When true, wraps the rule body in a white card with a left accent bar",
+    },
+    cardAccentColor: {
+      control: "text",
+      description:
+        "Accent bar color when useCardStyle is true (match page background)",
     },
   },
 };

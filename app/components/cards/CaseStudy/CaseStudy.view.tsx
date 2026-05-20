@@ -10,11 +10,11 @@ const SURFACE_CLASS: Record<CaseStudyProps["surface"], string> = {
   rose: "bg-[var(--color-surface-invert-brand-red)]",
 };
 
-/** Default art per tile: PNG composites (FNB/BCSM) or vector Mutual Aid logo. */
+/** Default art per tile: Figma-exported SVG composites (305×305 incl. rounded bg). */
 const SURFACE_ART: Record<CaseStudyProps["surface"], string> = {
   lavender: "/assets/case-study/case-study-mutual-aid.svg",
-  neutral: "/assets/use-cases/case-study-food-not-bombs.png",
-  rose: "/assets/use-cases/case-study-boulder-county-street-medics.png",
+  neutral: "/assets/case-study/case-study-food-not-bombs.svg",
+  rose: "/assets/case-study/case-study-boulder-county-street-medics.svg",
 };
 
 /** Figma: ~23px corner (“Card / CaseStudy” shells). */
@@ -39,12 +39,8 @@ function CaseStudyView({
           alt={imageAlt}
           width={305}
           height={305}
-          unoptimized={
-            SURFACE_ART[surface].endsWith(".svg") ? true : undefined
-          }
-          className={`pointer-events-none select-none ${
-            surface === "lavender" ? "object-contain object-center" : "object-cover"
-          }`}
+          unoptimized
+          className="pointer-events-none size-full select-none object-contain object-center"
           draggable={false}
         />
       )}

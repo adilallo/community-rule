@@ -15,6 +15,11 @@ interface SectionHeaderProps {
    * subtitle **18 / 1.3** at `lg`, **24/32** at `xl`, **left-aligned** in its column from `lg` (Figma **22085:860413**).
    */
   ruleStackDesktopTypeScale?: boolean;
+  /**
+   * When true with `ruleStackDesktopTypeScale`, title and subtitle split into two columns from project **`md`** (640px),
+   * e.g. `/use-cases` Rule stack. Default keeps the split at **`lg`** (1024px).
+   */
+  twoColumnsFromMd?: boolean;
 }
 
 /**
@@ -29,12 +34,18 @@ const SectionHeader = memo<SectionHeaderProps>(
     variant: variantProp = "default",
     stackedDesktopLines,
     ruleStackDesktopTypeScale = false,
+    twoColumnsFromMd = false,
   }) => {
     const variant = variantProp;
     const useStackedDesktop =
       variant === "multi-line" && stackedDesktopLines != null;
-    const rowAlignClasses =
-      variant === "multi-line"
+    const splitFromMd =
+      twoColumnsFromMd &&
+      ruleStackDesktopTypeScale &&
+      variant === "multi-line";
+    const rowAlignClasses = splitFromMd
+      ? "md:flex-row md:justify-between md:items-center xl:gap-[var(--spacing-scale-024)]"
+      : variant === "multi-line"
         ? "lg:flex-row lg:justify-between lg:items-center xl:gap-[var(--spacing-scale-024)]"
         : "lg:flex-row lg:justify-between lg:items-start xl:gap-[var(--spacing-scale-024)]";
 
@@ -42,11 +53,13 @@ const SectionHeader = memo<SectionHeaderProps>(
       <div
         className={`flex flex-col gap-[var(--spacing-scale-004)] w-full ${rowAlignClasses}`}
       >
-        {/* Title — left column at lg+ */}
+        {/* Title — left column at md+ (use cases) or lg+ */}
         <div
           className={
             variant === "multi-line"
-              ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[50%] xl:h-[156px] xl:flex xl:items-center"
+              ? splitFromMd
+                ? "md:w-[50%] md:h-[var(--spacing-scale-120)] md:flex md:items-center xl:w-[50%] xl:h-[156px] xl:flex xl:items-center"
+                : "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[50%] xl:h-[156px] xl:flex xl:items-center"
               : "lg:w-[369px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center xl:w-[452px] xl:h-[156px] xl:flex xl:items-center"
           }
         >
@@ -54,30 +67,38 @@ const SectionHeader = memo<SectionHeaderProps>(
             className={
               variant === "multi-line"
                 ? ruleStackDesktopTypeScale
-                  ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-full lg:max-w-none lg:text-left lg:text-[32px] lg:leading-[40px] xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
+                  ? splitFromMd
+                    ? "font-bricolage-grotesque font-bold text-[28px] leading-[36px] text-[var(--color-content-default-primary)] md:w-full md:max-w-none md:text-left md:text-[32px] md:leading-[40px] xl:text-[40px] xl:leading-[52px]"
+                    : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-full lg:max-w-none lg:text-left lg:text-[32px] lg:leading-[40px] xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
                   : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] md:text-[32px] md:leading-[40px] lg:w-[410px] lg:text-left xl:text-[40px] xl:leading-[52px] text-[var(--color-content-default-primary)]"
                 : "font-bricolage-grotesque font-bold text-[28px] leading-[36px] sm:text-[32px] sm:leading-[40px] lg:text-[32px] lg:leading-[40px] lg:w-[369px] lg:pr-[var(--spacing-scale-096)] xl:text-[40px] xl:leading-[52px] xl:w-[452px] xl:pr-[var(--spacing-scale-096)] text-[var(--color-content-default-primary)]"
             }
           >
-            <span className="block lg:hidden">{title}</span>
+            <span className={splitFromMd ? "block md:hidden" : "block lg:hidden"}>
+              {title}
+            </span>
             {useStackedDesktop ? (
-              <span className="hidden lg:block">
+              <span className={splitFromMd ? "hidden md:block" : "hidden lg:block"}>
                 <span className="block">{stackedDesktopLines[0]}</span>
                 <span className="block">{stackedDesktopLines[1]}</span>
                 <span className="block">{stackedDesktopLines[2]}</span>
               </span>
             ) : (
-              <span className="hidden lg:block">{titleLg || title}</span>
+              <span className={splitFromMd ? "hidden md:block" : "hidden lg:block"}>
+                {titleLg || title}
+              </span>
             )}
           </h2>
         </div>
 
-        {/* Subtitle — right column at lg+ (Figma X Large / Large / stacked small) */}
+        {/* Subtitle — right column at md+ (use cases) or lg+ */}
         <div
           className={
             variant === "multi-line"
               ? ruleStackDesktopTypeScale
-                ? "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-start lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-start"
+                ? splitFromMd
+                  ? "md:w-[50%] md:h-[var(--spacing-scale-120)] md:flex md:items-center md:justify-start md:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-start"
+                  : "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-start lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-start"
                 : "lg:w-[50%] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end lg:ml-[var(--spacing-scale-016)] xl:ml-0 xl:w-[50%] xl:h-[156px] xl:flex xl:items-center xl:justify-end"
               : "lg:w-[928px] lg:h-[var(--spacing-scale-120)] lg:flex lg:items-center lg:justify-end xl:h-[156px] xl:flex xl:items-center xl:justify-end"
           }
@@ -86,7 +107,9 @@ const SectionHeader = memo<SectionHeaderProps>(
             className={
               variant === "multi-line"
                 ? ruleStackDesktopTypeScale
-                  ? "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] lg:text-left lg:text-[18px] lg:leading-[130%] text-[var(--color-content-default-tertiary)] xl:text-[24px] xl:leading-[32px]"
+                  ? splitFromMd
+                    ? "font-inter font-normal text-[14px] leading-[20px] text-[var(--color-content-default-tertiary)] md:text-left md:text-[18px] md:leading-[130%] xl:text-[24px] xl:leading-[32px]"
+                    : "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] lg:text-left lg:text-[18px] lg:leading-[130%] text-[var(--color-content-default-tertiary)] xl:text-[24px] xl:leading-[32px]"
                   : "font-inter font-normal text-[14px] leading-[20px] md:text-[18px] md:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-default-tertiary)] lg:text-right"
                 : "font-inter font-normal text-[18px] leading-[130%] sm:text-[18px] sm:leading-[32px] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] xl:text-right text-[#484848] sm:text-[var(--color-content-default-tertiary)] lg:text-[var(--color-content-default-tertiary)] xl:text-[var(--color-content-default-tertiary)] tracking-[0px]"
             }

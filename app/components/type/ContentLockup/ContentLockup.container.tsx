@@ -111,9 +111,9 @@ const ContentLockupContainer = memo<ContentLockupProps>(
         titleGroup: "flex flex-col gap-[var(--spacing-scale-008)]",
         titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
         title:
-          "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] lg:text-[44px] lg:leading-[1.1] text-[var(--color-content-default-brand-primary)]",
+          "font-bricolage-grotesque font-medium text-[32px] leading-[1.1] tracking-[0] md:text-[44px] md:leading-[1.1] text-[var(--color-content-default-brand-primary)]",
         subtitle:
-          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-default-primary)]",
+          "font-inter font-normal text-[18px] leading-[1.3] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-default-primary)]",
         shape:
           "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
       },
@@ -123,9 +123,9 @@ const ContentLockupContainer = memo<ContentLockupProps>(
         titleGroup: "flex flex-col gap-[var(--spacing-scale-008)] w-full",
         titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
         title:
-          "font-bricolage-grotesque font-medium text-[36px] leading-[110%] tracking-[0] lg:text-[44px] lg:leading-[1.1] text-[var(--color-content-inverse-primary)]",
+          "font-bricolage-grotesque font-medium text-[32px] leading-[1.1] tracking-[0] md:text-[44px] md:leading-[1.1] text-[var(--color-content-inverse-primary)]",
         subtitle:
-          "font-inter font-normal text-[18px] leading-[130%] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-invert-secondary)]",
+          "font-inter font-normal text-[18px] leading-[1.3] tracking-[0] md:text-[24px] md:leading-[32px] text-[var(--color-content-invert-secondary)]",
         shape:
           "w-[16px] h-[16px] md:w-[20px] md:h-[20px] lg:w-[24px] lg:h-[24px]",
       },

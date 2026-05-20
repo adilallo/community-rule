@@ -39,6 +39,13 @@ export interface RuleProps {
   descriptionEditAriaLabel?: string;
   /** Shown when {@link onDescriptionClick} is set and `description` is empty. */
   descriptionEmptyHint?: string;
+  /**
+   * When set, the title in the card header is clickable — caller handles modal /
+   * navigation (e.g. edit published rule).
+   */
+  onTitleClick?: () => void;
+  /** When {@link onTitleClick} is set, forwarded to the control’s `aria-label`. */
+  titleEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor?: string;
   className?: string;
@@ -80,6 +87,8 @@ export interface RuleViewProps {
   onDescriptionClick?: () => void;
   descriptionEmptyHint?: string;
   descriptionEditAriaLabel?: string;
+  onTitleClick?: () => void;
+  titleEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor: string;
   className: string;

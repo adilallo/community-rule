@@ -15,6 +15,11 @@
     "emptyHint": "Add a community description",
     "ariaEditDescription": "Edit community description"
   },
+  "titleEditModal": {
+    "title": "Community name",
+    "description": "Update the name shown on your public CommunityRule.",
+    "ariaEditTitle": "Edit community name"
+  },
   "categories": [
     {
       "name": "Values",

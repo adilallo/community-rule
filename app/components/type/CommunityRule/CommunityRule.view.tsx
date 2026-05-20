@@ -17,17 +17,22 @@ function CommunityRuleView({
   sections,
   className = "",
   useCardStyle = false,
+  cardAccentColor,
 }: CommunityRuleProps) {
+  const accent = cardAccentColor ?? TEAL_BG;
   const rootClass = useCardStyle
-    ? `rounded-[12px] bg-white pl-3 border-l-4 ${className}`
+    ? `rounded-[12px] bg-white pl-4 ${className}`
     : className;
-  const rootStyle = useCardStyle ? { borderLeftColor: TEAL_BG } : undefined;
+  const rootStyle = useCardStyle
+    ? {
+        gap: SECTION_GAP,
+        // Inset bar (not border) — Safari mishandles `border-left` + CSS variable accent colors.
+        boxShadow: `inset 4px 0 0 0 ${accent}`,
+      }
+    : { gap: SECTION_GAP };
 
   return (
-    <div
-      className={`flex flex-col min-w-0 ${rootClass}`}
-      style={{ gap: SECTION_GAP, ...rootStyle }}
-    >
+    <div className={`flex flex-col min-w-0 ${rootClass}`} style={rootStyle}>
       {sections.map((ruleSection, sectionIndex) => (
         <Section
           key={sectionIndex}

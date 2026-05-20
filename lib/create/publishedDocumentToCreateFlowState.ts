@@ -8,6 +8,7 @@ import {
 } from "./customRuleFacets";
 import type { PublishedMethodSelections } from "./buildPublishPayload";
 import type { StoredLastPublishedRule } from "./lastPublishedRule";
+import { normalizePublishedDocumentForEdit } from "./normalizePublishedDocumentForEdit";
 import { methodLabelFor } from "./finalReviewChipPresets";
 import type { TemplateFacetGroupKey } from "./templateReviewMapping";
 
@@ -120,7 +121,9 @@ export function methodSectionsPinsFromPublishedHydratePatch(
 export function createFlowStateFromPublishedRule(
   rule: StoredLastPublishedRule,
 ): Partial<CreateFlowState> {
-  const doc = rule.document;
+  const doc = normalizePublishedDocumentForEdit(
+    rule.document,
+  ) as StoredLastPublishedRule["document"];
   const out: Partial<CreateFlowState> = {
     title: rule.title,
     editingPublishedRuleId: rule.id,

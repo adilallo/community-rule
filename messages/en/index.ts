@@ -18,6 +18,8 @@ import learn from "./pages/learn.json";
 import about from "./pages/about.json";
 import useCases from "./pages/useCases.json";
 import useCasesDetail from "./pages/useCasesDetail.json";
+import useCasesCompletedRules from "./pages/useCasesCompletedRules.json";
+import useCasesCompletedRule from "./pages/useCasesCompletedRule.json";
 import howItWorks from "./pages/howItWorks.json";
 import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
@@ -83,6 +85,8 @@ export default {
     about,
     useCases,
     useCasesDetail,
+    useCasesCompletedRules,
+    useCasesCompletedRule,
     howItWorks,
     monitor,
     login,

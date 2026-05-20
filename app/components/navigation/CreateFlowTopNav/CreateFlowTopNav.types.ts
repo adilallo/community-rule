@@ -22,6 +22,11 @@ export interface CreateFlowTopNavProps {
    */
   hasEdit?: boolean;
   /**
+   * Whether to show Duplicate instead of Edit (marketing completed demos).
+   * @default false
+   */
+  hasDuplicate?: boolean;
+  /**
    * Whether to show **Manage Stakeholders** (published-rule invite management).
    * Used on `/create/edit-rule` only.
    * @default false
@@ -45,6 +50,17 @@ export interface CreateFlowTopNavProps {
    * Callback when Edit button is clicked
    */
   onEdit?: () => void;
+  /**
+   * Callback when Duplicate button is clicked
+   */
+  onDuplicate?: () => void;
+  /**
+   * Override exit button label (e.g. "Return" on marketing demos).
+   */
+  exitLabel?: string;
+  /** Label for Duplicate when {@link hasDuplicate} is true. */
+  duplicateLabel?: string;
+  duplicateAriaLabel?: string;
   /**
    * Callback when Manage Stakeholders is clicked
    */
@@ -71,4 +87,6 @@ export type CreateFlowTopNavViewProps = CreateFlowTopNavProps & {
   exportPopoverPdfLabel: string;
   exportPopoverCsvLabel: string;
   exportPopoverMarkdownLabel: string;
+  moreOptionsAriaLabel: string;
+  actionsMenuAriaLabel: string;
 };

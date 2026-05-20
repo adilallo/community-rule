@@ -14,6 +14,8 @@ export function RuleView({
   onDescriptionClick,
   descriptionEmptyHint,
   descriptionEditAriaLabel,
+  onTitleClick,
+  titleEditAriaLabel,
   icon,
   backgroundColor,
   className,
@@ -307,11 +309,27 @@ export function RuleView({
                   {t("recommendedLabel")}
                 </Tag>
               ) : null}
-              <h3
-                className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
-              >
-                {title}
-              </h3>
+              {onTitleClick ? (
+                <InlineTextButton
+                  type="button"
+                  underline={false}
+                  data-testid="rule-title-edit"
+                  ariaLabel={titleEditAriaLabel}
+                  className={`${titleClass} w-full min-w-0 cursor-pointer text-left text-[var(--color-content-invert-primary)] hover:!opacity-100 overflow-hidden text-ellipsis`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTitleClick();
+                  }}
+                >
+                  {title}
+                </InlineTextButton>
+              ) : (
+                <h3
+                  className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
+                >
+                  {title}
+                </h3>
+              )}
             </div>
           </div>
         )}
