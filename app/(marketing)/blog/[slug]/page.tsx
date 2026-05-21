@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import type { BlogPost } from "../../../../lib/content";
 import {
   getBlogPostBySlug,
   getAllBlogPosts as getAllPosts,
@@ -201,7 +202,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
 
       <div
-        className="min-h-screen relative overflow-hidden"
+        className="relative min-h-screen overflow-x-clip"
         style={{ backgroundColor }}
       >
         {/* Content Banner */}
@@ -242,10 +243,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
         </div>
 
-        {/* Main Content */}
-        <article className="p-[var(--spacing-scale-024)] sm:py-[var(--spacing-scale-032)]">
-          {/* Article Content */}
-          <div className="post-body -mt-[var(--spacing-scale-048)] text-[var(--color-content-inverse-primary)] text-[16px] leading-[24px] sm:text-[18px] sm:leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] sm:mx-auto sm:max-w-[390px] md:max-w-[472px] lg:max-w-[700px] xl:max-w-[904px]">
+        {/* Main Content — Figma Content page Template (19003:23305) article body instances */}
+        <article
+          data-node-id="19031:10426"
+          className="
+            relative z-[2] flex w-full justify-center
+            p-[var(--spacing-scale-024)]
+            sm:px-0 sm:py-[var(--spacing-scale-032)]
+          "
+        >
+          <div className="post-body w-full text-[var(--color-content-inverse-primary)] text-[16px] leading-[24px] sm:text-[18px] sm:leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] sm:max-w-[390px] md:max-w-[472px] lg:max-w-[700px] xl:max-w-[904px]">
             <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
           </div>
         </article>

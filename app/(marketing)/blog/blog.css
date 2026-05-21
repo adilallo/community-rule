@@ -1,4 +1,8 @@
 /* Blog post body styling with semantic spacing */
+.post-body > :first-child {
+  margin-block-start: 0;
+}
+
 .post-body p {
   /* Scales with font size - uses logical properties for better writing mode support */
   margin-block: 1em;

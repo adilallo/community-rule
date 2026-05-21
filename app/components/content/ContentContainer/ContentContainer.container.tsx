@@ -6,9 +6,8 @@
  */
 import { memo } from "react";
 import {
-  getAssetPath,
-  ASSETS,
   contentBlogTagPath,
+  contentCatalogSlugForFallback,
   CONTENT_CATALOG_SLUG_ORDER,
 } from "../../../../lib/assetUtils";
 import ContentContainerView from "./ContentContainer.view";
@@ -36,26 +35,14 @@ const ContentContainerContainer = memo<ContentContainerProps>(
       : "text-[var(--color-content-inverse-brand-royal)]";
 
     const getIconImage = (slug: string): string => {
-      const icons = [
-        getAssetPath(ASSETS.ICON_1),
-        getAssetPath(ASSETS.ICON_2),
-        getAssetPath(ASSETS.ICON_3),
-      ];
+      const resolvedSlug =
+        CONTENT_CATALOG_SLUG_ORDER.indexOf(
+          slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
+        ) >= 0
+          ? slug
+          : contentCatalogSlugForFallback(slug);
 
-      if (!slug) return icons[0];
-
-      const index = CONTENT_CATALOG_SLUG_ORDER.indexOf(
-        slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
-      );
-      if (index >= 0) {
-        return contentBlogTagPath(slug);
-      }
-
-      const fallbackIndex =
-        Math.abs(
-          slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0),
-        ) % icons.length;
-      return icons[fallbackIndex];
+      return contentBlogTagPath(resolvedSlug);
     };
 
     const iconImage = leadingImageSrc ?? getIconImage(post.slug);

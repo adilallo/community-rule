@@ -62,6 +62,61 @@ describe("ContentBanner", () => {
     expect(screen.getByText("Test description")).toBeInTheDocument();
   });
 
+  it("renders article banner with horizontal thumbnail below md and section SVG at md+", () => {
+    const { container } = render(
+      <ContentBanner
+        post={{
+          ...mockPost,
+          slug: "resolving-active-conflicts",
+          frontmatter: {
+            ...mockPost.frontmatter,
+            thumbnail: {
+              vertical: "resolving-active-conflicts-vertical.svg",
+              horizontal: "resolving-active-conflicts-horizontal.svg",
+            },
+          },
+        }}
+      />,
+    );
+
+    const banner = container.querySelector('[data-node-id="19189:9053"]');
+    expect(banner).toBeInTheDocument();
+    expect(banner).toHaveClass("min-h-[275px]", "md:min-h-[224px]", "xl:min-h-[504px]");
+
+    const horizontalBackground = container.querySelector(
+      '[data-name="ContentBannerBackgroundHorizontal"]',
+    );
+    expect(horizontalBackground).toHaveClass(
+      "absolute",
+      "inset-x-0",
+      "top-0",
+      "md:hidden",
+    );
+    expect(horizontalBackground?.querySelector("img")).toHaveAttribute(
+      "src",
+      "/content/blog/resolving-active-conflicts-horizontal.svg",
+    );
+
+    const sectionBackground = container.querySelector(
+      '[data-name="ContentBannerBackgroundSection"]',
+    );
+    expect(sectionBackground).toHaveClass(
+      "absolute",
+      "inset-x-0",
+      "top-0",
+      "hidden",
+      "md:block",
+    );
+    expect(sectionBackground?.querySelector("img")).toHaveAttribute(
+      "src",
+      "/content/blog/resolving-active-conflicts-section.svg",
+    );
+
+    const copyColumn = container.querySelector('[data-node-id="19189:9010"]');
+    expect(copyColumn).toHaveClass("md:max-w-[280px]", "lg:max-w-[365px]", "xl:max-w-[623px]");
+    expect(copyColumn).not.toHaveClass("h-[160px]");
+  });
+
   it("renders useCase variant rule preview as link when href is set", () => {
     const { container } = render(
       <ContentBanner

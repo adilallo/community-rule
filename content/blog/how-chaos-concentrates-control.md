@@ -11,7 +11,7 @@ thumbnail:
   vertical: "how-chaos-concentrates-control-vertical.svg"
   horizontal: "how-chaos-concentrates-control-horizontal.svg"
 background:
-  color: "#C8E6F0"
+  color: "#DCF7FC"
 ---
 
 Every failing collective tells itself the same story: we don't need formal structures because we trust each other. We're not like those hierarchical organizations. We make decisions organically, by consensus, through the natural flow of discussion. We don't have leaders.

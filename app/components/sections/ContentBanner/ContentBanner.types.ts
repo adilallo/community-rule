@@ -35,8 +35,10 @@ export interface ContentBannerViewProps {
   post: BlogPost;
   leadingImageSrc?: string;
   leadingImageAlt?: string;
-  backgroundImageSm?: string;
-  backgroundImageMd?: string;
+  /** Article variant: horizontal thumbnail below lg (`320×225.5`). */
+  backgroundImageHorizontal?: string;
+  /** Article variant: section banner at md+ (`1920×672`, Figma Section orientation). */
+  backgroundImageSection?: string;
   rulePreview?: ContentBannerRulePreview;
   contentTone?: ContentContainerToneValue;
 }

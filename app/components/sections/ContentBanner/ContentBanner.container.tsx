@@ -1,12 +1,17 @@
 "use client";
 
 import { memo } from "react";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import {
+  getAssetPath,
+  contentBlogHorizontalPath,
+  contentBlogSectionPath,
+  CONTENT_CATALOG_SLUG_ORDER,
+} from "../../../../lib/assetUtils";
 import type { BlogPost } from "../../../../lib/content";
 import ContentBannerView from "./ContentBanner.view";
 import type { ContentBannerProps } from "./ContentBanner.types";
 
-/** Figma: Section / ContentBanner — article (blog) and guide (content page template 22078:791901). */
+/** Figma: Content page Template (19003:23305) — article ContentBanner per breakpoint. */
 const ContentBannerContainer = memo<ContentBannerProps>(
   ({
     post,
@@ -18,27 +23,42 @@ const ContentBannerContainer = memo<ContentBannerProps>(
   }) => {
     const variant = variantProp;
 
-    const getBackgroundImage = (blogPost: BlogPost): string => {
+    const resolveHorizontalImage = (blogPost: BlogPost): string => {
       if (blogPost.frontmatter?.thumbnail?.horizontal) {
         return `/content/blog/${blogPost.frontmatter.thumbnail.horizontal}`;
       }
+
+      if (
+        CONTENT_CATALOG_SLUG_ORDER.includes(
+          blogPost.slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
+        )
+      ) {
+        return contentBlogHorizontalPath(blogPost.slug);
+      }
+
       return getAssetPath("assets/Content_Banner.svg");
     };
 
-    const getBannerImageMd = (blogPost: BlogPost): string => {
+    const resolveSectionImage = (blogPost: BlogPost): string => {
       if (blogPost.frontmatter?.banner?.horizontal) {
         return `/content/blog/${blogPost.frontmatter.banner.horizontal}`;
       }
-      if (blogPost.frontmatter?.thumbnail?.horizontal) {
-        return `/content/blog/${blogPost.frontmatter.thumbnail.horizontal}`;
+
+      if (
+        CONTENT_CATALOG_SLUG_ORDER.includes(
+          blogPost.slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
+        )
+      ) {
+        return contentBlogSectionPath(blogPost.slug);
       }
-      return getAssetPath("assets/Content_Banner_2.svg");
+
+      return resolveHorizontalImage(blogPost);
     };
 
-    const backgroundImageSm =
-      variant === "article" ? getBackgroundImage(post) : undefined;
-    const backgroundImageMd =
-      variant === "article" ? getBannerImageMd(post) : undefined;
+    const backgroundImageHorizontal =
+      variant === "article" ? resolveHorizontalImage(post) : undefined;
+    const backgroundImageSection =
+      variant === "article" ? resolveSectionImage(post) : undefined;
 
     return (
       <ContentBannerView
@@ -46,8 +66,8 @@ const ContentBannerContainer = memo<ContentBannerProps>(
         post={post}
         leadingImageSrc={leadingImageSrc}
         leadingImageAlt={leadingImageAlt}
-        backgroundImageSm={backgroundImageSm}
-        backgroundImageMd={backgroundImageMd}
+        backgroundImageHorizontal={backgroundImageHorizontal}
+        backgroundImageSection={backgroundImageSection}
         rulePreview={rulePreview}
         contentTone={contentTone}
       />

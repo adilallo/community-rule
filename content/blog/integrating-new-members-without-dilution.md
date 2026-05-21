@@ -11,7 +11,7 @@ thumbnail:
   vertical: "integrating-new-members-without-dilution-vertical.svg"
   horizontal: "integrating-new-members-without-dilution-horizontal.svg"
 background:
-  color: "#F5D4C8"
+  color: "#FBDDF0"
 ---
 
 Your worker coop is finally stable. Your mutual aid group actually delivers. Your open source project has momentum. People show up, work gets done, meetings function. You've built something that works, which means people want to join. That's where the problem starts.

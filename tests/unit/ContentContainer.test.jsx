@@ -4,18 +4,25 @@ import ContentContainer from "../../app/components/content/ContentContainer";
 
 // Mock asset utils
 vi.mock("../../lib/assetUtils", () => ({
-  getAssetPath: vi.fn((asset) => `/assets/${asset}`),
   contentBlogTagPath: vi.fn((slug) => `/content/blog/${slug}-tag.svg`),
+  contentCatalogSlugForFallback: vi.fn((slug) => {
+    const catalog = [
+      "resolving-active-conflicts",
+      "operational-security-mutual-aid",
+      "making-decisions-without-hierarchy",
+    ];
+    if (!slug) return catalog[0];
+    const index =
+      Math.abs(
+        slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0),
+      ) % catalog.length;
+    return catalog[index];
+  }),
   CONTENT_CATALOG_SLUG_ORDER: [
     "resolving-active-conflicts",
     "operational-security-mutual-aid",
     "making-decisions-without-hierarchy",
   ],
-  ASSETS: {
-    ICON_1: "Icon_1.svg",
-    ICON_2: "Icon_2.svg",
-    ICON_3: "Icon_3.svg",
-  },
 }));
 
 // Mock blog post data
@@ -52,7 +59,10 @@ describe("ContentContainer", () => {
 
     const icon = screen.getByAltText("Icon for Test Article Title");
     expect(icon).toBeInTheDocument();
-    expect(icon).toHaveAttribute("src", "/assets/Icon_1.svg");
+    expect(icon).toHaveAttribute(
+      "src",
+      "/content/blog/resolving-active-conflicts-tag.svg",
+    );
     expect(icon).toHaveClass("w-[60px]", "h-[30px]", "object-contain");
   });
 
@@ -159,7 +169,10 @@ describe("ContentContainer", () => {
     const { rerender } = render(<ContentContainer post={mockPost} />);
 
     let icon = screen.getByAltText("Icon for Test Article Title");
-    expect(icon).toHaveAttribute("src", "/assets/Icon_1.svg");
+    expect(icon).toHaveAttribute(
+      "src",
+      "/content/blog/resolving-active-conflicts-tag.svg",
+    );
 
     const post2 = { ...mockPost, slug: "operational-security-mutual-aid" };
     rerender(<ContentContainer post={post2} />);

@@ -68,12 +68,30 @@ export function guideBannerLogoArrowPath(): string {
   return "assets/shapes/guide-banner-logo-arrow.svg";
 }
 
+/** Per-article thumbnail backgrounds in `public/content/blog/` (Figma Thumbnail 19428:22574). */
+export function contentBlogVerticalPath(slug: string): string {
+  return `/content/blog/${slug}-vertical.svg`;
+}
+
+export function contentBlogHorizontalPath(slug: string): string {
+  return `/content/blog/${slug}-horizontal.svg`;
+}
+
+/** Wide banner background for ContentBanner at md+ (Figma Section, 1920×672). */
+export function contentBlogSectionPath(slug: string): string {
+  return `/content/blog/${slug}-section.svg`;
+}
+
+export function contentBlogBannerPath(slug: string): string {
+  return contentBlogSectionPath(slug);
+}
+
 /** Per-article Tag mark for ContentContainer (Figma Tag frame 19600:15534). */
 export function contentBlogTagPath(slug: string): string {
   return `/content/blog/${slug}-tag.svg`;
 }
 
-/** Stable catalog slug order for icon fallbacks when a tag asset is missing. */
+/** Stable catalog slug order for blog asset fallbacks when an article has no custom SVGs. */
 export const CONTENT_CATALOG_SLUG_ORDER = [
   "resolving-active-conflicts",
   "operational-security-mutual-aid",
@@ -84,6 +102,19 @@ export const CONTENT_CATALOG_SLUG_ORDER = [
   "digital-mediation-and-the-death-of-nuance",
   "knowledge-management-and-institutional-amnesia",
 ] as const;
+
+/** Pick a catalog article whose `public/content/blog/` SVGs can stand in as fallbacks. */
+export function contentCatalogSlugForFallback(
+  slug: string,
+): (typeof CONTENT_CATALOG_SLUG_ORDER)[number] {
+  if (!slug) return CONTENT_CATALOG_SLUG_ORDER[0];
+
+  const index =
+    Math.abs(
+      slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0),
+    ) % CONTENT_CATALOG_SLUG_ORDER.length;
+  return CONTENT_CATALOG_SLUG_ORDER[index];
+}
 
 /**
  * Asset paths for common components
@@ -100,17 +131,6 @@ export const ASSETS = {
   // Social media
   BLUESKY_LOGO: "assets/Bluesky_Logo.svg",
   GITLAB_ICON: "assets/GitLab_Icon.png",
-
-  // Content thumbnails
-  VERTICAL_1: "assets/Content_Thumbnail/Vertical_1.svg",
-  VERTICAL_2: "assets/Content_Thumbnail/Vertical_2.svg",
-  VERTICAL_3: "assets/Content_Thumbnail/Vertical_3.svg",
-  HORIZONTAL_1: "assets/Content_Thumbnail/Horizontal_1.svg",
-  HORIZONTAL_2: "assets/Content_Thumbnail/Horizontal_2.svg",
-  HORIZONTAL_3: "assets/Content_Thumbnail/Horizontal_3.svg",
-  ICON_1: "assets/Content_Thumbnail/Icon_1.svg",
-  ICON_2: "assets/Content_Thumbnail/Icon_2.svg",
-  ICON_3: "assets/Content_Thumbnail/Icon_3.svg",
 
   // Content page decorative shapes
   CONTENT_SHAPE_1: "assets/Content_Shape_1.svg",

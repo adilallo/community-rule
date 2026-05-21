@@ -11,7 +11,7 @@ thumbnail:
   vertical: "knowledge-management-and-institutional-amnesia-vertical.svg"
   horizontal: "knowledge-management-and-institutional-amnesia-horizontal.svg"
 background:
-  color: "#D4F0E0"
+  color: "#F1FBE0"
 ---
 
 Someone leaves the group and takes three years of operational knowledge with them. Not because they're selfish, but because that knowledge lived in their head and in message threads that have already disappeared. The new person trying to figure out how intake works has to reconstruct the process from fragments and half-remembered explanations. Six months later, someone else leaves and the cycle repeats.

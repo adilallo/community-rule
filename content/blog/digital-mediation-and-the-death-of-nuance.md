@@ -11,7 +11,7 @@ thumbnail:
   vertical: "digital-mediation-and-the-death-of-nuance-vertical.svg"
   horizontal: "digital-mediation-and-the-death-of-nuance-horizontal.svg"
 background:
-  color: "#E2EFFF"
+  color: "#FFF1D4"
 ---
 
 This isn't neutral. The medium shapes the message, and algorithmic mediation shapes how we relate to each other in ways that actively undermine the solidarity we're trying to build.

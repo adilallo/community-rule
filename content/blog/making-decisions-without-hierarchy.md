@@ -11,7 +11,7 @@ thumbnail:
   vertical: "making-decisions-without-hierarchy-vertical.svg"
   horizontal: "making-decisions-without-hierarchy-horizontal.svg"
 background:
-  color: "#E8D4F4"
+  color: "#F3F3F1"
 ---
 
 Many groups try to work without bosses, managers, or traditional leadership structures. But when no one's in charge, how do decisions actually get made? Non-hierarchical groups often rely on collective processes that prioritize trust, transparency, and shared responsibility. These approaches can take more time upfront, but they help build stronger, more equitable communities in the long run.

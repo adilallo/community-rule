@@ -11,7 +11,7 @@ thumbnail:
   vertical: "avoiding-burnout-sustainability-in-the-ruins-vertical.svg"
   horizontal: "avoiding-burnout-sustainability-in-the-ruins-horizontal.svg"
 background:
-  color: "#EDCC8F"
+  color: "#FFE8DC"
 ---
 
 The pattern repeats itself across every worker coop, mutual aid network, and organizing project. Someone who was essential suddenly stops showing up. They apologize, say they need to step back, talk about self-care and boundaries. Everyone nods sympathetically. The work gets redistributed to whoever's left. Six months later, someone else burns out. The cycle continues.

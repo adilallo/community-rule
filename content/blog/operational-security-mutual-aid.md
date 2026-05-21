@@ -11,7 +11,7 @@ thumbnail:
   vertical: "operational-security-mutual-aid-vertical.svg"
   horizontal: "operational-security-mutual-aid-horizontal.svg"
 background:
-  color: "#F4F3F1"
+  color: "#EECB8F"
 ---
 
 We like to think of mutual aid as something pure, outside the machinery of state surveillance and corporate extraction. But the reality is messier. The moment you start organizing, you're generating data. Names, addresses, health conditions, immigration status, financial need. All of it stored somewhere, passed between people, vulnerable to exactly the kind of scrutiny that could harm the people you're trying to help.

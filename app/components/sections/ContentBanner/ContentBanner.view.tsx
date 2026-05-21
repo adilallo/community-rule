@@ -68,44 +68,71 @@ function ContentBannerGuideView({
   );
 }
 
+/**
+ * Figma: Content page Template (19003:23305) — ContentBanner article instances.
+ * Horizontal thumbnail below md; Section SVG (1920×672) at md+.
+ */
 function ContentBannerArticleView({
   post,
   leadingImageSrc,
   leadingImageAlt,
-  backgroundImageSm,
-  backgroundImageMd,
+  backgroundImageHorizontal,
+  backgroundImageSection,
 }: ContentBannerViewProps) {
-  if (!backgroundImageSm || !backgroundImageMd) {
+  if (!backgroundImageHorizontal || !backgroundImageSection) {
     return null;
   }
 
   return (
-    <div className="relative h-[275px] w-full pt-[var(--measures-spacing-016)] sm:h-[326px] sm:overflow-hidden md:h-[224px] md:pt-[var(--measures-spacing-008)] lg:h-[358.4px] lg:pt-[50px] xl:h-[504px] xl:pt-[112px]">
+    <div
+      data-node-id="19189:9053"
+      className="
+        relative z-[1] w-full overflow-visible
+        min-h-[275px]
+        pt-[var(--spacing-scale-016)] px-[var(--spacing-scale-016)]
+        pb-[var(--spacing-scale-064)]
+        sm:min-h-[326px] sm:pb-[var(--spacing-scale-048)]
+        md:min-h-[224px] md:px-[var(--spacing-scale-024)] md:pb-0
+        md:pt-[var(--spacing-scale-008)]
+        lg:min-h-[358.4px] lg:px-[var(--spacing-scale-048)] lg:py-[var(--spacing-scale-040)]
+        xl:min-h-[504px] xl:px-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-076)]
+      "
+    >
       <div
-        className="absolute inset-0 aspect-[320/225.5] h-full w-full bg-cover bg-no-repeat"
-        style={{
-          backgroundImage: `url(${backgroundImageSm})`,
-          backgroundPosition: "center bottom",
-        }}
-      />
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[var(--spacing-scale-024)] sm:-bottom-[var(--spacing-scale-032)] md:hidden"
+        data-name="ContentBannerBackgroundHorizontal"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={backgroundImageHorizontal}
+          alt=""
+          className="absolute inset-0 size-full max-w-none object-cover object-bottom"
+        />
+      </div>
 
       <div
-        className="absolute inset-0 hidden aspect-[640/224] h-full w-full bg-cover bg-no-repeat md:block"
-        style={{
-          backgroundImage: `url(${backgroundImageMd})`,
-          backgroundPosition: "center bottom",
-        }}
-      />
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -bottom-[var(--spacing-scale-032)] hidden md:block"
+        data-name="ContentBannerBackgroundSection"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={backgroundImageSection}
+          alt=""
+          className="absolute inset-0 size-full max-w-none object-cover object-center"
+        />
+      </div>
 
       <div
+        data-node-id="19189:9010"
         className="
-          relative z-10 flex h-full flex-col
-          pl-[var(--measures-spacing-016)] pr-[96px]
-          justify-start
-          md:absolute md:inset-x-0 md:top-1/2 md:h-auto md:w-full md:-translate-y-1/2
-          md:pl-[var(--measures-spacing-024)] md:pr-[350px]
-          lg:static lg:top-auto lg:h-full lg:translate-y-0 lg:justify-start
-          lg:pl-[var(--measures-spacing-064)]
+          relative z-10
+          max-w-[calc(100%-96px)]
+          sm:max-w-[calc(100%-151px)]
+          md:max-w-[280px]
+          lg:max-w-[365px]
+          xl:max-w-[623px]
         "
       >
         <ContentContainer
