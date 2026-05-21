@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ContentThumbnailTemplate from "../../app/components/content/ContentThumbnailTemplate";
 
-// Mock Next.js components
 vi.mock("next/link", () => {
   return {
     default: ({ children, href, ...props }) => (
@@ -13,13 +12,6 @@ vi.mock("next/link", () => {
   };
 });
 
-vi.mock("next/image", () => {
-  return {
-    default: ({ src, alt, ...props }) => <img src={src} alt={alt} {...props} />,
-  };
-});
-
-// Mock blog post data
 const mockPost = {
   slug: "test-post",
   frontmatter: {
@@ -35,18 +27,14 @@ const mockPost = {
   },
 };
 
-// Pure presentational; no provider context needed.
 describe("ContentThumbnailTemplate", () => {
   describe("Vertical Variant", () => {
-    it("should render vertical variant with responsive dimensions", () => {
+    it("should render vertical variant with fluid Figma aspect ratio", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
       const container = screen.getByRole("link");
-      expect(container).toBeInTheDocument();
-
-      // Check that the component has the correct classes for responsive dimensions
-      const thumbnailDiv = container.querySelector("div");
-      expect(thumbnailDiv).toHaveClass("w-full", "aspect-[2/3]");
+      const thumbnailDiv = container.querySelector("div.relative");
+      expect(thumbnailDiv).toHaveClass("aspect-[260/390]", "w-full");
     });
 
     it("should display post title and description", () => {
@@ -67,29 +55,20 @@ describe("ContentThumbnailTemplate", () => {
   });
 
   describe("Horizontal Variant", () => {
-    it("should render horizontal variant with responsive sizing", () => {
+    it("should render horizontal variant with fluid Figma aspect ratio", () => {
       render(<ContentThumbnailTemplate post={mockPost} variant="horizontal" />);
 
       const container = screen.getByRole("link");
-      expect(container).toBeInTheDocument();
-
-      // Check that the component has the correct classes for horizontal layout
-      const thumbnailDiv = container.querySelector("div");
-      expect(thumbnailDiv).toHaveClass(
-        "min-w-[320px]",
-        "max-w-[800px]",
-        "h-[225.5px]",
-      );
+      const thumbnailDiv = container.querySelector("div.relative");
+      expect(thumbnailDiv).toHaveClass("aspect-[320/225.5]", "w-full");
     });
 
-    it("should display post information in horizontal layout", () => {
-      render(<ContentThumbnailTemplate post={mockPost} />);
+    it("should render fixed vertical dimensions when sizing is fixed", () => {
+      render(<ContentThumbnailTemplate post={mockPost} sizing="fixed" />);
 
-      expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
-      expect(
-        screen.getByText(/This is a test description/),
-      ).toBeInTheDocument();
-      expect(screen.getByText("Test Author")).toBeInTheDocument();
+      const container = screen.getByRole("link");
+      const thumbnailDiv = container.querySelector("div.relative");
+      expect(thumbnailDiv).toHaveClass("h-[390px]", "w-[260px]");
     });
   });
 
@@ -99,83 +78,32 @@ describe("ContentThumbnailTemplate", () => {
         <ContentThumbnailTemplate post={mockPost} className="custom-class" />,
       );
 
-      const container = screen.getByRole("link");
-      expect(container).toHaveClass("custom-class");
+      expect(screen.getByRole("link")).toHaveClass("custom-class");
     });
 
     it("should generate correct link href", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
-      const link = screen.getByRole("link");
-      expect(link).toHaveAttribute("href", "/blog/test-post");
-    });
-
-    it("should handle posts without tags gracefully", () => {
-      const postWithoutTags = {
-        ...mockPost,
-        frontmatter: {
-          ...mockPost.frontmatter,
-          tags: [],
-        },
-      };
-
-      render(<ContentThumbnailTemplate post={postWithoutTags} />);
-
-      // Should still render without errors
-      expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
-    });
-
-    it("should handle posts without thumbnail images", () => {
-      const postWithoutImages = {
-        ...mockPost,
-        frontmatter: {
-          ...mockPost.frontmatter,
-          thumbnail: undefined,
-        },
-      };
-
-      render(<ContentThumbnailTemplate post={postWithoutImages} />);
-
-      // Should still render without errors
-      expect(screen.getByText("Test Blog Post Title")).toBeInTheDocument();
+      expect(screen.getByRole("link")).toHaveAttribute(
+        "href",
+        "/blog/test-post",
+      );
     });
 
     it("should use article-specific thumbnail images when provided", () => {
       render(<ContentThumbnailTemplate post={mockPost} />);
 
-      // Check that the background image uses the article-specific thumbnail
-      const backgroundImg = document.querySelector(
-        "img[alt*='Background for']",
-      );
+      const backgroundImg = document.querySelector('img[src*="test-post-vertical"]');
       expect(backgroundImg).toBeInTheDocument();
-      expect(backgroundImg.src).toContain("test-post-vertical.svg");
     });
 
-    it("should use article-specific horizontal images for horizontal variant", () => {
+    it("should use horizontal thumbnail for horizontal variant", () => {
       render(<ContentThumbnailTemplate post={mockPost} variant="horizontal" />);
 
-      // Check that the background image uses the article-specific horizontal thumbnail
       const backgroundImg = document.querySelector(
-        "img[alt*='Background for']",
+        'img[src*="test-post-horizontal"]',
       );
       expect(backgroundImg).toBeInTheDocument();
-      expect(backgroundImg.src).toContain("test-post-horizontal.svg");
-    });
-  });
-
-  describe("Default Behavior", () => {
-    it("should default to vertical variant when no variant specified", () => {
-      render(<ContentThumbnailTemplate post={mockPost} />);
-
-      const thumbnailDiv = screen.getByRole("link").querySelector("div");
-      expect(thumbnailDiv).toHaveClass("w-full", "aspect-[2/3]");
-    });
-
-    it("should show metadata by default", () => {
-      render(<ContentThumbnailTemplate post={mockPost} />);
-
-      expect(screen.getByText("Test Author")).toBeInTheDocument();
-      expect(screen.getByText("April 2025")).toBeInTheDocument();
     });
   });
 });

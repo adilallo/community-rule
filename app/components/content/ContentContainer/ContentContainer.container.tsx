@@ -1,7 +1,16 @@
 "use client";
 
+/**
+ * Figma: "Components" / Container (19614-14838, 19003-23432).
+ * XS thumbnail copy: title 18/22, description 12/16, metadata 10/14.
+ */
 import { memo } from "react";
-import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
+import {
+  getAssetPath,
+  ASSETS,
+  contentBlogTagPath,
+  CONTENT_CATALOG_SLUG_ORDER,
+} from "../../../../lib/assetUtils";
 import ContentContainerView from "./ContentContainer.view";
 import type { ContentContainerProps } from "./ContentContainer.types";
 
@@ -25,7 +34,7 @@ const ContentContainerContainer = memo<ContentContainerProps>(
     const bodyColor = onLight
       ? "text-[var(--color-content-default-secondary)]"
       : "text-[var(--color-content-inverse-brand-royal)]";
-    // Get the corresponding icon based on the same logic as background images
+
     const getIconImage = (slug: string): string => {
       const icons = [
         getAssetPath(ASSETS.ICON_1),
@@ -35,23 +44,24 @@ const ContentContainerContainer = memo<ContentContainerProps>(
 
       if (!slug) return icons[0];
 
-      // Use the same cycling logic as background images to ensure matching
-      const slugOrder = [
-        "building-community-trust",
-        "operational-security-mutual-aid",
-        "making-decisions-without-hierarchy",
-        "resolving-active-conflicts",
-      ];
-      const index = slugOrder.indexOf(slug);
-      const finalIndex = index >= 0 ? index % icons.length : 0;
-      return icons[finalIndex];
+      const index = CONTENT_CATALOG_SLUG_ORDER.indexOf(
+        slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
+      );
+      if (index >= 0) {
+        return contentBlogTagPath(slug);
+      }
+
+      const fallbackIndex =
+        Math.abs(
+          slug.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0),
+        ) % icons.length;
+      return icons[fallbackIndex];
     };
 
     const iconImage = leadingImageSrc ?? getIconImage(post.slug);
     const iconAlt =
       leadingImageAlt ?? `Icon for ${post.frontmatter.title}`;
 
-    // Format date
     const formattedDate = new Date(post.frontmatter.date).toLocaleDateString(
       "en-US",
       {
@@ -60,10 +70,9 @@ const ContentContainerContainer = memo<ContentContainerProps>(
       },
     );
 
-    // Choose styling based on size prop
     const containerClasses =
       size === "xs"
-        ? "relative z-20 h-full flex flex-col gap-[var(--measures-spacing-012)]"
+        ? "relative z-20 flex h-full flex-col gap-[var(--measures-spacing-012)]"
         : "relative z-20 h-full flex flex-col gap-[var(--measures-spacing-012)] sm:gap-[var(--measures-spacing-016)] md:gap-[18px] lg:gap-[var(--measures-spacing-024)]";
 
     const contentGapClasses =
@@ -78,7 +87,7 @@ const ContentContainerContainer = memo<ContentContainerProps>(
 
     const titleClasses =
       size === "xs"
-        ? `font-bricolage font-medium text-[18px] leading-[120%] transition-colors ${titleColor}`
+        ? `font-bricolage font-medium text-[18px] leading-[22px] transition-colors ${titleColor}`
         : `font-bricolage font-medium text-[18px] leading-[120%] sm:text-[24px] sm:leading-[24px] md:text-[32px] md:leading-[110%] lg:text-[44px] lg:leading-[110%] xl:text-[64px] xl:leading-[110%] transition-colors ${titleColor}`;
 
     const descriptionClasses =
@@ -88,12 +97,12 @@ const ContentContainerContainer = memo<ContentContainerProps>(
 
     const authorClasses =
       size === "xs"
-        ? `font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
+        ? `overflow-hidden text-ellipsis whitespace-nowrap font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
         : `font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] ${bodyColor}`;
 
     const dateClasses =
       size === "xs"
-        ? `font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
+        ? `overflow-hidden text-ellipsis whitespace-nowrap font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
         : `font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] ${bodyColor}`;
 
     return (

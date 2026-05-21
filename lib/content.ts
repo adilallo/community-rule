@@ -71,7 +71,9 @@ export function getBlogPostFiles(): string[] {
   try {
     const files = fs.readdirSync(contentDirectory);
     return files.filter(
-      (file) => file.endsWith(".md") || file.endsWith(".mdx"),
+      (file) =>
+        (file.endsWith(".md") || file.endsWith(".mdx")) &&
+        !file.startsWith("_"),
     );
   } catch (error) {
     logger.error("Error reading blog content directory:", error);

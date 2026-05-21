@@ -5,6 +5,12 @@ import ContentContainer from "../../app/components/content/ContentContainer";
 // Mock asset utils
 vi.mock("../../lib/assetUtils", () => ({
   getAssetPath: vi.fn((asset) => `/assets/${asset}`),
+  contentBlogTagPath: vi.fn((slug) => `/content/blog/${slug}-tag.svg`),
+  CONTENT_CATALOG_SLUG_ORDER: [
+    "resolving-active-conflicts",
+    "operational-security-mutual-aid",
+    "making-decisions-without-hierarchy",
+  ],
   ASSETS: {
     ICON_1: "Icon_1.svg",
     ICON_2: "Icon_2.svg",
@@ -121,7 +127,8 @@ describe("ContentContainer", () => {
     const metadataContainer = screen.getByText("Test Author").closest("div");
     expect(metadataContainer).toHaveClass(
       "flex",
-      "items-center",
+      "min-w-0",
+      "items-end",
       "gap-[var(--measures-spacing-008)]",
     );
   });
@@ -148,26 +155,29 @@ describe("ContentContainer", () => {
     );
   });
 
-  it("cycles through different icons based on slug", () => {
+  it("uses per-article tag assets for catalog slugs", () => {
     const { rerender } = render(<ContentContainer post={mockPost} />);
 
-    // First render should use Icon_1
     let icon = screen.getByAltText("Icon for Test Article Title");
     expect(icon).toHaveAttribute("src", "/assets/Icon_1.svg");
 
-    // Test with different slug
     const post2 = { ...mockPost, slug: "operational-security-mutual-aid" };
     rerender(<ContentContainer post={post2} />);
 
     icon = screen.getByAltText("Icon for Test Article Title");
-    expect(icon).toHaveAttribute("src", "/assets/Icon_2.svg");
+    expect(icon).toHaveAttribute(
+      "src",
+      "/content/blog/operational-security-mutual-aid-tag.svg",
+    );
 
-    // Test with another slug
     const post3 = { ...mockPost, slug: "making-decisions-without-hierarchy" };
     rerender(<ContentContainer post={post3} />);
 
     icon = screen.getByAltText("Icon for Test Article Title");
-    expect(icon).toHaveAttribute("src", "/assets/Icon_3.svg");
+    expect(icon).toHaveAttribute(
+      "src",
+      "/content/blog/making-decisions-without-hierarchy-tag.svg",
+    );
   });
 
   it("handles missing post data gracefully", () => {
@@ -191,7 +201,7 @@ describe("ContentContainer", () => {
     expect(icon).toHaveClass("w-[60px]", "h-[30px]");
 
     const title = screen.getByText("Test Article Title");
-    expect(title).toHaveClass("text-[18px]", "leading-[120%]");
+    expect(title).toHaveClass("text-[18px]", "leading-[22px]");
 
     const description = screen.getByText(/This is a test article description/);
     expect(description).toHaveClass("text-[12px]", "leading-[16px]");

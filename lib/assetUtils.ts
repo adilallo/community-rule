@@ -68,6 +68,23 @@ export function guideBannerLogoArrowPath(): string {
   return "assets/shapes/guide-banner-logo-arrow.svg";
 }
 
+/** Per-article Tag mark for ContentContainer (Figma Tag frame 19600:15534). */
+export function contentBlogTagPath(slug: string): string {
+  return `/content/blog/${slug}-tag.svg`;
+}
+
+/** Stable catalog slug order for icon fallbacks when a tag asset is missing. */
+export const CONTENT_CATALOG_SLUG_ORDER = [
+  "resolving-active-conflicts",
+  "operational-security-mutual-aid",
+  "making-decisions-without-hierarchy",
+  "integrating-new-members-without-dilution",
+  "avoiding-burnout-sustainability-in-the-ruins",
+  "how-chaos-concentrates-control",
+  "digital-mediation-and-the-death-of-nuance",
+  "knowledge-management-and-institutional-amnesia",
+] as const;
+
 /**
  * Asset paths for common components
  */

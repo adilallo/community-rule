@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import {
   getBlogPostBySlug,
   getAllBlogPosts as getAllPosts,
-  type BlogPost,
+  getRelatedBlogPosts,
 } from "../../../../lib/content";
 import { logger } from "../../../../lib/logger";
 import ContentBanner from "../../../components/sections/ContentBanner";
@@ -111,66 +111,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   // Get related articles with improved algorithm
   const allPosts = getAllPosts();
-
-  // Create slug order for consistent background cycling
   const slugOrder = allPosts.map((post) => post.slug);
-
-  // Simple related articles algorithm based on content similarity
-  const getRelatedArticles = (
-    currentPost: BlogPost,
-    allPosts: BlogPost[],
-    limit = 3,
-  ): BlogPost[] => {
-    const otherPosts = allPosts.filter((p) => p.slug !== currentPost.slug);
-
-    // Score posts based on content similarity
-    const scoredPosts = otherPosts.map((post) => {
-      let score = 0;
-
-      // Check for similar keywords in title and description
-      const currentTitle = currentPost.frontmatter.title.toLowerCase();
-      const currentDesc = currentPost.frontmatter.description.toLowerCase();
-      const postTitle = post.frontmatter.title.toLowerCase();
-      const postDesc = post.frontmatter.description.toLowerCase();
-
-      // Common keywords that indicate similarity
-      const keywords = [
-        "community",
-        "conflict",
-        "decision",
-        "governance",
-        "security",
-        "trust",
-        "collaboration",
-        "organization",
-      ];
-
-      keywords.forEach((keyword) => {
-        if (currentTitle.includes(keyword) && postTitle.includes(keyword))
-          score += 3;
-        if (currentDesc.includes(keyword) && postDesc.includes(keyword))
-          score += 2;
-        if (currentTitle.includes(keyword) && postDesc.includes(keyword))
-          score += 1;
-        if (currentDesc.includes(keyword) && postTitle.includes(keyword))
-          score += 1;
-      });
-
-      return { ...post, score };
-    });
-
-    // Sort by score and return top posts
-    return scoredPosts
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map(({ score, ...post }) => {
-        // Score used for sorting, removed from final result
-        void score;
-        return post;
-      });
-  };
-
-  const relatedArticles = getRelatedArticles(post, allPosts);
+  const relatedArticles = getRelatedBlogPosts(
+    post.slug,
+    post.frontmatter.related,
+    3,
+  );
 
   // Generate structured data for search engines
   const structuredData = {

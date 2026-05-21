@@ -62,7 +62,7 @@ export function RelatedArticlesView({
           </h2>
         )}
 
-        {/* Horizontal Articles Row - Carousel on mobile, Scrollable slider on desktop */}
+        {/* Horizontal Articles Row - Carousel on mobile, scrollable slider on desktop */}
         <div
           className={
             isUseCases
@@ -86,12 +86,13 @@ export function RelatedArticlesView({
             {filteredPosts.map((relatedPost) => (
               <div
                 key={relatedPost.slug}
-                className="flex flex-col items-center flex-shrink-0"
+                className="flex flex-shrink-0 flex-col items-center"
                 data-testid={`related-${relatedPost.slug}`}
               >
                 <ContentThumbnailTemplate
                   post={relatedPost}
                   variant="vertical"
+                  sizing="fixed"
                   slugOrder={slugOrder}
                 />
               </div>

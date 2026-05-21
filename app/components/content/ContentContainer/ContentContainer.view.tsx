@@ -20,7 +20,7 @@ function ContentContainerView({
   return (
     <div
       className={containerClasses}
-      style={size === "responsive" ? {} : { width }}
+      style={size === "responsive" || size === "xs" ? {} : { width }}
     >
       {/* Content Container - gap between icon and text */}
       <div className={contentGapClasses}>
@@ -45,8 +45,7 @@ function ContentContainerView({
         </div>
       </div>
 
-      {/* Metadata Container - horizontal with 8px gap */}
-      <div className="flex items-center gap-[var(--measures-spacing-008)]">
+      <div className="flex min-w-0 items-end gap-[var(--measures-spacing-008)]">
         {/* Author Name */}
         <span className={authorClasses}>{post.frontmatter.author}</span>
 

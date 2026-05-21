@@ -1,13 +1,23 @@
 "use client";
 
+/**
+ * Figma: "Components" / ContentThumnailTemplate (19614-14838, 19041-13415).
+ * Vertical 260×390 (19060-15787); horizontal 320×225.5 (19041-13550).
+ */
 import { memo } from "react";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 import ContentThumbnailTemplateView from "./ContentThumbnailTemplate.view";
 import type { ContentThumbnailTemplateProps } from "./ContentThumbnailTemplate.types";
 
 const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
-  ({ post, className = "", variant: variantProp = "vertical" }) => {
+  ({
+    post,
+    className = "",
+    variant: variantProp = "vertical",
+    sizing: sizingProp = "fluid",
+  }) => {
     const variant = variantProp;
+    const sizing = sizingProp;
     // Get article-specific background image from frontmatter
     const getBackgroundImage = (
       post: ContentThumbnailTemplateProps["post"],
@@ -42,6 +52,7 @@ const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
         post={post}
         className={className}
         variant={variant}
+        sizing={sizing}
         backgroundImage={backgroundImage}
       />
     );
