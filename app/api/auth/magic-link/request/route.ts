@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../../../lib/server/db";
 import {
   getSessionPepper,
@@ -19,6 +20,8 @@ import {
 import { logRouteError } from "../../../../../lib/server/requestId";
 import { apiRoute } from "../../../../../lib/server/apiRoute";
 import { safeInternalPath } from "../../../../../lib/safeInternalPath";
+import { magicLinkRequestBodySchema } from "../../../../../lib/server/validation/createFlowSchemas";
+import { jsonFromZodError } from "../../../../../lib/server/validation/zodHttp";
 
 const MAGIC_LINK_TTL_MS = 15 * 60 * 1000;
 const EMAIL_MIN_INTERVAL_MS = 60 * 1000;
@@ -30,13 +33,6 @@ function normalizeEmail(raw: unknown): string | null {
   const email = raw.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
   return email;
-}
-
-function readNextPath(body: unknown): string | null {
-  if (!body || typeof body !== "object" || !("next" in body)) return null;
-  const n = (body as { next: unknown }).next;
-  if (typeof n !== "string") return null;
-  return safeInternalPath(n);
 }
 
 export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { requestId }) => {
@@ -51,14 +47,20 @@ export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { request
     return errorJson("invalid_json", "Invalid JSON", 400);
   }
 
-  const email = normalizeEmail(
-    body && typeof body === "object" && "email" in body
-      ? (body as { email: unknown }).email
-      : null,
-  );
+  const parsed = magicLinkRequestBodySchema.safeParse(body);
+  if (!parsed.success) {
+    return jsonFromZodError(parsed.error);
+  }
+
+  const email = normalizeEmail(parsed.data.email);
   if (!email) {
     return errorJson("validation_error", "Valid email required", 400);
   }
+
+  const nextPath = parsed.data.next
+    ? safeInternalPath(parsed.data.next)
+    : null;
+  const draftPayload = parsed.data.draft as Prisma.InputJsonValue | undefined;
 
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
@@ -85,7 +87,6 @@ export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { request
   const token = newSessionToken();
   const tokenHash = hashSessionToken(token, pepper);
   const expiresAt = new Date(Date.now() + MAGIC_LINK_TTL_MS);
-  const nextPath = readNextPath(body);
 
   await prisma.magicLinkToken.deleteMany({ where: { email } });
   await prisma.magicLinkToken.create({
@@ -94,6 +95,7 @@ export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { request
       tokenHash,
       expiresAt,
       nextPath: nextPath ?? undefined,
+      ...(draftPayload !== undefined ? { draftPayload } : {}),
     },
   });
 

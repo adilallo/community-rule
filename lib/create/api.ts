@@ -41,6 +41,7 @@ export async function fetchAuthSession(): Promise<{
 export async function requestMagicLink(
   email: string,
   nextPath?: string,
+  draft?: CreateFlowState,
 ): Promise<{ ok: true } | { ok: false; error: string; retryAfterMs?: number }> {
   const res = await fetch("/api/auth/magic-link/request", {
     method: "POST",
@@ -49,6 +50,7 @@ export async function requestMagicLink(
     body: JSON.stringify({
       email,
       ...(nextPath ? { next: nextPath } : {}),
+      ...(draft && Object.keys(draft).length > 0 ? { draft } : {}),
     }),
   });
   const data = await parseJson<{ error?: string; retryAfterMs?: number }>(res);

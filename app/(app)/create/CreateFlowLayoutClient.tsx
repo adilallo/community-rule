@@ -44,6 +44,7 @@ import {
 } from "./utils/createFlowScreenRegistry";
 import Button from "../../components/buttons/Button";
 import { isValidCreateFlowSaveEmail } from "../../../lib/create/isValidCreateFlowSaveEmail";
+import { buildCreateFlowDraftPayload } from "../../../lib/create/buildCreateFlowDraftPayload";
 import {
   fetchAuthSession,
   requestMagicLink,
@@ -52,6 +53,7 @@ import { safeInternalPath } from "../../../lib/safeInternalPath";
 import {
   clearAnonymousCreateFlowStorage,
   setTransferPendingFlag,
+  writeAnonymousCreateFlowState,
 } from "./utils/anonymousDraftStorage";
 import {
   createFlowStateFromPublishedRule,
@@ -396,7 +398,15 @@ function CreateFlowLayoutContent({
       const segment = stepAfterSave ?? "review";
       const rawNext = `/create/${segment}?syncDraft=1`;
       const nextPath = safeInternalPath(rawNext);
-      const result = await requestMagicLink(trimmed, nextPath);
+      const draftPayload = buildCreateFlowDraftPayload(state, currentStep);
+      writeAnonymousCreateFlowState({
+        ...draftPayload,
+        communitySaveEmail: trimmed,
+      });
+      const result = await requestMagicLink(trimmed, nextPath, {
+        ...draftPayload,
+        communitySaveEmail: trimmed,
+      });
       if (result.ok === false) {
         if (result.retryAfterMs != null && result.retryAfterMs > 0) {
           const seconds = Math.ceil(result.retryAfterMs / 1000);
@@ -418,7 +428,7 @@ function CreateFlowLayoutContent({
     } finally {
       setCommunitySaveMagicLinkSubmitting(false);
     }
-  }, [state.communitySaveEmail, tLogin, updateState]);
+  }, [state, currentStep, tLogin, updateState]);
 
   const isCompletedStep = currentStep === "completed";
   const isRightRailStep = currentStep === "decision-approaches";

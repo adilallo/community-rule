@@ -9,16 +9,55 @@ import {
 } from "./utils/anonymousDraftStorage";
 import { useCreateFlow } from "./context/CreateFlowContext";
 import { parseCreateFlowScreenFromPathname } from "./utils/flowSteps";
-import { saveDraftToServer } from "../../../lib/create/api";
+import { fetchDraftFromServer, saveDraftToServer } from "../../../lib/create/api";
+import { createFlowStateHasKeys } from "../../../lib/create/draftHydrationUtils";
+import type { CreateFlowState } from "./types";
 import messages from "../../../messages/en/index";
 import Alert from "../../components/modals/Alert";
 
 const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
+function buildPayloadWithStep(
+  base: CreateFlowState,
+  pathname: string | null,
+): CreateFlowState {
+  const step =
+    parseCreateFlowScreenFromPathname(pathname ?? null) ?? undefined;
+  return {
+    ...base,
+    ...(step ? { currentStep: step } : {}),
+  };
+}
+
+/**
+ * Prefer the on-device anonymous mirror when present; otherwise use the draft
+ * stored on the magic-link token at request time (written during verify).
+ */
+async function resolvePostLoginDraftPayload(
+  local: CreateFlowState,
+  pathname: string | null,
+): Promise<CreateFlowState | null> {
+  const localPayload = createFlowStateHasKeys(local)
+    ? buildPayloadWithStep(local, pathname)
+    : null;
+
+  const serverDraft = await fetchDraftFromServer();
+  const serverPayload =
+    serverDraft != null && createFlowStateHasKeys(serverDraft)
+      ? buildPayloadWithStep(serverDraft, pathname)
+      : null;
+
+  if (localPayload && serverPayload) {
+    return { ...serverPayload, ...localPayload };
+  }
+  return localPayload ?? serverPayload;
+}
+
 /**
  * After magic-link verify, redirects to `/create/...?syncDraft=1` with session cookie.
- * With backend sync: PUT draft once then hydrates context. Without sync: hydrates from
- * `create-flow-anonymous` localStorage only (no server write).
+ * With backend sync: PUT draft once when the device mirror is non-empty, then hydrates
+ * context. Without sync: hydrates from localStorage and/or the server draft saved at
+ * verify. Never writes an empty payload over an existing server draft.
  */
 export function PostLoginDraftTransfer({
   sessionUser,
@@ -39,49 +78,6 @@ export function PostLoginDraftTransfer({
     if (!wantsTransfer) return;
     if (attemptedRef.current) return;
 
-    if (!SYNC_ENABLED) {
-      attemptedRef.current = true;
-      let cancelled = false;
-      void (async () => {
-        const local = readAnonymousCreateFlowState();
-        const pending = hasTransferPendingFlag();
-
-        if (Object.keys(local).length === 0 && !pending) {
-          const params = new URLSearchParams(searchParams.toString());
-          params.delete("syncDraft");
-          const q = params.toString();
-          if (pathname) {
-            router.replace(q ? `${pathname}?${q}` : pathname);
-          }
-          attemptedRef.current = false;
-          return;
-        }
-
-        const step =
-          parseCreateFlowScreenFromPathname(pathname ?? null) ?? undefined;
-        const payload = {
-          ...local,
-          ...(step ? { currentStep: step } : {}),
-        };
-
-        if (cancelled) return;
-        clearAnonymousCreateFlowStorage();
-        replaceState(payload);
-
-        if (cancelled) return;
-        if (pathname) {
-          const params = new URLSearchParams(searchParams.toString());
-          params.delete("syncDraft");
-          const q = params.toString();
-          router.replace(q ? `${pathname}?${q}` : pathname);
-        }
-      })();
-
-      return () => {
-        cancelled = true;
-      };
-    }
-
     attemptedRef.current = true;
 
     let cancelled = false;
@@ -90,7 +86,7 @@ export function PostLoginDraftTransfer({
       const local = readAnonymousCreateFlowState();
       const pending = hasTransferPendingFlag();
 
-      if (Object.keys(local).length === 0 && !pending) {
+      if (!createFlowStateHasKeys(local) && !pending) {
         const params = new URLSearchParams(searchParams.toString());
         params.delete("syncDraft");
         const q = params.toString();
@@ -101,25 +97,34 @@ export function PostLoginDraftTransfer({
         return;
       }
 
-      const step =
-        parseCreateFlowScreenFromPathname(pathname ?? null) ?? undefined;
-      const payload = {
-        ...local,
-        ...(step ? { currentStep: step } : {}),
-      };
-
-      const saveResult = await saveDraftToServer(payload);
+      const payload = await resolvePostLoginDraftPayload(local, pathname);
       if (cancelled) return;
 
-      if (saveResult.ok === false) {
-        setTransferError(
-          messages.create.topNav.postLoginSaveFailedWithReason.replace(
-            "{reason}",
-            saveResult.message,
-          ),
-        );
+      if (payload == null || !createFlowStateHasKeys(payload)) {
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete("syncDraft");
+        const q = params.toString();
+        if (pathname) {
+          router.replace(q ? `${pathname}?${q}` : pathname);
+        }
         attemptedRef.current = false;
         return;
+      }
+
+      if (SYNC_ENABLED && createFlowStateHasKeys(local)) {
+        const saveResult = await saveDraftToServer(payload);
+        if (cancelled) return;
+
+        if (saveResult.ok === false) {
+          setTransferError(
+            messages.create.topNav.postLoginSaveFailedWithReason.replace(
+              "{reason}",
+              saveResult.message,
+            ),
+          );
+          attemptedRef.current = false;
+          return;
+        }
       }
 
       clearAnonymousCreateFlowStorage();
