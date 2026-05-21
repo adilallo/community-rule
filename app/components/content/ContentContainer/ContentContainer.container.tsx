@@ -1,38 +1,54 @@
 "use client";
 
+/**
+ * Figma: "Components" / Container (19614-14838, 19003-23432).
+ * XS thumbnail copy: title 18/22, description 12/16, metadata 10/14.
+ */
 import { memo } from "react";
-import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
+import {
+  contentBlogTagPath,
+  contentCatalogSlugForFallback,
+  CONTENT_CATALOG_SLUG_ORDER,
+} from "../../../../lib/assetUtils";
 import ContentContainerView from "./ContentContainer.view";
 import type { ContentContainerProps } from "./ContentContainer.types";
 
 const ContentContainerContainer = memo<ContentContainerProps>(
-  ({ post, width = "200px", size: sizeProp = "responsive" }) => {
+  ({
+    post,
+    width = "200px",
+    size: sizeProp = "responsive",
+    tone: toneProp = "inverse",
+    leadingImageSrc,
+    leadingImageAlt,
+    showLeadingImage: showLeadingImageProp = true,
+  }) => {
     const size = sizeProp;
-    // Get the corresponding icon based on the same logic as background images
+    const tone = toneProp;
+    const showLeadingImage = showLeadingImageProp;
+    const onLight = tone === "onLight";
+    const titleColor = onLight
+      ? "text-[var(--color-content-default-primary)] group-hover:text-[var(--color-content-default-brand-primary)]"
+      : "text-[var(--color-content-inverse-brand-royal)] group-hover:text-blue-200";
+    const bodyColor = onLight
+      ? "text-[var(--color-content-default-secondary)]"
+      : "text-[var(--color-content-inverse-brand-royal)]";
+
     const getIconImage = (slug: string): string => {
-      const icons = [
-        getAssetPath(ASSETS.ICON_1),
-        getAssetPath(ASSETS.ICON_2),
-        getAssetPath(ASSETS.ICON_3),
-      ];
+      const resolvedSlug =
+        CONTENT_CATALOG_SLUG_ORDER.indexOf(
+          slug as (typeof CONTENT_CATALOG_SLUG_ORDER)[number],
+        ) >= 0
+          ? slug
+          : contentCatalogSlugForFallback(slug);
 
-      if (!slug) return icons[0];
-
-      // Use the same cycling logic as background images to ensure matching
-      const slugOrder = [
-        "building-community-trust",
-        "operational-security-mutual-aid",
-        "making-decisions-without-hierarchy",
-        "resolving-active-conflicts",
-      ];
-      const index = slugOrder.indexOf(slug);
-      const finalIndex = index >= 0 ? index % icons.length : 0;
-      return icons[finalIndex];
+      return contentBlogTagPath(resolvedSlug);
     };
 
-    const iconImage = getIconImage(post.slug);
+    const iconImage = leadingImageSrc ?? getIconImage(post.slug);
+    const iconAlt =
+      leadingImageAlt ?? `Icon for ${post.frontmatter.title}`;
 
-    // Format date
     const formattedDate = new Date(post.frontmatter.date).toLocaleDateString(
       "en-US",
       {
@@ -41,10 +57,9 @@ const ContentContainerContainer = memo<ContentContainerProps>(
       },
     );
 
-    // Choose styling based on size prop
     const containerClasses =
       size === "xs"
-        ? "relative z-20 h-full flex flex-col gap-[var(--measures-spacing-012)]"
+        ? "relative z-20 flex h-full flex-col gap-[var(--measures-spacing-012)]"
         : "relative z-20 h-full flex flex-col gap-[var(--measures-spacing-012)] sm:gap-[var(--measures-spacing-016)] md:gap-[18px] lg:gap-[var(--measures-spacing-024)]";
 
     const contentGapClasses =
@@ -59,30 +74,33 @@ const ContentContainerContainer = memo<ContentContainerProps>(
 
     const titleClasses =
       size === "xs"
-        ? "font-bricolage font-medium text-[18px] leading-[120%] text-[var(--color-content-inverse-brand-royal)] group-hover:text-blue-200 transition-colors"
-        : "font-bricolage font-medium text-[18px] leading-[120%] sm:text-[24px] sm:leading-[24px] md:text-[32px] md:leading-[110%] lg:text-[44px] lg:leading-[110%] xl:text-[64px] xl:leading-[110%] text-[var(--color-content-inverse-brand-royal)] group-hover:text-blue-200 transition-colors";
+        ? `font-bricolage font-medium text-[18px] leading-[22px] transition-colors ${titleColor}`
+        : `font-bricolage font-medium text-[18px] leading-[120%] sm:text-[24px] sm:leading-[24px] md:text-[32px] md:leading-[110%] lg:text-[44px] lg:leading-[110%] xl:text-[64px] xl:leading-[110%] transition-colors ${titleColor}`;
 
     const descriptionClasses =
       size === "xs"
-        ? "font-inter font-normal text-[12px] leading-[16px] text-[var(--color-content-inverse-brand-royal)] max-w-md"
-        : "font-inter font-normal text-[12px] leading-[16px] sm:text-[14px] sm:leading-[20px] md:text-[14px] md:leading-[20px] lg:text-[18px] lg:leading-[130%] xl:text-[24px] xl:leading-[32px] text-[var(--color-content-inverse-brand-royal)]";
+        ? `font-inter font-normal text-[12px] leading-[16px] max-w-md ${bodyColor}`
+        : `font-inter font-normal text-[12px] leading-[16px] sm:text-[14px] sm:leading-[20px] md:text-[14px] md:leading-[20px] lg:text-[18px] lg:leading-[130%] xl:text-[24px] xl:leading-[32px] ${bodyColor}`;
 
     const authorClasses =
       size === "xs"
-        ? "font-inter font-normal text-[10px] leading-[14px] text-[var(--color-content-inverse-brand-royal)]"
-        : "font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] text-[var(--color-content-inverse-brand-royal)]";
+        ? `overflow-hidden text-ellipsis whitespace-nowrap font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
+        : `font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] ${bodyColor}`;
 
     const dateClasses =
       size === "xs"
-        ? "font-inter font-normal text-[10px] leading-[14px] text-[var(--color-content-inverse-brand-royal)]"
-        : "font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] text-[var(--color-content-inverse-brand-royal)]";
+        ? `overflow-hidden text-ellipsis whitespace-nowrap font-inter font-normal text-[10px] leading-[14px] ${bodyColor}`
+        : `font-inter font-normal text-[10px] leading-[14px] md:text-[12px] md:leading-[16px] lg:text-[14px] lg:leading-[20px] xl:text-[18px] xl:leading-[130%] ${bodyColor}`;
 
     return (
       <ContentContainerView
         post={post}
         width={width}
         size={size}
+        tone={tone}
         iconImage={iconImage}
+        iconAlt={iconAlt}
+        showLeadingImage={showLeadingImage}
         containerClasses={containerClasses}
         contentGapClasses={contentGapClasses}
         textGapClasses={textGapClasses}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "../../../../../lib/server/db";
 import {
   getSessionPepper,
@@ -67,6 +68,19 @@ export async function GET(request: NextRequest) {
       create: { email: row.email },
       update: {},
     });
+
+    if (row.draftPayload != null) {
+      await prisma.ruleDraft.upsert({
+        where: { userId: user.id },
+        create: {
+          userId: user.id,
+          payload: row.draftPayload as Prisma.InputJsonValue,
+        },
+        update: {
+          payload: row.draftPayload as Prisma.InputJsonValue,
+        },
+      });
+    }
 
     const { token: sessionToken, expiresAt } = await createSessionForUser(
       user.id,

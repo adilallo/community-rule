@@ -39,6 +39,13 @@ export interface RuleProps {
   descriptionEditAriaLabel?: string;
   /** Shown when {@link onDescriptionClick} is set and `description` is empty. */
   descriptionEmptyHint?: string;
+  /**
+   * When set, the title in the card header is clickable — caller handles modal /
+   * navigation (e.g. edit published rule).
+   */
+  onTitleClick?: () => void;
+  /** When {@link onTitleClick} is set, forwarded to the control’s `aria-label`. */
+  titleEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor?: string;
   className?: string;
@@ -66,6 +73,12 @@ export interface RuleProps {
    * `expanded` — Figma `22142:898446` compact `Card / Rule` only.
    */
   recommended?: boolean;
+  /**
+   * Marketing **GovernanceTemplateGrid** / RuleStack shell (Figma [22085:860413](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-860413&m=dev); card shell **18375:22616**).
+   */
+  templateGridFigmaShell?: boolean;
+  /** When true, expanded cards fill their container instead of a fixed Figma width. */
+  fluidWidth?: boolean;
 }
 
 export interface RuleViewProps {
@@ -74,6 +87,8 @@ export interface RuleViewProps {
   onDescriptionClick?: () => void;
   descriptionEmptyHint?: string;
   descriptionEditAriaLabel?: string;
+  onTitleClick?: () => void;
+  titleEditAriaLabel?: string;
   icon?: React.ReactNode;
   backgroundColor: string;
   className: string;
@@ -90,4 +105,6 @@ export interface RuleViewProps {
   bottomStatusLabel?: string;
   bottomLinks?: RuleBottomLink[];
   recommended?: boolean;
+  templateGridFigmaShell?: boolean;
+  fluidWidth?: boolean;
 }

@@ -74,6 +74,25 @@ describe("RuleStack Component", () => {
     expect(fetchMock.mock.calls.length).toBe(callsBefore);
   });
 
+  test("uses translationNamespace for section heading copy", () => {
+    render(
+      <RuleStack
+        initialGridEntries={homeFeatured}
+        translationNamespace="pages.useCases.ruleStack"
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.textContent).toMatch(
+      /Get Templates that help your community run smoothly/,
+    );
+  });
+
+  test("defaults to home rule stack heading copy when namespace omitted", () => {
+    render(<RuleStack initialGridEntries={homeFeatured} />);
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.textContent).toMatch(/Popular templates/);
+  });
+
   test("renders four featured governance template cards on the home row", async () => {
     render(<RuleStack />);
     await waitForRuleStackCards();
@@ -166,6 +185,7 @@ describe("RuleStack Component", () => {
     await waitForRuleStackCards();
 
     const section = document.querySelector("section");
+    expect(section).toHaveAttribute("data-figma-node", "22085-860413");
     expect(section).toHaveClass("px-[20px]", "py-[32px]");
     expect(section?.className).toMatch(/min-\[640px\]:px-\[32px\]/);
     expect(section?.className).toMatch(/min-\[640px\]:py-\[48px\]/);
@@ -280,6 +300,12 @@ describe("RuleStack Component", () => {
     );
     expect(circlesIcon?.className).toMatch(
       /min-\[640px\]:max-\[1023px\]:h-\[56px\]/,
+    );
+    expect(circlesIcon?.className).toMatch(
+      /min-\[1024px\]:max-\[1439px\]:w-\[90px\]/,
+    );
+    expect(circlesIcon?.className).toMatch(
+      /min-\[1024px\]:max-\[1439px\]:h-\[90px\]/,
     );
     expect(circlesIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
     expect(circlesIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);

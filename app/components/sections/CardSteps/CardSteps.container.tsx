@@ -10,7 +10,7 @@ import type { CardStepsProps } from "./CardSteps.types";
  * Composes **`cards/Step`** (Figma Card / Step), not **`progress/Stepper`**.
  */
 const CardStepsContainer = memo<CardStepsProps>(
-  ({ title, subtitle, steps, headingDesktopLines }) => {
+  ({ title, subtitle, steps, headingDesktopLines, seeHowItWorksHref }) => {
     const schemaData = useSchemaData({
       type: "HowTo",
       name: title,
@@ -29,6 +29,7 @@ const CardStepsContainer = memo<CardStepsProps>(
         subtitle={subtitle}
         steps={steps}
         headingDesktopLines={headingDesktopLines}
+        seeHowItWorksHref={seeHowItWorksHref}
         schemaJson={schemaJson}
       />
     );

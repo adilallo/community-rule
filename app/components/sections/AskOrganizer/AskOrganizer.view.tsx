@@ -21,6 +21,13 @@ function AskOrganizerView({
 }: AskOrganizerViewProps) {
   const t = useTranslation();
   const ariaLabel = t("askOrganizer.ariaLabel");
+  const isUseCaseDetail = variant === "use-case-detail";
+  const lockupVariant =
+    variant === "inverse" || isUseCaseDetail ? "ask-inverse" : "ask";
+  const lockupAlignment =
+    variant === "left-aligned" ? "left" : "center";
+  const buttonPalette =
+    variant === "inverse" || isUseCaseDetail ? "inverse" : "default";
 
   return (
     <section
@@ -28,26 +35,31 @@ function AskOrganizerView({
       aria-labelledby={labelledBy}
       aria-label={labelledBy ? undefined : ariaLabel}
       tabIndex={-1}
+      data-figma-node={isUseCaseDetail ? "22015-42624" : "18116-15960"}
     >
-      <div className={`flex flex-col ${contentGap}`}>
+      <div
+        className={`mx-auto flex w-full min-w-0 max-w-[1280px] flex-col md:min-w-[358px] ${contentGap} ${isUseCaseDetail ? "items-center" : ""}`}
+      >
         {/* Content Lockup */}
         <ContentLockup
           title={title}
           subtitle={subtitle}
           description={description}
-          variant={variant === "inverse" ? "ask-inverse" : "ask"}
-          alignment={variant === "left-aligned" ? "left" : "center"}
+          variant={lockupVariant}
+          alignment={lockupAlignment}
           titleId={labelledBy}
         />
 
         {/* Button */}
-        <div className={buttonContainerClass}>
+        <div
+          className={`${buttonContainerClass} flex-wrap gap-y-[var(--spacing-scale-016)]`}
+        >
           <Button
             {...(buttonHref ? { href: buttonHref } : {})}
-            size="large"
+            size="small"
             buttonType="filled"
-            palette={variant === "inverse" ? "inverse" : "default"}
-            className="xl:!px-[var(--spacing-scale-020)] xl:!py-[var(--spacing-scale-012)] xl:!text-[24px] xl:!leading-[28px]"
+            palette={buttonPalette}
+            className="!px-[var(--spacing-scale-010)] md:!px-[var(--spacing-scale-016)] md:!py-[var(--spacing-scale-012)] md:!text-[16px] md:!leading-[20px]"
             onClick={onContactClick}
             ariaLabel={ariaLabel}
             data-testid="ask-organizer-cta"

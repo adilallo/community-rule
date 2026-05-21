@@ -7,16 +7,20 @@ import { GovernanceTemplateGrid } from "../GovernanceTemplateGrid";
 import { GovernanceTemplateGridSkeleton } from "../GovernanceTemplateGrid/GovernanceTemplateGridSkeleton";
 import type { RuleStackViewProps } from "./RuleStack.types";
 
+/** Figma **Section / RuleStack** [22085:860413](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22085-860413&m=dev). */
 export function RuleStackView({
   className,
   onTemplateClick,
   gridEntries,
+  translationNamespace,
+  twoColumnsFromMd = false,
 }: RuleStackViewProps) {
-  const t = useTranslation("pages.home.ruleStack");
+  const t = useTranslation(translationNamespace);
   const buttonText = t("button.seeAllTemplates");
 
   return (
     <section
+      data-figma-node="22085-860413"
       className={`
         w-full bg-transparent flex flex-col
         px-[20px] py-[32px]
@@ -34,14 +38,20 @@ export function RuleStackView({
         title={t("title")}
         subtitle={t("subtitle")}
         variant="multi-line"
+        ruleStackDesktopTypeScale
+        twoColumnsFromMd={twoColumnsFromMd}
       />
 
       {gridEntries === null ? (
-        <GovernanceTemplateGridSkeleton count={4} />
+        <GovernanceTemplateGridSkeleton
+          count={4}
+          twoColumnsFromMd={twoColumnsFromMd}
+        />
       ) : (
         <GovernanceTemplateGrid
           entries={gridEntries}
           onTemplateClick={onTemplateClick}
+          twoColumnsFromMd={twoColumnsFromMd}
         />
       )}
 

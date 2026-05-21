@@ -7,7 +7,7 @@ Quick map from the Figma file **Community Rule System** (`agv0VBLiBlcnSAaiAORgPR
 | [Utility](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=20515-15809) | `utility/` | Create chrome, tag, scroll, sidebar, dividers, etc. |
 | [Asset](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=1240-9089) | **`app/components/asset/`**, **`public/assets/template-mark/`**, **`public/assets/vector/`** | Components under **`asset/`**; flat kebab **`*.svg`** in **`template-mark/`** & **`vector/`** (see conventions below). |
 | [Button](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=497-3016) | `buttons/` | PascalCase package per primitive — **`Button/`**, **`InlineTextButton/`** (see conventions below). |
-| [Card](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=17865-24349) | `cards/` | One PascalCase package per surface—**`Selection/`** (Figma **Card / CardSelection**), **`CardStack/`**, **`Rule/`** (Figma **Card / Rule**), **`Icon/`**, **`Mini/`**, **`Step/`** (Figma **Card / Step**), **`TemplateReviewCard/`** (see conventions below). |
+| [Card](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=17865-24349) | `cards/` | One PascalCase package per surface—**`Selection/`** (Figma **Card / CardSelection**), **`CardStack/`**, **`Rule/`** (Figma **Card / Rule**), **`Icon/`**, **`CaseStudy/`**, **`Mini/`**, **`Stat/`** (Figma **Card / Stat**), **`Step/`** (Figma **Card / Step**), **`TemplateReviewCard/`** (see conventions below). |
 | [Control](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=5944-58611) | `controls/` | Checkbox, radio, text field, select, toggle, switch, incrementer, upload, multi-select, chip, … (see **Control conventions** below). **`InfoMessageBox`** canonical here. |
 | [Layout](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21836-20542) | `layout/` | **`List/`**, **`ListEntry/`**, **`ListItem/`** + **`listSizeLayout.ts`**. **Tabs** / **Accordion** are in Figma only—**not** in code yet (see **Layout conventions**). |
 | [Modals](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=5944-47704) | `modals/` | Alert, Create, Dialog, Login, Tooltip, **`ModalHeader`** / **`ModalFooter`** (see **Modals conventions**). |
@@ -59,7 +59,7 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 
 ## Layout conventions (Figma [“Layout”](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21836-20542) canvas)
 
-Tracks [**CR-104**](https://linear.app/community-rule/issue/CR-104/backlog-design-system-component-cleanup) §6: **inventory only**. **Do not** add **`Tabs`**, **`Accordion`**, or other Layout primitives until a shipped surface needs them and design is agreed—**no scaffold components** for Figma-only patterns.
+Tracks [**CR-104**](https://linear.app/community-rule/issue/CR-104/backlog-design-system-component-cleanup) §6: **inventory only**. **`Accordion/`** shipped for **`/about`**; **`Tabs`** and other Layout primitives stay **Figma-only** until a shipped surface needs them—**no scaffold components** for parity alone.
 
 | Figma (typical) | Code (`app/components/layout/`) | Notes |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ Tracks [**CR-104**](https://linear.app/community-rule/issue/CR-104/backlog-desig
 | Shared list sizing | **`listSizeLayout.ts`** | Layout constants / classes shared by **`List`** and **`ListEntry`**. |
 | List edit | — | No **`ListEdit`** package in this repo today; editing flows may be screen-local or future work—confirm in Figma vs product before introducing a shared primitive. |
 | Tabs | — | **Not implemented.** |
-| Accordion | — | **Not implemented.** |
+| Accordion | **`Accordion/`** | **`Accordion.container.tsx`**, **`Accordion.view.tsx`**, **`Accordion.types.ts`** — disclosure row used on **`/about`** FAQ (`sections/Accordion`). |
 
 **Coverage note:** Figma’s Base / List matrix may be larger than **`List`** / **`ListEntry`** props—parity is **incremental**, not assumed 1:1.
 
@@ -144,13 +144,18 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 | Card steps (SectionCardSteps) | **`CardSteps/`** | Composes **`cards/Step`** (Figma **Card / Step** — not **`progress/Stepper`**). |
 | Rule stack | **`RuleStack/`** | |
 | Feature grid | **`FeatureGrid/`** | |
-| Quote block | **`QuoteBlock/`** | |
+| Quote block | **`QuoteBlock/`** | Includes **`statement`** (Section/Quote **22137:890679**), shipped **`/about`** under FAQ; **`standard` / `compact` / `extended`** remain portrait + attribution. |
 | Ask organizer | **`AskOrganizer/`** | |
+| Stats (about metrics) | **`Stats/`** | Composes **`cards/Stat`** + **`asset/Shapes`**; shipped on **`/about`**. |
+| Book promo | **`Book/`** | **`/about`** download band — **`ContentLockup`** + **`Button`**. |
+| FAQ accordion | **`Accordion/`** | Section wrapper over **`layout/Accordion`**; **`/about`**. |
 | Related content | **`RelatedArticles/`** | Article list / cards — confirm naming vs Figma “related slider” frames. |
 | Template grid (governance) | **`GovernanceTemplateGrid/`** | **`GovernanceTemplateGridSkeleton`** colocated. |
+| Use cases org strip | **`UseCasesOrgs/`** | Figma [**22112-873893**](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22112-873893); composes **`cards/CaseStudy`**; **`/use-cases`**. |
+| “Who is this for?” icon grid | **`Groups/`** | Figma [**22084-859470**](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22084-859470); composes **`cards/Icon`** (`interactive={false}`); **`/use-cases`**. |
 | Section index / number | **`SectionNumber.tsx`** | Single module. |
 
-**Gaps / TBD (§10, confirm with design / roadmap):** **PageHeader**, **CardGroup**, **Section Accordion**, **Section / Stats** (hero metrics distinct from **`cards/Step`** — [**CR-59**](https://linear.app/community-rule/issue/CR-59/card-stat)), **Related slider** (vs **`RelatedArticles`** parity), **About header**, **triple-step** / text blocks, **orgs** strip, and other Figma-only compositions.
+**Gaps / TBD (§10, confirm with design / roadmap):** **CardGroup**, **Related slider** (vs **`RelatedArticles`** parity), and other Figma-only compositions not yet mapped to a shipped route.
 
 - **Pattern:** Prefer **`container` / `view` / `types`** + **`index.tsx`** for **new** section composites. Older or small surfaces may stay a **single `*.tsx`** at **`sections/`** root (**`ContentBanner`**, **`SectionNumber`**) — match neighbors when extending.
 
@@ -163,7 +168,11 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 | Figma (typical) | Code (`app/components/type/`) | Notes |
 | --- | --- | --- |
 | Section header (1 vs 3 lines, responsive sizes) | **`SectionHeader/`** | Figma [**17411:10981**](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=17411-10981). **`SectionHeader.tsx`** + **`index.tsx`**; **`default`** / **`multi-line`**; optional **`stackedDesktopLines`**. Composed by **`sections/CardSteps`**, **`sections/RuleStack`**, etc. |
-| Header lockup / content lockup | **`HeaderLockup/`**, **`ContentLockup/`** | **`container` / `view` / `types`** + **`index.tsx`** where split. |
+| Header lockup / content lockup | **`HeaderLockup/`**, **`ContentLockup/`** | **`container` / `view` / `types`** + **`index.tsx`** where split. **`ContentLockup`** **`about`** variant + optional **`titleContent`** for **`AboutHeader`**. |
+| About header (inline word + shape lockup) | **`AboutHeader/`** | **`/about`** hero; composes **`ContentLockup`**. |
+| Marketing page header (title + body + optional CTA) | **`PageHeader/`** | Figma [**21004-15902**](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21004-15902); **`/use-cases`**. |
+| Triple text block | **`TripleTextBlock/`** | **`/about`** (columns only; optional title/CTA omitted per page). |
+| Three-step explainer + CTA | **`TripleStep/`** | Figma [**22084-859256**](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22084-859256); **`/use-cases`** (illustration column deferred). |
 | Type / Numbered List (+ item) | **`NumberedList/`** | **`container` / `view` / `types`** + **`index.tsx`**. |
 | `.utility/Input label` (often filed under Utility in Figma) | **`InputLabel/`** | See also **Utility conventions** — **`InputLabel`** is canonical under **`type/`**. |
 | “Community Rule” published body (Sections canvas) | **`CommunityRule/`** | Composes **`Section`** + **`TextBlock`**. Category + entries; optional entry **`blocks`**; plain **`body`** splits on blank lines. |
@@ -177,8 +186,10 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 - **Pattern:** follow the **container / view / types** split (**`Selection/`**, **`CardStack/`**, **`Rule/`**, **`Icon/`**, **`Mini/`**) unless a component stays a single module (**`Step/`** uses one **`Step.tsx`** + **`index.tsx`** only).
 - **`Rule/`** — Figma **Card / Rule**. **`Rule.container.tsx`**, **`Rule.view.tsx`**, **`Rule.types.ts`**.
 - **`Selection/`** — Figma **Card / CardSelection** (e.g. `16775:28762`): optional recommended/selected **`Tag`**, label, support text. Stacked layout uses `orientation="horizontal"`; row + info icon + tag right uses `orientation="vertical"`.
+- **`Stat/`** — Figma **Card / Stat** (metric tile + decorative shape). Composed by **`sections/Stats`** on **`/about`**.
 - **`Step/`** — Figma **Card / Step** (numbered step tile + text). Shipped on the home page via **`sections/CardSteps`**. Not the **Progress / Stepper** wizard control.
 - **`CardStack/`** — selectable stacks + expand affordance for create-flow method pickers (**Figma may still say “Utility / CardStack”;** code lives here).
+- **`CaseStudy/`** — Figma **Card / CaseStudy** ([21993-32352](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21993-32352)). Square org tile with **`lavender` \| `neutral` \| `rose`** surfaces; optional **`visual`** slot. Composed by **`sections/UseCasesOrgs`** on **`/use-cases`**.
 - **`TemplateReviewCard/`** — template review grid + chip detail modal (**`TemplateChipDetailModal`** colocated in the package).
 
 ## Asset conventions (Figma “Asset” canvas)
@@ -188,5 +199,6 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 - **`public/assets/vector/<slug>.svg`** — Figma Asset / Vector marks (same kebab **`slug`** convention as **`public/assets/template-mark/`**). Use **`vectorMarkPath(slug)`** in **`lib/assetUtils.ts`**.
 - **`asset/Logo`** — Community Rule **`Logo`** component (folder PascalCase, like **`Avatar/`**).
 - **`asset/Avatar`** + **`asset/AvatarContainer`** — paired circular image stacks (e.g. top nav). Fuller DS Avatar behavior (**initials**, upload routing, …) tracked as **[CR-58](https://linear.app/community-rule/issue/CR-58)**.
+- **`asset/Shapes/`** — decorative blobs for **`cards/Stat`** and About header inline art (Figma **Shapes**).
 
 *Update this when you add a new top-level `app/components/*` package or a new Figma canvas.*

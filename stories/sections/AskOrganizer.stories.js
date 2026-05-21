@@ -34,7 +34,7 @@ export default {
     },
     variant: {
       control: { type: "select" },
-      options: ["centered", "left-aligned", "compact", "inverse"],
+      options: ["centered", "left-aligned", "compact", "inverse", "use-case-detail"],
       description: "Layout variant for the component",
     },
     onContactClick: {
@@ -82,6 +82,26 @@ export const Inverse = {
     variant: "inverse",
     onContactClick: (data) => console.log("Contact clicked:", data),
   },
+};
+
+export const UseCaseDetail = {
+  args: {
+    title: "Still have questions?",
+    subtitle: "Get answers from an experienced organizer",
+    buttonText: "Ask an Organizer",
+    variant: "use-case-detail",
+    onContactClick: (data) => console.log("Contact clicked:", data),
+  },
+  decorators: [
+    (Story) => (
+      <div
+        className="min-h-[360px] w-full"
+        style={{ background: "var(--color-content-default-brand-lavender)" }}
+      >
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 /** Legacy: CTA is a link (no inquiry modal). */

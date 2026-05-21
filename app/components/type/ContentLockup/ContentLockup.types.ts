@@ -1,7 +1,11 @@
+import type { ReactNode } from "react";
+
 export type ContentLockupVariantValue =
   | "hero"
   | "feature"
   | "learn"
+  | "about"
+  | "book"
   | "ask"
   | "ask-inverse"
   | "modal"
@@ -31,6 +35,8 @@ export interface ContentLockupProps {
    * Useful when a parent section uses aria-labelledby.
    */
   titleId?: string;
+  /** Replaces the default title string when inline title markup is required. */
+  titleContent?: ReactNode;
 }
 
 export interface VariantStyle {
@@ -55,6 +61,8 @@ export interface ContentLockupViewProps {
     | "hero"
     | "feature"
     | "learn"
+    | "about"
+    | "book"
     | "ask"
     | "ask-inverse"
     | "modal"
@@ -63,5 +71,6 @@ export interface ContentLockupViewProps {
   linkHref?: string;
   alignment: "center" | "left";
   titleId?: string;
+  titleContent?: ReactNode;
   styles: VariantStyle;
 }

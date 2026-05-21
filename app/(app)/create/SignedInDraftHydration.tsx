@@ -65,7 +65,6 @@ export function SignedInDraftHydration({
     if (finishedUserIdRef.current === userId) return;
 
     if (syncDraftParam === "1" || hasTransferPendingFlag()) {
-      finishedUserIdRef.current = userId;
       return;
     }
 

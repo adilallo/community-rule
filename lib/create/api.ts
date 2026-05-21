@@ -41,6 +41,7 @@ export async function fetchAuthSession(): Promise<{
 export async function requestMagicLink(
   email: string,
   nextPath?: string,
+  draft?: CreateFlowState,
 ): Promise<{ ok: true } | { ok: false; error: string; retryAfterMs?: number }> {
   const res = await fetch("/api/auth/magic-link/request", {
     method: "POST",
@@ -49,6 +50,7 @@ export async function requestMagicLink(
     body: JSON.stringify({
       email,
       ...(nextPath ? { next: nextPath } : {}),
+      ...(draft && Object.keys(draft).length > 0 ? { draft } : {}),
     }),
   });
   const data = await parseJson<{ error?: string; retryAfterMs?: number }>(res);
@@ -577,6 +579,44 @@ export async function duplicatePublishedRule(
   try {
     const res = await fetch(
       `/api/rules/${encodeURIComponent(id)}/duplicate`,
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
+    const data = (await safeParseJsonResponse(res)) as {
+      rule?: { id: string; title: string };
+    } | null;
+    const rule = data && typeof data === "object" ? data.rule : undefined;
+    if (!res.ok || !rule) {
+      const fromBody =
+        data && typeof data === "object" ? readApiErrorMessage(data) : null;
+      const msg =
+        fromBody && fromBody !== "Request failed"
+          ? fromBody
+          : PUBLISH_FAILED_FALLBACK;
+      return {
+        ok: false as const,
+        error: msg,
+        status: res.status,
+      };
+    }
+    return { ok: true, id: rule.id, title: rule.title };
+  } catch {
+    return {
+      ok: false as const,
+      error: DRAFT_SAVE_NETWORK_ERROR,
+      status: 0,
+    };
+  }
+}
+
+export async function duplicateUseCaseTemplate(
+  slug: string,
+): Promise<DuplicateRuleResult> {
+  try {
+    const res = await fetch(
+      `/api/use-cases/${encodeURIComponent(slug)}/duplicate`,
       {
         method: "POST",
         credentials: "include",

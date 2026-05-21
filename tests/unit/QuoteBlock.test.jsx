@@ -222,4 +222,45 @@ describe("QuoteBlock Component", () => {
       screen.queryByText("The Tyranny of Structurelessness"),
     ).not.toBeInTheDocument();
   });
+
+  test("statement variant uses one paragraph with responsive stack (Figma 21967-24638)", () => {
+    render(
+      <QuoteBlock
+        variant="statement"
+        id="about-test-quote"
+        quote="First paragraph of the statement."
+        quoteSecondary="Second paragraph of the statement."
+      />,
+    );
+
+    const region = screen.getByRole("region", {
+      name: /first paragraph of the statement/i,
+    });
+    expect(region).toBeInTheDocument();
+    expect(region).toHaveAttribute("data-figma-node", "21967-24638");
+    expect(
+      screen.getByText("Second paragraph of the statement."),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("cite")).not.toBeInTheDocument();
+
+    const heading = region.querySelector("#about-test-quote-content");
+    expect(heading?.querySelectorAll("span.block.lg\\:inline").length).toBe(2);
+  });
+
+  test("statement variant logs when quoteSecondary is missing", () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <QuoteBlock
+        variant="statement"
+        quote="Only one paragraph"
+      />,
+    );
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "QuoteBlock: statement variant requires non-empty quote and quoteSecondary",
+    );
+
+    consoleSpy.mockRestore();
+  });
 });

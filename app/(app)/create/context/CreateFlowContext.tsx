@@ -18,6 +18,7 @@ import type {
 import {
   clearAnonymousCreateFlowStorage,
   clearLegacyCreateFlowKeysOnce,
+  hasTransferPendingFlag,
   readAnonymousCreateFlowState,
   writeAnonymousCreateFlowState,
 } from "../utils/anonymousDraftStorage";
@@ -94,6 +95,13 @@ export function CreateFlowProvider({
     const wasOff = !prevPersistRef.current;
     prevPersistRef.current = true;
     if (!wasOff) return;
+    if (hasTransferPendingFlag()) return;
+    if (
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("syncDraft") === "1"
+    ) {
+      return;
+    }
     const from = readAnonymousCreateFlowState();
     if (Object.keys(from).length === 0) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate local draft when mirroring turns on

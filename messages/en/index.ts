@@ -15,6 +15,12 @@ import webVitalsDashboard from "./components/webVitalsDashboard.json";
 import home from "./pages/home.json";
 import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
+import about from "./pages/about.json";
+import useCases from "./pages/useCases.json";
+import useCasesDetail from "./pages/useCasesDetail.json";
+import useCasesCompletedRules from "./pages/useCasesCompletedRules.json";
+import useCasesCompletedRule from "./pages/useCasesCompletedRule.json";
+import howItWorks from "./pages/howItWorks.json";
 import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
@@ -76,6 +82,12 @@ export default {
     home,
     templates,
     learn,
+    about,
+    useCases,
+    useCasesDetail,
+    useCasesCompletedRules,
+    useCasesCompletedRule,
+    howItWorks,
     monitor,
     login,
     profile,

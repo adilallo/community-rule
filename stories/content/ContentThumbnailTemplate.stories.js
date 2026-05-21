@@ -1,13 +1,17 @@
 import ContentThumbnailTemplate from "../../app/components/content/ContentThumbnailTemplate";
 
 const mockPost = {
-  slug: "sample-article",
+  slug: "resolving-active-conflicts",
   frontmatter: {
-    title: "Sample Article Title",
+    title: "Resolving Active Conflicts",
     description:
-      "This is a sample article description that explains what the article covers.",
-    author: "Sample Author",
-    date: "2025-01-15",
+      "Practical steps for resolving conflicts while maintaining trust, cooperation, and shared goals",
+    author: "Author name",
+    date: "2025-04-15",
+    thumbnail: {
+      vertical: "resolving-active-conflicts-vertical.svg",
+      horizontal: "resolving-active-conflicts-horizontal.svg",
+    },
   },
 };
 

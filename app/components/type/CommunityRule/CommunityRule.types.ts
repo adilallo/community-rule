@@ -28,6 +28,11 @@ export interface CommunityRuleSection {
 export interface CommunityRuleProps {
   sections: CommunityRuleSection[];
   className?: string;
-  /** When true, wrap in white background with left teal bar (small breakpoint). */
+  /** When true, wrap in white background with left accent bar (small breakpoint). */
   useCardStyle?: boolean;
+  /**
+   * Accent bar color when {@link useCardStyle} is true; should match the page
+   * surface behind the card (defaults to create-flow teal).
+   */
+  cardAccentColor?: string;
 }

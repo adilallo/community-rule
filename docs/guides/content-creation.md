@@ -49,7 +49,7 @@ thumbnail:
   vertical: "your-article-slug-vertical.svg"
   horizontal: "your-article-slug-horizontal.svg"
 banner:
-  horizontal: "your-article-slug-banner.svg" # md+ breakpoint banner image
+  horizontal: "your-article-slug-section.svg" # md+ breakpoint banner (Figma Section, 1920×672)
 background:
   color: "#F4F3F1" # Page background color (hex)
 ---
@@ -63,7 +63,7 @@ background:
 - **date**: Publication date in YYYY-MM-DD format
 - **related**: Array of article slugs (use filename without .md)
 - **thumbnail**: Custom images for article thumbnails (optional)
-- **banner.horizontal**: Banner image for md+ breakpoints (optional)
+- **banner.horizontal**: Section banner for md+ breakpoints (optional; defaults to `{slug}-section.svg`)
 - **background.color**: Page background color as a hex code (e.g., `#F4F3F1`)
 
 ### Related Articles
@@ -85,28 +85,25 @@ The slug is different from the title - it's lowercase with hyphens instead of sp
 
 ## Thumbnail Images
 
-Add custom thumbnail images to make your article stand out:
+Each article uses SVGs in `public/content/blog/`. For a new article, duplicate an existing set and rename the files to match your slug:
 
-1. **Create your images**:
-   - Vertical: 260px × 390px
-   - Horizontal: 320px × 225.5px (minimum width)
-   - Format: SVG preferred, PNG also works
-
-2. **Save in public/content/blog/**:
-   - `your-article-slug-vertical.svg`
-   - `your-article-slug-horizontal.svg`
-   - `your-article-slug-banner.svg` (optional, for md+ breakpoints)
-
-3. **Add to frontmatter**:
+1. **Pick a template set** from `public/content/blog/` (e.g. `resolving-active-conflicts-*.svg`)
+2. **Copy and rename** for your slug:
+   - `{slug}-vertical.svg` — 260px × 390px
+   - `{slug}-horizontal.svg` — 320px × 225.5px (minimum width)
+   - `{slug}-section.svg` — optional md+ banner (1920×672)
+   - `{slug}-tag.svg` — tag mark for content cards
+3. **Customize** the copied SVGs for your article
+4. **Add to frontmatter**:
    ```yaml
    thumbnail:
      vertical: "your-article-slug-vertical.svg"
      horizontal: "your-article-slug-horizontal.svg"
    banner:
-     horizontal: "your-article-slug-banner.svg"
+     horizontal: "your-article-slug-section.svg"
    ```
 
-If no thumbnails are provided, default images will be used.
+If you omit custom SVGs, the site reuses assets from an existing catalog article as a temporary fallback until you add your own.
 
 ## Background Color
 

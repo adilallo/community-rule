@@ -76,6 +76,7 @@ export default function Page() {
         iconColor: "orange",
       },
     ],
+    seeHowItWorksHref: t("cardSteps.buttons.seeHowItWorksHref"),
   };
 
   const featureGridData = {

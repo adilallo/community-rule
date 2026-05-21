@@ -14,6 +14,8 @@ export function RuleView({
   onDescriptionClick,
   descriptionEmptyHint,
   descriptionEditAriaLabel,
+  onTitleClick,
+  titleEditAriaLabel,
   icon,
   backgroundColor,
   className,
@@ -30,6 +32,8 @@ export function RuleView({
   bottomStatusLabel,
   bottomLinks,
   recommended = false,
+  templateGridFigmaShell = false,
+  fluidWidth = false,
 }: RuleViewProps) {
   const t = useTranslation("ruleCard");
   const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
@@ -73,18 +77,27 @@ export function RuleView({
         : isMedium
           ? "gap-[12px]"
           : "gap-[18px]"; // XS and S: 18px gap
-  const cardWidth = expanded
-    ? isLarge
-      ? "w-[568px]"
-      : isMedium
-        ? "w-[398px]"
-        : "" // XS and S: no fixed width
-    : "";
+  const cardWidth =
+    fluidWidth && expanded
+      ? ""
+      : expanded
+        ? isLarge
+          ? "w-[568px]"
+          : isMedium
+            ? "w-[398px]"
+            : ""
+        : "";
 
   // Logo/Icon dimensions (inner circle) after Figma header `pl-1 pr-2 py-2` in icon cell
   // (Card / Rule — e.g. `22143:900771` / `19706:12110`); outer column width holds padding + this.
   const logoSize = 103; // `next/image` prop; actual box comes from `logoContainerClass`
-  const logoContainerClass = `
+  const logoContainerClass = templateGridFigmaShell
+    ? `
+    max-[639px]:size-[56px]
+    min-[640px]:max-[1023px]:size-[64px]
+    min-[1024px]:size-[88px]
+  `
+    : `
     max-[639px]:size-[56px]
     min-[640px]:max-[1023px]:size-[64px]
     min-[1024px]:max-[1439px]:size-[56px]
@@ -93,21 +106,50 @@ export function RuleView({
 
   // Title typography - use CSS responsive classes
   const showRecommendedTag = recommended && !expanded;
-  const titleClass = `
+  const titleClass = templateGridFigmaShell
+    ? `
+    max-[639px]:font-inter max-[639px]:font-bold max-[639px]:text-[20px] max-[639px]:leading-[28px]
+    min-[640px]:max-[1023px]:font-bricolage-grotesque min-[640px]:max-[1023px]:font-bold min-[640px]:max-[1023px]:text-[28px] min-[640px]:max-[1023px]:leading-[36px]
+    min-[1024px]:max-[1439px]:font-bricolage-grotesque min-[1024px]:max-[1439px]:font-extrabold min-[1024px]:max-[1439px]:text-[36px] min-[1024px]:max-[1439px]:leading-[44px]
+    min-[1440px]:font-bricolage-grotesque min-[1440px]:font-extrabold min-[1440px]:text-[36px] min-[1440px]:leading-[44px]
+  `
+    : `
     max-[639px]:font-inter max-[639px]:font-bold max-[639px]:text-[20px] max-[639px]:leading-[28px]
     min-[640px]:max-[1023px]:font-bricolage-grotesque min-[640px]:max-[1023px]:font-bold min-[640px]:max-[1023px]:text-[28px] min-[640px]:max-[1023px]:leading-[36px]
     min-[1024px]:max-[1439px]:font-bricolage-grotesque min-[1024px]:max-[1439px]:font-bold min-[1024px]:max-[1439px]:text-[24px] min-[1024px]:max-[1439px]:leading-[32px]
     min-[1440px]:font-bricolage-grotesque min-[1440px]:font-extrabold min-[1440px]:text-[36px] min-[1440px]:leading-[44px]
   `;
 
-  // Description typography
   const descriptionClass = isLarge
     ? "font-inter font-medium text-[18px] leading-[24px]"
     : isMedium
-      ? "font-inter font-medium text-[14px] leading-[16px]"
+      ? templateGridFigmaShell
+        ? "font-inter font-medium text-[14px] leading-[16px] min-[1024px]:max-[1439px]:text-[18px] min-[1024px]:max-[1439px]:leading-[24px]"
+        : "font-inter font-medium text-[14px] leading-[16px]"
       : isSmall
         ? "font-inter font-medium text-[14px] leading-[16px]" // S: 14px, medium, Inter
         : "font-inter font-medium text-[12px] leading-[14px]"; // XS: 12px, medium, Inter
+
+  const headerIconCellClass = templateGridFigmaShell
+    ? `
+            flex shrink-0 items-center justify-center
+            pl-[4px] pr-[8px] py-[8px]
+            max-[639px]:w-[72px]
+            min-[640px]:max-[1023px]:w-[80px]
+            min-[1024px]:max-[1439px]:w-[130px]
+            min-[1440px]:w-[119px]
+          `
+    : `
+            flex shrink-0 items-center justify-center
+            pl-[4px] pr-[8px] py-[8px]
+            max-[639px]:w-[72px]
+            min-[640px]:max-[1023px]:w-[80px]
+            min-[1024px]:w-[119px]
+          `;
+
+  const titleColumnMinHClass = templateGridFigmaShell
+    ? "min-h-[72px] min-[640px]:min-h-[80px] min-[1024px]:max-[1439px]:min-h-[136px] min-[1440px]:min-h-[136px]"
+    : "min-h-[72px] min-[640px]:min-h-[80px] min-[1024px]:min-h-[88px] min-[1440px]:min-h-[136px]";
 
   // Render logo/icon
   const renderLogo = () => {
@@ -236,15 +278,7 @@ export function RuleView({
       "
       >
         {renderLogo() && (
-          <div
-            className="
-            flex shrink-0 items-center justify-center
-            pl-[4px] pr-[8px] py-[8px]
-            max-[639px]:w-[72px]
-            min-[640px]:max-[1023px]:w-[80px]
-            min-[1024px]:w-[119px]
-          "
-          >
+          <div className={headerIconCellClass}>
             {renderLogo()}
           </div>
         )}
@@ -252,7 +286,7 @@ export function RuleView({
           <div
             className={`
             flex min-w-0 flex-1 flex-col justify-center
-            min-h-[72px] min-[640px]:min-h-[80px] min-[1024px]:min-h-[88px] min-[1440px]:min-h-[136px]
+            ${titleColumnMinHClass}
             border-l border-solid border-[var(--color-content-invert-primary)]
           `}
           >
@@ -275,11 +309,27 @@ export function RuleView({
                   {t("recommendedLabel")}
                 </Tag>
               ) : null}
-              <h3
-                className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
-              >
-                {title}
-              </h3>
+              {onTitleClick ? (
+                <InlineTextButton
+                  type="button"
+                  underline={false}
+                  data-testid="rule-title-edit"
+                  ariaLabel={titleEditAriaLabel}
+                  className={`${titleClass} w-full min-w-0 cursor-pointer text-left text-[var(--color-content-invert-primary)] hover:!opacity-100 overflow-hidden text-ellipsis`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onTitleClick();
+                  }}
+                >
+                  {title}
+                </InlineTextButton>
+              ) : (
+                <h3
+                  className={`${titleClass} cursor-inherit text-[var(--color-content-invert-primary)] overflow-hidden text-ellipsis w-full`}
+                >
+                  {title}
+                </h3>
+              )}
             </div>
           </div>
         )}
@@ -335,9 +385,11 @@ export function RuleView({
             (onDescriptionClick &&
               typeof descriptionEmptyHint === "string")) && (
             <div
-              className={`relative w-full shrink-0 border-b border-solid border-[var(--color-content-invert-primary)] pb-[16px] ${
-                expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"
-              }`}
+              className={`relative w-full shrink-0 ${
+                categories && categories.length > 0
+                  ? "border-b border-solid border-[var(--color-content-invert-primary)] pb-[16px]"
+                  : ""
+              } ${expanded && (isLarge || isMedium) ? "px-0" : "px-[12px]"}`}
             >
               {onDescriptionClick ? (
                 <InlineTextButton
@@ -410,9 +462,17 @@ export function RuleView({
       ) : (
         /* Collapsed State: Description */
         description && (
-          <div className="flex items-center justify-center relative shrink-0 w-full">
+          <div
+            className={
+              templateGridFigmaShell
+                ? "relative flex w-full shrink-0 items-center justify-start"
+                : "relative flex w-full shrink-0 items-center justify-center"
+            }
+          >
             <p
-              className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)] flex-1`}
+              className={`${descriptionClass} cursor-inherit text-[var(--color-content-invert-primary)] ${
+                templateGridFigmaShell ? "w-full text-left" : "flex-1"
+              }`}
             >
               {description}
             </p>

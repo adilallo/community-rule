@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { usePathname } from "next/navigation";
+import { isChromelessNavigationPath } from "../../../lib/navigationChromelessPath";
 import TopWithPathname from "./Top/TopWithPathname";
 
 export type ConditionalNavigationClientProps = {
@@ -15,10 +16,8 @@ export type ConditionalNavigationClientProps = {
 const ConditionalNavigationClient = memo(
   ({ initialSignedIn }: ConditionalNavigationClientProps) => {
     const pathname = usePathname();
-    const isCreateFlow = pathname?.startsWith("/create");
-    const isLogin = pathname === "/login";
 
-    if (isCreateFlow || isLogin) {
+    if (isChromelessNavigationPath(pathname)) {
       return null;
     }
 

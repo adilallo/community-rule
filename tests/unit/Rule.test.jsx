@@ -106,6 +106,22 @@ describe("Rule Component", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("clicking editable title calls onTitleClick and does not fire card onClick", () => {
+    const onCard = vi.fn();
+    const onTitle = vi.fn();
+    render(
+      <Rule
+        {...defaultProps}
+        expanded={true}
+        onClick={onCard}
+        onTitleClick={onTitle}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("rule-title-edit"));
+    expect(onTitle).toHaveBeenCalledTimes(1);
+    expect(onCard).not.toHaveBeenCalled();
+  });
+
   it("clicking editable description calls onDescriptionClick and does not fire card onClick", () => {
     const onCard = vi.fn();
     const onDesc = vi.fn();
@@ -128,6 +144,14 @@ describe("Rule Component", () => {
 
     const card = screen.getByRole("button");
     expect(card).toHaveClass("w-[568px]");
+  });
+
+  it("fluidWidth expanded cards fill the container", () => {
+    render(<Rule {...defaultProps} expanded={true} size="L" fluidWidth />);
+
+    const card = screen.getByRole("button");
+    expect(card).not.toHaveClass("w-[568px]");
+    expect(card).toHaveClass("w-full");
   });
 
   it("applies proper accessibility attributes", () => {

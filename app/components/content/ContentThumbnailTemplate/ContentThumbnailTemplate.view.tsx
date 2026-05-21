@@ -7,55 +7,95 @@ function ContentThumbnailTemplateView({
   post,
   className,
   variant,
+  sizing,
   backgroundImage,
 }: ContentThumbnailTemplateViewProps) {
   if (variant === "vertical") {
+    if (sizing === "fixed") {
+      return (
+        <Link
+          href={`/blog/${post.slug}`}
+          className={`group block transition-transform duration-200 hover:scale-[1.02] ${className}`}
+        >
+          <div className="relative h-[390px] w-[260px] overflow-hidden">
+            <div className="absolute inset-0 z-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={backgroundImage}
+                alt=""
+                className="pointer-events-none size-full object-cover"
+              />
+            </div>
+            <div className="absolute left-[18px] top-[18px] z-20 w-[200px]">
+              <ContentContainer post={post} width="200px" size="xs" />
+            </div>
+          </div>
+        </Link>
+      );
+    }
+
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
+        className={`group block w-full transition-transform duration-200 hover:scale-[1.02] ${className}`}
       >
-        <div className="relative w-full aspect-[2/3] overflow-hidden pt-[18px] pl-[18px] pr-[42px] pb-[212px]">
-          {/* Background SVG - fills container with maintained aspect */}
+        <div className="relative aspect-[260/390] w-full overflow-hidden">
           <div className="absolute inset-0 z-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={backgroundImage}
-              alt={`Background for ${post.frontmatter.title}`}
-              className="w-full h-full object-cover"
+              alt=""
+              className="pointer-events-none size-full object-cover"
             />
-            {/* Gradient overlay for better text readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 z-10" />
           </div>
-
-          {/* Content Section - positioned within the padding constraints */}
-          <ContentContainer post={post} width="200px" size="xs" />
+          <div className="absolute left-[6.923%] top-[4.615%] z-20 w-[76.923%]">
+            <ContentContainer post={post} size="xs" />
+          </div>
         </div>
       </Link>
     );
   }
 
-  // Horizontal variant
+  if (sizing === "fixed") {
+    return (
+      <Link
+        href={`/blog/${post.slug}`}
+        className={`group block transition-transform duration-200 hover:scale-[1.02] ${className}`}
+      >
+        <div className="relative h-[225.5px] w-[320px] overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={backgroundImage}
+              alt=""
+              className="pointer-events-none size-full object-cover"
+            />
+          </div>
+          <div className="absolute left-[14px] top-[13.75px] z-20 w-[230px]">
+            <ContentContainer post={post} width="230px" size="xs" />
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={`block transition-transform duration-200 hover:scale-[1.02] ${className}`}
+      className={`group block w-full transition-transform duration-200 hover:scale-[1.02] ${className}`}
     >
-      <div className="relative min-w-[320px] max-w-[800px] h-[225.5px] overflow-hidden pt-[13.75px] pr-[76px] pb-[73.75px] pl-[14px]">
-        {/* Background SVG - sized to fit the 320x225.5 container exactly */}
+      <div className="relative aspect-[320/225.5] w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={backgroundImage}
-            alt={`Background for ${post.frontmatter.title}`}
-            className="w-full h-[225.5px] object-cover"
+            alt=""
+            className="pointer-events-none size-full object-cover"
           />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/70 z-10" />
         </div>
-
-        {/* Content - positioned within the padding constraints */}
-        <ContentContainer post={post} width="230px" size="xs" />
+        <div className="absolute left-[4.375%] top-[6.099%] z-20 w-[71.875%]">
+          <ContentContainer post={post} size="xs" />
+        </div>
       </div>
     </Link>
   );

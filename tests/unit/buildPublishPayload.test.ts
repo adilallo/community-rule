@@ -314,6 +314,40 @@ describe("parseDocumentSectionsForDisplay", () => {
     expect(parseDocumentSectionsForDisplay(doc)).toEqual(doc.sections);
   });
 
+  it("accepts entries with labeled blocks and omits body in JSON (normalized to \"\")", () => {
+    const doc = {
+      sections: [
+        {
+          categoryName: "Membership",
+          entries: [
+            {
+              title: "Open membership",
+              blocks: [
+                { label: "Eligibility", body: "Anyone may join." },
+                { label: "Process", body: "Sign the sheet." },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    expect(parseDocumentSectionsForDisplay(doc)).toEqual([
+      {
+        categoryName: "Membership",
+        entries: [
+          {
+            title: "Open membership",
+            body: "",
+            blocks: [
+              { label: "Eligibility", body: "Anyone may join." },
+              { label: "Process", body: "Sign the sheet." },
+            ],
+          },
+        ],
+      },
+    ]);
+  });
+
   it("accepts entries with labeled blocks and empty body", () => {
     const doc = {
       sections: [

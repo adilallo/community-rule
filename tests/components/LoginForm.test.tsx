@@ -104,7 +104,11 @@ describe("LoginForm", () => {
       screen.getByRole("button", { name: /send me a magic link/i }),
     );
     await waitFor(() => {
-      expect(requestMagicLink).toHaveBeenCalledWith("pat@example.com", "/");
+      expect(requestMagicLink).toHaveBeenCalledWith(
+        "pat@example.com",
+        "/",
+        undefined,
+      );
     });
     expect(
       await screen.findByRole("heading", { name: /check your email/i }),
@@ -134,6 +138,7 @@ describe("LoginForm", () => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "save@example.com",
         "/create/community-structure?syncDraft=1",
+        undefined,
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();
@@ -152,7 +157,11 @@ describe("LoginForm", () => {
       screen.getByRole("button", { name: /send me a magic link/i }),
     );
     await waitFor(() => {
-      expect(requestMagicLink).toHaveBeenCalledWith("a@b.co", "/learn");
+      expect(requestMagicLink).toHaveBeenCalledWith(
+        "a@b.co",
+        "/learn",
+        undefined,
+      );
     });
   });
 

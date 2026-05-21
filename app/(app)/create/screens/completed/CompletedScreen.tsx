@@ -163,10 +163,10 @@ export function CompletedScreen() {
     <>
       <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-[var(--color-teal-teal50,#c9fef9)] md:h-full">
         <div
-          className={`mx-auto grid min-h-0 w-full grid-cols-1 gap-4 px-5 max-md:max-w-[639px] max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:justify-items-center md:gap-[var(--measures-spacing-1200,48px)] md:overflow-hidden md:px-12 md:py-0 ${CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS}`}
+          className={`mx-auto grid min-h-0 w-full grid-cols-1 gap-4 px-5 max-md:max-w-[639px] max-md:overflow-y-auto max-md:overscroll-y-contain max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:grid-cols-2 md:grid-rows-1 md:items-stretch md:justify-items-center md:gap-[var(--measures-spacing-1200,48px)] md:overflow-hidden md:px-12 md:py-0 ${CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS}`}
         >
           <div
-            className={`flex flex-col justify-start overflow-hidden md:justify-center md:pb-8 ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
+            className={`flex flex-col justify-start max-md:min-h-min max-md:overflow-visible min-h-0 overflow-hidden md:justify-center md:pb-8 ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
           >
             <CreateFlowHeaderLockup
               title={headerTitle}
@@ -177,7 +177,7 @@ export function CompletedScreen() {
             />
           </div>
           <div
-            className={`scrollbar-hide relative flex min-h-0 flex-col overflow-x-hidden md:overflow-y-auto ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
+            className={`scrollbar-hide relative flex min-h-0 flex-col self-stretch overflow-x-hidden md:max-h-full md:overflow-y-auto ${CREATE_FLOW_MD_UP_GRID_CELL_CLASS}`}
           >
             <div
               className="pointer-events-none sticky top-0 z-10 hidden h-5 shrink-0 bg-gradient-to-b from-[var(--color-teal-teal50,#c9fef9)]/55 from-0% via-[var(--color-teal-teal50,#c9fef9)]/20 via-50% to-transparent md:block"

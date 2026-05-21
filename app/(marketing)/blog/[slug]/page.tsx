@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import type { BlogPost } from "../../../../lib/content";
 import {
   getBlogPostBySlug,
   getAllBlogPosts as getAllPosts,
-  type BlogPost,
+  getRelatedBlogPosts,
 } from "../../../../lib/content";
 import { logger } from "../../../../lib/logger";
 import ContentBanner from "../../../components/sections/ContentBanner";
@@ -111,66 +112,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   // Get related articles with improved algorithm
   const allPosts = getAllPosts();
-
-  // Create slug order for consistent background cycling
   const slugOrder = allPosts.map((post) => post.slug);
-
-  // Simple related articles algorithm based on content similarity
-  const getRelatedArticles = (
-    currentPost: BlogPost,
-    allPosts: BlogPost[],
-    limit = 3,
-  ): BlogPost[] => {
-    const otherPosts = allPosts.filter((p) => p.slug !== currentPost.slug);
-
-    // Score posts based on content similarity
-    const scoredPosts = otherPosts.map((post) => {
-      let score = 0;
-
-      // Check for similar keywords in title and description
-      const currentTitle = currentPost.frontmatter.title.toLowerCase();
-      const currentDesc = currentPost.frontmatter.description.toLowerCase();
-      const postTitle = post.frontmatter.title.toLowerCase();
-      const postDesc = post.frontmatter.description.toLowerCase();
-
-      // Common keywords that indicate similarity
-      const keywords = [
-        "community",
-        "conflict",
-        "decision",
-        "governance",
-        "security",
-        "trust",
-        "collaboration",
-        "organization",
-      ];
-
-      keywords.forEach((keyword) => {
-        if (currentTitle.includes(keyword) && postTitle.includes(keyword))
-          score += 3;
-        if (currentDesc.includes(keyword) && postDesc.includes(keyword))
-          score += 2;
-        if (currentTitle.includes(keyword) && postDesc.includes(keyword))
-          score += 1;
-        if (currentDesc.includes(keyword) && postTitle.includes(keyword))
-          score += 1;
-      });
-
-      return { ...post, score };
-    });
-
-    // Sort by score and return top posts
-    return scoredPosts
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map(({ score, ...post }) => {
-        // Score used for sorting, removed from final result
-        void score;
-        return post;
-      });
-  };
-
-  const relatedArticles = getRelatedArticles(post, allPosts);
+  const relatedArticles = getRelatedBlogPosts(
+    post.slug,
+    post.frontmatter.related,
+    3,
+  );
 
   // Generate structured data for search engines
   const structuredData = {
@@ -255,7 +202,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       />
 
       <div
-        className="min-h-screen relative overflow-hidden"
+        className="relative min-h-screen overflow-x-clip"
         style={{ backgroundColor }}
       >
         {/* Content Banner */}
@@ -296,10 +243,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           />
         </div>
 
-        {/* Main Content */}
-        <article className="p-[var(--spacing-scale-024)] sm:py-[var(--spacing-scale-032)]">
-          {/* Article Content */}
-          <div className="post-body -mt-[var(--spacing-scale-048)] text-[var(--color-content-inverse-primary)] text-[16px] leading-[24px] sm:text-[18px] sm:leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] sm:mx-auto sm:max-w-[390px] md:max-w-[472px] lg:max-w-[700px] xl:max-w-[904px]">
+        {/* Main Content — Figma Content page Template (19003:23305) article body instances */}
+        <article
+          data-node-id="19031:10426"
+          className="
+            relative z-[2] flex w-full justify-center
+            p-[var(--spacing-scale-024)]
+            sm:px-0 sm:py-[var(--spacing-scale-032)]
+          "
+        >
+          <div className="post-body w-full text-[var(--color-content-inverse-primary)] text-[16px] leading-[24px] sm:text-[18px] sm:leading-[130%] lg:text-[24px] lg:leading-[32px] xl:text-[32px] xl:leading-[40px] sm:max-w-[390px] md:max-w-[472px] lg:max-w-[700px] xl:max-w-[904px]">
             <div dangerouslySetInnerHTML={{ __html: post.htmlContent }} />
           </div>
         </article>

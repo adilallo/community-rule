@@ -28,6 +28,8 @@ const RuleContainer = memo<RuleProps>(
     onDescriptionClick,
     descriptionEmptyHint,
     descriptionEditAriaLabel,
+    onTitleClick,
+    titleEditAriaLabel,
     icon,
     backgroundColor = "bg-[var(--color-community-teal-100)]",
     className = "",
@@ -43,6 +45,8 @@ const RuleContainer = memo<RuleProps>(
     bottomStatusLabel,
     bottomLinks,
     recommended = false,
+    templateGridFigmaShell = false,
+    fluidWidth = false,
   }) => {
     const size = sizeProp ?? "L";
 
@@ -82,6 +86,8 @@ const RuleContainer = memo<RuleProps>(
         onDescriptionClick={onDescriptionClick}
         descriptionEmptyHint={descriptionEmptyHint}
         descriptionEditAriaLabel={descriptionEditAriaLabel}
+        onTitleClick={onTitleClick}
+        titleEditAriaLabel={titleEditAriaLabel}
         icon={icon}
         backgroundColor={backgroundColor}
         className={className}
@@ -98,6 +104,8 @@ const RuleContainer = memo<RuleProps>(
         bottomStatusLabel={bottomStatusLabel}
         bottomLinks={bottomLinks}
         recommended={recommended}
+        templateGridFigmaShell={templateGridFigmaShell}
+        fluidWidth={fluidWidth}
       />
     );
   },

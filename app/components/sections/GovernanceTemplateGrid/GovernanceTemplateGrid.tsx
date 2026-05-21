@@ -10,11 +10,17 @@ import type { GovernanceTemplateCatalogEntry } from "../../../../lib/templates/g
 export interface GovernanceTemplateGridProps {
   entries: GovernanceTemplateCatalogEntry[];
   onTemplateClick: (_slug: string) => void;
+  /**
+   * When true, use project **`md`** (640px) for a 2-column grid (e.g. `/use-cases`).
+   * Default keeps the template shell break at **768px**.
+   */
+  twoColumnsFromMd?: boolean;
 }
 
 export function GovernanceTemplateGrid({
   entries,
   onTemplateClick,
+  twoColumnsFromMd = false,
 }: GovernanceTemplateGridProps) {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -44,13 +50,21 @@ export function GovernanceTemplateGrid({
             : "M"
     : "M";
 
-  return (
-    <div
-      className={`
+  const gridLayoutClasses = twoColumnsFromMd
+    ? `
+        flex flex-col gap-[18px]
+        md:grid md:grid-cols-2 md:gap-[18px]
+        lg:gap-[24px]
+      `
+    : `
         flex flex-col gap-[18px]
         min-[768px]:grid min-[768px]:grid-cols-2 min-[768px]:gap-[18px]
         min-[1024px]:gap-[24px]
-      `}
+      `;
+
+  return (
+    <div
+      className={gridLayoutClasses}
     >
       {entries.map((card) => (
         <Rule
@@ -58,19 +72,20 @@ export function GovernanceTemplateGrid({
           title={card.title}
           description={card.description}
           recommended={card.recommended === true}
+          templateGridFigmaShell
           size={cardSize}
           className={`
               select-none
               cursor-pointer
               max-[639px]:rounded-[var(--measures-radius-200,8px)]
               min-[640px]:max-[1023px]:rounded-[var(--measures-radius-300,12px)]
-              min-[1024px]:rounded-[var(--radius-measures-radius-small)]
+              min-[1024px]:rounded-[var(--radius-measures-radius-large)]
               max-[639px]:pb-[24px] max-[639px]:pt-[12px] max-[639px]:px-[12px]
               min-[640px]:max-[1023px]:p-[24px]
-              min-[1024px]:max-[1439px]:p-[16px]
+              min-[1024px]:max-[1439px]:p-[24px]
               min-[1440px]:p-[24px]
               max-[1023px]:gap-[18px]
-              min-[1024px]:max-[1439px]:gap-[12px]
+              min-[1024px]:max-[1439px]:gap-[10px]
               min-[1440px]:gap-[10px]
             `}
           icon={
@@ -84,7 +99,7 @@ export function GovernanceTemplateGrid({
                   cursor-inherit
                   max-[639px]:w-[40px] max-[639px]:h-[40px]
                   min-[640px]:max-[1023px]:w-[56px] min-[640px]:max-[1023px]:h-[56px]
-                  min-[1024px]:max-[1439px]:w-[56px] min-[1024px]:max-[1439px]:h-[56px]
+                  min-[1024px]:max-[1439px]:w-[90px] min-[1024px]:max-[1439px]:h-[90px]
                   min-[1440px]:w-[90px] min-[1440px]:h-[90px]
                 "
             />

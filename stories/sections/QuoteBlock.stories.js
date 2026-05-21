@@ -11,7 +11,7 @@ export default {
 A responsive quote section component that displays inspirational governance quotes with author attribution and decorative geometric elements.
 
 ## Features
-- **Three variants**: compact, standard, and extended layouts
+- **Four variants**: compact, standard, extended, and **statement** (Section/Quote yellow band; two paragraphs below \`lg\`, one paragraph from \`lg\` on /about and /use-cases — [21967-24638](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=21967-24638&m=dev))
 - **Responsive design**: Adapts across all breakpoints
 - **Error handling**: Graceful fallbacks for image loading failures
 - **Accessibility**: WCAG 2.1 AA compliant with proper ARIA labels
@@ -34,12 +34,16 @@ A responsive quote section component that displays inspirational governance quot
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["compact", "standard", "extended"],
+      options: ["compact", "standard", "extended", "statement"],
       description: "Layout variant for different use cases",
     },
     quote: {
       control: { type: "text" },
-      description: "The quote text to display",
+      description: "Main quote — first statement paragraph",
+    },
+    quoteSecondary: {
+      control: { type: "text" },
+      description: "Second statement paragraph",
     },
     author: {
       control: { type: "text" },
@@ -124,7 +128,22 @@ export const AllVariants = {
   },
 };
 
-// Error state simulation
+// Statement band (Section/Quote — same layout as /about + /use-cases)
+export const StatementAbout = {
+  args: {
+    variant: "statement",
+    id: "story-statement-quote",
+    quote:
+      "Too many of our communities adopt default governance practices that rely on unchecked authority without even basic democratic features.",
+    quoteSecondary:
+      "Community Rule helps communities establish better norms for decision-making, stewardship, and culture.",
+  },
+  parameters: {
+    backgrounds: { default: "dark" },
+  },
+};
+
+// Error state simulation (avatar load failure)
 export const ErrorState = {
   args: {
     variant: "standard",

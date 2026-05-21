@@ -4,7 +4,8 @@ export type AskOrganizerVariant =
   | "centered"
   | "left-aligned"
   | "compact"
-  | "inverse";
+  | "inverse"
+  | "use-case-detail";
 
 export interface AskOrganizerProps {
   title?: string;

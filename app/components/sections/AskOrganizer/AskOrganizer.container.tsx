@@ -11,7 +11,7 @@ import type {
 } from "./AskOrganizer.types";
 
 const VARIANT_STYLES: Record<
-  "centered" | "left-aligned" | "compact" | "inverse",
+  AskOrganizerVariant,
   { container: string; buttonContainer: string }
 > = {
   centered: {
@@ -30,8 +30,13 @@ const VARIANT_STYLES: Record<
     container: "text-center",
     buttonContainer: "flex justify-center",
   },
+  "use-case-detail": {
+    container: "w-full text-center",
+    buttonContainer: "flex w-full justify-center",
+  },
 };
 
+/** Figma **Section/AskOrganizer** — baseline default [17487:12288](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=17487-12288&m=dev), inverse [19189:8140](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=19189-8140&m=dev); md+ [16306:14995](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=16306-14995&m=dev). Use-case detail instance: [22015:42624](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22015-42624&m=dev). */
 const AskOrganizerContainer = memo<AskOrganizerProps>(
   ({
     title,
@@ -56,12 +61,16 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     const sectionPadding =
       resolvedVariant === "compact"
         ? "py-[var(--spacing-scale-016)] px-[var(--spacing-scale-016)] md:py-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-032)]"
-        : "py-[var(--spacing-scale-032)] px-[var(--spacing-scale-032)] md:py-[var(--spacing-scale-096)] md:px-[var(--spacing-scale-064)]";
+        : resolvedVariant === "use-case-detail" || resolvedVariant === "inverse"
+          ? "w-full py-[var(--spacing-scale-032)] px-[var(--spacing-scale-032)] md:py-[var(--spacing-scale-096)] md:px-[var(--spacing-scale-064)]"
+          : "py-[var(--spacing-scale-040)] px-[var(--spacing-scale-032)] md:py-[var(--spacing-scale-096)] md:px-[var(--spacing-scale-064)]";
 
     const contentGap =
       resolvedVariant === "compact"
         ? "gap-[var(--spacing-scale-020)]"
-        : "gap-[var(--spacing-scale-040)]";
+        : resolvedVariant === "use-case-detail"
+          ? "gap-[var(--spacing-scale-040)]"
+          : "gap-[var(--spacing-scale-040)]";
 
     const labelledBy = title ? "ask-organizer-headline" : undefined;
 

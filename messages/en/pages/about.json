@@ -1,0 +1,108 @@
+{
+  "_comment": "About page content. book.buttonHref is \"#\" as a stub until the book download endpoint or asset URL is wired.",
+  "aboutHeader": {
+    "segments": [
+      { "type": "word", "text": "CommunityRule" },
+      { "type": "icon", "icon": "arrow" },
+      { "type": "word", "text": "is" },
+      { "type": "word", "text": "a" },
+      { "type": "word", "text": "tool" },
+      { "type": "word", "text": "that" },
+      { "type": "word", "text": "helps" },
+      { "type": "word", "text": "groups" },
+      { "type": "icon", "icon": "about" },
+      { "type": "word", "text": "define" },
+      { "type": "word", "text": "who" },
+      { "type": "word", "text": "they" },
+      { "type": "word", "text": "want" },
+      { "type": "word", "text": "to" },
+      { "type": "word", "text": "be" }
+    ]
+  },
+  "stats": {
+    "titlePrefix": "From",
+    "titleEmphasis": "projects",
+    "titleSuffix": "to communities",
+    "asOf": "as of June 30, 2024",
+    "items": [
+      {
+        "value": "420M+",
+        "label": "open source projects",
+        "shapeVariant": "yellow"
+      },
+      {
+        "value": "27%",
+        "label": "year over year growth in open source",
+        "shapeVariant": "purple"
+      },
+      {
+        "value": "45%",
+        "label": "adults in the US participate in community service",
+        "shapeVariant": "green"
+      },
+      {
+        "value": "8000+",
+        "label": "mutual aid groups in the U.S.",
+        "shapeVariant": "orange"
+      }
+    ]
+  },
+  "tripleTextBlock": {
+    "columns": [
+      {
+        "title": "Share Leadership and Prevent Burnout",
+        "description": "Rotating roles and setting clear expectations for contributions can prevent a few people from taking on too much. A living document outlining responsibilities and group values helps distribute labor fairly and avoids misunderstandings.\n\nA transportation assistance group avoided burnout by introducing a weekly shift system, making participation more sustainable.",
+        "lgTitle": "Frameworks for Community Governance",
+        "lgDescription": "CommunityRule provides customizable templates that help communities define decision-making structures, leadership roles, and processes for collective action."
+      },
+      {
+        "title": "Establish Transparent, Inclusive Decision-Making",
+        "description": "Deciding early on how your group makes choices—whether consensus, majority vote, or delegation—can prevent confusion. Transparency and regular check-ins help avoid unspoken hierarchies and keep everyone engaged.\n\nA disaster relief group sped up decisions by adopting a “consensus-minus-one” model, preventing gridlock while maintaining group alignment.",
+        "lgTitle": "Empowering Self-Governance",
+        "lgDescription": "The platform enables communities, mutual aid groups, and open-source projects to foster transparency and accountability without relying on top-down authority."
+      },
+      {
+        "title": "Address Conflicts Before They Grow",
+        "description": "A basic conflict resolution process can prevent disputes from escalating. Clear guidelines for resource distribution reduce misunderstandings and maintain trust. Assume good faith and use structured discussions to resolve issues.\n\nMembers noticed frustration when some folks felt unheard in decisions about new projects. By anonymous feedback box, they created a space to address concerns early and make adjustments before conflicts escalated.",
+        "lgTitle": "Flexible & Open-Source Approach",
+        "lgDescription": "Users can modify existing governance templates or create their own, making it a versatile tool for diverse community needs, from co-ops to digital collectives."
+      }
+    ]
+  },
+  "book": {
+    "title": "Get the Community Rules Book",
+    "description": "Community Rules is a simple tool to help make great communities even better and healthier. It includes nine templates for organizational structures that communities can choose from, combine, or react against.",
+    "buttonText": "Download Book",
+    "buttonHref": "#",
+    "imageAlt": "Structure Before Crisis book cover"
+  },
+  "faq": {
+    "title": "Get answers to your questions",
+    "items": [
+      {
+        "title": "What is CommunityRule, and who is it for?",
+        "answer": "CommunityRule helps groups write operating manuals that reflect their values and decision-making needs."
+      },
+      {
+        "title": "How does CommunityRule help with governance?",
+        "answer": "Templates and guided prompts help teams document roles, decision processes, and conflict resolution before issues escalate."
+      },
+      {
+        "title": "Do we need to have formal governance to use CommunityRule?",
+        "answer": "No. Many groups start with informal practices and use CommunityRule to clarify expectations as they grow."
+      },
+      {
+        "title": "What kinds of templates does CommunityRule offer?",
+        "answer": "The library includes structures such as consensus clusters, elected boards, do-ocracy, and other community-tested models."
+      },
+      {
+        "title": "Is CommunityRule free to use?",
+        "answer": "Yes. You can explore templates and draft rules without a subscription."
+      }
+    ]
+  },
+  "quote": {
+    "paragraph1": "Too many of our communities adopt default governance practices that rely on unchecked authority without even basic democratic features.",
+    "paragraph2": "Community Rule helps communities establish better norms for decision-making, stewardship, and culture."
+  }
+}

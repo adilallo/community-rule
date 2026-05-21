@@ -5,11 +5,13 @@ import { logger } from "../../../../lib/logger";
 import QuoteBlockView from "./QuoteBlock.view";
 import type { QuoteBlockProps, VariantConfig } from "./QuoteBlock.types";
 
+/** Figma: portrait variants standard | compact | extended; **`statement`** = Section/Quote (22137‑890679; **`lg`** single paragraph **21967‑24638** — About + use cases). */
 const QuoteBlockContainer = memo<QuoteBlockProps>(
   ({
     variant: variantProp = "standard",
     className = "",
     quote = "The rules of decision-making must be open and available to everyone, and this can happen only if they are formalized.",
+    quoteSecondary,
     author = "Jo Freeman",
     source = "The Tyranny of Structurelessness",
     avatarSrc = "/assets/Quote_Avatar.svg",
@@ -17,7 +19,6 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     fallbackAvatarSrc = "/assets/Quote_Avatar.svg",
     onError,
   }) => {
-    const variant = variantProp;
     const [imageError, setImageError] = useState(false);
     const [imageLoading, setImageLoading] = useState(true);
 
@@ -69,12 +70,29 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
           "text-[14px] leading-[120%] md:text-[20px] md:leading-[120%] md:tracking-[0.24px] lg:text-[28px] xl:text-[36px]",
         showDecor: true,
       },
+      statement: {
+        container:
+          "flex w-full flex-col items-center px-[var(--spacing-scale-032)] py-[var(--spacing-scale-048)] md:px-[var(--spacing-scale-096)] md:py-[var(--space-1200)]",
+        card: "",
+        gap: "",
+        avatarGap: "",
+        avatar: "",
+        quote: "",
+        author: "",
+        source: "",
+        showDecor: false,
+        statementLayout: true,
+      },
     };
 
-    const config = variants[variant] || variants.standard;
+    const config = variants[variantProp] || variants.standard;
 
     // Use provided ID or generate a stable one based on content
-    const baseId = id || `quote-${author.toLowerCase().replace(/\s+/g, "-")}`;
+    const baseId =
+      id ||
+      (variantProp === "statement"
+        ? "statement-quote"
+        : `quote-${author.toLowerCase().replace(/\s+/g, "-")}`);
     const quoteId = `${baseId}-content`;
     const authorId = `${baseId}-author`;
 
@@ -105,7 +123,22 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     };
 
     // Validate required props
-    if (!quote || !author) {
+    if (variantProp === "statement") {
+      if (!quote?.trim() || !quoteSecondary?.trim()) {
+        logger.error(
+          "QuoteBlock: statement variant requires non-empty quote and quoteSecondary",
+        );
+        if (onError) {
+          onError({
+            type: "missing_props",
+            message:
+              "QuoteBlock statement variant requires quote and quoteSecondary",
+            quote: !!(quote?.trim() && quoteSecondary?.trim()),
+          });
+        }
+        return null;
+      }
+    } else if (!quote || !author) {
       logger.error("QuoteBlock: Missing required props (quote or author)");
       if (onError) {
         onError({
@@ -125,6 +158,7 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
       <QuoteBlockView
         className={className}
         quote={quote}
+        quoteSecondary={quoteSecondary}
         author={author}
         source={source}
         quoteId={quoteId}

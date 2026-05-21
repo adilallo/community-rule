@@ -1,2 +1,5 @@
 export { default } from "./QuoteBlock.container";
-export type { QuoteBlockProps } from "./QuoteBlock.types";
+export type {
+  QuoteBlockProps,
+  QuoteBlockVariantValue,
+} from "./QuoteBlock.types";

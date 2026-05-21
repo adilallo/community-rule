@@ -51,6 +51,7 @@ npm-cache/
 /build
 
 # misc
+/tmp/
 *.pem
 
 # IDE and editor files

@@ -109,4 +109,17 @@ describe("Icon (behavioral tests)", () => {
     const card = screen.getByRole("button");
     expect(card).toHaveAttribute("aria-label", "Test Title: Test Description");
   });
+
+  it("uses article semantics when interactive is false", () => {
+    render(
+      <Icon
+        interactive={false}
+        icon={<div>Icon</div>}
+        title="Static Title"
+        description="Static Description"
+      />,
+    );
+    expect(screen.getByRole("article")).toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
 });

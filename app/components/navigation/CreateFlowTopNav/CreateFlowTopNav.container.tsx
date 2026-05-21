@@ -16,17 +16,23 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
     hasShare = false,
     hasExport = false,
     hasEdit = false,
+    hasDuplicate = false,
     hasManageStakeholders = false,
     saveDraftOnExit = false,
     onShare,
     onSelectExportFormat,
     onEdit,
+    onDuplicate,
     onManageStakeholders,
     onExit,
+    exitLabel,
+    duplicateLabel,
+    duplicateAriaLabel,
     buttonPalette,
     className = "",
   }) => {
     const router = useRouter();
+    const t = useTranslation("create.topNav");
     const tPopover = useTranslation("modals.popoverExport");
 
     const handleExit = (options?: { saveDraft?: boolean }) => {
@@ -43,19 +49,26 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         hasShare={hasShare}
         hasExport={hasExport}
         hasEdit={hasEdit}
+        hasDuplicate={hasDuplicate}
         hasManageStakeholders={hasManageStakeholders}
         saveDraftOnExit={saveDraftOnExit}
         onShare={onShare}
         onSelectExportFormat={onSelectExportFormat}
         onEdit={onEdit}
+        onDuplicate={onDuplicate}
         onManageStakeholders={onManageStakeholders}
         onExit={handleExit}
+        exitLabel={exitLabel}
+        duplicateLabel={duplicateLabel}
+        duplicateAriaLabel={duplicateAriaLabel}
         buttonPalette={buttonPalette}
         className={className}
         exportPopoverMenuAriaLabel={tPopover("menuAriaLabel")}
         exportPopoverPdfLabel={tPopover("downloadPdf")}
         exportPopoverCsvLabel={tPopover("downloadCsv")}
         exportPopoverMarkdownLabel={tPopover("downloadMarkdown")}
+        moreOptionsAriaLabel={t("moreOptionsAriaLabel")}
+        actionsMenuAriaLabel={t("actionsMenuAriaLabel")}
       />
     );
   },

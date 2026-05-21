@@ -10,12 +10,14 @@ function ContentLockupView({
   subtitle,
   description,
   ctaText,
+  ctaHref,
   buttonClassName,
   variant,
   linkText,
   linkHref,
   alignment,
   titleId,
+  titleContent,
   styles,
 }: ContentLockupViewProps) {
   return (
@@ -57,7 +59,14 @@ function ContentLockupView({
           <div className={styles.titleGroup}>
             {/* Title container */}
             <div className={styles.titleContainer}>
-              {title ? (
+              {titleContent ? (
+                <h1
+                  id={titleId}
+                  className={`${styles.title} flex flex-wrap items-center gap-[var(--spacing-scale-008)] md:gap-[var(--spacing-scale-010)]`}
+                >
+                  {titleContent}
+                </h1>
+              ) : title ? (
                 <h1 id={titleId} className={styles.title}>
                   {title}
                 </h1>
@@ -103,6 +112,7 @@ function ContentLockupView({
               buttonType="filled"
               palette={variant === "hero" ? "default" : "inverse"}
               size="small"
+              href={ctaHref}
             >
               {ctaText}
             </Button>
@@ -114,6 +124,7 @@ function ContentLockupView({
               palette={variant === "hero" ? "default" : "inverse"}
               size="large"
               className={buttonClassName}
+              href={ctaHref}
             >
               {ctaText}
             </Button>
@@ -124,6 +135,7 @@ function ContentLockupView({
               buttonType="filled"
               palette={variant === "hero" ? "default" : "inverse"}
               size="xlarge"
+              href={ctaHref}
             >
               {ctaText}
             </Button>

@@ -352,5 +352,13 @@ export function parseDocumentSectionsForDisplay(
   if (!document || typeof document !== "object") return [];
   const sections = (document as Record<string, unknown>).sections;
   if (!Array.isArray(sections)) return [];
-  return sections.filter(isDocumentSection);
+  return sections
+    .filter(isDocumentSection)
+    .map((section) => ({
+      ...section,
+      entries: section.entries.map((entry) => ({
+        ...entry,
+        body: typeof entry.body === "string" ? entry.body : "",
+      })),
+    }));
 }

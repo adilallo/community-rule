@@ -50,12 +50,14 @@ model Session {
 }
 
 model MagicLinkToken {
-  id        String   @id @default(cuid())
-  email     String
-  tokenHash String   @unique
-  expiresAt DateTime
-  nextPath  String?
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  email        String
+  tokenHash    String   @unique
+  expiresAt    DateTime
+  nextPath     String?
+  /// Optional create-flow draft captured at magic-link request (save-progress).
+  draftPayload Json?
+  createdAt    DateTime @default(now())
 
   @@index([email])
 }

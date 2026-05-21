@@ -25,6 +25,7 @@ import {
   type FinalReviewChipEditTarget,
 } from "../../components/FinalReviewChipEditModal";
 import { FinalReviewCommunityContextEditModal } from "../../components/FinalReviewCommunityContextEditModal";
+import { FinalReviewTitleEditModal } from "../../components/FinalReviewTitleEditModal";
 import { useCreateFlowNavigation } from "../../hooks/useCreateFlowNavigation";
 import { createFlowStepForFacetGroup } from "../../utils/facetGroupToCreateFlowStep";
 import {
@@ -114,6 +115,7 @@ export function FinalReviewScreen({
     useState<TemplateChipDetail | null>(null);
   const [communityContextModalOpen, setCommunityContextModalOpen] =
     useState(false);
+  const [titleModalOpen, setTitleModalOpen] = useState(false);
 
   const handleSave = useCallback(
     (patch: FinalReviewChipEditPatch) => {
@@ -225,6 +227,9 @@ export function FinalReviewScreen({
   const rawCommunityContextForModal =
     typeof state.communityContext === "string" ? state.communityContext : "";
 
+  const rawTitleForModal =
+    typeof state.title === "string" ? state.title : "";
+
   const descriptionEmptyHint =
     variant === "editPublished" ? t("communityContextEditModal.emptyHint") : undefined;
 
@@ -242,6 +247,16 @@ export function FinalReviewScreen({
       <Rule
         title={ruleCardTitle}
         description={ruleCardDescription}
+        onTitleClick={
+          variant === "editPublished"
+            ? () => setTitleModalOpen(true)
+            : undefined
+        }
+        titleEditAriaLabel={
+          variant === "editPublished"
+            ? t("titleEditModal.ariaEditTitle")
+            : undefined
+        }
         onDescriptionClick={
           variant === "editPublished"
             ? () => setCommunityContextModalOpen(true)
@@ -278,15 +293,26 @@ export function FinalReviewScreen({
         detail={activeReadOnlyDetail}
       />
       {variant === "editPublished" ? (
-        <FinalReviewCommunityContextEditModal
-          isOpen={communityContextModalOpen}
-          onClose={() => setCommunityContextModalOpen(false)}
-          initialValue={rawCommunityContextForModal}
-          onSave={(value) => {
-            markCreateFlowInteraction();
-            updateState({ communityContext: value, summary: value });
-          }}
-        />
+        <>
+          <FinalReviewTitleEditModal
+            isOpen={titleModalOpen}
+            onClose={() => setTitleModalOpen(false)}
+            initialValue={rawTitleForModal}
+            onSave={(value) => {
+              markCreateFlowInteraction();
+              updateState({ title: value });
+            }}
+          />
+          <FinalReviewCommunityContextEditModal
+            isOpen={communityContextModalOpen}
+            onClose={() => setCommunityContextModalOpen(false)}
+            initialValue={rawCommunityContextForModal}
+            onSave={(value) => {
+              markCreateFlowInteraction();
+              updateState({ communityContext: value, summary: value });
+            }}
+          />
+        </>
       ) : null}
     </CreateFlowLockupCardStepShell>
   );

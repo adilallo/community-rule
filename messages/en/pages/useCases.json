@@ -1,0 +1,104 @@
+{
+  "pageHeader": {
+    "title": ["See how groups use", "CommunityRule"]
+  },
+  "caseStudyTiles": {
+    "mutualAidColoradoAlt": "Mutual Aid Colorado logo",
+    "foodNotBombsAlt": "Food Not Bombs logo",
+    "boulderCountyStreetMedicsAlt": "Boulder County Street Medics logo",
+    "links": [
+      {
+        "href": "/use-cases/mutual-aid-colorado",
+        "ariaLabel": "View Mutual Aid Colorado use case"
+      },
+      {
+        "href": "/use-cases/food-not-bombs",
+        "ariaLabel": "View Food Not Bombs use case"
+      },
+      {
+        "href": "/use-cases/boulder-county-street-medics",
+        "ariaLabel": "View Boulder County Street Medics use case"
+      }
+    ]
+  },
+  "quote": {
+    "paragraph1": "Most communities don't fail because of a lack of passion, they fail because of undefined processes.",
+    "paragraph2": "CommunityRule helps by providing a modular library of open-source operating manuals that groups can fork, customize, and export to make their governance explicit."
+  },
+  "groups": {
+    "title": "Who is this for?",
+    "items": [
+      {
+        "title": "Worker's cooperatives",
+        "description": "Employee-owned businesses often need to clarify how power is shared, decisions are made, and how processes operate within their organizations."
+      },
+      {
+        "title": "Mutual aid groups",
+        "description": "Mutual aid groups must define how resources are shared, decisions are made, and volunteer coordination operates within their organizations."
+      },
+      {
+        "title": "Open source projects",
+        "description": "Agree to how contributions are managed, technical decisions are made, and community participation operates within their development communities."
+      },
+      {
+        "title": "DAOs",
+        "description": "Document token-based voting process, proposal patterns, and how community governance operates within their blockchain ecosystems."
+      }
+    ]
+  },
+  "tripleStep": {
+    "heading": "Get recommendations that will make organizing easier",
+    "ctaText": "Create Rule",
+    "ctaHref": "/create",
+    "steps": [
+      {
+        "title": "Get your stakeholders together",
+        "body": "If you're just getting started, you might begin with shared values, decision-making plan, and conflict resolution process—keeping it simple ensures guidelines remain practical rather than overwhelming."
+      },
+      {
+        "title": "Define how your group should operate",
+        "body": "Involving everyone in shaping these agreements through group discussions, workshops, or a tool like CommunityRule can help build collective buy-in."
+      },
+      {
+        "title": "Have a durable impact",
+        "body": "Consider treating guidelines as a living document that evolves with your group's needs. A little structure early on helps keep your group effective and sustainable. CommunityRule makes it easy to track and share these changes as your group evolves."
+      }
+    ]
+  },
+  "tripleTextBlock": {
+    "title": "Why Horizontal groups need CommunityRule",
+    "ctaText": "Setup your community",
+    "ctaHref": "/create",
+    "columns": [
+      {
+        "title": "Share Leadership and Prevent Burnout",
+        "description": "Rotating roles and setting clear expectations for contributions can prevent a few people from taking on too much. A living document outlining responsibilities and group values helps distribute labor fairly and avoids misunderstandings.",
+        "descriptionSecondary": "A transportation assistance group avoided burnout by introducing a weekly shift system, making participation more sustainable."
+      },
+      {
+        "title": "Establish Transparent, Inclusive Decision-Making",
+        "description": "Figuring out how your team makes decisions right from the start saves a lot of headaches. You can use full consensus, majority rules, or let specific people make the call. Being open about this and checking in often keeps everyone involved and prevents secret power struggles. As an example, one disaster relief group sped things up by using a \"consensus-minus-one\" rule. It kept them aligned but stopped a single person from bringing everything to a halt."
+      },
+      {
+        "title": "Empower Your Community with Transparent Governance",
+        "description": "A basic conflict resolution process can prevent disputes from escalating. Clear guidelines for resource distribution reduce misunderstandings and maintain trust. Assume good faith and use structured discussions to resolve issues.",
+        "descriptionSecondary": "Members noticed frustration when some folks felt unheard in decisions about new projects. By anonymous feedback box, they created a space to address concerns early and make adjustments before conflicts escalated."
+      }
+    ]
+  },
+  "ruleStack": {
+    "title": "Get Templates that help your community run smoothly",
+    "subtitle": "These are popular patterns for making decisions in mutual aid and open source communities. You can use them as they are or as a starting place for customizing your own CommunityRule.",
+    "button": {
+      "seeAllTemplates": "See all templates"
+    }
+  },
+  "askOrganizer": {
+    "title": "Still have questions?",
+    "subtitle": "Get answers from an experienced organizer",
+    "buttonText": "Ask an organizer"
+  },
+  "relatedArticles": {
+    "title": ["Tools to set your", "group up for", "success"]
+  }
+}

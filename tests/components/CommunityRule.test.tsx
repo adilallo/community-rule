@@ -1,4 +1,5 @@
-import { describe } from "vitest";
+import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
 import {
   componentTestSuite,
   type ComponentTestSuiteConfig,
@@ -34,4 +35,19 @@ const config: ComponentTestSuiteConfig<Props> = {
 
 describe("CommunityRule", () => {
   componentTestSuite<Props>(config);
+
+  it("uses cardAccentColor for the card left border when useCardStyle is true", () => {
+    const { container } = render(
+      <CommunityRule
+        sections={sampleSections}
+        useCardStyle
+        cardAccentColor="var(--color-surface-invert-brand-lavender)"
+      />,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.style.boxShadow).toBe(
+      "inset 4px 0 0 0 var(--color-surface-invert-brand-lavender)",
+    );
+    expect(screen.getByText("How proposals pass")).toBeInTheDocument();
+  });
 });

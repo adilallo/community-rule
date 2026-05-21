@@ -246,12 +246,16 @@ describe("BlogPostPage", () => {
       .getByText(/This is the article content/)
       .closest("div.post-body");
     expect(contentDiv).toHaveClass("post-body");
-    expect(contentDiv).toHaveClass("-mt-[var(--spacing-scale-048)]");
     expect(contentDiv).toHaveClass(
       "text-[var(--color-content-inverse-primary)]",
     );
     expect(contentDiv).toHaveClass("text-[16px]");
     expect(contentDiv).toHaveClass("leading-[24px]");
+
+    const article = contentDiv?.closest("article");
+    expect(article).toHaveClass("p-[var(--spacing-scale-024)]");
+    expect(article).toHaveClass("sm:py-[var(--spacing-scale-032)]");
+    expect(article).not.toHaveClass("-mt-[var(--spacing-scale-048)]");
   });
 
   it("applies responsive text sizing", async () => {
@@ -280,7 +284,6 @@ describe("BlogPostPage", () => {
     const contentDiv = screen
       .getByText(/This is the article content/)
       .closest("div.post-body");
-    expect(contentDiv).toHaveClass("sm:mx-auto");
     expect(contentDiv).toHaveClass("sm:max-w-[390px]");
     expect(contentDiv).toHaveClass("md:max-w-[472px]");
     expect(contentDiv).toHaveClass("lg:max-w-[700px]");

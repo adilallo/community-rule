@@ -9,8 +9,12 @@ import TextInput from "../../controls/TextInput";
 import ContentLockup from "../../type/ContentLockup";
 import Alert from "../Alert";
 import { requestMagicLink } from "../../../../lib/create/api";
+import { buildCreateFlowDraftPayload } from "../../../../lib/create/buildCreateFlowDraftPayload";
 import { safeInternalPath } from "../../../../lib/safeInternalPath";
-import { setTransferPendingFlag } from "../../../(app)/create/utils/anonymousDraftStorage";
+import {
+  readAnonymousCreateFlowState,
+  setTransferPendingFlag,
+} from "../../../(app)/create/utils/anonymousDraftStorage";
 
 /** Mail icon for login modal (inline SVG; same pattern as InfoMessageBox ExclamationIconInline). */
 function MailIconInline() {
@@ -91,7 +95,14 @@ export default function LoginForm({
     try {
       const rawNext = magicLinkNextPath ?? nextParam;
       const nextPath = safeInternalPath(rawNext);
-      const result = await requestMagicLink(trimmed, nextPath);
+      const shouldAttachDraft =
+        isSaveProgress || nextPath.includes("syncDraft=1");
+      const localDraft = readAnonymousCreateFlowState();
+      const draft =
+        shouldAttachDraft && Object.keys(localDraft).length > 0
+          ? buildCreateFlowDraftPayload(localDraft)
+          : undefined;
+      const result = await requestMagicLink(trimmed, nextPath, draft);
       if (result.ok === false) {
         if (result.retryAfterMs != null && result.retryAfterMs > 0) {
           const seconds = Math.ceil(result.retryAfterMs / 1000);

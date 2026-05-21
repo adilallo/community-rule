@@ -24,7 +24,8 @@ export default {
     },
     description: {
       control: { type: "text" },
-      description: "The description text displayed in uppercase",
+      description:
+        "Body: 12px/16px (X Small); 14px/20px on md–<lg only (Card/Icon, Section 22084-859062)",
     },
     onClick: { action: "clicked" },
   },

@@ -10,14 +10,28 @@ const RuleStack = dynamic(() => import("../../components/sections/RuleStack"), {
   ssr: true,
 });
 
+type MarketingRuleStackSectionProps = {
+  translationNamespace?: string;
+  twoColumnsFromMd?: boolean;
+};
+
 /**
  * Server-loaded “Popular templates” row so the first paint has card data without a client fetch.
  */
-export async function MarketingRuleStackSection() {
+export async function MarketingRuleStackSection({
+  translationNamespace,
+  twoColumnsFromMd,
+}: MarketingRuleStackSectionProps = {}) {
   const rows = await listRuleTemplatesFromDb();
   const initialGridEntries = gridEntriesForSlugOrderWithCatalogFallback(
     rows,
     GOVERNANCE_TEMPLATE_HOME_SLUGS,
   );
-  return <RuleStack initialGridEntries={initialGridEntries} />;
+  return (
+    <RuleStack
+      initialGridEntries={initialGridEntries}
+      translationNamespace={translationNamespace}
+      twoColumnsFromMd={twoColumnsFromMd}
+    />
+  );
 }

@@ -1,14 +1,28 @@
 /**
  * Placeholder grid matching GovernanceTemplateGrid layout (loading state).
  */
-export function GovernanceTemplateGridSkeleton({ count }: { count: number }) {
-  return (
-    <div
-      className="
+export function GovernanceTemplateGridSkeleton({
+  count,
+  twoColumnsFromMd = false,
+}: {
+  count: number;
+  twoColumnsFromMd?: boolean;
+}) {
+  const gridLayoutClasses = twoColumnsFromMd
+    ? `
+        flex flex-col gap-[18px]
+        md:grid md:grid-cols-2 md:gap-[18px]
+        lg:gap-[24px]
+      `
+    : `
         flex flex-col gap-[18px]
         min-[768px]:grid min-[768px]:grid-cols-2 min-[768px]:gap-[18px]
         min-[1024px]:gap-[24px]
-      "
+      `;
+
+  return (
+    <div
+      className={gridLayoutClasses}
       aria-busy
       aria-label="Loading templates"
     >

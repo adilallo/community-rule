@@ -1,0 +1,35 @@
+/**
+ * Figma: use case detail body text (22015:42622 / 22015:42623)
+ * X Large/Paragraph — Inter 24px / 32px, inverse primary on brand surface.
+ */
+.use-case-body {
+  width: 100%;
+  max-width: 700px;
+  font-family: var(--font-inter, Inter, sans-serif);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 130%;
+  color: var(--color-content-inverse-primary);
+  word-break: break-word;
+}
+
+@media (min-width: 768px) {
+  .use-case-body {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+.use-case-body p {
+  margin-block: 0;
+}
+
+.use-case-body p + p {
+  margin-block-start: 1em;
+}
+
+@media (min-width: 768px) {
+  .use-case-body p + p {
+    margin-block-start: 32px;
+  }
+}

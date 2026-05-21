@@ -13,6 +13,9 @@ import ImageGlyphIcon from "./image.svg";
 import LogOutIcon from "./log_out.svg";
 import MailIcon from "./mail.svg";
 import MarkdownCopyIcon from "./markdown_copy.svg";
+import Numeric1CircleIcon from "./numeric-1-circle.svg";
+import Numeric2CircleIcon from "./numeric-2-circle.svg";
+import Numeric3CircleIcon from "./numeric-3-circle.svg";
 import NumberIcon from "./number.svg";
 import PictureAsPdfIcon from "./picture_as_pdf.svg";
 import TagsIcon from "./tags.svg";
@@ -31,6 +34,9 @@ export const ICON_NAME_OPTIONS = [
   "log_out",
   "mail",
   "markdown_copy",
+  "numeric_1_circle",
+  "numeric_2_circle",
+  "numeric_3_circle",
   "number",
   "picture_as_pdf",
   "tags",
@@ -57,6 +63,9 @@ const iconMap: Record<IconName, SvgComponent> = {
   log_out: LogOutIcon,
   mail: MailIcon,
   markdown_copy: MarkdownCopyIcon,
+  numeric_1_circle: Numeric1CircleIcon,
+  numeric_2_circle: Numeric2CircleIcon,
+  numeric_3_circle: Numeric3CircleIcon,
   number: NumberIcon,
   picture_as_pdf: PictureAsPdfIcon,
   tags: TagsIcon,

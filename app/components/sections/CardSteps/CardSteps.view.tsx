@@ -11,6 +11,7 @@ function CardStepsView({
   subtitle,
   steps,
   headingDesktopLines,
+  seeHowItWorksHref,
   schemaJson,
 }: CardStepsViewProps) {
   const t = useTranslation();
@@ -47,7 +48,12 @@ function CardStepsView({
             </div>
 
             <div className="text-center">
-              <Button buttonType="outline" palette="default" size="large">
+              <Button
+                buttonType="outline"
+                palette="default"
+                size="large"
+                href={seeHowItWorksHref}
+              >
                 {t("cardSteps.buttons.seeHowItWorks")}
               </Button>
             </div>

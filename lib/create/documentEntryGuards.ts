@@ -19,11 +19,19 @@ export function isDocumentEntry(x: unknown): x is CommunityRuleEntry {
   if (typeof o.title !== "string" || o.title.trim().length === 0) {
     return false;
   }
-  if (typeof o.body !== "string") return false;
   if (o.blocks !== undefined) {
     if (!Array.isArray(o.blocks) || !o.blocks.every(isLabeledBlock)) {
       return false;
     }
   }
+  const blocks = Array.isArray(o.blocks) ? o.blocks : [];
+  const hasBlocks = blocks.length > 0;
+  if (hasBlocks) {
+    if (o.body !== undefined && typeof o.body !== "string") {
+      return false;
+    }
+    return true;
+  }
+  if (typeof o.body !== "string") return false;
   return true;
 }

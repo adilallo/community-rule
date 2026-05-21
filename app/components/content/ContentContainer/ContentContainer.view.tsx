@@ -6,6 +6,8 @@ function ContentContainerView({
   width,
   size,
   iconImage,
+  iconAlt,
+  showLeadingImage,
   containerClasses,
   contentGapClasses,
   textGapClasses,
@@ -18,19 +20,20 @@ function ContentContainerView({
   return (
     <div
       className={containerClasses}
-      style={size === "responsive" ? {} : { width }}
+      style={size === "responsive" || size === "xs" ? {} : { width }}
     >
       {/* Content Container - gap between icon and text */}
       <div className={contentGapClasses}>
-        {/* Icon */}
-        <div className="w-[60px] h-[30px] flex items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={iconImage}
-            alt={`Icon for ${post.frontmatter.title}`}
-            className="w-[60px] h-[30px] object-contain"
-          />
-        </div>
+        {showLeadingImage ? (
+          <div className="flex h-[30px] w-[60px] items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={iconImage}
+              alt={iconAlt}
+              className="h-[30px] w-[60px] object-contain"
+            />
+          </div>
+        ) : null}
 
         {/* Text Container */}
         <div className={textGapClasses}>
@@ -42,8 +45,7 @@ function ContentContainerView({
         </div>
       </div>
 
-      {/* Metadata Container - horizontal with 8px gap */}
-      <div className="flex items-center gap-[var(--measures-spacing-008)]">
+      <div className="flex min-w-0 items-end gap-[var(--measures-spacing-008)]">
         {/* Author Name */}
         <span className={authorClasses}>{post.frontmatter.author}</span>
 

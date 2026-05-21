@@ -222,3 +222,10 @@ export const putDraftBodySchema = z.object({
   payload: createFlowStateSchema,
 });
 export type CreateFlowStateValidated = z.infer<typeof createFlowStateSchema>;
+
+export const magicLinkRequestBodySchema = z.object({
+  email: z.string(),
+  next: z.string().optional(),
+  draft: createFlowStateSchema.optional(),
+});
+export type MagicLinkRequestBody = z.infer<typeof magicLinkRequestBodySchema>;

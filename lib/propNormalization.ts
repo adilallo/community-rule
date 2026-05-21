@@ -141,6 +141,7 @@ export const QUOTE_BLOCK_VARIANT_OPTIONS = [
   "compact",
   "standard",
   "extended",
+  "statement",
 ] as const;
 export type QuoteBlockVariantValue =
   (typeof QUOTE_BLOCK_VARIANT_OPTIONS)[number];
