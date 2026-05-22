@@ -1,10 +1,10 @@
-# Recommendation Matrix — Implementation Context (CR-88)
+# Recommendation Matrix — Implementation Context
 
-**Status:** Implemented (CR-88). This doc remains the spec — keep code in sync with it.
-**Linear:** [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no) (**Done** — no `.xlsx` import; authoring = committed JSON + seed).
-**Follow-up (UI):** [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) — pass facets into marketing template fetches so grids rank like the wizard; template ranking **tests** ship with CR-93.
-**Roadmap:** [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §4 (`RuleTemplate`) and §13.
-**Spec ticket:** [`docs/guides/backend-linear-tickets.md`](backend-linear-tickets.md) Ticket 16.
+**Status:** Implemented. This doc is the canonical spec — keep code in sync with it.
+
+**Authoring:** Committed JSON under `data/create/customRule/` plus `npx prisma db seed` — no runtime `.xlsx` import.
+
+**Related:** [`docs/create-flow.md`](../create-flow.md) (wizard URLs and stages), [`CONTRIBUTING.md`](../../CONTRIBUTING.md) (API route table).
 
 This doc documents the **method facet matrix** that powers ranking from shared facet data:
 
@@ -13,7 +13,7 @@ This doc documents the **method facet matrix** that powers ranking from shared f
    `conflict-management`) reorder their `methods[]` array based on which
    methods match the user's selected community facets.
 2. **Template list API (shipped)** — `GET /api/templates?facet.*` returns scored/ranked `RuleTemplate` rows when query params are present.
-3. **Template marketing grids (CR-93)** — home `MarketingRuleStackSection.tsx` and `/templates` still call `GET /api/templates` **without** facets; wiring + tests are **[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)**.
+3. **Template marketing grids (optional follow-up)** — home `MarketingRuleStackSection.tsx` and `/templates` may call `GET /api/templates` **without** facets; product can pass `facet.*` when those surfaces should rank like the wizard.
 
 > **Scope note:** Card / modal copy lives in
 > `messages/en/create/customRule/*.json` as flat `methods` arrays (one
@@ -27,7 +27,7 @@ This doc documents the **method facet matrix** that powers ranking from shared f
 
 ---
 
-## 1. Where things live (post-reorg)
+## 1. Where things live
 
 ### 1a. Card / modal copy — `messages/en/create/customRule/<section>.json`
 
@@ -36,7 +36,9 @@ Source of truth for all displayed text. Each file holds the page chrome
 plus decision-approaches' `sidebar` / `messageBox` / `cardStack` /
 `scopeAddButtonLabel`) plus a flat `methods` array. Read via
 `useMessages().create.customRule.<section>.methods`. Never duplicated
-anywhere else; the recommendation API never returns copy.
+elsewhere for in-app UI. `GET /api/create-flow/methods` exposes the same
+copy for external consumers (§9.2); the wizard may still read messages
+directly.
 
 ### 1b. Facet data — `data/create/customRule/<section>.json`
 
@@ -48,43 +50,22 @@ the Zod schema at seed time and in CI (see §3 — no app-boot validator).
 Lives **outside** `messages/<locale>/` because facets are not localized
 — they describe the methods, not the UI text.
 
-### 1c. Messages folder reorg (prerequisite)
+### 1c. Messages folder layout
 
-Today every `messages/en/create/*.json` file sits flat in one folder.
-Plan: regroup into the three Figma stages from
+Create-flow messages are grouped into three stages from
 [`docs/create-flow.md`](../create-flow.md) §"Product stages":
 
-| New folder | Files |
+| Folder | Files |
 | --- | --- |
 | `messages/en/create/community/` | `informational.json`, `communityName.json`, `communityStructure.json`, `communityContext.json`, `communitySize.json`, `communityUpload.json`, `communitySave.json`, `review.json` |
 | `messages/en/create/customRule/` | `coreValues.json`, `communication.json`, `membership.json`, `decisionApproaches.json`, `conflictManagement.json` |
 | `messages/en/create/reviewAndComplete/` | `confirmStakeholders.json`, `finalReview.json`, `completed.json`, `publish.json` |
 | `messages/en/create/` (root, cross-cutting) | `footer.json`, `topNav.json`, `draftHydration.json`, `templateReview.json`, plus layout-shell strings (`select.json`, `text.json`, `upload.json`) |
 
-Touchpoints: every file move, the imports in
-[`messages/en/index.ts`](../../messages/en/index.ts), the namespace shape
-exposed via `useMessages()`, and every screen that reads
-`m.create.<section>` becomes `m.create.<stage>.<section>`. This is a
-mechanical refactor — no behavior change.
-
-**Sequencing (explicit).** This reorg is **its own ticket** and **must
-land before** any of §6–§9 below. CR-88's facet JSON paths
-(`data/create/customRule/<section>.json`) and `useMessages()` namespaces
-(`m.create.customRule.<section>`) assume the reorg is already in place.
-Concretely, ship in this order:
-
-1. **Reorg PR (separate ticket).** Move every `messages/en/create/*.json`
-   into the table above, update `messages/en/index.ts`, update every
-   `useMessages().create.<section>` callsite to
-   `useMessages().create.<stage>.<section>`, run `npx tsc --noEmit` and
-   `npx vitest run` green. No new behavior.
-2. **CR-88 PR (this doc).** Adds `data/create/customRule/`,
-   `MethodFacet`, the seed step, and the two API endpoints — all reading
-   the post-reorg paths.
-
-If the reorg slips, do **not** start CR-88 against the flat paths and
-plan to migrate later — the path mirroring between `messages/` and
-`data/` is the whole point of §1a/§1b and is fragile to retrofit.
+[`messages/en/index.ts`](../../messages/en/index.ts) exposes
+`useMessages().create.<stage>.<section>`. Facet JSON paths
+(`data/create/customRule/<section>.json`) mirror the `customRule/`
+filenames — that pairing is intentional (§1a/§1b).
 
 ---
 
@@ -264,9 +245,12 @@ decision-approaches → conflict-management → confirm-stakeholders → final-r
 | Templates index | `app/(marketing)/templates/page.tsx` |
 | Template preview (by slug) | `app/(app)/create/review-template/[slug]/page.tsx` |
 | "Use without changes" → publish | `app/(app)/create/CreateFlowLayoutClient.tsx` `handleUseTemplateWithoutChanges` |
-| API list | `app/api/templates/route.ts` (`GET`; optional `facet.*` params — see §9.1) |
+| API list | `app/api/templates/route.ts` (`GET`; optional `facet.*` — §9.1) |
+| API detail | `app/api/templates/[slug]/route.ts` (`GET` — §9.4) |
+| API catalog | `app/api/create-flow/methods/route.ts` (`GET` — §9.2); `lib/server/governanceCatalog.ts` |
 
-**Marketing UIs** do not pass `facet.*` yet (**[CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates)**). The no-facets path keeps curated ordering; with facets, templates are ranked and `scores` may be returned. Template **Customize**
+**Marketing UIs** may omit `facet.*` (curated ordering only). When facets
+are passed, templates are ranked and `scores` may be returned. Template **Customize**
 now prefills the custom-rule flow via
 [`buildTemplateCustomizePrefill`](../../lib/create/applyTemplatePrefill.ts)
 (applied in `CreateFlowLayoutClient.tsx`) and routes to `core-values`
@@ -362,7 +346,7 @@ one.
 ### 5.7 i18n stays the source of truth for copy
 
 Card decks and modal copy live in
-`messages/en/create/customRule/<section>.json` (post-reorg) and are read
+`messages/en/create/customRule/<section>.json` and are read
 via `useMessages().create.customRule.<section>` (`messages/en/index.ts`,
 `app/contexts/MessagesContext.tsx`). The matrix never puts copy in the
 DB. The recommendation API returns slugs and scores only — never copy —
@@ -547,10 +531,14 @@ async function seedMethodFacets() {
 
 ## 9. APIs
 
-Both endpoints follow §5.1 conventions. **Neither returns copy** — copy
-lives in messages and is read client-side via `useMessages()`.
+Endpoints follow §5.1 conventions. List and method routes support
+optional `facet.*` ranking. `GET /api/create-flow/methods` returns the
+full catalog (copy + optional scores); `GET /api/templates/[slug]` returns
+template detail and composition. The in-app wizard may still read messages
+via `useMessages()`; external clients should use the HTTP catalog (English
+v1 only today).
 
-### 9.1 `GET /api/templates` (rewrite)
+### 9.1 `GET /api/templates`
 
 Optional facet query params:
 
@@ -611,25 +599,46 @@ debugging and for an eventual "Why this template?" UI tooltip.
 
 ### 9.2 `GET /api/create-flow/methods?section=<section>[&facet.*=...]`
 
-Powers the four card-deck wizard steps. Returns slugs + per-method match
-scores only — wizard renders by looking up entries in
-`useMessages().create.customRule.<section>.methods` (via the
-`methodById` map each screen builds).
+Public catalog for one facet. Powers wizard re-ranking (scores) and
+external method browsers (full copy). Assembler:
+`lib/server/governanceCatalog.ts`.
 
-Response:
+**`section` values:** `communication`, `membership`,
+`decisionApproaches`, `conflictManagement`, `coreValues` (query alias
+`values` → `coreValues`). Core values have **no** `MethodFacet` rows;
+`facet.*` is ignored for `coreValues`.
+
+**Method sections** — full deck, messages authoring order:
 
 ```ts
 {
   section: "communication" | "membership" | "decisionApproaches" | "conflictManagement",
   methods: Array<{
     slug: string;
-    matches: { score: number; matchedFacets: string[] };
+    label: string;
+    description: string;  // messages supportText
+    sections: Record<string, unknown>;
+    matches?: { score: number; matchedFacets: string[] };  // present when facet.* sent
   }>
 }
 ```
 
-**Scoring algorithm.** Same simple count as §9.1, scoped to a single
-method:
+**Core values** — preset list; `id` is `"1"` … `"n"` (position in
+`coreValues.json`, not a kebab slug):
+
+```ts
+{
+  section: "coreValues",
+  methods: Array<{
+    id: string;
+    label: string;
+    meaning: string;
+    signals: string;
+  }>
+}
+```
+
+**Scoring algorithm** (method sections only). Same simple count as §9.1:
 
 ```
 score(method)
@@ -638,41 +647,59 @@ score(method)
       else 0
 ```
 
-Methods are returned **ranked by `matches.score` desc**, then by the
-on-disk order from the messages file (so the deck stays stable when no
-facets are passed and zero-match methods preserve authoring order). The
-wizard never **hides** rows — see §10.
+With `facet.*` present, methods are **ranked by `matches.score` desc**,
+then authoring order; **all** methods are returned (zero-score rows stay
+in the deck). Without facets, `matches` is omitted and order is
+authoring order. `Cache-Control: public, max-age=3600`.
 
-Server helper: `listMethodRecommendations({ section, facets })` in
-`lib/server/methodRecommendations.ts`. Same swallow-and-return-`[]`
-failure mode as `listRuleTemplatesFromDb`. When the DB is unavailable
-(or facets are empty), the wizard falls back to the messages deck in
-its on-disk order.
+Server: `listMethodRecommendations` + `listCatalogMethods` /
+`listCatalogCoreValues`. DB failure with facets still returns the full
+catalog without `matches` (wizard treats scores as 0).
 
-### 9.3 `POST /api/templates/recommend` (follow-up, optional)
+### 9.4 `GET /api/templates/[slug]`
+
+Single seeded template. Public read; `404` when unknown.
+
+```ts
+{
+  template: RuleTemplateDto,
+  methods: Array<{ section: SectionId; slug: string }>  // templateMethodsFromBody(body)
+}
+```
+
+`Cache-Control: public, max-age=3600`. List behavior unchanged in §9.1.
+
+### 9.5 External catalog consumers
+
+1. Cache section responses (`GET /api/create-flow/methods?section=…`).
+2. Render cards from `label` + `description`; modal bodies from `sections`.
+3. Template preview: `GET /api/templates/:slug` → join each
+   `{ section, slug }` to the cached section catalog.
+4. Do not import Next.js `messages/` from outside the app — treat these
+   GET routes as the stable contract until copy is served from a CMS or
+   database instead of committed JSON.
+
+### 9.3 `POST /api/templates/recommend` (optional)
 
 If product wants to send the full `CreateFlowState` instead of just
-facet ids, body schema reuses `createFlowStateSchema`. Skip until §9.1
-+ §9.2 ship.
+facet ids, body schema can reuse `createFlowStateSchema`. Not
+implemented today.
 
 **Empty / partial facets:** never error. Fall back to today's ordering
 and return all rows.
 
 ---
 
-## 10. Wizard wiring (UI follow-on)
-
-Once the API exists:
+## 10. Wizard wiring
 
 - `communication-methods` / `membership-methods` / `decision-approaches`
   / `conflict-management` screens each call
-  `GET /api/create-flow/methods?section=...&facet.*=...` to get the
-  ranking. Card label, description, and modal copy continue to come
-  from `useMessages().create.customRule.<section>.methods` (a flat
-  array — each screen already builds a `methodById` lookup map and
-  iterates the array; no per-section `_CARD_ORDER` constants exist).
-  The screen reorders the array by the API's ranked slug list before
-  rendering.
+  `GET /api/create-flow/methods?section=...&facet.*=...` for scores
+  (`matches.score` per slug). Card label, description, and modal copy
+  still come from `useMessages().create.customRule.<section>.methods`
+  in-app; external clients use the API copy fields (§9.5). Each screen
+  reorders the messages array via `rankMethodsByScore` (full deck
+  returned; zero-score slugs sort to authoring order).
 - API failure or empty facets → render the messages deck in its on-disk
   order. No regression from today.
 - Selecting a template on the template-review page via **Customize**
@@ -680,7 +707,7 @@ Once the API exists:
   snapshot from the template's composition — see
   [`buildTemplateCustomizePrefill`](../../lib/create/applyTemplatePrefill.ts)
   and the `handleCustomizeTemplate` handler in
-  `CreateFlowLayoutClient.tsx`. Shipped outside CR-88.
+  `CreateFlowLayoutClient.tsx`.
 - Recommendations **never hide** options — ranking only. Authors expect
   to see "all 32 decision-making patterns" with the matching ones
   surfaced first.
@@ -723,8 +750,8 @@ Once the API exists:
   reserved for a future v2; ignored by v1.
 - ~~Boot-time validation~~ → none. Parity is enforced by the seed step
   (§8) and the parity test in CI (§3, §12). No `next dev` startup hook.
-- ~~Messages folder reorg sequencing~~ → ships as **its own ticket
-  before** CR-88 (§1c). CR-88 assumes the post-reorg paths.
+- ~~Messages folder layout~~ → three-stage folders under
+  `messages/en/create/` (§1c). Facet paths assume that layout.
 - ~~Spreadsheet handoff~~ → the four `~/Downloads/*.xlsx` files are
   passed to the implementing agent alongside this doc. They are **not**
   committed; the post-ingest `messages/en/create/customRule/*.json`
@@ -732,39 +759,39 @@ Once the API exists:
 
 ---
 
-## 12. Test plan (acceptance for CR-88)
+## 12. Test plan
 
-- [ ] `prisma db seed` populates `MethodFacet` from the four
+- [x] `prisma db seed` populates `MethodFacet` from the four
       `data/create/customRule/<section>.json` files with no errors,
       producing the expected row count
       (`(11 + 19 + 32 + 19) × 19 = 1539` rows max, fewer if authors
       use the omit-default shorthand).
-- [ ] `tests/unit/methodFacets.test.ts` asserts every method slug in
+- [x] `tests/unit/methodFacets.test.ts` asserts every method slug in
       each facet file matches a `methods[].id` in the corresponding
       messages file (and vice-versa) — no orphans either way. Also
       asserts every `chipId` in `_facetGroups.json` resolves to a real
       position in the referenced messages file (off-by-one fails).
-- [ ] `tests/unit/methodFacetsSchemas.test.ts` exercises the Zod schema
+- [x] `tests/unit/methodFacetsSchemas.test.ts` exercises the Zod schema
       (rejects unknown facet values, unknown groups, unknown sections,
       malformed booleans).
-- [ ] `tests/unit/methodRecommendations.test.ts` exercises the scoring
+- [x] `tests/unit/methodRecommendations.test.ts` exercises the scoring
       function directly with a fixture set: a method matching 2 of 3
       requested facets scores `2`; a template composing two methods
       that each match `2` and `3` requested facets scores `5`; ties
       fall back to curated `(featured, sortOrder, title)` order.
-- [ ] `GET /api/create-flow/methods?section=conflictManagement&facet.orgType=nonprofit`
+- [x] `GET /api/create-flow/methods?section=conflictManagement&facet.orgType=nonprofit`
       returns all 19 methods, ranked, with the `nonprofit`-matching
       methods scoring higher than non-matching ones; zero-match
       methods preserve their on-disk authoring order.
-- [ ] `GET /api/templates?facet.orgType=nonprofit&facet.size=sixToTwelve`
+- [x] `GET /api/templates?facet.orgType=nonprofit&facet.size=sixToTwelve`
       returns templates re-ordered by composed-method match count, with
       score-0 templates still present at the end in curated order.
-- [ ] No-facets `GET /api/templates` matches today's curated ordering
+- [x] No-facets `GET /api/templates` matches today's curated ordering
       (no regression for the existing marketing/templates surfaces).
-- [ ] DB-down smoke: with `DATABASE_URL` unset, the four wizard
+- [x] DB-down smoke: with `DATABASE_URL` unset, the four wizard
       card-deck steps still render the full deck from messages (no
       5xx, no broken cards).
-- [ ] Editing a `data/create/customRule/<section>.json` entry and
+- [x] Editing a `data/create/customRule/<section>.json` entry and
       re-running `prisma db seed` changes the rank order returned by
       both endpoints without any code change.
 
@@ -772,19 +799,18 @@ Once the API exists:
 
 ## 13. Source files referenced
 
-- `prisma/schema.prisma` — `RuleTemplate` model (unchanged); add
-  `MethodFacet` model (§7).
-- `prisma/seed.ts` — current curated composition; add `seedMethodFacets`
-  helper (§8).
-- `app/api/templates/route.ts` — existing GET endpoint (rewrite with
-  optional facet params).
+- `prisma/schema.prisma` — `RuleTemplate`, `MethodFacet`, `TemplateFacet`.
+- `prisma/seed.ts` — curated templates + `seedMethodFacets` (§8).
+- `app/api/templates/route.ts` — list + optional facet params (§9.1).
+- `app/api/templates/[slug]/route.ts` — detail + composition (§9.4).
+- `lib/server/governanceCatalog.ts` — catalog DTOs from messages (§9.2).
 - `app/api/drafts/me/route.ts` — reference route shape.
 - `lib/server/db.ts` — Prisma singleton.
 - `lib/server/responses.ts` — `dbUnavailable()`.
 - `lib/server/ruleTemplates.ts` — `listRuleTemplatesFromDb` (extend with
   facet param + scoring helper).
-- `lib/server/methodRecommendations.ts` — **new**; helper for §9.2.
-- `lib/server/validation/methodFacetsSchemas.ts` — **new**; Zod schema
+- `lib/server/methodRecommendations.ts` — facet scoring for §9.1–9.2.
+- `lib/server/validation/methodFacetsSchemas.ts` — Zod schema
   for the JSON facet files and the API request shapes.
 - `lib/server/validation/createFlowSchemas.ts` — reuse facet-id arrays
   rather than redeclaring them.
@@ -801,19 +827,20 @@ Once the API exists:
   the three sibling screens) — already iterate `methods[]` via
   `methodById`; the API ranking layer plugs in here.
 - `messages/en/create/customRule/{communication,membership,decisionApproaches,conflictManagement}.json`
-  — flat `methods` arrays (post-reorg paths). Source of truth for copy;
+  — flat `methods` arrays. Source of truth for in-app copy;
   the matrix never edits these.
 - `messages/en/create/{community,reviewAndComplete}/*.json` — the other
-  two stages (post-reorg); not consumed by the matrix but listed for
-  context on the §1c reorg.
+  two other create stages; not consumed by the matrix but listed for
+  context alongside §1c.
 - `data/create/customRule/{communication,membership,decisionApproaches,conflictManagement}.json`
-  — **new**; facet matches per method.
-- `data/create/customRule/_facetGroups.json` — **new**; canonical facet
+  — facet matches per method.
+- `data/create/customRule/_facetGroups.json` — canonical facet
   group/value ids and the wizard-chip-id ↔ facet-value-id mapping.
-- `tests/unit/createFlowValidation.test.ts` — Vitest pattern for new
+- `tests/unit/createFlowValidation.test.ts` — Vitest pattern for
   schema/parity tests.
-- Roadmap: `docs/guides/backend-roadmap.md` §4, §13.
-- Spec: `docs/guides/backend-linear-tickets.md` Ticket 16.
+- `tests/unit/governanceCatalog.test.ts` — catalog ↔ messages parity.
+- `tests/unit/createFlowMethodsRoute.test.ts` — methods API routes.
+- `tests/unit/templatesBySlugRoute.test.ts` — template detail route.
 
 ---
 
@@ -836,7 +863,7 @@ part of the runtime contract, and **not** referenced by any code path.
 Each workbook's leading columns hold the descriptive copy already
 ingested into `messages/en/create/customRule/<section>.json`; the
 trailing 19 columns hold the facet matches that need to land in
-`data/create/customRule/<section>.json`. After CR-88 lands, future
-facet edits happen directly in the JSON files — the workbooks are
+`data/create/customRule/<section>.json`. Ongoing facet edits happen
+directly in those JSON files — the workbooks are
 historical reference only, and the committed JSON (in both `messages/`
 and `data/`) is the canonical record.

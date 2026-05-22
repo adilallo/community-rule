@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { listCatalogMethods } from "../../lib/server/governanceCatalog";
 
 const findManyMock = vi.fn();
 
@@ -20,6 +21,8 @@ import { GET } from "../../app/api/create-flow/methods/route";
 function makeReq(url: string) {
   return new NextRequest(url);
 }
+
+const communicationCatalog = listCatalogMethods("communication");
 
 beforeEach(() => {
   findManyMock.mockReset();
@@ -50,11 +53,35 @@ describe("GET /api/create-flow/methods", () => {
     expect(body2.error.code).toBe("validation_error");
   });
 
-  it("returns ranked methods from the facet query", async () => {
+  it("returns full catalog with copy when no facets are passed", async () => {
+    const res = await GET(
+      makeReq(
+        "https://x.test/api/create-flow/methods?section=communication",
+      ),
+      undefined,
+    );
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Cache-Control")).toContain("max-age=3600");
+    const json = (await res.json()) as {
+      section: string;
+      methods: Array<{
+        slug: string;
+        label: string;
+        description: string;
+        matches?: unknown;
+      }>;
+    };
+    expect(json.section).toBe("communication");
+    expect(json.methods.length).toBe(communicationCatalog.length);
+    expect(json.methods[0].label).toBeTruthy();
+    expect(json.methods[0].matches).toBeUndefined();
+  });
+
+  it("returns ranked full deck with matches from the facet query", async () => {
     findManyMock.mockResolvedValueOnce([
       { slug: "loomio", group: "size", value: "twoToFive" },
       { slug: "loomio", group: "orgType", value: "workersCoop" },
-      { slug: "in-person", group: "size", value: "twoToFive" },
+      { slug: "in-person-meetings", group: "size", value: "twoToFive" },
     ]);
     const res = await GET(
       makeReq(
@@ -65,14 +92,22 @@ describe("GET /api/create-flow/methods", () => {
     expect(res.status).toBe(200);
     const json = (await res.json()) as {
       section: string;
-      methods: { slug: string; matches: { score: number } }[];
+      methods: Array<{
+        slug: string;
+        label: string;
+        matches: { score: number };
+      }>;
     };
     expect(json.section).toBe("communication");
-    expect(json.methods.map((m) => m.slug)).toEqual(["loomio", "in-person"]);
+    expect(json.methods.length).toBe(communicationCatalog.length);
+    expect(json.methods[0].slug).toBe("loomio");
     expect(json.methods[0].matches.score).toBe(2);
+    expect(json.methods[1].slug).toBe("in-person-meetings");
+    expect(json.methods[1].matches.score).toBe(1);
+    expect(json.methods[0].label).toBeTruthy();
   });
 
-  it("returns empty methods when the DB query throws (caller falls back)", async () => {
+  it("returns full catalog without matches when the DB query throws", async () => {
     findManyMock.mockRejectedValueOnce(new Error("db down"));
     const res = await GET(
       makeReq(
@@ -81,7 +116,39 @@ describe("GET /api/create-flow/methods", () => {
       undefined,
     );
     expect(res.status).toBe(200);
-    const json = (await res.json()) as { methods: unknown[] };
-    expect(json.methods).toEqual([]);
+    const json = (await res.json()) as {
+      methods: Array<{ slug: string; matches?: unknown }>;
+    };
+    expect(json.methods.length).toBe(communicationCatalog.length);
+    expect(json.methods[0].matches).toBeUndefined();
+  });
+
+  it("returns all core values for section=coreValues", async () => {
+    const res = await GET(
+      makeReq(
+        "https://x.test/api/create-flow/methods?section=coreValues",
+      ),
+      undefined,
+    );
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as {
+      section: string;
+      methods: Array<{ id: string; label: string; meaning: string }>;
+    };
+    expect(json.section).toBe("coreValues");
+    expect(json.methods.length).toBeGreaterThan(50);
+    expect(json.methods[0].id).toBe("1");
+    expect(json.methods[0].label).toBeTruthy();
+    expect(findManyMock).not.toHaveBeenCalled();
+  });
+
+  it("accepts values as an alias for coreValues", async () => {
+    const res = await GET(
+      makeReq("https://x.test/api/create-flow/methods?section=values"),
+      undefined,
+    );
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as { section: string };
+    expect(json.section).toBe("coreValues");
   });
 });

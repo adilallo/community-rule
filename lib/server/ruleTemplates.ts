@@ -45,6 +45,23 @@ export async function listRuleTemplatesFromDb(): Promise<RuleTemplateDto[]> {
   }
 }
 
+/** Single curated template by slug; `null` when missing or DB unavailable. */
+export async function getRuleTemplateBySlug(
+  slug: string,
+): Promise<RuleTemplateDto | null> {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+  try {
+    return await prisma.ruleTemplate.findUnique({
+      where: { slug },
+      select: TEMPLATE_SELECT,
+    });
+  } catch {
+    return null;
+  }
+}
+
 export type TemplateScore = {
   score: number;
   matchedFacets: string[];

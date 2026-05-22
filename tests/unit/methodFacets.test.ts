@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { catalogMethodSlugsForSection } from "../../lib/server/governanceCatalog";
 import {
   FACET_GROUP_IDS,
   FACET_VALUE_IDS_BY_GROUP,
@@ -42,6 +43,9 @@ describe("data/create/customRule parity (CR-88)", () => {
 
       expect(onlyInMessages, `${section} slugs missing from data/`).toEqual([]);
       expect(onlyInData, `${section} slugs missing from messages/`).toEqual([]);
+
+      const catalogSlugs = catalogMethodSlugsForSection(section);
+      expect(catalogSlugs).toEqual([...messageSlugs]);
     });
   }
 });
