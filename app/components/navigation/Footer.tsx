@@ -192,13 +192,13 @@ const Footer = memo(() => {
               lg:gap-10
               lg:text-sm lg:leading-5"
             >
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.privacyPolicyHref")} className={legalLinkClass}>
                 {t("legal.privacyPolicy")}
               </Link>
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.termsOfServiceHref")} className={legalLinkClass}>
                 {t("legal.termsOfService")}
               </Link>
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.cookiesSettingsHref")} className={legalLinkClass}>
                 {t("legal.cookiesSettings")}
               </Link>
             </div>

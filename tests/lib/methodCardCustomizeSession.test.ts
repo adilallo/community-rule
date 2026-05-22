@@ -57,37 +57,35 @@ describe("methodCardCustomizeSession", () => {
     ).toBe(true);
   });
 
-  it("confirmDiscard skips confirm when unlocked but snapshot missing", () => {
-    const spy = vi.spyOn(window, "confirm");
+  it("confirmDiscard skips confirm when unlocked but snapshot missing", async () => {
+    const confirmFn = vi.fn();
     expect(
-      confirmDiscardMethodCardCustomizeSession(
+      await confirmDiscardMethodCardCustomizeSession(
         true,
         null,
         { x: 1 },
         null,
         null,
-        "msg",
+        confirmFn,
       ),
     ).toBe(true);
-    expect(spy).not.toHaveBeenCalled();
-    spy.mockRestore();
+    expect(confirmFn).not.toHaveBeenCalled();
   });
 
-  it("confirmDiscard runs confirm when dirty", () => {
-    const spy = vi.spyOn(window, "confirm").mockReturnValue(false);
+  it("confirmDiscard runs confirm when dirty", async () => {
+    const confirmFn = vi.fn().mockResolvedValue(false);
     const draft = { n: 1 };
     const snap = captureMethodCardCustomizeSnapshot(draft, null, HEADER_0);
     expect(
-      confirmDiscardMethodCardCustomizeSession(
+      await confirmDiscardMethodCardCustomizeSession(
         true,
         snap,
         { n: 2 },
         null,
         HEADER_0,
-        "Discard?",
+        confirmFn,
       ),
     ).toBe(false);
-    expect(spy).toHaveBeenCalledWith("Discard?");
-    spy.mockRestore();
+    expect(confirmFn).toHaveBeenCalled();
   });
 });

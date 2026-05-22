@@ -22,7 +22,6 @@ const config: ComponentTestSuiteConfig<AskOrganizerProps> = {
     subtitle: "Subtitle",
     description: "Description",
     buttonText: "Button",
-    buttonHref: "/link",
     className: "custom",
     variant: "centered",
   },
@@ -72,11 +71,9 @@ describe("AskOrganizer (behavioral tests)", () => {
   });
 
   it("renders button with custom text", () => {
-    render(
-      <AskOrganizer title="Test" buttonText="Contact" buttonHref="/contact" />,
-    );
+    render(<AskOrganizer title="Test" buttonText="Contact" />);
     expect(
-      screen.getByRole("link", {
+      screen.getByRole("button", {
         name: /contact/i,
       }),
     ).toBeInTheDocument();

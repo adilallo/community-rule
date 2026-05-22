@@ -55,14 +55,14 @@ export function isMethodCardCustomizeSessionDirty<TDraft>(
 }
 
 /** For Close / overlay / Escape — skip closing when user cancels the confirm. */
-export function confirmDiscardMethodCardCustomizeSession<TDraft>(
+export async function confirmDiscardMethodCardCustomizeSession<TDraft>(
   modalEditUnlocked: boolean,
   snapshot: MethodCardCustomizeSnapshot<TDraft> | null,
   pendingDraft: TDraft | null,
   draftFieldBlocks: CustomMethodCardFieldBlock[] | null,
   headerDraft: MethodCardHeaderDraft | null,
-  message: string,
-): boolean {
+  confirmFn: () => Promise<boolean>,
+): Promise<boolean> {
   if (!modalEditUnlocked || snapshot === null) {
     return true;
   }
@@ -76,5 +76,5 @@ export function confirmDiscardMethodCardCustomizeSession<TDraft>(
   ) {
     return true;
   }
-  return window.confirm(message);
+  return confirmFn();
 }

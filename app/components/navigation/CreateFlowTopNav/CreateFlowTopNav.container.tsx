@@ -237,6 +237,16 @@ const CreateFlowTopNavContainer = memo<CreateFlowTopNavProps>(
         exportPopoverMarkdownLabel={tPopover("downloadMarkdown")}
         moreOptionsAriaLabel={t("moreOptionsAriaLabel")}
         actionsMenuAriaLabel={t("actionsMenuAriaLabel")}
+        shareLabel={t("share")}
+        exportLabel={t("export")}
+        editLabel={t("edit")}
+        manageStakeholdersLabel={t("manageStakeholders")}
+        shareAriaLabel={t("shareAriaLabel")}
+        exportAriaLabel={t("exportAriaLabel")}
+        editAriaLabel={t("editAriaLabel")}
+        manageStakeholdersAriaLabel={t("manageStakeholdersAriaLabel")}
+        bannerAriaLabel={t("bannerAriaLabel")}
+        navAriaLabel={t("navAriaLabel")}
       />
     );
   },

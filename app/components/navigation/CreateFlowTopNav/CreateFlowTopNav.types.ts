@@ -110,4 +110,14 @@ export type CreateFlowTopNavViewProps = CreateFlowTopNavProps & {
   exportPopoverMarkdownLabel: string;
   moreOptionsAriaLabel: string;
   actionsMenuAriaLabel: string;
+  shareLabel: string;
+  exportLabel: string;
+  editLabel: string;
+  manageStakeholdersLabel: string;
+  shareAriaLabel: string;
+  exportAriaLabel: string;
+  editAriaLabel: string;
+  manageStakeholdersAriaLabel: string;
+  bannerAriaLabel: string;
+  navAriaLabel: string;
 };

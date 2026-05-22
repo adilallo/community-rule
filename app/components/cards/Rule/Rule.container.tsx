@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { RuleView } from "./Rule.view";
 import type { RuleProps } from "./Rule.types";
 
@@ -49,6 +50,9 @@ const RuleContainer = memo<RuleProps>(
     fluidWidth = false,
   }) => {
     const size = sizeProp ?? "L";
+    const t = useTranslation("ruleCard");
+    const cardAriaLabel = t("ariaLabel")?.replace("{title}", title) || title;
+    const recommendedLabel = t("recommendedLabel");
 
     const handleClick = () => {
       if (hasBottomLinks) return;
@@ -106,6 +110,8 @@ const RuleContainer = memo<RuleProps>(
         recommended={recommended}
         templateGridFigmaShell={templateGridFigmaShell}
         fluidWidth={fluidWidth}
+        cardAriaLabel={cardAriaLabel}
+        recommendedLabel={recommendedLabel}
       />
     );
   },

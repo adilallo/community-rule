@@ -21,6 +21,15 @@ public/
     blog/               # Per-article SVG thumbnails (see content-creation.md)
 ```
 
+## Icon sources (two systems)
+
+| Location | Used for | Resolution |
+| --- | --- | --- |
+| `public/assets/icons/` | Static chrome served by URL (`icon-close.svg`, `icon-help.svg`) | `ASSETS.ICON_*` |
+| `app/components/asset/icon/` | Bundled create-flow / nav SVGs imported by `Icon.tsx` | Webpack import, not `public/` |
+
+Do not duplicate the same glyph in both places unless migrating between systems.
+
 ## Naming rules
 
 - **Directories and filenames:** lowercase kebab-case only.
@@ -54,6 +63,7 @@ stage. Raster → SVG conversion is tracked in
 | `marketing/hero-image.png` | HeroBanner | **Design review** — likely keep raster |
 | `marketing/governance-booklet.pdf` | About / Book | **Done** — PDF (`governanceBookletPath()`) |
 | `logos/community-rule.svg` | Logo + favicon (`ASSETS.LOGO`) | **Done** — SVG |
+| `share/*.svg` (×5) | Share modal | **Done** — SVG (`shareIconPath()`) |
 | `logos/gitlab.svg` | Footer / social | **Done** — SVG |
 
 ## Related docs

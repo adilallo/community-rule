@@ -11,12 +11,13 @@ export { useAnalytics } from "./useAnalytics";
 export { useComponentId } from "./useComponentId";
 export { useFormField } from "./useFormField";
 export { useSchemaData } from "./useSchemaData";
-export {
-  useMediaQuery,
+export { useMediaQuery,
   useIsMobile,
   useIsDesktop,
   BREAKPOINTS,
 } from "./useMediaQuery";
+export { useAsyncConfirm } from "./useAsyncConfirm";
+export type { AsyncConfirmOptions } from "./useAsyncConfirm";
 export type {
   SchemaOrganization,
   SchemaWebSite,

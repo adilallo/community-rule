@@ -28,10 +28,6 @@ export default {
       control: "text",
       description: "Text for the call-to-action button",
     },
-    buttonHref: {
-      control: "text",
-      description: "URL for the button link",
-    },
     variant: {
       control: { type: "select" },
       options: ["centered", "left-aligned", "compact", "inverse", "use-case-detail"],
@@ -102,16 +98,4 @@ export const UseCaseDetail = {
       </div>
     ),
   ],
-};
-
-/** Legacy: CTA is a link (no inquiry modal). */
-export const LinkCta = {
-  args: {
-    title: "Still have questions?",
-    subtitle: "Get answers from an experienced organizer",
-    buttonText: "Ask an organizer",
-    buttonHref: "/contact",
-    variant: "centered",
-    onContactClick: (data) => console.log("Contact clicked:", data),
-  },
 };

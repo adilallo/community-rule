@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { ModalFooterView } from "./ModalFooter.view";
 import type { ModalFooterProps } from "./ModalFooter.types";
 
@@ -10,7 +11,17 @@ import type { ModalFooterProps } from "./ModalFooter.types";
  * primary/secondary actions.
  */
 const ModalFooterContainer = memo<ModalFooterProps>((props) => {
-  return <ModalFooterView {...props} />;
+  const t = useTranslation("common");
+  const resolvedBackText = props.backButtonText ?? t("buttons.back");
+  const resolvedNextText = props.nextButtonText ?? t("buttons.next");
+
+  return (
+    <ModalFooterView
+      {...props}
+      backButtonText={resolvedBackText}
+      nextButtonText={resolvedNextText}
+    />
+  );
 });
 
 ModalFooterContainer.displayName = "ModalFooter";

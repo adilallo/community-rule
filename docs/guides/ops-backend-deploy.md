@@ -213,7 +213,13 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
    Count rows + decide whether to publish a static archive before
    CR-99 uninstalls the legacy MySQL. Priority: Low.
 
-## 9. Related docs
+## 10. Rate limiting (single-instance deploys)
+
+The app uses an **in-memory** rate limiter in [`lib/server/rateLimit.ts`](../../lib/server/rateLimit.ts) (magic-link requests, organizer inquiry, etc.). This is sufficient for the current **single Cloudron container** per environment.
+
+**Before horizontal scale-out** (multiple app instances behind a load balancer), replace or back the limiter with a shared store (e.g. Redis) so per-IP / per-user windows apply across instances. Until then, document expected limits in the steady-state runbook ([CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)).
+
+## 11. Related docs
 
 - [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §11
   (environments) and §8 (Prisma migrations policy).

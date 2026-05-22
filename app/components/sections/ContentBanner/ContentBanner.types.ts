@@ -41,4 +41,6 @@ export interface ContentBannerViewProps {
   backgroundImageSection?: string;
   rulePreview?: ContentBannerRulePreview;
   contentTone?: ContentContainerToneValue;
+  /** `useCase` only: aria-label for linked rule preview. */
+  ruleCardLinkAriaLabel?: string;
 }

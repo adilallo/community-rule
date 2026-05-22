@@ -6,6 +6,7 @@
 
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { logger } from "../../../../lib/logger";
 import { prepareFreshCreateFlowEntry } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import {
@@ -34,6 +35,8 @@ declare global {
 const RuleStackContainer = memo<RuleStackProps>(
   ({ className = "", initialGridEntries, translationNamespace, twoColumnsFromMd }) => {
   const router = useRouter();
+  const namespace = translationNamespace ?? "pages.home.ruleStack";
+  const t = useTranslation(namespace);
   const [gridEntries, setGridEntries] = useState<TemplateGridCardEntry[] | null>(
     () => initialGridEntries ?? null,
   );
@@ -107,7 +110,9 @@ const RuleStackContainer = memo<RuleStackProps>(
       className={className}
       onTemplateClick={handleTemplateClick}
       gridEntries={gridEntries}
-      translationNamespace={translationNamespace ?? "pages.home.ruleStack"}
+      sectionTitle={t("title")}
+      sectionSubtitle={t("subtitle")}
+      seeAllTemplatesLabel={t("button.seeAllTemplates")}
       twoColumnsFromMd={twoColumnsFromMd}
     />
   );

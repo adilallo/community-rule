@@ -5,7 +5,7 @@
  * File: agv0VBLiBlcnSAaiAORgPR, node 22078-587823
  */
 
-import { memo, useCallback, useEffect, useState, type FormEvent } from "react";
+import { memo, useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { AskOrganizerInquiryModalView } from "./AskOrganizerInquiryModal.view";
 import type { AskOrganizerInquiryModalProps } from "./AskOrganizerInquiryModal.types";
 import { ORGANIZER_INQUIRY_HONEYPOT_FIELD } from "../../../../lib/organizerInquiryConstants";
@@ -14,6 +14,23 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 const AskOrganizerInquiryModalContainer = memo<AskOrganizerInquiryModalProps>(
   ({ isOpen, onClose }) => {
     const t = useTranslation("modals.askOrganizerInquiry");
+    const copy = useMemo(
+      () => ({
+        title: t("title"),
+        description: t("description"),
+        emailLabel: t("emailLabel"),
+        emailPlaceholder: t("emailPlaceholder"),
+        questionLabel: t("questionLabel"),
+        questionPlaceholder: t("questionPlaceholder"),
+        submitButton: t("submitButton"),
+        closeAfterSuccess: t("closeAfterSuccess"),
+        successTitle: t("successTitle"),
+        successDescription: t("successDescription"),
+        ariaDialog: t("ariaDialog"),
+        honeypotLabel: t("honeypotLabel"),
+      }),
+      [t],
+    );
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [honeypot, setHoneypot] = useState("");
@@ -102,6 +119,7 @@ const AskOrganizerInquiryModalContainer = memo<AskOrganizerInquiryModalProps>(
       <AskOrganizerInquiryModalView
         isOpen={isOpen}
         onClose={onClose}
+        copy={copy}
         email={email}
         message={message}
         honeypot={honeypot}

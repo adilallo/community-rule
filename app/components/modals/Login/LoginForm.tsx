@@ -262,14 +262,14 @@ export default function LoginForm({
           <p className="text-center font-inter text-[14px] leading-[20px] text-[var(--color-content-default-tertiary)]">
             {t("legalPrefix")}
             <Link
-              href="#"
+              href={tFooter("legal.termsOfServiceHref")}
               className="text-[var(--color-content-default-tertiary)] underline decoration-solid underline-offset-2"
             >
               {tFooter("legal.termsOfService")}
             </Link>
             {t("legalAnd")}
             <Link
-              href="#"
+              href={tFooter("legal.privacyPolicyHref")}
               className="text-[var(--color-content-default-tertiary)] underline decoration-solid underline-offset-2"
             >
               {tFooter("legal.privacyPolicy")}

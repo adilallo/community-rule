@@ -28,6 +28,7 @@ import {
 import CustomMethodCardModalBody from "./CustomMethodCardModalBody";
 import MethodCardCustomizeModalHeader from "./MethodCardCustomizeModalHeader";
 import { buildCustomRuleModalKebabMenu } from "./customRuleModalKebabMenu";
+import { useDiscardCustomizeConfirm } from "../hooks/useDiscardCustomizeConfirm";
 import {
   communicationPresetFor,
   conflictManagementPresetFor,
@@ -52,7 +53,6 @@ import {
 } from "../../../../lib/create/coreValueChipFacet";
 import {
   captureMethodCardCustomizeSnapshot,
-  confirmDiscardMethodCardCustomizeSession,
   isMethodCardCustomizeSessionDirty,
   type MethodCardCustomizeSnapshot,
   type MethodCardHeaderDraft,
@@ -171,6 +171,8 @@ export function FinalReviewChipEditModal({
   const tModal = useTranslation(
     "create.reviewAndComplete.finalReview.chipEditModal",
   );
+  const { confirmDiscard, confirmDirtyCustomizeCancel, confirmDialog } =
+    useDiscardCustomizeConfirm();
 
   const [draft, setDraft] = useState<Draft | null>(null);
   const [modalEditUnlocked, setModalEditUnlocked] = useState(false);
@@ -342,32 +344,30 @@ export function FinalReviewChipEditModal({
     onClose();
   }, [onClose]);
 
-  const handleModalClose = useCallback(() => {
+  const handleModalClose = useCallback(async () => {
     if (
       target &&
       target.groupKey === "coreValues" &&
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft?.groupKey === "coreValues" ? draft.value : null,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
     if (
       target &&
       isMethodFacetGroup(target.groupKey) &&
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         customizeSnapshotRef.current,
         methodDetailDraftForCustomizeSession(draft),
         draftFieldBlocks,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -380,17 +380,17 @@ export function FinalReviewChipEditModal({
     }
     finalizeModalClose();
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draft,
     draftFieldBlocks,
     finalizeModalClose,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     replaceState,
     target,
   ]);
 
-  const handleCancelCustomize = useCallback(() => {
+  const handleCancelCustomize = useCallback(async () => {
     if (!modalEditUnlocked || !target) {
       return;
     }
@@ -404,13 +404,12 @@ export function FinalReviewChipEditModal({
       }
       if (
         draft?.groupKey === "coreValues" &&
-        isMethodCardCustomizeSessionDirty(
+        !(await confirmDirtyCustomizeCancel(
           snap,
           draft.value,
           null,
           customizeHeaderDraft,
-        ) &&
-        !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+        ))
       ) {
         return;
       }
@@ -435,13 +434,12 @@ export function FinalReviewChipEditModal({
       return;
     }
     if (
-      isMethodCardCustomizeSessionDirty(
+      !(await confirmDirtyCustomizeCancel(
         snap,
         methodDetailDraftForCustomizeSession(draft),
         draftFieldBlocks,
         customizeHeaderDraft,
-      ) &&
-      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+      ))
     ) {
       return;
     }
@@ -451,11 +449,11 @@ export function FinalReviewChipEditModal({
     customizeSnapshotRef.current = null;
     setCustomizeHeaderDraft(null);
   }, [
+    confirmDirtyCustomizeCancel,
     customizeHeaderDraft,
     draft,
     draftFieldBlocks,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     target,
   ]);
 
@@ -565,7 +563,7 @@ export function FinalReviewChipEditModal({
     tCm,
   ]);
 
-  const handleRemoveSelectedFromModal = useCallback(() => {
+  const handleRemoveSelectedFromModal = useCallback(async () => {
     if (!target || !isMethodFacetGroup(target.groupKey)) {
       return;
     }
@@ -575,14 +573,13 @@ export function FinalReviewChipEditModal({
     }
     onInteract?.();
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         customizeSnapshotRef.current,
         methodDetailDraftForCustomizeSession(draft),
         draftFieldBlocks,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -597,32 +594,31 @@ export function FinalReviewChipEditModal({
     }));
     finalizeModalClose();
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draft,
     draftFieldBlocks,
     finalizeModalClose,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     onInteract,
     replaceState,
     selectionIdsForTarget,
     target,
   ]);
 
-  const handleRemoveCoreValueFromModal = useCallback(() => {
+  const handleRemoveCoreValueFromModal = useCallback(async () => {
     if (!target || target.groupKey !== "coreValues") {
       return;
     }
     onInteract?.();
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft?.groupKey === "coreValues" ? draft.value : null,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -634,17 +630,17 @@ export function FinalReviewChipEditModal({
     }));
     finalizeModalClose();
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draft,
     finalizeModalClose,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     onInteract,
     replaceState,
     target,
   ]);
 
-  const handleDuplicateCoreValue = useCallback(() => {
+  const handleDuplicateCoreValue = useCallback(async () => {
     if (
       !target ||
       target.groupKey !== "coreValues" ||
@@ -659,14 +655,13 @@ export function FinalReviewChipEditModal({
       return;
     }
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft.value,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -711,10 +706,10 @@ export function FinalReviewChipEditModal({
       chipLabel: outcome.newLabel,
     });
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draft,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     modalKebabMenu.duplicateTitleSuffix,
     onEditTargetChange,
     onInteract,
@@ -1015,6 +1010,7 @@ export function FinalReviewChipEditModal({
       : showMethodModalPrimary;
 
   return (
+    <>
       <Create
       isOpen={isOpen}
       onClose={handleModalClose}
@@ -1184,6 +1180,8 @@ export function FinalReviewChipEditModal({
           ))}
       </div>
     </Create>
+    {confirmDialog}
+    </>
   );
 }
 

@@ -8,6 +8,7 @@ import ContentLockup from "../../../../components/type/ContentLockup";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { buildCoreValueChipOptionsFromDraft } from "../../../../../lib/create/coreValueChipOptionsFromDraft";
 import { useCreateFlow } from "../../context/CreateFlowContext";
+import { useDiscardCustomizeConfirm } from "../../hooks/useDiscardCustomizeConfirm";
 import type {
   CommunityStructureChipSnapshotRow,
   CoreValueDetailEntry,
@@ -19,7 +20,6 @@ import MethodCardCustomizeModalHeader from "../../components/MethodCardCustomize
 import { buildCustomRuleModalKebabMenu } from "../../components/customRuleModalKebabMenu";
 import {
   captureMethodCardCustomizeSnapshot,
-  confirmDiscardMethodCardCustomizeSession,
   isMethodCardCustomizeSessionDirty,
   type MethodCardCustomizeSnapshot,
   type MethodCardHeaderDraft,
@@ -101,6 +101,8 @@ export function CoreValuesSelectScreen() {
     [cv.values],
   );
 
+  const { confirmDiscard, confirmDirtyCustomizeCancel, confirmDialog } =
+    useDiscardCustomizeConfirm();
   const { markCreateFlowInteraction, updateState, replaceState, state } =
     useCreateFlow();
 
@@ -239,7 +241,7 @@ export function CoreValuesSelectScreen() {
     setModalEditUnlocked(true);
   }, [activeModalChipId, coreValueOptions, draft, markCreateFlowInteraction]);
 
-  const handleCancelCustomize = useCallback(() => {
+  const handleCancelCustomize = useCallback(async () => {
     if (!modalEditUnlocked) return;
     const snap = coreCustomizeSnapshotRef.current;
     if (!snap) {
@@ -247,18 +249,22 @@ export function CoreValuesSelectScreen() {
       return;
     }
     if (
-      isMethodCardCustomizeSessionDirty(snap, draft, null, customizeHeaderDraft) &&
-      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+      !(await confirmDirtyCustomizeCancel(
+        snap,
+        draft,
+        null,
+        customizeHeaderDraft,
+      ))
     ) {
       return;
     }
     setDraft(structuredClone(snap.pendingDraft));
     resetCustomizeSession();
   }, [
+    confirmDirtyCustomizeCancel,
     customizeHeaderDraft,
     draft,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     resetCustomizeSession,
   ]);
 
@@ -271,17 +277,16 @@ export function CoreValuesSelectScreen() {
     );
   }, [activeModalChipId, customizeHeaderDraft, coreValueOptions]);
 
-  const handleDuplicateCoreChip = useCallback(() => {
+  const handleDuplicateCoreChip = useCallback(async () => {
     if (!activeModalChipId || !modalSession) return;
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -317,11 +322,11 @@ export function CoreValuesSelectScreen() {
     );
   }, [
     activeModalChipId,
+    confirmDiscard,
     customizeHeaderDraft,
     draft,
     markCreateFlowInteraction,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     modalKebabMenu.duplicateTitleSuffix,
     modalSession,
     openModal,
@@ -329,16 +334,15 @@ export function CoreValuesSelectScreen() {
     resetCustomizeSession,
   ]);
 
-  const handleRemoveFromKebab = useCallback(() => {
+  const handleRemoveFromKebab = useCallback(async () => {
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -382,30 +386,27 @@ export function CoreValuesSelectScreen() {
     finalizeModalDismiss();
   }, [
     activeModalChipId,
+    confirmDiscard,
     coreValueOptions,
     customizeHeaderDraft,
     draft,
     finalizeModalDismiss,
     markCreateFlowInteraction,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     modalSession,
     persistCoreValues,
     replaceState,
-    modalSession,
-    persistCoreValues,
   ]);
 
-  const handleModalDismiss = useCallback(() => {
+  const handleModalDismiss = useCallback(async () => {
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         coreCustomizeSnapshotRef.current,
         draft,
         null,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -435,12 +436,12 @@ export function CoreValuesSelectScreen() {
     finalizeModalDismiss();
   }, [
     activeModalChipId,
+    confirmDiscard,
     coreValueOptions,
     customizeHeaderDraft,
     draft,
     finalizeModalDismiss,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     modalSession,
     persistCoreValues,
     replaceState,
@@ -645,6 +646,7 @@ export function CoreValuesSelectScreen() {
   const detailModal = cv.detailModal;
 
   return (
+    <>
     <CreateFlowTwoColumnSelectShell
       lgVerticalAlign="start"
       header={
@@ -724,5 +726,7 @@ export function CoreValuesSelectScreen() {
         </Create>
       )}
     </CreateFlowTwoColumnSelectShell>
+    {confirmDialog}
+    </>
   );
 }

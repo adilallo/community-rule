@@ -23,9 +23,13 @@
     "about": "About"
   },
   "legal": {
+    "_comment": "privacyPolicyHref, termsOfServiceHref, cookiesSettingsHref are stubs until legal pages ship.",
     "privacyPolicy": "Privacy Policy",
+    "privacyPolicyHref": "#",
     "termsOfService": "Terms of Service",
-    "cookiesSettings": "Cookies Settings"
+    "termsOfServiceHref": "#",
+    "cookiesSettings": "Cookies Settings",
+    "cookiesSettingsHref": "#"
   },
   "copyright": "© All right reserved"
 }

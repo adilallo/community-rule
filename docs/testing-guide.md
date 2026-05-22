@@ -7,6 +7,7 @@ APIs, and required imports see `.cursor/rules/testing.mdc`.
 
 ```bash
 npx tsc --noEmit
+npm run knip            # unused files / exports (see knip.json; local only)
 npm test
 npx next build
 npm run e2e                          # when routes, auth, or critical flows change

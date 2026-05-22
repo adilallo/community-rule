@@ -19,7 +19,7 @@
     "storybook:github": "STORYBOOK_BASE_PATH=true storybook dev -p 6006",
     "storybook:build": "storybook build",
     "storybook:build:github": "STORYBOOK_BASE_PATH=true storybook build",
-    "knip": "knip",
+    "knip": "knip --include files,exports --exclude duplicates",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

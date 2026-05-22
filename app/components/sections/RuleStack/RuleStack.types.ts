@@ -23,6 +23,8 @@ export interface RuleStackViewProps {
   onTemplateClick: (_slug: string) => void;
   /** `null` while loading curated templates from the API. */
   gridEntries: TemplateGridCardEntry[] | null;
-  translationNamespace: string;
+  sectionTitle: string;
+  sectionSubtitle: string;
+  seeAllTemplatesLabel: string;
   twoColumnsFromMd?: boolean;
 }

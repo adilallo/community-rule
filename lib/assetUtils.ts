@@ -208,8 +208,6 @@ export const ASSETS = {
   UNION_XLG: "assets/shapes/union-xlg.svg",
 
   // Alert / UI icons
-  ICON_ALERT: "assets/icons/icon-alert.svg",
   ICON_CLOSE: "assets/icons/icon-close.svg",
-  ICON_POINTER: "assets/icons/icon-pointer.svg",
   ICON_HELP: "assets/icons/icon-help.svg",
 } as const;

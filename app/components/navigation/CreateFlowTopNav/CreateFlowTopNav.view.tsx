@@ -4,7 +4,6 @@ import Logo from "../../asset/Logo";
 import Button from "../../buttons/Button";
 import ListItem from "../../layout/ListItem";
 import Popover from "../../modals/Popover";
-import { useTranslation } from "../../../contexts/MessagesContext";
 import type { CreateFlowTopNavViewProps } from "./CreateFlowTopNav.types";
 
 const outlineButtonClass =
@@ -65,9 +64,17 @@ export function CreateFlowTopNavView({
   exportPopoverMarkdownLabel,
   moreOptionsAriaLabel,
   actionsMenuAriaLabel,
+  shareLabel,
+  exportLabel,
+  editLabel,
+  manageStakeholdersLabel,
+  shareAriaLabel,
+  exportAriaLabel,
+  editAriaLabel,
+  manageStakeholdersAriaLabel,
+  bannerAriaLabel,
+  navAriaLabel,
 }: CreateFlowTopNavViewProps) {
-  const t = useTranslation("create.topNav");
-
   const hasSecondaryActions =
     hasShare ||
     hasExport ||
@@ -83,10 +90,10 @@ export function CreateFlowTopNavView({
           palette={buttonPalette}
           size="xsmall"
           onClick={onShare}
-          ariaLabel={t("shareAriaLabel")}
+          ariaLabel={shareAriaLabel}
           className={outlineButtonClass}
         >
-          {t("share")}
+          {shareLabel}
         </Button>
       )}
 
@@ -97,14 +104,14 @@ export function CreateFlowTopNavView({
             palette={buttonPalette}
             size="xsmall"
             type="button"
-            ariaLabel={t("exportAriaLabel")}
+            ariaLabel={exportAriaLabel}
             aria-haspopup="menu"
             aria-expanded={exportMenuOpen}
             aria-controls={exportMenuId}
             onClick={() => setExportMenuOpen((o) => !o)}
             className={`justify-center gap-[var(--spacing-scale-002,2px)] !pl-[var(--spacing-scale-012,12px)] !pr-[var(--spacing-scale-006,6px)] md:!pr-[var(--spacing-scale-006,6px)] ${outlineButtonClass}`}
           >
-            <span>{t("export")}</span>
+            <span>{exportLabel}</span>
             <svg
               width="12"
               height="12"
@@ -166,11 +173,11 @@ export function CreateFlowTopNavView({
           size="xsmall"
           onClick={onDuplicate}
           ariaLabel={
-            duplicateAriaLabel ?? duplicateLabel ?? t("editAriaLabel")
+            duplicateAriaLabel ?? duplicateLabel ?? editAriaLabel
           }
           className={outlineButtonClass}
         >
-          {duplicateLabel ?? t("edit")}
+          {duplicateLabel ?? editLabel}
         </Button>
       )}
 
@@ -180,10 +187,10 @@ export function CreateFlowTopNavView({
           palette={buttonPalette}
           size="xsmall"
           onClick={onEdit}
-          ariaLabel={t("editAriaLabel")}
+          ariaLabel={editAriaLabel}
           className={outlineButtonClass}
         >
-          {t("edit")}
+          {editLabel}
         </Button>
       )}
 
@@ -194,10 +201,10 @@ export function CreateFlowTopNavView({
           size="xsmall"
           type="button"
           onClick={onManageStakeholders}
-          ariaLabel={t("manageStakeholdersAriaLabel")}
+          ariaLabel={manageStakeholdersAriaLabel}
           className={outlineButtonClass}
         >
-          {t("manageStakeholders")}
+          {manageStakeholdersLabel}
         </Button>
       ) : null}
 
@@ -219,12 +226,12 @@ export function CreateFlowTopNavView({
     <header
       className={`bg-black w-full ${className}`}
       role="banner"
-      aria-label={t("bannerAriaLabel")}
+      aria-label={bannerAriaLabel}
     >
       <nav
         className="flex items-center justify-between mx-auto max-w-[639px] md:max-w-[1920px] px-[var(--spacing-measures-spacing-500,20px)] md:px-[48px] py-[var(--spacing-measures-spacing-300,12px)] md:py-[var(--spacing-measures-spacing-016,16px)]"
         role="navigation"
-        aria-label={t("navAriaLabel")}
+        aria-label={navAriaLabel}
       >
         <Logo size="createFlow" wordmark palette={buttonPalette} />
 

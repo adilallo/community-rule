@@ -31,7 +31,7 @@ export function useCreateFlowExit({
   user: { id: string; email: string } | null;
   /** When save fails, surface the server message in the create shell banner (no leave confirm). */
   setDraftSaveBannerMessage?: (_message: string | null) => void;
-  /** When exit would discard unsaved work, return true to proceed. Defaults to `window.confirm`. */
+  /** When exit would discard unsaved work, return true to proceed. Defaults to denying leave. */
   confirmLeave?: () => Promise<boolean>;
 }): (_options?: { saveDraft?: boolean }) => Promise<void> {
   return useCallback(
@@ -41,12 +41,7 @@ export function useCreateFlowExit({
       const saveDraft = options?.saveDraft ?? false;
 
       if (!saveDraft) {
-        const confirmFn =
-          confirmLeave ??
-          (async () => {
-            if (typeof window === "undefined") return true;
-            return window.confirm(messages.create.topNav.leaveConfirmLoss);
-          });
+        const confirmFn = confirmLeave ?? (async () => false);
         const confirmed = await confirmFn();
         if (!confirmed) return;
       }

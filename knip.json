@@ -1,16 +1,37 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
+    "next.config.mjs",
+    "postcss.config.mjs",
+    "eslint.config.mjs",
+    ".storybook/**/*.{js,ts}",
     "app/**/*.{ts,tsx}",
     "lib/**/*.{ts,tsx}",
     "scripts/**/*.{ts,js,mjs}",
     "prisma/seed.ts"
   ],
-  "project": ["**/*.{ts,tsx,js,jsx}"],
+  "project": ["**/*.{ts,tsx,js,jsx,mjs}"],
   "ignore": [
     "tests/**",
     "stories/**",
     "**/*.stories.{js,jsx,ts,tsx}",
     "**/*.disabled"
-  ]
+  ],
+  "ignoreDependencies": [
+    "critters",
+    "next-intl",
+    "@axe-core/playwright",
+    "@eslint/eslintrc",
+    "@types/mdx",
+    "eslint-config-next",
+    "typescript-eslint",
+    "@storybook/react",
+    "@storybook/nextjs-vite",
+    "@eslint/js",
+    "@next/eslint-plugin-next",
+    "eslint-plugin-react",
+    "eslint-plugin-react-hooks",
+    "postcss-load-config"
+  ],
+  "ignoreBinaries": ["tailwindcss", "@svgr/webpack"]
 }

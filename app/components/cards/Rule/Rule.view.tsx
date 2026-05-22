@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslation } from "../../../contexts/MessagesContext";
 import MultiSelect from "../../controls/MultiSelect";
 import InlineTextButton from "../../buttons/InlineTextButton";
 import NavigationLink from "../../navigation/Link";
@@ -34,9 +33,10 @@ export function RuleView({
   recommended = false,
   templateGridFigmaShell = false,
   fluidWidth = false,
+  cardAriaLabel,
+  recommendedLabel,
 }: RuleViewProps) {
-  const t = useTranslation("ruleCard");
-  const ariaLabel = t("ariaLabel")?.replace("{title}", title) || title;
+  const ariaLabel = cardAriaLabel;
   const interactiveCard = !hasBottomLinks;
 
   // Size-based styling
@@ -306,7 +306,7 @@ export function RuleView({
             >
               {showRecommendedTag ? (
                 <Tag variant="templateRecommended">
-                  {t("recommendedLabel")}
+                  {recommendedLabel}
                 </Tag>
               ) : null}
               {onTitleClick ? (

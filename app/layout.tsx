@@ -38,17 +38,18 @@ const spaceGrotesk = Space_Grotesk({
   fallback: ["system-ui", "arial"],
 });
 
-/** Viewport and favicon use the Metadata / Viewport APIs; avoid a manual `<head>` with a second viewport `meta` (duplicates Next’s head injection). */
+const homeMeta = messages.metadata.home;
+
+/** Viewport and favicon use the Metadata / Viewport APIs; avoid a manual `<head>` with a second viewport `meta` (duplicates Next's head injection). */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: "CommunityRule - Build operating manuals for successful communities",
-  description:
-    "Help your community make important decisions in a way that reflects its unique values.",
-  keywords: ["community", "governance", "decision-making", "operating manual"],
+  title: homeMeta.title,
+  description: homeMeta.description,
+  keywords: [...homeMeta.keywords],
   authors: [{ name: "Media Economies Design Lab" }],
   creator: "Media Economies Design Lab",
   publisher: "Media Economies Design Lab",
@@ -65,9 +66,8 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "CommunityRule - Build operating manuals for successful communities",
-    description:
-      "Help your community make important decisions in a way that reflects its unique values.",
+    title: homeMeta.title,
+    description: homeMeta.description,
     url: "https://communityrule.com",
     siteName: "CommunityRule",
     locale: "en_US",
@@ -75,9 +75,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CommunityRule - Build operating manuals for successful communities",
-    description:
-      "Help your community make important decisions in a way that reflects its unique values.",
+    title: homeMeta.title,
+    description: homeMeta.description,
   },
   robots: {
     index: true,

@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * Figma: "Sections / AskOrganizer" (see registry).
+ */
 import { memo, useCallback, useState } from "react";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import { useAnalytics } from "../../../hooks";
@@ -43,7 +46,6 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     subtitle,
     description,
     buttonText,
-    buttonHref,
     className = "",
     variant: variantProp = "centered",
     onContactClick,
@@ -51,7 +53,7 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
     const variant = variantProp;
     const t = useTranslation();
     const defaultButtonText = buttonText ?? t("askOrganizer.buttonText");
-    const analyticsHref = buttonHref ?? "modal";
+    const ctaAriaLabel = t("askOrganizer.ariaLabel");
     const { trackEvent, trackCustomEvent } = useAnalytics();
     const [inquiryOpen, setInquiryOpen] = useState(false);
 
@@ -74,11 +76,9 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
 
     const labelledBy = title ? "ask-organizer-headline" : undefined;
 
-    const handleContactClick = (
-      event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
-    ) => {
-      if (buttonHref) {
-        // Legacy link CTA: do not intercept navigation.
+    const handleContactClick = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         trackEvent({
           event: "contact_button_click",
           category: "engagement",
@@ -86,46 +86,30 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
           component: "AskOrganizer",
           variant: resolvedVariant,
         });
+
         trackCustomEvent(
           "contact_button_click",
           {
             component: "AskOrganizer",
             variant: resolvedVariant,
             buttonText: defaultButtonText,
-            buttonHref: analyticsHref,
+            buttonHref: "modal",
           },
           onContactClick as
             | ((_data: Record<string, unknown>) => void)
             | undefined,
         );
-        return event;
-      }
 
-      event.preventDefault();
-      trackEvent({
-        event: "contact_button_click",
-        category: "engagement",
-        label: "ask_organizer",
-        component: "AskOrganizer",
-        variant: resolvedVariant,
-      });
-
-      trackCustomEvent(
-        "contact_button_click",
-        {
-          component: "AskOrganizer",
-          variant: resolvedVariant,
-          buttonText: defaultButtonText,
-          buttonHref: analyticsHref,
-        },
-        onContactClick as
-          | ((_data: Record<string, unknown>) => void)
-          | undefined,
-      );
-
-      setInquiryOpen(true);
-      return event;
-    };
+        setInquiryOpen(true);
+      },
+      [
+        defaultButtonText,
+        onContactClick,
+        resolvedVariant,
+        trackCustomEvent,
+        trackEvent,
+      ],
+    );
 
     const closeInquiry = useCallback(() => {
       setInquiryOpen(false);
@@ -138,7 +122,7 @@ const AskOrganizerContainer = memo<AskOrganizerProps>(
           subtitle={subtitle}
           description={description}
           buttonText={defaultButtonText}
-          buttonHref={buttonHref}
+          ctaAriaLabel={ctaAriaLabel}
           className={className}
           sectionPadding={sectionPadding}
           contentGap={`${contentGap} ${styles.container}`}
