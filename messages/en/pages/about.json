@@ -1,5 +1,5 @@
 {
-  "_comment": "About page content. book.buttonHref is \"#\" as a stub until the book download endpoint or asset URL is wired.",
+  "_comment": "About page content. Book download href is wired in app/(marketing)/about/page.tsx via governanceBookletPath().",
   "aboutHeader": {
     "segments": [
       { "type": "word", "text": "CommunityRule" },
@@ -73,7 +73,6 @@
     "title": "Get the Community Rules Book",
     "description": "Community Rules is a simple tool to help make great communities even better and healthier. It includes nine templates for organizational structures that communities can choose from, combine, or react against.",
     "buttonText": "Download Book",
-    "buttonHref": "#",
     "imageAlt": "Structure Before Crisis book cover"
   },
   "faq": {

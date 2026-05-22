@@ -48,6 +48,7 @@ stage. Raster → SVG conversion is tracked in
 | `marketing/section-number-*.svg` (×3) | SectionNumber | **Done** — SVG |
 | `marketing/avatar-*.svg` (×3) | Avatar / ASSETS | **Done** — SVG |
 | `marketing/hero-image.png` | HeroBanner | **Design review** — likely keep raster |
+| `marketing/governance-booklet.pdf` | About / Book | **Done** — PDF (`governanceBookletPath()`) |
 | `logos/gitlab.svg` | Footer / social | **Done** — SVG |
 
 ## Related docs

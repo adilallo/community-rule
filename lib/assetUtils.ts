@@ -97,6 +97,11 @@ export function sectionNumberPath(n: 1 | 2 | 3): string {
   return `assets/marketing/section-number-${n}.svg`;
 }
 
+/** Downloadable governance booklet PDF (About / Sections / Book). */
+export function governanceBookletPath(): string {
+  return "assets/marketing/governance-booklet.pdf";
+}
+
 /** Home feature grid panel art in `public/assets/marketing/`. */
 export type FeaturePanelKey = "support" | "exercises" | "guidance" | "tools";
 
