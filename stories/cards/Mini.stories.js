@@ -11,10 +11,10 @@ export default {
     backgroundColor: {
       control: "select",
       options: [
-        "bg-[var(--color-surface-default-brand-royal)]",
-        "bg-[#D1FFE2]",
-        "bg-[#F4CAFF]",
-        "bg-[#CBDDFF]",
+        "bg-[var(--color-surface-invert-brand-royal)]",
+        "bg-[var(--color-surface-invert-brand-lime)]",
+        "bg-[var(--color-surface-invert-brand-rust)]",
+        "bg-[var(--color-surface-invert-brand-teal)]",
       ],
     },
     labelLine1: { control: "text" },
@@ -28,7 +28,7 @@ export default {
 
 export const Default = {
   args: {
-    backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
+    backgroundColor: "bg-[var(--color-surface-invert-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
     panelContent: getAssetPath(featurePanelPath("support")),
@@ -39,25 +39,25 @@ export const ColorVariants = {
   render: () => (
     <div className="grid grid-cols-2 gap-4">
       <Mini
-        backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
+        backgroundColor="bg-[var(--color-surface-invert-brand-royal)]"
         labelLine1="Decision-making"
         labelLine2="support"
         panelContent={getAssetPath(featurePanelPath("support"))}
       />
       <Mini
-        backgroundColor="bg-[#D1FFE2]"
+        backgroundColor="bg-[var(--color-surface-invert-brand-lime)]"
         labelLine1="Values alignment"
         labelLine2="exercises"
         panelContent={getAssetPath(featurePanelPath("exercises"))}
       />
       <Mini
-        backgroundColor="bg-[#F4CAFF]"
+        backgroundColor="bg-[var(--color-surface-invert-brand-rust)]"
         labelLine1="Membership"
         labelLine2="guidance"
         panelContent={getAssetPath(featurePanelPath("guidance"))}
       />
       <Mini
-        backgroundColor="bg-[#CBDDFF]"
+        backgroundColor="bg-[var(--color-surface-invert-brand-teal)]"
         labelLine1="Conflict resolution"
         labelLine2="tools"
         panelContent={getAssetPath(featurePanelPath("tools"))}
@@ -68,7 +68,7 @@ export const ColorVariants = {
 
 export const AsLink = {
   args: {
-    backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
+    backgroundColor: "bg-[var(--color-surface-invert-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
     panelContent: getAssetPath(featurePanelPath("support")),

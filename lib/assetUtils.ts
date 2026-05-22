@@ -106,7 +106,32 @@ export function governanceBookletPath(): string {
 export type FeaturePanelKey = "support" | "exercises" | "guidance" | "tools";
 
 export function featurePanelPath(key: FeaturePanelKey): string {
-  return `assets/marketing/feature-${key}.png`;
+  return `assets/marketing/feature-${key}.svg`;
+}
+
+/** Intrinsic icon bounds from Figma Feature-Grid (18632:10911). */
+export const FEATURE_PANEL_LAYOUT: Record<
+  FeaturePanelKey,
+  { width: number; height: number; panelImageClassName?: string }
+> = {
+  support: { width: 48, height: 48 },
+  exercises: { width: 55, height: 48 },
+  guidance: { width: 56, height: 39 },
+  tools: {
+    width: 50,
+    height: 47,
+    /** Figma 18632:10947 — raw asset is inverted; frame applies rotate + flip. */
+    panelImageClassName: "rotate-180 -scale-x-100",
+  },
+};
+
+export function featurePanelLayout(key: FeaturePanelKey): {
+  panelWidth: number;
+  panelHeight: number;
+  panelImageClassName?: string;
+} {
+  const { width, height, panelImageClassName } = FEATURE_PANEL_LAYOUT[key];
+  return { panelWidth: width, panelHeight: height, panelImageClassName };
 }
 
 /** Case study card artwork in `public/assets/case-study/`. */

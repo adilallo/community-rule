@@ -21,6 +21,10 @@ const MiniContainer = memo<MiniProps>(
     onClick,
     href,
     ariaLabel,
+    featureGridShell = false,
+    panelWidth,
+    panelHeight,
+    panelImageClassName,
   }) => {
     const t = useTranslation("controlsChrome");
 
@@ -92,6 +96,10 @@ const MiniContainer = memo<MiniProps>(
         computedAriaLabel={computedAriaLabel}
         wrapperElement={wrapperElement}
         wrapperProps={wrapperProps}
+        featureGridShell={featureGridShell}
+        panelWidth={panelWidth}
+        panelHeight={panelHeight}
+        panelImageClassName={panelImageClassName}
       >
         {children}
       </MiniView>

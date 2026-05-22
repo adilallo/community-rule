@@ -57,7 +57,7 @@ stage. Raster → SVG conversion is tracked in
 | Path | Used by | Disposition |
 | --- | --- | --- |
 | `logos/partners/*.svg` (×6) | LogoWall | **Done** — SVG (kebab org slug, no `logo-` prefix) |
-| `marketing/feature-*.png` (×4) | FeatureGrid | **Design review** — convert if vector in Figma, else keep raster |
+| `marketing/feature-*.svg` (×4) | FeatureGrid | Exported from Figma Section/Feature-Grid (18847:22410) |
 | `marketing/section-number-*.svg` (×3) | SectionNumber | **Done** — SVG |
 | `marketing/avatar-*.svg` (×3) | Avatar / ASSETS | **Done** — SVG |
 | `marketing/hero-image.png` | HeroBanner | **Design review** — likely keep raster |
