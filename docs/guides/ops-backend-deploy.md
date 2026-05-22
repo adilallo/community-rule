@@ -58,13 +58,13 @@ Cloudron addons are not "enabled" platform-wide; they are requested
 per-app in the manifest and provisioned at install time.
 
 - `CLOUDRON_POSTGRESQL_URL` — from the **postgresql** addon. The app
-  reads `DATABASE_URL`; bridging is a small in-app code change (see
-  §8 [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)).
+  reads this name directly (Prisma + [`lib/server/env.ts`](../../lib/server/env.ts)).
 - `CLOUDRON_MAIL_SMTP_SERVER` / `_PORT` / `_USERNAME` / `_PASSWORD` —
   from the **sendmail** addon. The platform Mail server is configured
   for `communityrule.info` with **Amazon SES relay** + "allow custom
-  from address" on, so `SMTP_FROM` of our choice will deliver. The
-  app reads `SMTP_URL`; bridged the same way.
+  from address" on, so `SMTP_FROM` of our choice will deliver. The app
+  assembles a Nodemailer transport URL from these four vars in
+  [`lib/server/env.ts`](../../lib/server/env.ts).
 
 ### I set manually via `cloudron configure --app <id> --set-env`
 
@@ -188,8 +188,8 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
 **Community-rule** team, **Backlog** state.
 
 1. [**CR-96**](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)
-   — `[Backend] Bridge CLOUDRON_* env vars to canonical names`. No
-   blockers; can land now.
+   — `[Backend] Cloudron-native env vars` (shipped: app reads
+   `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only).
 2. [**CR-97**](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)
    — `[Backend] Container image registry: choose, build, push`.
    Blocked by registry decision (§6.3).

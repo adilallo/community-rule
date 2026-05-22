@@ -16,7 +16,7 @@ Keep new routes within this shape so auth, config, and validation stay uniform.
    ```
 
    From `lib/server/env` + `lib/server/responses`. Returns a consistent 503
-   when `DATABASE_URL` is missing (local dev, preview builds).
+   when `CLOUDRON_POSTGRESQL_URL` is missing (local dev, preview builds).
 
 2. **Auth (when the route requires a user).**
 

@@ -7,7 +7,7 @@ POSTGRES_USER="${POSTGRES_USER:-communityrule}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-communityrule}"
 POSTGRES_DB="${POSTGRES_DB:-communityrule}"
 CONTAINER_NAME="${CONTAINER_NAME:-migrate-smoke-pg}"
-export DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@127.0.0.1:${PG_HOST_PORT}/${POSTGRES_DB}"
+export CLOUDRON_POSTGRESQL_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@127.0.0.1:${PG_HOST_PORT}/${POSTGRES_DB}"
 
 cleanup() {
   docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -41,6 +41,6 @@ echo "→ prisma migrate deploy"
 npm run db:deploy
 
 echo "→ Verifying connection (SELECT 1)"
-echo "SELECT 1;" | npx --no-install prisma db execute --stdin --url "$DATABASE_URL"
+echo "SELECT 1;" | npx --no-install prisma db execute --stdin --url "$CLOUDRON_POSTGRESQL_URL"
 
 echo "→ migrate smoke OK"

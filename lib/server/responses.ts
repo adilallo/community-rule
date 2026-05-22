@@ -50,7 +50,7 @@ export function errorJson(
 export function dbUnavailable(): NextResponse {
   return errorJson(
     "db_unavailable",
-    "Database is not configured (DATABASE_URL).",
+    "Database is not configured (CLOUDRON_POSTGRESQL_URL).",
     503,
   );
 }

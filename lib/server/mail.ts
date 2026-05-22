@@ -1,18 +1,19 @@
 import nodemailer from "nodemailer";
 import { logger } from "../logger";
+import { getSmtpUrl } from "./env";
 
 export async function sendMagicLinkEmail(
   to: string,
   verifyUrl: string,
 ): Promise<void> {
-  const url = process.env.SMTP_URL;
+  const url = getSmtpUrl();
 
   if (!url) {
     if (process.env.NODE_ENV === "development") {
       logger.info(`[dev] Magic link for ${to}: ${verifyUrl}`);
       return;
     }
-    throw new Error("SMTP_URL is not configured");
+    throw new Error("CLOUDRON_MAIL_SMTP_* is not configured");
   }
 
   const transporter = nodemailer.createTransport(url);
@@ -33,7 +34,7 @@ export async function sendRuleStakeholderInviteEmail(
   verifyUrl: string,
   ruleTitle: string,
 ): Promise<void> {
-  const url = process.env.SMTP_URL;
+  const url = getSmtpUrl();
 
   if (!url) {
     if (process.env.NODE_ENV === "development") {
@@ -42,7 +43,7 @@ export async function sendRuleStakeholderInviteEmail(
       );
       return;
     }
-    throw new Error("SMTP_URL is not configured");
+    throw new Error("CLOUDRON_MAIL_SMTP_* is not configured");
   }
 
   const transporter = nodemailer.createTransport(url);
@@ -66,7 +67,7 @@ export async function sendOrganizerInquiryNotification(params: {
   requestId: string;
 }): Promise<void> {
   const { to, fromEmail, visitorEmail, message, requestId } = params;
-  const url = process.env.SMTP_URL;
+  const url = getSmtpUrl();
 
   if (!url) {
     if (process.env.NODE_ENV === "development") {
@@ -75,7 +76,7 @@ export async function sendOrganizerInquiryNotification(params: {
       );
       return;
     }
-    throw new Error("SMTP_URL is not configured");
+    throw new Error("CLOUDRON_MAIL_SMTP_* is not configured");
   }
 
   const transporter = nodemailer.createTransport(url);
@@ -93,14 +94,14 @@ export async function sendEmailChangeEmail(
   to: string,
   verifyUrl: string,
 ): Promise<void> {
-  const url = process.env.SMTP_URL;
+  const url = getSmtpUrl();
 
   if (!url) {
     if (process.env.NODE_ENV === "development") {
       logger.info(`[dev] Email change verify for ${to}: ${verifyUrl}`);
       return;
     }
-    throw new Error("SMTP_URL is not configured");
+    throw new Error("CLOUDRON_MAIL_SMTP_* is not configured");
   }
 
   const transporter = nodemailer.createTransport(url);

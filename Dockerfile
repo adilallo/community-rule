@@ -1,6 +1,6 @@
 # Optional production image (Next.js standalone output + Prisma).
 # Build: docker build -t community-rule .
-# Run: pass DATABASE_URL, SESSION_SECRET, etc. at runtime (see .env.example).
+# Run: pass CLOUDRON_POSTGRESQL_URL, CLOUDRON_MAIL_SMTP_*, SESSION_SECRET, etc. at runtime (see .env.example).
 
 FROM node:20-bookworm-slim AS base
 WORKDIR /app

@@ -24,7 +24,7 @@ Use this if you **do not** have SSH or hosting access yet. Most engineering tick
 
 ### You do **not** need the server admin for
 
-- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env`, `npm run dev`, `npx prisma migrate dev`. **Magic-link** sign-in email can use Mailhog or **dev server logs** (verify URL) when `SMTP_URL` is unset—no real SMTP required locally.
+- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env`, `npm run dev`, `npx prisma migrate dev`. **Magic-link** sign-in email can use Mailhog or **dev server logs** (verify URL) when `CLOUDRON_MAIL_SMTP_*` is unset—no real SMTP required locally.
 - **Verifying APIs:** Use `localhost` and the same Docker Postgres—no production host.
 
 ### The **first** time you need someone with hosting access
@@ -35,10 +35,10 @@ Ask the admin to provide (or do for you) the items below—**Ticket 12** turns t
 
 | What                 | Why you need it                                                                                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Postgres**         | Managed instance or container; a **`DATABASE_URL`** you can plug into the deployed app.                                                                          |
+| **Postgres**         | Managed instance or container; a **`CLOUDRON_POSTGRESQL_URL`** you can plug into the deployed app.                                                               |
 | **Run migrations**   | Someone runs **`npx prisma migrate deploy`** against that database **before** the new app version serves traffic (or gives you a secure way to run it in CI/CD). |
 | **`SESSION_SECRET`** | Long random string in production env (sessions **+ hashed magic-link tokens**).                                                                                  |
-| **SMTP**             | **`SMTP_URL`** + **`SMTP_FROM`** for real **sign-in link** email; not required on laptop if you use logs/Mailhog.                                                |
+| **SMTP**             | **`CLOUDRON_MAIL_SMTP_*`** + **`SMTP_FROM`** for real **sign-in link** email; not required on laptop if you use logs/Mailhog.                                   |
 | **DNS for mail**     | Often **SPF/DKIM** so **magic-link** messages are not spam—admin or whoever owns DNS.                                                                            |
 | **TLS + hostname**   | HTTPS URL for the site; reverse proxy (nginx, Caddy, etc.) in front of Node.                                                                                     |
 | **Health check**     | Load balancer or platform should probe **`GET /api/health`** (or your chosen path).                                                                              |
@@ -137,7 +137,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 2. Flow: email → “Send link” → user opens link (email, Mailhog, or dev log) → `GET /api/auth/magic-link/verify?token=...` sets session and redirects; optional `next` for post-login path.
 3. Surface API errors: invalid email, 429 `retryAfterMs`, expired/invalid token, network failure (accessible copy).
 4. Ensure `fetch` calls use `credentials: "include"` where needed (see [lib/create/api.ts](lib/create/api.ts)).
-5. **Dev:** without `SMTP_URL`, verify URL is logged; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `SMTP_URL=smtp://localhost:1025`.
+5. **Dev:** without `CLOUDRON_MAIL_SMTP_*`, verify URL is logged; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `CLOUDRON_MAIL_SMTP_SERVER=localhost` + `CLOUDRON_MAIL_SMTP_PORT=1025`.
 6. **Marketing header:** When signed in (`fetchAuthSession`), **Log in** becomes **Profile** linking to [`/profile`](app/(app)/profile/page.tsx) (placeholder until Ticket 15 / CR-86). Implemented in [TopWithPathname.tsx](app/components/navigation/Top/TopWithPathname.tsx) + [Top.container.tsx](app/components/navigation/Top/Top.container.tsx).
 
 **Acceptance criteria:**
@@ -678,7 +678,7 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 
 **Per-ticket detail:**
 
-1. **Bridge `CLOUDRON_*` env vars to canonical names.** Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_SERVER/PORT/USERNAME/PASSWORD`; the app reads `DATABASE_URL` / `SMTP_URL`. Recommended approach: read both names in [`lib/server/env.ts`](../../lib/server/env.ts) and assemble `SMTP_URL` from the four parts in [`lib/server/mail.ts`](../../lib/server/mail.ts) when only the Cloudron names are present. Alternative: a `start.sh` shim in the image. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; with only canonical names set (current behavior), unchanged; unit tests cover both.
+1. **Cloudron-native env vars (CR-96).** App reads `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only (no `DATABASE_URL` / `SMTP_URL` shim). Local dev uses the same names in `.env`. SMTP URL assembled in [`lib/server/env.ts`](../../lib/server/env.ts); mail senders use `getSmtpUrl()`. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; unit tests in `tests/unit/env.test.ts`.
 2. **Container image registry: choose, build, push.** Acceptance: `docker pull <registry>/communityrule:<tag>` works from a Cloudron-reachable network. CI builds and pushes on merge to `main` (stretch).
 3. **Cloudron staging install + smoke.** Acceptance: `curl https://<staging>/api/health` returns `{"ok":true,"database":"connected"}`; magic-link request → click link → `GET /api/auth/session` returns a user; publishing a rule succeeds.
 4. **Cloudron production install + DNS cutover.** Acceptance: production subdomain resolves to the new app; old subdomain still works during overlap; sign-in + publish succeed against production; backups confirmed.

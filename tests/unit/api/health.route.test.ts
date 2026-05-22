@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 describe("GET /api/health", () => {
-  it("returns not_configured when DATABASE_URL is unset", async () => {
+  it("returns not_configured when database is not configured", async () => {
     isDatabaseConfiguredMock.mockReturnValue(false);
     const res = await GET(
       new NextRequest("https://x.test/api/health"),
