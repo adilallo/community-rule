@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Button from "../../buttons/Button";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { contentLockupShapePath, getAssetPath } from "../../../../lib/assetUtils";
 import type { ContentLockupViewProps } from "./ContentLockup.types";
 
 function ContentLockupView({
@@ -75,7 +75,7 @@ function ContentLockupView({
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element -- decorative shape SVG */}
                   <img
-                    src={getAssetPath("assets/shapes/shapes-1.svg")}
+                    src={getAssetPath(contentLockupShapePath())}
                     alt=""
                     className={styles.shape}
                     role="presentation"

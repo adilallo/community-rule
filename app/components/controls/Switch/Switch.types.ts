@@ -37,6 +37,7 @@ export interface SwitchViewProps {
   trackClasses: string;
   thumbClasses: string;
   labelClasses: string;
+  switchAriaLabel: string;
   onClick: (_e: React.MouseEvent<HTMLButtonElement>) => void;
   onKeyDown: (_e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onFocus: (_e: React.FocusEvent<HTMLButtonElement>) => void;

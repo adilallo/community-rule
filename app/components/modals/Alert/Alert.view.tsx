@@ -17,6 +17,7 @@ export function AlertView({
   iconColor,
   closeButtonIconColor,
   onClose,
+  closeAlertAriaLabel,
 }: AlertViewProps) {
   const getIcon = () => {
     // Use the Icon_Alert.svg with dynamic fill color
@@ -61,7 +62,7 @@ export function AlertView({
           palette="default"
           size="large"
           onClick={onClose}
-          ariaLabel="Close alert"
+          ariaLabel={closeAlertAriaLabel}
           className="shrink-0 [&_svg_path]:transition-colors [&_svg_path]:duration-200 hover:[&_svg_path]:fill-[var(--color-content-default-primary)]"
         >
           <svg

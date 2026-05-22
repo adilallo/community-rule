@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useEffect, useId, useRef, useState } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { ModalHeaderView } from "./ModalHeader.view";
 import type { ModalHeaderProps } from "./ModalHeader.types";
 
@@ -10,7 +11,14 @@ import type { ModalHeaderProps } from "./ModalHeader.types";
  * (right) icon buttons.
  */
 const ModalHeaderContainer = memo<ModalHeaderProps>((props) => {
-  const { menuItems = [] } = props;
+  const t = useTranslation("controlsChrome");
+  const {
+    closeButtonAriaLabel = t("closeDialog"),
+    moreOptionsAriaLabel = t("moreOptions"),
+    menuAriaLabel = t("moreOptionsMenu"),
+    menuItems = [],
+    ...rest
+  } = props;
   const hasMenu = menuItems.length > 0;
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
@@ -44,7 +52,11 @@ const ModalHeaderContainer = memo<ModalHeaderProps>((props) => {
   return (
     <div ref={menuWrapRef}>
       <ModalHeaderView
-        {...props}
+        {...rest}
+        menuItems={menuItems}
+        closeButtonAriaLabel={closeButtonAriaLabel}
+        moreOptionsAriaLabel={moreOptionsAriaLabel}
+        menuAriaLabel={menuAriaLabel}
         menuId={menuId}
         menuOpen={menuOpen}
         onToggleMenu={hasMenu ? () => setMenuOpen((open) => !open) : undefined}

@@ -46,6 +46,18 @@ deployment-pipeline work.
 | GET | `/api/templates` | List curated templates. Optional repeatable `facet.<group>=<value>` query params re-rank results (and may include `scores` in the JSON). See [docs/guides/template-recommendation-matrix.md](docs/guides/template-recommendation-matrix.md) §9.1. |
 | GET | `/api/create-flow/methods` | Facet-aware scores for custom-rule card steps: required `section` (`communication` \| `membership` \| `decisionApproaches` \| `conflictManagement`) and optional `facet.*` params (same facet groups as `/api/templates`). Returns `methods` with match metadata for re-ordering in the wizard. |
 | POST / GET | `/api/web-vitals` | Ingest or read web vitals. **Production default:** `external` — structured logs only (no writes under `.next`; safe for read-only FS). **Development default:** `local` — aggregates under `.next/web-vitals`. Override with `WEB_VITALS_STORAGE`. See [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7. |
+| GET | `/api/rules/me` | Authenticated list of own published rules. |
+| GET / PATCH / DELETE | `/api/rules/[id]` | Public read; owner update/delete. |
+| POST | `/api/rules/[id]/duplicate` | Owner clone of a published rule. |
+| GET / POST | `/api/rules/[id]/stakeholders` | List or invite rule stakeholders. |
+| DELETE | `/api/rules/[id]/stakeholders/[stakeholderId]` | Remove a stakeholder. |
+| POST | `/api/rules/[id]/stakeholders/[stakeholderId]/resend` | Resend stakeholder invite email. |
+| GET | `/api/invites/rule-stakeholder/verify` | Verify stakeholder invite token; redirect. |
+| DELETE | `/api/user/me` | Delete authenticated user account. |
+| POST | `/api/user/email-change/request` | Request email change (magic link to new address). |
+| GET | `/api/user/email-change/verify` | Verify email-change token; update `User.email`. |
+| POST | `/api/organizer-inquiry` | Submit ask-organizer inquiry form. |
+| POST | `/api/use-cases/[slug]/duplicate` | Duplicate a use-case demo rule. |
 
 ### Magic-link sign-in
 
@@ -58,10 +70,10 @@ deployment-pipeline work.
 
 ### Optional draft sync
 
-`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` enables Postgres draft persistence
-via `PUT /api/drafts/me` for signed-in users and post-sign-in upload of
-anonymous drafts. Without it, anonymous progress stays in `localStorage`
-and signed-in progress stays in memory until **Save & Exit**.
+Postgres draft persistence via `PUT /api/drafts/me` is **on by default** for
+signed-in users and post-sign-in transfer of anonymous drafts. Set
+`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=false` to disable server sync (anonymous
+progress stays in `localStorage` only).
 
 ### Create flow
 

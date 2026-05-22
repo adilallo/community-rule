@@ -14,7 +14,7 @@ const mockBlogPost = {
       vertical: "resolving-active-conflicts-vertical.svg",
     },
     banner: {
-      horizontal: "resolving-active-conflicts-banner.svg",
+      horizontal: "resolving-active-conflicts-section.svg",
     },
   },
   htmlContent:

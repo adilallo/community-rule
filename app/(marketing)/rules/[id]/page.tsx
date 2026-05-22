@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import messages from "../../../../messages/en/index";
 import { getPublicPublishedRuleById } from "../../../../lib/server/publishedRules";
 import { parsePublishedDocumentForCommunityRuleDisplay } from "../../../../lib/create/publishedDocumentToDisplaySections";
 import CommunityRule from "../../../components/type/CommunityRule";
@@ -16,7 +17,7 @@ export async function generateMetadata({
   const rule = await getPublicPublishedRuleById(id);
   if (!rule) {
     return {
-      title: "Rule Not Found",
+      title: messages.pages.ruleDetail.notFoundTitle,
       description: "The requested CommunityRule could not be found.",
     };
   }

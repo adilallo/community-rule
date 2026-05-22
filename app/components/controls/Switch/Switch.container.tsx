@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useId, forwardRef } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { SwitchView } from "./Switch.view";
 import type { SwitchProps } from "./Switch.types";
 
@@ -10,6 +11,7 @@ import type { SwitchProps } from "./Switch.types";
  */
 const SwitchContainer = memo(
   forwardRef<HTMLButtonElement, SwitchProps>((props, ref) => {
+    const t = useTranslation("controlsChrome");
     const {
       propSwitch = false,
       onChange,
@@ -154,6 +156,7 @@ const SwitchContainer = memo(
         trackClasses={trackClasses}
         thumbClasses={thumbClasses}
         labelClasses={labelClasses}
+        switchAriaLabel={text ?? t("toggleSwitch")}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onFocus={handleFocus}

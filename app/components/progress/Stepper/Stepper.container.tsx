@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Progress / Stepper" (see registry)
+ */
+
 import { memo } from "react";
 import { StepperView } from "./Stepper.view";
 import type { StepperProps } from "./Stepper.types";

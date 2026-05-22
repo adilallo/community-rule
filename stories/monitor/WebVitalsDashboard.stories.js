@@ -1,4 +1,4 @@
-import WebVitalsDashboard from "../app/(admin)/monitor/_components/WebVitalsDashboard";
+import WebVitalsDashboard from "../../app/(admin)/monitor/_components/WebVitalsDashboard";
 
 export default {
   title: "Components/Monitor/WebVitalsDashboard",

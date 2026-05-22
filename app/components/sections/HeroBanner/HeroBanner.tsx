@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Sections / Hero" (see registry)
+ */
+
 import { memo } from "react";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentLockup from "../../type/ContentLockup";

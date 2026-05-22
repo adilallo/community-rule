@@ -57,4 +57,5 @@ export interface AlertViewProps {
   iconColor: string;
   closeButtonIconColor: string;
   onClose?: () => void;
+  closeAlertAriaLabel: string;
 }

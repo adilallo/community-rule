@@ -57,10 +57,10 @@ describe("HeroBanner (behavioral tests)", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders CTA button when provided", () => {
+  it("renders CTA link when provided", () => {
     render(<HeroBanner title="Test" ctaText="Get Started" ctaHref="/start" />);
     expect(
-      screen.getAllByRole("button", { name: "Get Started" }).length,
+      screen.getAllByRole("link", { name: "Get Started" }).length,
     ).toBeGreaterThan(0);
   });
 });

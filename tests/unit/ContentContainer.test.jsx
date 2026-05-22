@@ -102,14 +102,14 @@ describe("ContentContainer", () => {
   });
 
   it("applies correct width when specified", () => {
-    render(<ContentContainer post={mockPost} width="300px" size="xs" />);
+    render(<ContentContainer post={mockPost} width="300px" size="responsive" />);
 
     const container = document.querySelector("div[class*='relative z-20']");
     expect(container).toHaveStyle("width: 300px");
   });
 
   it("applies default width when not specified", () => {
-    render(<ContentContainer post={mockPost} size="xs" />);
+    render(<ContentContainer post={mockPost} size="responsive" />);
 
     const container = document.querySelector("div[class*='relative z-20']");
     expect(container).toHaveStyle("width: 200px");

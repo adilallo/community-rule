@@ -1,10 +1,11 @@
 import Groups from "../../app/components/sections/Groups";
+import { getAssetPath, vectorMarkPath } from "../../lib/assetUtils";
 
 const vectorIconSrc = [
-  "/assets/vector/worker-coop.svg",
-  "/assets/vector/mutual-aid.svg",
-  "/assets/vector/open-source.svg",
-  "/assets/vector/dao.svg",
+  getAssetPath(vectorMarkPath("worker-coop")),
+  getAssetPath(vectorMarkPath("mutual-aid")),
+  getAssetPath(vectorMarkPath("open-source")),
+  getAssetPath(vectorMarkPath("dao")),
 ];
 
 const sampleItems = [

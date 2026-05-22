@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "WebVitalsDashboard" (see registry)
+ */
+
 import { memo, useEffect, useState } from "react";
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { logger } from "../../../../../lib/logger";

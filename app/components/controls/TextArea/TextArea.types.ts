@@ -79,4 +79,6 @@ export interface TextAreaViewProps {
   formHeader?: boolean;
   showHelpIcon?: boolean;
   appearance?: "default" | "embedded";
+  helpIconAlt: string;
+  hintDefault: string;
 }

@@ -87,7 +87,7 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 | Context menu | — | **Not implemented** — removed unused primitives; reintroduce when a shipped surface needs it. |
 | Headers / footers (often under Utility in Figma) | **`ModalHeader/`**, **`ModalFooter/`** | Composed chrome; **canonical code** is under **`modals/`**. |
 
-**Gaps / TBD:** **Modal / Share** — product may use share callbacks elsewhere; no dedicated **`Share/`** modal package yet (**CR-104**).
+| Modal / Share | **`Share/`** | Share modal; icons via `shareIconPath()` in `lib/assetUtils.ts`. |
 
 - **Pattern:** **`container` / `view` / `types`** for **`Alert`**, **`Create`**, **`Dialog`**, **`Login`**, **`Tooltip`**, **`ModalHeader`**, **`ModalFooter`**.
 

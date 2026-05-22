@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { memo } from "react";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { getAssetPath, tripleStepShapePath } from "../../../../lib/assetUtils";
 import AssetIcon from "../../asset/icon";
 import Button from "../../buttons/Button";
 import type { TripleStepViewProps } from "./TripleStep.types";
@@ -22,7 +22,7 @@ function TripleStepView({
   className = "",
 }: TripleStepViewProps) {
   /** Decorative column art — `public/assets/shapes/triple-step.svg` (288×576 viewBox). */
-  const shapeSrc = getAssetPath("assets/shapes/triple-step.svg");
+  const shapeSrc = getAssetPath(tripleStepShapePath());
 
   return (
     <section

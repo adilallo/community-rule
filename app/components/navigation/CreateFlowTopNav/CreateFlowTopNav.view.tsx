@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { IconName } from "../../asset/icon";
 import Logo from "../../asset/Logo";
 import Button from "../../buttons/Button";
 import ListItem from "../../layout/ListItem";
 import Popover from "../../modals/Popover";
-import { useCreateFlowSm2Up } from "../../../(app)/create/hooks/useCreateFlowSm2Up";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import type { CreateFlowTopNavViewProps } from "./CreateFlowTopNav.types";
 
@@ -15,13 +12,6 @@ const outlineButtonClass =
 
 const exitButtonFigmaClass =
   "!rounded-[var(--radius-measures-radius-full,9999px)] !border-[1.25px] !px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!text-[12px] md:!leading-[14px]";
-
-type ActionMenuItem = {
-  id: string;
-  label: string;
-  leadingIcon: IconName;
-  onClick: () => void;
-};
 
 function KebabIcon({ className = "" }: { className?: string }) {
   return (
@@ -54,11 +44,21 @@ export function CreateFlowTopNavView({
   onDuplicate,
   onManageStakeholders,
   onExit,
-  exitLabel,
   duplicateLabel,
   duplicateAriaLabel,
   buttonPalette = "default",
   className = "",
+  exitButtonText,
+  useKebabMenu,
+  exportMenuOpen,
+  setExportMenuOpen,
+  actionsMenuOpen,
+  setActionsMenuOpen,
+  exportWrapRef,
+  actionsWrapRef,
+  exportMenuId,
+  actionsMenuId,
+  actionMenuItems,
   exportPopoverMenuAriaLabel,
   exportPopoverPdfLabel,
   exportPopoverCsvLabel,
@@ -67,15 +67,6 @@ export function CreateFlowTopNavView({
   actionsMenuAriaLabel,
 }: CreateFlowTopNavViewProps) {
   const t = useTranslation("create.topNav");
-  const sm2Up = useCreateFlowSm2Up();
-  const exitButtonText =
-    exitLabel ?? (saveDraftOnExit ? t("saveAndExit") : t("exit"));
-  const [exportMenuOpen, setExportMenuOpen] = useState(false);
-  const [actionsMenuOpen, setActionsMenuOpen] = useState(false);
-  const exportWrapRef = useRef<HTMLDivElement>(null);
-  const actionsWrapRef = useRef<HTMLDivElement>(null);
-  const exportMenuId = useId();
-  const actionsMenuId = useId();
 
   const hasSecondaryActions =
     hasShare ||
@@ -83,142 +74,6 @@ export function CreateFlowTopNavView({
     hasEdit ||
     hasDuplicate ||
     hasManageStakeholders;
-  const useKebabMenu = hasSecondaryActions && !sm2Up;
-
-  const actionMenuItems = useMemo((): ActionMenuItem[] => {
-    const items: ActionMenuItem[] = [];
-
-    if (hasShare && onShare) {
-      items.push({
-        id: "share",
-        label: t("share"),
-        leadingIcon: "mail",
-        onClick: onShare,
-      });
-    }
-
-    if (hasExport && onSelectExportFormat) {
-      items.push(
-        {
-          id: "export-pdf",
-          label: exportPopoverPdfLabel,
-          leadingIcon: "picture_as_pdf",
-          onClick: () => onSelectExportFormat("pdf"),
-        },
-        {
-          id: "export-csv",
-          label: exportPopoverCsvLabel,
-          leadingIcon: "csv",
-          onClick: () => onSelectExportFormat("csv"),
-        },
-        {
-          id: "export-markdown",
-          label: exportPopoverMarkdownLabel,
-          leadingIcon: "markdown_copy",
-          onClick: () => onSelectExportFormat("markdown"),
-        },
-      );
-    }
-
-    if (hasDuplicate && onDuplicate) {
-      items.push({
-        id: "duplicate",
-        label: duplicateLabel ?? t("edit"),
-        leadingIcon: "content_copy",
-        onClick: onDuplicate,
-      });
-    } else if (hasEdit && onEdit) {
-      items.push({
-        id: "edit",
-        label: t("edit"),
-        leadingIcon: "edit",
-        onClick: onEdit,
-      });
-    }
-
-    if (hasManageStakeholders && onManageStakeholders) {
-      items.push({
-        id: "manage-stakeholders",
-        label: t("manageStakeholders"),
-        leadingIcon: "tags",
-        onClick: onManageStakeholders,
-      });
-    }
-
-    items.push({
-      id: "exit",
-      label: exitButtonText,
-      leadingIcon: "log_out",
-      onClick: () => void onExit?.({ saveDraft: saveDraftOnExit }),
-    });
-
-    return items;
-  }, [
-    duplicateLabel,
-    exitButtonText,
-    exportPopoverCsvLabel,
-    exportPopoverMarkdownLabel,
-    exportPopoverPdfLabel,
-    hasDuplicate,
-    hasEdit,
-    hasExport,
-    hasManageStakeholders,
-    hasShare,
-    onDuplicate,
-    onEdit,
-    onExit,
-    onManageStakeholders,
-    onSelectExportFormat,
-    onShare,
-    saveDraftOnExit,
-    t,
-  ]);
-
-  useEffect(() => {
-    if (!exportMenuOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (
-        exportWrapRef.current &&
-        !exportWrapRef.current.contains(e.target as Node)
-      ) {
-        setExportMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [exportMenuOpen]);
-
-  useEffect(() => {
-    if (!actionsMenuOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (
-        actionsWrapRef.current &&
-        !actionsWrapRef.current.contains(e.target as Node)
-      ) {
-        setActionsMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [actionsMenuOpen]);
-
-  useEffect(() => {
-    if (!exportMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setExportMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [exportMenuOpen]);
-
-  useEffect(() => {
-    if (!actionsMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActionsMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [actionsMenuOpen]);
 
   const inlineActions = (
     <>

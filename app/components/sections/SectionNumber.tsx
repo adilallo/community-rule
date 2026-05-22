@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Sections / SectionNumber" (see registry)
+ */
+
 import { memo } from "react";
 import { getAssetPath, sectionNumberPath } from "../../../lib/assetUtils";
 

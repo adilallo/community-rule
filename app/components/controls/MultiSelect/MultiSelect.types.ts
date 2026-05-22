@@ -74,7 +74,8 @@ export interface MultiSelectViewProps {
   onChipClick?: (chipId: string) => void;
   onAddClick?: () => void;
   addButton: boolean;
-  addButtonText: string;
+  addButtonText?: string;
+  addButtonAriaLabel: string;
   formHeader: boolean;
   onCustomChipConfirm?: (chipId: string, value: string) => void;
   onCustomChipClose?: (chipId: string) => void;

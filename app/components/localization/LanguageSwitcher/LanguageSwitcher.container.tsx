@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "localization/LanguageSwitcher" (see registry)
+ */
+
 import { memo } from "react";
 import LanguageSwitcherView from "./LanguageSwitcher.view";
 import type { LanguageSwitcherProps } from "./LanguageSwitcher.types";

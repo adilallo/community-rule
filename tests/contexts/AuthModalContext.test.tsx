@@ -144,6 +144,7 @@ describe("AuthModalProvider (header overlay)", () => {
       expect(requestMagicLink).toHaveBeenCalledWith(
         "guest@example.com",
         "/create/community-structure?syncDraft=1",
+        undefined,
       );
     });
     expect(setTransferPendingFlag).toHaveBeenCalled();

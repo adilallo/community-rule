@@ -8,6 +8,7 @@ export function ToggleGroupView({
   state: _state,
   showText,
   ariaLabel,
+  defaultToggleOptionAriaLabel,
   toggleClasses,
   onClick,
   onKeyDown,
@@ -20,7 +21,7 @@ export function ToggleGroupView({
       id={groupId}
       type="button"
       role="button"
-      aria-label={ariaLabel || (showText ? undefined : "Toggle option")}
+      aria-label={ariaLabel || (showText ? undefined : defaultToggleOptionAriaLabel)}
       onClick={onClick}
       onKeyDown={onKeyDown}
       onFocus={onFocus}

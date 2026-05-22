@@ -5,9 +5,8 @@ import type { CreateFlowState, CreateFlowStep } from "../types";
 import { buildPublishPayload } from "../../../../lib/create/buildPublishPayload";
 import { saveDraftToServer, updatePublishedRule } from "../../../../lib/create/api";
 import { writeLastPublishedRule } from "../../../../lib/create/lastPublishedRule";
+import { isBackendSyncEnabled } from "../../../../lib/create/backendSyncEnabled";
 import messages from "../../../../messages/en/index";
-
-const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
 
 export type CreateFlowExitClearState = () => void;
 
@@ -23,6 +22,7 @@ export function useCreateFlowExit({
   router,
   user,
   setDraftSaveBannerMessage,
+  confirmLeave,
 }: {
   state: CreateFlowState;
   currentStep: CreateFlowStep | null;
@@ -31,6 +31,8 @@ export function useCreateFlowExit({
   user: { id: string; email: string } | null;
   /** When save fails, surface the server message in the create shell banner (no leave confirm). */
   setDraftSaveBannerMessage?: (_message: string | null) => void;
+  /** When exit would discard unsaved work, return true to proceed. Defaults to `window.confirm`. */
+  confirmLeave?: () => Promise<boolean>;
 }): (_options?: { saveDraft?: boolean }) => Promise<void> {
   return useCallback(
     async (options?: { saveDraft?: boolean }) => {
@@ -38,14 +40,18 @@ export function useCreateFlowExit({
 
       const saveDraft = options?.saveDraft ?? false;
 
-      if (!saveDraft && typeof window !== "undefined") {
-        const confirmed = window.confirm(
-          messages.create.topNav.leaveConfirmLoss,
-        );
+      if (!saveDraft) {
+        const confirmFn =
+          confirmLeave ??
+          (async () => {
+            if (typeof window === "undefined") return true;
+            return window.confirm(messages.create.topNav.leaveConfirmLoss);
+          });
+        const confirmed = await confirmFn();
         if (!confirmed) return;
       }
 
-      if (saveDraft && SYNC_ENABLED) {
+      if (saveDraft && isBackendSyncEnabled()) {
         const editingId =
           typeof state.editingPublishedRuleId === "string"
             ? state.editingPublishedRuleId.trim()
@@ -97,6 +103,14 @@ export function useCreateFlowExit({
       clearState();
       router.push("/");
     },
-    [state, currentStep, clearState, router, user, setDraftSaveBannerMessage],
+    [
+      state,
+      currentStep,
+      clearState,
+      router,
+      user,
+      setDraftSaveBannerMessage,
+      confirmLeave,
+    ],
   );
 }

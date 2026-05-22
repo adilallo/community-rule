@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Type / HeaderLockup" (see registry)
+ */
+
 import { memo } from "react";
 import HeaderLockupView from "./HeaderLockup.view";
 import type { HeaderLockupProps } from "./HeaderLockup.types";

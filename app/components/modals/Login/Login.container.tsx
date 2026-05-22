@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Modal / Login" (see registry)
+ */
+
 import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { LoginView } from "./Login.view";
 import type { LoginProps } from "./Login.types";

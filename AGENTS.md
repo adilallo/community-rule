@@ -68,7 +68,7 @@ Run these (in order) before declaring a change done:
 ```bash
 rm -rf .next            # only if you moved/renamed routes or layouts
 npx tsc --noEmit        # type check
-npx vitest run          # unit + component (101 files / ~700 tests)
+npx vitest run          # unit + component (~185 test files)
 npx next build          # production build + route manifest
 ```
 

@@ -45,10 +45,20 @@ export function statShapeAssetPath(index: 1 | 2 | 3 | 4): string {
 }
 
 /**
- * Statement / Section-Quote flanking ornaments (`public/assets/shapes/shape-qoute.svg`).
+ * Statement / Section-Quote flanking ornaments (`public/assets/shapes/shape-quote.svg`).
  */
 export function quoteStatementShapePath(): string {
-  return "assets/shapes/shape-qoute.svg";
+  return "assets/shapes/shape-quote.svg";
+}
+
+/** ContentLockup decorative shape (Figma **22078:791901**). */
+export function contentLockupShapePath(): string {
+  return "assets/shapes/shapes-1.svg";
+}
+
+/** TripleStep section ornament. */
+export function tripleStepShapePath(): string {
+  return "assets/shapes/triple-step.svg";
 }
 
 /**

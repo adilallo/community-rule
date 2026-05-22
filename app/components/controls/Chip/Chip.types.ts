@@ -68,4 +68,7 @@ export interface ChipViewProps {
   onInputKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
   ariaLabel?: string;
+  confirmAriaLabel: string;
+  typeToAddPlaceholder: string;
+  closeAriaLabel: string;
 }

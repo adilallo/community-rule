@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Progress / Bar" (17861-33241)
+ */
+
 import { memo } from "react";
 import { ProportionBarView } from "./ProportionBar.view";
 import type { ProportionBarProps } from "./ProportionBar.types";

@@ -19,6 +19,9 @@ function ChipView({
   onInputKeyDown,
   inputRef,
   ariaLabel,
+  confirmAriaLabel,
+  typeToAddPlaceholder,
+  closeAriaLabel,
 }: ChipViewProps) {
   // The container is the source of truth for `disabled`. This allows
   // `state="disabled"` to be used purely as a visual (for toggle-group chips
@@ -167,7 +170,7 @@ function ChipView({
             <button
               type="button"
               className="flex items-center justify-center p-[var(--measures-spacing-150,6px)] rounded-full hover:bg-[var(--color-surface-default-semi-opaque,rgba(0,0,0,0.1))] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Confirm"
+              aria-label={confirmAriaLabel}
               disabled={!inputValue || !inputValue.trim()}
               onClick={(event) => {
                 event.stopPropagation();
@@ -204,7 +207,7 @@ function ChipView({
               value={inputValue ?? ""}
               onChange={(e) => onInputChange?.(e.target.value)}
               onKeyDown={onInputKeyDown}
-              placeholder="Type to add"
+              placeholder={typeToAddPlaceholder}
               className="bg-transparent border-none outline-none flex-1 min-w-0 font-inter font-normal text-[color:var(--color-content-default-tertiary,#b4b4b4)] placeholder:text-[color:var(--color-content-default-tertiary,#b4b4b4)]"
               style={{
                 fontSize: isSmall
@@ -222,7 +225,7 @@ function ChipView({
             <button
               type="button"
               className="flex items-center justify-center p-[var(--measures-spacing-150,6px)] rounded-full hover:bg-[var(--color-surface-default-semi-opaque,rgba(0,0,0,0.1))] transition-colors"
-              aria-label="Close"
+              aria-label={closeAriaLabel}
               onClick={(event) => {
                 event.stopPropagation();
                 onClose(event);

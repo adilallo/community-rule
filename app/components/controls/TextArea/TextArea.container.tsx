@@ -2,6 +2,7 @@
 
 import { memo, forwardRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { TextAreaView } from "./TextArea.view";
 import type { TextAreaProps } from "./TextArea.types";
 
@@ -35,6 +36,7 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     },
     ref,
   ) => {
+    const t = useTranslation("controlsChrome");
     const size = sizeProp;
     const labelVariant = labelVariantProp;
     const state = stateProp;
@@ -200,6 +202,8 @@ const TextAreaContainer = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         formHeader={formHeader}
         showHelpIcon={showHelpIcon}
         appearance={appearance}
+        helpIconAlt={t("helpIconAlt")}
+        hintDefault={t("hintDefault")}
         {...props}
       />
     );

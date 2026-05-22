@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Sections / FeatureGrid" (see registry)
+ */
+
 import { memo, useMemo } from "react";
 import { getAssetPath, featurePanelPath } from "../../../../lib/assetUtils";
 import { useTranslation } from "../../../contexts/MessagesContext";

@@ -12,6 +12,9 @@ import quoteBlock from "./components/quoteBlock.json";
 import ruleCard from "./components/ruleCard.json";
 import ruleStack from "./components/ruleStack.json";
 import webVitalsDashboard from "./components/webVitalsDashboard.json";
+import controlsChrome from "./components/controlsChrome.json";
+import logoWall from "./components/logoWall.json";
+import topNav from "./components/topNav.json";
 import home from "./pages/home.json";
 import templates from "./pages/templates.json";
 import learn from "./pages/learn.json";
@@ -25,6 +28,7 @@ import monitor from "./pages/monitor.json";
 import login from "./pages/login.json";
 import profile from "./pages/profile.json";
 import notFoundPage from "./pages/notFoundPage.json";
+import ruleDetail from "./pages/ruleDetail.json";
 import navigation from "./navigation.json";
 import metadata from "./metadata.json";
 import modalsShare from "./modals/share.json";
@@ -78,6 +82,9 @@ export default {
   ruleCard,
   ruleStack,
   webVitalsDashboard,
+  controlsChrome,
+  logoWall,
+  topNav,
   pages: {
     home,
     templates,
@@ -92,6 +99,7 @@ export default {
     login,
     profile,
     notFoundPage,
+    ruleDetail,
   },
   create: {
     community: {

@@ -1,6 +1,7 @@
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithProviders as render } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import Upload from "../../app/components/controls/Upload";

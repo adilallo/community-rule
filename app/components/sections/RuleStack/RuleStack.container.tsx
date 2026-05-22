@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Sections / RuleStack" (22085-860413)
+ */
+
 import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { logger } from "../../../../lib/logger";

@@ -9,37 +9,22 @@ import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";
 import Page from "../../app/(marketing)/page";
 
-// Mock next/dynamic to return components synchronously in tests
-vi.mock("next/dynamic", () => {
-  return {
-    default: (importFn) => {
-      // In tests, return the component directly by importing it synchronously
-      // This bypasses the async loading behavior for testing
-      return (props) => {
-        const [Component, setComponent] = React.useState(null);
-        React.useEffect(() => {
-          importFn().then((mod) => {
-            setComponent(() => mod.default || mod);
-          });
-        }, []);
-        if (!Component) {
-          return null;
-        }
-        return <Component {...props} />;
-      };
-    },
-  };
+vi.mock("next/dynamic", async () => {
+  const { default: syncDynamic } = await import("../utils/mockNextDynamicSync.js");
+  return { default: syncDynamic };
 });
+
+function renderPage(ui = <Page />) {
+  return render(ui);
+}
 
 afterEach(() => {
   cleanup();
 });
 
 describe("Page Flow Integration", () => {
-  // TODO: Fix next/dynamic mock to properly handle async component loading
-  // The mock currently doesn't resolve components synchronously, causing this test to fail
-  test.skip("renders complete page with all sections in correct order", async () => {
-    render(<Page />);
+  test("renders complete page with all sections in correct order", async () => {
+    renderPage();
 
     // Hero Banner section
     expect(
@@ -53,24 +38,20 @@ describe("Page Flow Integration", () => {
         "Help your community make important decisions in a way that reflects its unique values.",
       ),
     ).toBeInTheDocument();
-    // Check that CTA button exists (multiple sizes for responsive design)
-    const ctaButtons = screen.getAllByRole("button", {
+    const ctaButtons = screen.getAllByRole("link", {
       name: "Learn how CommunityRule works",
     });
     expect(ctaButtons.length).toBeGreaterThan(0);
 
-    // Wait for dynamically imported LogoWall component to load
     await waitFor(() => {
       expect(screen.getByAltText("Food Not Bombs")).toBeInTheDocument();
     });
-    // Once LogoWall is loaded, other logos should be available
     expect(screen.getByAltText("Start COOP")).toBeInTheDocument();
     expect(screen.getByAltText("Metagov")).toBeInTheDocument();
     expect(screen.getByAltText("Open Civics")).toBeInTheDocument();
     expect(screen.getByAltText("Mutual Aid CO")).toBeInTheDocument();
     expect(screen.getByAltText("CU Boulder")).toBeInTheDocument();
 
-    // CardSteps section — wait for dynamically imported component
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /How CommunityRule works/ }),
@@ -93,8 +74,9 @@ describe("Page Flow Integration", () => {
       ),
     ).toBeInTheDocument();
 
-    // Rule Stack section
-    expect(screen.getByRole("heading", { name: "Circles" })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole("heading", { name: "Circles" })).toBeInTheDocument();
+    });
     expect(
       screen.getByRole("heading", { name: "Elected Board" }),
     ).toBeInTheDocument();
@@ -105,24 +87,23 @@ describe("Page Flow Integration", () => {
       screen.getByRole("heading", { name: "Petition" }),
     ).toBeInTheDocument();
 
-    // Feature Grid section
-    expect(
-      screen.getByRole("heading", {
-        name: "We've got your back, every step of the way",
-      }),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          name: "We've got your back, every step of the way",
+        }),
+      ).toBeInTheDocument();
+    });
     expect(
       screen.getByText(
         "Use our toolkit to improve, document, and evolve your organization.",
       ),
     ).toBeInTheDocument();
 
-    // Quote Block section
     expect(
       screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
-    // Ask Organizer section
     expect(
       screen.getByRole("heading", { name: "Still have questions?" }),
     ).toBeInTheDocument();
@@ -136,27 +117,22 @@ describe("Page Flow Integration", () => {
 
   test("hero banner CTA button is interactive", async () => {
     const user = userEvent.setup();
-    render(<Page />);
+    renderPage();
 
-    // Get the first CTA button (multiple sizes for responsive design)
-    const ctaButtons = screen.getAllByRole("button", {
+    const ctaLinks = screen.getAllByRole("link", {
       name: "Learn how CommunityRule works",
     });
-    const ctaButton = ctaButtons[0];
-    expect(ctaButton).toBeInTheDocument();
-    // Button should be clickable (no href needed for button elements)
-    expect(ctaButton).toBeEnabled();
+    const ctaLink = ctaLinks[0];
+    expect(ctaLink).toBeInTheDocument();
+    expect(ctaLink).toHaveAttribute("href", "/how-it-works");
 
-    // Test button interaction
-    await user.click(ctaButton);
-    // Button should remain visible after click
-    expect(ctaButton).toBeInTheDocument();
+    await user.click(ctaLink);
+    expect(ctaLink).toBeInTheDocument();
   });
 
   test("CardSteps section shows step tiles with expected icon/color props", async () => {
-    render(<Page />);
+    renderPage();
 
-    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       const cards = screen.getAllByText(
         /Document how your community|Build an operating manual|Get a link to your manual/,
@@ -164,19 +140,17 @@ describe("Page Flow Integration", () => {
       expect(cards.length).toBeGreaterThan(0);
     });
 
-    // Check that all three cards are rendered
     const cards = screen.getAllByText(
       /Document how your community|Build an operating manual|Get a link to your manual/,
     );
     expect(cards.length).toBeGreaterThan(0);
 
-    // Check that section numbers are present
     const sectionNumbers = screen.getAllByText(/1|2|3/);
     expect(sectionNumbers.length).toBeGreaterThan(0);
   });
 
   test("rule stack shows four featured templates and link to full catalog", async () => {
-    render(<Page />);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText("Circles")).toBeInTheDocument();
@@ -189,14 +163,14 @@ describe("Page Flow Integration", () => {
     const seeAll = screen.getByRole("link", { name: "See all templates" });
     expect(seeAll).toHaveAttribute("href", "/templates");
 
-    const seeHowButton = screen.getByRole("button", {
+    const seeHowLink = screen.getByRole("link", {
       name: "See how it works",
     });
-    expect(seeHowButton).toBeInTheDocument();
+    expect(seeHowLink).toHaveAttribute("href", "/how-it-works");
   });
 
   test("ask organizer section has proper call-to-action", () => {
-    render(<Page />);
+    renderPage();
 
     const askCta = screen.getByRole("button", { name: /ask an organizer/i });
     expect(askCta).toBeInTheDocument();
@@ -204,19 +178,16 @@ describe("Page Flow Integration", () => {
   });
 
   test("page maintains proper semantic structure", async () => {
-    render(<Page />);
+    renderPage();
 
-    // Wait for dynamically imported components to load
     await waitFor(() => {
       const headings = screen.getAllByRole("heading");
-      expect(headings.length).toBeGreaterThan(4); // Should have multiple headings
+      expect(headings.length).toBeGreaterThan(4);
     });
 
-    // Check for proper heading hierarchy
     const headings = screen.getAllByRole("heading");
-    expect(headings.length).toBeGreaterThan(4); // Should have multiple headings
+    expect(headings.length).toBeGreaterThan(4);
 
-    // Check that main content is properly structured
     const mainContent = screen.getByText(
       /Help your community make important decisions/,
     );
@@ -224,7 +195,7 @@ describe("Page Flow Integration", () => {
   });
 
   test("all interactive elements are accessible", async () => {
-    render(<Page />);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getAllByRole("button").length).toBeGreaterThan(0);
@@ -245,33 +216,31 @@ describe("Page Flow Integration", () => {
     });
   });
 
-  // TODO: Fix next/dynamic mock to properly handle async component loading
-  test.skip("page content flows logically from top to bottom", async () => {
-    render(<Page />);
+  test("page content flows logically from top to bottom", async () => {
+    renderPage();
 
-    // Verify the logical flow of information
-    // 1. Hero introduces the concept
     expect(
       screen.getByText(/Help your community make important decisions/),
     ).toBeInTheDocument();
 
-    // 2. How it works section explains the process
-    expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
+    });
 
-    // 3. Rule types show different governance options
-    expect(screen.getByText("Circles")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Circles")).toBeInTheDocument();
+    });
 
-    // 4. Features highlight benefits
-    expect(
-      screen.getByText("We've got your back, every step of the way"),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText("We've got your back, every step of the way"),
+      ).toBeInTheDocument();
+    });
 
-    // 5. Quote provides social proof
     expect(
       screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
-    // 6. Call to action for help
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
   });
 });

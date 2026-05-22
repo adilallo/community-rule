@@ -10,7 +10,7 @@ import {
   USE_CASE_DETAIL_SLUGS,
   useCaseContentKeyForSlug,
 } from "../../../../../lib/useCaseSyntheticPost";
-import { UseCaseCompletedRuleView } from "./_components/UseCaseCompletedRule.view";
+import { UseCaseCompletedRule } from "./_components/UseCaseCompletedRule.container";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -57,7 +57,7 @@ export default async function UseCaseCompletedRulePage({ params }: PageProps) {
   }
 
   return (
-    <UseCaseCompletedRuleView
+    <UseCaseCompletedRule
       slug={resolved.slug}
       fixture={resolved.fixture}
       sections={resolved.sections}

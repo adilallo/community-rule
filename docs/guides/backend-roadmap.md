@@ -34,15 +34,26 @@ Mirrors [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes** table (including `/
 
 **Product sign-in** uses **magic link** (`/api/auth/magic-link/*`).
 
-### HTTP API (profile / account — not implemented yet)
+### HTTP API (profile / account — implemented in repo)
 
-Planned for the signed-in profile/dashboard ([Figma profile frame](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22143-900069); [docs/backend-linear-tickets.md](backend-linear-tickets.md) Ticket 15; Linear **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)**):
+Shipped handlers (profile UI may still be placeholder per **[CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)**):
 
-- Authenticated list of **own** `PublishedRule` rows (e.g. `GET /api/rules/me` or a strictly scoped query—**not** the same as public `GET /api/rules`).
-- Owner-only **delete** and **duplicate** (clone) for published rules.
-- **Delete account** (authenticated), with an explicit policy for drafts, sessions, and linked rules.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/rules/me` | Authenticated list of own published rules |
+| GET / PATCH / DELETE | `/api/rules/[id]` | Public read; owner update/delete |
+| POST | `/api/rules/[id]/duplicate` | Owner clone |
+| GET / POST | `/api/rules/[id]/stakeholders` | List or invite stakeholders |
+| DELETE | `/api/rules/[id]/stakeholders/[stakeholderId]` | Remove stakeholder |
+| POST | `/api/rules/[id]/stakeholders/[stakeholderId]/resend` | Resend invite |
+| GET | `/api/invites/rule-stakeholder/verify` | Accept stakeholder invite |
+| DELETE | `/api/user/me` | Delete account |
+| POST | `/api/user/email-change/request` | Request email change ([CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session) — **Done**) |
+| GET | `/api/user/email-change/verify` | Verify new email |
+| POST | `/api/organizer-inquiry` | Ask-organizer form |
+| POST | `/api/use-cases/[slug]/duplicate` | Duplicate use-case rule |
 
-**Tracked separately:** **Change email** with verification (e.g. magic link to a new address, conflict handling)—**[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** / **Ticket 20** in [docs/guides/backend-linear-tickets.md](guides/backend-linear-tickets.md); **out of scope** for the profile milestone above.
+Full table: [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes**.
 
 ---
 
@@ -110,7 +121,7 @@ Match the current API behavior; tighten as product evolves:
 
 - **`GET /api/drafts/me` / `PUT /api/drafts/me`:** Authenticated user only; draft is **scoped to that user** (`userId`).
 - **`POST /api/rules`:** Authenticated user only; rule is stored with **`userId`** (owner).
-- **`GET /api/rules`:** **Public list** of published rules (metadata: id, title, summary, timestamps)—no auth required today. **Not** a private “my rules” feed unless you add a separate route later (see §1 “profile / account — not implemented yet” and Ticket 15).
+- **`GET /api/rules`:** **Public list** of published rules (metadata: id, title, summary, timestamps)—no auth required today. **Authenticated “my rules”** uses **`GET /api/rules/me`** (see §1 profile / account table).
 - **Profile / owner scope (planned):** Authenticated **list own rules**, **delete own rule**, **duplicate own rule**—required for the signed-in dashboard in design; **v1 shipped handlers** may not include these until that work lands.
 - **Delete account (planned):** Authenticated endpoint + UX to remove the user record per policy (cascade vs orphan `PublishedRule`, drafts, sessions)—Ticket 15. **Change email** is **not** part of that milestone; implement via **[CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)** (Ticket 20 — verified email updates).
 - **v1 (shipped today):** No **editing** or **deleting** published rules via API in current handlers; no **sharing** or **collaborative ownership**—treat each rule as **owned by one user** until product defines more.

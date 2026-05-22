@@ -13,10 +13,11 @@ export const CREATE_FLOW_TRANSFER_PENDING_KEY =
   "create-flow-transfer-pending" as const;
 
 /**
- * When signed-in + sync, {@link SignedInDraftHydration} resolves server vs this key via `window.confirm`
- * if both are non-empty; see `messages/en/create/draftHydration.json`.
+ * When signed-in + sync, local draft wins if non-empty; server draft applies when local is empty.
+ * See `messages/en/create/draftHydration.json`.
  */
 
+// TODO(legacy): Remove after production soak — one-time migration from pre-anonymous keys.
 const LEGACY_LIVE_KEY = "create-flow-state";
 const LEGACY_DRAFT_KEY = "create-flow-draft";
 

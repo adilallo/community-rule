@@ -2,6 +2,7 @@ import {
   renderWithProviders as render,
   screen,
   cleanup,
+  waitFor,
 } from "../utils/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, afterEach, beforeEach, vi } from "vitest";
@@ -59,18 +60,24 @@ describe("Templates page (/templates)", () => {
       <TemplatesPageClient initialGridEntries={GOVERNANCE_TEMPLATE_CATALOG} />,
     );
 
-    const consensusCard = screen.getByText("Consensus").closest("div");
-    await user.click(consensusCard);
-    expect(testRouter.push).toHaveBeenCalledWith(
-      "/create/review-template/consensus",
+    await user.click(
+      screen.getByRole("button", { name: /Consensus/i }),
     );
+    await waitFor(() => {
+      expect(testRouter.push).toHaveBeenCalledWith(
+        "/create/review-template/consensus",
+      );
+    });
 
     testRouter.push.mockClear();
-    const solidarity = screen.getByText("Solidarity Network").closest("div");
-    await user.click(solidarity);
-    expect(testRouter.push).toHaveBeenCalledWith(
-      "/create/review-template/solidarity-network",
+    await user.click(
+      screen.getByRole("button", { name: /Solidarity Network/i }),
     );
+    await waitFor(() => {
+      expect(testRouter.push).toHaveBeenCalledWith(
+        "/create/review-template/solidarity-network",
+      );
+    });
   });
 
   test("direct entry (no ?fromFlow=1): wipes anonymous draft before navigating", async () => {
@@ -80,16 +87,19 @@ describe("Templates page (/templates)", () => {
       <TemplatesPageClient initialGridEntries={GOVERNANCE_TEMPLATE_CATALOG} />,
     );
 
-    const consensusCard = screen.getByText("Consensus").closest("div");
-    await user.click(consensusCard);
-
-    expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBeNull();
-    expect(
-      window.localStorage.getItem(CORE_VALUE_DETAILS_STORAGE_KEY),
-    ).toBeNull();
-    expect(testRouter.push).toHaveBeenCalledWith(
-      "/create/review-template/consensus",
+    await user.click(
+      screen.getByRole("button", { name: /Consensus/i }),
     );
+
+    await waitFor(() => {
+      expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBeNull();
+      expect(
+        window.localStorage.getItem(CORE_VALUE_DETAILS_STORAGE_KEY),
+      ).toBeNull();
+      expect(testRouter.push).toHaveBeenCalledWith(
+        "/create/review-template/consensus",
+      );
+    });
   });
 
   test("in-flow entry (?fromFlow=1): preserves the anonymous draft", async () => {
@@ -102,8 +112,9 @@ describe("Templates page (/templates)", () => {
       <TemplatesPageClient initialGridEntries={GOVERNANCE_TEMPLATE_CATALOG} />,
     );
 
-    const consensusCard = screen.getByText("Consensus").closest("div");
-    await user.click(consensusCard);
+    await user.click(
+      screen.getByRole("button", { name: /Consensus/i }),
+    );
 
     expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBe(
       JSON.stringify({ title: "Stale Community" }),
@@ -115,8 +126,10 @@ describe("Templates page (/templates)", () => {
     );
     // In-flow picks also pass `?fromFlow=1` on the template review URL so
     // footer Back on `/create/review-template/…` returns to `/create/review`.
-    expect(testRouter.push).toHaveBeenCalledWith(
-      "/create/review-template/consensus?fromFlow=1",
-    );
+    await waitFor(() => {
+      expect(testRouter.push).toHaveBeenCalledWith(
+        "/create/review-template/consensus?fromFlow=1",
+      );
+    });
   });
 });

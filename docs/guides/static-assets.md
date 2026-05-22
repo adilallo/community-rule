@@ -10,7 +10,7 @@ public/
   assets/
     icons/              # UI chrome (alert, close, help, pointer)
     logos/              # Brand + social lockups
-      partners/         # Logo wall partner PNGs
+      partners/         # Logo wall partner SVGs (kebab org slug)
     marketing/          # Hero, feature panels, section numbers, avatars, banners, book cover
     case-study/         # CaseStudy card SVG artwork (canonical)
     shapes/             # Decorative ornaments (stats, quotes, unions, content shapes)

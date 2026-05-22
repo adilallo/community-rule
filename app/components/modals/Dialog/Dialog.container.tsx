@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Dialog" (see registry)
+ */
+
 import { memo, useId, useRef } from "react";
 import { useCreateModalA11y } from "../Create/useCreateModalA11y";
 import { DialogView } from "./Dialog.view";

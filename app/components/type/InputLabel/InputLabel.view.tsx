@@ -12,6 +12,8 @@ function InputLabelView({
   size,
   palette,
   className = "",
+  helpIconAlt,
+  helperTextDefault,
 }: InputLabelViewProps) {
   const isSmall = size === "s";
   const isInverse = palette === "inverse";
@@ -79,7 +81,7 @@ function InputLabelView({
             {/* eslint-disable-next-line @next/next/no-img-element -- icon from asset path */}
             <img
               src={getAssetPath(ASSETS.ICON_HELP)}
-              alt="Help"
+              alt={helpIconAlt}
               className="block max-w-none size-full"
               style={
                 helpIconFilter
@@ -96,7 +98,7 @@ function InputLabelView({
         <p
           className={`flex-[1_0_0] font-inter font-normal ${helperTextSize} min-h-px min-w-px relative ${helperTextColor} text-right`}
         >
-          {typeof helperText === "string" ? helperText : "Optional text"}
+          {typeof helperText === "string" ? helperText : helperTextDefault}
         </p>
       )}
     </div>

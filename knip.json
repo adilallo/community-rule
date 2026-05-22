@@ -1,0 +1,16 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "app/**/*.{ts,tsx}",
+    "lib/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,js,mjs}",
+    "prisma/seed.ts"
+  ],
+  "project": ["**/*.{ts,tsx,js,jsx}"],
+  "ignore": [
+    "tests/**",
+    "stories/**",
+    "**/*.stories.{js,jsx,ts,tsx}",
+    "**/*.disabled"
+  ]
+}

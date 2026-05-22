@@ -1,12 +1,11 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { screen, cleanup } from "@testing-library/react";
 import { describe, test, expect, afterEach } from "vitest";
+import { renderWithProviders as render } from "../utils/test-utils";
 import LogoWall from "../../app/components/sections/LogoWall";
 
 afterEach(() => {
   cleanup();
 });
-
-// Pure presentational; no provider context needed.
 describe("LogoWall Component", () => {
   test("renders with default logos", () => {
     render(<LogoWall />);

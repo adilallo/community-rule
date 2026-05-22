@@ -5,10 +5,11 @@ import { forwardRef, memo } from "react";
 interface SelectDropdownProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   children?: React.ReactNode;
+  ariaLabel: string;
 }
 
 const SelectDropdown = forwardRef<HTMLDivElement, SelectDropdownProps>(
-  ({ className = "", children, ...props }, ref) => {
+  ({ className = "", children, ariaLabel, ...props }, ref) => {
     const menuClasses = `
       bg-black
       border border-[var(--color-border-default-tertiary)]
@@ -27,7 +28,7 @@ const SelectDropdown = forwardRef<HTMLDivElement, SelectDropdownProps>(
         ref={ref}
         className={menuClasses}
         role="listbox"
-        aria-label="Select an option"
+        aria-label={ariaLabel}
         style={{ backgroundColor: "#000000" }}
         {...props}
       >

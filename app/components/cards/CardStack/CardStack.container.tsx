@@ -1,11 +1,11 @@
 "use client";
 
 import { memo, useCallback, useState } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { CardStackView } from "./CardStack.view";
 import type { CardStackProps } from "./CardStack.types";
 
 const DEFAULT_TOGGLE_LABEL = "See all communication approaches";
-const DEFAULT_SHOW_LESS_LABEL = "Show less";
 
 /**
  * Figma: "Utility / CardStack"; canonical code under `cards/`.
@@ -22,7 +22,7 @@ const CardStackContainer = memo<CardStackProps>(
     onToggleExpand: controlledOnToggleExpand,
     hasMore = true,
     toggleLabel = DEFAULT_TOGGLE_LABEL,
-    showLessLabel = DEFAULT_SHOW_LESS_LABEL,
+    showLessLabel,
     title = "",
     description = "",
     layout = "default",
@@ -37,6 +37,7 @@ const CardStackContainer = memo<CardStackProps>(
     addCardAriaLabel = "",
     onAddCard,
   }) => {
+    const t = useTranslation("controlsChrome");
     const [internalExpanded, setInternalExpanded] = useState(false);
     const [internalSelectedIds, setInternalSelectedIds] = useState<string[]>(
       [],
@@ -84,7 +85,7 @@ const CardStackContainer = memo<CardStackProps>(
         onToggleExpand={handleToggleExpand}
         hasMore={hasMore}
         toggleLabel={toggleLabel}
-        showLessLabel={showLessLabel}
+        showLessLabel={showLessLabel ?? t("cardStackShowLess")}
         title={title}
         description={description}
         layout={layout}

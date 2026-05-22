@@ -45,6 +45,7 @@ vi.mock("next/dynamic", () => {
 vi.mock("../../lib/content", () => ({
   getBlogPostBySlug: vi.fn(),
   getAllBlogPosts: vi.fn(),
+  getRelatedBlogPosts: vi.fn(() => []),
 }));
 
 // Mock components
@@ -137,10 +138,11 @@ describe("BlogPostPage", () => {
     vi.clearAllMocks();
 
     // Mock the content functions
-    const { getBlogPostBySlug, getAllBlogPosts } =
+    const { getBlogPostBySlug, getAllBlogPosts, getRelatedBlogPosts } =
       await import("../../lib/content");
     vi.mocked(getBlogPostBySlug).mockReturnValue(mockPost);
     vi.mocked(getAllBlogPosts).mockReturnValue([mockPost, ...mockRelatedPosts]);
+    vi.mocked(getRelatedBlogPosts).mockReturnValue(mockRelatedPosts);
   });
 
   it("renders the blog post page with correct structure", async () => {
@@ -155,7 +157,7 @@ describe("BlogPostPage", () => {
     expect(mainContainer).toHaveClass(
       "min-h-screen",
       "relative",
-      "overflow-hidden",
+      "overflow-x-clip",
     );
     // Background color is applied via inline style from frontmatter hex
     expect(mainContainer).toHaveStyle({ backgroundColor: expect.any(String) });

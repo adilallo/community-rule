@@ -1,4 +1,5 @@
 import Mini from "../../app/components/cards/Mini";
+import { getAssetPath, featurePanelPath } from "../../lib/assetUtils";
 
 export default {
   title: "Components/Cards/Mini",
@@ -30,7 +31,7 @@ export const Default = {
     backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
-    panelContent: "assets/marketing/feature-support.png",
+    panelContent: getAssetPath(featurePanelPath("support")),
   },
 };
 
@@ -41,25 +42,25 @@ export const ColorVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
         labelLine1="Decision-making"
         labelLine2="support"
-        panelContent="assets/marketing/feature-support.png"
+        panelContent={getAssetPath(featurePanelPath("support"))}
       />
       <Mini
         backgroundColor="bg-[#D1FFE2]"
         labelLine1="Values alignment"
         labelLine2="exercises"
-        panelContent="assets/marketing/feature-exercises.png"
+        panelContent={getAssetPath(featurePanelPath("exercises"))}
       />
       <Mini
         backgroundColor="bg-[#F4CAFF]"
         labelLine1="Membership"
         labelLine2="guidance"
-        panelContent="assets/marketing/feature-guidance.png"
+        panelContent={getAssetPath(featurePanelPath("guidance"))}
       />
       <Mini
         backgroundColor="bg-[#CBDDFF]"
         labelLine1="Conflict resolution"
         labelLine2="tools"
-        panelContent="assets/marketing/feature-tools.png"
+        panelContent={getAssetPath(featurePanelPath("tools"))}
       />
     </div>
   ),
@@ -70,7 +71,7 @@ export const AsLink = {
     backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
-    panelContent: "assets/marketing/feature-support.png",
+    panelContent: getAssetPath(featurePanelPath("support")),
     href: "#decision-making",
     ariaLabel: "Navigate to decision-making support tools",
   },

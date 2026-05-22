@@ -1,5 +1,8 @@
+"use client";
+
 import { memo } from "react";
 import Link from "next/link";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
 
 interface LogoProps {
@@ -31,6 +34,8 @@ interface SizeConfig {
 
 const Logo = memo<LogoProps>(
   ({ size = "default", palette = "default", wordmark = true }) => {
+    const t = useTranslation("controlsChrome");
+
     // Size configurations
     const sizes: Record<string, SizeConfig> = {
       default: {
@@ -97,7 +102,7 @@ const Logo = memo<LogoProps>(
           : "hidden";
 
     return (
-      <Link href="/" className="block" aria-label="CommunityRule Logo">
+      <Link href="/" className="block" aria-label={t("logoAlt")}>
         <div
           className={`flex items-center ${config.containerHeight} ${
             wordmark ? config.gap : ""
@@ -106,16 +111,16 @@ const Logo = memo<LogoProps>(
           {/* Logo Text - responsive visibility for topNav sizes */}
           <div
             className={`font-bricolage-grotesque ${textColorClass} ${config.textSize} ${config.lineHeight} font-normal tracking-[0px] transition-colors duration-200 ${wordmarkVisibilityClass}`}
-            aria-label="CommunityRule"
+            aria-label={t("logoText")}
           >
-            CommunityRule
+            {t("logoText")}
           </div>
 
           {/* Vector Icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={getAssetPath(ASSETS.LOGO)}
-            alt="CommunityRule Logo Icon"
+            alt={t("logoAlt")}
             width={27.05}
             height={27.05}
             className={`flex-shrink-0 ${config.iconSize} transition-all duration-200 ${

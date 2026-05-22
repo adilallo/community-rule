@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Modal / Tooltip" (see registry)
+ */
+
 import { memo, useState } from "react";
 import { TooltipView } from "./Tooltip.view";
 import type { TooltipProps } from "./Tooltip.types";

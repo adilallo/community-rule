@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Type / ContentLockup" (see registry)
+ */
+
 import { memo } from "react";
 import ContentLockupView from "./ContentLockup.view";
 import type { ContentLockupProps, VariantStyle } from "./ContentLockup.types";

@@ -3,7 +3,7 @@
 import { memo } from "react";
 import { getAssetPath, quoteStatementShapePath } from "../../../../lib/assetUtils";
 
-/** Figma: Section / Quote — **`shape-qoute.svg`** (22137:890679). */
+/** Figma: Section / Quote — **`shape-quote.svg`** (22137:890679). */
 const EDGE_MASK =
   "linear-gradient(to right, #fff 0%, #fff 14%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, #fff 86%, #fff 100%)";
 
