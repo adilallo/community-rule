@@ -88,10 +88,12 @@ vi.mock("../../app/components/sections/AskOrganizer", () => {
 
 // Mock asset utils
 vi.mock("../../lib/assetUtils", () => ({
-  getAssetPath: vi.fn((asset) => `/assets/${asset}`),
+  getAssetPath: vi.fn((asset) =>
+    asset.startsWith("/") ? asset : `/${asset}`,
+  ),
   ASSETS: {
-    CONTENT_SHAPE_1: "Content_Shape_1.svg",
-    CONTENT_SHAPE_2: "Content_Shape_2.svg",
+    CONTENT_SHAPE_1: "assets/shapes/content-shape-1.svg",
+    CONTENT_SHAPE_2: "assets/shapes/content-shape-2.svg",
   },
 }));
 
@@ -232,8 +234,8 @@ describe("BlogPostPage", () => {
     expect(shapes).toHaveLength(2);
 
     // Check shape sources
-    expect(shapes[0]).toHaveAttribute("src", "/assets/Content_Shape_1.svg");
-    expect(shapes[1]).toHaveAttribute("src", "/assets/Content_Shape_2.svg");
+    expect(shapes[0]).toHaveAttribute("src", "/assets/shapes/content-shape-1.svg");
+    expect(shapes[1]).toHaveAttribute("src", "/assets/shapes/content-shape-2.svg");
   });
 
   it("applies correct styling to article content", async () => {

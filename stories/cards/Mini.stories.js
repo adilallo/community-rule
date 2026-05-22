@@ -30,7 +30,7 @@ export const Default = {
     backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
-    panelContent: "assets/Feature_Support.png",
+    panelContent: "assets/marketing/feature-support.png",
   },
 };
 
@@ -41,25 +41,25 @@ export const ColorVariants = {
         backgroundColor="bg-[var(--color-surface-default-brand-royal)]"
         labelLine1="Decision-making"
         labelLine2="support"
-        panelContent="assets/Feature_Support.png"
+        panelContent="assets/marketing/feature-support.png"
       />
       <Mini
         backgroundColor="bg-[#D1FFE2]"
         labelLine1="Values alignment"
         labelLine2="exercises"
-        panelContent="assets/Feature_Exercises.png"
+        panelContent="assets/marketing/feature-exercises.png"
       />
       <Mini
         backgroundColor="bg-[#F4CAFF]"
         labelLine1="Membership"
         labelLine2="guidance"
-        panelContent="assets/Feature_Guidance.png"
+        panelContent="assets/marketing/feature-guidance.png"
       />
       <Mini
         backgroundColor="bg-[#CBDDFF]"
         labelLine1="Conflict resolution"
         labelLine2="tools"
-        panelContent="assets/Feature_Tools.png"
+        panelContent="assets/marketing/feature-tools.png"
       />
     </div>
   ),
@@ -70,7 +70,7 @@ export const AsLink = {
     backgroundColor: "bg-[var(--color-surface-default-brand-royal)]",
     labelLine1: "Decision-making",
     labelLine2: "support",
-    panelContent: "assets/Feature_Support.png",
+    panelContent: "assets/marketing/feature-support.png",
     href: "#decision-making",
     ariaLabel: "Navigate to decision-making support tools",
   },

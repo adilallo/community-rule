@@ -15,7 +15,7 @@ import { useMessages, useTranslation } from "../../../contexts/MessagesContext";
 import Chip from "../../../components/controls/Chip";
 import IncrementerBlock from "../../../components/controls/IncrementerBlock";
 import Upload from "../../../components/controls/Upload";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
 import ApplicableScopeField from "./ApplicableScopeField";
 import InputLabel from "../../../components/type/InputLabel";
 import type { CustomMethodCardFieldBlock } from "../../../../lib/create/customMethodCardFieldBlocks";
@@ -139,7 +139,7 @@ function CustomMethodCardUploadBlockRow({
           >
             {/* eslint-disable-next-line @next/next/no-img-element -- matches ModalHeader close control */}
             <img
-              src={getAssetPath("assets/Icon_Close.svg")}
+              src={getAssetPath(ASSETS.ICON_CLOSE)}
               alt=""
               className="h-[16px] w-[16px]"
               style={{

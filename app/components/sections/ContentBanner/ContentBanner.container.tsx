@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import {
+  ASSETS,
   getAssetPath,
   contentBlogHorizontalPath,
   contentBlogSectionPath,
@@ -36,7 +37,7 @@ const ContentBannerContainer = memo<ContentBannerProps>(
         return contentBlogHorizontalPath(blogPost.slug);
       }
 
-      return getAssetPath("assets/Content_Banner.svg");
+      return getAssetPath(ASSETS.CONTENT_BANNER);
     };
 
     const resolveSectionImage = (blogPost: BlogPost): string => {

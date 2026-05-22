@@ -75,7 +75,7 @@ function ContentLockupView({
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element -- decorative shape SVG */}
                   <img
-                    src={getAssetPath("assets/Shapes_1.svg")}
+                    src={getAssetPath("assets/shapes/shapes-1.svg")}
                     alt=""
                     className={styles.shape}
                     role="presentation"

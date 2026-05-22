@@ -4,7 +4,7 @@ import { memo } from "react";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentLockup from "../../type/ContentLockup";
 import HeroDecor from "./HeroDecor";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
 
 interface HeroBannerProps {
   title?: string;
@@ -48,7 +48,7 @@ const HeroBanner = memo<HeroBannerProps>(
             <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element -- dynamic path from getAssetPath */}
               <img
-                src={getAssetPath("assets/HeroImage.png")}
+                src={getAssetPath(ASSETS.HERO_IMAGE)}
                 alt={imageAlt}
                 className="w-full h-auto"
                 loading="eager"

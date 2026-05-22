@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useMemo } from "react";
+import { getAssetPath, featurePanelPath } from "../../../../lib/assetUtils";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import FeatureGridView from "./FeatureGrid.view";
 import type { FeatureGridProps, Feature } from "./FeatureGrid.types";
@@ -19,7 +20,7 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           labelLine2: t(
             "pages.home.featureGrid.features.decisionMaking.labelLine2",
           ),
-          panelContent: "/assets/Feature_Support.png",
+          panelContent: getAssetPath(featurePanelPath("support")),
           ariaLabel: t("featureGrid.features.decisionMaking.ariaLabel"),
           href: "#decision-making",
         },
@@ -31,7 +32,7 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           labelLine2: t(
             "pages.home.featureGrid.features.valuesAlignment.labelLine2",
           ),
-          panelContent: "/assets/Feature_Exercises.png",
+          panelContent: getAssetPath(featurePanelPath("exercises")),
           ariaLabel: t("featureGrid.features.valuesAlignment.ariaLabel"),
           href: "#values-alignment",
         },
@@ -43,7 +44,7 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           labelLine2: t(
             "pages.home.featureGrid.features.membershipGuidance.labelLine2",
           ),
-          panelContent: "/assets/Feature_Guidance.png",
+          panelContent: getAssetPath(featurePanelPath("guidance")),
           ariaLabel: t("featureGrid.features.membershipGuidance.ariaLabel"),
           href: "#membership-guidance",
         },
@@ -55,7 +56,7 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           labelLine2: t(
             "pages.home.featureGrid.features.conflictResolution.labelLine2",
           ),
-          panelContent: "/assets/Feature_Tools.png",
+          panelContent: getAssetPath(featurePanelPath("tools")),
           ariaLabel: t("featureGrid.features.conflictResolution.ariaLabel"),
           href: "#conflict-resolution",
         },

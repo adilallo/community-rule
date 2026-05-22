@@ -194,11 +194,14 @@ Inventory aligns with [**CR-104**](https://linear.app/community-rule/issue/CR-10
 
 ## Asset conventions (Figma “Asset” canvas)
 
+Full folder map and PNG audit: **[guides/static-assets.md](./guides/static-assets.md)**.
+
 - **Imports:** use **`asset/icon`** (named **`Icon`** component), **`asset/Logo`**, **`asset/Avatar`**, etc.—same rule as **`buttons/Button`**, no top-level **`asset/index.tsx`** barrel.
 - **`asset/icon/`** — **`Icon.tsx`** maps icon names to SVG modules beside it (`arrow_back.svg`, …); **`index.tsx`** re-exports **`Icon`** and **`ICON_NAME_OPTIONS`** / types.
-- **`public/assets/vector/<slug>.svg`** — Figma Asset / Vector marks (same kebab **`slug`** convention as **`public/assets/template-mark/`**). Use **`vectorMarkPath(slug)`** in **`lib/assetUtils.ts`**.
-- **`asset/Logo`** — Community Rule **`Logo`** component (folder PascalCase, like **`Avatar/`**).
+- **`public/assets/`** — lowercase kebab-case folders: **`icons/`**, **`logos/`** (incl. **`logos/partners/`**), **`marketing/`**, **`case-study/`**, **`shapes/`**, **`vector/`**, **`template-mark/`**, **`share/`**. Use helpers in **`lib/assetUtils.ts`** (`ASSETS`, `partnerLogoPath`, `vectorMarkPath`, …).
+- **`public/assets/vector/<slug>.svg`** — Figma Asset / Vector marks (same kebab **`slug`** convention as **`public/assets/template-mark/`**). Use **`vectorMarkPath(slug)`**.
+- **`asset/Logo`** — Community Rule **`Logo`** component (folder PascalCase, like **`Avatar/`**); brand SVG at **`public/assets/logos/community-rule.svg`**.
 - **`asset/Avatar`** + **`asset/AvatarContainer`** — paired circular image stacks (e.g. top nav). Fuller DS Avatar behavior (**initials**, upload routing, …) tracked as **[CR-58](https://linear.app/community-rule/issue/CR-58)**.
-- **`asset/Shapes/`** — decorative blobs for **`cards/Stat`** and About header inline art (Figma **Shapes**).
+- **`asset/Shapes/`** — decorative blobs for **`cards/Stat`** and About header inline art (Figma **Shapes**); static files under **`public/assets/shapes/`**.
 
 *Update this when you add a new top-level `app/components/*` package or a new Figma canvas.*

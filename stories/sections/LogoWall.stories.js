@@ -37,13 +37,13 @@ export default {
 <LogoWall 
   logos={[
     { 
-      src: "assets/Section/Logo_CUBoulder.png", 
+      src: "assets/logos/partners/cu-boulder.svg", 
       alt: "CU Boulder",
       size: "h-10 lg:h-12 xl:h-[60px]",
       order: "order-1 sm:order-2"
     },
     { 
-      src: "assets/Section/Logo_FoodNotBombs.png", 
+      src: "assets/logos/partners/food-not-bombs.svg", 
       alt: "Food Not Bombs",
       size: "h-11 lg:h-14 xl:h-[70px]",
       order: "order-2 sm:order-1"

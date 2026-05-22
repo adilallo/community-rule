@@ -25,9 +25,9 @@ const NAV_SIZE_TO_MENU_ITEM_SIZE: Record<NavSize, MenuClusterSize> = {
 };
 
 export const avatarImages = [
-  { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
-  { src: getAssetPath(ASSETS.AVATAR_2), alt: "Avatar 2" },
   { src: getAssetPath(ASSETS.AVATAR_3), alt: "Avatar 3" },
+  { src: getAssetPath(ASSETS.AVATAR_2), alt: "Avatar 2" },
+  { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
 ];
 
 const TopContainer = memo<TopProps>(
