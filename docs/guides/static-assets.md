@@ -31,6 +31,10 @@ public/
   `/assets/...` strings in components.
 - **Blog art** stays under `public/content/blog/` with
   `{slug}-vertical.svg`, `-horizontal.svg`, `-section.svg`, `-tag.svg`.
+- **Favicon** reuses `assets/logos/community-rule.svg` (`ASSETS.LOGO` in
+  `app/layout.tsx` metadata). Do not place `favicon.ico` or other static
+  binaries under `app/` — keep `app/` for routes, layouts, and styles only
+  (`globals.css`, `tailwind.css`).
 
 ## PNG files and `.gitignore`
 
@@ -49,6 +53,7 @@ stage. Raster → SVG conversion is tracked in
 | `marketing/avatar-*.svg` (×3) | Avatar / ASSETS | **Done** — SVG |
 | `marketing/hero-image.png` | HeroBanner | **Design review** — likely keep raster |
 | `marketing/governance-booklet.pdf` | About / Book | **Done** — PDF (`governanceBookletPath()`) |
+| `logos/community-rule.svg` | Logo + favicon (`ASSETS.LOGO`) | **Done** — SVG |
 | `logos/gitlab.svg` | Footer / social | **Done** — SVG |
 
 ## Related docs

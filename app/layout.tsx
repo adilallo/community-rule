@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { AuthModalProvider } from "./contexts/AuthModalContext";
 import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
+import { ASSETS, getAssetPath } from "../lib/assetUtils";
 import "./globals.css";
 import ConditionalNavigation from "./components/navigation/ConditionalNavigation";
 
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL("https://communityrule.com"),
   icons: {
-    icon: [{ url: "/favicon.ico", sizes: "16x16", type: "image/x-icon" }],
+    icon: [{ url: getAssetPath(ASSETS.LOGO), type: "image/svg+xml" }],
   },
   alternates: {
     canonical: "/",
