@@ -66,6 +66,14 @@ export const METHOD_FACET_API_SECTION_IDS = [
 
 export type MethodFacetApiSectionId = (typeof METHOD_FACET_API_SECTION_IDS)[number];
 
+/** `GET /api/create-flow/methods?section=` — four method decks + core values (CR-115). */
+export const CATALOG_SECTION_IDS = [
+  ...METHOD_FACET_API_SECTION_IDS,
+  "coreValues",
+] as const;
+
+export type CatalogSectionId = (typeof CATALOG_SECTION_IDS)[number];
+
 export type CustomRuleFacetKind = "coreValues" | "method";
 
 export type CustomRuleFacetRow = {

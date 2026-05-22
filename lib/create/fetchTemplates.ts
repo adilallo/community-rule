@@ -131,13 +131,60 @@ export async function fetchRankedTemplatesByFacets(options: {
   return { templates, scores: parseScoresPayload(data.scores) };
 }
 
+export type TemplateDetailDto = {
+  template: RuleTemplateDto;
+  methods: Array<{ section: string; slug: string }>;
+};
+
+export async function fetchTemplateDetailBySlug(
+  slug: string,
+  options?: FetchTemplatesOptions,
+): Promise<TemplateDetailDto | null | { error: string }> {
+  const encoded = encodeURIComponent(slug);
+  try {
+    const res = await fetch(`/api/templates/${encoded}`, {
+      credentials: "include",
+      signal: options?.signal,
+    });
+    const data = (await res.json()) as TemplateDetailDto & {
+      error?: string | { message?: string };
+    };
+    if (!res.ok) {
+      if (res.status === 404) return null;
+      const err = data.error;
+      const message =
+        typeof err === "string"
+          ? err
+          : err && typeof err === "object" && typeof err.message === "string"
+            ? err.message
+            : "Could not load template";
+      return { error: message };
+    }
+    if (!data.template || typeof data.template.slug !== "string") {
+      return { error: "Could not load template" };
+    }
+    return {
+      template: data.template,
+      methods: Array.isArray(data.methods) ? data.methods : [],
+    };
+  } catch (e) {
+    if (isAbortError(e)) {
+      throw new DOMException("Aborted", "AbortError");
+    }
+    return { error: "Could not load template" };
+  }
+}
+
 export async function fetchTemplateBySlug(
   slug: string,
   options?: FetchTemplatesOptions,
 ): Promise<RuleTemplateDto | null | { error: string }> {
-  const result = await fetchTemplates(options);
+  const result = await fetchTemplateDetailBySlug(slug, options);
   if ("error" in result) {
     return result;
   }
-  return result.find((t) => t.slug === slug) ?? null;
+  if (result === null) {
+    return null;
+  }
+  return result.template;
 }

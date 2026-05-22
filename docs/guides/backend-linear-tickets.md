@@ -319,6 +319,33 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 
 ---
 
+## Ticket 22 — Public catalog API (templates + methods + core values; CR-115)
+
+**Depends on:** Ticket 16 / [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no) (facet ranking).
+
+**Goal:** Machine-readable HTTP catalog so external clients and tools can discover curated templates and all built-in governance methods (including core values) **without** importing `messages/en/create/customRule/*.json`.
+
+**Implementation (shipped):**
+
+1. **`lib/server/governanceCatalog.ts`** — DTOs from messages JSON (English v1).
+2. **`GET /api/templates/[slug]`** — template + `templateMethodsFromBody` composition.
+3. **`GET /api/create-flow/methods`** — extended: full copy, full deck, `coreValues` (+ `values` alias), facet merge unchanged for method sections.
+4. **`lib/create/fetchTemplates.ts`** — `fetchTemplateDetailBySlug`; `fetchTemplateBySlug` uses detail route.
+5. Tests: `governanceCatalog.test.ts`, `templatesBySlugRoute.test.ts`, extended `createFlowMethodsRoute.test.ts`.
+
+**Acceptance criteria:**
+
+- [x] `GET /api/templates/[slug]` returns one template or 404.
+- [x] `GET /api/create-flow/methods?section=coreValues` returns all presets with stable ids.
+- [x] Method sections return full metadata; facet ranking preserved.
+- [x] Documented in CONTRIBUTING.md and template-recommendation-matrix.md §9.
+
+**Files:** [lib/server/governanceCatalog.ts](../../lib/server/governanceCatalog.ts), [app/api/templates/[slug]/route.ts](../../app/api/templates/[slug]/route.ts), [app/api/create-flow/methods/route.ts](../../app/api/create-flow/methods/route.ts), [lib/server/ruleTemplates.ts](../../lib/server/ruleTemplates.ts), [lib/create/fetchTemplates.ts](../../lib/create/fetchTemplates.ts), [lib/create/customRuleFacets.ts](../../lib/create/customRuleFacets.ts).
+
+**Status:** [CR-115](https://linear.app/community-rule/issue/CR-115/backend-public-catalog-api-templates-built-in-governance-methods-all) **Done** (in-repo).
+
+---
+
 ## Ticket 17 — Canon custom create-rule wizard (routes, resume, progress) + docs
 
 **Depends on:** none for documentation; soft optional **CR-73**, **CR-76**, **CR-77** for payload/resume/publish alignment.

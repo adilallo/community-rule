@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { METHOD_FACET_API_SECTION_IDS } from "../../create/customRuleFacets";
+import {
+  CATALOG_SECTION_IDS,
+  METHOD_FACET_API_SECTION_IDS,
+} from "../../create/customRuleFacets";
 
 /**
  * Zod schemas for the recommendation matrix (CR-88).
@@ -19,6 +22,10 @@ import { METHOD_FACET_API_SECTION_IDS } from "../../create/customRuleFacets";
 export const SECTION_IDS = METHOD_FACET_API_SECTION_IDS;
 export type SectionId = (typeof SECTION_IDS)[number];
 export const sectionIdSchema = z.enum(SECTION_IDS);
+
+/** `GET /api/create-flow/methods?section=` including core values (CR-115). */
+export type CatalogSectionId = (typeof CATALOG_SECTION_IDS)[number];
+export const catalogSectionIdSchema = z.enum(CATALOG_SECTION_IDS);
 
 export const FACET_GROUP_IDS = [
   "size",
