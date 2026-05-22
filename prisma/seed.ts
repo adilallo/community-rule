@@ -234,7 +234,7 @@ const TEMPLATES: {
     description:
       "Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council.",
     sortOrder: 0,
-    featured: true,
+    featured: false,
     body: bodyFromSlugComposition("consensus-clusters"),
   },
   {
@@ -254,7 +254,7 @@ const TEMPLATES: {
     description:
       "An elected board determines policies and organizes their implementation.",
     sortOrder: 2,
-    featured: true,
+    featured: false,
     body: bodyFromSlugComposition("elected-board"),
   },
   {
@@ -264,7 +264,7 @@ const TEMPLATES: {
     description:
       "Any participant can propose a rule change. If enough sign it, it goes to a general vote.",
     sortOrder: 3,
-    featured: true,
+    featured: false,
     body: bodyFromSlugComposition("petition"),
   },
   {
@@ -304,7 +304,7 @@ const TEMPLATES: {
     description:
       "Authority is granted to those doing the work. If you do the task, you decide how it gets done.",
     sortOrder: 7,
-    featured: false,
+    featured: true,
     body: bodyFromSlugComposition("do-ocracy"),
   },
   {
@@ -314,7 +314,7 @@ const TEMPLATES: {
     description:
       "Voting cost is squared (V²), preventing a majority from steamrolling a passionate minority.",
     sortOrder: 8,
-    featured: false,
+    featured: true,
     body: bodyFromSlugComposition("quadratic-governance"),
   },
   {
@@ -334,7 +334,7 @@ const TEMPLATES: {
     description:
       "Starts as a Dictatorship for speed, moving to a Board, and finally to full community ownership.",
     sortOrder: 10,
-    featured: false,
+    featured: true,
     body: bodyFromSlugComposition("devolution"),
   },
   {

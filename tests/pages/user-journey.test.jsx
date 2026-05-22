@@ -56,11 +56,11 @@ describe("User Journey Integration", () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText("Circles")).toBeInTheDocument();
+      expect(screen.getByText("Consensus")).toBeInTheDocument();
     });
-    expect(screen.getByText("Elected Board")).toBeInTheDocument();
-    expect(screen.getByText("Consensus")).toBeInTheDocument();
-    expect(screen.getByText("Petition")).toBeInTheDocument();
+    expect(screen.getByText("Do-ocracy")).toBeInTheDocument();
+    expect(screen.getByText("Devolution")).toBeInTheDocument();
+    expect(screen.getByText("Quadratic Governance")).toBeInTheDocument();
 
     const seeHowLinks = screen.getAllByRole("link", {
       name: "See how it works",
@@ -195,7 +195,7 @@ describe("User Journey Integration", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText(/Circles/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/Consensus/i).length).toBeGreaterThan(0);
     });
 
     await waitFor(() => {

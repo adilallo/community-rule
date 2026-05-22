@@ -75,16 +75,16 @@ describe("Page Flow Integration", () => {
     ).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByRole("heading", { name: "Circles" })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Consensus" })).toBeInTheDocument();
     });
     expect(
-      screen.getByRole("heading", { name: "Elected Board" }),
+      screen.getByRole("heading", { name: "Do-ocracy" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Consensus" }),
+      screen.getByRole("heading", { name: "Devolution" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Petition" }),
+      screen.getByRole("heading", { name: "Quadratic Governance" }),
     ).toBeInTheDocument();
 
     await waitFor(() => {
@@ -153,12 +153,12 @@ describe("Page Flow Integration", () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText("Circles")).toBeInTheDocument();
+      expect(screen.getByText("Consensus")).toBeInTheDocument();
     });
     expect(screen.queryByText("Solidarity Network")).not.toBeInTheDocument();
-    expect(screen.getByText("Elected Board")).toBeInTheDocument();
-    expect(screen.getByText("Consensus")).toBeInTheDocument();
-    expect(screen.getByText("Petition")).toBeInTheDocument();
+    expect(screen.getByText("Do-ocracy")).toBeInTheDocument();
+    expect(screen.getByText("Devolution")).toBeInTheDocument();
+    expect(screen.getByText("Quadratic Governance")).toBeInTheDocument();
 
     const seeAll = screen.getByRole("link", { name: "See all templates" });
     expect(seeAll).toHaveAttribute("href", "/templates");
@@ -228,7 +228,7 @@ describe("Page Flow Integration", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Circles")).toBeInTheDocument();
+      expect(screen.getByText("Consensus")).toBeInTheDocument();
     });
 
     await waitFor(() => {
