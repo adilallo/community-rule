@@ -45,10 +45,10 @@ test.describe("Critical User Journeys", () => {
     ).toBeVisible();
 
     // 6. User explores rule templates
-    await page.locator("text=Circles").first().click();
-    await page.locator("text=Consensus").nth(1).click();
-    await page.locator("text=Elected Board").first().click();
-    await page.locator("text=Petition").first().click();
+    await page.locator("text=Consensus").first().click();
+    await page.locator("text=Do-ocracy").first().click();
+    await page.locator("text=Devolution").first().click();
+    await page.locator("text=Quadratic Governance").first().click();
 
     // 7. User checks out features
     const features = [

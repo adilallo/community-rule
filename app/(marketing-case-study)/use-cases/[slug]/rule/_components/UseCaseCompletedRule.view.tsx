@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import CommunityRule from "../../../../../components/type/CommunityRule";
-import type { CommunityRuleSection } from "../../../../../components/type/CommunityRule/CommunityRule.types";
 import CreateFlowTopNav from "../../../../../components/navigation/CreateFlowTopNav";
 import Share from "../../../../../components/modals/Share";
 import Alert from "../../../../../components/modals/Alert";
@@ -12,41 +9,25 @@ import {
   CREATE_FLOW_MD_UP_GRID_CELL_CLASS,
   CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS,
 } from "../../../../../(app)/create/components/createFlowLayoutTokens";
-import { useCreateFlowMdUp } from "../../../../../(app)/create/hooks/useCreateFlowMdUp";
-import { useTranslation } from "../../../../../contexts/MessagesContext";
-import type { UseCaseDetailSlug } from "../../../../../../lib/useCaseSyntheticPost";
-import type { UseCaseCompletedRuleFixture } from "../../../../../../lib/useCaseCompletedRule";
-import {
-  useUseCaseCompletedRuleActions,
-  type UseCaseCompletedRuleActionBanner,
-} from "./useUseCaseCompletedRuleActions";
+import type { UseCaseCompletedRuleViewProps } from "./UseCaseCompletedRule.types";
 
-export type UseCaseCompletedRuleViewProps = {
-  slug: UseCaseDetailSlug;
-  fixture: UseCaseCompletedRuleFixture;
-  sections: CommunityRuleSection[];
-};
-
-/** Figma: Completed CR — use case demos (21995:39476, 21995:40092, 22015:42413). */
 export function UseCaseCompletedRuleView({
-  slug,
   fixture,
   sections,
+  mdUp,
+  duplicateLabel,
+  duplicateAriaLabel,
+  exitLabel,
+  shareModalOpen,
+  onShareOpen,
+  onShareClose,
+  onCopyLink,
+  onEmailShare,
+  onDuplicate,
+  onExit,
+  actionBanner,
+  onActionBannerClose,
 }: UseCaseCompletedRuleViewProps) {
-  const router = useRouter();
-  const mdUp = useCreateFlowMdUp();
-  const tTopNav = useTranslation("pages.useCasesCompletedRule.topNav");
-  const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [actionBanner, setActionBanner] =
-    useState<UseCaseCompletedRuleActionBanner | null>(null);
-
-  const { copyPageLink, mailtoPageLink, handleDuplicate } =
-    useUseCaseCompletedRuleActions({
-      slug,
-      fixture,
-      setActionBanner,
-    });
-
   const pageBg = fixture.pageBackground;
 
   return (
@@ -69,7 +50,7 @@ export function UseCaseCompletedRuleView({
                 description={actionBanner.description}
                 hasLeadingIcon
                 hasBodyText={Boolean(actionBanner.description)}
-                onClose={() => setActionBanner(null)}
+                onClose={onActionBannerClose}
                 className="w-full"
               />
             </div>
@@ -77,24 +58,24 @@ export function UseCaseCompletedRuleView({
         ) : null}
         <Share
           isOpen={shareModalOpen}
-          onClose={() => setShareModalOpen(false)}
-          onCopyLink={() => void copyPageLink()}
-          onEmailShare={mailtoPageLink}
-          onSignalShare={() => void copyPageLink()}
-          onSlackShare={() => void copyPageLink()}
-          onDiscordShare={() => void copyPageLink()}
+          onClose={onShareClose}
+          onCopyLink={onCopyLink}
+          onEmailShare={onEmailShare}
+          onSignalShare={onCopyLink}
+          onSlackShare={onCopyLink}
+          onDiscordShare={onCopyLink}
         />
         <CreateFlowTopNav
           hasShare
           hasDuplicate
-          duplicateLabel={tTopNav("duplicate")}
-          duplicateAriaLabel={tTopNav("duplicateAriaLabel")}
-          exitLabel={tTopNav("return")}
+          duplicateLabel={duplicateLabel}
+          duplicateAriaLabel={duplicateAriaLabel}
+          exitLabel={exitLabel}
           buttonPalette="inverse"
           className="shrink-0 !bg-transparent"
-          onShare={() => setShareModalOpen(true)}
-          onDuplicate={() => void handleDuplicate()}
-          onExit={() => router.push(`/use-cases/${slug}`)}
+          onShare={onShareOpen}
+          onDuplicate={onDuplicate}
+          onExit={onExit}
         />
         <div
           className={`mx-auto grid w-full min-h-0 flex-1 grid-cols-1 gap-4 px-5 max-md:max-w-[639px] max-md:gap-6 max-md:overflow-y-auto max-md:overscroll-y-contain max-md:pt-[var(--space-800)] max-md:pb-8 md:h-full md:flex-1 md:grid-cols-2 md:grid-rows-1 md:items-start md:justify-items-center md:gap-[var(--measures-spacing-1200,48px)] md:overflow-hidden md:px-12 md:py-0 ${CREATE_FLOW_TWO_COLUMN_MAX_WIDTH_CLASS}`}

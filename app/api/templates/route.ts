@@ -3,6 +3,7 @@ import { isDatabaseConfigured } from "../../../lib/server/env";
 import { listRankedRuleTemplatesFromDb } from "../../../lib/server/ruleTemplates";
 import { dbUnavailable } from "../../../lib/server/responses";
 import { parseRequestedFacetsFromSearchParams } from "../../../lib/server/validation/methodFacetsSchemas";
+import { apiRoute } from "../../../lib/server/apiRoute";
 
 /**
  * GET /api/templates
@@ -15,7 +16,7 @@ import { parseRequestedFacetsFromSearchParams } from "../../../lib/server/valida
  *
  * See `docs/guides/template-recommendation-matrix.md` §9.1.
  */
-export async function GET(request: NextRequest) {
+export const GET = apiRoute("templates.get", async (request: NextRequest) => {
   if (!isDatabaseConfigured()) {
     return dbUnavailable();
   }
@@ -29,4 +30,4 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(
     hasScores ? { templates, scores } : { templates },
   );
-}
+});

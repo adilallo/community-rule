@@ -1,31 +1,14 @@
 "use client";
 
-import type { FormEvent } from "react";
 import Create from "../Create";
 import TextInput from "../../controls/TextInput";
 import TextArea from "../../controls/TextArea";
 import Button from "../../buttons/Button";
-import { useTranslation } from "../../../contexts/MessagesContext";
 import {
   ASK_ORGANIZER_INQUIRY_FORM_ID,
   ORGANIZER_INQUIRY_HONEYPOT_FIELD,
 } from "../../../../lib/organizerInquiryConstants";
-import type { AskOrganizerInquiryModalProps } from "./AskOrganizerInquiryModal.types";
-
-export type AskOrganizerInquiryModalViewProps = AskOrganizerInquiryModalProps & {
-  email: string;
-  message: string;
-  honeypot: string;
-  submitting: boolean;
-  success: boolean;
-  formError: string | null;
-  emailError: boolean;
-  questionError: boolean;
-  onEmailChange: (_v: string) => void;
-  onMessageChange: (_v: string) => void;
-  onHoneypotChange: (_v: string) => void;
-  onSubmit: (_e: FormEvent<HTMLFormElement>) => void;
-};
+import type { AskOrganizerInquiryModalViewProps } from "./AskOrganizerInquiryModal.types";
 
 /**
  * Figma: Community Rule System — Modal / Ask an Organizer (22078-587823)
@@ -33,6 +16,7 @@ export type AskOrganizerInquiryModalViewProps = AskOrganizerInquiryModalProps & 
 export function AskOrganizerInquiryModalView({
   isOpen,
   onClose,
+  copy,
   email,
   message,
   honeypot,
@@ -46,8 +30,6 @@ export function AskOrganizerInquiryModalView({
   onHoneypotChange,
   onSubmit,
 }: AskOrganizerInquiryModalViewProps) {
-  const t = useTranslation("modals.askOrganizerInquiry");
-
   const footer = success ? (
     <div className="w-full px-1">
       <Button
@@ -58,7 +40,7 @@ export function AskOrganizerInquiryModalView({
         className="w-full !justify-center"
         onClick={onClose}
       >
-        {t("closeAfterSuccess")}
+        {copy.closeAfterSuccess}
       </Button>
     </div>
   ) : (
@@ -72,7 +54,7 @@ export function AskOrganizerInquiryModalView({
         className="w-full !justify-center"
         disabled={submitting}
       >
-        {t("submitButton")}
+        {copy.submitButton}
       </Button>
     </div>
   );
@@ -82,22 +64,22 @@ export function AskOrganizerInquiryModalView({
       isOpen={isOpen}
       onClose={onClose}
       backdropVariant="blurredYellow"
-      title={t("title")}
-      description={t("description")}
+      title={copy.title}
+      description={copy.description}
       showBackButton={false}
       showNextButton={false}
       stepper={false}
-      ariaLabel={t("ariaDialog")}
+      ariaLabel={copy.ariaDialog}
       footerContent={footer}
       footerClassName="!h-auto min-h-[112px] shrink-0 flex flex-col justify-end pb-8 pt-3 px-4"
     >
       {success ? (
         <div className="flex flex-col gap-3 py-2">
           <p className="font-inter text-[18px] font-semibold leading-[24px] text-[var(--color-content-default-primary)]">
-            {t("successTitle")}
+            {copy.successTitle}
           </p>
           <p className="font-inter text-[14px] leading-[20px] text-[var(--color-content-default-secondary)]">
-            {t("successDescription")}
+            {copy.successDescription}
           </p>
         </div>
       ) : (
@@ -120,8 +102,8 @@ export function AskOrganizerInquiryModalView({
             type="email"
             name="email"
             autoComplete="email"
-            label={t("emailLabel")}
-            placeholder={t("emailPlaceholder")}
+            label={copy.emailLabel}
+            placeholder={copy.emailPlaceholder}
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
             error={emailError}
@@ -131,8 +113,8 @@ export function AskOrganizerInquiryModalView({
 
           <TextArea
             name="message"
-            label={t("questionLabel")}
-            placeholder={t("questionPlaceholder")}
+            label={copy.questionLabel}
+            placeholder={copy.questionPlaceholder}
             value={message}
             onChange={(e) => onMessageChange(e.target.value)}
             error={questionError}
@@ -146,7 +128,7 @@ export function AskOrganizerInquiryModalView({
             className="pointer-events-none absolute left-0 top-0 h-px w-px overflow-hidden opacity-0"
           >
             <label htmlFor={`${ASK_ORGANIZER_INQUIRY_FORM_ID}-${ORGANIZER_INQUIRY_HONEYPOT_FIELD}`}>
-              {t("honeypotLabel")}
+              {copy.honeypotLabel}
             </label>
             <input
               id={`${ASK_ORGANIZER_INQUIRY_FORM_ID}-${ORGANIZER_INQUIRY_HONEYPOT_FIELD}`}

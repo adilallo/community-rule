@@ -26,7 +26,9 @@ vi.mock("../../lib/assetUtils", async (importOriginal) => {
     (await importOriginal()) as typeof import("../../lib/assetUtils");
   return {
     ...actual,
-    getAssetPath: vi.fn((asset: string) => `/assets/${asset}`),
+    getAssetPath: vi.fn((asset: string) =>
+      asset.startsWith("/") ? asset : `/${asset}`,
+    ),
   };
 });
 

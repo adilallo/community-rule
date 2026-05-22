@@ -2,6 +2,7 @@
 
 import { memo, forwardRef, useState, useRef } from "react";
 import { useComponentId, useFormField } from "../../../hooks";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { TextInputView } from "./TextInput.view";
 import type { TextInputProps } from "./TextInput.types";
 
@@ -34,6 +35,7 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     },
     ref,
   ) => {
+    const t = useTranslation("controlsChrome");
     const externalState = externalStateProp;
     const inputSize = inputSizeProp;
 
@@ -244,6 +246,8 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
         textHint={textHint}
         formHeader={formHeader}
         maxLength={maxLength}
+        helpIconAlt={t("helpIconAlt")}
+        hintDefault={t("hintDefault")}
         {...props}
       />
     );

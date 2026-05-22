@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Card / Stat" (21598-18215)
+ */
+
 import { memo } from "react";
 import StatView from "./Stat.view";
 import type { StatProps } from "./Stat.types";

@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Utility / Menu Item" (see registry)
+ */
+
 import { memo } from "react";
 import MenuItemView from "./MenuItem.view";
 import type { MenuItemProps } from "./MenuItem.types";

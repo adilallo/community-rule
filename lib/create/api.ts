@@ -8,19 +8,20 @@ async function parseJson<T>(response: Response): Promise<T> {
   return data;
 }
 
-/** Supports legacy `{ error: string }` and `{ error: { message: string } }` from API routes. */
+/** Reads `message` from API error JSON (canonical `{ error: { code, message } }` or legacy `{ error: string }`). */
 function readApiErrorMessage(data: unknown): string {
-  if (!data || typeof data !== "object" || !("error" in data)) {
-    return "Request failed";
-  }
-  const err = (data as { error: unknown }).error;
-  if (typeof err === "string") {
-    return err;
-  }
-  if (err && typeof err === "object" && "message" in err) {
-    const m = (err as { message: unknown }).message;
-    if (typeof m === "string") {
-      return m;
+  if (data && typeof data === "object" && "error" in data) {
+    const err = (data as { error: unknown }).error;
+    if (typeof err === "string") {
+      return err;
+    }
+    if (
+      err &&
+      typeof err === "object" &&
+      "message" in err &&
+      typeof (err as { message: unknown }).message === "string"
+    ) {
+      return (err as { message: string }).message;
     }
   }
   return "Request failed";

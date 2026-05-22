@@ -7,10 +7,10 @@ export type CaseStudySurfaceValue = (typeof CASE_STUDY_SURFACE_OPTIONS)[number];
 export interface CaseStudyProps {
   surface: CaseStudySurfaceValue;
   /**
-   * Alt text for built-in raster art (`public/assets/use-cases/`) when **`visual`** is omitted.
+   * Alt text for built-in SVG art (`public/assets/case-study/`) when **`visual`** is omitted.
    */
   imageAlt?: string;
-  /** Overrides built-in raster with custom slot content when provided. */
+  /** Overrides built-in artwork with custom slot content when provided. */
   visual?: ReactNode;
   className?: string;
 }

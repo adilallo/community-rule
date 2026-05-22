@@ -9,13 +9,14 @@ export function CreateFlowFooterView({
   proportionBarVariant: proportionBarVariantProp,
   onBackClick,
   className = "",
+  footerAriaLabel,
 }: CreateFlowFooterProps) {
   const proportionBarVariant = proportionBarVariantProp ?? "default";
   return (
     <footer
       className={`bg-black w-full ${className}`}
       role="contentinfo"
-      aria-label="Create Flow Footer"
+      aria-label={footerAriaLabel}
     >
       {/* Progress Bar - Top */}
       {progressBar && (

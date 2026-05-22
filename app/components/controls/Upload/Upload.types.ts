@@ -35,6 +35,8 @@ export interface UploadViewProps {
   label?: string;
   showHelpIcon: boolean;
   hintText: string;
+  uploadButtonLabel: string;
+  uploadAriaLabel: string;
   onClick?: () => void;
   className: string;
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "../../../contexts/MessagesContext";
 import SectionHeader from "../../type/SectionHeader";
 import Button from "../../buttons/Button";
 import { GovernanceTemplateGrid } from "../GovernanceTemplateGrid";
@@ -12,12 +11,11 @@ export function RuleStackView({
   className,
   onTemplateClick,
   gridEntries,
-  translationNamespace,
+  sectionTitle,
+  sectionSubtitle,
+  seeAllTemplatesLabel,
   twoColumnsFromMd = false,
 }: RuleStackViewProps) {
-  const t = useTranslation(translationNamespace);
-  const buttonText = t("button.seeAllTemplates");
-
   return (
     <section
       data-figma-node="22085-860413"
@@ -35,8 +33,8 @@ export function RuleStackView({
       `}
     >
       <SectionHeader
-        title={t("title")}
-        subtitle={t("subtitle")}
+        title={sectionTitle}
+        subtitle={sectionSubtitle}
         variant="multi-line"
         ruleStackDesktopTypeScale
         twoColumnsFromMd={twoColumnsFromMd}
@@ -69,7 +67,7 @@ export function RuleStackView({
           size="large"
           href="/templates"
         >
-          {buttonText}
+          {seeAllTemplatesLabel}
         </Button>
       </div>
     </section>

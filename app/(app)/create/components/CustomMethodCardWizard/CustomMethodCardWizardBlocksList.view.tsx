@@ -1,11 +1,10 @@
 "use client";
 
-import { memo, useCallback, useState, type DragEvent } from "react";
+import { memo } from "react";
 import Icon from "../../../../components/asset/icon";
 import { ADD_CUSTOM_FIELD_TYPE_ICONS } from "../../../../components/controls/AddCustomField/AddCustomField.types";
 import type { AddCustomFieldType } from "../../../../components/controls/AddCustomField/AddCustomField.types";
-import type { CustomMethodCardFieldBlock } from "../../../../../lib/create/customMethodCardFieldBlocks";
-import { reorderCustomMethodCardFieldBlocks } from "../../../../../lib/create/reorderCustomMethodCardFieldBlocks";
+import type { CustomMethodCardWizardBlocksListViewProps } from "./CustomMethodCardWizardBlocksList.types";
 
 function DragHandleGlyph({ className }: { className?: string }) {
   return (
@@ -28,62 +27,18 @@ function DragHandleGlyph({ className }: { className?: string }) {
   );
 }
 
-export interface CustomMethodCardWizardBlocksListViewProps {
-  blocks: CustomMethodCardFieldBlock[];
-  fieldTypeLabels: Record<AddCustomFieldType, string>;
-  dragHandleAriaLabel: string;
-  listLabel: string;
-  onBlocksReorder: (_next: CustomMethodCardFieldBlock[]) => void;
-}
-
 function CustomMethodCardWizardBlocksListViewComponent({
   blocks,
   fieldTypeLabels,
   dragHandleAriaLabel,
   listLabel,
-  onBlocksReorder,
+  draggingIndex,
+  overIndex,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
 }: CustomMethodCardWizardBlocksListViewProps) {
-  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-  const [overIndex, setOverIndex] = useState<number | null>(null);
-
-  const clearDragUi = useCallback(() => {
-    setDraggingIndex(null);
-    setOverIndex(null);
-  }, []);
-
-  const handleDragStart = useCallback(
-    (index: number) => (e: DragEvent) => {
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", String(index));
-      setDraggingIndex(index);
-    },
-    [],
-  );
-
-  const handleDragOver = useCallback((index: number) => {
-    return (e: DragEvent) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      setOverIndex(index);
-    };
-  }, []);
-
-  const handleDrop = useCallback(
-    (index: number) => (e: DragEvent) => {
-      e.preventDefault();
-      const from = Number.parseInt(e.dataTransfer.getData("text/plain"), 10);
-      if (Number.isNaN(from)) {
-        clearDragUi();
-        return;
-      }
-      onBlocksReorder(
-        reorderCustomMethodCardFieldBlocks(blocks, from, index),
-      );
-      clearDragUi();
-    },
-    [blocks, clearDragUi, onBlocksReorder],
-  );
-
   return (
     <ul className="flex list-none flex-col gap-2 p-0" aria-label={listLabel}>
       {blocks.map((block, index) => {
@@ -98,14 +53,14 @@ function CustomMethodCardWizardBlocksListViewComponent({
                 ? "ring-2 ring-[var(--color-border-invert-primary)] ring-offset-2 ring-offset-[var(--color-surface-default-primary)]"
                 : ""
             } ${draggingIndex === index ? "opacity-60" : ""}`}
-            onDragOver={handleDragOver(index)}
-            onDrop={handleDrop(index)}
+            onDragOver={onDragOver(index)}
+            onDrop={onDrop(index)}
           >
             <button
               type="button"
               draggable
-              onDragStart={handleDragStart(index)}
-              onDragEnd={clearDragUi}
+              onDragStart={onDragStart(index)}
+              onDragEnd={onDragEnd}
               className="flex shrink-0 cursor-grab touch-manipulation items-center justify-center rounded-[var(--measures-radius-200,8px)] border-0 bg-transparent px-1 text-[var(--color-content-default-secondary)] active:cursor-grabbing focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-invert-primary)]"
               aria-label={dragHandleAriaLabel}
             >

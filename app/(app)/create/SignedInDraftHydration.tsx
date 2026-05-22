@@ -17,7 +17,7 @@ import {
   parseCreateFlowScreenFromPathname,
 } from "./utils/flowSteps";
 
-const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
+import { isBackendSyncEnabled } from "../../../lib/create/backendSyncEnabled";
 
 /**
  * When sync is on and the user is signed in, restore the server-side draft only
@@ -54,7 +54,7 @@ export function SignedInDraftHydration({
   const finishedUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!SYNC_ENABLED) return;
+    if (!isBackendSyncEnabled()) return;
     if (!sessionResolved) return;
     if (sessionUser == null || sessionUser === undefined) {
       finishedUserIdRef.current = null;

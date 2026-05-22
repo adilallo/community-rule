@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { memo } from "react";
+import { caseStudyVisualPath, getAssetPath } from "../../../../lib/assetUtils";
 import type { CaseStudyProps } from "./CaseStudy.types";
 
 const SURFACE_CLASS: Record<CaseStudyProps["surface"], string> = {
@@ -12,9 +13,9 @@ const SURFACE_CLASS: Record<CaseStudyProps["surface"], string> = {
 
 /** Default art per tile: Figma-exported SVG composites (305×305 incl. rounded bg). */
 const SURFACE_ART: Record<CaseStudyProps["surface"], string> = {
-  lavender: "/assets/case-study/case-study-mutual-aid.svg",
-  neutral: "/assets/case-study/case-study-food-not-bombs.svg",
-  rose: "/assets/case-study/case-study-boulder-county-street-medics.svg",
+  lavender: getAssetPath(caseStudyVisualPath("lavender")),
+  neutral: getAssetPath(caseStudyVisualPath("neutral")),
+  rose: getAssetPath(caseStudyVisualPath("rose")),
 };
 
 /** Figma: ~23px corner (“Card / CaseStudy” shells). */

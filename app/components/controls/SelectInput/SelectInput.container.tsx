@@ -14,6 +14,7 @@ import React, {
   useEffect,
 } from "react";
 import { useClickOutside } from "../../../hooks";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { SelectInputView } from "./SelectInput.view";
 import type { SelectInputProps } from "./SelectInput.types";
 
@@ -38,7 +39,7 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
       textHint = false,
       disabled = false,
       error = false,
-      placeholder = "Choose an option",
+      placeholder,
       className = "",
       children,
       value,
@@ -48,6 +49,9 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
     },
     ref,
   ) => {
+    const t = useTranslation("controlsChrome");
+    const resolvedPlaceholder = placeholder ?? t("selectPlaceholder");
+
     // Determine if label should be shown
     const shouldShowLabel =
       showLabel !== undefined ? showLabel : labelText !== undefined;
@@ -181,13 +185,13 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
 
     // Get display text for selected value
     const getDisplayText = (): string => {
-      if (!selectedValue) return placeholder;
+      if (!selectedValue) return resolvedPlaceholder;
 
       if (options && Array.isArray(options)) {
         const selectedOption = options.find(
           (option) => option.value === selectedValue,
         );
-        return selectedOption ? selectedOption.label : placeholder;
+        return selectedOption ? selectedOption.label : resolvedPlaceholder;
       }
 
       const selectedOption = Children.toArray(children).find(
@@ -207,13 +211,13 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
       );
       return selectedOption
         ? String(selectedOption.props.children)
-        : placeholder;
+        : resolvedPlaceholder;
     };
 
     return (
       <SelectInputView
         label={shouldShowLabel ? labelText : undefined}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         state={actualState}
         disabled={disabled}
         error={error}
@@ -241,6 +245,8 @@ const SelectInputContainer = forwardRef<HTMLButtonElement, SelectInputProps>(
         textData={textData}
         iconRight={iconRight}
         textHint={textHint}
+        selectAriaLabel={t("selectAriaLabel")}
+        hintDefault={t("hintDefault")}
         {...props}
       />
     );

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import MultiSelectView from "./MultiSelect.view";
 import type { MultiSelectProps } from "./MultiSelect.types";
 
@@ -18,12 +19,13 @@ const MultiSelectContainer = memo<MultiSelectProps>(
     onChipClick,
     onAddClick,
     addButton: addButtonProp = true,
-    addButtonText = "Add organization type",
+    addButtonText,
     formHeader = true,
     onCustomChipConfirm,
     onCustomChipClose,
     className = "",
   }) => {
+    const t = useTranslation("controlsChrome");
     const size = sizeProp;
     const palette = paletteProp;
 
@@ -38,6 +40,9 @@ const MultiSelectContainer = memo<MultiSelectProps>(
         onAddClick={onAddClick}
         addButton={addButtonProp}
         addButtonText={addButtonText}
+        addButtonAriaLabel={
+          addButtonText || t("multiSelectAddFallback")
+        }
         formHeader={formHeader}
         onCustomChipConfirm={onCustomChipConfirm}
         onCustomChipClose={onCustomChipClose}

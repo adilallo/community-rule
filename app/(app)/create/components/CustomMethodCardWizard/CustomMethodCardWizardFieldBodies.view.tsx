@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { getAssetPath } from "../../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../../lib/assetUtils";
 import InputWithCounter from "../../../../components/controls/InputWithCounter";
 import TextArea from "../../../../components/controls/TextArea";
 import TextInput from "../../../../components/controls/TextInput";
@@ -140,7 +140,7 @@ function CustomMethodCardWizardFieldBodiesViewComponent({
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- matches ModalHeader close control */}
               <img
-                src={getAssetPath("assets/Icon_Close.svg")}
+                src={getAssetPath(ASSETS.ICON_CLOSE)}
                 alt=""
                 className="h-[16px] w-[16px]"
                 style={{

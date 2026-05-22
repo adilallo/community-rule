@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const findManyMock = vi.fn();
@@ -17,7 +18,7 @@ vi.mock("../../lib/server/db", () => ({
 import { GET } from "../../app/api/create-flow/methods/route";
 
 function makeReq(url: string) {
-  return { nextUrl: new URL(url) } as unknown as Parameters<typeof GET>[0];
+  return new NextRequest(url);
 }
 
 beforeEach(() => {
@@ -25,13 +26,28 @@ beforeEach(() => {
 });
 
 describe("GET /api/create-flow/methods", () => {
-  it("400s on missing or unknown section", async () => {
-    const r1 = await GET(makeReq("https://x.test/api/create-flow/methods"));
+  it("400s on missing or unknown section with the canonical error shape", async () => {
+    const r1 = await GET(
+      makeReq("https://x.test/api/create-flow/methods"),
+      undefined,
+    );
     expect(r1.status).toBe(400);
+    const body1 = (await r1.json()) as {
+      error: { code: string; message: string };
+    };
+    expect(body1.error.code).toBe("validation_error");
+    expect(body1.error.message).toMatch(/Unknown section/);
+    expect(r1.headers.get("x-request-id")).toBeTruthy();
+
     const r2 = await GET(
       makeReq("https://x.test/api/create-flow/methods?section=foo"),
+      undefined,
     );
     expect(r2.status).toBe(400);
+    const body2 = (await r2.json()) as {
+      error: { code: string; message: string };
+    };
+    expect(body2.error.code).toBe("validation_error");
   });
 
   it("returns ranked methods from the facet query", async () => {
@@ -44,6 +60,7 @@ describe("GET /api/create-flow/methods", () => {
       makeReq(
         "https://x.test/api/create-flow/methods?section=communication&facet.size=twoToFive&facet.orgType=workersCoop",
       ),
+      undefined,
     );
     expect(res.status).toBe(200);
     const json = (await res.json()) as {
@@ -61,6 +78,7 @@ describe("GET /api/create-flow/methods", () => {
       makeReq(
         "https://x.test/api/create-flow/methods?section=communication&facet.size=oneMember",
       ),
+      undefined,
     );
     expect(res.status).toBe(200);
     const json = (await res.json()) as { methods: unknown[] };

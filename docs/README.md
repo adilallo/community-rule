@@ -14,6 +14,8 @@ User-facing docs. Implementation conventions live in `.cursor/rules/`.
 
 ## Author guides (`guides/`)
 
+- [static-assets.md](./guides/static-assets.md) — `public/assets/` folder
+  map, naming rules, PNG audit.
 - [content-creation.md](./guides/content-creation.md) — Writing and
   publishing blog posts.
 - [i18n-translation-workflow.md](./guides/i18n-translation-workflow.md) —

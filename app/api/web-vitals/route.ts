@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "../../../lib/logger";
+import { apiRoute } from "../../../lib/server/apiRoute";
 import { getWebVitalsStorageMode } from "../../../lib/server/webVitals/mode";
 import {
   appendLocalWebVital,
@@ -29,70 +30,54 @@ function logExternalIngest(body: WebVitalData): void {
   logger.info(line);
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const limited = await readLimitedJson(request);
-    if (limited.ok === false) {
-      return limited.response;
-    }
-
-    const parsed = webVitalIngestSchema.safeParse(limited.value);
-    if (!parsed.success) return jsonFromZodError(parsed.error);
-
-    const body = parsed.data;
-
-    const vitalsData: WebVitalData = {
-      metric: body.metric,
-      data: {
-        value: body.data.value,
-        rating: body.data.rating,
-      },
-      url: body.url,
-      userAgent: body.userAgent,
-      timestamp: normalizeTimestamp(body.timestamp),
-      receivedAt: new Date().toISOString(),
-    };
-
-    const mode = getWebVitalsStorageMode();
-
-    if (mode === "external") {
-      logExternalIngest(vitalsData);
-      return NextResponse.json({ success: true, storage: "external" });
-    }
-
-    appendLocalWebVital(vitalsData);
-    logger.info(
-      `Web Vital received: ${body.metric} = ${body.data.value}ms (${body.data.rating})`,
-    );
-
-    return NextResponse.json({ success: true, storage: "local" });
-  } catch (error) {
-    logger.error("Error processing web vital:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+export const POST = apiRoute("webVitals.post", async (request: NextRequest) => {
+  const limited = await readLimitedJson(request);
+  if (limited.ok === false) {
+    return limited.response;
   }
-}
 
-export async function GET() {
-  try {
-    const mode = getWebVitalsStorageMode();
+  const parsed = webVitalIngestSchema.safeParse(limited.value);
+  if (!parsed.success) return jsonFromZodError(parsed.error);
 
-    if (mode === "external") {
-      return NextResponse.json({
-        metrics: {},
-        storage: "external" as const,
-      });
-    }
+  const body = parsed.data;
 
-    const metrics = readLocalAggregatedMetrics();
-    return NextResponse.json({ metrics, storage: "local" as const });
-  } catch (error) {
-    logger.error("Error fetching web vitals:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+  const vitalsData: WebVitalData = {
+    metric: body.metric,
+    data: {
+      value: body.data.value,
+      rating: body.data.rating,
+    },
+    url: body.url,
+    userAgent: body.userAgent,
+    timestamp: normalizeTimestamp(body.timestamp),
+    receivedAt: new Date().toISOString(),
+  };
+
+  const mode = getWebVitalsStorageMode();
+
+  if (mode === "external") {
+    logExternalIngest(vitalsData);
+    return NextResponse.json({ success: true, storage: "external" });
   }
-}
+
+  appendLocalWebVital(vitalsData);
+  logger.info(
+    `Web Vital received: ${body.metric} = ${body.data.value}ms (${body.data.rating})`,
+  );
+
+  return NextResponse.json({ success: true, storage: "local" });
+});
+
+export const GET = apiRoute("webVitals.get", async () => {
+  const mode = getWebVitalsStorageMode();
+
+  if (mode === "external") {
+    return NextResponse.json({
+      metrics: {},
+      storage: "external" as const,
+    });
+  }
+
+  const metrics = readLocalAggregatedMetrics();
+  return NextResponse.json({ metrics, storage: "local" as const });
+});

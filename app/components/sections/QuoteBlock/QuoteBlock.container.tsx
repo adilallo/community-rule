@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState } from "react";
+import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
 import { logger } from "../../../../lib/logger";
 import QuoteBlockView from "./QuoteBlock.view";
 import type { QuoteBlockProps, VariantConfig } from "./QuoteBlock.types";
@@ -14,9 +15,9 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     quoteSecondary,
     author = "Jo Freeman",
     source = "The Tyranny of Structurelessness",
-    avatarSrc = "/assets/Quote_Avatar.svg",
+    avatarSrc = getAssetPath(ASSETS.QUOTE_AVATAR),
     id,
-    fallbackAvatarSrc = "/assets/Quote_Avatar.svg",
+    fallbackAvatarSrc = getAssetPath(ASSETS.QUOTE_AVATAR),
     onError,
   }) => {
     const [imageError, setImageError] = useState(false);

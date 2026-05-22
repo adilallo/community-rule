@@ -9,6 +9,11 @@ export interface MiniProps {
   onClick?: () => void;
   href?: string;
   ariaLabel?: string;
+  /** Figma Feature-Grid mini tile shell (18847:22410). */
+  featureGridShell?: boolean;
+  panelWidth?: number;
+  panelHeight?: number;
+  panelImageClassName?: string;
 }
 
 export interface MiniViewProps {
@@ -25,4 +30,8 @@ export interface MiniViewProps {
     | React.AnchorHTMLAttributes<HTMLAnchorElement>
     | React.ButtonHTMLAttributes<HTMLButtonElement>
     | React.HTMLAttributes<HTMLDivElement>;
+  featureGridShell?: boolean;
+  panelWidth?: number;
+  panelHeight?: number;
+  panelImageClassName?: string;
 }

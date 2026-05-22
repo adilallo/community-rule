@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/server/db";
 import { isDatabaseConfigured } from "../../../lib/server/env";
+import { apiRoute } from "../../../lib/server/apiRoute";
 
-export async function GET() {
+export const GET = apiRoute("health.get", async () => {
   if (!isDatabaseConfigured()) {
     return NextResponse.json({
       ok: true,
@@ -16,4 +17,4 @@ export async function GET() {
   } catch {
     return NextResponse.json({ ok: false, database: "error" }, { status: 503 });
   }
-}
+});

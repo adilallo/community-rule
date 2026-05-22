@@ -107,4 +107,7 @@ export interface RuleViewProps {
   recommended?: boolean;
   templateGridFigmaShell?: boolean;
   fluidWidth?: boolean;
+  /** Interactive card aria-label; supplied by the container from `ruleCard` messages. */
+  cardAriaLabel: string;
+  recommendedLabel: string;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import UploadView from "./Upload.view";
 import type { UploadProps } from "./Upload.types";
 
@@ -13,16 +14,20 @@ const UploadContainer = memo<UploadProps>(
     active = true,
     label,
     showHelpIcon = true,
-    hintText = "Add image from your device",
+    hintText,
     onClick,
     className = "",
   }) => {
+    const t = useTranslation("controlsChrome");
+
     return (
       <UploadView
         active={active}
         label={label}
         showHelpIcon={showHelpIcon}
-        hintText={hintText}
+        hintText={hintText ?? t("uploadHintDefault")}
+        uploadButtonLabel={t("uploadButton")}
+        uploadAriaLabel={t("uploadAriaLabel")}
         onClick={onClick}
         className={className}
       />

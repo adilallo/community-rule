@@ -14,7 +14,7 @@ import { CreateFlowHeaderLockup } from "../../components/CreateFlowHeaderLockup"
 import { CreateFlowStepShell } from "../../components/CreateFlowStepShell";
 import { CREATE_FLOW_MD_UP_COLUMN_MAX_CLASS } from "../../components/createFlowLayoutTokens";
 import { fetchAuthSession } from "../../../../../lib/create/api";
-import { getAssetPath } from "../../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../../lib/assetUtils";
 import {
   UploadToServerError,
   uploadCreateFlowFile,
@@ -177,7 +177,7 @@ export function CommunityUploadScreen() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- matches ModalHeader close control */}
                 <img
-                  src={getAssetPath("assets/Icon_Close.svg")}
+                  src={getAssetPath(ASSETS.ICON_CLOSE)}
                   alt=""
                   className="h-[16px] w-[16px]"
                   style={{

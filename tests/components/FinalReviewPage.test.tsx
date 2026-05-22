@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { fireEvent, within } from "@testing-library/react";
 import {
   renderWithProviders as render,
@@ -10,6 +10,12 @@ import "@testing-library/jest-dom/vitest";
 import { FinalReviewScreen } from "../../app/(app)/create/screens/review/FinalReviewScreen";
 import { useCreateFlow } from "../../app/(app)/create/context/CreateFlowContext";
 import type { CreateFlowState } from "../../app/(app)/create/types";
+
+async function confirmDiscardCustomizeEdits() {
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Discard" }),
+  );
+}
 
 /**
  * Mounts the screen with a Customize-style preset selection and exposes the
@@ -521,15 +527,11 @@ describe("FinalReviewScreen — chip edit modal save semantics", () => {
       target: { value: "Should NOT persist" },
     });
 
-    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
-    try {
-      fireEvent.keyDown(document, { key: "Escape" });
-      await waitFor(() => {
-        expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-      });
-    } finally {
-      confirmSpy.mockRestore();
-    }
+    fireEvent.keyDown(document, { key: "Escape" });
+    await confirmDiscardCustomizeEdits();
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
 
     expect(latest.communicationMethodDetailsById).toBeUndefined();
   });

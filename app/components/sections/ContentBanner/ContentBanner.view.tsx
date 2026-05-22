@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
-import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentContainer from "../../content/ContentContainer";
 import Rule from "../../cards/Rule";
 import {
@@ -155,6 +154,7 @@ function ContentBannerUseCaseView({
   contentTone = "inverse",
   leadingImageSrc,
   leadingImageAlt,
+  ruleCardLinkAriaLabel,
 }: Pick<
   ContentBannerViewProps,
   | "post"
@@ -162,8 +162,8 @@ function ContentBannerUseCaseView({
   | "contentTone"
   | "leadingImageSrc"
   | "leadingImageAlt"
+  | "ruleCardLinkAriaLabel"
 >) {
-  const t = useTranslation("pages.useCasesCompletedRule");
   if (!rulePreview) {
     return null;
   }
@@ -198,10 +198,7 @@ function ContentBannerUseCaseView({
             <Link
               href={rulePreview.href}
               className="block w-full rounded-[24px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-default-brand-primary)] focus-visible:ring-offset-2"
-              aria-label={t("ruleCardLinkAriaLabel").replace(
-                "{title}",
-                rulePreview.title,
-              )}
+              aria-label={ruleCardLinkAriaLabel ?? rulePreview.title}
             >
               <Rule
                 title={rulePreview.title}

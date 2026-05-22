@@ -12,5 +12,9 @@
   "customizePolicyTitleLabel": "Policy title",
   "customizePolicyDescriptionLabel": "Description",
   "cancelCustomize": "Cancel",
-  "discardUnsavedCustomizeChanges": "Discard unsaved changes?"
+  "discardUnsavedCustomizeChanges": "Discard unsaved changes?",
+  "discardUnsavedCustomizeChangesTitle": "Discard unsaved changes?",
+  "discardUnsavedCustomizeChangesDescription": "Your edits in customize mode will be lost.",
+  "discardUnsavedCustomizeChangesProceed": "Discard",
+  "discardUnsavedCustomizeChangesCancel": "Keep editing"
 }

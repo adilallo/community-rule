@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Sections / RelatedArticles" (22112-872308)
+ */
+
 import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { useIsMobile } from "../../../hooks";
 import { useMessages } from "../../../contexts/MessagesContext";

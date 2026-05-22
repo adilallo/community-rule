@@ -2,11 +2,13 @@
  * Asset path utilities for handling different environments
  * - Web app: uses absolute paths starting with /
  * - Storybook: uses relative paths for proper asset resolution
+ *
+ * Folder map: `docs/guides/static-assets.md`
  */
 
 /**
  * Get the correct asset path based on environment
- * @param assetPath - The asset path (e.g., "assets/Logo.svg")
+ * @param assetPath - The asset path (e.g., "assets/logos/community-rule.svg")
  * @returns The correct path for the current environment
  */
 export function getAssetPath(assetPath: string): string {
@@ -43,10 +45,20 @@ export function statShapeAssetPath(index: 1 | 2 | 3 | 4): string {
 }
 
 /**
- * Statement / Section-Quote flanking ornaments (`public/assets/shapes/shape-qoute.svg`).
+ * Statement / Section-Quote flanking ornaments (`public/assets/shapes/shape-quote.svg`).
  */
 export function quoteStatementShapePath(): string {
-  return "assets/shapes/shape-qoute.svg";
+  return "assets/shapes/shape-quote.svg";
+}
+
+/** ContentLockup decorative shape (Figma **22078:791901**). */
+export function contentLockupShapePath(): string {
+  return "assets/shapes/shapes-1.svg";
+}
+
+/** TripleStep section ornament. */
+export function tripleStepShapePath(): string {
+  return "assets/shapes/triple-step.svg";
 }
 
 /**
@@ -66,6 +78,73 @@ export function howItWorksOrnamentLeftPath(): string {
  */
 export function guideBannerLogoArrowPath(): string {
   return "assets/shapes/guide-banner-logo-arrow.svg";
+}
+
+/** Partner logo wall SVGs in `public/assets/logos/partners/`. */
+export function partnerLogoPath(slug: string): string {
+  return `assets/logos/partners/${slug}.svg`;
+}
+
+/** Share modal glyphs in `public/assets/share/`. */
+export type ShareIconName = "discord" | "link" | "mail" | "signal" | "slack";
+
+export function shareIconPath(name: ShareIconName): string {
+  return `assets/share/${name}.svg`;
+}
+
+/** Section number badges in `public/assets/marketing/`. */
+export function sectionNumberPath(n: 1 | 2 | 3): string {
+  return `assets/marketing/section-number-${n}.svg`;
+}
+
+/** Downloadable governance booklet PDF (About / Sections / Book). */
+export function governanceBookletPath(): string {
+  return "assets/marketing/governance-booklet.pdf";
+}
+
+/** Home feature grid panel art in `public/assets/marketing/`. */
+export type FeaturePanelKey = "support" | "exercises" | "guidance" | "tools";
+
+export function featurePanelPath(key: FeaturePanelKey): string {
+  return `assets/marketing/feature-${key}.svg`;
+}
+
+/** Intrinsic icon bounds from Figma Feature-Grid (18632:10911). */
+export const FEATURE_PANEL_LAYOUT: Record<
+  FeaturePanelKey,
+  { width: number; height: number; panelImageClassName?: string }
+> = {
+  support: { width: 48, height: 48 },
+  exercises: { width: 55, height: 48 },
+  guidance: { width: 56, height: 39 },
+  tools: {
+    width: 50,
+    height: 47,
+    /** Figma 18632:10947 — raw asset is inverted; frame applies rotate + flip. */
+    panelImageClassName: "rotate-180 -scale-x-100",
+  },
+};
+
+export function featurePanelLayout(key: FeaturePanelKey): {
+  panelWidth: number;
+  panelHeight: number;
+  panelImageClassName?: string;
+} {
+  const { width, height, panelImageClassName } = FEATURE_PANEL_LAYOUT[key];
+  return { panelWidth: width, panelHeight: height, panelImageClassName };
+}
+
+/** Case study card artwork in `public/assets/case-study/`. */
+export type CaseStudyVisualKey = "lavender" | "neutral" | "rose";
+
+const CASE_STUDY_VISUAL_PATHS: Record<CaseStudyVisualKey, string> = {
+  lavender: "assets/case-study/case-study-mutual-aid.svg",
+  neutral: "assets/case-study/case-study-food-not-bombs.svg",
+  rose: "assets/case-study/case-study-boulder-county-street-medics.svg",
+};
+
+export function caseStudyVisualPath(key: CaseStudyVisualKey): string {
+  return CASE_STUDY_VISUAL_PATHS[key];
 }
 
 /** Per-article thumbnail backgrounds in `public/content/blog/` (Figma Thumbnail 19428:22574). */
@@ -120,32 +199,40 @@ export function contentCatalogSlugForFallback(
  * Asset paths for common components
  */
 export const ASSETS = {
-  // Logo
-  LOGO: "assets/logo/Logo.svg",
+  // Brand logo
+  LOGO: "assets/logos/community-rule.svg",
 
   // Avatars
-  AVATAR_1: "assets/Avatar_1.png",
-  AVATAR_2: "assets/Avatar_2.png",
-  AVATAR_3: "assets/Avatar_3.png",
+  AVATAR_1: "assets/marketing/avatar-1.svg",
+  AVATAR_2: "assets/marketing/avatar-2.svg",
+  AVATAR_3: "assets/marketing/avatar-3.svg",
 
   // Social media
-  BLUESKY_LOGO: "assets/Bluesky_Logo.svg",
-  GITLAB_ICON: "assets/GitLab_Icon.png",
+  BLUESKY_LOGO: "assets/logos/bluesky.svg",
+  GITLAB_ICON: "assets/logos/gitlab.svg",
 
   // Content page decorative shapes
-  CONTENT_SHAPE_1: "assets/Content_Shape_1.svg",
-  CONTENT_SHAPE_2: "assets/Content_Shape_2.svg",
+  CONTENT_SHAPE_1: "assets/shapes/content-shape-1.svg",
+  CONTENT_SHAPE_2: "assets/shapes/content-shape-2.svg",
+
+  /** Default ContentBanner background when no article-specific art. */
+  CONTENT_BANNER: "assets/marketing/content-banner.svg",
+
+  /** Quote block default avatar. */
+  QUOTE_AVATAR: "assets/marketing/quote-avatar.svg",
 
   /** Sections / Book cover (Figma **22137:891197**). */
-  COMMUNITYRULES_COVER: "assets/communityrules-cover.svg",
+  COMMUNITYRULES_COVER: "assets/marketing/communityrules-cover.svg",
 
-  // Alert icons
-  ICON_ALERT: "assets/Icon_Alert.svg",
-  ICON_CLOSE: "assets/Icon_Close.svg",
+  // Marketing
+  HERO_IMAGE: "assets/marketing/hero-image.png",
 
-  // Tooltip icons
-  ICON_POINTER: "assets/Icon_Pointer.svg",
+  // Top nav union ornaments
+  UNION_XSM: "assets/shapes/union-xsm.svg",
+  UNION_SM_MD_LG: "assets/shapes/union-sm-md-lg.svg",
+  UNION_XLG: "assets/shapes/union-xlg.svg",
 
-  // Help icon
-  ICON_HELP: "assets/Icon_Help.svg",
+  // Alert / UI icons
+  ICON_CLOSE: "assets/icons/icon-close.svg",
+  ICON_HELP: "assets/icons/icon-help.svg",
 } as const;

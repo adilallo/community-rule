@@ -14,6 +14,7 @@ import { getAssetPath, ASSETS } from "../../../lib/assetUtils";
  */
 const Footer = memo(() => {
   const t = useTranslation("footer");
+  const tChrome = useTranslation("controlsChrome");
 
   const linkFocusClass =
     "hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity";
@@ -129,7 +130,7 @@ const Footer = memo(() => {
               </div>
 
               <nav
-                aria-label="Footer"
+                aria-label={tChrome("footerAriaLabel")}
                 className="order-1 flex w-full max-w-full flex-col
                 items-start
                 gap-[var(--spacing-scale-032)]
@@ -191,13 +192,13 @@ const Footer = memo(() => {
               lg:gap-10
               lg:text-sm lg:leading-5"
             >
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.privacyPolicyHref")} className={legalLinkClass}>
                 {t("legal.privacyPolicy")}
               </Link>
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.termsOfServiceHref")} className={legalLinkClass}>
                 {t("legal.termsOfService")}
               </Link>
-              <Link href="#" className={legalLinkClass}>
+              <Link href={t("legal.cookiesSettingsHref")} className={legalLinkClass}>
                 {t("legal.cookiesSettings")}
               </Link>
             </div>

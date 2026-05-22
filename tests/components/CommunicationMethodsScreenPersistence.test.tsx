@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { describe, it, expect, afterEach, vi } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import {
   renderWithProviders as render,
   screen,
@@ -16,6 +16,18 @@ import type { CreateFlowState } from "../../app/(app)/create/types";
 afterEach(() => {
   cleanup();
 });
+
+async function confirmDiscardCustomizeEdits() {
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Discard" }),
+  );
+}
+
+async function declineDiscardCustomizeEdits() {
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Keep editing" }),
+  );
+}
 
 /**
  * Mounts the screen with optional starting state and exposes the latest
@@ -152,9 +164,6 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
 
   it("Cancel customize reverts edited preset without persisting (no confirm when unchanged)", async () => {
     let latest: CreateFlowState = {};
-    const confirmSpy = vi.spyOn(window, "confirm").mockImplementation(() => {
-      throw new Error("confirm should not run when customize session is clean");
-    });
     render(
       <ScreenWithStateProbe
         onState={(s) => {
@@ -171,20 +180,20 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
     fireEvent.click(screen.getByRole("menuitem", { name: "Customize" }));
 
     fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(
-      (within(screen.getByRole("dialog")).getAllByRole(
-        "textbox",
-      )[0] as HTMLTextAreaElement).disabled,
-    ).toBe(true);
+    await waitFor(() => {
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+      expect(
+        (within(screen.getByRole("dialog")).getAllByRole(
+          "textbox",
+        )[0] as HTMLTextAreaElement).disabled,
+      ).toBe(true);
+    });
     expect(latest.communicationMethodDetailsById).toBeUndefined();
-
-    confirmSpy.mockRestore();
+    expect(screen.queryByRole("button", { name: "Discard" })).not.toBeInTheDocument();
   });
 
   it("Cancel customize with edits restores snapshot after confirm", async () => {
     let latest: CreateFlowState = {};
-    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
     render(
       <ScreenWithStateProbe
         onState={(s) => {
@@ -216,24 +225,23 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
     fireEvent.change(textboxes[2], { target: { value: "Edited principle" } });
 
     fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+    await confirmDiscardCustomizeEdits();
 
-    expect(confirmSpy).toHaveBeenCalled();
-    expect(
-      (
-        within(screen.getByRole("dialog")).getAllByRole(
-          "textbox",
-        )[0] as HTMLTextAreaElement
-      ).value,
-    ).toBe("Saved principle");
+    await waitFor(() => {
+      expect(
+        (
+          within(screen.getByRole("dialog")).getAllByRole(
+            "textbox",
+          )[0] as HTMLTextAreaElement
+        ).value,
+      ).toBe("Saved principle");
+    });
     expect(
       latest.communicationMethodDetailsById?.signal?.corePrinciple,
     ).toBe("Saved principle");
-
-    confirmSpy.mockRestore();
   });
 
   it("dirty Escape close stays open when user declines discard confirm", async () => {
-    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
     render(
       <ScreenWithStateProbe
         onState={() => {
@@ -255,11 +263,10 @@ describe("CommunicationMethodsScreen — Add Platform persistence", () => {
     fireEvent.change(textboxes[2], { target: { value: "Edited principle" } });
 
     fireEvent.keyDown(document, { key: "Escape" });
+    await screen.findByRole("button", { name: "Keep editing" });
+    await declineDiscardCustomizeEdits();
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(confirmSpy).toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
   });
 
   it("persists customized policy title for a custom UUID card on Save", async () => {

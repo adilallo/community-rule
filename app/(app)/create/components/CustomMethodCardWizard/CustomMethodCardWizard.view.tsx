@@ -6,7 +6,7 @@ import InputWithCounter from "../../../../components/controls/InputWithCounter";
 import TextArea from "../../../../components/controls/TextArea";
 import AddCustomField from "../../../../components/controls/AddCustomField";
 import { CustomMethodCardWizardFieldBodiesView } from "./CustomMethodCardWizardFieldBodies.view";
-import { CustomMethodCardWizardBlocksListView } from "./CustomMethodCardWizardBlocksList.view";
+import { CustomMethodCardWizardBlocksList } from "./CustomMethodCardWizardBlocksList.container";
 import type { CustomMethodCardWizardViewProps } from "./CustomMethodCardWizard.types";
 
 function CustomMethodCardWizardViewComponent({
@@ -90,7 +90,7 @@ function CustomMethodCardWizardViewComponent({
       {!fieldTypeModal && wizardStep === 3 ? (
         <div className="flex w-full flex-col gap-4">
           {draftFieldBlocks.length > 0 ? (
-            <CustomMethodCardWizardBlocksListView
+            <CustomMethodCardWizardBlocksList
               blocks={draftFieldBlocks}
               fieldTypeLabels={copy.fieldTypeLabels}
               dragHandleAriaLabel={copy.step3BlocksList.dragHandleAriaLabel}

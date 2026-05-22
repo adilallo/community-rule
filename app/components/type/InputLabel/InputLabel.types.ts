@@ -39,4 +39,6 @@ export interface InputLabelViewProps {
   size: "s" | "m";
   palette: "default" | "inverse";
   className: string;
+  helpIconAlt: string;
+  helperTextDefault: string;
 }

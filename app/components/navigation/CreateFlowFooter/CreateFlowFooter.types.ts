@@ -36,4 +36,8 @@ export interface CreateFlowFooterProps {
    * Additional CSS classes
    */
   className?: string;
+  /**
+   * Accessible name for the footer landmark.
+   */
+  footerAriaLabel?: string;
 }

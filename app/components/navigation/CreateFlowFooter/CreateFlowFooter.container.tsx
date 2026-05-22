@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { CreateFlowFooterView } from "./CreateFlowFooter.view";
 import type { CreateFlowFooterProps } from "./CreateFlowFooter.types";
 
@@ -16,7 +17,10 @@ const CreateFlowFooterContainer = memo<CreateFlowFooterProps>(
     proportionBarVariant,
     onBackClick,
     className = "",
+    footerAriaLabel,
   }) => {
+    const t = useTranslation("controlsChrome");
+
     return (
       <CreateFlowFooterView
         secondButton={secondButton}
@@ -25,6 +29,7 @@ const CreateFlowFooterContainer = memo<CreateFlowFooterProps>(
         proportionBarVariant={proportionBarVariant}
         onBackClick={onBackClick}
         className={className}
+        footerAriaLabel={footerAriaLabel ?? t("createFlowFooterAriaLabel")}
       />
     );
   },

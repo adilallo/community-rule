@@ -9,6 +9,8 @@ function UploadView({
   label,
   showHelpIcon = true,
   hintText,
+  uploadButtonLabel,
+  uploadAriaLabel,
   onClick,
   className = "",
 }: UploadViewProps) {
@@ -56,7 +58,7 @@ function UploadView({
           type="button"
           onClick={onClick}
           className={`${buttonBgClass} flex gap-[var(--measures-spacing-150,6px)] items-center justify-center overflow-clip px-[var(--space-400,16px)] py-[var(--measures-spacing-300,12px)] rounded-[var(--measures-radius-full,9999px)] shrink-0 hover:opacity-80 transition-opacity`}
-          aria-label="Upload"
+          aria-label={uploadAriaLabel}
         >
           {/* Upload icon */}
           <div className={`relative shrink-0 size-[20px] ${iconColor}`}>
@@ -98,7 +100,7 @@ function UploadView({
           <div
             className={`flex flex-col font-inter font-medium justify-center leading-[0] relative shrink-0 text-[length:var(--sizing-400,16px)] whitespace-nowrap ${buttonTextColor}`}
           >
-            <p className="leading-[20px]">Upload</p>
+            <p className="leading-[20px]">{uploadButtonLabel}</p>
           </div>
         </button>
 

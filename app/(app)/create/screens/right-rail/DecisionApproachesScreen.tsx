@@ -26,6 +26,7 @@ import type { InfoMessageBoxItem } from "../../../../components/controls/InfoMes
 import { useMessages } from "../../../../contexts/MessagesContext";
 import { useCreateFlow } from "../../context/CreateFlowContext";
 import { useCreateFlowMdUp } from "../../hooks/useCreateFlowMdUp";
+import { useDiscardCustomizeConfirm } from "../../hooks/useDiscardCustomizeConfirm";
 import { useMethodCardDeckOrdering } from "../../hooks/useMethodCardDeckOrdering";
 import { CreateFlowTwoColumnSelectShell } from "../../components/CreateFlowTwoColumnSelectShell";
 import { DecisionApproachEditFields } from "../../components/methodEditFields";
@@ -52,8 +53,6 @@ import { buildCustomRuleModalKebabMenu } from "../../components/customRuleModalK
 import { methodCardMetaWithCustomizeHeader } from "../../../../../lib/create/methodCardCustomizeMetaPatch";
 import {
   captureMethodCardCustomizeSnapshot,
-  confirmDiscardMethodCardCustomizeSession,
-  isMethodCardCustomizeSessionDirty,
   type MethodCardCustomizeSnapshot,
   type MethodCardHeaderDraft,
 } from "../../../../../lib/create/methodCardCustomizeSession";
@@ -64,6 +63,8 @@ export function DecisionApproachesScreen() {
   const da = m.create.customRule.decisionApproaches;
   const modalKebabMenu = m.create.customRule.modalKebabMenu;
   const mdUp = useCreateFlowMdUp();
+  const { confirmDiscard, confirmDirtyCustomizeCancel, confirmDialog } =
+    useDiscardCustomizeConfirm();
   const { state, updateState, replaceState, markCreateFlowInteraction } =
     useCreateFlow();
   const pendingEphemeralDuplicateIdRef = useRef<string | null>(null);
@@ -216,16 +217,15 @@ export function DecisionApproachesScreen() {
     ],
   );
 
-  const handleCreateModalClose = useCallback(() => {
+  const handleCreateModalClose = useCallback(async () => {
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         customizeSnapshotRef.current,
         pendingDraft,
         draftFieldBlocks,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -256,15 +256,15 @@ export function DecisionApproachesScreen() {
     setDraftFieldBlocks(null);
     setCustomizeHeaderDraft(null);
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draftFieldBlocks,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     pendingDraft,
     replaceState,
   ]);
 
-  const handleCancelCustomize = useCallback(() => {
+  const handleCancelCustomize = useCallback(async () => {
     if (!modalEditUnlocked) {
       return;
     }
@@ -277,13 +277,12 @@ export function DecisionApproachesScreen() {
       return;
     }
     if (
-      isMethodCardCustomizeSessionDirty(
+      !(await confirmDirtyCustomizeCancel(
         snap,
         pendingDraft,
         draftFieldBlocks,
         customizeHeaderDraft,
-      ) &&
-      !window.confirm(modalKebabMenu.discardUnsavedCustomizeChanges)
+      ))
     ) {
       return;
     }
@@ -293,27 +292,26 @@ export function DecisionApproachesScreen() {
     customizeSnapshotRef.current = null;
     setCustomizeHeaderDraft(null);
   }, [
+    confirmDirtyCustomizeCancel,
     customizeHeaderDraft,
     draftFieldBlocks,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     pendingDraft,
   ]);
 
-  const handleRemoveSelectedFromModal = useCallback(() => {
+  const handleRemoveSelectedFromModal = useCallback(async () => {
     if (!pendingCardId || !selectedIds.includes(pendingCardId)) {
       return;
     }
     markCreateFlowInteraction();
     if (
-      !confirmDiscardMethodCardCustomizeSession(
+      !(await confirmDiscard(
         modalEditUnlocked,
         customizeSnapshotRef.current,
         pendingDraft,
         draftFieldBlocks,
         customizeHeaderDraft,
-        modalKebabMenu.discardUnsavedCustomizeChanges,
-      )
+      ))
     ) {
       return;
     }
@@ -325,14 +323,14 @@ export function DecisionApproachesScreen() {
         pendingCardId,
       ),
     );
-    handleCreateModalClose();
+    await handleCreateModalClose();
   }, [
+    confirmDiscard,
     customizeHeaderDraft,
     draftFieldBlocks,
     handleCreateModalClose,
     markCreateFlowInteraction,
     modalEditUnlocked,
-    modalKebabMenu.discardUnsavedCustomizeChanges,
     pendingDraft,
     pendingCardId,
     selectedIds,
@@ -867,6 +865,7 @@ export function DecisionApproachesScreen() {
           uploadCreateFlowFile(file, "customMethodAttachment")
         }
       />
+      {confirmDialog}
     </>
   );
 }

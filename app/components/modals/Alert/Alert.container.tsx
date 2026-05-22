@@ -6,6 +6,7 @@
  */
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { AlertView } from "./Alert.view";
 import type { AlertProps } from "./Alert.types";
 
@@ -74,6 +75,7 @@ const AlertContainer = memo<AlertProps>(
     onClose,
     className = "",
   }) => {
+    const t = useTranslation("controlsChrome");
     const status = statusProp;
     const type = typeProp;
     const size = sizeProp;
@@ -175,6 +177,7 @@ const AlertContainer = memo<AlertProps>(
         iconColor={statusStyles.iconColor}
         closeButtonIconColor={statusStyles.closeButtonIconColor}
         onClose={onClose}
+        closeAlertAriaLabel={t("closeAlert")}
       />
     );
   },

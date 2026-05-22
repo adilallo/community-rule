@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Type / Numbered List" (see registry)
+ */
+
 import { memo } from "react";
 import NumberedListView from "./NumberedList.view";
 import type { NumberedListProps } from "./NumberedList.types";

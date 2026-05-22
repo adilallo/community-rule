@@ -15,6 +15,7 @@ function MultiSelectView({
   onAddClick,
   addButton,
   addButtonText,
+  addButtonAriaLabel,
   formHeader = true,
   onCustomChipConfirm,
   onCustomChipClose,
@@ -81,7 +82,7 @@ function MultiSelectView({
         {addButton && (
           <button
             type="button"
-            aria-label={addButtonText || "Add option"}
+            aria-label={addButtonAriaLabel}
             onClick={(e) => {
               e.stopPropagation();
               onAddClick?.();

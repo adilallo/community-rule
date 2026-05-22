@@ -1,6 +1,6 @@
 import ListItem from "../../layout/ListItem";
 import Popover from "../Popover";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
 import type { ModalHeaderProps } from "./ModalHeader.types";
 
 const iconButtonClass =
@@ -11,9 +11,9 @@ export function ModalHeaderView({
   onMoreOptions,
   showCloseButton = true,
   showMoreOptionsButton = true,
-  closeButtonAriaLabel = "Close dialog",
-  moreOptionsAriaLabel = "More options",
-  menuAriaLabel = "More options menu",
+  closeButtonAriaLabel,
+  moreOptionsAriaLabel,
+  menuAriaLabel,
   menuItems = [],
   menuId,
   menuOpen = false,
@@ -37,7 +37,7 @@ export function ModalHeaderView({
         >
           {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
           <img
-            src={getAssetPath("assets/Icon_Close.svg")}
+            src={getAssetPath(ASSETS.ICON_CLOSE)}
             alt=""
             className="w-[16px] h-[16px]"
             style={{

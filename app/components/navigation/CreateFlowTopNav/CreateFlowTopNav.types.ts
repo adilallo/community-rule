@@ -5,6 +5,16 @@
  * Includes logo and action buttons (Share, Export, Edit, Exit).
  */
 
+import type { Dispatch, RefObject, SetStateAction } from "react";
+import type { IconName } from "../../asset/icon";
+
+export type CreateFlowTopNavActionMenuItem = {
+  id: string;
+  label: string;
+  leadingIcon: IconName;
+  onClick: () => void;
+};
+
 export interface CreateFlowTopNavProps {
   /**
    * Whether to show the Share button
@@ -81,12 +91,33 @@ export interface CreateFlowTopNavProps {
   className?: string;
 }
 
-/** Resolved copy for the export popover; supplied by the container. */
+/** Resolved copy and menu state; supplied by the container. */
 export type CreateFlowTopNavViewProps = CreateFlowTopNavProps & {
+  exitButtonText: string;
+  useKebabMenu: boolean;
+  exportMenuOpen: boolean;
+  setExportMenuOpen: Dispatch<SetStateAction<boolean>>;
+  actionsMenuOpen: boolean;
+  setActionsMenuOpen: Dispatch<SetStateAction<boolean>>;
+  exportWrapRef: RefObject<HTMLDivElement | null>;
+  actionsWrapRef: RefObject<HTMLDivElement | null>;
+  exportMenuId: string;
+  actionsMenuId: string;
+  actionMenuItems: CreateFlowTopNavActionMenuItem[];
   exportPopoverMenuAriaLabel: string;
   exportPopoverPdfLabel: string;
   exportPopoverCsvLabel: string;
   exportPopoverMarkdownLabel: string;
   moreOptionsAriaLabel: string;
   actionsMenuAriaLabel: string;
+  shareLabel: string;
+  exportLabel: string;
+  editLabel: string;
+  manageStakeholdersLabel: string;
+  shareAriaLabel: string;
+  exportAriaLabel: string;
+  editAriaLabel: string;
+  manageStakeholdersAriaLabel: string;
+  bannerAriaLabel: string;
+  navAriaLabel: string;
 };

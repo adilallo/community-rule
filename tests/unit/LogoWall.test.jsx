@@ -1,12 +1,11 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { screen, cleanup } from "@testing-library/react";
 import { describe, test, expect, afterEach } from "vitest";
+import { renderWithProviders as render } from "../utils/test-utils";
 import LogoWall from "../../app/components/sections/LogoWall";
 
 afterEach(() => {
   cleanup();
 });
-
-// Pure presentational; no provider context needed.
 describe("LogoWall Component", () => {
   test("renders with default logos", () => {
     render(<LogoWall />);
@@ -84,7 +83,7 @@ describe("LogoWall Component", () => {
     const foodNotBombsLogo = screen.getByAltText("Food Not Bombs");
     expect(foodNotBombsLogo).toHaveAttribute(
       "src",
-      "/assets/Section/Logo_FoodNotBombs.png",
+      "/assets/logos/partners/food-not-bombs.svg",
     );
     expect(foodNotBombsLogo).toHaveClass("h-11", "lg:h-14", "xl:h-[70px]");
   });

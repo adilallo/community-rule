@@ -9,6 +9,9 @@ export interface Feature {
   labelLine1: string;
   labelLine2: string;
   panelContent: string;
+  panelWidth: number;
+  panelHeight: number;
+  panelImageClassName?: string;
   ariaLabel: string;
   href: string;
 }

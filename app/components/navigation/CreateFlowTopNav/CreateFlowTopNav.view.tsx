@@ -1,13 +1,9 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { IconName } from "../../asset/icon";
 import Logo from "../../asset/Logo";
 import Button from "../../buttons/Button";
 import ListItem from "../../layout/ListItem";
 import Popover from "../../modals/Popover";
-import { useCreateFlowSm2Up } from "../../../(app)/create/hooks/useCreateFlowSm2Up";
-import { useTranslation } from "../../../contexts/MessagesContext";
 import type { CreateFlowTopNavViewProps } from "./CreateFlowTopNav.types";
 
 const outlineButtonClass =
@@ -15,13 +11,6 @@ const outlineButtonClass =
 
 const exitButtonFigmaClass =
   "!rounded-[var(--radius-measures-radius-full,9999px)] !border-[1.25px] !px-[var(--spacing-measures-spacing-250,10px)] !py-[var(--spacing-measures-spacing-200,8px)] md:!text-[12px] md:!leading-[14px]";
-
-type ActionMenuItem = {
-  id: string;
-  label: string;
-  leadingIcon: IconName;
-  onClick: () => void;
-};
 
 function KebabIcon({ className = "" }: { className?: string }) {
   return (
@@ -54,171 +43,44 @@ export function CreateFlowTopNavView({
   onDuplicate,
   onManageStakeholders,
   onExit,
-  exitLabel,
   duplicateLabel,
   duplicateAriaLabel,
   buttonPalette = "default",
   className = "",
+  exitButtonText,
+  useKebabMenu,
+  exportMenuOpen,
+  setExportMenuOpen,
+  actionsMenuOpen,
+  setActionsMenuOpen,
+  exportWrapRef,
+  actionsWrapRef,
+  exportMenuId,
+  actionsMenuId,
+  actionMenuItems,
   exportPopoverMenuAriaLabel,
   exportPopoverPdfLabel,
   exportPopoverCsvLabel,
   exportPopoverMarkdownLabel,
   moreOptionsAriaLabel,
   actionsMenuAriaLabel,
+  shareLabel,
+  exportLabel,
+  editLabel,
+  manageStakeholdersLabel,
+  shareAriaLabel,
+  exportAriaLabel,
+  editAriaLabel,
+  manageStakeholdersAriaLabel,
+  bannerAriaLabel,
+  navAriaLabel,
 }: CreateFlowTopNavViewProps) {
-  const t = useTranslation("create.topNav");
-  const sm2Up = useCreateFlowSm2Up();
-  const exitButtonText =
-    exitLabel ?? (saveDraftOnExit ? t("saveAndExit") : t("exit"));
-  const [exportMenuOpen, setExportMenuOpen] = useState(false);
-  const [actionsMenuOpen, setActionsMenuOpen] = useState(false);
-  const exportWrapRef = useRef<HTMLDivElement>(null);
-  const actionsWrapRef = useRef<HTMLDivElement>(null);
-  const exportMenuId = useId();
-  const actionsMenuId = useId();
-
   const hasSecondaryActions =
     hasShare ||
     hasExport ||
     hasEdit ||
     hasDuplicate ||
     hasManageStakeholders;
-  const useKebabMenu = hasSecondaryActions && !sm2Up;
-
-  const actionMenuItems = useMemo((): ActionMenuItem[] => {
-    const items: ActionMenuItem[] = [];
-
-    if (hasShare && onShare) {
-      items.push({
-        id: "share",
-        label: t("share"),
-        leadingIcon: "mail",
-        onClick: onShare,
-      });
-    }
-
-    if (hasExport && onSelectExportFormat) {
-      items.push(
-        {
-          id: "export-pdf",
-          label: exportPopoverPdfLabel,
-          leadingIcon: "picture_as_pdf",
-          onClick: () => onSelectExportFormat("pdf"),
-        },
-        {
-          id: "export-csv",
-          label: exportPopoverCsvLabel,
-          leadingIcon: "csv",
-          onClick: () => onSelectExportFormat("csv"),
-        },
-        {
-          id: "export-markdown",
-          label: exportPopoverMarkdownLabel,
-          leadingIcon: "markdown_copy",
-          onClick: () => onSelectExportFormat("markdown"),
-        },
-      );
-    }
-
-    if (hasDuplicate && onDuplicate) {
-      items.push({
-        id: "duplicate",
-        label: duplicateLabel ?? t("edit"),
-        leadingIcon: "content_copy",
-        onClick: onDuplicate,
-      });
-    } else if (hasEdit && onEdit) {
-      items.push({
-        id: "edit",
-        label: t("edit"),
-        leadingIcon: "edit",
-        onClick: onEdit,
-      });
-    }
-
-    if (hasManageStakeholders && onManageStakeholders) {
-      items.push({
-        id: "manage-stakeholders",
-        label: t("manageStakeholders"),
-        leadingIcon: "tags",
-        onClick: onManageStakeholders,
-      });
-    }
-
-    items.push({
-      id: "exit",
-      label: exitButtonText,
-      leadingIcon: "log_out",
-      onClick: () => void onExit?.({ saveDraft: saveDraftOnExit }),
-    });
-
-    return items;
-  }, [
-    duplicateLabel,
-    exitButtonText,
-    exportPopoverCsvLabel,
-    exportPopoverMarkdownLabel,
-    exportPopoverPdfLabel,
-    hasDuplicate,
-    hasEdit,
-    hasExport,
-    hasManageStakeholders,
-    hasShare,
-    onDuplicate,
-    onEdit,
-    onExit,
-    onManageStakeholders,
-    onSelectExportFormat,
-    onShare,
-    saveDraftOnExit,
-    t,
-  ]);
-
-  useEffect(() => {
-    if (!exportMenuOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (
-        exportWrapRef.current &&
-        !exportWrapRef.current.contains(e.target as Node)
-      ) {
-        setExportMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [exportMenuOpen]);
-
-  useEffect(() => {
-    if (!actionsMenuOpen) return;
-    const onDoc = (e: MouseEvent) => {
-      if (
-        actionsWrapRef.current &&
-        !actionsWrapRef.current.contains(e.target as Node)
-      ) {
-        setActionsMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, [actionsMenuOpen]);
-
-  useEffect(() => {
-    if (!exportMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setExportMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [exportMenuOpen]);
-
-  useEffect(() => {
-    if (!actionsMenuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActionsMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [actionsMenuOpen]);
 
   const inlineActions = (
     <>
@@ -228,10 +90,10 @@ export function CreateFlowTopNavView({
           palette={buttonPalette}
           size="xsmall"
           onClick={onShare}
-          ariaLabel={t("shareAriaLabel")}
+          ariaLabel={shareAriaLabel}
           className={outlineButtonClass}
         >
-          {t("share")}
+          {shareLabel}
         </Button>
       )}
 
@@ -242,14 +104,14 @@ export function CreateFlowTopNavView({
             palette={buttonPalette}
             size="xsmall"
             type="button"
-            ariaLabel={t("exportAriaLabel")}
+            ariaLabel={exportAriaLabel}
             aria-haspopup="menu"
             aria-expanded={exportMenuOpen}
             aria-controls={exportMenuId}
             onClick={() => setExportMenuOpen((o) => !o)}
             className={`justify-center gap-[var(--spacing-scale-002,2px)] !pl-[var(--spacing-scale-012,12px)] !pr-[var(--spacing-scale-006,6px)] md:!pr-[var(--spacing-scale-006,6px)] ${outlineButtonClass}`}
           >
-            <span>{t("export")}</span>
+            <span>{exportLabel}</span>
             <svg
               width="12"
               height="12"
@@ -311,11 +173,11 @@ export function CreateFlowTopNavView({
           size="xsmall"
           onClick={onDuplicate}
           ariaLabel={
-            duplicateAriaLabel ?? duplicateLabel ?? t("editAriaLabel")
+            duplicateAriaLabel ?? duplicateLabel ?? editAriaLabel
           }
           className={outlineButtonClass}
         >
-          {duplicateLabel ?? t("edit")}
+          {duplicateLabel ?? editLabel}
         </Button>
       )}
 
@@ -325,10 +187,10 @@ export function CreateFlowTopNavView({
           palette={buttonPalette}
           size="xsmall"
           onClick={onEdit}
-          ariaLabel={t("editAriaLabel")}
+          ariaLabel={editAriaLabel}
           className={outlineButtonClass}
         >
-          {t("edit")}
+          {editLabel}
         </Button>
       )}
 
@@ -339,10 +201,10 @@ export function CreateFlowTopNavView({
           size="xsmall"
           type="button"
           onClick={onManageStakeholders}
-          ariaLabel={t("manageStakeholdersAriaLabel")}
+          ariaLabel={manageStakeholdersAriaLabel}
           className={outlineButtonClass}
         >
-          {t("manageStakeholders")}
+          {manageStakeholdersLabel}
         </Button>
       ) : null}
 
@@ -364,12 +226,12 @@ export function CreateFlowTopNavView({
     <header
       className={`bg-black w-full ${className}`}
       role="banner"
-      aria-label={t("bannerAriaLabel")}
+      aria-label={bannerAriaLabel}
     >
       <nav
         className="flex items-center justify-between mx-auto max-w-[639px] md:max-w-[1920px] px-[var(--spacing-measures-spacing-500,20px)] md:px-[48px] py-[var(--spacing-measures-spacing-300,12px)] md:py-[var(--spacing-measures-spacing-016,16px)]"
         role="navigation"
-        aria-label={t("navAriaLabel")}
+        aria-label={navAriaLabel}
       >
         <Logo size="createFlow" wordmark palette={buttonPalette} />
 

@@ -20,7 +20,7 @@ function ContentContainerView({
   return (
     <div
       className={containerClasses}
-      style={size === "responsive" || size === "xs" ? {} : { width }}
+      style={size === "xs" ? {} : { width }}
     >
       {/* Content Container - gap between icon and text */}
       <div className={contentGapClasses}>

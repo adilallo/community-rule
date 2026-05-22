@@ -45,6 +45,7 @@ vi.mock("next/dynamic", () => {
 vi.mock("../../lib/content", () => ({
   getBlogPostBySlug: vi.fn(),
   getAllBlogPosts: vi.fn(),
+  getRelatedBlogPosts: vi.fn(() => []),
 }));
 
 // Mock components
@@ -88,10 +89,12 @@ vi.mock("../../app/components/sections/AskOrganizer", () => {
 
 // Mock asset utils
 vi.mock("../../lib/assetUtils", () => ({
-  getAssetPath: vi.fn((asset) => `/assets/${asset}`),
+  getAssetPath: vi.fn((asset) =>
+    asset.startsWith("/") ? asset : `/${asset}`,
+  ),
   ASSETS: {
-    CONTENT_SHAPE_1: "Content_Shape_1.svg",
-    CONTENT_SHAPE_2: "Content_Shape_2.svg",
+    CONTENT_SHAPE_1: "assets/shapes/content-shape-1.svg",
+    CONTENT_SHAPE_2: "assets/shapes/content-shape-2.svg",
   },
 }));
 
@@ -135,10 +138,11 @@ describe("BlogPostPage", () => {
     vi.clearAllMocks();
 
     // Mock the content functions
-    const { getBlogPostBySlug, getAllBlogPosts } =
+    const { getBlogPostBySlug, getAllBlogPosts, getRelatedBlogPosts } =
       await import("../../lib/content");
     vi.mocked(getBlogPostBySlug).mockReturnValue(mockPost);
     vi.mocked(getAllBlogPosts).mockReturnValue([mockPost, ...mockRelatedPosts]);
+    vi.mocked(getRelatedBlogPosts).mockReturnValue(mockRelatedPosts);
   });
 
   it("renders the blog post page with correct structure", async () => {
@@ -153,7 +157,7 @@ describe("BlogPostPage", () => {
     expect(mainContainer).toHaveClass(
       "min-h-screen",
       "relative",
-      "overflow-hidden",
+      "overflow-x-clip",
     );
     // Background color is applied via inline style from frontmatter hex
     expect(mainContainer).toHaveStyle({ backgroundColor: expect.any(String) });
@@ -232,8 +236,8 @@ describe("BlogPostPage", () => {
     expect(shapes).toHaveLength(2);
 
     // Check shape sources
-    expect(shapes[0]).toHaveAttribute("src", "/assets/Content_Shape_1.svg");
-    expect(shapes[1]).toHaveAttribute("src", "/assets/Content_Shape_2.svg");
+    expect(shapes[0]).toHaveAttribute("src", "/assets/shapes/content-shape-1.svg");
+    expect(shapes[1]).toHaveAttribute("src", "/assets/shapes/content-shape-2.svg");
   });
 
   it("applies correct styling to article content", async () => {

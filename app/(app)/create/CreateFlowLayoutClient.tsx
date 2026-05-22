@@ -4,6 +4,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -80,6 +81,7 @@ import { PostLoginDraftTransfer } from "./PostLoginDraftTransfer";
 import { SignedInDraftHydration } from "./SignedInDraftHydration";
 import { CreateFlowPendingAvatarFlush } from "./components/CreateFlowPendingAvatarFlush";
 import Alert from "../../components/modals/Alert";
+import Create from "../../components/modals/Create";
 import Share from "../../components/modals/Share";
 import {
   CreateFlowDraftSaveBannerProvider,
@@ -190,6 +192,26 @@ function CreateFlowLayoutContent({
     description?: string;
   } | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [leaveConfirmOpen, setLeaveConfirmOpen] = useState(false);
+  const leaveConfirmResolverRef = useRef<((proceed: boolean) => void) | null>(
+    null,
+  );
+
+  const confirmLeave = useCallback(
+    () =>
+      new Promise<boolean>((resolve) => {
+        leaveConfirmResolverRef.current = resolve;
+        setLeaveConfirmOpen(true);
+      }),
+    [],
+  );
+
+  const closeLeaveConfirm = useCallback((proceed: boolean) => {
+    setLeaveConfirmOpen(false);
+    const resolve = leaveConfirmResolverRef.current;
+    leaveConfirmResolverRef.current = null;
+    resolve?.(proceed);
+  }, []);
 
   const {
     copyPublishedRuleLink,
@@ -256,6 +278,7 @@ function CreateFlowLayoutContent({
     router,
     user: sessionUser ?? null,
     setDraftSaveBannerMessage,
+    confirmLeave,
   });
 
   const handleExit = async (opts?: { saveDraft?: boolean }) => {
@@ -600,6 +623,28 @@ function CreateFlowLayoutContent({
         onSignalShare={() => void sharePublishedRuleViaSignal()}
         onSlackShare={() => void sharePublishedRuleViaSlack()}
         onDiscordShare={() => void sharePublishedRuleViaDiscord()}
+      />
+      <Create
+        isOpen={leaveConfirmOpen}
+        onClose={() => closeLeaveConfirm(false)}
+        title={messages.create.topNav.leaveConfirmTitle}
+        description={messages.create.topNav.leaveConfirmDescription}
+        showBackButton={false}
+        showNextButton
+        nextButtonText={messages.create.topNav.leaveConfirmProceed}
+        onNext={() => closeLeaveConfirm(true)}
+        footerContent={
+          <Button
+            buttonType="ghost"
+            palette="default"
+            size="xsmall"
+            onClick={() => closeLeaveConfirm(false)}
+          >
+            {messages.create.topNav.leaveConfirmCancel}
+          </Button>
+        }
+        backdropVariant="blurredYellow"
+        ariaLabel={messages.create.topNav.leaveConfirmTitle}
       />
       <CreateFlowTopNav
         hasShare={isCompletedStep}

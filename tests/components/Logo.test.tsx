@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { renderWithProviders as render } from "../utils/test-utils";
 import { describe, it, expect } from "vitest";
 import Logo from "../../app/components/asset/Logo";
 import {
@@ -27,7 +28,6 @@ const config: ComponentTestSuiteConfig<LogoProps> = {
 
 componentTestSuite<LogoProps>(config);
 
-// Pure presentational; no provider context needed.
 describe("Logo (behavioral tests)", () => {
   it("renders as a link to home", () => {
     render(<Logo />);
@@ -38,7 +38,7 @@ describe("Logo (behavioral tests)", () => {
 
   it("renders logo icon", () => {
     render(<Logo />);
-    expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
+    expect(screen.getByAltText("CommunityRule Logo")).toBeInTheDocument();
   });
 
   it("renders text by default", () => {
@@ -50,7 +50,7 @@ describe("Logo (behavioral tests)", () => {
     const { container } = render(<Logo wordmark={false} />);
     const textElement = container.querySelector(".hidden");
     expect(textElement).toBeInTheDocument();
-    expect(screen.getByAltText("CommunityRule Logo Icon")).toBeInTheDocument();
+    expect(screen.getByAltText("CommunityRule Logo")).toBeInTheDocument();
   });
 
   it("applies inverse palette styling when palette is inverse", () => {

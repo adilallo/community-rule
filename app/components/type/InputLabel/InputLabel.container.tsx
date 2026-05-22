@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import InputLabelView from "./InputLabel.view";
 import type { InputLabelProps } from "./InputLabel.types";
 
@@ -19,6 +20,7 @@ const InputLabelContainer = memo<InputLabelProps>(
     palette: paletteProp = "default",
     className = "",
   }) => {
+    const t = useTranslation("controlsChrome");
     const size = sizeProp;
     const palette = paletteProp;
 
@@ -31,6 +33,8 @@ const InputLabelContainer = memo<InputLabelProps>(
         size={size}
         palette={palette}
         className={className}
+        helpIconAlt={t("helpIconAlt")}
+        helperTextDefault={t("inputLabelOptional")}
       />
     );
   },

@@ -2,8 +2,7 @@ import { deleteServerDraft } from "../../../../lib/create/api";
 import { clearAnonymousCreateFlowStorage } from "./anonymousDraftStorage";
 import { clearCoreValueDetailsLocalStorage } from "./coreValueDetailsLocalStorage";
 
-const SYNC_ENABLED =
-  process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
+import { isBackendSyncEnabled } from "../../../../lib/create/backendSyncEnabled";
 
 /**
  * Call **before** navigating into `/create` from marketing or profile “new rule”
@@ -17,7 +16,7 @@ const SYNC_ENABLED =
 export async function prepareFreshCreateFlowEntry(): Promise<void> {
   clearAnonymousCreateFlowStorage();
   clearCoreValueDetailsLocalStorage();
-  if (SYNC_ENABLED) {
+  if (isBackendSyncEnabled()) {
     await deleteServerDraft();
   }
 }

@@ -65,4 +65,6 @@ export interface TextInputViewProps {
   textHint?: boolean | string;
   formHeader?: boolean;
   maxLength?: number;
+  helpIconAlt: string;
+  hintDefault: string;
 }

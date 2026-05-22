@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useEffect, useRef } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import ChipView from "./Chip.view";
 import type { ChipProps } from "./Chip.types";
 
@@ -22,6 +23,7 @@ const ChipContainer = memo<ChipProps>(
     onClose,
     ariaLabel,
   }) => {
+    const t = useTranslation("controlsChrome");
     const state = stateProp;
     const palette = paletteProp;
     const size = sizeProp;
@@ -92,6 +94,9 @@ const ChipContainer = memo<ChipProps>(
         onInputKeyDown={isCustom ? handleKeyDown : undefined}
         inputRef={isCustom ? inputRef : undefined}
         ariaLabel={ariaLabel}
+        confirmAriaLabel={t("chipConfirm")}
+        typeToAddPlaceholder={t("chipTypeToAdd")}
+        closeAriaLabel={t("chipClose")}
       />
     );
   },

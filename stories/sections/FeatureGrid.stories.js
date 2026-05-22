@@ -8,34 +8,12 @@ export default {
     docs: {
       description: {
         component: `
-A responsive feature grid component that displays organizational tools and services in a clean card-based layout with supportive messaging and categorized feature highlights.
+Feature grid for the home marketing section (Figma 18847:22410).
 
-## Features
-
-- **Responsive Layout**: Adapts from 2x2 grid on mobile to 1x4 grid on tablet to horizontal layout on desktop
-- **ContentLockup Integration**: Uses the feature variant with "Learn more" link
-- **Mini grid**: Four feature tiles with color-coded backgrounds and icons
-- **Accessibility**: Full keyboard navigation, focus indicators, and ARIA labels
-- **Design System**: Uses design tokens for consistent spacing, colors, and typography
-
-## Responsive Behavior
-
-- **Mobile (< 768px)**: 2x2 grid layout with ContentLockup on top
-- **Tablet (768px - 1024px)**: 1x4 grid layout with ContentLockup on top  
-- **Desktop (> 1024px)**: Horizontal layout with ContentLockup on left, 1x4 grid on right
-
-## Interactive Elements
-
-- **Mini tiles**: Hover effects, focus indicators, and keyboard navigation
-- **Learn More Link**: Underlined link with focus states
-- **Color-coded Features**: Royal, green, pink, and blue backgrounds for categorization
-
-## Accessibility
-
-- WCAG 2.1 AA compliant
-- Keyboard navigation support
-- Screen reader friendly with proper ARIA labels
-- Focus management with visible indicators
+- **Layout**: 2×2 on mobile, 1×4 on tablet, horizontal lockup + grid on desktop
+- **Shell**: \`surface/default/secondary\` content block with responsive spacing tokens
+- **ContentLockup**: Feature variant — 18/22 title & 14/20 subtitle (mobile), 24/32 title & 16/24 subtitle (640px+), 16/24 link
+- **Mini tiles**: Invert-brand surfaces (royal, lime, rust, teal), 138px panel height, 48px icons
         `,
       },
     },
@@ -66,14 +44,7 @@ export const Default = {
     docs: {
       description: {
         story: `
-Default FeatureGrid with standard content. This component demonstrates:
-
-- **ContentLockup**: Feature variant with title, subtitle, and "Learn more" link
-- **Mini grid**: Four feature tiles with different colors and icons
-- **Responsive Design**: Layout adapts across mobile, tablet, and desktop breakpoints
-- **Interactive States**: Hover effects and focus indicators on all interactive elements
-
-The component uses a dark background (#171717) with rounded corners and proper spacing using design tokens.
+Default FeatureGrid — responsive breakpoint layout with Figma styling (invert-brand tiles, secondary surface, updated lockup typography).
         `,
       },
     },

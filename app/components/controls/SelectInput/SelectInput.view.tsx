@@ -40,6 +40,8 @@ export interface SelectInputViewProps {
   textData?: boolean;
   iconRight?: boolean;
   textHint?: boolean;
+  selectAriaLabel: string;
+  hintDefault: string;
 }
 
 export function SelectInputView({
@@ -72,6 +74,8 @@ export function SelectInputView({
   textData = true,
   iconRight = true,
   textHint = false,
+  selectAriaLabel,
+  hintDefault,
 }: SelectInputViewProps) {
   // Styles based on Figma design
   const containerClasses = "flex flex-col gap-[8px]";
@@ -222,7 +226,7 @@ export function SelectInputView({
             ref={menuRef}
             className="absolute top-full left-0 right-0 z-50 mt-1"
           >
-            <SelectDropdown>
+            <SelectDropdown ariaLabel={selectAriaLabel}>
               {options && Array.isArray(options)
                 ? options.map((option) => (
                     <SelectOption
@@ -268,7 +272,7 @@ export function SelectInputView({
       {textHint && (
         <div className="flex items-start relative shrink-0 w-full">
           <p className="flex-[1_0_0] font-inter font-normal leading-[16px] min-h-px min-w-px relative text-[color:var(--color-content-default-tertiary,#b4b4b4)] text-[length:var(--sizing-300,12px)]">
-            Hint text here
+            {hintDefault}
           </p>
         </div>
       )}

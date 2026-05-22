@@ -1,5 +1,7 @@
 import Rule from "../../app/components/cards/Rule";
 import Image from "next/image";
+import { getAssetPath } from "../../lib/assetUtils";
+import { getGovernanceTemplatesForHome } from "../../lib/templates/governanceTemplateCatalog";
 
 export default {
   title: "Components/Cards/Rule",
@@ -323,66 +325,25 @@ export const AllVariants = {
   // eslint-disable-next-line no-unused-vars
   render: (_args) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-      <Rule
-        title="Consensus clusters"
-        description="Units called Circles have the ability to decide and act on matters in their domains, which their members agree on through a Council."
-        backgroundColor="bg-[var(--color-surface-default-brand-lime)]"
-        icon={
-          <Image
-            src="assets/template-mark/consensus-clusters.svg"
-            alt="Sociocracy"
-            width={40}
-            height={40}
-            className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
-          />
-        }
-        onClick={() => console.log("Consensus clusters selected")}
-      />
-      <Rule
-        title="Consensus"
-        description="Decisions that affect the group collectively should involve participation of all participants."
-        backgroundColor="bg-[var(--color-surface-default-brand-rust)]"
-        icon={
-          <Image
-            src="assets/template-mark/consensus.svg"
-            alt="Consensus"
-            width={40}
-            height={40}
-            className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
-          />
-        }
-        onClick={() => console.log("Consensus selected")}
-      />
-      <Rule
-        title="Elected Board"
-        description="An elected board determines policies and organizes their implementation."
-        backgroundColor="bg-[var(--color-surface-default-brand-red)]"
-        icon={
-          <Image
-            src="assets/template-mark/elected-board.svg"
-            alt="Elected Board"
-            width={40}
-            height={40}
-            className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
-          />
-        }
-        onClick={() => console.log("Elected Board selected")}
-      />
-      <Rule
-        title="Petition"
-        description="All participants can propose and vote on proposals for the group."
-        backgroundColor="bg-[var(--color-surface-default-brand-teal)]"
-        icon={
-          <Image
-            src="assets/template-mark/petition.svg"
-            alt="Petition"
-            width={40}
-            height={40}
-            className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
-          />
-        }
-        onClick={() => console.log("Petition selected")}
-      />
+      {getGovernanceTemplatesForHome().map((entry) => (
+        <Rule
+          key={entry.slug}
+          title={entry.title}
+          description={entry.description}
+          backgroundColor={entry.backgroundColor}
+          templateGridFigmaShell
+          icon={
+            <Image
+              src={getAssetPath(entry.iconPath)}
+              alt={entry.title}
+              width={40}
+              height={40}
+              className="md:w-[56px] md:h-[56px] lg:w-[90px] lg:h-[90px]"
+            />
+          }
+          onClick={() => console.log(`${entry.slug} template selected`)}
+        />
+      ))}
     </div>
   ),
   parameters: {

@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslation } from "../../../contexts/MessagesContext";
+
 /**
  * Placeholder grid matching GovernanceTemplateGrid layout (loading state).
  */
@@ -8,6 +12,7 @@ export function GovernanceTemplateGridSkeleton({
   count: number;
   twoColumnsFromMd?: boolean;
 }) {
+  const t = useTranslation("controlsChrome");
   const gridLayoutClasses = twoColumnsFromMd
     ? `
         flex flex-col gap-[18px]
@@ -24,7 +29,7 @@ export function GovernanceTemplateGridSkeleton({
     <div
       className={gridLayoutClasses}
       aria-busy
-      aria-label="Loading templates"
+      aria-label={t("governanceTemplateGridLoading")}
     >
       {Array.from({ length: count }, (_, i) => (
         <div

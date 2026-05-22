@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Navigation / Top" (22078-808559)
+ */
+
 import { memo, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthModal } from "../../../contexts/AuthModalContext";
@@ -24,11 +28,17 @@ const NAV_SIZE_TO_MENU_ITEM_SIZE: Record<NavSize, MenuClusterSize> = {
   xlarge: "X Large",
 };
 
-export const avatarImages = [
-  { src: getAssetPath(ASSETS.AVATAR_1), alt: "Avatar 1" },
-  { src: getAssetPath(ASSETS.AVATAR_2), alt: "Avatar 2" },
-  { src: getAssetPath(ASSETS.AVATAR_3), alt: "Avatar 3" },
-];
+export const avatarImageSources = [
+  getAssetPath(ASSETS.AVATAR_3),
+  getAssetPath(ASSETS.AVATAR_2),
+  getAssetPath(ASSETS.AVATAR_1),
+] as const;
+
+/** @deprecated Use `avatarImageSources` — alts are resolved in `TopContainer` via `topNav` messages. */
+export const avatarImages = avatarImageSources.map((src, index) => ({
+  src,
+  alt: `Avatar ${3 - index}`,
+}));
 
 const TopContainer = memo<TopProps>(
   ({ folderTop = false, loggedIn = false, profile = false, logIn = true }) => {
@@ -36,6 +46,7 @@ const TopContainer = memo<TopProps>(
     const router = useRouter();
     const { openLogin } = useAuthModal();
     const t = useTranslation("header");
+    const tTopNav = useTranslation("topNav");
 
     /**
      * `Top` is hidden on `/create` routes by ConditionalNavigationClient, so
@@ -58,7 +69,7 @@ const TopContainer = memo<TopProps>(
       name: "CommunityRule",
       url: "https://communityrule.com",
       ...(folderTop && {
-        description: "Build operating manuals for successful communities",
+        description: tTopNav("schemaDescription"),
       }),
       potentialAction: {
         "@type": "SearchAction",
@@ -110,11 +121,11 @@ const TopContainer = memo<TopProps>(
     ) => {
       return (
         <AvatarContainer size={containerSize}>
-          {avatarImages.map((avatar, index) => (
+          {avatarImageSources.map((src, index) => (
             <Avatar
               key={index}
-              src={avatar.src}
-              alt={avatar.alt}
+              src={src}
+              alt={tTopNav(`avatarAlts.${3 - index}`)}
               size={avatarSize}
             />
           ))}

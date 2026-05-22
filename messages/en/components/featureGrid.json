@@ -1,5 +1,5 @@
 {
-  "_comment": "FeatureGrid component defaults (shared across pages)",
+  "_comment": "FeatureGrid component defaults (shared across pages). linkHref is a stub until destination pages ship.",
   "linkText": "Learn more",
   "linkHref": "#",
   "ariaLabel": "Feature tools and services",

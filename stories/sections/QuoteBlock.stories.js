@@ -76,7 +76,7 @@ export const Default = {
       "The rules of decision-making must be open and available to everyone, and this can happen only if they are formalized.",
     author: "Jo Freeman",
     source: "The Tyranny of Structurelessness",
-    avatarSrc: "assets/Quote_Avatar.svg",
+    avatarSrc: "assets/marketing/quote-avatar.svg",
   },
 };
 
@@ -91,7 +91,7 @@ export const AllVariants = {
           quote="The rules of decision-making must be open and available to everyone."
           author="Jo Freeman"
           source="The Tyranny of Structurelessness"
-          avatarSrc="assets/Quote_Avatar.svg"
+          avatarSrc="assets/marketing/quote-avatar.svg"
         />
       </div>
 
@@ -102,7 +102,7 @@ export const AllVariants = {
           quote="The rules of decision-making must be open and available to everyone, and this can happen only if they are formalized."
           author="Jo Freeman"
           source="The Tyranny of Structurelessness"
-          avatarSrc="assets/Quote_Avatar.svg"
+          avatarSrc="assets/marketing/quote-avatar.svg"
         />
       </div>
 
@@ -113,7 +113,7 @@ export const AllVariants = {
           quote="The rules of decision-making must be open and available to everyone, and this can happen only if they are formalized."
           author="Jo Freeman"
           source="The Tyranny of Structurelessness"
-          avatarSrc="assets/Quote_Avatar.svg"
+          avatarSrc="assets/marketing/quote-avatar.svg"
         />
       </div>
     </div>

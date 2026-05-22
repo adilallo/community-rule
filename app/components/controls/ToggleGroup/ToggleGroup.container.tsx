@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useId, forwardRef } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import { ToggleGroupView } from "./ToggleGroup.view";
 import type { ToggleGroupProps } from "./ToggleGroup.types";
 
@@ -10,6 +11,7 @@ import type { ToggleGroupProps } from "./ToggleGroup.types";
  */
 const ToggleGroupContainer = memo(
   forwardRef<HTMLButtonElement, ToggleGroupProps>((props, _ref) => {
+    const t = useTranslation("controlsChrome");
     const {
       children,
       className = "",
@@ -131,6 +133,7 @@ const ToggleGroupContainer = memo(
         state={state}
         showText={showText}
         ariaLabel={ariaLabel}
+        defaultToggleOptionAriaLabel={t("toggleOption")}
         toggleClasses={toggleClasses}
         onClick={handleClick}
         onKeyDown={handleKeyDown}

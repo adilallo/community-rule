@@ -1,6 +1,11 @@
 "use client";
 
+/**
+ * Figma: "Card / Mini" (see registry)
+ */
+
 import { memo, useMemo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import MiniView from "./Mini.view";
 import type { MiniProps } from "./Mini.types";
 
@@ -16,15 +21,21 @@ const MiniContainer = memo<MiniProps>(
     onClick,
     href,
     ariaLabel,
+    featureGridShell = false,
+    panelWidth,
+    panelHeight,
+    panelImageClassName,
   }) => {
+    const t = useTranslation("controlsChrome");
+
     // Compute aria-label
     const computedAriaLabel = useMemo(
       () =>
         ariaLabel ||
         (labelLine1 && labelLine2
           ? `${labelLine1} ${labelLine2}`
-          : label || "Feature card"),
-      [ariaLabel, labelLine1, labelLine2, label],
+          : label || t("miniFeatureFallback")),
+      [ariaLabel, labelLine1, labelLine2, label, t],
     );
 
     // Determine wrapper element and props
@@ -85,6 +96,10 @@ const MiniContainer = memo<MiniProps>(
         computedAriaLabel={computedAriaLabel}
         wrapperElement={wrapperElement}
         wrapperProps={wrapperProps}
+        featureGridShell={featureGridShell}
+        panelWidth={panelWidth}
+        panelHeight={panelHeight}
+        panelImageClassName={panelImageClassName}
       >
         {children}
       </MiniView>

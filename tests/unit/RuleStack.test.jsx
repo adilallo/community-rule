@@ -61,7 +61,7 @@ afterEach(() => {
 
 async function waitForRuleStackCards() {
   await waitFor(() => {
-    expect(screen.getByText("Circles")).toBeInTheDocument();
+    expect(screen.getByText("Consensus")).toBeInTheDocument();
   });
 }
 
@@ -70,7 +70,7 @@ describe("RuleStack Component", () => {
     const fetchMock = vi.mocked(global.fetch);
     const callsBefore = fetchMock.mock.calls.length;
     render(<RuleStack initialGridEntries={homeFeatured} />);
-    expect(screen.getByText("Circles")).toBeInTheDocument();
+    expect(screen.getByText("Consensus")).toBeInTheDocument();
     expect(fetchMock.mock.calls.length).toBe(callsBefore);
   });
 
@@ -121,19 +121,23 @@ describe("RuleStack Component", () => {
     await waitForRuleStackCards();
 
     expect(
-      screen.getByText(/Units called Circles have the ability to decide/),
-    ).toBeInTheDocument();
-    expect(
       screen.getByText(
         /Important decisions require unanimous agreement\. Proposals pass only if no serious objections remain\./,
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/An elected board determines policies/),
+      screen.getByText(
+        /Authority is granted to those doing the work\. If you do the task, you decide how it gets done\./,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Any participant can propose a rule change\. If enough sign it/,
+        /Starts as a Dictatorship for speed, moving to a Board, and finally to full community ownership\./,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Voting cost is squared \(V²\), preventing a majority from steamrolling a passionate minority\./,
       ),
     ).toBeInTheDocument();
   });
@@ -143,24 +147,19 @@ describe("RuleStack Component", () => {
     await waitForRuleStackCards();
 
     const imgs = container.querySelectorAll("img");
-    const circles = [...imgs].find((el) => {
-      const s = el.getAttribute("src") ?? "";
-      return (
-        s.includes("template-mark/consensus-clusters") ||
-        s.includes("template-mark%2Fconsensus-clusters")
-      );
-    });
     const consensus = [...imgs].find((el) => {
       const s = el.getAttribute("src") ?? "";
       return (
-        s.includes("consensus") &&
-        !s.includes("consensus-clusters") &&
-        !s.includes("elected") &&
-        !s.includes("petition")
+        s.includes("template-mark/consensus") &&
+        !s.includes("consensus-clusters")
       );
     });
-    expect(circles).toBeTruthy();
+    const doOcracy = [...imgs].find((el) => {
+      const s = el.getAttribute("src") ?? "";
+      return s.includes("template-mark/do-ocracy");
+    });
     expect(consensus).toBeTruthy();
+    expect(doOcracy).toBeTruthy();
   });
 
   test("renders see-all-templates link to full templates page", async () => {
@@ -203,15 +202,15 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
     await waitForRuleStackCards();
 
-    const circlesCard = screen
-      .getByText("Circles")
-      .closest('[class*="bg-[var(--color-surface-invert-brand-teal)]"]');
-    expect(circlesCard).toBeInTheDocument();
-
     const consensusCard = screen
       .getByText("Consensus")
       .closest('[class*="bg-[var(--color-surface-invert-positive-secondary)]"]');
     expect(consensusCard).toBeInTheDocument();
+
+    const doOcracyCard = screen
+      .getByText("Do-ocracy")
+      .closest('[class*="bg-[var(--color-surface-invert-brand-royal)]"]');
+    expect(doOcracyCard).toBeInTheDocument();
   });
 
   test("handles template click events for featured templates", async () => {
@@ -284,31 +283,31 @@ describe("RuleStack Component", () => {
     await waitForRuleStackCards();
 
     const imgs = container.querySelectorAll("img");
-    const circlesIcon = [...imgs].find((el) => {
+    const doOcracyIcon = [...imgs].find((el) => {
       const s = el.getAttribute("src") ?? "";
       return (
-        s.includes("template-mark/consensus-clusters") ||
-        s.includes("template-mark%2Fconsensus-clusters")
+        s.includes("template-mark/do-ocracy") ||
+        s.includes("template-mark%2Fdo-ocracy")
       );
     });
-    expect(circlesIcon).toBeTruthy();
-    expect(circlesIcon?.getAttribute("src")).toMatch(
-      /template-mark(?:%2F|\/)consensus-clusters/,
+    expect(doOcracyIcon).toBeTruthy();
+    expect(doOcracyIcon?.getAttribute("src")).toMatch(
+      /template-mark(?:%2F|\/)do-ocracy/,
     );
-    expect(circlesIcon?.className).toMatch(
+    expect(doOcracyIcon?.className).toMatch(
       /min-\[640px\]:max-\[1023px\]:w-\[56px\]/,
     );
-    expect(circlesIcon?.className).toMatch(
+    expect(doOcracyIcon?.className).toMatch(
       /min-\[640px\]:max-\[1023px\]:h-\[56px\]/,
     );
-    expect(circlesIcon?.className).toMatch(
+    expect(doOcracyIcon?.className).toMatch(
       /min-\[1024px\]:max-\[1439px\]:w-\[90px\]/,
     );
-    expect(circlesIcon?.className).toMatch(
+    expect(doOcracyIcon?.className).toMatch(
       /min-\[1024px\]:max-\[1439px\]:h-\[90px\]/,
     );
-    expect(circlesIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
-    expect(circlesIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
+    expect(doOcracyIcon?.className).toMatch(/min-\[1440px\]:w-\[90px\]/);
+    expect(doOcracyIcon?.className).toMatch(/min-\[1440px\]:h-\[90px\]/);
   });
 
   test("applies different background colors to featured cards", async () => {
@@ -370,14 +369,14 @@ describe("RuleStack Component", () => {
     render(<RuleStack />);
     await waitForRuleStackCards();
 
-    const electedBoardCard = screen.getByText("Elected Board").closest("div");
-    await user.click(electedBoardCard);
+    const doOcracyCard = screen.getByText("Do-ocracy").closest("div");
+    await user.click(doOcracyCard);
 
     expect(gtagSpy).toHaveBeenCalledWith("event", "template_click", {
-      template_slug: "elected-board",
+      template_slug: "do-ocracy",
     });
     expect(analyticsSpy).toHaveBeenCalledWith("Template Clicked", {
-      templateSlug: "elected-board",
+      templateSlug: "do-ocracy",
     });
   });
 });

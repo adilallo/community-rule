@@ -25,6 +25,8 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
       formHeader = true,
       showHelpIcon = false,
       appearance: _appearance,
+      helpIconAlt,
+      hintDefault,
       // Component-only props: do not pass to DOM
       size: _size,
       labelVariant: _labelVariant,
@@ -51,7 +53,7 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
                   {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
                   <img
                     src={getAssetPath(ASSETS.ICON_HELP)}
-                    alt="Help"
+                    alt={helpIconAlt}
                     className="block max-w-none size-full"
                   />
                 </div>
@@ -81,7 +83,7 @@ export const TextAreaView = forwardRef<HTMLTextAreaElement, TextAreaViewProps>(
         {textHint ? (
           <div className="flex items-start relative shrink-0 w-full">
             <p className="flex-[1_0_0] font-inter font-normal leading-[16px] min-h-px min-w-px relative text-[color:var(--color-content-default-tertiary,#b4b4b4)] text-[length:var(--sizing-300,12px)]">
-              {typeof textHint === "string" ? textHint : "Hint text here"}
+              {typeof textHint === "string" ? textHint : hintDefault}
             </p>
           </div>
         ) : null}

@@ -29,6 +29,8 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
       textHint = false,
       formHeader = true,
       maxLength,
+      helpIconAlt,
+      hintDefault,
     },
     ref,
   ) => {
@@ -49,7 +51,7 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
                   {/* eslint-disable-next-line @next/next/no-img-element -- icon asset */}
                   <img
                     src={getAssetPath(ASSETS.ICON_HELP)}
-                    alt="Help"
+                    alt={helpIconAlt}
                     className="block max-w-none size-full"
                   />
                 </div>
@@ -83,7 +85,7 @@ export const TextInputView = forwardRef<HTMLInputElement, TextInputViewProps>(
         {textHint && (
           <div className="flex items-start relative shrink-0 w-full">
             <p className="flex-[1_0_0] font-inter font-normal leading-[16px] min-h-px min-w-px relative text-[color:var(--color-content-default-tertiary,#b4b4b4)] text-[length:var(--sizing-300,12px)]">
-              {typeof textHint === "string" ? textHint : "Hint text here"}
+              {typeof textHint === "string" ? textHint : hintDefault}
             </p>
           </div>
         )}

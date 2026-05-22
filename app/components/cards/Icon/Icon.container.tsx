@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Card / Icon" (see registry)
+ */
+
 import { memo, useId } from "react";
 import { IconView } from "./Icon.view";
 import type { IconProps } from "./Icon.types";

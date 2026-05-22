@@ -2,6 +2,11 @@
 
 import Image from "next/image";
 import { memo } from "react";
+import {
+  getAssetPath,
+  shareIconPath,
+  type ShareIconName,
+} from "../../../../lib/assetUtils";
 import ContentLockup from "../../type/ContentLockup";
 import Button from "../../buttons/Button";
 import ModalHeader from "../ModalHeader";
@@ -9,21 +14,16 @@ import ModalFooter from "../ModalFooter";
 import { CreateModalFrameView } from "../Create/CreateModalFrame.view";
 import type { ShareChannelTileProps, ShareViewProps } from "./Share.types";
 
-/** Decorative glyphs in `public/assets/Share/` — sizes match prior inline SVGs within the 60×60 circles. */
+/** Decorative glyphs in `public/assets/share/` — sizes match prior inline SVGs within the 60×60 circles. */
 function ShareAssetIcon(props: {
-  src:
-    | "/assets/Share/Discord.svg"
-    | "/assets/Share/Link.svg"
-    | "/assets/Share/Mail.svg"
-    | "/assets/Share/Signal.svg"
-    | "/assets/Share/Slack.svg";
+  name: ShareIconName;
   width: number;
   height: number;
 }) {
-  const { src, width, height } = props;
+  const { name, width, height } = props;
   return (
     <Image
-      src={src}
+      src={getAssetPath(shareIconPath(name))}
       alt=""
       width={width}
       height={height}
@@ -111,31 +111,31 @@ export const ShareView = memo(function ShareView({
             label={copyLinkLabel}
             onClick={onCopyLink}
             circleClassName="border-[#444444] bg-[#333333]"
-            icon={<ShareAssetIcon src="/assets/Share/Link.svg" width={24} height={24} />}
+            icon={<ShareAssetIcon name="link" width={24} height={24} />}
           />
           <ShareChannelTile
             label={signalLabel}
             onClick={onSignalShare}
             circleClassName="border-[#3a76f0] bg-[#3a76f0]"
-            icon={<ShareAssetIcon src="/assets/Share/Signal.svg" width={26} height={26} />}
+            icon={<ShareAssetIcon name="signal" width={26} height={26} />}
           />
           <ShareChannelTile
             label={slackLabel}
             onClick={onSlackShare}
             circleClassName="border-[#4a154b] bg-[#4a154b]"
-            icon={<ShareAssetIcon src="/assets/Share/Slack.svg" width={26} height={26} />}
+            icon={<ShareAssetIcon name="slack" width={26} height={26} />}
           />
           <ShareChannelTile
             label={discordLabel}
             onClick={onDiscordShare}
             circleClassName="border-[#5865f2] bg-[#5865f2]"
-            icon={<ShareAssetIcon src="/assets/Share/Discord.svg" width={30} height={30} />}
+            icon={<ShareAssetIcon name="discord" width={30} height={30} />}
           />
           <ShareChannelTile
             label={emailLabel}
             onClick={onEmailShare}
             circleClassName="border-[var(--color-surface-default-brand-kiwi)] bg-[var(--color-surface-default-brand-kiwi)]"
-            icon={<ShareAssetIcon src="/assets/Share/Mail.svg" width={24} height={24} />}
+            icon={<ShareAssetIcon name="mail" width={24} height={24} />}
           />
         </div>
       </div>

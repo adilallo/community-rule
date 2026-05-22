@@ -11,6 +11,7 @@ export const SwitchView = forwardRef<HTMLButtonElement, SwitchViewProps>(
       trackClasses,
       thumbClasses,
       labelClasses,
+      switchAriaLabel,
       onClick,
       onKeyDown,
       onFocus,
@@ -27,7 +28,7 @@ export const SwitchView = forwardRef<HTMLButtonElement, SwitchViewProps>(
           type="button"
           role="switch"
           aria-checked={propSwitch}
-          aria-label={text || "Toggle switch"}
+          aria-label={switchAriaLabel}
           onClick={onClick}
           onKeyDown={onKeyDown}
           onFocus={onFocus}

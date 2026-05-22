@@ -35,6 +35,7 @@ export interface ToggleGroupViewProps {
   state: "default" | "hover" | "focus" | "selected";
   showText: boolean;
   ariaLabel?: string;
+  defaultToggleOptionAriaLabel: string;
   toggleClasses: string;
   onClick: (_e: React.MouseEvent<HTMLButtonElement>) => void;
   onKeyDown: (_e: React.KeyboardEvent<HTMLButtonElement>) => void;

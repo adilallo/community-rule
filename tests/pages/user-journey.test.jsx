@@ -8,94 +8,72 @@ import userEvent from "@testing-library/user-event";
 import { vi, describe, test, expect, afterEach } from "vitest";
 import React from "react";
 import Page from "../../app/(marketing)/page";
-
-// Mock next/dynamic so dynamically loaded components render after the import resolves
-vi.mock("next/dynamic", () => {
-  const React = require("react");
-  return {
-    default: (importFn, options) => {
-      function DynamicWrapper(props) {
-        const [Component, setComponent] = React.useState(null);
-        React.useEffect(() => {
-          importFn().then((mod) => setComponent(() => mod.default || mod));
-        }, []);
-        if (!Component) {
-          return options?.loading ? options.loading() : null;
-        }
-        return <Component {...props} />;
-      }
-      return DynamicWrapper;
-    },
-  };
-});
 import Footer from "../../app/components/navigation/Footer";
+
+vi.mock("next/dynamic", async () => {
+  const { default: syncDynamic } = await import("../utils/mockNextDynamicSync.js");
+  return { default: syncDynamic };
+});
+
+function renderPageWithFooter() {
+  return render(
+    <>
+      <Page />
+      <Footer />
+    </>,
+  );
+}
+
+function renderPage() {
+  return render(<Page />);
+}
 
 afterEach(() => {
   cleanup();
 });
 
 describe("User Journey Integration", () => {
-  // TODO: Fix next/dynamic mock to properly handle async component loading
-  test.skip("new user discovers the application through hero section", async () => {
+  test("new user discovers the application through hero section", async () => {
     const user = userEvent.setup();
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // User sees the main value proposition
     expect(
       screen.getByText(/Help your community make important decisions/),
     ).toBeInTheDocument();
 
-    // User clicks the main CTA to learn more
-    const learnButtons = screen.getAllByRole("button", {
+    const learnLinks = screen.getAllByRole("link", {
       name: "Learn how CommunityRule works",
     });
-    const learnButton = learnButtons[0];
-    await user.click(learnButton);
+    await user.click(learnLinks[0]);
 
-    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
     });
   });
 
-  // TODO: Fix next/dynamic mock to properly handle async component loading
-  test.skip("user explores different governance types", async () => {
+  test("user explores different governance types", async () => {
     const user = userEvent.setup();
-    render(<Page />);
+    renderPage();
 
-    // Wait for dynamically imported RuleStack component
     await waitFor(() => {
-      expect(screen.getByText("Circles")).toBeInTheDocument();
+      expect(screen.getByText("Consensus")).toBeInTheDocument();
     });
-    expect(screen.getByText("Elected Board")).toBeInTheDocument();
-    expect(screen.getByText("Consensus")).toBeInTheDocument();
-    expect(screen.getByText("Petition")).toBeInTheDocument();
+    expect(screen.getByText("Do-ocracy")).toBeInTheDocument();
+    expect(screen.getByText("Devolution")).toBeInTheDocument();
+    expect(screen.getByText("Quadratic Governance")).toBeInTheDocument();
 
-    // User clicks on a governance type to create a rule
-    const seeHowButtons = screen.getAllByRole("button", {
+    const seeHowLinks = screen.getAllByRole("link", {
       name: "See how it works",
     });
-    expect(seeHowButtons.length).toBeGreaterThan(0);
+    expect(seeHowLinks.length).toBeGreaterThan(0);
 
-    await user.click(seeHowButtons[0]);
-    // Button should remain interactive
-    expect(seeHowButtons[0]).toBeInTheDocument();
+    await user.click(seeHowLinks[0]);
+    expect(seeHowLinks[0]).toBeInTheDocument();
   });
 
   test("user navigates through the application using header navigation", async () => {
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // User clicks on navigation links in header (check that they exist and are clickable)
     const navigationLinks = screen.getAllByRole("link");
     const headerNavLinks = navigationLinks.filter(
       (link) =>
@@ -104,7 +82,6 @@ describe("User Journey Integration", () => {
         link.textContent?.includes("About"),
     );
 
-    // Test that navigation links are present and clickable
     for (const link of headerNavLinks) {
       expect(link).toBeInTheDocument();
       expect(link).toHaveAttribute("href");
@@ -113,9 +90,8 @@ describe("User Journey Integration", () => {
 
   test("user seeks help through ask organizer section", async () => {
     const user = userEvent.setup();
-    render(<Page />);
+    renderPage();
 
-    // User scrolls to the bottom and sees the help section
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
     expect(
       screen.getByText("Get answers from an experienced organizer"),
@@ -129,9 +105,8 @@ describe("User Journey Integration", () => {
   });
 
   test("user explores the process through CardSteps", async () => {
-    render(<Page />);
+    renderPage();
 
-    // Wait for dynamically imported CardSteps component
     await waitFor(() => {
       expect(
         screen.getByText("Document how your community makes decisions"),
@@ -146,24 +121,16 @@ describe("User Journey Integration", () => {
       ),
     ).toBeInTheDocument();
 
-    // User sees the step numbers
     const stepNumbers = screen.getAllByText(/1|2|3/);
     expect(stepNumbers.length).toBeGreaterThan(0);
   });
 
   test("user accesses contact information through footer", async () => {
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // User finds contact email in footer
     const emailLink = screen.getByRole("link", { name: "medlab@colorado.edu" });
     expect(emailLink).toHaveAttribute("href", "mailto:medlab@colorado.edu");
 
-    // User finds social media links
     const blueskyLink = screen.getByRole("link", {
       name: "Follow us on Bluesky",
     });
@@ -176,9 +143,8 @@ describe("User Journey Integration", () => {
   });
 
   test("user explores features and benefits", async () => {
-    render(<Page />);
+    renderPage();
 
-    // Wait for dynamically imported FeatureGrid component
     await waitFor(() => {
       expect(
         screen.getByText("We've got your back, every step of the way"),
@@ -190,21 +156,14 @@ describe("User Journey Integration", () => {
       ),
     ).toBeInTheDocument();
 
-    // User sees the testimonial/quote (check for the actual quote content)
     expect(
       screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
   });
 
   test("user interacts with logo wall and social proof", async () => {
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // Wait for dynamically imported LogoWall component
     await waitFor(() => {
       const logoImages = screen.getAllByRole("img");
       const partnerLogos = logoImages.filter(
@@ -219,7 +178,6 @@ describe("User Journey Integration", () => {
       expect(partnerLogos.length).toBeGreaterThan(0);
     });
 
-    // Social links should be present in footer
     const blueskyLink = screen.getByRole("link", { name: /Bluesky/i });
     const gitlabLink = screen.getByRole("link", { name: /GitLab/i });
     expect(blueskyLink).toBeInTheDocument();
@@ -227,76 +185,40 @@ describe("User Journey Integration", () => {
   });
 
   test("user completes the full journey from discovery to action", async () => {
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // 1. User discovers the application
     expect(screen.getByText("Collaborate")).toBeInTheDocument();
     expect(screen.getByText("with clarity")).toBeInTheDocument();
 
-    // 2. User learns how it works - wait for dynamically imported component
     await waitFor(() => {
       expect(screen.getByText("How CommunityRule works")).toBeInTheDocument();
     });
 
-    // 3. User sees governance options - wait for dynamically imported component
-    // Note: Dynamic imports may not resolve reliably in test environment
-    // Try to find governance content, but don't fail if dynamic import hasn't resolved
-    try {
-      await waitFor(
-        () => {
-          // Check for any of the governance card titles
-          const hasGovernanceContent =
-            screen.queryByText(/Circles/i) ||
-            screen.queryByText(/Elected Board/i) ||
-            screen.queryByText(/Petition/i);
-          expect(hasGovernanceContent).toBeTruthy();
-        },
-        { timeout: 3000 },
-      );
-    } catch {
-      // Dynamic import may not resolve in test environment - this is a known limitation
-      // The component functionality is tested in RuleStack.test.jsx
-      console.warn(
-        "Dynamic import for RuleStack did not resolve in test environment",
-      );
-    }
+    await waitFor(() => {
+      expect(screen.getAllByText(/Consensus/i).length).toBeGreaterThan(0);
+    });
 
-    // 4. User sees features and benefits - wait for dynamically imported component
     await waitFor(() => {
       expect(
         screen.getByText("We've got your back, every step of the way"),
       ).toBeInTheDocument();
     });
 
-    // 5. User sees social proof
     expect(
       screen.getByText(/The rules of decision-making must be open/),
     ).toBeInTheDocument();
 
-    // 6. User can take action
-    const seeHowButtons = screen.getAllByRole("button", {
+    const seeHowLinks = screen.getAllByRole("link", {
       name: "See how it works",
     });
-    expect(seeHowButtons.length).toBeGreaterThan(0);
+    expect(seeHowLinks.length).toBeGreaterThan(0);
 
-    // 7. User can get help if needed
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
   });
 
   test("user can access all navigation options consistently", async () => {
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // Footer navigation (header navigation is handled by layout, not in page component)
     const footerLinks = screen.getAllByRole("link");
     const navigationLinks = footerLinks.filter(
       (link) =>
@@ -306,7 +228,6 @@ describe("User Journey Integration", () => {
     );
     expect(navigationLinks.length).toBeGreaterThan(0);
 
-    // All navigation links should be accessible
     navigationLinks.forEach((link) => {
       expect(link).not.toHaveAttribute("tabindex", "-1");
     });
@@ -314,24 +235,16 @@ describe("User Journey Integration", () => {
 
   test("user can complete actions without errors", async () => {
     const user = userEvent.setup();
-    render(
-      <div>
-        <Page />
-        <Footer />
-      </div>,
-    );
+    renderPageWithFooter();
 
-    // Test all interactive elements
     const buttons = screen.getAllByRole("button");
     const links = screen.getAllByRole("link");
 
-    // All buttons should be clickable
     for (const button of buttons) {
       await user.click(button);
       expect(button).toBeInTheDocument();
     }
 
-    // All links should be accessible
     for (const link of links) {
       expect(link).toBeInTheDocument();
       expect(link).not.toHaveAttribute("tabindex", "-1");

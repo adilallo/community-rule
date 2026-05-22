@@ -15,7 +15,7 @@ import type { CreateFlowState } from "./types";
 import messages from "../../../messages/en/index";
 import Alert from "../../components/modals/Alert";
 
-const SYNC_ENABLED = process.env.NEXT_PUBLIC_ENABLE_BACKEND_SYNC === "true";
+import { isBackendSyncEnabled } from "../../../lib/create/backendSyncEnabled";
 
 function buildPayloadWithStep(
   base: CreateFlowState,
@@ -111,7 +111,7 @@ export function PostLoginDraftTransfer({
         return;
       }
 
-      if (SYNC_ENABLED && createFlowStateHasKeys(local)) {
+      if (isBackendSyncEnabled() && createFlowStateHasKeys(local)) {
         const saveResult = await saveDraftToServer(payload);
         if (cancelled) return;
 

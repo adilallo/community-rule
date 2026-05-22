@@ -1,54 +1,64 @@
 "use client";
 
+/**
+ * Figma: "Sections / LogoWall" (see registry)
+ */
+
 import { memo, useState, useEffect, useMemo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
+import { getAssetPath, partnerLogoPath } from "../../../../lib/assetUtils";
 import LogoWallView from "./LogoWall.view";
 import type { LogoWallProps } from "./LogoWall.types";
 
-const defaultLogos = [
-  {
-    src: "/assets/Section/Logo_FoodNotBombs.png",
-    alt: "Food Not Bombs",
-    size: "h-11 lg:h-14 xl:h-[70px]",
-    order: "order-1 sm:order-4", // Mobile: row 1 col 1, SM: row 2 col 1 (bottom left)
-  },
-  {
-    src: "/assets/Section/Logo_StartCOOP.png",
-    alt: "Start COOP",
-    size: "h-[42px] lg:h-[53px] xl:h-[66px]",
-    order: "order-2 sm:order-2", // Mobile: row 1 col 2, SM: row 1 col 2 (top middle)
-  },
-  {
-    src: "/assets/Section/Logo_Metagov.png",
-    alt: "Metagov",
-    size: "h-6 lg:h-8 xl:h-[41px]",
-    order: "order-3 sm:order-1", // Mobile: row 2 col 1, SM: row 1 col 1 (top left)
-  },
-  {
-    src: "/assets/Section/Logo_OpenCivics.png",
-    alt: "Open Civics",
-    size: "h-8 lg:h-10 xl:h-[50px]",
-    order: "order-4 sm:order-5 md:order-6", // Mobile: row 2 col 2, SM: row 2 col 2, MD: swapped with Mutual Aid CO
-  },
-  {
-    src: "/assets/Section/Logo_MutualAidCO.png",
-    alt: "Mutual Aid CO",
-    size: "h-11 lg:h-14 xl:h-[70px]",
-    order: "order-5 sm:order-6 md:order-5", // Mobile: row 3 col 1, SM: row 2 col 3, MD: swapped with OpenCivics
-  },
-  {
-    src: "/assets/Section/Logo_CUBoulder.png",
-    alt: "CU Boulder",
-    size: "h-10 lg:h-12 xl:h-[60px]",
-    order: "order-6 sm:order-3", // Mobile: row 3 col 2, SM: row 1 col 3 (top right)
-  },
-];
-
 const LogoWallContainer = memo<LogoWallProps>(({ logos, className = "" }) => {
+  const t = useTranslation("logoWall");
   const [isVisible, setIsVisible] = useState(false);
+
+  const defaultLogos = useMemo(
+    () => [
+      {
+        src: getAssetPath(partnerLogoPath("food-not-bombs")),
+        alt: t("partners.foodNotBombs"),
+        size: "h-11 lg:h-14 xl:h-[70px]",
+        order: "order-1 sm:order-4",
+      },
+      {
+        src: getAssetPath(partnerLogoPath("start-coop")),
+        alt: t("partners.startCoop"),
+        size: "h-[42px] lg:h-[53px] xl:h-[66px]",
+        order: "order-2 sm:order-2",
+      },
+      {
+        src: getAssetPath(partnerLogoPath("metagov")),
+        alt: t("partners.metagov"),
+        size: "h-6 lg:h-8 xl:h-[41px]",
+        order: "order-3 sm:order-1",
+      },
+      {
+        src: getAssetPath(partnerLogoPath("open-civics")),
+        alt: t("partners.openCivics"),
+        size: "h-8 lg:h-10 xl:h-[50px]",
+        order: "order-4 sm:order-5 md:order-6",
+      },
+      {
+        src: getAssetPath(partnerLogoPath("mutual-aid-co")),
+        alt: t("partners.mutualAidCo"),
+        size: "h-11 lg:h-14 xl:h-[70px]",
+        order: "order-5 sm:order-6 md:order-5",
+      },
+      {
+        src: getAssetPath(partnerLogoPath("cu-boulder")),
+        alt: t("partners.cuBoulder"),
+        size: "h-10 lg:h-12 xl:h-[60px]",
+        order: "order-6 sm:order-3",
+      },
+    ],
+    [t],
+  );
 
   const displayLogos = useMemo(
     () => (logos && logos.length > 0 ? logos : defaultLogos),
-    [logos],
+    [logos, defaultLogos],
   );
 
   useEffect(() => {

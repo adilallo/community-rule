@@ -3,7 +3,7 @@
 import { memo } from "react";
 import Script from "next/script";
 import { useTranslation } from "../../../contexts/MessagesContext";
-import { getAssetPath } from "../../../../lib/assetUtils";
+import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
 import Menu from "../Menu";
 import type { TopViewProps } from "./Top.types";
 
@@ -61,21 +61,21 @@ function TopView({
               {/* Decorative Union images for tab appearance */}
               {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG, not content */}
               <img
-                src={getAssetPath("assets/Union_xsm.svg")}
+                src={getAssetPath(ASSETS.UNION_XSM)}
                 alt=""
                 role="presentation"
                 className="absolute -bottom-[3px] -right-[52px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] sm:hidden -z-10"
               />
               {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG */}
               <img
-                src={getAssetPath("assets/Union_sm_md_lg.svg")}
+                src={getAssetPath(ASSETS.UNION_SM_MD_LG)}
                 alt=""
                 role="presentation"
                 className="absolute -bottom-[3.7px] -right-[53px] w-[61px] h-[24px] sm:w-[61px] sm:h-[31.5px] hidden sm:block xl:hidden -z-10"
               />
               {/* eslint-disable-next-line @next/next/no-img-element -- decorative SVG */}
               <img
-                src={getAssetPath("assets/Union_xlg.svg")}
+                src={getAssetPath(ASSETS.UNION_XLG)}
                 alt=""
                 role="presentation"
                 className="absolute -bottom-[6px] -right-[94px] w-[105px] h-[53px] hidden xl:block -z-10"

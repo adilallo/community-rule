@@ -1,4 +1,5 @@
 import messages from "../../../messages/en/index";
+import { getAssetPath, governanceBookletPath } from "../../../lib/assetUtils";
 import { getTranslation } from "../../../lib/i18n/getTranslation";
 import AboutHeader from "../../components/type/AboutHeader";
 import type { AboutHeaderSegment } from "../../components/type/AboutHeader";
@@ -55,7 +56,7 @@ export default function AboutPage() {
         title={page.book.title}
         description={page.book.description}
         buttonText={page.book.buttonText}
-        buttonHref={page.book.buttonHref}
+        buttonHref={getAssetPath(governanceBookletPath())}
         imageAlt={page.book.imageAlt}
       />
       <FaqAccordion title={page.faq.title} items={faqItems} />

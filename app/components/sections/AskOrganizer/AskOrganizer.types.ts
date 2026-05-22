@@ -12,10 +12,6 @@ export interface AskOrganizerProps {
   subtitle?: string;
   description?: string;
   buttonText?: string;
-  /**
-   * @deprecated Modal-only flow (CR-107). Omit; kept optional for Storybook overrides.
-   */
-  buttonHref?: string;
   className?: string;
   /**
    * Ask organizer variant.
@@ -26,7 +22,6 @@ export interface AskOrganizerProps {
     component: string;
     variant: string;
     buttonText: string;
-    buttonHref?: string;
     timestamp: string;
   }) => void;
 }
@@ -36,7 +31,7 @@ export interface AskOrganizerViewProps {
   subtitle?: string;
   description?: string;
   buttonText: string;
-  buttonHref?: string;
+  ctaAriaLabel: string;
   className: string;
   sectionPadding: string;
   contentGap: string;
@@ -44,6 +39,6 @@ export interface AskOrganizerViewProps {
   variant: AskOrganizerVariant;
   labelledBy?: string;
   onContactClick: (
-    _event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>,
+    _event: React.MouseEvent<HTMLButtonElement>,
   ) => void;
 }

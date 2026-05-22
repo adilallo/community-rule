@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Navigation / NavigationItem" (see registry)
+ */
+
 import { memo } from "react";
 import NavigationItemView from "./NavigationItem.view";
 import type { NavigationItemProps } from "./NavigationItem.types";

@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { renderWithProviders as render } from "../utils/test-utils";
 import "@testing-library/jest-dom/vitest";
 import TextInput from "../../app/components/controls/TextInput";
 import { componentTestSuite } from "../utils/componentTestSuite";

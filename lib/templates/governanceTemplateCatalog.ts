@@ -140,13 +140,14 @@ const bySlug = new Map(
 );
 
 /**
- * Order for the home “Popular templates” row (four cards). Must match catalog slugs.
+ * Order for the home “Popular templates” row (four cards).
+ * Figma Section/RuleStack [22083:855584](https://www.figma.com/design/agv0VBLiBlcnSAaiAORgPR/Community-Rule-System?node-id=22083-855584).
  */
 export const GOVERNANCE_TEMPLATE_HOME_SLUGS: readonly string[] = [
-  "consensus-clusters",
   "consensus",
-  "elected-board",
-  "petition",
+  "do-ocracy",
+  "devolution",
+  "quadratic-governance",
 ];
 
 export function getGovernanceTemplatesForHome(): GovernanceTemplateCatalogEntry[] {

@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Figma: "Type / ContentLockup" (see registry)
+ */
+
 import { memo } from "react";
 import ContentLockupView from "./ContentLockup.view";
 import type { ContentLockupProps, VariantStyle } from "./ContentLockup.types";
@@ -41,14 +45,14 @@ const ContentLockupContainer = memo<ContentLockupProps>(
           "w-[27.2px] h-[27.2px] md:w-[34px] md:h-[34px] lg:w-[50px] lg:h-[50px]",
       },
       feature: {
-        container: "flex flex-col gap-[var(--spacing-scale-012)] relative z-10",
-        textContainer: "flex flex-col gap-[var(--spacing-scale-012)]",
-        titleGroup: "flex flex-col gap-[var(--spacing-scale-012)]",
-        titleContainer: "flex gap-[var(--spacing-scale-008)] items-center",
+        container: "flex flex-col gap-[var(--space-400,16px)] md:gap-[var(--space-500,20px)] relative z-10",
+        textContainer: "flex flex-col gap-[var(--space-100,4px)] md:gap-[var(--space-150,6px)]",
+        titleGroup: "flex flex-col gap-[var(--space-100,4px)] md:gap-[var(--space-150,6px)]",
+        titleContainer: "flex items-center",
         title:
-          "font-bricolage-grotesque font-medium text-[32px] leading-[130%] tracking-[0] text-[var(--color-content-default-primary)]",
+          "font-bricolage-grotesque font-medium text-[18px] leading-[22px] md:text-[length:var(--sizing-600,24px)] md:leading-[32px] text-[var(--color-content-default-primary)]",
         subtitle:
-          "font-space-grotesk font-normal text-[20px] leading-[130%] tracking-[0] text-[var(--color-content-default-primary)]",
+          "font-inter font-normal text-[length:var(--sizing-350,14px)] leading-[20px] md:text-[length:var(--sizing-400,16px)] md:leading-[24px] text-[var(--color-content-default-secondary)]",
         description:
           "font-inter font-normal text-[16px] leading-[140%] lg:text-[18px] lg:leading-[150%] xl:text-[20px] xl:leading-[160%] text-[var(--color-content-default-secondary)]",
         shape:

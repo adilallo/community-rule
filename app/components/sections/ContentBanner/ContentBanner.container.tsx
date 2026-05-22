@@ -1,7 +1,9 @@
 "use client";
 
 import { memo } from "react";
+import { useTranslation } from "../../../contexts/MessagesContext";
 import {
+  ASSETS,
   getAssetPath,
   contentBlogHorizontalPath,
   contentBlogSectionPath,
@@ -22,6 +24,14 @@ const ContentBannerContainer = memo<ContentBannerProps>(
     contentTone,
   }) => {
     const variant = variantProp;
+    const tUseCase = useTranslation("pages.useCasesCompletedRule");
+    const ruleCardLinkAriaLabel =
+      variant === "useCase" && rulePreview?.href
+        ? tUseCase("ruleCardLinkAriaLabel").replace(
+            "{title}",
+            rulePreview.title,
+          )
+        : undefined;
 
     const resolveHorizontalImage = (blogPost: BlogPost): string => {
       if (blogPost.frontmatter?.thumbnail?.horizontal) {
@@ -36,7 +46,7 @@ const ContentBannerContainer = memo<ContentBannerProps>(
         return contentBlogHorizontalPath(blogPost.slug);
       }
 
-      return getAssetPath("assets/Content_Banner.svg");
+      return getAssetPath(ASSETS.CONTENT_BANNER);
     };
 
     const resolveSectionImage = (blogPost: BlogPost): string => {
@@ -70,6 +80,7 @@ const ContentBannerContainer = memo<ContentBannerProps>(
         backgroundImageSection={backgroundImageSection}
         rulePreview={rulePreview}
         contentTone={contentTone}
+        ruleCardLinkAriaLabel={ruleCardLinkAriaLabel}
       />
     );
   },
