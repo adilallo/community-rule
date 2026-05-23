@@ -388,6 +388,10 @@ production env vars, and verify the vertical slice before apex cutover
 
 **Smoke checklist (acceptance):**
 
+Automated curl checks: `./scripts/staging-smoke.sh staging.communityrule.info`
+(optional `EMAIL=you@example.com` to exercise magic-link request). Manual UI
+steps below are still required.
+
 - [ ] **Health:** `curl -sS https://staging.communityrule.info/api/health`
       returns `200` with `{"ok":true,"database":"connected"}`.
 - [ ] **Magic link:** request sign-in from the UI → email arrives at a real
