@@ -45,7 +45,7 @@ check_http() {
 check_json_contains() {
   name="$1"
   pattern="$2"
-  if grep -q "$pattern" "/tmp/staging-smoke-body.$$" 2>/dev/null; then
+  if grep -Fq "$pattern" "/tmp/staging-smoke-body.$$" 2>/dev/null; then
     pass "$name"
   else
     fail "$name (body missing pattern: $pattern)"
@@ -61,7 +61,8 @@ check_json_contains 'health ok + database connected' '"ok":true'
 check_json_contains 'health database connected' '"database":"connected"'
 
 check_http "GET /api/templates" "$BASE/api/templates" "200"
-check_json_contains 'templates non-empty' '"templates":['
+check_json_contains 'templates response shape' '"templates":['
+check_json_contains 'templates seeded (non-empty)' '"slug":'
 
 check_http "GET /api/rules" "$BASE/api/rules" "200"
 check_json_contains 'rules list shape' '"rules":['

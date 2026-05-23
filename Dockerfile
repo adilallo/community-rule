@@ -44,9 +44,9 @@ COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/prisma ./prisma
 
 # Prisma CLI (devDependency) is not in the Next.js standalone trace. Install
-# globally in the runner so start.sh can run `prisma migrate deploy` with all
-# transitive deps (@prisma/engines, effect, etc.).
-RUN npm install -g prisma@6.19.3
+# globally in the runner so start.sh can run `prisma migrate deploy` and the
+# one-time idempotent `prisma db seed` (upserts by slug).
+RUN npm install -g prisma@6.19.3 tsx@4.19.4
 
 # Cloudron's runtime rootfs is read-only except /tmp, /run, /app/data.
 # Three marketing routes use ISR (`revalidate`) and write to .next/cache;
