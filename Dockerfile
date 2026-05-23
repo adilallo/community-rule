@@ -48,7 +48,6 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/prisma ./prisma
-COPY --from=builder --chown=node:node /app/data ./data
 
 # Prisma CLI (devDependency) is not in the Next.js standalone trace. Install
 # globally in the runner so start.sh can run `prisma migrate deploy`.
