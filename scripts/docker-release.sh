@@ -31,8 +31,8 @@ echo
 echo "Pushed: $IMAGE:$TAG  ($PLATFORM)"
 echo
 echo "Next steps:"
-echo "  1. Update CloudronManifest.json 'version' (must increase) and"
-echo "     'dockerimage' to:"
-echo "       \"dockerimage\": \"$IMAGE:$TAG\""
-echo "  2. First install:   cloudron install"
-echo "     Subsequent:      cloudron update --app <app-id>"
+echo "  1. Bump CloudronManifest.json 'version' (must increase for cloudron update)."
+echo "  2. First install:"
+echo "       cloudron install --location staging.communityrule.info --image $IMAGE:$TAG"
+echo "     Subsequent update:"
+echo "       cloudron update --app staging.communityrule.info --image $IMAGE:$TAG"

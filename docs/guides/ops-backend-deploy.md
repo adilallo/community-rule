@@ -70,7 +70,7 @@ per-app in the manifest and provisioned at install time.
   assembles a Nodemailer transport URL from these four vars in
   [`lib/server/env.ts`](../../lib/server/env.ts).
 
-### I set manually via `cloudron configure --app <id> --set-env`
+### I set manually via `cloudron env set --app <id/location>`
 
 - `SESSION_SECRET` — long random (`openssl rand -hex 32`). Required,
   ≥ 16 chars. Rotating it logs everyone out.
@@ -114,10 +114,13 @@ apex.
 ### Phases
 
 1. **Staging install** — from a checkout whose
-   [`CloudronManifest.json`](../../CloudronManifest.json) matches the pushed
-   image tag, run `cloudron install --location staging.communityrule.info`.
-   Cloudron reads `dockerimage` from the manifest (no `--image` flag). Set
-   manual env vars from §3. `prisma migrate deploy` runs automatically in
+   [`CloudronManifest.json`](../../CloudronManifest.json) `version` matches the
+   pushed image tag, run:
+   ```bash
+   cloudron install --location staging.communityrule.info \
+     --image git.medlab.host/communityrule/community-rule:<tag>
+   ```
+   Set manual env vars from §3. `prisma migrate deploy` runs automatically in
    [`scripts/start.sh`](../../scripts/start.sh) on container start. Smoke per
    [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)
    (§12).
@@ -274,9 +277,7 @@ standalone server.
 1. **Bump the manifest version.** Edit
    [`CloudronManifest.json`](../../CloudronManifest.json):
    - increment `version` (e.g. `0.1.0` → `0.1.1`) — Cloudron requires
-     it to **increase** for `cloudron update --image` to be accepted;
-   - update `dockerimage` to the tag you're about to push (default tag
-     is the git short SHA).
+     it to **increase** for `cloudron update --image` to be accepted.
 2. **Run the release script** from the repo root:
 
    ```bash
@@ -285,9 +286,9 @@ standalone server.
    npm run docker:release
    ```
 
-   Override the tag with `TAG=v0.1.1 ./scripts/docker-release.sh` for
-   semver releases. The script prints the exact `dockerimage` line to
-   paste back into the manifest.
+   Override the tag with `TAG=0.1.1 ./scripts/docker-release.sh` for
+   semver releases. The script prints the exact `cloudron install` /
+   `cloudron update --image …` commands to run next.
 3. **First push only:** confirm the
    [`CommunityRule/community-rule`](https://git.medlab.host/CommunityRule/community-rule)
    repo is **Public** (Settings → General). Gitea inherits container-package
@@ -316,15 +317,16 @@ logged in to `my.medlab.host`:
 
 ```bash
 # First install (staging):
-cloudron install --location staging.communityrule.info
+cloudron install --location staging.communityrule.info \
+  --image git.medlab.host/communityrule/community-rule:<tag>
 
 # Subsequent updates:
-cloudron update --app <app-id>
+cloudron update --app staging.communityrule.info \
+  --image git.medlab.host/communityrule/community-rule:<tag>
 ```
 
-`cloudron install` reads `dockerimage` from
-[`CloudronManifest.json`](../../CloudronManifest.json); no `--image`
-flag needed.
+Pass the registry image with `--image`; it is not a field in
+[`CloudronManifest.json`](../../CloudronManifest.json).
 
 ### CI — deferred (stretch goal)
 
@@ -358,24 +360,26 @@ production env vars, and verify the vertical slice before apex cutover
 **Install steps:**
 
 1. **Checkout** a commit whose [`CloudronManifest.json`](../../CloudronManifest.json)
-   `version`, `dockerimage`, and `memoryLimit` match the image you intend to
-   run (currently `0.1.0` →
-   `git.medlab.host/communityrule/community-rule:0.1.0`).
+   `version` and `memoryLimit` match the image you intend to run (currently
+   `0.1.1` → `git.medlab.host/communityrule/community-rule:0.1.1`).
 2. **Log in to Cloudron CLI:**
    ```bash
    cloudron login my.medlab.host
    ```
-3. **Install** from the repo root (manifest is read automatically):
+3. **Install or update** from the repo root (manifest is read for addons;
+   image comes from `--image`):
    ```bash
-   cloudron install --location staging.communityrule.info
+   cloudron update --app staging.communityrule.info \
+     --image git.medlab.host/communityrule/community-rule:0.1.1
    ```
-   Cloudron provisions **postgresql**, **sendmail**, and **localstorage**
-   addons from the manifest, pulls the image (no registry credentials needed),
-   and starts the container. `scripts/start.sh` chowns `/app/data`, runs
-   `prisma migrate deploy`, then execs the Next.js server.
+   (Use `cloudron install --location … --image …` only if staging is not
+   already installed.) Cloudron provisions **postgresql**, **sendmail**, and
+   **localstorage** addons from the manifest, pulls the image (no registry
+   credentials needed), and starts the container. `scripts/start.sh` chowns
+   `/app/data`, runs `prisma migrate deploy`, then execs the Next.js server.
 4. **Set manual env vars** (Cloudron does not inject these):
    ```bash
-   cloudron configure --app <app-id> --set-env \
+   cloudron env set --app staging.communityrule.info \
      SESSION_SECRET="$(openssl rand -hex 32)" \
      SMTP_FROM="Community Rule <hello@communityrule.info>" \
      NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true \
