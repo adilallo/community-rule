@@ -1,101 +1,148 @@
 # Contributing
 
-## Local backend
+Thanks for working on Community Rule. This file covers local setup, the
+API surface, and the pull-request workflow. Per-file implementation
+conventions live in [`.cursor/rules/`](.cursor/rules/) (auto-loaded by
+Cursor); high-level orientation is in [`AGENTS.md`](AGENTS.md).
 
-1. Copy [`.env.example`](.env.example) to `.env` and set `SESSION_SECRET`
-   (at least 16 characters).
-2. `docker compose up -d postgres mailhog` — omit `mailhog` if you only
-   need Postgres. Without `CLOUDRON_MAIL_SMTP_*`, the **magic-link verify URL** is
-   printed in the dev server log.
-3. `npm ci`
-4. `npx prisma migrate dev`
-5. *(Optional)* `npx prisma db seed` — seeds curated rule templates.
-   Idempotent; rows upsert by `slug`.
-6. `npm run dev`
+## Local setup
 
-Use `npx prisma studio` to inspect the database.
+Prerequisites: Node **20+**, npm **10+**, Docker.
 
-Deploying to staging or production (MEDLab Cloudron) — see
-[docs/guides/ops-backend-deploy.md](docs/guides/ops-backend-deploy.md)
-for the admin handoff and the linked Linear tickets for the actual
-deployment-pipeline work.
+```bash
+cp .env.example .env                    # set SESSION_SECRET (≥16 chars)
+docker compose up -d postgres mailhog   # omit `mailhog` if you don't need
+                                        # a local inbox
+npm ci
+npx prisma migrate dev
+npx prisma db seed                      # optional — seeds curated templates
+npm run dev
+```
 
-### Prisma migrations
+Open [http://localhost:3000](http://localhost:3000). Use
+`npx prisma studio` to browse the database.
 
-- **Never edit** a migration that has already been applied to staging,
-  production, or any shared database. Add a **new** migration that
-  corrects the schema instead. Full policy:
-  [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §8.
-- Any change under **`prisma/`**: run **`npm run migrate:smoke`** (see
-  [docs/testing-guide.md](docs/testing-guide.md#running-tests), **Prisma**
-  under *Running tests*).
-
-### API routes
-
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | `/api/health` | Liveness / DB check. |
-| GET | `/api/auth/session` | Current user or null. |
-| POST | `/api/auth/magic-link/request` | Send sign-in link email. |
-| GET | `/api/auth/magic-link/verify` | Validate token, set cookie, redirect. |
-| POST | `/api/auth/logout` | Clear session. |
-| GET / PUT | `/api/drafts/me` | Load or save the create-flow draft. |
-| POST | `/api/uploads` | Authenticated multipart upload (create-flow images / PDFs); requires `UPLOAD_ROOT`. |
-| GET | `/api/uploads/[id]` | Stream a previously uploaded file by opaque id (public read). |
-| GET / POST | `/api/rules` | List or publish rules. |
-| GET | `/api/templates` | List curated templates. Optional repeatable `facet.<group>=<value>` query params re-rank results (and may include `scores` in the JSON). See [docs/guides/template-recommendation-matrix.md](docs/guides/template-recommendation-matrix.md) §9.1. |
-| GET | `/api/templates/[slug]` | Single curated template plus normalized `{ section, slug }` composition from `body`. Public read; 404 when unknown. §9.4 (CR-115). |
-| GET | `/api/create-flow/methods` | Public catalog for built-in governance methods and core values. Required `section` (`communication` \| `membership` \| `decisionApproaches` \| `conflictManagement` \| `coreValues`; alias `values` → `coreValues`). Returns the **full deck** with `label`, `description`, and `sections` (methods) or `id`, `label`, `meaning`, `signals` (core values). Optional `facet.*` adds `matches` and re-ranks method rows (ignored for `coreValues`). Core value `id` is a 1-based position string (`"1"`, `"2"`, …). English v1 only. §9.2 / §9.5 (CR-115). |
-| POST / GET | `/api/web-vitals` | Ingest or read web vitals. **Production default:** `external` — structured logs only (no writes under `.next`; safe for read-only FS). **Development default:** `local` — aggregates under `.next/web-vitals`. Override with `WEB_VITALS_STORAGE`. See [docs/guides/backend-roadmap.md](docs/guides/backend-roadmap.md) §7. |
-| GET | `/api/rules/me` | Authenticated list of own published rules. |
-| GET / PATCH / DELETE | `/api/rules/[id]` | Public read; owner update/delete. |
-| POST | `/api/rules/[id]/duplicate` | Owner clone of a published rule. |
-| GET / POST | `/api/rules/[id]/stakeholders` | List or invite rule stakeholders. |
-| DELETE | `/api/rules/[id]/stakeholders/[stakeholderId]` | Remove a stakeholder. |
-| POST | `/api/rules/[id]/stakeholders/[stakeholderId]/resend` | Resend stakeholder invite email. |
-| GET | `/api/invites/rule-stakeholder/verify` | Verify stakeholder invite token; redirect. |
-| DELETE | `/api/user/me` | Delete authenticated user account. |
-| POST | `/api/user/email-change/request` | Request email change (magic link to new address). |
-| GET | `/api/user/email-change/verify` | Verify email-change token; update `User.email`. |
-| POST | `/api/organizer-inquiry` | Submit ask-organizer inquiry form. |
-| POST | `/api/use-cases/[slug]/duplicate` | Duplicate a use-case demo rule. |
+Deploying to staging or production (MEDLab Cloudron at `my.medlab.host`)
+is documented in
+[`docs/guides/ops-backend-deploy.md`](docs/guides/ops-backend-deploy.md).
 
 ### Magic-link sign-in
 
-- Visit **[/login](http://localhost:3000/login)** or use **Log in** in the
-  site header.
-- Without `CLOUDRON_MAIL_SMTP_*`: copy the verify URL from the dev server terminal.
-- With Mailhog: set `CLOUDRON_MAIL_SMTP_SERVER=localhost` and
-  `CLOUDRON_MAIL_SMTP_PORT=1025` (see `.env.example`) and open the message
-  at [http://localhost:8025](http://localhost:8025).
-- Open the link in the **same browser** as the app (session cookie).
+1. Go to [/login](http://localhost:3000/login) or click **Log in** in
+   the site header.
+2. Submit your email.
+3. Open the verify link in the **same browser** (the session cookie is
+   bound to that origin):
+   - **Without SMTP:** copy the URL from the dev-server log.
+   - **With Mailhog:** open the message at
+     [http://localhost:8025](http://localhost:8025).
 
-### Optional draft sync
+### Prisma migrations
 
-Postgres draft persistence via `PUT /api/drafts/me` is **on by default** for
-signed-in users and post-sign-in transfer of anonymous drafts. Set
-`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=false` to disable server sync (anonymous
-progress stays in `localStorage` only).
+- **Never edit a migration** that has already been applied to staging,
+  production, or any shared database — add a new migration instead.
+  Full policy: [`docs/guides/backend-roadmap.md`](docs/guides/backend-roadmap.md) §8.
+- **After any change under `prisma/`**, run `npm run migrate:smoke`
+  (Docker required). A throwaway Postgres on `127.0.0.1:5433` verifies
+  the migration applies cleanly. See
+  [`docs/testing-guide.md`](docs/testing-guide.md) → *Running tests*.
+
+### Draft persistence
+
+Signed-in create-flow drafts sync to Postgres via `PUT /api/drafts/me`
+by default; anonymous progress stays in `localStorage`. Set
+`NEXT_PUBLIC_ENABLE_BACKEND_SYNC=false` to disable server sync.
 
 ### Create flow
 
 The custom wizard lives under `/create/…`. Step order, URLs, and Figma
-stage mapping are canon in [docs/create-flow.md](docs/create-flow.md).
-Engineering tracking: Linear **CR-89** (**Done**) /
-[docs/guides/backend-linear-tickets.md](docs/guides/backend-linear-tickets.md)
-Ticket 17.
+stage mapping are canon in
+[`docs/create-flow.md`](docs/create-flow.md); component conventions are
+in `.cursor/rules/create-flow.mdc`.
 
-## Frontend & tests
+## API routes
 
-- Code conventions are enforced by `.cursor/rules/*.mdc` — Cursor surfaces
-  the relevant rule when editing matching files.
-- See [docs/testing-guide.md](docs/testing-guide.md) for testing
-  philosophy and `.cursor/rules/testing.mdc` for layout/helpers.
+All routes return JSON. Non-`GET` requests expect
+`Content-Type: application/json` unless noted (uploads are multipart).
 
-## Pull request workflow
+### Auth & account
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Liveness + DB connectivity. |
+| GET | `/api/auth/session` | Current user or `null`. |
+| POST | `/api/auth/magic-link/request` | Send sign-in link. |
+| GET | `/api/auth/magic-link/verify` | Validate token, set cookie, redirect. |
+| POST | `/api/auth/logout` | Clear session. |
+| DELETE | `/api/user/me` | Delete authenticated account. |
+| POST | `/api/user/email-change/request` | Send verify link to new address. |
+| GET | `/api/user/email-change/verify` | Apply email change. |
+
+### Drafts & uploads
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET, PUT | `/api/drafts/me` | Load / save the signed-in create-flow draft. |
+| POST | `/api/uploads` | Multipart upload (requires `UPLOAD_ROOT`). |
+| GET | `/api/uploads/[id]` | Stream a previously uploaded file (public). |
+
+### Rules
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET, POST | `/api/rules` | List or publish rules. |
+| GET | `/api/rules/me` | Owner's published rules. |
+| GET, PATCH, DELETE | `/api/rules/[id]` | Public read; owner update / delete. |
+| POST | `/api/rules/[id]/duplicate` | Owner clone. |
+| GET, POST | `/api/rules/[id]/stakeholders` | List / invite stakeholders. |
+| DELETE | `/api/rules/[id]/stakeholders/[stakeholderId]` | Remove stakeholder. |
+| POST | `/api/rules/[id]/stakeholders/[stakeholderId]/resend` | Resend invite email. |
+| GET | `/api/invites/rule-stakeholder/verify` | Verify stakeholder invite token. |
+
+### Templates & create-flow catalog
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/templates` | List curated templates. Repeatable `facet.<group>=<value>` query params re-rank results. |
+| GET | `/api/templates/[slug]` | Single template with normalized `{ section, slug }` composition. |
+| GET | `/api/create-flow/methods` | Built-in governance methods / core values for the wizard. Required `section` query param. |
+
+Facet semantics and the recommendation matrix:
+[`docs/guides/template-recommendation-matrix.md`](docs/guides/template-recommendation-matrix.md)
+§9.
+
+### Misc
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| POST | `/api/organizer-inquiry` | "Ask an organizer" form submission. |
+| POST | `/api/use-cases/[slug]/duplicate` | Duplicate a use-case demo rule. |
+| GET, POST | `/api/web-vitals` | Read / ingest web vitals. Storage mode set by `WEB_VITALS_STORAGE` (`local` in dev, `external` in prod). |
+
+## Testing
+
+The full testing recipe and philosophy live in
+[`docs/testing-guide.md`](docs/testing-guide.md). Component conventions
+and shared helpers are in `.cursor/rules/testing.mdc`.
+
+A typical pre-merge subset:
+
+```bash
+npx tsc --noEmit
+npm run knip
+npm test
+npx next build
+```
+
+Add `npm run e2e` for routing, auth, or critical-flow changes, and
+`npm run migrate:smoke` for anything under `prisma/`.
+
+## Pull-request workflow
 
 1. Branch from `main`: `git checkout -b feature/<short-name>`.
-2. Make the change and add/update tests.
-3. Before merging, run [docs/testing-guide.md](docs/testing-guide.md#running-tests) *Running tests*.
-4. Commit using a clear message (`feat:`, `fix:`, `chore:`, …).
-5. Open a pull request.
+2. Make the change and add or update tests.
+3. Run the relevant subset of the testing recipe above.
+4. Commit using a conventional-commit prefix: `feat:`, `fix:`,
+   `chore:`, `docs:`, `refactor:`, `test:`.
+5. Open a pull request; link the Linear ticket if there is one (e.g.
+   `CR-123`).
