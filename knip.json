@@ -25,7 +25,6 @@
     "@types/mdx",
     "eslint-config-next",
     "typescript-eslint",
-    "@storybook/react",
     "@storybook/nextjs-vite",
     "@eslint/js",
     "@next/eslint-plugin-next",

@@ -10,16 +10,23 @@ ENV NEXT_TELEMETRY_DISABLED=1
 FROM base AS deps
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
-# --ignore-scripts: skips the project `postinstall` (`npm rebuild lightningcss
-# && prisma generate`). The Prisma schema is not yet present in this stage;
-# the builder stage runs `prisma generate` after `COPY . .`.
-RUN npm ci --no-audit --fund=false --ignore-scripts
+# Copy the Prisma schema so the project's `postinstall` (which runs
+# `prisma generate`) succeeds during install.
+COPY prisma ./prisma
+# `npm install` rather than `npm ci`:
+#   1. `npm ci` strictly validates the lockfile and refuses when sub-tree
+#      resolutions drift (a recurring nuisance because the lockfile is
+#      generated on darwin-arm64 by default).
+#   2. `npm install` reuses the lockfile when it can but tolerates
+#      platform-specific reshuffles for Linux-only optional deps
+#      (`lightningcss-linux-*-gnu`, `@tailwindcss/oxide-linux-*-gnu`,
+#      `@next/swc-linux-*-gnu`, etc.) that Next.js needs at build time.
+RUN npm install --no-audit --fund=false
 
 FROM base AS builder
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate
 RUN npm run build
 
 FROM base AS runner
