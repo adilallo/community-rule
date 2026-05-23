@@ -11,7 +11,8 @@ import {
   sectionFacetsSchema,
 } from "../../lib/server/validation/methodFacetsSchemas";
 
-const REPO_ROOT = path.resolve(__dirname, "..", "..");
+// Bundled seed runs from repo root (`process.cwd()`); __dirname breaks under esbuild.
+const REPO_ROOT = process.cwd();
 const DATA_DIR = path.join(REPO_ROOT, "data", "create", "customRule");
 
 /**

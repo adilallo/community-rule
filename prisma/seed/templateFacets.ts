@@ -4,7 +4,7 @@ import type { PrismaClient } from "@prisma/client";
 import { FACET_GROUP_IDS } from "../../lib/server/validation/methodFacetsSchemas";
 import { templateFacetFileSchema } from "../../lib/server/validation/templateFacetSchema";
 
-const REPO_ROOT = path.resolve(__dirname, "..", "..");
+const REPO_ROOT = process.cwd();
 const TEMPLATE_FACET_FILE = path.join(
   REPO_ROOT,
   "data",
