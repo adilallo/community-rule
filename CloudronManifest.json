@@ -1,0 +1,20 @@
+{
+  "manifestVersion": 2,
+  "id": "com.medlab.communityrule",
+  "title": "Community Rule",
+  "author": "MEDLab",
+  "description": "Community governance and rule-building app",
+  "version": "0.1.0",
+  "httpPort": 3000,
+  "healthCheckPath": "/api/health",
+  "memoryLimit": 805306368,
+  "minBoxVersion": "9.0.0",
+  "addons": {
+    "postgresql": {},
+    "sendmail": {},
+    "localstorage": {}
+  },
+  "dockerimage": "git.medlab.host/communityrule/community-rule:0.1.0",
+  "website": "https://communityrule.info",
+  "contactEmail": "hello@communityrule.info"
+}
