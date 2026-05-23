@@ -1,5 +1,5 @@
 import Footer from "../../app/components/navigation/Footer";
-import { within, userEvent } from "@storybook/test";
+import { within, userEvent } from "storybook/test";
 
 export default {
   title: "Components/Navigation/Footer/Responsive",

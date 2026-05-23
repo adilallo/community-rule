@@ -6,9 +6,9 @@ module.exports = {
   ],
   addons: [
     // Removed @storybook/addon-essentials due to version mismatch with Storybook 10.x
-    // Using individual addons instead
+    // Using individual addons instead. Interaction helpers import from storybook/test
+    // (bundled with storybook@10); @storybook/addon-interactions was merged into SB 8 core.
     "@storybook/addon-a11y",
-    "@storybook/addon-interactions",
   ],
   framework: {
     name: "@storybook/nextjs",

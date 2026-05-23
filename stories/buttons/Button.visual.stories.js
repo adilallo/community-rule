@@ -1,5 +1,5 @@
 import Button from "../../app/components/buttons/Button";
-import { within, userEvent } from "@storybook/test";
+import { within, userEvent } from "storybook/test";
 
 export default {
   title: "Components/Buttons/Button/Visual Regression",

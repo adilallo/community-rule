@@ -3,7 +3,8 @@
 This doc captures everything needed to deploy the new CommunityRule
 (Next.js + Postgres) onto MEDLab's Cloudron and replace the legacy
 LAMP-packaged service at `communityrule.info`. Cloudron admin access
-has been granted; remaining open item is the registry decision in §6.
+has been granted and the container registry is wired up (§6, §9); the
+remaining gates are CR-96 (env bridging) and CR-98 (staging install).
 
 > **For a plain-language summary to hand to MEDLab's Cloudron admin,
 > see [`../relaunch-brief.md`](../relaunch-brief.md).** This doc is the
@@ -148,11 +149,21 @@ Product decisions (closed):
    part of the CR-99 pre-cutover backup. Tracked in
    [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export).
 
-Infra decision still open:
+Infra decision closed:
 
-3. **Container registry** — GHCR (under your personal / org account,
-   lowest friction), Docker Hub, or MEDLab self-hosted. Tracked in
-   [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push).
+3. **Container registry — Gitea Container Registry on `git.medlab.host`.**
+   Same host as Cloudron (`193.46.198.90`); container package is set
+   **public** to sidestep the [same-host docker-login "socket hangup"
+   bug](https://forum.cloudron.io/topic/14572/private-docker-registry-in-cloudron),
+   so Cloudron pulls without credentials. Push auth from operator
+   laptops uses a Gitea personal access token (`read:package` +
+   `write:package`). Canonical image ref:
+   `git.medlab.host/communityrule/community-rule:<tag>`. Operator
+   build/push workflow lives in [§9](#9-build-and-push-image-workflow).
+   Tracked in [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push).
+   Fallback if same-host pull ever breaks: install the **Cloudron
+   Container Registry** app and re-tag against its hostname; no other
+   changes required.
 
 ## 7. Old vs new deltas
 
@@ -192,7 +203,10 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
    blockers; can land now.
 2. [**CR-97**](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)
    — `[Backend] Container image registry: choose, build, push`.
-   Blocked by registry decision (§6.3).
+   Registry decided (§6.3); packaging + build/push workflow shipped
+   (§9). Closes after the first verified `docker pull` of the pushed
+   image (no Cloudron-side install required to close this ticket;
+   that's CR-98).
 3. [**CR-98**](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)
    — `[Backend] Cloudron staging install + smoke` at
    `staging.communityrule.info`. Blocked by CR-96 + CR-97.
@@ -212,6 +226,90 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
    — `[Backend] Decide fate of legacy rules table (read-only export?)`.
    Count rows + decide whether to publish a static archive before
    CR-99 uninstalls the legacy MySQL. Priority: Low.
+
+## 9. Build and push image workflow
+
+The repo is packaged as a Cloudron app via
+[`CloudronManifest.json`](../../CloudronManifest.json),
+[`Dockerfile`](../../Dockerfile),
+[`scripts/start.sh`](../../scripts/start.sh), and
+[`scripts/docker-release.sh`](../../scripts/docker-release.sh). The
+manifest declares `httpPort 3000`, `healthCheckPath /api/health`,
+`memoryLimit 768 MiB`, `minBoxVersion 9.0.0`, and the
+`postgresql + sendmail + localstorage` addons. The Dockerfile reuses
+the base image's `node` user (uid 1000), installs `gosu` for the
+privilege drop, and symlinks `.next/cache → /tmp/next-cache` so
+Next.js ISR works on Cloudron's read-only rootfs. `start.sh` runs as
+root to chown `/app/data` (localstorage mount), then drops to
+`node:node`, applies `prisma migrate deploy`, and execs the Next.js
+standalone server.
+
+### One-time setup (per operator)
+
+1. **Generate a Gitea PAT.** In Gitea web UI: avatar → Settings →
+   Applications → Manage Access Tokens → Generate New Token. Check
+   `read:package` and `write:package`. Save in 1Password.
+2. **`docker login git.medlab.host`** with your Gitea username and the
+   PAT as password. Expect `Login Succeeded`.
+3. Confirm you have package-write rights on the `CommunityRule` org
+   (you do if you can push commits to the repo).
+
+### Per-release workflow
+
+1. **Bump the manifest version.** Edit
+   [`CloudronManifest.json`](../../CloudronManifest.json):
+   - increment `version` (e.g. `0.1.0` → `0.1.1`) — Cloudron requires
+     it to **increase** for `cloudron update --image` to be accepted;
+   - update `dockerimage` to the tag you're about to push (default tag
+     is the git short SHA).
+2. **Run the release script** from the repo root:
+
+   ```bash
+   ./scripts/docker-release.sh
+   # or, equivalently:
+   npm run docker:release
+   ```
+
+   Override the tag with `TAG=v0.1.1 ./scripts/docker-release.sh` for
+   semver releases. The script prints the exact `dockerimage` line to
+   paste back into the manifest.
+3. **First push only:** in Gitea, navigate to the `CommunityRule` org
+   → Packages → `community-rule` → Settings → set **Visibility: Public**.
+4. **Verify the pull works without credentials** (simulates Cloudron's
+   anonymous pull):
+
+   ```bash
+   docker logout git.medlab.host
+   docker pull git.medlab.host/communityrule/community-rule:<tag>
+   ```
+
+5. **Commit the manifest change** alongside any code changes that
+   shipped in this build, so the manifest and image stay in lockstep.
+
+### Install / update on Cloudron
+
+From the repo dir on the operator's machine, with `cloudron` CLI
+logged in to `cloud.medlab.host`:
+
+```bash
+# First install (staging):
+cloudron install --location staging.communityrule.info
+
+# Subsequent updates:
+cloudron update --app <app-id>
+```
+
+`cloudron install` reads `dockerimage` from
+[`CloudronManifest.json`](../../CloudronManifest.json); no `--image`
+flag needed.
+
+### CI — deferred (stretch goal)
+
+CR-97 acceptance lists a stretch goal of building and pushing on merge
+to `main` via Gitea Actions. Deferred: no hosted runners are available
+today, and the manual workflow above is acceptable for v1 staging and
+production. Revisit when runners return or when release cadence
+justifies the runner cost.
 
 ## 10. Rate limiting (single-instance deploys)
 
