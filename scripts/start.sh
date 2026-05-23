@@ -21,4 +21,4 @@ chown -R node:node /tmp/next-cache
 # Drop privileges, apply any pending migrations, then exec the server.
 # Inner `exec` ensures SIGTERM from Cloudron reaches node for clean shutdown.
 exec gosu node:node sh -c \
-  'prisma migrate deploy && prisma db seed && exec node server.js'
+  'prisma migrate deploy && node prisma/seed.bundle.cjs && exec node server.js'

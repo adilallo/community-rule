@@ -28,6 +28,12 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
+# Standalone output omits TS sources the seed imports; bundle seed + JSON paths
+# so `node prisma/seed.bundle.cjs` works in the slim runner (no tsx/lib/ tree).
+RUN ./node_modules/.bin/esbuild prisma/seed.ts \
+  --bundle --platform=node --format=cjs \
+  --outfile=prisma/seed.bundle.cjs \
+  --external:@prisma/client
 
 FROM base AS runner
 # openssl: Prisma engines. gosu: privilege drop in start.sh after chown.
@@ -42,11 +48,11 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/data ./data
 
 # Prisma CLI (devDependency) is not in the Next.js standalone trace. Install
-# globally in the runner so start.sh can run `prisma migrate deploy` and the
-# one-time idempotent `prisma db seed` (upserts by slug).
-RUN npm install -g prisma@6.19.3 tsx@4.19.4
+# globally in the runner so start.sh can run `prisma migrate deploy`.
+RUN npm install -g prisma@6.19.3
 
 # Cloudron's runtime rootfs is read-only except /tmp, /run, /app/data.
 # Three marketing routes use ISR (`revalidate`) and write to .next/cache;
