@@ -1,7 +1,6 @@
 import React from "react";
 import Checkbox from "../../app/components/controls/Checkbox";
-import { within, userEvent } from "@storybook/test";
-import { expect } from "@storybook/test";
+import { within, userEvent, expect } from "storybook/test";
 
 // Interaction functions for Storybook play functions
 const DefaultInteraction = {

@@ -10,19 +10,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 FROM base AS deps
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
-# --legacy-peer-deps: tolerates two pre-existing peer-dependency mismatches
-#   that local `npm install` papers over but container `npm ci` (npm 10.8.x)
-#   refuses:
-#     1. next-intl@3.26.5 declares peer next "^10..^15" while the project is
-#        on next@16. Upgrading to next-intl@4 supports next 16 cleanly.
-#     2. @storybook/addon-interactions@8 vs storybook@10 (devDep only;
-#        the addon was merged into Storybook 8 core and can be removed).
-#   Drop this flag in the follow-up that lands next-intl@4 + Storybook
-#   cleanup together.
 # --ignore-scripts: skips the project `postinstall` (`npm rebuild lightningcss
-#   && prisma generate`). The Prisma schema is not yet present in this stage;
-#   the builder stage runs `prisma generate` after `COPY . .`.
-RUN npm ci --no-audit --fund=false --legacy-peer-deps --ignore-scripts
+# && prisma generate`). The Prisma schema is not yet present in this stage;
+# the builder stage runs `prisma generate` after `COPY . .`.
+RUN npm ci --no-audit --fund=false --ignore-scripts
 
 FROM base AS builder
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*

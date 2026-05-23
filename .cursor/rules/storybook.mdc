@@ -91,12 +91,12 @@ story. If you need a new global, update `preview.js`.
 
 # Interaction tests (`play`)
 
-Use `@storybook/test` for interaction assertions — not `@testing-library/*`
+Use `storybook/test` for interaction assertions — not `@testing-library/*`
 directly. This matches `Checkbox.stories.js` and stays compatible with the
 Vitest portable-stories runner in `.storybook/vitest.setup.js`.
 
 ```javascript
-import { within, userEvent, expect } from "@storybook/test";
+import { within, userEvent, expect } from "storybook/test";
 
 export const Interactive = {
   play: async ({ canvasElement }) => {
