@@ -47,9 +47,10 @@ Rollback plan during the window: restore the legacy backup to a scratch Cloudron
 
 Roughly this order:
 
-1. **Code prep** — small local change so the app reads Cloudron's injected `CLOUDRON_*` env vars natively. No infra impact.
-2. **Build and push the app image** to a container registry.
-3. **Install at staging** subdomain, smoke test, soft launch.
+1. ~~**Code prep** — Cloudron-native env vars (CR-96).~~ **Done.**
+2. ~~**Build and push the app image** to Gitea registry (CR-97).~~ **Done**
+   (`git.medlab.host/communityrule/community-rule:0.1.0`).
+3. **Install at staging** subdomain, smoke test, soft launch (CR-98).
 4. **Apex cutover window** — the brief downtime above.
 5. **Uninstall legacy**, archive legacy repos.
 6. **Write the steady-state runbook** based on what actually worked.

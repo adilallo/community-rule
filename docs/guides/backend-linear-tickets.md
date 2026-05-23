@@ -668,9 +668,9 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 
 | # | Linear | Title | Depends on |
 | - | ------ | ----- | ---------- |
-| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `[Backend] Bridge CLOUDRON_* env vars to canonical names` | none — can ship now |
-| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | `[Backend] Container image registry: choose, build, push` | registry decision (handoff §5) |
-| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | `[Backend] Cloudron staging install + smoke` | CR-96 + CR-97 + Cloudron CLI access + staging DNS |
+| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `[Backend] Cloudron-native env vars` | **Done** — merged |
+| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | `[Backend] Container image registry: choose, build, push` | **Done** — first image `0.1.0` verified |
+| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | `[Backend] Cloudron staging install + smoke` | Cloudron CLI token (§2) — **next** |
 | 4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | `[Backend] Cloudron production install + apex cutover` | CR-98 green for the agreed overlap window |
 | 5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | `[Backend] Steady-state operator runbook` | CR-98 (write what we actually did) |
 | 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | `[Backend] Decommission legacy CommunityRule LAMP app` | CR-99 + sign-off window |
@@ -682,21 +682,28 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 
 | Order | Linear | Repo PR / branch | Kind | Status | Blocked by |
 | ----- | ------ | ---------------- | ---- | ------ | ---------- |
-| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `adilallo/Backend/BridgeCloudronEnv` — *[Backend] Cloudron-native environment variables* | repo | **Open** | — |
-| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | TBD — registry choice + build/push (Dockerfile / CI) | repo | **Next** | CR-96 merged + registry decision ([ops-backend-deploy.md](ops-backend-deploy.md) §6) |
+| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `adilallo/Backend/BridgeCloudronEnv` — *[Backend] Cloudron-native environment variables* | repo | **Done** | — |
+| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | Container registry packaging + `docker-release.sh` | repo | **Done** | — |
 | — | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | TBD — optional repo PR if export tooling/docs needed | product / repo | **Parallel** | row count from legacy MySQL (pre–CR-99 backup) |
-| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | — (ops checklist; doc tweaks only if smoke finds gaps) | ops | Backlog | CR-96 + CR-97 + Cloudron CLI token + staging DNS |
+| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | — (ops checklist; [ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98)) | ops | **Next** | Cloudron CLI token only |
 | 4 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | TBD — `docs/guides/ops-runbook.md` | docs | Backlog | CR-98 (write what we actually did) |
 | 5 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | — (ops; maintenance window) | ops | Backlog | CR-98 green + CR-102 resolved |
 | 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | — (ops; uninstall LAMP slot) | ops | Backlog | CR-99 + sign-off window |
 
-**What's next:** merge **CR-96** PR, then open **CR-97** on its own branch. Start **CR-102** product decision in parallel so it is resolved before the CR-99 cutover window.
+**What's next:** **CR-98** — staging install + smoke at `staging.communityrule.info`
+([ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98)).
+Start **CR-102** product decision in parallel so it is resolved before the CR-99
+cutover window.
 
 **Per-ticket detail:**
 
-1. **Cloudron-native env vars (CR-96).** **Shipped in repo** on branch `adilallo/Backend/BridgeCloudronEnv` (PR open). App reads `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only (no `DATABASE_URL` / `SMTP_URL` shim). Local dev uses the same names in `.env`. SMTP URL assembled in [`lib/server/env.ts`](../../lib/server/env.ts); mail senders use `getSmtpUrl()`. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; unit tests in `tests/unit/env.test.ts`.
-2. **Container image registry: choose, build, push.** Acceptance: `docker pull <registry>/communityrule:<tag>` works from a Cloudron-reachable network. CI builds and pushes on merge to `main` (stretch).
-3. **Cloudron staging install + smoke.** Acceptance: `curl https://<staging>/api/health` returns `{"ok":true,"database":"connected"}`; magic-link request → click link → `GET /api/auth/session` returns a user; publishing a rule succeeds.
+1. **Cloudron-native env vars (CR-96).** **Done.** App reads `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only (no `DATABASE_URL` / `SMTP_URL` shim). Prisma datasource uses `CLOUDRON_POSTGRESQL_URL`. Local dev uses the same names in `.env`. SMTP URL assembled in [`lib/server/env.ts`](../../lib/server/env.ts); mail senders use `getSmtpUrl()`. `scripts/start.sh` does not bridge env names.
+2. **Container image registry (CR-97).** **Done.** Gitea registry on `git.medlab.host`; repo `CommunityRule/community-rule` is **public** (package visibility inherits from repo). Image `git.medlab.host/communityrule/community-rule:0.1.0`, built `linux/amd64` via `./scripts/docker-release.sh`. Anonymous pull verified. CI on merge to `main` deferred (no hosted runners).
+3. **Cloudron staging install + smoke (CR-98).** **Next.** Full checklist in [ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98). Summary:
+   - **Prereqs:** Cloudron CLI token (only outstanding item); CR-96 + CR-97 done.
+   - **Install:** `cloudron install --location staging.communityrule.info` from repo root (manifest supplies `dockerimage`; migrations run in `start.sh`).
+   - **Configure:** `SESSION_SECRET`, `SMTP_FROM`, `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`, `UPLOAD_ROOT=/app/data/uploads`.
+   - **Acceptance:** `GET /api/health` → `{"ok":true,"database":"connected"}`; magic-link sign-in end-to-end; publish a rule succeeds.
 4. **Cloudron production install + DNS cutover.** Acceptance: production subdomain resolves to the new app; old subdomain still works during overlap; sign-in + publish succeed against production; backups confirmed.
 5. **Steady-state operator runbook.** Lives at `docs/guides/ops-runbook.md` (sibling to the handoff). Covers deploy a new version, rollback, restore drill cadence, multi-instance limitations from [`backend-roadmap.md`](backend-roadmap.md) §5/§7. Acceptance: a fresh reader can deploy + roll back using only this doc.
 6. **Decommission legacy Express/MySQL backend.** Acceptance: old Cloudron app stopped + uninstalled; old MySQL addon backed up once and removed; legacy Gitea repo README updated to point at this app. Priority: Low.
@@ -822,7 +829,7 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the Cloudron deployment pipeline is split into **`[Backend]` follow-ups CR-96–CR-102** — see [PR plan (CR-96 – CR-102)](#pr-plan-cr-96--cr-102) under Ticket 12 (**CR-96** repo PR open; **CR-97** next). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior); **Ticket 21 / [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** (create-flow file uploads).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the Cloudron deployment pipeline is split into **`[Backend]` follow-ups CR-96–CR-102** — see [PR plan (CR-96 – CR-102)](#pr-plan-cr-96--cr-102) under Ticket 12 (**CR-96** + **CR-97** **Done**; **CR-98** **next**). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior); **Ticket 21 / [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** (create-flow file uploads).
 
 | Doc ticket | Linear                                                                                                                      | Title (short)                           | Deploy PR / tracking |
 | ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | -------------------- |
@@ -838,9 +845,9 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           | — |
 |         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | Local migrate smoke (**Done in repo**; optional remote CI) | — |
 |         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops admin handoff (Cloudron) **Done**   | — |
-|       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | Cloudron-native env vars | **Open** — `adilallo/Backend/BridgeCloudronEnv` |
-|       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | Container image registry + CI | **Next** — own branch after CR-96 |
-|       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | Cloudron staging install + smoke | Ops — after CR-96 + CR-97 |
+|       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | Cloudron-native env vars | **Done** |
+|       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | Container image registry + CI | **Done** — image `0.1.0` |
+|       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | Cloudron staging install + smoke | **Next** — [ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98) |
 |       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)                    | Production install + apex cutover | Ops — after CR-98 + CR-102 |
 |       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | Steady-state operator runbook | Docs PR — after CR-98 |
 |       12.6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app)                | Decommission legacy LAMP app | Ops — after CR-99 + sign-off |

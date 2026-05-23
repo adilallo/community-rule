@@ -3,8 +3,10 @@
 This doc captures everything needed to deploy the new CommunityRule
 (Next.js + Postgres) onto MEDLab's Cloudron and replace the legacy
 LAMP-packaged service at `communityrule.info`. Cloudron admin access
-has been granted and the container registry is wired up (§6, §9); the
-remaining gates are CR-96 (env bridging) and CR-98 (staging install).
+has been granted, CR-96 (Cloudron-native env vars) and CR-97 (container
+registry + first image push) are done; the remaining gate is
+[CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)
+(staging install + smoke — §10).
 
 > **For a plain-language summary to hand to MEDLab's Cloudron admin,
 > see [`../relaunch-brief.md`](../relaunch-brief.md).** This doc is the
@@ -76,10 +78,12 @@ per-app in the manifest and provisioned at install time.
   with the legacy service; SES relay accepts it).
 - `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true` — turns on Postgres draft
   persistence for signed-in users. Required in production.
-- `UPLOAD_ROOT` — absolute path to a writable directory (typically on the
-  Cloudron **localstorage** mount) for `POST /api/uploads` (community photo +
-  custom-method attachments). When unset, upload routes return
-  `server_misconfigured`. See [CONTRIBUTING.md](../../CONTRIBUTING.md) API table.
+- `UPLOAD_ROOT` — absolute path to a writable directory on the Cloudron
+  **localstorage** mount for `POST /api/uploads` (community photo +
+  custom-method attachments). Use **`/app/data/uploads`** on Cloudron
+  (`start.sh` chowns `/app/data` for the `node` user). When unset, upload
+  routes return `server_misconfigured`. See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+  API table.
 
 ## 4. Platform settings
 
@@ -89,9 +93,10 @@ per-app in the manifest and provisioned at install time.
   ([`app/api/health/route.ts`](../../app/api/health/route.ts) returns
   `200 {"ok":true,"database":"connected"}` when healthy, `503`
   otherwise).
-- Memory limit: start at **512 MiB** (matches what the legacy LAMP
-  app has been running fine on for two years); raise if Next.js
-  standalone OOMs under load.
+- Memory limit: **768 MiB** in
+  [`CloudronManifest.json`](../../CloudronManifest.json) (`memoryLimit:
+  805306368`). The legacy LAMP app ran at 512 MiB; raise further only if
+  Next.js standalone OOMs under load.
 - Backups: Cloudron's automatic backups are already on for the host
   (legacy app shows weekly snapshots ~451 MB each). Same default
   applies to new apps.
@@ -107,10 +112,14 @@ apex.
 
 ### Phases
 
-1. **Staging install** — `cloudron install --image <our-image>
-   --location staging.communityrule.info`. Set env vars from §3. Run
-   `prisma migrate deploy`. Smoke per
-   [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke).
+1. **Staging install** — from a checkout whose
+   [`CloudronManifest.json`](../../CloudronManifest.json) matches the pushed
+   image tag, run `cloudron install --location staging.communityrule.info`.
+   Cloudron reads `dockerimage` from the manifest (no `--image` flag). Set
+   manual env vars from §3. `prisma migrate deploy` runs automatically in
+   [`scripts/start.sh`](../../scripts/start.sh) on container start. Smoke per
+   [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)
+   (§12).
 2. **Soft launch / acceptance** — share the staging URL with a small
    group, exercise sign-in + publish + draft sync end-to-end. Hold
    here until confident.
@@ -152,18 +161,24 @@ Product decisions (closed):
 Infra decision closed:
 
 3. **Container registry — Gitea Container Registry on `git.medlab.host`.**
-   Same host as Cloudron (`193.46.198.90`); container package is set
-   **public** to sidestep the [same-host docker-login "socket hangup"
+   Same host as Cloudron (`193.46.198.90`). The
+   [`CommunityRule/community-rule`](https://git.medlab.host/CommunityRule/community-rule)
+   repo must be **public** so the container package inherits public visibility
+   (Gitea does not expose per-package visibility toggles — visibility follows
+   the owning repo). Public pull sidesteps the [same-host docker-login
+   "socket hangup"
    bug](https://forum.cloudron.io/topic/14572/private-docker-registry-in-cloudron),
-   so Cloudron pulls without credentials. Push auth from operator
-   laptops uses a Gitea personal access token (`read:package` +
-   `write:package`). Canonical image ref:
-   `git.medlab.host/communityrule/community-rule:<tag>`. Operator
-   build/push workflow lives in [§9](#9-build-and-push-image-workflow).
-   Tracked in [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push).
-   Fallback if same-host pull ever breaks: install the **Cloudron
-   Container Registry** app and re-tag against its hostname; no other
-   changes required.
+   so Cloudron pulls without credentials. Push auth from operator laptops uses
+   a Gitea personal access token (`read:package` + `write:package`). Canonical
+   image ref: `git.medlab.host/communityrule/community-rule:<tag>`. Images are
+   built **`linux/amd64` only** (Cloudron host is x86_64). Operator build/push
+   workflow lives in [§9](#9-build-and-push-image-workflow). First verified
+   image: `…:0.1.0` (digest
+   `sha256:e652f9f4bfa4154412cc9d8b63d55c94a128e8935579d101b5ab8977e2080e52`).
+   Tracked in [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)
+   (**Done**). Fallback if same-host pull ever breaks: install the **Cloudron
+   Container Registry** app and re-tag against its hostname; no other changes
+   required.
 
 ## 7. Old vs new deltas
 
@@ -199,17 +214,16 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
 **Community-rule** team, **Backlog** state.
 
 1. [**CR-96**](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)
-   — `[Backend] Cloudron-native env vars` (shipped: app reads
+   — `[Backend] Cloudron-native env vars` (**Done** — app reads
    `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only).
 2. [**CR-97**](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)
-   — `[Backend] Container image registry: choose, build, push`.
-   Registry decided (§6.3); packaging + build/push workflow shipped
-   (§9). Closes after the first verified `docker pull` of the pushed
-   image (no Cloudron-side install required to close this ticket;
-   that's CR-98).
+   — `[Backend] Container image registry: choose, build, push` (**Done**).
+   Registry decided (§6.3); packaging + build/push workflow shipped (§9).
+   First image pushed and verified via anonymous `docker pull` (§9).
 3. [**CR-98**](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)
    — `[Backend] Cloudron staging install + smoke` at
-   `staging.communityrule.info`. Blocked by CR-96 + CR-97.
+   `staging.communityrule.info`. **Next** — checklist in §10. Requires
+   Cloudron CLI token (§2) only; CR-96 and CR-97 are done.
 4. [**CR-99**](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)
    — `[Backend] Cloudron production install + apex cutover`.
    Side-by-side cutover at scheduled low-traffic window per §5.
@@ -273,15 +287,23 @@ standalone server.
    Override the tag with `TAG=v0.1.1 ./scripts/docker-release.sh` for
    semver releases. The script prints the exact `dockerimage` line to
    paste back into the manifest.
-3. **First push only:** in Gitea, navigate to the `CommunityRule` org
-   → Packages → `community-rule` → Settings → set **Visibility: Public**.
+3. **First push only:** confirm the
+   [`CommunityRule/community-rule`](https://git.medlab.host/CommunityRule/community-rule)
+   repo is **Public** (Settings → General). Gitea inherits container-package
+   visibility from the repo — there is no per-package visibility toggle. Org
+   owners are not required if you have repo-admin rights on this repo.
 4. **Verify the pull works without credentials** (simulates Cloudron's
    anonymous pull):
 
    ```bash
    docker logout git.medlab.host
-   docker pull git.medlab.host/communityrule/community-rule:<tag>
+   # Image is linux/amd64 only. On Apple Silicon, add --platform:
+   docker pull --platform linux/amd64 git.medlab.host/communityrule/community-rule:<tag>
    ```
+
+   A bare `docker pull` on arm64 Macs fails with "no matching manifest for
+   linux/arm64" — that is expected and does **not** indicate an auth problem.
+   Cloudron (x86_64) pulls the amd64 manifest without `--platform`.
 
 5. **Commit the manifest change** alongside any code changes that
    shipped in this build, so the manifest and image stay in lockstep.
@@ -311,13 +333,95 @@ today, and the manual workflow above is acceptable for v1 staging and
 production. Revisit when runners return or when release cadence
 justifies the runner cost.
 
-## 10. Rate limiting (single-instance deploys)
+## 10. Staging install + smoke (CR-98)
+
+**Goal:** Install the pushed image at `staging.communityrule.info`, configure
+production env vars, and verify the vertical slice before apex cutover
+([CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)).
+
+**Prerequisites (all satisfied unless noted):**
+
+- [x] **CR-96** — app reads `CLOUDRON_POSTGRESQL_URL` and
+      `CLOUDRON_MAIL_SMTP_*` only ([`lib/server/env.ts`](../../lib/server/env.ts),
+      [`prisma/schema.prisma`](../../prisma/schema.prisma)). No `DATABASE_URL` /
+      `SMTP_URL` shim.
+- [x] **CR-97** — image pushed to
+      `git.medlab.host/communityrule/community-rule:0.1.0` (or current tag in
+      manifest); repo is **public**; anonymous amd64 pull verified (§9).
+- [ ] **Cloudron CLI token** — generate at *Profile → API Tokens* on
+      `cloud.medlab.host`; save in 1Password (§2).
+- [x] **Cloudron admin login** on `cloud.medlab.host` (§2).
+- [x] **DNS** — `communityrule.info` managed in Cloudron; staging subdomain
+      will be provisioned at install time.
+
+**Install steps:**
+
+1. **Checkout** a commit whose [`CloudronManifest.json`](../../CloudronManifest.json)
+   `version`, `dockerimage`, and `memoryLimit` match the image you intend to
+   run (currently `0.1.0` →
+   `git.medlab.host/communityrule/community-rule:0.1.0`).
+2. **Log in to Cloudron CLI:**
+   ```bash
+   cloudron login cloud.medlab.host
+   ```
+3. **Install** from the repo root (manifest is read automatically):
+   ```bash
+   cloudron install --location staging.communityrule.info
+   ```
+   Cloudron provisions **postgresql**, **sendmail**, and **localstorage**
+   addons from the manifest, pulls the image (no registry credentials needed),
+   and starts the container. `scripts/start.sh` chowns `/app/data`, runs
+   `prisma migrate deploy`, then execs the Next.js server.
+4. **Set manual env vars** (Cloudron does not inject these):
+   ```bash
+   cloudron configure --app <app-id> --set-env \
+     SESSION_SECRET="$(openssl rand -hex 32)" \
+     SMTP_FROM="Community Rule <hello@communityrule.info>" \
+     NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true \
+     UPLOAD_ROOT=/app/data/uploads
+   ```
+   Rotating `SESSION_SECRET` logs everyone out. `SMTP_FROM` must be an address
+   SES accepts on `communityrule.info` (platform mail addon is SES-relayed with
+   custom-from allowed — §3).
+5. **Confirm the app is running** in the Cloudron dashboard (Logs tab). Look
+   for a clean `prisma migrate deploy` and Next.js listening on port 3000.
+
+**Smoke checklist (acceptance):**
+
+- [ ] **Health:** `curl -sS https://staging.communityrule.info/api/health`
+      returns `200` with `{"ok":true,"database":"connected"}`.
+- [ ] **Magic link:** request sign-in from the UI → email arrives at a real
+      inbox → click link → land signed in →
+      `GET /api/auth/session` returns a user. Confirm the link host matches
+      `staging.communityrule.info` (reverse proxy / `Host` alignment).
+- [ ] **Publish:** complete create flow → publish a rule → public rule detail
+      loads.
+- [ ] **Draft sync (optional):** signed-in Save & Exit persists to Postgres;
+      resume works after re-login.
+- [ ] **Upload (optional):** with `UPLOAD_ROOT` set, attach a community photo
+      in create flow and confirm it renders after publish.
+
+**If something fails:**
+
+| Symptom | Likely cause | Check |
+| ------- | ------------ | ----- |
+| Image pull error on install | Repo still private, or wrong tag in manifest | §6.3; `docker pull --platform linux/amd64 …` from laptop |
+| Health `503` / `database: disconnected` | Postgres addon not provisioned or URL missing | Cloudron app → Environment; expect `CLOUDRON_POSTGRESQL_URL` |
+| Magic link not sent | Mail addon or `SMTP_FROM` | Cloudron mail logs; `CLOUDRON_MAIL_SMTP_*` vars |
+| Upload `server_misconfigured` | `UPLOAD_ROOT` unset | Set to `/app/data/uploads` (§3) |
+| Container crash on start | Migration failure | App logs around `prisma migrate deploy` |
+
+**Done when:** all smoke checklist items pass. Then proceed to soft-launch
+(§5 phase 2) and, when ready, [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)
+apex cutover.
+
+## 11. Rate limiting (single-instance deploys)
 
 The app uses an **in-memory** rate limiter in [`lib/server/rateLimit.ts`](../../lib/server/rateLimit.ts) (magic-link requests, organizer inquiry, etc.). This is sufficient for the current **single Cloudron container** per environment.
 
 **Before horizontal scale-out** (multiple app instances behind a load balancer), replace or back the limiter with a shared store (e.g. Redis) so per-IP / per-user windows apply across instances. Until then, document expected limits in the steady-state runbook ([CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)).
 
-## 11. Related docs
+## 12. Related docs
 
 - [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §11
   (environments) and §8 (Prisma migrations policy).
