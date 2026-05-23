@@ -80,3 +80,14 @@ PostgreSQL · Vitest · Playwright · Storybook 10 · Lighthouse CI.
   — Cloudron deploy + cutover plan.
 - [CONTRIBUTING.md](CONTRIBUTING.md) — local backend, API routes, PR workflow.
 - [AGENTS.md](AGENTS.md) — orientation for AI coding agents.
+
+## License
+
+Application source code is licensed under the
+[GNU General Public License v3.0](LICENSE), the same license as the
+legacy [GitLab project](https://gitlab.com/medlabboulder/communityrule).
+Copyright (C) 2020 Media Enterprise Design Lab.
+
+User-facing content (guides, template copy, marketing text) is licensed
+under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+as stated on [communityrule.info/about](https://communityrule.info/about/).

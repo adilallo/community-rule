@@ -42,8 +42,9 @@ registry + first image push) are done; the remaining gate is
 
 ## 2. Access — granted
 
-Cloudron admin login on `cloud.medlab.host` granted. From the
-dashboard the deployer can self-serve:
+Cloudron admin login on `my.medlab.host` granted (note: this is the
+**Cloudron dashboard**, not `cloud.medlab.host`, which is MEDLab's
+Nextcloud file portal). From the dashboard the deployer can self-serve:
 
 - [x] **Cloudron admin login** (full admin on the MEDLab instance).
 - [x] **DNS for `communityrule.info`** — domain is managed inside
@@ -311,7 +312,7 @@ standalone server.
 ### Install / update on Cloudron
 
 From the repo dir on the operator's machine, with `cloudron` CLI
-logged in to `cloud.medlab.host`:
+logged in to `my.medlab.host`:
 
 ```bash
 # First install (staging):
@@ -349,8 +350,8 @@ production env vars, and verify the vertical slice before apex cutover
       `git.medlab.host/communityrule/community-rule:0.1.0` (or current tag in
       manifest); repo is **public**; anonymous amd64 pull verified (§9).
 - [ ] **Cloudron CLI token** — generate at *Profile → API Tokens* on
-      `cloud.medlab.host`; save in 1Password (§2).
-- [x] **Cloudron admin login** on `cloud.medlab.host` (§2).
+      `my.medlab.host`; save in 1Password (§2).
+- [x] **Cloudron admin login** on `my.medlab.host` (§2).
 - [x] **DNS** — `communityrule.info` managed in Cloudron; staging subdomain
       will be provisioned at install time.
 
@@ -362,7 +363,7 @@ production env vars, and verify the vertical slice before apex cutover
    `git.medlab.host/communityrule/community-rule:0.1.0`).
 2. **Log in to Cloudron CLI:**
    ```bash
-   cloudron login cloud.medlab.host
+   cloudron login my.medlab.host
    ```
 3. **Install** from the repo root (manifest is read automatically):
    ```bash
