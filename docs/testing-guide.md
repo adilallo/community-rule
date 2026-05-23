@@ -26,7 +26,7 @@ Starts a throwaway Postgres on `127.0.0.1:5433`, runs `prisma migrate
 deploy`, checks the connection, then removes the container. Port **5433**
 avoids clashing with `docker compose` on **5432**. If you already use
 Compose on 5432: `docker compose up -d postgres` then
-`DATABASE_URL=postgresql://communityrule:communityrule@127.0.0.1:5432/communityrule npm run db:deploy`.
+`CLOUDRON_POSTGRESQL_URL=postgresql://communityrule:communityrule@127.0.0.1:5432/communityrule npm run db:deploy`.
 
 Do not rewrite migrations already applied to shared DBs — see
 [CONTRIBUTING.md](../CONTRIBUTING.md) and

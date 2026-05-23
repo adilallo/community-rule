@@ -5,12 +5,12 @@
 
 set -e
 
-# Bridge Cloudron's env name to Prisma's expected name so `prisma migrate
-# deploy` works before CR-96 lands the in-app DATABASE_URL bridging.
-export DATABASE_URL="${DATABASE_URL:-$CLOUDRON_POSTGRESQL_URL}"
-
 # /app/data is created at runtime by Cloudron's localstorage addon as
 # root:root; chown so the node user can write uploads.
+# Prisma reads `CLOUDRON_POSTGRESQL_URL` directly via `prisma/schema.prisma`
+# (`datasource db { url = env("CLOUDRON_POSTGRESQL_URL") }`), so no DATABASE_URL
+# bridging is needed in this script — the app code reads the same var via
+# `lib/server/env.ts`.
 chown -R node:node /app/data
 
 # Next.js ISR cache lives at /app/.next/cache via a symlink baked into the

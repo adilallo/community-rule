@@ -76,7 +76,7 @@ Full table: [CONTRIBUTING.md](../CONTRIBUTING.md) **API routes**.
 
 **Step 2.** Use **Prisma** — `schema.prisma`, `npx prisma migrate dev` / `migrate deploy`.
 
-**Step 3.** Add **SMTP** (or Mailhog locally) for **magic-link** sign-in email in deployed environments; when `SMTP_URL` is unset in dev, the app can log the **verify URL** to the console (same pattern as [`lib/server/mail.ts`](lib/server/mail.ts)).
+**Step 3.** Add **SMTP** (or Mailhog locally) for **magic-link** sign-in email in deployed environments; when `CLOUDRON_MAIL_SMTP_*` is unset in dev, the app can log the **verify URL** to the console (same pattern as [`lib/server/mail.ts`](lib/server/mail.ts)).
 
 **Step 4.** **Redis / queues / Kubernetes** — not required for v1. **Exception:** before running **multiple app instances**, plan a **shared rate-limit store** (often Redis) for **passwordless email (magic-link request)**; the current limiter is in-memory per process ([`lib/server/rateLimit.ts`](lib/server/rateLimit.ts)).
 
@@ -157,7 +157,7 @@ Match the current API behavior; tighten as product evolves:
 
 ---
 
-**Step 1.** Copy `.env.example` to `.env`. Set `DATABASE_URL` and secrets (see file comments).
+**Step 1.** Copy `.env.example` to `.env`. Set `CLOUDRON_POSTGRESQL_URL` and secrets (see file comments).
 
 **Step 2.** Start Postgres locally:
 
@@ -183,7 +183,7 @@ npm run dev
 **Step 6.** **Magic-link sign-in** (happy path):
 
 1. `POST /api/auth/magic-link/request` with `{ "email": "you@example.com" }` (optional `"next"` for redirect after verify).
-2. Open the link from email, Mailhog, or **server logs** when `SMTP_URL` is unset (dev).
+2. Open the link from email, Mailhog, or **server logs** when `CLOUDRON_MAIL_SMTP_*` is unset (dev).
 3. Browser hits `GET /api/auth/magic-link/verify?token=...` (and optional `next=...`); response sets the session cookie and redirects.
 4. `GET /api/auth/session` should show your user in the same browser.
 
@@ -221,7 +221,7 @@ npm run dev
 
 **Optional QA:** Run automated tests against an **ephemeral** database in CI instead of maintaining a fourth long-lived server.
 
-**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. Admin handoff (access, env vars, platform settings, open decisions): [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). Note: Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*`; the app reads `DATABASE_URL` / `SMTP_URL`, so a small env-var bridge in [`lib/server/env.ts`](../../lib/server/env.ts) / [`lib/server/mail.ts`](../../lib/server/mail.ts) is needed (tracked in [**CR-96**](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names), filed under CR-83 — see [backend-linear-tickets.md](backend-linear-tickets.md) Ticket 12 follow-ups).
+**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. Admin handoff (access, env vars, platform settings, open decisions): [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). The app reads Cloudron-injected `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` via [`lib/server/env.ts`](../../lib/server/env.ts) (CR-96).
 
 **Admin / infra (coordinate with whoever runs the server):**
 

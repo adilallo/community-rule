@@ -5,7 +5,7 @@
 1. Copy [`.env.example`](.env.example) to `.env` and set `SESSION_SECRET`
    (at least 16 characters).
 2. `docker compose up -d postgres mailhog` — omit `mailhog` if you only
-   need Postgres. Without `SMTP_URL`, the **magic-link verify URL** is
+   need Postgres. Without `CLOUDRON_MAIL_SMTP_*`, the **magic-link verify URL** is
    printed in the dev server log.
 3. `npm ci`
 4. `npx prisma migrate dev`
@@ -64,8 +64,9 @@ deployment-pipeline work.
 
 - Visit **[/login](http://localhost:3000/login)** or use **Log in** in the
   site header.
-- Without `SMTP_URL`: copy the verify URL from the dev server terminal.
-- With Mailhog: set `SMTP_URL=smtp://localhost:1025` and open the message
+- Without `CLOUDRON_MAIL_SMTP_*`: copy the verify URL from the dev server terminal.
+- With Mailhog: set `CLOUDRON_MAIL_SMTP_SERVER=localhost` and
+  `CLOUDRON_MAIL_SMTP_PORT=1025` (see `.env.example`) and open the message
   at [http://localhost:8025](http://localhost:8025).
 - Open the link in the **same browser** as the app (session cookie).
 

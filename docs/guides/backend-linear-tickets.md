@@ -24,7 +24,7 @@ Use this if you **do not** have SSH or hosting access yet. Most engineering tick
 
 ### You do **not** need the server admin for
 
-- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env`, `npm run dev`, `npx prisma migrate dev`. **Magic-link** sign-in email can use Mailhog or **dev server logs** (verify URL) when `SMTP_URL` is unset—no real SMTP required locally.
+- **Tickets 1–8, 10:** Everything runs on your machine: `docker compose up -d postgres mailhog`, `.env`, `npm run dev`, `npx prisma migrate dev`. **Magic-link** sign-in email can use Mailhog or **dev server logs** (verify URL) when `CLOUDRON_MAIL_SMTP_*` is unset—no real SMTP required locally.
 - **Verifying APIs:** Use `localhost` and the same Docker Postgres—no production host.
 
 ### The **first** time you need someone with hosting access
@@ -35,10 +35,10 @@ Ask the admin to provide (or do for you) the items below—**Ticket 12** turns t
 
 | What                 | Why you need it                                                                                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Postgres**         | Managed instance or container; a **`DATABASE_URL`** you can plug into the deployed app.                                                                          |
+| **Postgres**         | Managed instance or container; a **`CLOUDRON_POSTGRESQL_URL`** you can plug into the deployed app.                                                               |
 | **Run migrations**   | Someone runs **`npx prisma migrate deploy`** against that database **before** the new app version serves traffic (or gives you a secure way to run it in CI/CD). |
 | **`SESSION_SECRET`** | Long random string in production env (sessions **+ hashed magic-link tokens**).                                                                                  |
-| **SMTP**             | **`SMTP_URL`** + **`SMTP_FROM`** for real **sign-in link** email; not required on laptop if you use logs/Mailhog.                                                |
+| **SMTP**             | **`CLOUDRON_MAIL_SMTP_*`** + **`SMTP_FROM`** for real **sign-in link** email; not required on laptop if you use logs/Mailhog.                                   |
 | **DNS for mail**     | Often **SPF/DKIM** so **magic-link** messages are not spam—admin or whoever owns DNS.                                                                            |
 | **TLS + hostname**   | HTTPS URL for the site; reverse proxy (nginx, Caddy, etc.) in front of Node.                                                                                     |
 | **Health check**     | Load balancer or platform should probe **`GET /api/health`** (or your chosen path).                                                                              |
@@ -137,7 +137,7 @@ Optional: **Docker image deploy** using the repo [Dockerfile](Dockerfile)—admi
 2. Flow: email → “Send link” → user opens link (email, Mailhog, or dev log) → `GET /api/auth/magic-link/verify?token=...` sets session and redirects; optional `next` for post-login path.
 3. Surface API errors: invalid email, 429 `retryAfterMs`, expired/invalid token, network failure (accessible copy).
 4. Ensure `fetch` calls use `credentials: "include"` where needed (see [lib/create/api.ts](lib/create/api.ts)).
-5. **Dev:** without `SMTP_URL`, verify URL is logged; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `SMTP_URL=smtp://localhost:1025`.
+5. **Dev:** without `CLOUDRON_MAIL_SMTP_*`, verify URL is logged; with Mailhog, use [docker-compose.yml](docker-compose.yml) and `CLOUDRON_MAIL_SMTP_SERVER=localhost` + `CLOUDRON_MAIL_SMTP_PORT=1025`.
 6. **Marketing header:** When signed in (`fetchAuthSession`), **Log in** becomes **Profile** linking to [`/profile`](app/(app)/profile/page.tsx) (placeholder until Ticket 15 / CR-86). Implemented in [TopWithPathname.tsx](app/components/navigation/Top/TopWithPathname.tsx) + [Top.container.tsx](app/components/navigation/Top/Top.container.tsx).
 
 **Acceptance criteria:**
@@ -676,9 +676,25 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 | 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | `[Backend] Decommission legacy CommunityRule LAMP app` | CR-99 + sign-off window |
 | 7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | `[Backend] Decide fate of legacy rules table (read-only export?)` | must resolve before CR-99 maintenance window |
 
+### PR plan (CR-96 – CR-102)
+
+**One ticket ≠ one mega-branch.** Repo PRs stay small; stack only when there is a hard code dependency (e.g. CR-97 before CR-98 can pull a built image from `main`). Ops steps (Cloudron install, DNS, smoke, cutover, decommission) are tracked in Linear checklists — not bundled into a single git branch.
+
+| Order | Linear | Repo PR / branch | Kind | Status | Blocked by |
+| ----- | ------ | ---------------- | ---- | ------ | ---------- |
+| 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `adilallo/Backend/BridgeCloudronEnv` — *[Backend] Cloudron-native environment variables* | repo | **Open** | — |
+| 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | TBD — registry choice + build/push (Dockerfile / CI) | repo | **Next** | CR-96 merged + registry decision ([ops-backend-deploy.md](ops-backend-deploy.md) §6) |
+| — | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | TBD — optional repo PR if export tooling/docs needed | product / repo | **Parallel** | row count from legacy MySQL (pre–CR-99 backup) |
+| 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | — (ops checklist; doc tweaks only if smoke finds gaps) | ops | Backlog | CR-96 + CR-97 + Cloudron CLI token + staging DNS |
+| 4 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | TBD — `docs/guides/ops-runbook.md` | docs | Backlog | CR-98 (write what we actually did) |
+| 5 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | — (ops; maintenance window) | ops | Backlog | CR-98 green + CR-102 resolved |
+| 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | — (ops; uninstall LAMP slot) | ops | Backlog | CR-99 + sign-off window |
+
+**What's next:** merge **CR-96** PR, then open **CR-97** on its own branch. Start **CR-102** product decision in parallel so it is resolved before the CR-99 cutover window.
+
 **Per-ticket detail:**
 
-1. **Bridge `CLOUDRON_*` env vars to canonical names.** Cloudron injects `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_SERVER/PORT/USERNAME/PASSWORD`; the app reads `DATABASE_URL` / `SMTP_URL`. Recommended approach: read both names in [`lib/server/env.ts`](../../lib/server/env.ts) and assemble `SMTP_URL` from the four parts in [`lib/server/mail.ts`](../../lib/server/mail.ts) when only the Cloudron names are present. Alternative: a `start.sh` shim in the image. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; with only canonical names set (current behavior), unchanged; unit tests cover both.
+1. **Cloudron-native env vars (CR-96).** **Shipped in repo** on branch `adilallo/Backend/BridgeCloudronEnv` (PR open). App reads `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` only (no `DATABASE_URL` / `SMTP_URL` shim). Local dev uses the same names in `.env`. SMTP URL assembled in [`lib/server/env.ts`](../../lib/server/env.ts); mail senders use `getSmtpUrl()`. Acceptance: with only `CLOUDRON_*` set, app connects to DB and sends mail; unit tests in `tests/unit/env.test.ts`.
 2. **Container image registry: choose, build, push.** Acceptance: `docker pull <registry>/communityrule:<tag>` works from a Cloudron-reachable network. CI builds and pushes on merge to `main` (stretch).
 3. **Cloudron staging install + smoke.** Acceptance: `curl https://<staging>/api/health` returns `{"ok":true,"database":"connected"}`; magic-link request → click link → `GET /api/auth/session` returns a user; publishing a rule succeeds.
 4. **Cloudron production install + DNS cutover.** Acceptance: production subdomain resolves to the new app; old subdomain still works during overlap; sign-in + publish succeed against production; backups confirmed.
@@ -806,39 +822,39 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 
 ## Linear (Community-rule team)
 
-**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the actual Cloudron deployment pipeline is split into the **`[Backend]` follow-up tickets** filed under it (env-var bridging → image registry → staging → production cutover → operator runbook → legacy decommission). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior); **Ticket 21 / [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** (create-flow file uploads).
+**Main chain (historical):** **CR-72 → CR-83** was the original **strict sequence**; **repo + Linear status today:** **CR-72–CR-79**, **CR-83**, **CR-84**, **CR-85**, **CR-88**, **CR-89** are **Done**; **CR-77** (publish) **Done**; **CR-80–CR-81** remain **Backlog** (web vitals, public rule detail). **CR-82** covered by local `migrate:smoke` (see Ticket 11). **CR-83** (admin handoff) shipped as a narrow handoff sheet; the Cloudron deployment pipeline is split into **`[Backend]` follow-ups CR-96–CR-102** — see [PR plan (CR-96 – CR-102)](#pr-plan-cr-96--cr-102) under Ticket 12 (**CR-96** repo PR open; **CR-97** next). **Parallel (still open):** **CR-86** / Ticket 15 (**Backlog** — publish **not** a blocker); **CR-103** / Ticket 20 (change account email); **CR-93** (**Backlog**); **CR-90** / Ticket 18 (stakeholder invites); **CR-91** / Ticket 19 (`Add` button behavior); **Ticket 21 / [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method)** (create-flow file uploads).
 
-| Doc ticket | Linear                                                                                                                      | Title (short)                           |
-| ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-|          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap                   |
-|          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation        |
-|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)               | Magic-link sign-in UI (Ticket 3; Done)  |
-|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                | Create flow session UI (Ticket 4; Done) |
-|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors)  |
-|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring **Done**                 |
-|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed **Done**                  |
-|          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                         |
-|          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            |
-|         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           |
-|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | Local migrate smoke (**Done in repo**; optional remote CI) |
-|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops admin handoff (Cloudron) **Done**   |
-|       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | `[Backend] Bridge CLOUDRON_* env vars to canonical names` |
-|       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | `[Backend] Container image registry: choose, build, push` |
-|       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | `[Backend] Cloudron staging install + smoke`           |
-|       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)                    | `[Backend] Cloudron production install + apex cutover` |
-|       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | `[Backend] Steady-state operator runbook`              |
-|       12.6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app)                | `[Backend] Decommission legacy CommunityRule LAMP app` |
-|       12.7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export)        | `[Backend] Decide fate of legacy rules table (read-only export?)` |
-|         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         |
-|         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup **Done**    |
-|         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  |
-|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)         | Template matrix (facets; no xlsx)        |
-|         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) **Done** |
-|          — | [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) | Template grid + facet ranking (product)   |
-|         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) |
-|         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) |
-|         20 | [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)   | Change account email (verify new address) **Backlog** |
-|         21 | [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method) | Create flow file uploads (community + custom blocks) **Backlog** |
+| Doc ticket | Linear                                                                                                                      | Title (short)                           | Deploy PR / tracking |
+| ---------: | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | -------------------- |
+|          1 | [CR-72](https://linear.app/community-rule/issue/CR-72/backend-align-docsbackend-roadmapmd-with-current-codebase)            | Align backend-roadmap                   | — |
+|          2 | [CR-73](https://linear.app/community-rule/issue/CR-73/backend-formalize-createflowstate-validate-draftpublish-api-payloads) | CreateFlowState + API validation        | — |
+|          3 | [CR-74](https://linear.app/community-rule/issue/CR-74/backend-magic-link-sign-in-ui-apis-ticket-3-cr-75-done)               | Magic-link sign-in UI (Ticket 3; Done)  | — |
+|          4 | [CR-75](https://linear.app/community-rule/issue/CR-75/backend-create-flow-session-ui-sign-out-ticket-4-done)                | Create flow session UI (Ticket 4; Done) | — |
+|          5 | [CR-76](https://linear.app/community-rule/issue/CR-76/backend-harden-server-draft-sync-save-and-exit-post-login-transfer)   | Draft sync hardening (PUT UX / errors)  | — |
+|          6 | [CR-77](https://linear.app/community-rule/issue/CR-77/backend-wire-publish-rule-from-create-flow-post-apirules)             | Publish wiring **Done**                 | — |
+|          7 | [CR-78](https://linear.app/community-rule/issue/CR-78/backend-prisma-seed-ruletemplate-document)                            | Template seed **Done**                  | — |
+|          8 | [CR-79](https://linear.app/community-rule/issue/CR-79/backend-load-rule-templates-from-get-apitemplates-in-ui)              | Templates in UI                         | — |
+|          9 | [CR-80](https://linear.app/community-rule/issue/CR-80/backend-persist-web-vitals-outside-next-db-or-external-rum)           | Web vitals (prefer external)            | — |
+|         10 | [CR-81](https://linear.app/community-rule/issue/CR-81/backend-public-rule-detail-page-get-apirulesid-optional)              | Public rule detail (optional)           | — |
+|         11 | [CR-82](https://linear.app/community-rule/issue/CR-82/backend-ci-postgres-migration-smoke-optional)                         | Local migrate smoke (**Done in repo**; optional remote CI) | — |
+|         12 | [CR-83](https://linear.app/community-rule/issue/CR-83/backend-stagingproduction-runbook-admin-handoff-docsops-backend)      | Ops admin handoff (Cloudron) **Done**   | — |
+|       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | Cloudron-native env vars | **Open** — `adilallo/Backend/BridgeCloudronEnv` |
+|       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | Container image registry + CI | **Next** — own branch after CR-96 |
+|       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | Cloudron staging install + smoke | Ops — after CR-96 + CR-97 |
+|       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)                    | Production install + apex cutover | Ops — after CR-98 + CR-102 |
+|       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | Steady-state operator runbook | Docs PR — after CR-98 |
+|       12.6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app)                | Decommission legacy LAMP app | Ops — after CR-99 + sign-off |
+|       12.7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export)        | Legacy `rules` table fate / export | **Parallel** — before CR-99 |
+|         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         | — |
+|         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup **Done**    | — |
+|         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  | — |
+|         16 | [CR-88](https://linear.app/community-rule/issue/CR-88/backend-template-recommendation-matrix-facet-data-seed-and-apis-no)         | Template matrix (facets; no xlsx)        | — |
+|         17 | [CR-89](https://linear.app/community-rule/issue/CR-89/product-canon-custom-create-rule-wizard-routes-resume-progress-repo)   | Canon create-flow (custom wizard + docs) **Done** | — |
+|          — | [CR-93](https://linear.app/community-rule/issue/CR-93/product-rank-template-cards-by-community-facets-reuse-get-apitemplates) | Template grid + facet ranking (product)   | — |
+|         18 | [CR-90](https://linear.app/community-rule/issue/CR-90/productbackend-invite-stakeholders-email-from-confirm-stakeholders)    | Stakeholder invites (confirm-stakeholders) | — |
+|         19 | [CR-91](https://linear.app/community-rule/issue/CR-91/productdesign-add-button-behavior-on-custom-rule-pages-and-final)      | `Add` button behavior (custom-rule + Final Review) | — |
+|         20 | [CR-103](https://linear.app/community-rule/issue/CR-103/backend-change-account-email-verify-new-address-conflict-session)   | Change account email (verify new address) **Backlog** | — |
+|         21 | [CR-113](https://linear.app/community-rule/issue/CR-113/backend-create-flow-file-uploads-community-photo-custom-method) | Create flow file uploads (community + custom blocks) **Backlog** | — |
 
 ---
 

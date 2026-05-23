@@ -788,7 +788,7 @@ and return all rows.
       score-0 templates still present at the end in curated order.
 - [x] No-facets `GET /api/templates` matches today's curated ordering
       (no regression for the existing marketing/templates surfaces).
-- [x] DB-down smoke: with `DATABASE_URL` unset, the four wizard
+- [x] DB-down smoke: with `CLOUDRON_POSTGRESQL_URL` unset, the four wizard
       card-deck steps still render the full deck from messages (no
       5xx, no broken cards).
 - [x] Editing a `data/create/customRule/<section>.json` entry and
