@@ -46,20 +46,21 @@ describe("FeatureGrid (behavioral tests)", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all four feature cards", () => {
+  it("renders all four feature cards as static tiles", () => {
     render(<FeatureGrid title="Test" subtitle="Test" />);
+    expect(screen.getByText("Decision-making")).toBeInTheDocument();
+    expect(screen.getByText("Values alignment")).toBeInTheDocument();
+    expect(screen.getByText("Membership")).toBeInTheDocument();
+    expect(screen.getByText("Conflict resolution")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Decision-making support tools" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Values alignment exercises" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Membership guidance resources" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Conflict resolution tools" }),
-    ).toBeInTheDocument();
+      screen.queryByRole("link", { name: "Decision-making support tools" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("does not apply a focus ring to the entire grid shell", () => {
+    render(<FeatureGrid title="Test" subtitle="Test" />);
+    const shell = document.querySelector('[data-figma-node="18847-22410"]');
+    expect(shell?.className).not.toContain("focus-within:ring-2");
   });
 
   it("has proper accessibility attributes", () => {
