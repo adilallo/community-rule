@@ -20,6 +20,7 @@ import { stakeholderInviteVerifyUrl } from "../../../lib/server/ruleStakeholderI
 import { STAKEHOLDER_INVITE_TTL_MS } from "../../../lib/server/ruleStakeholders";
 import { getSessionUser } from "../../../lib/server/session";
 import { apiRoute } from "../../../lib/server/apiRoute";
+import { getPublicOrigin } from "../../../lib/server/publicOrigin";
 import {
   publishRuleBodySchema,
   uniqueStakeholderEmailsForPublish,
@@ -148,7 +149,7 @@ export const POST = apiRoute(
       return { rule: created, invites: toSend };
     });
 
-    const origin = request.nextUrl.origin;
+    const origin = getPublicOrigin(request);
     try {
       for (const inv of invites) {
         const verifyUrl = stakeholderInviteVerifyUrl(origin, inv.token);

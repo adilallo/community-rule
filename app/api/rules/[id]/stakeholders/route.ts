@@ -18,6 +18,7 @@ import {
   unauthorized,
 } from "../../../../../lib/server/responses";
 import { getSessionUser } from "../../../../../lib/server/session";
+import { getPublicOrigin } from "../../../../../lib/server/publicOrigin";
 import {
   MAX_STAKEHOLDER_EMAILS,
   postRuleStakeholderBodySchema,
@@ -151,7 +152,7 @@ export const POST = apiRoute<RouteContext>(
       return serverMisconfigured();
     }
 
-    const origin = request.nextUrl.origin;
+    const origin = getPublicOrigin(request);
     const sent = await createRuleStakeholderInviteAndSendMail({
       scope: "rules.stakeholders.add",
       requestId,

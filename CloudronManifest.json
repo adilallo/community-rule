@@ -4,7 +4,7 @@
   "title": "Community Rule",
   "author": "MEDLab",
   "description": "Community governance and rule-building app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "httpPort": 3000,
   "healthCheckPath": "/api/health",
   "memoryLimit": 805306368,

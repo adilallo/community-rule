@@ -20,6 +20,7 @@ import {
 import { logRouteError } from "../../../../../lib/server/requestId";
 import { apiRoute } from "../../../../../lib/server/apiRoute";
 import { safeInternalPath } from "../../../../../lib/safeInternalPath";
+import { getPublicOrigin } from "../../../../../lib/server/publicOrigin";
 import { magicLinkRequestBodySchema } from "../../../../../lib/server/validation/createFlowSchemas";
 import { jsonFromZodError } from "../../../../../lib/server/validation/zodHttp";
 
@@ -99,7 +100,7 @@ export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { request
     },
   });
 
-  const origin = request.nextUrl.origin;
+  const origin = getPublicOrigin(request);
   const verifyUrl = `${origin}/api/auth/magic-link/verify?token=${encodeURIComponent(token)}`;
 
   try {

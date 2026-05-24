@@ -20,6 +20,7 @@ import {
   unauthorized,
 } from "../../../../../lib/server/responses";
 import { getSessionUser } from "../../../../../lib/server/session";
+import { getPublicOrigin } from "../../../../../lib/server/publicOrigin";
 import { readLimitedJson } from "../../../../../lib/server/validation/requestBody";
 import { emailChangeRequestBodySchema } from "../../../../../lib/server/validation/userEmailChangeSchemas";
 import { jsonFromZodError } from "../../../../../lib/server/validation/zodHttp";
@@ -115,7 +116,7 @@ export const POST = apiRoute(SCOPE, async (request: NextRequest, _ctx, { request
     },
   });
 
-  const origin = request.nextUrl.origin;
+  const origin = getPublicOrigin(request);
   const verifyUrl = `${origin}/api/user/email-change/verify?token=${encodeURIComponent(token)}`;
 
   try {

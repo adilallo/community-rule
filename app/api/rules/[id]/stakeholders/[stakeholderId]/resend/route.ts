@@ -21,6 +21,7 @@ import {
 } from "../../../../../../../lib/server/responses";
 import { getSessionUser } from "../../../../../../../lib/server/session";
 import { rateLimitKey } from "../../../../../../../lib/server/rateLimit";
+import { getPublicOrigin } from "../../../../../../../lib/server/publicOrigin";
 
 type RouteContext = { params: Promise<{ id: string; stakeholderId: string }> };
 
@@ -92,7 +93,7 @@ export const POST = apiRoute<RouteContext>(
       },
     });
 
-    const verifyUrl = stakeholderInviteVerifyUrl(request.nextUrl.origin, token);
+    const verifyUrl = stakeholderInviteVerifyUrl(getPublicOrigin(request), token);
     try {
       await sendRuleStakeholderInviteEmail(row.email, verifyUrl, row.rule.title);
     } catch (err) {
