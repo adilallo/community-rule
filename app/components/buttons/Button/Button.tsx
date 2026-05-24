@@ -156,7 +156,7 @@ const Button = memo<ButtonProps>(
     // Note: State prop is informational for Figma alignment - actual state is handled by CSS pseudo-classes
     // For now, we maintain existing behavior and state prop is for documentation/alignment purposes
 
-    const baseStyles = `inline-flex items-center justify-start box-border whitespace-nowrap shrink-0 ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-all duration-500 ease-in-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
+    const baseStyles = `inline-flex items-center justify-start box-border whitespace-nowrap shrink-0 touch-manipulation [-webkit-tap-highlight-color:transparent] ${sizeStyles[size]} rounded-[var(--radius-measures-radius-full)] ${fontStyles[size]} transition-[transform,color,background-color,border-color,box-shadow,outline-color] duration-150 ease-out cursor-pointer ${variantStyles[variant]} ${outlineStyles}`;
     const combinedStyles = `${baseStyles} ${className}`;
 
     const sharedA11y = {

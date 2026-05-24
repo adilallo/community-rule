@@ -17,7 +17,7 @@ const Footer = memo(() => {
   const tChrome = useTranslation("controlsChrome");
 
   const linkFocusClass =
-    "hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity";
+    "touch-manipulation [-webkit-tap-highlight-color:transparent] hover:opacity-80 active:opacity-60 focus:opacity-80 focus:outline-none focus:ring-2 focus:ring-[var(--color-content-default-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface-default-primary)] transition-opacity duration-150 ease-out";
 
   const bodyTextClass =
     "text-[var(--color-content-default-primary)] font-inter text-base font-medium leading-5 tracking-[0%] lg:text-2xl lg:font-normal lg:leading-7";
