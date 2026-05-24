@@ -10,17 +10,14 @@ import {
   resolveFacetMatch,
   sectionFacetsSchema,
 } from "../../lib/server/validation/methodFacetsSchemas";
-
-// Bundled seed runs from repo root (`process.cwd()`); __dirname breaks under esbuild.
-const REPO_ROOT = process.cwd();
-const DATA_DIR = path.join(REPO_ROOT, "data", "create", "customRule");
+import { methodFacetsJsonDir } from "./seedDataPaths";
 
 /**
  * Reads + Zod-validates `data/create/customRule/<section>.json`.
  * Throws on schema failures so the seed aborts before any DB write.
  */
 async function loadSectionFacets(section: SectionId) {
-  const file = path.join(DATA_DIR, `${section}.json`);
+  const file = path.join(methodFacetsJsonDir(), `${section}.json`);
   const raw = await readFile(file, "utf8");
   const parsed = JSON.parse(raw) as unknown;
   const result = sectionFacetsSchema.safeParse(parsed);
@@ -33,7 +30,7 @@ async function loadSectionFacets(section: SectionId) {
 }
 
 async function loadFacetGroups() {
-  const file = path.join(DATA_DIR, "_facetGroups.json");
+  const file = path.join(methodFacetsJsonDir(), "_facetGroups.json");
   const raw = await readFile(file, "utf8");
   const parsed = JSON.parse(raw) as unknown;
   const result = facetGroupsFileSchema.safeParse(parsed);

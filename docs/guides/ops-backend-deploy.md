@@ -390,6 +390,16 @@ production env vars, and verify the vertical slice before apex cutover
    custom-from allowed — §3).
 5. **Confirm the app is running** in the Cloudron dashboard (Logs tab). Look
    for a clean `prisma migrate deploy` and Next.js listening on port 3000.
+6. **Seed facet data (one-time per environment)** — templates + `MethodFacet`
+   rows for create-flow "Recommended" tags are **not** applied at boot. After
+   first install (or when recommendations return all-zero scores), run:
+   ```bash
+   cloudron exec --app staging.communityrule.info -- \
+     node prisma/seed.bundle.cjs
+   ```
+   JSON lives at `/app/seed-data/` (`SEED_DATA_DIR`); do not use `/app/data`
+   (Cloudron localstorage overwrites it). Re-run after deploy is safe
+   (idempotent upserts / per-section swaps).
 
 **Smoke checklist (acceptance):**
 
@@ -419,6 +429,8 @@ steps below are still required.
 | Magic link not sent | Mail addon or `SMTP_FROM` | Cloudron mail logs; `CLOUDRON_MAIL_SMTP_*` vars |
 | Upload `server_misconfigured` | `UPLOAD_ROOT` unset | Set to `/app/data/uploads` (§3) |
 | Container crash on start | Migration failure | App logs around `prisma migrate deploy` |
+| No "Recommended" on method cards | `MethodFacet` not seeded | §10 step 6; API should return `matches.score > 0` for some methods when `facet.*` set |
+| `seed.bundle.cjs` ENOENT on `/app/data/...` | Old image without `/app/seed-data` | Deploy ≥ 0.1.8; JSON is at `SEED_DATA_DIR=/app/seed-data` |
 
 **Done when:** all smoke checklist items pass. Then proceed to soft-launch
 (§5 phase 2) and, when ready, [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)

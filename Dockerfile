@@ -48,6 +48,9 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 COPY --from=builder --chown=node:node /app/prisma ./prisma
+# Facet/template seed JSON — NOT under /app/data (localstorage mount overlays that).
+COPY --from=builder --chown=node:node /app/data ./seed-data
+ENV SEED_DATA_DIR=/app/seed-data
 
 # Prisma CLI (devDependency) is not in the Next.js standalone trace. Install
 # globally in the runner so start.sh can run `prisma migrate deploy`.

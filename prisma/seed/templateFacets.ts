@@ -1,16 +1,8 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import type { PrismaClient } from "@prisma/client";
 import { FACET_GROUP_IDS } from "../../lib/server/validation/methodFacetsSchemas";
 import { templateFacetFileSchema } from "../../lib/server/validation/templateFacetSchema";
-
-const REPO_ROOT = process.cwd();
-const TEMPLATE_FACET_FILE = path.join(
-  REPO_ROOT,
-  "data",
-  "templates",
-  "templateFacet.json",
-);
+import { templateFacetJsonPath } from "./seedDataPaths";
 
 type TemplateFacetRow = {
   templateSlug: string;
@@ -20,12 +12,13 @@ type TemplateFacetRow = {
 };
 
 async function loadTemplateFacets() {
-  const raw = await readFile(TEMPLATE_FACET_FILE, "utf8");
+  const templateFacetFile = templateFacetJsonPath();
+  const raw = await readFile(templateFacetFile, "utf8");
   const parsed = JSON.parse(raw) as unknown;
   const result = templateFacetFileSchema.safeParse(parsed);
   if (!result.success) {
     throw new Error(
-      `Invalid template facet file ${TEMPLATE_FACET_FILE}: ${JSON.stringify(
+      `Invalid template facet file ${templateFacetFile}: ${JSON.stringify(
         result.error.flatten(),
         null,
         2,
