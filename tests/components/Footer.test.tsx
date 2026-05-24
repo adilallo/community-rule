@@ -71,6 +71,13 @@ describe("Footer (behavioral tests)", () => {
     ).toBeGreaterThan(0);
   });
 
+  it("renders navigation links with baseline width-fit focus targets", () => {
+    render(<Footer />);
+    const useCases = screen.getAllByRole("link", { name: "Use cases" })[0];
+    expect(useCases).toHaveClass("w-fit", "self-start");
+    expect(useCases).not.toHaveClass("w-full");
+  });
+
   it("renders legal links", () => {
     render(<Footer />);
     expect(
