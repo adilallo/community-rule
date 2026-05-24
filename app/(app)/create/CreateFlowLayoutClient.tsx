@@ -692,7 +692,7 @@ function CreateFlowLayoutContent({
         }`.trim()}
       />
       <main
-        className={`flex min-h-0 flex-1 w-full ${mainContentClass} ${mainResponsiveLayout}`}
+        className={`flex min-h-0 min-w-0 flex-1 w-full max-w-full overflow-x-hidden ${mainContentClass} ${mainResponsiveLayout}`}
       >
         {children}
       </main>
