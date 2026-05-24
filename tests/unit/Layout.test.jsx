@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from "vitest";
-import RootLayout from "../../app/layout";
+import RootLayout, { metadata } from "../../app/layout";
 import MarketingLayout from "../../app/(marketing)/layout";
 import AppLayout from "../../app/(app)/layout";
 
@@ -83,6 +83,36 @@ describe("RootLayout", () => {
       (n) => typeof n === "string" && n.includes(testContent),
     );
     expect(childText).toBeTruthy();
+  });
+
+  test("declares svg, ico, png, and apple-touch icons for cross-browser support", () => {
+    const icons = metadata.icons;
+    expect(icons?.icon).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          url: "/assets/logos/community-rule.svg",
+          type: "image/svg+xml",
+        }),
+        expect.objectContaining({ url: "/favicon.ico", sizes: "any" }),
+        expect.objectContaining({
+          url: "/favicon-32x32.png",
+          sizes: "32x32",
+          type: "image/png",
+        }),
+        expect.objectContaining({
+          url: "/favicon-16x16.png",
+          sizes: "16x16",
+          type: "image/png",
+        }),
+      ]),
+    );
+    expect(icons?.apple).toEqual([
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ]);
   });
 });
 

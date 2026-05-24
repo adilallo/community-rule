@@ -28,7 +28,7 @@ npm-cache/
 /lhci-results/
 /.lighthouseci/
 
-# Ignore other image files (but not visual regression snapshots)
+# Ignore other image files (but not visual regression snapshots or favicons)
 *.png
 *.jpg
 *.jpeg
@@ -38,6 +38,11 @@ npm-cache/
 *.mov
 *.avi
 *.mkv
+
+# Root favicons (generated via `npm run generate:favicons`)
+!public/favicon-16x16.png
+!public/favicon-32x32.png
+!public/apple-touch-icon.png
 
 # Visual regression snapshots (allow these)
 !tests/e2e/visual-regression.spec.ts-snapshots/
