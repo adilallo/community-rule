@@ -12,6 +12,21 @@ function columnUsesLargeBreakpointCopy(column: TripleTextBlockColumn): boolean {
   return column.lgTitle !== undefined || column.lgDescription !== undefined;
 }
 
+function splitDescriptionParagraphs(description: string): {
+  primary: string;
+  secondary?: string;
+} {
+  const parts = description.split(/\n\n+/).map((part) => part.trim()).filter(Boolean);
+  if (parts.length <= 1) {
+    return { primary: description };
+  }
+
+  return {
+    primary: parts[0] ?? description,
+    secondary: parts.slice(1).join("\n\n"),
+  };
+}
+
 function TripleTextUseCasesColumn({ column }: { column: TripleTextBlockColumn }) {
   return (
     <article className="flex w-full flex-col gap-[var(--spacing-scale-006)] md:gap-[var(--spacing-scale-008)] lg:gap-[var(--spacing-scale-004)] xl:gap-[var(--spacing-scale-008)]">
@@ -30,6 +45,22 @@ function TripleTextUseCasesColumn({ column }: { column: TripleTextBlockColumn })
   );
 }
 
+function TripleTextStackedColumn({ column }: { column: TripleTextBlockColumn }) {
+  const { primary, secondary } = column.descriptionSecondary
+    ? { primary: column.description, secondary: column.descriptionSecondary }
+    : splitDescriptionParagraphs(column.description);
+
+  return (
+    <TripleTextUseCasesColumn
+      column={{
+        ...column,
+        description: primary,
+        descriptionSecondary: secondary,
+      }}
+    />
+  );
+}
+
 function TripleTextBlockColumnLockup({
   column,
   layoutPreset,
@@ -38,7 +69,7 @@ function TripleTextBlockColumnLockup({
   layoutPreset: "default" | "useCases";
 }) {
   if (layoutPreset === "useCases") {
-    return <TripleTextUseCasesColumn column={column} />;
+    return <TripleTextStackedColumn column={column} />;
   }
 
   const dual = columnUsesLargeBreakpointCopy(column);
@@ -47,24 +78,26 @@ function TripleTextBlockColumnLockup({
 
   if (!dual) {
     return (
-      <ContentLockup
-        variant="about"
-        alignment="left"
-        subtitle={column.title}
-        description={column.description}
-      />
+      <>
+        <div className="lg:hidden">
+          <TripleTextStackedColumn column={column} />
+        </div>
+        <div className="hidden lg:block">
+          <ContentLockup
+            variant="about"
+            alignment="left"
+            subtitle={column.title}
+            description={column.description}
+          />
+        </div>
+      </>
     );
   }
 
   return (
     <>
       <div className="lg:hidden">
-        <ContentLockup
-          variant="about"
-          alignment="left"
-          subtitle={column.title}
-          description={column.description}
-        />
+        <TripleTextStackedColumn column={column} />
       </div>
       <div className="hidden lg:block">
         <ContentLockup
@@ -105,7 +138,7 @@ function TripleTextBlockView({
       className={`bg-black py-[var(--spacing-scale-064)] xl:py-[var(--spacing-scale-064)] ${
         isUseCases
           ? "px-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-096)] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] xl:px-[var(--spacing-scale-160)]"
-          : "px-[calc(var(--spacing-scale-032)+var(--spacing-scale-096))] md:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] xl:px-[calc(var(--spacing-scale-160)+var(--spacing-scale-096))]"
+          : "px-[var(--spacing-scale-032)] md:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] lg:px-[calc(var(--spacing-scale-096)+var(--spacing-scale-096))] xl:px-[calc(var(--spacing-scale-160)+var(--spacing-scale-096))]"
       } ${className}`.trim()}
     >
       <div
@@ -131,7 +164,7 @@ function TripleTextBlockView({
           className={
             isUseCases
               ? "flex w-full flex-col gap-[var(--spacing-scale-048)] lg:flex-row lg:items-start lg:gap-[var(--spacing-scale-032)]"
-              : "flex w-full flex-col gap-[var(--spacing-scale-032)] lg:flex-row lg:items-start lg:gap-[var(--spacing-scale-032)]"
+              : "flex w-full flex-col gap-[var(--spacing-scale-048)] lg:flex-row lg:items-start lg:gap-[var(--spacing-scale-032)]"
           }
         >
           {columns.map((column, index) => (
