@@ -16,6 +16,7 @@ import {
   getOrCreateRequestId,
   logRouteError,
 } from "../../../../../lib/server/requestId";
+import { getPublicOrigin } from "../../../../../lib/server/publicOrigin";
 
 const SCOPE = "user.emailChange.verify";
 
@@ -166,7 +167,7 @@ function redirectWithRequestId(
   path: string,
   requestId: string,
 ): NextResponse {
-  const res = NextResponse.redirect(new URL(path, request.url));
+  const res = NextResponse.redirect(new URL(path, getPublicOrigin(request)));
   res.headers.set(REQUEST_ID_HEADER, requestId);
   return res;
 }
