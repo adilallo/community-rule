@@ -131,11 +131,13 @@ apex.
    only step with brief downtime (~5–15 min). Sequence:
    1. Take one final manual backup of the legacy LAMP app (Cloudron
       *Backups* tab → *Backup now*).
-   2. `cloudron uninstall` the legacy app at `communityrule.info`.
-   3. `cloudron configure --location communityrule.info` to move the
+   2. Export legacy `rules` + `version_history` to the Gitea archive
+      per [§6.1](#61-legacy-rules-archive-cr-102).
+   3. `cloudron uninstall` the legacy app at `communityrule.info`.
+   4. `cloudron configure --location communityrule.info` to move the
       validated staging install to the apex (or `cloudron install`
       fresh at apex if cleaner).
-   4. Re-run `prisma migrate deploy`, re-set production env vars if
+   5. Re-run `prisma migrate deploy`, re-set production env vars if
       not preserved by the move, smoke again.
 4. **Decommission** — see [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-expressmysql-backend).
    Hold the final LAMP backup ≥ 90 days for safety.
@@ -155,11 +157,11 @@ Product decisions (closed):
 1. **Final URL — `communityrule.info` apex.** New app fully replaces
    the legacy site, including the marketing surface. Brief cutover
    downtime (~5–15 min) is accepted.
-2. **Legacy `rules` data — not migrated.** No data moves into the new
-   app's Postgres. A pre-cutover **read-only export** of the
-   `rules` + `version_history` MySQL tables is under consideration;
-   approach depends on the actual row count, which we'll pull as
-   part of the CR-99 pre-cutover backup. Tracked in
+2. **Legacy `rules` data — not migrated; exported to Gitea.** No data
+   moves into the new app's Postgres. Before CR-99 uninstalls the
+   legacy MySQL, operators export the `rules` + `version_history`
+   tables to a new read-only Gitea repo on `git.medlab.host` (see
+   [§6.1](#61-legacy-rules-archive-cr-102)). Tracked in
    [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export).
 
 Infra decision closed:
@@ -183,6 +185,50 @@ Infra decision closed:
    (**Done**). Fallback if same-host pull ever breaks: install the **Cloudron
    Container Registry** app and re-tag against its hostname; no other changes
    required.
+
+### 6.1 Legacy rules archive (CR-102)
+
+The legacy Express backend stores published rules in bundled MySQL
+tables `rules` and `version_history` (soft-delete via a `deleted`
+column). These do not map to the new app's Postgres schema and are
+**not imported**. Instead, a one-time export preserves the library for
+posterity and operator lookup.
+
+**Archive repo:** create
+[`CommunityRule/legacy-rules-archive`](https://git.medlab.host/CommunityRule/legacy-rules-archive)
+on `git.medlab.host` (same org as the other CommunityRule repos).
+Mark the repo **archived** after the cutover push.
+
+**When:** during the [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)
+maintenance window — after the final Cloudron backup (§5 phase 3 step
+1) and **before** `cloudron uninstall` (step 3).
+
+**Export steps (operator):**
+
+1. From the legacy LAMP container or a restored backup, pull row counts
+   for `rules` and `version_history` (include non-deleted vs soft-deleted
+   if useful for the README summary).
+2. `mysqldump` both tables to SQL files (`rules.sql`,
+   `version_history.sql`).
+3. Derive human-readable exports (JSON and/or CSV) from the dump for
+   anyone browsing the archive without MySQL tooling.
+4. Commit artifacts + a `README.md` to the archive repo. The README
+   should record:
+   - cutover date;
+   - row counts and a brief activity summary;
+   - a short field glossary (`deleted`, version rows, etc.);
+   - a pointer to the new app at `communityrule.info`.
+5. Tag the commit (e.g. `legacy-rules-YYYY-MM-DD`) and archive the
+   Gitea repo.
+
+**Safety net:** the final Cloudron LAMP backup is retained ≥ 90 days
+([CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app))
+for operator recovery if manual lookup from the export is ever needed.
+
+**User discoverability:** link to the archive repo (or a release
+download) from the new app — footer, help page, or a static
+`/legacy-archive` page — so users looking for pre-cutover rules can
+find it without knowing Gitea exists.
 
 ## 7. Old vs new deltas
 
@@ -231,19 +277,20 @@ All filed in Linear, titled `[Backend] …`, assigned to me, in the
 4. [**CR-99**](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)
    — `[Backend] Cloudron production install + apex cutover`.
    Side-by-side cutover at scheduled low-traffic window per §5.
-   Blocked by CR-98 green + CR-102 resolved.
+   Blocked by CR-98 green. Includes legacy rules export (§6.1) before
+   uninstall.
 5. [**CR-100**](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)
-   — `[Backend] Steady-state operator runbook`. Blocked by CR-98
-   (write what we actually did).
+   — `[Backend] Steady-state operator runbook` (**Done** —
+   [`ops-runbook.md`](ops-runbook.md)).
 6. [**CR-101**](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app)
    — `[Backend] Decommission legacy CommunityRule LAMP app`.
    Uninstall the entire LAMP slot (marketing + Express backend +
    chatbot in one go); preserve final backup ≥ 90 days. Blocked by
    CR-99 + sign-off window. Priority: Low.
 7. [**CR-102**](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export)
-   — `[Backend] Decide fate of legacy rules table (read-only export?)`.
-   Count rows + decide whether to publish a static archive before
-   CR-99 uninstalls the legacy MySQL. Priority: Low.
+   — `[Backend] Legacy rules archive export`. Decision: export to Gitea
+   (§6.1). Execute during the CR-99 maintenance window before
+   uninstall. Priority: Low.
 
 ## 9. Build and push image workflow
 
@@ -440,10 +487,12 @@ apex cutover.
 
 The app uses an **in-memory** rate limiter in [`lib/server/rateLimit.ts`](../../lib/server/rateLimit.ts) (magic-link requests, organizer inquiry, etc.). This is sufficient for the current **single Cloudron container** per environment.
 
-**Before horizontal scale-out** (multiple app instances behind a load balancer), replace or back the limiter with a shared store (e.g. Redis) so per-IP / per-user windows apply across instances. Until then, document expected limits in the steady-state runbook ([CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)).
+**Before horizontal scale-out** (multiple app instances behind a load balancer), replace or back the limiter with a shared store (e.g. Redis) so per-IP / per-user windows apply across instances. Until then, see [`ops-runbook.md` §6](ops-runbook.md#6-single-instance-limitations).
 
 ## 12. Related docs
 
+- [`docs/guides/ops-runbook.md`](ops-runbook.md) — steady-state deploy,
+  rollback, restore drill, single-instance limits ([CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)).
 - [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §11
   (environments) and §8 (Prisma migrations policy).
 - [`docs/guides/backend-linear-tickets.md`](backend-linear-tickets.md)

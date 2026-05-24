@@ -221,7 +221,7 @@ npm run dev
 
 **Optional QA:** Run automated tests against an **ephemeral** database in CI instead of maintaining a fourth long-lived server.
 
-**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. Admin handoff (access, env vars, platform settings, open decisions): [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). The app reads Cloudron-injected `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` via [`lib/server/env.ts`](../../lib/server/env.ts) (CR-96).
+**Target platform:** **Cloudron at MEDLab** — same host as the legacy [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (Express + MySQL). The new app is packaged as a proper Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons). Cloudron's container supervisor replaces the legacy 30-min `run.sh` watchdog. First-time install and cutover: [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md). Steady-state deploy, rollback, and restore drill: [`docs/guides/ops-runbook.md`](ops-runbook.md). The app reads Cloudron-injected `CLOUDRON_POSTGRESQL_URL` and `CLOUDRON_MAIL_SMTP_*` via [`lib/server/env.ts`](../../lib/server/env.ts) (CR-96).
 
 **Admin / infra (coordinate with whoever runs the server):**
 

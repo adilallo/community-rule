@@ -30,6 +30,7 @@ These will be deleted once the backend services are stood up:
 - [guides/backend-linear-tickets.md](./guides/backend-linear-tickets.md)
 - [guides/template-recommendation-matrix.md](./guides/template-recommendation-matrix.md)
 - [guides/ops-backend-deploy.md](./guides/ops-backend-deploy.md) — technical deploy handoff + cutover plan (Cloudron, env vars, health checks, follow-up tickets).
+- [guides/ops-runbook.md](./guides/ops-runbook.md) — steady-state operator runbook: deploy, rollback, restore drill, single-instance limits.
 
 ## Cursor rules
 
