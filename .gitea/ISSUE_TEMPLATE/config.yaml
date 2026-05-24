@@ -3,7 +3,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Open the staging site
     url: https://staging.communityrule.info
-    about: Preview version of Community Rule — test here before reporting
+    about: Preview version of Community Rule, test here before reporting
   - name: How to sign in (read first)
     url: https://staging.communityrule.info/login
-    about: Use your email — we send a link to click, not a code to type
+    about: Use your email to recieve a link to click

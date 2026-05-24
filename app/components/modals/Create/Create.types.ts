@@ -43,6 +43,8 @@ export interface CreateProps {
   kebabTriggerAriaLabel?: string;
   kebabMenuAriaLabel?: string;
   kebabMenuItems?: ModalHeaderMenuItem[];
+  /** Rendered below the dialog card on the backdrop (e.g. “Back to home”). */
+  belowCard?: React.ReactNode;
 }
 
 export interface CreateViewProps {
@@ -73,4 +75,5 @@ export interface CreateViewProps {
   kebabTriggerAriaLabel?: string;
   kebabMenuAriaLabel?: string;
   kebabMenuItems?: ModalHeaderMenuItem[];
+  belowCard?: React.ReactNode;
 }

@@ -34,6 +34,7 @@ export function CreateView({
   kebabTriggerAriaLabel,
   kebabMenuAriaLabel,
   kebabMenuItems,
+  belowCard,
 }: CreateViewProps) {
   return (
     <CreateModalFrameView
@@ -45,6 +46,7 @@ export function CreateView({
       ariaLabelledBy={ariaLabelledBy}
       overlayRef={overlayRef}
       dialogRef={createRef}
+      belowCard={belowCard}
     >
       <ModalHeader
         onClose={onClose}

@@ -169,6 +169,14 @@ describe("Create", () => {
     expect(screen.getByText("Custom Footer")).toBeInTheDocument();
   });
 
+  it("uses responsive width at baseline (matches Login modal)", () => {
+    renderWithProviders(
+      <Create {...defaultProps}>Create dialog content</Create>,
+    );
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveClass("w-full", "max-w-[560px]");
+  });
+
   it("has proper ARIA attributes", () => {
     renderWithProviders(
       <Create {...defaultProps} ariaLabel="Test create dialog" />,
