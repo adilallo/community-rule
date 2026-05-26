@@ -97,7 +97,8 @@ export function CommunicationMethodsScreen() {
     [comm.methods, selectedIds, state.customMethodCardMetaById],
   );
 
-  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+  const { sampleCards, compactCardIds, methodById, recommendationsReady } =
+    useMethodCardDeckOrdering(
     "communication",
     mergedMethods,
     selectedIds,
@@ -735,7 +736,11 @@ export function CommunicationMethodsScreen() {
             justification="center"
           />
         </div>
-        <div className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}>
+        <div
+          className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}
+          aria-busy={!recommendationsReady}
+        >
+          {recommendationsReady ? (
           <CardStack
             cards={sampleCards}
             selectedIds={selectedIds}
@@ -752,6 +757,7 @@ export function CommunicationMethodsScreen() {
             compactDesktopLayout="flexWrap"
             headerLockupSize={mdUp ? "L" : "M"}
           />
+          ) : null}
         </div>
       </div>
 

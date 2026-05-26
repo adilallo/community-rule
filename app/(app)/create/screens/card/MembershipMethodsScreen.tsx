@@ -95,7 +95,8 @@ export function MembershipMethodsScreen() {
     [mem.methods, selectedIds, state.customMethodCardMetaById],
   );
 
-  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+  const { sampleCards, compactCardIds, methodById, recommendationsReady } =
+    useMethodCardDeckOrdering(
     "membership",
     mergedMethods,
     selectedIds,
@@ -727,7 +728,11 @@ export function MembershipMethodsScreen() {
             justification="center"
           />
         </div>
-        <div className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}>
+        <div
+          className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}
+          aria-busy={!recommendationsReady}
+        >
+          {recommendationsReady ? (
           <CardStack
             cards={sampleCards}
             selectedIds={selectedIds}
@@ -744,6 +749,7 @@ export function MembershipMethodsScreen() {
             compactDesktopLayout="pyramidFive"
             headerLockupSize={mdUp ? "L" : "M"}
           />
+          ) : null}
         </div>
       </div>
 

@@ -2,7 +2,7 @@ import createMDX from "@next/mdx";
 
 /* eslint-env node */
 
-/** Keep viewBox so inline SVGR art can scale/center like `object-contain`. */
+/** Keep viewBox and unique clip/mask IDs when multiple SVGR icons share a page. */
 const svgrLoaderOptions = {
   svgoConfig: {
     plugins: [
@@ -12,6 +12,12 @@ const svgrLoaderOptions = {
           overrides: {
             removeViewBox: false,
           },
+        },
+      },
+      {
+        name: "prefixIds",
+        params: {
+          prefixClassNames: false,
         },
       },
     ],
