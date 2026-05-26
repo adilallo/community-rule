@@ -1,7 +1,7 @@
 ---
 title: "Making decisions without hierarchy"
 description: "A brief guide to collaborative nonhierarchical decision making"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-01"
 related:
   - "resolving-active-conflicts"

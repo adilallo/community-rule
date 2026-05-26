@@ -70,15 +70,15 @@ const MenuItemContainer = memo<MenuItemProps>(
           "border border-[var(--color-border-default-brand-primary,#fdfaa8)] text-[var(--color-content-default-brand-primary,#fefcc9)] bg-transparent hover:bg-[var(--color-gray-800)]",
       };
 
-    // State styles for Inverse mode (black text on yellow background)
+    // State styles for Inverse mode (black text on yellow HeaderTab / inverse surfaces)
     const inverseModeStyles: Record<"default" | "hover" | "selected", string> =
       {
         default:
-          "bg-transparent text-[var(--color-content-inverse-primary,black)] hover:bg-[var(--color-surface-brand-accent,#4d4a00)] hover:text-[var(--color-content-inverse-primary,black)]",
+          "bg-transparent text-[var(--color-content-inverse-primary,black)] hover:bg-[var(--color-surface-inverse-brand-secondary)] hover:text-[var(--color-content-inverse-primary,black)]",
         hover:
-          "bg-[var(--color-surface-brand-accent,#4d4a00)] text-[var(--color-content-inverse-primary,black)]",
+          "bg-[var(--color-surface-inverse-brand-secondary)] text-[var(--color-content-inverse-primary,black)]",
         selected:
-          "border border-[var(--color-border-default-primary,#141414)] text-[var(--color-content-inverse-primary,black)] bg-transparent hover:bg-[var(--color-surface-brand-accent,#4d4a00)]",
+          "border border-[var(--color-border-default-primary,#141414)] text-[var(--color-content-inverse-primary,black)] bg-transparent hover:bg-[var(--color-surface-inverse-brand-secondary)]",
       };
 
     // Get state styles based on mode

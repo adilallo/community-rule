@@ -42,14 +42,6 @@ describe("LogoWall Component", () => {
     expect(screen.queryByAltText("Food Not Bombs")).not.toBeInTheDocument();
   });
 
-  test("renders section label", () => {
-    render(<LogoWall />);
-
-    expect(
-      screen.getByText("Trusted by leading cooperators"),
-    ).toBeInTheDocument();
-  });
-
   test("applies correct CSS classes", () => {
     render(<LogoWall />);
 
@@ -74,7 +66,12 @@ describe("LogoWall Component", () => {
       '[class*="grid grid-cols-2 grid-rows-3"]',
     );
     expect(grid).toBeInTheDocument();
-    expect(grid).toHaveClass("sm:grid-cols-3", "sm:grid-rows-2", "md:flex");
+    expect(grid).toHaveClass(
+      "sm:grid-cols-3",
+      "sm:grid-rows-2",
+      "md:flex",
+      "md:justify-center",
+    );
   });
 
   test("renders logos with correct attributes", () => {
@@ -86,15 +83,6 @@ describe("LogoWall Component", () => {
       "/assets/logos/partners/food-not-bombs.svg",
     );
     expect(foodNotBombsLogo).toHaveClass("h-11", "lg:h-14", "xl:h-[70px]");
-  });
-
-  test("applies order classes for responsive layout", () => {
-    render(<LogoWall />);
-
-    const foodNotBombsContainer = screen
-      .getByAltText("Food Not Bombs")
-      .closest("div");
-    expect(foodNotBombsContainer).toHaveClass("order-1", "sm:order-4");
   });
 
   test("handles empty logos array", () => {
@@ -119,9 +107,7 @@ describe("LogoWall Component", () => {
     const section = document.querySelector("section");
     expect(section).toBeInTheDocument();
 
-    // Check for the label
-    const label = screen.getByText("Trusted by leading cooperators");
-    expect(label).toBeInTheDocument();
+    expect(screen.queryByText("Trusted by leading cooperators")).not.toBeInTheDocument();
   });
 
   test("applies transition effects", () => {

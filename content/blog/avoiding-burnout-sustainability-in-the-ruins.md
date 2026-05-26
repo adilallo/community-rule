@@ -1,7 +1,7 @@
 ---
 title: "Avoiding Burnout: Sustainability in the Ruins"
 description: "Building a practice of resistance that doesn't consume you"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-12"
 related:
   - "resolving-active-conflicts"

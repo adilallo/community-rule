@@ -16,7 +16,7 @@
     "addButtonText": "Add maturity"
   },
   "organizationTypes": [
-    { "label": "Worker’s coop" },
+    { "label": "Worker cooperative" },
     { "label": "Mutual aid" },
     { "label": "Open source project" },
     { "label": "Nonprofit" },

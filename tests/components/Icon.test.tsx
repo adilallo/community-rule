@@ -12,7 +12,7 @@ type IconProps = React.ComponentProps<typeof Icon>;
 
 const baseProps: IconProps = {
   icon: <div data-testid="test-icon">Icon</div>,
-  title: "Worker's cooperatives",
+  title: "Worker cooperatives",
   description:
     "Employee-owned businesses often need to clarify how power is shared",
 };
@@ -89,12 +89,12 @@ describe("Icon (behavioral tests)", () => {
     render(
       <Icon
         icon={<div data-testid="icon">Icon</div>}
-        title="Worker's cooperatives"
+        title="Worker cooperatives"
         description="Employee-owned businesses"
       />,
     );
     expect(screen.getByTestId("icon")).toBeInTheDocument();
-    expect(screen.getByText("Worker's cooperatives")).toBeInTheDocument();
+    expect(screen.getByText("Worker cooperatives")).toBeInTheDocument();
     expect(screen.getByText("Employee-owned businesses")).toBeInTheDocument();
   });
 

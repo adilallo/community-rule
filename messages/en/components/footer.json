@@ -7,14 +7,19 @@
   },
   "social": {
     "bluesky": {
-      "handle": "medlabboulder",
+      "label": "Bluesky",
       "ariaLabel": "Follow us on Bluesky",
-      "url": "https://bsky.app/profile/medlabboulder"
+      "url": "https://bsky.app/profile/medlabboulder.bsky.social"
     },
-    "gitlab": {
-      "handle": "medlabboulder",
-      "ariaLabel": "Follow us on GitLab",
-      "url": "https://gitlab.com/medlabboulder"
+    "gitea": {
+      "label": "Gitea",
+      "ariaLabel": "View source on Gitea",
+      "url": "https://git.medlab.host/CommunityRule/community-rule"
+    },
+    "mastodon": {
+      "label": "Mastodon",
+      "ariaLabel": "Follow us on Mastodon",
+      "url": "https://social.medlab.host/@medlab"
     }
   },
   "navigation": {

@@ -1,7 +1,7 @@
 ---
 title: "Operational Security for Mutual Aid"
 description: "Why protecting information isn't paranoia: it's care work in a hostile world"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-10"
 related:
   - "resolving-active-conflicts"

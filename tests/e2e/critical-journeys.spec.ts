@@ -101,9 +101,7 @@ test.describe("Critical User Journeys", () => {
 
     // Check key components are rendered
     await expect(page.locator('img[alt="Hero illustration"]')).toBeVisible();
-    await expect(
-      page.locator("text=Trusted by leading cooperators"),
-    ).toBeVisible();
+    await expect(page.locator('img[alt="Food Not Bombs"]')).toBeVisible();
     await expect(page.locator("text=Jo Freeman")).toBeVisible();
   });
 

@@ -25,7 +25,7 @@ const Footer = memo(() => {
   /** Figma 18411:62925 (1024+): org name is one line, `w-full whitespace-nowrap`. */
   const orgNameClass = `${bodyTextClass} lg:whitespace-nowrap`;
 
-  const primaryLinkClass = `inline-flex w-fit max-w-full self-start text-[var(--color-content-default-primary)] font-inter text-base font-medium leading-5 tracking-[0%] ${linkFocusClass} p-2 -m-2 cursor-pointer lg:text-2xl lg:font-normal lg:leading-7`;
+  const primaryLinkClass = `inline-flex w-fit max-w-full shrink-0 whitespace-nowrap self-start md:self-end text-[var(--color-content-default-primary)] font-inter text-base font-medium leading-5 tracking-[0%] ${linkFocusClass} p-2 -m-2 cursor-pointer lg:text-2xl lg:font-normal lg:leading-7`;
 
   /** Figma 18411:62944: 40px gaps, w-[396px] link block; `p-2` on links overruns 396px—tighten x at `md+` row. */
   const legalLinkClass = `inline-flex w-fit max-w-full self-start text-[var(--color-content-default-secondary)] font-inter text-sm font-normal leading-5 tracking-[0%] ${linkFocusClass} p-2 -m-2 cursor-pointer underline decoration-solid [text-decoration-skip-ink:none] md:self-auto md:px-0 md:py-1 md:mx-0 md:text-xs md:leading-4 md:whitespace-nowrap md:no-underline md:text-[var(--color-content-default-primary)] lg:text-sm lg:leading-5 lg:text-[var(--color-content-default-primary)]`;
@@ -37,7 +37,11 @@ const Footer = memo(() => {
     name: t("organization.name"),
     email: t("organization.email"),
     url: t("organization.url"),
-    sameAs: [t("social.bluesky.url"), t("social.gitlab.url")],
+    sameAs: [
+      t("social.bluesky.url"),
+      t("social.gitea.url"),
+      t("social.mastodon.url"),
+    ],
   };
 
   return (
@@ -104,27 +108,42 @@ const Footer = memo(() => {
                     {/* eslint-disable-next-line @next/next/no-img-element -- social logo */}
                     <img
                       src={getAssetPath(ASSETS.BLUESKY_LOGO)}
-                      alt="Bluesky"
+                      alt=""
                       width={24}
                       height={22}
                       className="h-[21px] w-[24px] flex-shrink-0 transition-transform group-hover:scale-110"
                     />
-                    <div className={bodyTextClass}>{t("social.bluesky.handle")}</div>
+                    <div className={bodyTextClass}>{t("social.bluesky.label")}</div>
                   </a>
                   <a
-                    href={t("social.gitlab.url")}
+                    href={t("social.gitea.url")}
                     className={`group inline-flex w-fit max-w-full items-center gap-[var(--spacing-measures-spacing-06,6px)] ${linkFocusClass} p-2 -m-2 cursor-pointer`}
-                    aria-label={t("social.gitlab.ariaLabel")}
+                    aria-label={t("social.gitea.ariaLabel")}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- social icon */}
                     <img
-                      src={getAssetPath(ASSETS.GITLAB_ICON)}
-                      alt="GitLab"
+                      src={getAssetPath(ASSETS.GITEA_ICON)}
+                      alt=""
                       width={22}
                       height={22}
                       className="h-5 w-[22px] flex-shrink-0 grayscale transition-transform group-hover:scale-110"
                     />
-                    <div className={bodyTextClass}>{t("social.gitlab.handle")}</div>
+                    <div className={bodyTextClass}>{t("social.gitea.label")}</div>
+                  </a>
+                  <a
+                    href={t("social.mastodon.url")}
+                    className={`group inline-flex w-fit max-w-full items-center gap-[var(--spacing-measures-spacing-06,6px)] ${linkFocusClass} p-2 -m-2 cursor-pointer`}
+                    aria-label={t("social.mastodon.ariaLabel")}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- social icon */}
+                    <img
+                      src={getAssetPath(ASSETS.MASTODON_LOGO)}
+                      alt=""
+                      width={22}
+                      height={22}
+                      className="h-5 w-[22px] flex-shrink-0 grayscale transition-transform group-hover:scale-110"
+                    />
+                    <div className={bodyTextClass}>{t("social.mastodon.label")}</div>
                   </a>
                 </div>
               </div>

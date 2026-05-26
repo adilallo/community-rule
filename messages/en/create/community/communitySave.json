@@ -3,7 +3,7 @@
   "description": "We need your email to save your CommunityRule progress\nand make it accessible to you later.",
   "placeholder": "email@domain.com",
   "characterCountTemplate": "{current}/{max}",
-  "magicLinkSuccessTitle": "Check your email to log in!",
-  "magicLinkSuccessDescription": "Your account is created, now just check your email for a magic link",
+  "magicLinkSuccessTitle": "Check your email to log in",
+  "magicLinkSuccessDescription": "Your account has been created. A login link has been emailed to you.",
   "magicLinkErrorTitle": "Could not send link"
 }

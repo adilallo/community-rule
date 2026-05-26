@@ -1,7 +1,7 @@
 ---
 title: "Digital Mediation and the Death of Nuance"
 description: "How corporate platforms undermine solidarity and what to build instead"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-18"
 related:
   - "operational-security-mutual-aid"

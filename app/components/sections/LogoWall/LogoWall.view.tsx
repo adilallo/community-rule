@@ -14,18 +14,12 @@ function LogoWallView({
       className={`p-[var(--spacing-scale-032)] md:px-[var(--spacing-scale-024)] md:py-[var(--spacing-scale-032)] lg:px-[var(--spacing-scale-064)] lg:py-[var(--spacing-scale-048)] xl:px-[160px] xl:py-[var(--spacing-scale-064)] ${className}`}
     >
       <div className="flex flex-col gap-[var(--spacing-scale-032)] md:gap-[var(--spacing-scale-024)] xl:gap-[var(--spacing-scale-032)]">
-        {/* Label */}
-        <p className="font-inter font-medium text-[10px] leading-[12px] xl:text-[14px] xl:leading-[12px] uppercase text-[var(--color-content-default-secondary)] text-center">
-          Trusted by leading cooperators
-        </p>
-
-        {/* Logo Grid Container */}
         <div
           className={`transition-opacity duration-500 ${
             isVisible ? "opacity-60" : "opacity-0"
           }`}
         >
-          <div className="grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-rows-2 md:flex md:justify-between md:items-center gap-x-[var(--spacing-scale-032)] gap-y-[var(--spacing-scale-032)] sm:gap-y-[var(--spacing-scale-048)]">
+          <div className="grid grid-cols-2 grid-rows-3 sm:grid-cols-3 sm:grid-rows-2 md:flex md:flex-wrap md:justify-center md:items-center gap-x-[var(--spacing-scale-032)] gap-y-[var(--spacing-scale-032)] sm:gap-y-[var(--spacing-scale-048)]">
             {displayLogos.map((logo, index) => (
               <div
                 key={index}

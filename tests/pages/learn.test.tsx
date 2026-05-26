@@ -31,7 +31,7 @@ const mockPosts = [
     frontmatter: {
       title: "Resolving Active Conflicts",
       description: "Practical steps for resolving conflicts",
-      author: "Author name",
+      author: "CommunityRule",
       date: "2025-04-15",
       thumbnail: {
         vertical: "resolving-active-conflicts-vertical.svg",
@@ -48,7 +48,7 @@ const mockPosts = [
     frontmatter: {
       title: "Operational Security for Mutual Aid",
       description: "Tactics to protect members",
-      author: "Author name",
+      author: "CommunityRule",
       date: "2025-04-10",
       thumbnail: {
         vertical: "operational-security-mutual-aid-vertical.svg",

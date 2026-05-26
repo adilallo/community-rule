@@ -1,7 +1,7 @@
 ---
 title: "Resolving Active Conflicts"
 description: "Practical steps for resolving conflicts while maintaining trust, cooperation, and shared goals"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-04-15"
 related:
   - "operational-security-mutual-aid"

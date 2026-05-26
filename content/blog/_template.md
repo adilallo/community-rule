@@ -1,7 +1,7 @@
 ---
 title: "Your Article Title Here"
 description: "A brief, compelling description of what this article covers"
-author: "Author Name"
+author: "CommunityRule"
 date: "2025-01-15"
 related: ["slug-of-related-article-1", "slug-of-related-article-2"]
 ---

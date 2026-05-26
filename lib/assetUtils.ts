@@ -209,7 +209,8 @@ export const ASSETS = {
 
   // Social media
   BLUESKY_LOGO: "assets/logos/bluesky.svg",
-  GITLAB_ICON: "assets/logos/gitlab.svg",
+  GITEA_ICON: "assets/logos/gitea.svg",
+  MASTODON_LOGO: "assets/logos/mastodon.svg",
 
   // Content page decorative shapes
   CONTENT_SHAPE_1: "assets/shapes/content-shape-1.svg",
