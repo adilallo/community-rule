@@ -5,6 +5,14 @@ import createMDX from "@next/mdx";
 const nextConfig = {
   output: "standalone",
   serverExternalPackages: ["@prisma/client"],
+  // React Compiler — annotation mode: opt-in via the `"use memo"` directive at
+  // the top of a component/hook. With no annotations in the codebase yet, this
+  // is plumbing only (no behavior change). Migrate hand-written `useMemo`/
+  // `useCallback` containers incrementally and rely on `eslint-plugin-react-
+  // compiler` to surface any code that the compiler bails on.
+  reactCompiler: {
+    compilationMode: "annotation",
+  },
   /**
    * `next dev --turbopack` does not use `webpack()`; without this, `.svg`
    * imports resolve as asset URLs and {@link app/components/asset/icon/Icon.tsx}
@@ -23,10 +31,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ["react", "react-dom"],
+    // Cache Components (the Next 16 successor to `experimental.ppr`) — components
+    // without `"use cache"` are dynamic by default, and any cookies/headers
+    // access outside a `<Suspense>` boundary becomes a build-time error. The
+    // `(app)` and `(admin)` layouts wrap `<ConditionalNavigation />` in
+    // `<Suspense>` so the static shell prerenders while the session-aware nav
+    // streams in. Replaces the prior `force-dynamic` route-segment exports.
+    cacheComponents: true,
   },
-  // Phase 3 canary stub (not enabled): React Compiler probe surfaces a missing
-  // `babel-plugin-react-compiler` dep — Next 16 also moved this top-level out
-  // of `experimental`. See `docs/perf/next16-eval.md` for evaluation results.
   // Compression
   compress: true,
   // Image optimization

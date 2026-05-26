@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import MarketingNavigation from "../components/navigation/MarketingNavigation";
 import { MessagesProvider } from "../contexts/MessagesContext";
 import { AuthModalProvider } from "../contexts/AuthModalContext";
@@ -19,7 +19,14 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <MessagesProvider messages={marketingMessages}>
       <AuthModalProvider>
-        <MarketingNavigation />
+        {/*
+         * MarketingNavigation reads `usePathname()` to decide chromeless paths
+         * (uncached data under `cacheComponents`). Suspense lets the static
+         * shell prerender; the nav streams in with the correct visibility.
+         */}
+        <Suspense fallback={null}>
+          <MarketingNavigation />
+        </Suspense>
         <main className="flex-1">{children}</main>
         <Footer />
       </AuthModalProvider>

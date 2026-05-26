@@ -1,18 +1,19 @@
 # Next 16 substrate evaluation (Phase 3)
 
 Evaluation of `experimental.cacheComponents` (formerly `experimental.ppr`)
-and React Compiler against this repo on Next.js 16.2.6. Performed as a
-canary build pass without committing either flag to `main`.
+and React Compiler against this repo on Next.js 16.2.6. Originally written
+as a canary report when both flags were deferred; updated when both shipped
+as follow-up work (see "Outcome" sections below).
 
 ## TL;DR
 
-| Flag | Recommendation | Why |
+| Flag | Recommendation | Status |
 | --- | --- | --- |
-| `cacheComponents` (PPR successor) | **Defer** — requires a follow-up refactor before it can ship | Renamed from `ppr` in Next 16; now a boolean global toggle, no per-route `experimental_ppr` opt-in. Requires removing `force-dynamic` from `(app)` and `(admin)` layouts and re-expressing session-aware dynamism via Suspense + cache primitives. |
-| React Compiler | **Defer** — config surface moved + missing dep | Moved out of `experimental` to the top-level `reactCompiler` key in Next 16. Requires installing `babel-plugin-react-compiler`. No blocking codebase incompatibilities found in the canary surface, but the install + eslint plugin setup is its own follow-up task. |
+| `cacheComponents` (PPR successor) | **Ship** | **Shipped.** `force-dynamic` removed from `(app)` and `(admin)` layouts; `<ConditionalNavigation />` (and `<MarketingNavigation />`) wrapped in `<Suspense fallback={null}>`. `(app)`/`(admin)` routes are now `◐ Partial Prerender` instead of `ƒ Dynamic`. `/` static shell dropped from 45 KB → 11.7 KB gzipped. |
+| React Compiler | **Ship (annotation mode)** | **Shipped (plumbing only).** `babel-plugin-react-compiler` + `eslint-plugin-react-compiler` installed. `reactCompiler: { compilationMode: "annotation" }` enabled in `next.config.mjs`. ESLint rule wired in at "warn" — found 31 latent warnings across 8 files (none introduced by this change). Migrating containers to `"use memo"` is a future task. |
 
-Neither flag was shippable as a pure config flip in this audit. The findings
-below describe what changed in Next 16 and the work each would require.
+Both flags now ship in `main`. The findings below describe what changed in
+Next 16, what work each required, and the outcomes.
 
 ## Repo baseline (Next 16.2.6, Turbopack, no experimental flags)
 
@@ -29,7 +30,7 @@ Note: Next 16 with Turbopack no longer prints per-route first-load JS sizes
 in the build summary. Bundle analyzer (`ANALYZE=true`) is the canonical
 source for size data — see Phase 4a.
 
-## 3a. `cacheComponents` (PPR) — DEFER
+## 3a. `cacheComponents` (PPR) — SHIPPED
 
 ### What changed in Next 16
 
@@ -67,30 +68,46 @@ session-aware chrome (set in Phase 4b of the prior plan). `cacheComponents`
 requires expressing that dynamism via `<Suspense>` boundaries plus
 `unstable_noStore()`/`unstable_cache()` instead of route-segment `dynamic`.
 
-### Estimated work to ship
+### Work performed
 
-1. Refactor [app/(app)/layout.tsx](../../app/(app)/layout.tsx) and
-   [app/(admin)/layout.tsx](../../app/(admin)/layout.tsx) so the
-   `ConditionalNavigation` session fetch sits inside a `<Suspense>` boundary
-   with a fallback that matches the generic chrome.
-2. Mark the session-reading components with `unstable_noStore()` (or the
-   stable equivalent in Next 16) so they opt out of the static cache.
-3. Verify the existing static routes (`/`, `/about`, `/blog`, etc.) still
-   prerender; add `<Suspense>` boundaries around any future dynamic islands.
-4. Confirm `(marketing)` routes still serve from CDN with the static shell
-   while the personalized nav island streams.
+1. Removed `export const dynamic = "force-dynamic"` from
+   [app/(app)/layout.tsx](../../app/(app)/layout.tsx) and
+   [app/(admin)/layout.tsx](../../app/(admin)/layout.tsx).
+2. Wrapped `<ConditionalNavigation />` (server component reading
+   `getNavAuthSignedIn()` → `cookies()`) in `<Suspense fallback={null}>` in
+   both layouts.
+3. Same change for `<MarketingNavigation />` in
+   [app/(marketing)/layout.tsx](../../app/(marketing)/layout.tsx) — the
+   marketing nav reads `usePathname()` (uncached per request) and would
+   otherwise block the static shell at routes like `/rules/[id]`.
+4. Enabled `experimental.cacheComponents: true` in
+   [next.config.mjs](../../next.config.mjs).
 
-This is the natural next step after Phase 4b made marketing static, but
-it's not a config-only change. Ticket separately.
+`unstable_noStore()` already sits inside `getNavAuthSignedIn()`; no
+additional cache primitives were needed.
 
-### Verification (when shipping)
+### Why `fallback={null}` and not a placeholder
 
-- `(marketing)` routes still appear as `○ Static` in build output.
-- `(app)`/`(admin)` routes' static shell prerenders; the personalized nav
-  streams (visible in `curl` of the HTML — partial shell first, then nav).
-- TTFB on `(marketing)` unchanged or improved.
+Any non-null fallback would also need to live in the static shell. The
+existing `ConditionalNavigationClient` reads `usePathname()` to decide
+chromeless paths (`/create/*`, `/login`), which is uncached data —
+disallowed in the static shell under `cacheComponents`. A truly static
+placeholder is possible but would cause layout shift on routes that
+ultimately render no nav. Trade-off accepted: brief blank-nav while the
+dynamic island streams in.
 
-## 3b. React Compiler — DEFER
+### Outcome (measured against `npx next build`)
+
+| Route group | Before | After |
+| --- | --- | --- |
+| `/`, `/about`, `/blog`, `/components-preview`, `/how-it-works`, `/learn` | `○ Static` | `○ Static` |
+| `/create`, `/create/[screenId]`, `/profile`, `/monitor`, `/login`, `/rules/[id]` | `ƒ Dynamic` | `◐ Partial Prerender` |
+| `/templates`, `/use-cases`, `/use-cases/[slug]`, `/blog/[slug]` | `○ Static` / `◐ SSG` | `◐ Partial Prerender` |
+
+`/` static shell: 45 KB gzipped → 11.7 KB gzipped (74% reduction). All
+196 test files / 1251 tests pass.
+
+## 3b. React Compiler — SHIPPED (annotation mode, plumbing only)
 
 ### What changed in Next 16
 
@@ -110,51 +127,82 @@ to the next package. Is babel-plugin-react-compiler installed in your
 node_modules directory?
 ```
 
-### Estimated work to ship
+### Work performed
 
 1. `npm install --save-dev babel-plugin-react-compiler eslint-plugin-react-compiler`.
-2. Add `reactCompiler: { compilationMode: "annotation" }` to `next.config.mjs`
-   (top-level, not under `experimental`).
-3. Enable `eslint-plugin-react-compiler` and run it against the repo to
-   surface components that would bail (refs mutated during render, reads
-   of non-reactive globals inline, etc.).
-4. Incrementally add `"use memo"` directives to high-render-frequency
-   containers (`CreateFlowProvider`, `AuthModalProvider`, list-heavy views).
-5. Once stable, flip `compilationMode: "all"` and remove hand-written
-   `useMemo`/`useCallback` where the compiler subsumes them.
+2. Added top-level `reactCompiler: { compilationMode: "annotation" }` to
+   [next.config.mjs](../../next.config.mjs).
+3. Wired `react-compiler/react-compiler` as `"warn"` in
+   [eslint.config.mjs](../../eslint.config.mjs) (both JS and TS plugin blocks).
+4. No `"use memo"` directives added in this pass — the goal is plumbing,
+   not migration. The compiler is a no-op until components opt in.
 
-### Why annotation mode first
+### Why annotation mode first (unchanged from original plan)
 
 We have many hand-rolled memoized containers. The risk of `compilationMode: "all"`
 on day one is that the compiler bails on a critical component in a way that
 changes render counts. Annotation mode lets us migrate one component at a
 time with eslint enforcement.
 
-### Verification (when shipping)
+### ESLint audit results
 
-- Bundle size before/after `next build` with the runtime added.
-- Test suite green (`npx vitest run` — 196 files / 1251 tests today).
-- Component render counts unchanged or reduced on key surfaces (use the
-  React DevTools profiler on `/create/informational` and `/`).
+`npx eslint app lib` after wiring the rule found **31 react-compiler warnings
+across 8 files**:
+
+| Category | Count |
+| --- | --- |
+| "Hooks may not be referenced as normal values" (passing hook references as values) | 25 |
+| "Writing to a variable defined outside a component or hook" (module-level mutation) | 2 |
+| "Hooks must always be called in a consistent order" (conditional hooks) | 2 |
+| "React Compiler skipped optimizing" (file has React rules disabled) | 2 |
+
+Files flagged:
+- `app/(app)/create/context/CreateFlowContext.tsx`
+- `app/(app)/create/hooks/useCompletedRuleShareExport.ts`
+- `app/(marketing)/use-cases/[slug]/page.tsx`
+- `app/(marketing)/use-cases/page.tsx`
+- `app/(marketing-case-study)/use-cases/[slug]/rule/_components/useUseCaseCompletedRuleActions.ts`
+- `app/(marketing-case-study)/use-cases/[slug]/rule/page.tsx`
+- `app/components/controls/SelectInput/SelectInput.container.tsx`
+- `app/components/sections/RelatedArticles/RelatedArticles.view.tsx`
+
+All warnings are latent (not introduced by this change). The compiler runs
+in annotation mode, so these files are not affected at runtime until they
+opt in. Not fixed in this commit — these are the migration targets to
+address before flipping to `compilationMode: "all"`.
+
+### Verification
+
+- Test suite green: 196 files / 1251 tests pass.
+- Build green: `npx next build` clean with the new config.
+- TSC clean.
+- Bundle size delta minimal — no `"use memo"` annotations means no compiler
+  runtime calls are emitted in user code yet.
 
 ## Impact on Phase 4 (MessagesProvider)
 
-If we later ship `cacheComponents`, the MessagesProvider refactor's win
-shrinks meaningfully: the messages dictionary lives in the static shell of
-every route, and only the dynamic island re-fetches. The static prerender
-output is already cacheable at the CDN. So Phase 4 should be re-evaluated
-**after** the `cacheComponents` work lands, not before.
+Phase 4 (route-scoped `MessagesProvider`) shipped before this work. With
+`cacheComponents` now enabled, the marketing routes' messages dictionary
+lives in the static shell — cached at the CDN with no per-request cost.
+The route-scoping is still a win for the dynamic islands' RSC payload, but
+the static-shell win is now structural, not bundle-size dependent.
 
-If we don't ship `cacheComponents`, Phase 4's bundle-size measurement
-(Phase 4a) is still the right gate — measure first, refactor only if the
-data justifies it.
+## Follow-up work
 
-## What to do now
+`cacheComponents` and React Compiler annotation mode now ship. Remaining
+work (file separately when scheduled):
 
-- Skip both flags for this performance follow-ups plan.
-- File two follow-up tickets:
-  1. "Enable `cacheComponents`: refactor `(app)`/`(admin)` layouts to
-     Suspense + cache primitives, remove `force-dynamic` from route segments."
-  2. "Adopt React Compiler in annotation mode: install plugin, enable
-     eslint rule, migrate top containers."
-- Proceed with Phase 4a (measure) and let the data drive Phase 4b.
+1. **Migrate top React Compiler bail sites.** Fix the 31 latent warnings
+   (especially the hook-reference patterns in `CreateFlowContext` and the
+   conditional hooks in `SelectInput.container`) so those files become
+   compiler-eligible.
+2. **Annotate high-render containers with `"use memo"`.** Targets:
+   `CreateFlowProvider`, `AuthModalProvider`, list-heavy views. Measure
+   render counts before/after with React DevTools profiler.
+3. **Flip React Compiler from `annotation` to `all`** once the bail list is
+   green and a critical mass of containers are annotated. Remove
+   hand-written `useMemo`/`useCallback` the compiler subsumes.
+4. **Audit `<Suspense fallback={null}>` UX on (app)/(admin) routes.** If
+   blank-nav flash becomes noticeable on slow connections, replace the
+   `null` fallback with a static placeholder that doesn't read `usePathname`
+   (e.g. a `min-h` div sized to the nav).

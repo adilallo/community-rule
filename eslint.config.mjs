@@ -9,6 +9,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 import globals from "globals";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
+import reactCompiler from "eslint-plugin-react-compiler";
 
 const eslintConfig = [
   // Base JavaScript recommended rules
@@ -51,6 +52,7 @@ const eslintConfig = [
     plugins: {
       react,
       "react-hooks": reactHooks,
+      "react-compiler": reactCompiler,
     },
     settings: {
       react: {
@@ -62,6 +64,9 @@ const eslintConfig = [
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off", // React 19 doesn't require React import
       "react/prop-types": "off", // Using TypeScript for prop validation
+      // Surface code the React Compiler would bail on. We run in annotation
+      // mode, so the rule is "warn" — informational, not a build blocker.
+      "react-compiler/react-compiler": "warn",
     },
   },
   // TypeScript files configuration
@@ -90,6 +95,7 @@ const eslintConfig = [
       "@next/next": nextPlugin,
       react,
       "react-hooks": reactHooks,
+      "react-compiler": reactCompiler,
     },
     settings: {
       react: {
@@ -101,6 +107,9 @@ const eslintConfig = [
       ...reactHooks.configs.recommended.rules,
       "react/react-in-jsx-scope": "off", // React 19 doesn't require React import
       "react/prop-types": "off", // Using TypeScript for prop validation
+      // Surface code the React Compiler would bail on. We run in annotation
+      // mode, so the rule is "warn" — informational, not a build blocker.
+      "react-compiler/react-compiler": "warn",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
