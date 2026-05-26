@@ -52,8 +52,6 @@ export interface QuoteBlockViewProps {
   authorId: string;
   config: VariantConfig;
   imageError: boolean;
-  imageLoading: boolean;
   currentAvatarSrc: string;
-  onImageLoad: () => void;
   onImageError: (_error: unknown) => void;
 }

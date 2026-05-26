@@ -21,7 +21,6 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     onError,
   }) => {
     const [imageError, setImageError] = useState(false);
-    const [imageLoading, setImageLoading] = useState(true);
 
     // Variant configurations
     const variants: Record<string, VariantConfig> = {
@@ -97,16 +96,13 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
     const quoteId = `${baseId}-content`;
     const authorId = `${baseId}-author`;
 
-    // Error handling functions
     const handleImageError = (error: unknown) => {
       logger.warn(
         `QuoteBlock: Failed to load avatar image for ${author}:`,
         error,
       );
       setImageError(true);
-      setImageLoading(false);
 
-      // Call error callback if provided
       if (onError) {
         onError({
           type: "image_load_error",
@@ -116,11 +112,6 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
           error,
         });
       }
-    };
-
-    const handleImageLoad = () => {
-      setImageLoading(false);
-      setImageError(false);
     };
 
     // Validate required props
@@ -166,9 +157,7 @@ const QuoteBlockContainer = memo<QuoteBlockProps>(
         authorId={authorId}
         config={config}
         imageError={imageError}
-        imageLoading={imageLoading}
         currentAvatarSrc={currentAvatarSrc}
-        onImageLoad={handleImageLoad}
         onImageError={handleImageError}
       />
     );

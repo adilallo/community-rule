@@ -15,7 +15,10 @@ import TripleTextBlock from "../../components/type/TripleTextBlock";
 import type { TripleTextBlockColumn } from "../../components/type/TripleTextBlock";
 import AskOrganizer from "../../components/sections/AskOrganizer";
 import { MarketingRuleStackSection } from "../_components/MarketingRuleStackSection";
-import { getAssetPath, vectorMarkPath } from "../../../lib/assetUtils";
+import WorkerCoopMark from "../../../public/assets/vector/worker-coop.svg";
+import MutualAidMark from "../../../public/assets/vector/mutual-aid.svg";
+import OpenSourceMark from "../../../public/assets/vector/open-source.svg";
+import DaoMark from "../../../public/assets/vector/dao.svg";
 
 const RelatedArticles = dynamic(
   () => import("../../components/sections/RelatedArticles"),
@@ -41,12 +44,12 @@ const CASE_STUDY_LINK_CLASS = [
   "active:scale-[0.98]",
 ].join(" ");
 
-/** Matches `pages.useCases.groups.items` order ↔ `public/assets/vector/*.svg`. */
-const USE_CASES_GROUP_VECTOR_SLUGS = [
-  "worker-coop",
-  "mutual-aid",
-  "open-source",
-  "dao",
+/** Matches `pages.useCases.groups.items` order ↔ inlined vector mark components. */
+const USE_CASES_GROUP_MARKS = [
+  WorkerCoopMark,
+  MutualAidMark,
+  OpenSourceMark,
+  DaoMark,
 ] as const;
 
 const USE_CASES_RELATED_SENTINEL_SLUG = "__use-cases-page__";
@@ -77,24 +80,20 @@ export default function UseCasesPage() {
     page.groups.items,
   );
 
-  const groupItems: GroupsItem[] = groupItemsRaw.map((item, index) => ({
-    ...item,
-    icon: (
-      /* eslint-disable-next-line @next/next/no-img-element -- small vector marks from `public/assets/vector` */
-      <img
-        alt=""
-        aria-hidden
-        className="block size-9 shrink-0 object-contain"
-        height={36}
-        src={getAssetPath(
-          vectorMarkPath(
-            USE_CASES_GROUP_VECTOR_SLUGS[index] ?? USE_CASES_GROUP_VECTOR_SLUGS[0],
-          ),
-        )}
-        width={36}
-      />
-    ),
-  }));
+  const groupItems: GroupsItem[] = groupItemsRaw.map((item, index) => {
+    const Mark = USE_CASES_GROUP_MARKS[index] ?? USE_CASES_GROUP_MARKS[0];
+    return {
+      ...item,
+      icon: (
+        <Mark
+          aria-hidden
+          className="block size-9 shrink-0"
+          width={36}
+          height={36}
+        />
+      ),
+    };
+  });
 
   const askOrganizerData = {
     title: page.askOrganizer.title,

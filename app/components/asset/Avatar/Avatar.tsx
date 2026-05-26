@@ -24,7 +24,15 @@ const Avatar = memo<AvatarProps>(
 
     return (
       /* eslint-disable-next-line @next/next/no-img-element -- avatar image from URL */
-      <img src={src} alt={alt} className={baseStyles} {...props} />
+      <img
+        src={src}
+        alt={alt}
+        className={baseStyles}
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        {...props}
+      />
     );
   },
 );

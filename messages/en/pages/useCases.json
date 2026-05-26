@@ -49,7 +49,7 @@
   "tripleStep": {
     "heading": "Get recommendations that will make organizing easier",
     "ctaText": "Create Rule",
-    "ctaHref": "/create",
+    "ctaHref": "/create/informational",
     "steps": [
       {
         "title": "Get your stakeholders together",
@@ -68,7 +68,7 @@
   "tripleTextBlock": {
     "title": "Why Horizontal groups need CommunityRule",
     "ctaText": "Setup your community",
-    "ctaHref": "/create",
+    "ctaHref": "/create/informational",
     "columns": [
       {
         "title": "Share Leadership and Prevent Burnout",

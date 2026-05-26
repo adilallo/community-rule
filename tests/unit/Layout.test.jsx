@@ -138,10 +138,13 @@ describe("Group layouts (chrome composition)", () => {
 
   test("AppLayout wraps children in <main flex-1> with no footer", () => {
     const tree = AppLayout({ children: <div>app-child</div> });
-    expect(tree.type).toBe("main");
-    expect(tree.props.className).toContain("flex-1");
+    const main = findDescendant(
+      tree,
+      (n) => n?.type === "main" && n.props?.className?.includes("flex-1"),
+    );
+    expect(main).toBeTruthy();
     expect(
-      findDescendant(tree, (n) => typeof n === "string" && n.includes("app-child")),
+      findDescendant(main, (n) => typeof n === "string" && n.includes("app-child")),
     ).toBeTruthy();
   });
 });

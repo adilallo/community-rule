@@ -8,7 +8,7 @@ import { memo, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import { logger } from "../../../../lib/logger";
-import { prepareFreshCreateFlowEntry } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
+import { prepareFreshCreateFlowEntrySync } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import {
   fetchTemplates,
   isTemplatesFetchAborted,
@@ -99,10 +99,8 @@ const RuleStackContainer = memo<RuleStackProps>(
     logger.debug(`${slug} template clicked`);
     // Marketing home “Popular templates”: same fresh start as Top “Create rule”
     // (local + server draft when sync) so stale state cannot break template apply.
-    void (async () => {
-      await prepareFreshCreateFlowEntry();
-      router.push(`/create/review-template/${encodeURIComponent(slug)}`);
-    })();
+    prepareFreshCreateFlowEntrySync();
+    router.push(`/create/review-template/${encodeURIComponent(slug)}`);
   };
 
   return (

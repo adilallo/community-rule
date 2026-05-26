@@ -7,13 +7,14 @@ import type { CreateFlowStep } from "../types";
 import {
   CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY,
   CREATE_FLOW_REVIEW_RETURN_QUERY_KEY,
+  FIRST_STEP,
 } from "./flowSteps";
 
 export const CREATE_ROUTES = {
   root: "/",
   createRoot: "/create",
-  /** First step resolves via redirect from `/create`. */
-  createFirstStep: "/create",
+  /** Direct path to the first wizard step so client navigations skip the redirect hop. */
+  createFirstStep: `/create/${FIRST_STEP}`,
   review: "/create/review",
   finalReview: "/create/final-review",
   completed: "/create/completed",

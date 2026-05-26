@@ -56,27 +56,47 @@ export function CreateFlowProvider({
   initialStep = null,
   enableLocalDraftMirroring = false,
 }: CreateFlowProviderProps) {
-  const [state, setState] = useState<CreateFlowState>(() => {
-    const base = enableLocalDraftMirroring
-      ? readAnonymousCreateFlowState()
-      : {};
-    const storedDetails = readCoreValueDetailsFromLocalStorage();
-    if (Object.keys(storedDetails).length === 0) return base;
-    return {
-      ...base,
-      coreValueDetailsByChipId: {
-        ...storedDetails,
-        ...(base.coreValueDetailsByChipId ?? {}),
-      },
-    };
-  });
+  // Initializer must NOT touch `localStorage`: this provider runs through SSR
+  // now (CreateFlowLayoutGate dropped `ssr: false`), and a server `{}` followed
+  // by a client read of stored data would be a hydration mismatch. The
+  // `mount-once` effect below replays the read on the client.
+  const [state, setState] = useState<CreateFlowState>({});
   const [interactionTouched, setInteractionTouched] = useState(false);
   const [currentStep] = useState<CreateFlowStep | null>(initialStep);
   const prevPersistRef = useRef(enableLocalDraftMirroring);
   const persistWriteSkipRef = useRef(true);
+  const initialHydrateDoneRef = useRef(false);
 
   useEffect(() => {
     clearLegacyCreateFlowKeysOnce();
+  }, []);
+
+  // Replay the previous `useState` initializer on mount (client-only). Keeps
+  // SSR + first client render aligned with the empty default while still
+  // hydrating any persisted draft / core-value details that existed before
+  // the user landed back on a wizard step.
+  useEffect(() => {
+    if (initialHydrateDoneRef.current) return;
+    initialHydrateDoneRef.current = true;
+    const base = enableLocalDraftMirroring
+      ? readAnonymousCreateFlowState()
+      : {};
+    const storedDetails = readCoreValueDetailsFromLocalStorage();
+    const baseEmpty = Object.keys(base).length === 0;
+    const detailsEmpty = Object.keys(storedDetails).length === 0;
+    if (baseEmpty && detailsEmpty) return;
+    setState((prev) => {
+      const merged: CreateFlowState = { ...base, ...prev };
+      if (!detailsEmpty) {
+        merged.coreValueDetailsByChipId = {
+          ...storedDetails,
+          ...(base.coreValueDetailsByChipId ?? {}),
+          ...(prev.coreValueDetailsByChipId ?? {}),
+        };
+      }
+      return merged;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional mount-once
   }, []);
 
   // Session resolved after initial paint: hydrate from localStorage, merging

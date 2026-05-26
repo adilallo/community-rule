@@ -29,7 +29,7 @@ const nextConfig = {
   // Image optimization
   images: {
     formats: ["image/webp", "image/avif"],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
@@ -63,6 +63,18 @@ const nextConfig = {
       },
       {
         source: "/static/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        // Long-cache static marketing art (avatars, vectors, case-study, etc.)
+        // since the file content is hashed into the URL by Next at request time
+        // through the image optimizer for raster, and changes require a deploy.
+        source: "/assets/:path*\\.(svg|png|webp|avif|jpg|jpeg)",
         headers: [
           {
             key: "Cache-Control",

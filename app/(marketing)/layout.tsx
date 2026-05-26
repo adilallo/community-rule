@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
+import MarketingNavigation from "../components/navigation/MarketingNavigation";
 
 // Site footer is part of the public marketing chrome only — not rendered for
 // signed-in product surfaces, admin dashboards, or dev previews. See
@@ -14,6 +15,7 @@ const Footer = dynamic(() => import("../components/navigation/Footer"), {
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <MarketingNavigation />
       <main className="flex-1">{children}</main>
       <Footer />
     </>

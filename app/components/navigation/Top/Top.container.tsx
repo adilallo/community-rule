@@ -13,7 +13,7 @@ import Button from "../../buttons/Button";
 import AvatarContainer from "../../asset/AvatarContainer";
 import Avatar from "../../asset/Avatar";
 import { getAssetPath, ASSETS } from "../../../../lib/assetUtils";
-import { prepareFreshCreateFlowEntry } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
+import { prepareFreshCreateFlowEntrySync } from "../../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import { TopView } from "./Top.view";
 import type { TopProps, NavSize } from "./Top.types";
 
@@ -51,15 +51,14 @@ const TopContainer = memo<TopProps>(
     /**
      * `Top` is hidden on `/create` routes by ConditionalNavigationClient, so
      * this button is always clicked from outside the wizard. Clears anonymous
-     * `localStorage` and, when backend sync is on, deletes the server draft
-     * so signed-in users get the same fresh start as guests (see
-     * {@link prepareFreshCreateFlowEntry}).
+     * `localStorage` synchronously and, when backend sync is on, fires the
+     * server `DELETE /api/drafts/me` in the background. `SignedInDraftHydration`
+     * reads the `create:fresh-entry-pending` sentinel and waits before fetching
+     * (see {@link prepareFreshCreateFlowEntrySync}).
      */
     const handleCreateRuleClick = useCallback(() => {
-      void (async () => {
-        await prepareFreshCreateFlowEntry();
-        router.push("/create");
-      })();
+      prepareFreshCreateFlowEntrySync();
+      router.push("/create/informational");
     }, [router]);
 
     // Schema markup for site navigation
