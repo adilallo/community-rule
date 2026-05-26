@@ -740,24 +740,24 @@ export function CommunicationMethodsScreen() {
           className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}
           aria-busy={!recommendationsReady}
         >
-          {recommendationsReady ? (
-          <CardStack
-            cards={sampleCards}
-            selectedIds={selectedIds}
-            onCardSelect={handleCardClick}
-            expanded={expanded}
-            onToggleExpand={() => {
-              markCreateFlowInteraction();
-              setExpanded((prev) => !prev);
-            }}
-            hasMore={true}
-            toggleLabel={comm.page.seeAllLink}
-            compactRecommendedLimit={5}
-            compactCardIds={compactCardIds}
-            compactDesktopLayout="flexWrap"
-            headerLockupSize={mdUp ? "L" : "M"}
-          />
-          ) : null}
+          {recommendationsReady && (
+            <CardStack
+              cards={sampleCards}
+              selectedIds={selectedIds}
+              onCardSelect={handleCardClick}
+              expanded={expanded}
+              onToggleExpand={() => {
+                markCreateFlowInteraction();
+                setExpanded((prev) => !prev);
+              }}
+              hasMore={true}
+              toggleLabel={comm.page.seeAllLink}
+              compactRecommendedLimit={5}
+              compactCardIds={compactCardIds}
+              compactDesktopLayout="flexWrap"
+              headerLockupSize={mdUp ? "L" : "M"}
+            />
+          )}
         </div>
       </div>
 

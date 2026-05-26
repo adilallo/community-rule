@@ -57,9 +57,9 @@ const TopContainer = memo<TopProps>(
      * (see {@link prepareFreshCreateFlowEntrySync}).
      */
     const handleCreateRuleClick = useCallback(() => {
-      prepareFreshCreateFlowEntrySync();
+      prepareFreshCreateFlowEntrySync({ signedIn: loggedIn });
       router.push("/create/informational");
-    }, [router]);
+    }, [loggedIn, router]);
 
     // Schema markup for site navigation
     const schemaData = {

@@ -253,7 +253,7 @@ export default function ProfilePageClient() {
   }, [draft, router]);
 
   const handleStartNewCustomRule = useCallback(() => {
-    prepareFreshCreateFlowEntrySync();
+    prepareFreshCreateFlowEntrySync({ signedIn: true });
     router.push("/create/informational");
   }, [router]);
 

@@ -11,6 +11,14 @@ import { isBackendSyncEnabled } from "../../../../lib/create/backendSyncEnabled"
  */
 export const FRESH_ENTRY_PENDING_KEY = "create:fresh-entry-pending";
 
+export type PrepareFreshCreateFlowEntryOptions = {
+  /**
+   * When `true`, and backend sync is on, also `DELETE /api/drafts/me`.
+   * Omit or pass `false` for guests — they have no server draft to clear.
+   */
+  signedIn?: boolean;
+};
+
 export function hasFreshEntryPending(): boolean {
   if (typeof window === "undefined") return false;
   try {
@@ -38,10 +46,17 @@ function clearFreshEntryPending(): void {
   }
 }
 
+function clearServerDraftWhenSignedIn(signedIn: boolean): void {
+  if (!signedIn || !isBackendSyncEnabled()) return;
+  setFreshEntryPending();
+  void deleteServerDraft().finally(clearFreshEntryPending);
+}
+
 /**
  * Call **before** navigating into `/create` from marketing or profile “new rule”
  * entry points so signed-in + sync matches an anonymous fresh start: wipe
- * `localStorage` draft keys and, when sync is on, `DELETE /api/drafts/me`.
+ * `localStorage` draft keys and, when sync is on and the user is signed in,
+ * `DELETE /api/drafts/me`.
  *
  * Synchronous variant: returns immediately after clearing local state and
  * scheduling the server draft delete in the background. Sets a sessionStorage
@@ -50,12 +65,13 @@ function clearFreshEntryPending(): void {
  *
  * Do **not** use for “Continue draft” — that path should load the server draft.
  */
-export function prepareFreshCreateFlowEntrySync(): void {
+export function prepareFreshCreateFlowEntrySync(
+  options: PrepareFreshCreateFlowEntryOptions = {},
+): void {
+  const signedIn = options.signedIn === true;
   clearAnonymousCreateFlowStorage();
   clearCoreValueDetailsLocalStorage();
-  if (!isBackendSyncEnabled()) return;
-  setFreshEntryPending();
-  void deleteServerDraft().finally(clearFreshEntryPending);
+  clearServerDraftWhenSignedIn(signedIn);
 }
 
 /**
@@ -63,10 +79,13 @@ export function prepareFreshCreateFlowEntrySync(): void {
  * before continuing (e.g. tests, programmatic reset flows). Most click handlers
  * should use {@link prepareFreshCreateFlowEntrySync} for instant navigation.
  */
-export async function prepareFreshCreateFlowEntry(): Promise<void> {
+export async function prepareFreshCreateFlowEntry(
+  options: PrepareFreshCreateFlowEntryOptions = {},
+): Promise<void> {
+  const signedIn = options.signedIn === true;
   clearAnonymousCreateFlowStorage();
   clearCoreValueDetailsLocalStorage();
-  if (!isBackendSyncEnabled()) return;
+  if (!signedIn || !isBackendSyncEnabled()) return;
   setFreshEntryPending();
   try {
     await deleteServerDraft();

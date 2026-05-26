@@ -739,24 +739,24 @@ export function ConflictManagementScreen() {
           className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}
           aria-busy={!recommendationsReady}
         >
-          {recommendationsReady ? (
-          <CardStack
-            cards={sampleCards}
-            selectedIds={selectedIds}
-            onCardSelect={handleCardClick}
-            expanded={expanded}
-            onToggleExpand={() => {
-              markCreateFlowInteraction();
-              setExpanded((prev) => !prev);
-            }}
-            hasMore={true}
-            toggleLabel={cm.page.seeAllLink}
-            compactRecommendedLimit={5}
-            compactCardIds={compactCardIds}
-            compactDesktopLayout="pyramidFive"
-            headerLockupSize={mdUp ? "L" : "M"}
-          />
-          ) : null}
+          {recommendationsReady && (
+            <CardStack
+              cards={sampleCards}
+              selectedIds={selectedIds}
+              onCardSelect={handleCardClick}
+              expanded={expanded}
+              onToggleExpand={() => {
+                markCreateFlowInteraction();
+                setExpanded((prev) => !prev);
+              }}
+              hasMore={true}
+              toggleLabel={cm.page.seeAllLink}
+              compactRecommendedLimit={5}
+              compactCardIds={compactCardIds}
+              compactDesktopLayout="pyramidFive"
+              headerLockupSize={mdUp ? "L" : "M"}
+            />
+          )}
         </div>
       </div>
 
