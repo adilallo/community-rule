@@ -5,10 +5,19 @@
  */
 
 import { memo } from "react";
+import Image from "next/image";
 import { useTranslation } from "../../../contexts/MessagesContext";
 import ContentLockup from "../../type/ContentLockup";
 import HeroDecor from "./HeroDecor";
 import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
+
+/**
+ * Intrinsic dimensions of `public/assets/marketing/hero-image.png` (2560×1600,
+ * 16:10). Passed to `next/image` to reserve aspect ratio + drive responsive
+ * srcset generation. Actual rendered size is governed by `sizes`.
+ */
+const HERO_IMAGE_WIDTH = 2560;
+const HERO_IMAGE_HEIGHT = 1600;
 
 interface HeroBannerProps {
   title?: string;
@@ -50,13 +59,14 @@ const HeroBanner = memo<HeroBannerProps>(
 
             {/* Hero Image Container */}
             <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element -- dynamic path from getAssetPath */}
-              <img
+              <Image
                 src={getAssetPath(ASSETS.HERO_IMAGE)}
                 alt={imageAlt}
+                width={HERO_IMAGE_WIDTH}
+                height={HERO_IMAGE_HEIGHT}
+                priority
+                sizes="(min-width: 768px) 50vw, 100vw"
                 className="w-full h-auto"
-                loading="eager"
-                fetchPriority="high"
               />
             </div>
           </div>

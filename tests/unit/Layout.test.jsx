@@ -128,12 +128,24 @@ describe("Group layouts (chrome composition)", () => {
       findDescendant(main, (n) => typeof n === "string" && n.includes("marketing-child")),
     ).toBeTruthy();
 
-    // Footer is loaded via next/dynamic — it appears as a render prop component
-    // sibling to <main>. Verify the layout returns more than just <main>.
-    const childrenArr = Array.isArray(tree.props.children)
-      ? tree.props.children
-      : [tree.props.children];
-    expect(childrenArr.length).toBeGreaterThan(1);
+    // Footer is a next/dynamic component sibling to <main>. Find the node
+    // whose children include <main>, then assert its sibling list also
+    // contains a third element (the Footer dynamic component) — independent
+    // of where MessagesProvider/AuthModalProvider sit in the tree.
+    const mainSiblingParent = findDescendant(tree, (n) => {
+      const ch = Array.isArray(n?.props?.children)
+        ? n.props.children
+        : [n?.props?.children].filter(Boolean);
+      return ch.some(
+        (c) =>
+          c?.type === "main" && c.props?.className?.includes("flex-1"),
+      );
+    });
+    expect(mainSiblingParent).toBeTruthy();
+    const siblings = Array.isArray(mainSiblingParent.props.children)
+      ? mainSiblingParent.props.children
+      : [mainSiblingParent.props.children];
+    expect(siblings.length).toBeGreaterThan(1);
   });
 
   test("AppLayout wraps children in <main flex-1> with no footer", () => {

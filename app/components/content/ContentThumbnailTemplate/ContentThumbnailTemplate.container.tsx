@@ -23,14 +23,13 @@ const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
   }) => {
     const variant = variantProp;
     const sizing = sizingProp;
-    // Get article-specific background image from frontmatter
     const getBackgroundImage = (
       post: ContentThumbnailTemplateProps["post"],
-      variant: "vertical" | "horizontal",
+      orientation: "vertical" | "horizontal",
     ): string => {
       if (post.frontmatter?.thumbnail) {
         const imageName =
-          variant === "vertical"
+          orientation === "vertical"
             ? post.frontmatter.thumbnail.vertical
             : post.frontmatter.thumbnail.horizontal;
 
@@ -47,12 +46,21 @@ const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
           ? slug
           : contentCatalogSlugForFallback(slug);
 
-      return variant === "vertical"
+      return orientation === "vertical"
         ? contentBlogVerticalPath(resolvedSlug)
         : contentBlogHorizontalPath(resolvedSlug);
     };
 
-    const backgroundImage = getBackgroundImage(post, variant);
+    // For "responsive", emit both orientations so the <picture> source can
+    // swap at smd without a second card in the DOM.
+    const backgroundImage =
+      variant === "responsive"
+        ? getBackgroundImage(post, "horizontal")
+        : getBackgroundImage(post, variant);
+    const backgroundImageSmd =
+      variant === "responsive"
+        ? getBackgroundImage(post, "vertical")
+        : undefined;
 
     return (
       <ContentThumbnailTemplateView
@@ -61,6 +69,7 @@ const ContentThumbnailTemplateContainer = memo<ContentThumbnailTemplateProps>(
         variant={variant}
         sizing={sizing}
         backgroundImage={backgroundImage}
+        backgroundImageSmd={backgroundImageSmd}
       />
     );
   },

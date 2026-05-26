@@ -24,6 +24,9 @@ const nextConfig = {
     optimizeCss: true,
     optimizePackageImports: ["react", "react-dom"],
   },
+  // Phase 3 canary stub (not enabled): React Compiler probe surfaces a missing
+  // `babel-plugin-react-compiler` dep — Next 16 also moved this top-level out
+  // of `experimental`. See `docs/perf/next16-eval.md` for evaluation results.
   // Compression
   compress: true,
   // Image optimization

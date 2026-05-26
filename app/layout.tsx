@@ -1,8 +1,6 @@
 import { Inter, Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { AuthModalProvider } from "./contexts/AuthModalContext";
-import { MessagesProvider } from "./contexts/MessagesContext";
 import messages from "../messages/en/index";
 import { ASSETS, getAssetPath } from "../lib/assetUtils";
 import "./globals.css";
@@ -11,6 +9,11 @@ import "./globals.css";
 // (the only groups that read the session via `ConditionalNavigation`). Marketing
 // renders a client-side `MarketingNavigation` so its HTML can be statically
 // optimized — TTFB drops to CDN speed for guests.
+//
+// MessagesProvider + AuthModalProvider are mounted per route group (Phase 4b):
+// `(marketing)` gets a trimmed slice without `create.*` (~41 KB gzipped saved
+// per static page); `(app)`/`(admin)`/`(dev)` get the full tree. See
+// `messages/en/marketing.ts` and `docs/perf/next16-eval.md`.
 
 const inter = Inter({
   subsets: ["latin"],
@@ -142,11 +145,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${inter.variable} ${bricolageGrotesque.variable} ${spaceGrotesk.variable}`}
       >
-        <MessagesProvider messages={messages}>
-          <AuthModalProvider>
-            <div className="min-h-screen flex flex-col">{children}</div>
-          </AuthModalProvider>
-        </MessagesProvider>
+        <div className="min-h-screen flex flex-col">{children}</div>
       </body>
     </html>
   );

@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import ConditionalNavigation from "../components/navigation/ConditionalNavigation";
+import { MessagesProvider } from "../contexts/MessagesContext";
+import { AuthModalProvider } from "../contexts/AuthModalContext";
+import messages from "../../messages/en/index";
 
 // Reads `cr_session` via Server Components on every navigation so the header
 // matches the HttpOnly cookie on the first HTML response (no "Log in" flash
@@ -12,9 +15,11 @@ export const dynamic = "force-dynamic";
 // CreateFlow) is composed in nested layouts.
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <ConditionalNavigation />
-      <main className="flex-1">{children}</main>
-    </>
+    <MessagesProvider messages={messages}>
+      <AuthModalProvider>
+        <ConditionalNavigation />
+        <main className="flex-1">{children}</main>
+      </AuthModalProvider>
+    </MessagesProvider>
   );
 }
