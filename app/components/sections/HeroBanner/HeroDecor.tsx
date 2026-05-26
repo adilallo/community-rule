@@ -1,12 +1,23 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 interface HeroDecorProps {
   className?: string;
 }
 
 const HeroDecor = memo<HeroDecorProps>(({ className = "" }) => {
+  const [grainEnabled, setGrainEnabled] = useState(false);
+
+  useEffect(() => {
+    // feTurbulence forces tiled rasterization that reads as top-down segments on
+    // first paint. Flat shapes render immediately; grain applies after paint.
+    const frame = requestAnimationFrame(() => {
+      setGrainEnabled(true);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <svg
       className={`text-[var(--color-surface-default-brand-lighter-accent)] opacity-50 ${className}`}
@@ -59,7 +70,7 @@ const HeroDecor = memo<HeroDecorProps>(({ className = "" }) => {
         </defs>
 
         {/* apply filter only to the decoration paths */}
-        <g fill="currentColor" filter="url(#grain)">
+        <g fill="currentColor" filter={grainEnabled ? "url(#grain)" : undefined}>
           <path d="M1441.54 226.758C1495.92 226.758 1540 320.385 1540 435.879C1540 551.373 1495.92 645 1441.54 645C1387.16 645 1343.08 551.373 1343.08 435.879C1343.08 320.385 1387.16 226.758 1441.54 226.758Z" />
           <path d="M1441.54 226.758C1495.92 226.758 1540 320.385 1540 435.879C1540 551.373 1495.92 645 1441.54 645C1387.16 645 1343.08 551.373 1343.08 435.879C1343.08 320.385 1387.16 226.758 1441.54 226.758Z" />
           <path d="M674.066 209.121C728.443 209.121 772.525 302.748 772.525 418.242C772.525 533.737 728.443 627.363 674.066 627.363C619.688 627.363 575.607 533.737 575.607 418.242C575.607 302.748 619.688 209.121 674.066 209.121Z" />

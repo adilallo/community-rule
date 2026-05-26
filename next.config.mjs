@@ -1,6 +1,23 @@
 import createMDX from "@next/mdx";
 
 /* eslint-env node */
+
+/** Keep viewBox so inline SVGR art can scale/center like `object-contain`. */
+const svgrLoaderOptions = {
+  svgoConfig: {
+    plugins: [
+      {
+        name: "preset-default",
+        params: {
+          overrides: {
+            removeViewBox: false,
+          },
+        },
+      },
+    ],
+  },
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
@@ -22,7 +39,12 @@ const nextConfig = {
     rules: {
       "*.svg": {
         condition: { not: "foreign" },
-        loaders: ["@svgr/webpack"],
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: svgrLoaderOptions,
+          },
+        ],
         as: "*.js",
       },
     },
@@ -104,7 +126,7 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.[jt]sx?$/,
-      use: ["@svgr/webpack"],
+      use: [{ loader: "@svgr/webpack", options: svgrLoaderOptions }],
     });
 
     // Bundle analysis - only in production builds

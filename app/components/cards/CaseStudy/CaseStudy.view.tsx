@@ -45,19 +45,22 @@ function CaseStudyView({
   return (
     <div
       data-figma-node="21993-32352"
-      className={`relative flex h-[305px] w-[305px] shrink-0 overflow-hidden ${CASE_TILE_RADIUS_CLASS} ${SURFACE_CLASS[surface]} ${className}`.trim()}
+      className={`relative h-[305px] w-[305px] shrink-0 overflow-hidden ${CASE_TILE_RADIUS_CLASS} ${SURFACE_CLASS[surface]} ${className}`.trim()}
     >
       {visual ? (
         <div className="flex size-full items-center justify-center p-2">{visual}</div>
       ) : (
-        <Art
-          role="img"
-          aria-label={imageAlt}
-          data-case-study-art={SURFACE_ART_DATA_KEY[surface]}
-          width={305}
-          height={305}
-          className="pointer-events-none size-full select-none object-contain object-center"
-        />
+        <div className="absolute inset-0">
+          <Art
+            role="img"
+            aria-label={imageAlt}
+            data-case-study-art={SURFACE_ART_DATA_KEY[surface]}
+            width="100%"
+            height="100%"
+            className="pointer-events-none block select-none"
+            preserveAspectRatio="xMidYMid meet"
+          />
+        </div>
       )}
     </div>
   );
