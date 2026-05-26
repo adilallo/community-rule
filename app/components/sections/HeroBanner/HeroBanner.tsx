@@ -1,14 +1,20 @@
-"use client";
-
 /**
  * Figma: "Sections / Hero" (see registry)
  */
 
 import { memo } from "react";
-import { useTranslation } from "../../../contexts/MessagesContext";
+import Image from "next/image";
 import ContentLockup from "../../type/ContentLockup";
 import HeroDecor from "./HeroDecor";
 import { ASSETS, getAssetPath } from "../../../../lib/assetUtils";
+
+/**
+ * Intrinsic dimensions of `public/assets/marketing/hero-image.png` (2560×1600,
+ * 16:10). Passed to `next/image` to reserve aspect ratio + drive responsive
+ * srcset generation. Actual rendered size is governed by `sizes`.
+ */
+const HERO_IMAGE_WIDTH = 2560;
+const HERO_IMAGE_HEIGHT = 1600;
 
 interface HeroBannerProps {
   title?: string;
@@ -16,13 +22,18 @@ interface HeroBannerProps {
   description?: string;
   ctaText?: string;
   ctaHref?: string;
+  imageAlt?: string;
 }
 
 const HeroBanner = memo<HeroBannerProps>(
-  ({ title, subtitle, description, ctaText, ctaHref }) => {
-    const t = useTranslation();
-    const imageAlt = t("heroBanner.imageAlt");
-
+  ({
+    title,
+    subtitle,
+    description,
+    ctaText,
+    ctaHref,
+    imageAlt = "Hero illustration",
+  }) => {
     return (
       <section className="bg-transparent px-[var(--spacing-scale-008)] sm:px-[var(--spacing-scale-010)] md:px-[var(--spacing-scale-016)] lg:px-[var(--spacing-scale-024)] xl:px-[var(--spacing-scale-048)]">
         <div className="flex flex-col gap-[var(--spacing-scale-010)]">
@@ -49,14 +60,15 @@ const HeroBanner = memo<HeroBannerProps>(
             </div>
 
             {/* Hero Image Container */}
-            <div className="w-full h-full md:flex-1 rounded-[8px] overflow-hidden relative z-10 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element -- dynamic path from getAssetPath */}
-              <img
+            <div className="relative z-10 flex w-full items-center justify-center overflow-hidden rounded-[8px] aspect-[16/10] md:flex-1">
+              <Image
                 src={getAssetPath(ASSETS.HERO_IMAGE)}
                 alt={imageAlt}
-                className="w-full h-auto"
-                loading="eager"
-                fetchPriority="high"
+                width={HERO_IMAGE_WIDTH}
+                height={HERO_IMAGE_HEIGHT}
+                priority
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="size-full object-contain"
               />
             </div>
           </div>

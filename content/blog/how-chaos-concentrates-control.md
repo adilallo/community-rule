@@ -1,7 +1,7 @@
 ---
 title: "How Chaos Concentrates Control"
 description: "How to limit informal hierarchies inevitably emerging in horizontal groups"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-15"
 related:
   - "making-decisions-without-hierarchy"

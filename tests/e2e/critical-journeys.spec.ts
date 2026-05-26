@@ -101,9 +101,7 @@ test.describe("Critical User Journeys", () => {
 
     // Check key components are rendered
     await expect(page.locator('img[alt="Hero illustration"]')).toBeVisible();
-    await expect(
-      page.locator("text=Trusted by leading cooperators"),
-    ).toBeVisible();
+    await expect(page.locator('img[alt="Food Not Bombs"]')).toBeVisible();
     await expect(page.locator("text=Jo Freeman")).toBeVisible();
   });
 
@@ -129,24 +127,11 @@ test.describe("Critical User Journeys", () => {
       featureSection.locator("text=Conflict resolution"),
     ).toBeVisible();
 
-    // Check feature links - Mini tiles render as <a> tags with href="#..."
-    // There are 4 feature cards + 1 "Learn more" link = 5 total links
-    // We check for the specific feature card links
+    // Feature tiles are presentational — only the lockup "Learn more" is a link
     await expect(
       featureSection.locator('a[href="#decision-making"]'),
-    ).toBeVisible();
-    await expect(
-      featureSection.locator('a[href="#values-alignment"]'),
-    ).toBeVisible();
-    await expect(
-      featureSection.locator('a[href="#membership-guidance"]'),
-    ).toBeVisible();
-    await expect(
-      featureSection.locator('a[href="#conflict-resolution"]'),
-    ).toBeVisible();
-
-    // Test feature card interactions
-    await page.locator('a[href="#decision-making"]').click();
+    ).toHaveCount(0);
+    await expect(featureSection.getByRole("link", { name: "Learn more" })).toBeVisible();
   });
 
   test("header navigation functionality", async ({ page }) => {

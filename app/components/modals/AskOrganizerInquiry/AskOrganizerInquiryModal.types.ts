@@ -16,6 +16,7 @@ export interface AskOrganizerInquiryModalCopy {
   successDescription: string;
   ariaDialog: string;
   honeypotLabel: string;
+  backToHome: string;
 }
 
 export interface AskOrganizerInquiryModalViewProps

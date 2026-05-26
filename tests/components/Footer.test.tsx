@@ -54,7 +54,10 @@ describe("Footer (behavioral tests)", () => {
       screen.getAllByRole("link", { name: "Follow us on Bluesky" }).length,
     ).toBeGreaterThan(0);
     expect(
-      screen.getAllByRole("link", { name: "Follow us on GitLab" }).length,
+      screen.getAllByRole("link", { name: "View source on Gitea" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Follow us on Mastodon" }).length,
     ).toBeGreaterThan(0);
   });
 
@@ -69,6 +72,13 @@ describe("Footer (behavioral tests)", () => {
     expect(
       screen.getAllByRole("link", { name: "About" }).length,
     ).toBeGreaterThan(0);
+  });
+
+  it("renders navigation links with baseline width-fit focus targets", () => {
+    render(<Footer />);
+    const useCases = screen.getAllByRole("link", { name: "Use cases" })[0];
+    expect(useCases).toHaveClass("w-fit", "self-start", "md:self-end");
+    expect(useCases).not.toHaveClass("w-full");
   });
 
   it("renders legal links", () => {

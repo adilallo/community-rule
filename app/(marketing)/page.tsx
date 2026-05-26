@@ -49,6 +49,7 @@ export default function Page() {
     description: t("pages.home.heroBanner.description"),
     ctaText: t("pages.home.heroBanner.ctaText"),
     ctaHref: t("pages.home.heroBanner.ctaHref"),
+    imageAlt: t("heroBanner.imageAlt"),
   };
 
   const cardStepsData = {

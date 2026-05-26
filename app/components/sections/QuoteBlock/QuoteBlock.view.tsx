@@ -17,9 +17,7 @@ function QuoteBlockView({
   authorId,
   config,
   imageError,
-  imageLoading,
   currentAvatarSrc,
-  onImageLoad,
   onImageError,
 }: QuoteBlockViewProps) {
   const t = useTranslation("quoteBlock");
@@ -89,7 +87,6 @@ function QuoteBlockView({
 
         <div className={`flex flex-col ${config.gap} relative z-10`}>
           <div className={`flex flex-col ${config.avatarGap}`}>
-            {/* Avatar with error handling */}
             <div className="relative">
               {!imageError ? (
                 <Image
@@ -97,26 +94,12 @@ function QuoteBlockView({
                   alt={avatarAlt}
                   width={64}
                   height={64}
-                  className={`filter sepia ${
-                    config.avatar
-                  } transition-opacity duration-300 ${
-                    imageLoading ? "opacity-0" : "opacity-100"
-                  }`}
-                  loading="lazy"
+                  className={`filter sepia ${config.avatar}`}
+                  loading="eager"
+                  priority
                   onError={onImageError}
-                  onLoad={onImageLoad}
                 />
-              ) : null}
-
-              {/* Loading state */}
-              {imageLoading && !imageError && (
-                <div
-                  className={`absolute inset-0 bg-gray-200 animate-pulse rounded-full ${config.avatar}`}
-                />
-              )}
-
-              {/* Error state - show initials */}
-              {imageError && (
+              ) : (
                 <div
                   className={`flex items-center justify-center bg-gray-300 rounded-full ${config.avatar} text-gray-600 font-bold`}
                 >

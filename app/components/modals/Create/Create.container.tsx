@@ -36,6 +36,7 @@ const CreateContainer = memo<CreateProps>(
     kebabTriggerAriaLabel,
     kebabMenuAriaLabel,
     kebabMenuItems,
+    belowCard,
   }) => {
     const createRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
@@ -72,6 +73,7 @@ const CreateContainer = memo<CreateProps>(
         kebabTriggerAriaLabel={kebabTriggerAriaLabel}
         kebabMenuAriaLabel={kebabMenuAriaLabel}
         kebabMenuItems={kebabMenuItems}
+        belowCard={belowCard}
       />
     );
   },

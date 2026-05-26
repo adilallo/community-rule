@@ -70,6 +70,15 @@ describe("AskOrganizer (behavioral tests)", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows back to home link below inquiry modal", async () => {
+    const user = userEvent.setup();
+    render(<AskOrganizer title="Test" />);
+    await user.click(screen.getByTestId("ask-organizer-cta"));
+    expect(
+      await screen.findByRole("link", { name: /back to home/i }),
+    ).toHaveAttribute("href", "/");
+  });
+
   it("renders button with custom text", () => {
     render(<AskOrganizer title="Test" buttonText="Contact" />);
     expect(

@@ -94,7 +94,8 @@ export function ConflictManagementScreen() {
     [cm.methods, selectedIds, state.customMethodCardMetaById],
   );
 
-  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+  const { sampleCards, compactCardIds, methodById, recommendationsReady } =
+    useMethodCardDeckOrdering(
     "conflictManagement",
     mergedMethods,
     selectedIds,
@@ -734,23 +735,28 @@ export function ConflictManagementScreen() {
             justification="center"
           />
         </div>
-        <div className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}>
-          <CardStack
-            cards={sampleCards}
-            selectedIds={selectedIds}
-            onCardSelect={handleCardClick}
-            expanded={expanded}
-            onToggleExpand={() => {
-              markCreateFlowInteraction();
-              setExpanded((prev) => !prev);
-            }}
-            hasMore={true}
-            toggleLabel={cm.page.seeAllLink}
-            compactRecommendedLimit={5}
-            compactCardIds={compactCardIds}
-            compactDesktopLayout="pyramidFive"
-            headerLockupSize={mdUp ? "L" : "M"}
-          />
+        <div
+          className={CREATE_FLOW_CARD_STACK_AREA_MAX_CLASS}
+          aria-busy={!recommendationsReady}
+        >
+          {recommendationsReady && (
+            <CardStack
+              cards={sampleCards}
+              selectedIds={selectedIds}
+              onCardSelect={handleCardClick}
+              expanded={expanded}
+              onToggleExpand={() => {
+                markCreateFlowInteraction();
+                setExpanded((prev) => !prev);
+              }}
+              hasMore={true}
+              toggleLabel={cm.page.seeAllLink}
+              compactRecommendedLimit={5}
+              compactCardIds={compactCardIds}
+              compactDesktopLayout="pyramidFive"
+              headerLockupSize={mdUp ? "L" : "M"}
+            />
+          )}
         </div>
       </div>
 

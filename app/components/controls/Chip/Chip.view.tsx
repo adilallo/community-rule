@@ -155,6 +155,7 @@ function ChipView({
         tabIndex={0}
         onClick={handleClick}
         onKeyDown={(e) => {
+          if (e.target instanceof HTMLInputElement) return;
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             handleClick(e as unknown as React.MouseEvent<HTMLButtonElement>);

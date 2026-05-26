@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from "vitest";
-import RootLayout from "../../app/layout";
+import RootLayout, { metadata } from "../../app/layout";
 import MarketingLayout from "../../app/(marketing)/layout";
 import AppLayout from "../../app/(app)/layout";
 
@@ -84,6 +84,36 @@ describe("RootLayout", () => {
     );
     expect(childText).toBeTruthy();
   });
+
+  test("declares svg, ico, png, and apple-touch icons for cross-browser support", () => {
+    const icons = metadata.icons;
+    expect(icons?.icon).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          url: "/assets/logos/community-rule.svg",
+          type: "image/svg+xml",
+        }),
+        expect.objectContaining({ url: "/favicon.ico", sizes: "any" }),
+        expect.objectContaining({
+          url: "/favicon-32x32.png",
+          sizes: "32x32",
+          type: "image/png",
+        }),
+        expect.objectContaining({
+          url: "/favicon-16x16.png",
+          sizes: "16x16",
+          type: "image/png",
+        }),
+      ]),
+    );
+    expect(icons?.apple).toEqual([
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ]);
+  });
 });
 
 describe("Group layouts (chrome composition)", () => {
@@ -98,20 +128,35 @@ describe("Group layouts (chrome composition)", () => {
       findDescendant(main, (n) => typeof n === "string" && n.includes("marketing-child")),
     ).toBeTruthy();
 
-    // Footer is loaded via next/dynamic — it appears as a render prop component
-    // sibling to <main>. Verify the layout returns more than just <main>.
-    const childrenArr = Array.isArray(tree.props.children)
-      ? tree.props.children
-      : [tree.props.children];
-    expect(childrenArr.length).toBeGreaterThan(1);
+    // Footer is a next/dynamic component sibling to <main>. Find the node
+    // whose children include <main>, then assert its sibling list also
+    // contains a third element (the Footer dynamic component) — independent
+    // of where MessagesProvider/AuthModalProvider sit in the tree.
+    const mainSiblingParent = findDescendant(tree, (n) => {
+      const ch = Array.isArray(n?.props?.children)
+        ? n.props.children
+        : [n?.props?.children].filter(Boolean);
+      return ch.some(
+        (c) =>
+          c?.type === "main" && c.props?.className?.includes("flex-1"),
+      );
+    });
+    expect(mainSiblingParent).toBeTruthy();
+    const siblings = Array.isArray(mainSiblingParent.props.children)
+      ? mainSiblingParent.props.children
+      : [mainSiblingParent.props.children];
+    expect(siblings.length).toBeGreaterThan(1);
   });
 
   test("AppLayout wraps children in <main flex-1> with no footer", () => {
     const tree = AppLayout({ children: <div>app-child</div> });
-    expect(tree.type).toBe("main");
-    expect(tree.props.className).toContain("flex-1");
+    const main = findDescendant(
+      tree,
+      (n) => n?.type === "main" && n.props?.className?.includes("flex-1"),
+    );
+    expect(main).toBeTruthy();
     expect(
-      findDescendant(tree, (n) => typeof n === "string" && n.includes("app-child")),
+      findDescendant(main, (n) => typeof n === "string" && n.includes("app-child")),
     ).toBeTruthy();
   });
 });

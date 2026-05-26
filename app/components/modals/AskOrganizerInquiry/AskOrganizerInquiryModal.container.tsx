@@ -14,6 +14,7 @@ import { useTranslation } from "../../../contexts/MessagesContext";
 const AskOrganizerInquiryModalContainer = memo<AskOrganizerInquiryModalProps>(
   ({ isOpen, onClose }) => {
     const t = useTranslation("modals.askOrganizerInquiry");
+    const tLogin = useTranslation("pages.login");
     const copy = useMemo(
       () => ({
         title: t("title"),
@@ -28,8 +29,9 @@ const AskOrganizerInquiryModalContainer = memo<AskOrganizerInquiryModalProps>(
         successDescription: t("successDescription"),
         ariaDialog: t("ariaDialog"),
         honeypotLabel: t("honeypotLabel"),
+        backToHome: tLogin("backToHome"),
       }),
-      [t],
+      [t, tLogin],
     );
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");

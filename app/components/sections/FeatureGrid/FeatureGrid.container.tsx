@@ -27,7 +27,6 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           panelContent: getAssetPath(featurePanelPath("support")),
           ...featurePanelLayout("support"),
           ariaLabel: t("featureGrid.features.decisionMaking.ariaLabel"),
-          href: "#decision-making",
         },
         {
           backgroundColor: "bg-[var(--color-surface-invert-brand-lime)]",
@@ -40,7 +39,6 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           panelContent: getAssetPath(featurePanelPath("exercises")),
           ...featurePanelLayout("exercises"),
           ariaLabel: t("featureGrid.features.valuesAlignment.ariaLabel"),
-          href: "#values-alignment",
         },
         {
           backgroundColor: "bg-[var(--color-surface-invert-brand-rust)]",
@@ -53,7 +51,6 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           panelContent: getAssetPath(featurePanelPath("guidance")),
           ...featurePanelLayout("guidance"),
           ariaLabel: t("featureGrid.features.membershipGuidance.ariaLabel"),
-          href: "#membership-guidance",
         },
         {
           backgroundColor: "bg-[var(--color-surface-invert-brand-teal)]",
@@ -66,7 +63,6 @@ const FeatureGridContainer = memo<FeatureGridProps>(
           panelContent: getAssetPath(featurePanelPath("tools")),
           ...featurePanelLayout("tools"),
           ariaLabel: t("featureGrid.features.conflictResolution.ariaLabel"),
-          href: "#conflict-resolution",
         },
       ],
       [t],

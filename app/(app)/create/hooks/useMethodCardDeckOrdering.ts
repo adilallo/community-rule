@@ -25,7 +25,9 @@ export function useMethodCardDeckOrdering(
   methods: readonly MethodEntry[],
   selectedIds: readonly string[],
 ) {
-  const { scoresBySlug, hasAnyFacets } = useFacetRecommendations(section);
+  const { scoresBySlug, hasAnyFacets, isReady } =
+    useFacetRecommendations(section);
+  const recommendationsReady = !hasAnyFacets || isReady;
 
   const rankedMethods = useMemo(
     () => rankMethodsByScore(methods, scoresBySlug),
@@ -90,5 +92,6 @@ export function useMethodCardDeckOrdering(
     recommendedIds,
     sampleCards,
     methodById,
+    recommendationsReady,
   };
 }

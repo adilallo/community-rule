@@ -1,7 +1,7 @@
 ---
 title: "Knowledge Management and Institutional Amnesia"
 description: "Preserving what we learn without surveillance infrastructure"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-20"
 related:
   - "integrating-new-members-without-dilution"

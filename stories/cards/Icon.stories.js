@@ -46,7 +46,7 @@ const WorkerCoopIcon = () => (
 export const Default = {
   args: {
     icon: <WorkerCoopIcon />,
-    title: "Worker's cooperatives",
+    title: "Worker cooperatives",
     description:
       "Employee-owned businesses often need to clarify how power is shared, decisions are made, and how processes operate within their organizations.",
   },
@@ -64,7 +64,7 @@ export const WithLongTitle = {
 export const WithShortDescription = {
   args: {
     icon: <WorkerCoopIcon />,
-    title: "Worker's cooperatives",
+    title: "Worker cooperatives",
     description: "Short description",
   },
 };

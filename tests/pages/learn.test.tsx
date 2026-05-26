@@ -31,7 +31,7 @@ const mockPosts = [
     frontmatter: {
       title: "Resolving Active Conflicts",
       description: "Practical steps for resolving conflicts",
-      author: "Author name",
+      author: "CommunityRule",
       date: "2025-04-15",
       thumbnail: {
         vertical: "resolving-active-conflicts-vertical.svg",
@@ -48,7 +48,7 @@ const mockPosts = [
     frontmatter: {
       title: "Operational Security for Mutual Aid",
       description: "Tactics to protect members",
-      author: "Author name",
+      author: "CommunityRule",
       date: "2025-04-10",
       thumbnail: {
         vertical: "operational-security-mutual-aid-vertical.svg",
@@ -82,32 +82,29 @@ describe("LearnPage", () => {
     expect(screen.getByText("Still have questions?")).toBeInTheDocument();
   });
 
-  it("renders one card per post in each layout region without duplication", () => {
+  it("renders one card per post (single responsive grid, no duplication)", () => {
     const { container } = render(<LearnPage />);
 
-    const mobileRegion = container.querySelector(".smd\\:hidden");
-    const desktopRegion = container.querySelector(".smd\\:grid");
+    const grid = container.querySelector(".smd\\:grid");
+    expect(grid).toBeTruthy();
 
-    expect(mobileRegion).toBeTruthy();
-    expect(desktopRegion).toBeTruthy();
+    const links = within(grid as HTMLElement).getAllByRole("link");
+    expect(links).toHaveLength(mockPosts.length);
 
-    const mobileLinks = within(mobileRegion as HTMLElement).getAllByRole(
-      "link",
-    );
-    const desktopLinks = within(desktopRegion as HTMLElement).getAllByRole(
-      "link",
-    );
-
-    expect(mobileLinks).toHaveLength(mockPosts.length);
-    expect(desktopLinks).toHaveLength(mockPosts.length);
-
-    expect(mobileLinks[0]).toHaveAttribute(
+    expect(links[0]).toHaveAttribute(
       "href",
       "/blog/resolving-active-conflicts",
     );
-    expect(desktopLinks[1]).toHaveAttribute(
+    expect(links[1]).toHaveAttribute(
       "href",
       "/blog/operational-security-mutual-aid",
     );
+
+    // <picture> with a smd source provides the orientation swap without a
+    // duplicate card per breakpoint.
+    const sources = grid?.querySelectorAll(
+      "picture source[media='(min-width: 530px)']",
+    );
+    expect(sources?.length).toBe(mockPosts.length);
   });
 });

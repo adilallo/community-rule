@@ -73,7 +73,7 @@ describe('Top "Create rule" button', () => {
    * in-flight anonymous draft so the wizard always starts fresh. See
    * handleCreateRuleClick in Top.container.tsx for the contract.
    */
-  it("clears anonymous draft + core-value-details localStorage before routing to /create", async () => {
+  it("clears anonymous draft + core-value-details localStorage before routing to /create/informational", async () => {
     window.localStorage.setItem(
       CREATE_FLOW_ANONYMOUS_KEY,
       JSON.stringify({ title: "Stale community" }),
@@ -93,7 +93,7 @@ describe('Top "Create rule" button', () => {
     await userEvent.click(btn);
 
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith("/create");
+      expect(pushMock).toHaveBeenCalledWith("/create/informational");
     });
     expect(window.localStorage.getItem(CREATE_FLOW_ANONYMOUS_KEY)).toBeNull();
     expect(

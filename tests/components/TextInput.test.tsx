@@ -44,6 +44,8 @@ describe("TextInput (size tests)", () => {
     const { container } = render(<TextInput label="Test" inputSize="small" />);
     const input = container.querySelector("input");
     expect(input).toHaveClass("h-[32px]");
+    expect(input?.className).toContain("text-[16px]");
+    expect(input?.className).toContain("md:text-[14px]");
   });
 
   it("forwards maxLength to the native input", () => {

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import HeaderLockup from "../../components/type/HeaderLockup";
 import { GovernanceTemplateGrid } from "../../components/sections/GovernanceTemplateGrid";
 import type { TemplateGridCardEntry } from "../../../lib/templates/templateGridPresentation";
-import { prepareFreshCreateFlowEntry } from "../../(app)/create/utils/prepareFreshCreateFlowEntry";
+import { prepareFreshCreateFlowEntrySync } from "../../(app)/create/utils/prepareFreshCreateFlowEntry";
 import {
   buildTemplateReviewHref,
   TEMPLATES_FACET_RECOMMEND_QUERY,
@@ -102,13 +102,7 @@ function TemplatesGrid({
       entries={entries}
       onTemplateClick={(slug) => {
         if (!fromFlow) {
-          void (async () => {
-            await prepareFreshCreateFlowEntry();
-            router.push(
-              buildTemplateReviewHref(slug, { fromCreateWizard: fromFlow }),
-            );
-          })();
-          return;
+          prepareFreshCreateFlowEntrySync();
         }
         router.push(
           buildTemplateReviewHref(slug, { fromCreateWizard: fromFlow }),

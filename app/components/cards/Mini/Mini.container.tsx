@@ -79,7 +79,6 @@ const MiniContainer = memo<MiniProps>(
       return {
         wrapperElement: "div" as const,
         wrapperProps: {
-          ...baseProps,
           className: "block",
         },
       };

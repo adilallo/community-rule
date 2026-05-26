@@ -41,8 +41,11 @@ Do not duplicate the same glyph in both places unless migrating between systems.
 - **Blog art** stays under `public/content/blog/` with
   `{slug}-vertical.svg`, `-horizontal.svg`, `-section.svg`, `-tag.svg`.
 - **Favicon** reuses `assets/logos/community-rule.svg` (`ASSETS.LOGO` in
-  `app/layout.tsx` metadata). Do not place `favicon.ico` or other static
-  binaries under `app/` — keep `app/` for routes, layouts, and styles only
+  `app/layout.tsx` metadata) plus generated root binaries for Safari/iOS:
+  `public/favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, and
+  `apple-touch-icon.png`. Regenerate after logo changes with
+  `npm run generate:favicons`. Do not place other static binaries under
+  `app/` — keep `app/` for routes, layouts, and styles only
   (`globals.css`, `tailwind.css`).
 
 ## PNG files and `.gitignore`

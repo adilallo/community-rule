@@ -16,6 +16,7 @@ import {
   isValidStep,
   parseCreateFlowScreenFromPathname,
 } from "./utils/flowSteps";
+import { hasFreshEntryPending } from "./utils/prepareFreshCreateFlowEntry";
 
 import { isBackendSyncEnabled } from "../../../lib/create/backendSyncEnabled";
 
@@ -52,6 +53,22 @@ export function SignedInDraftHydration({
 
   const [loadingHydration, setLoadingHydration] = useState(false);
   const finishedUserIdRef = useRef<string | null>(null);
+  const [freshEntryPending, setFreshEntryPending] = useState(false);
+
+  // Poll the sessionStorage sentinel set by `prepareFreshCreateFlowEntrySync`.
+  // Cheap because the gate is open within a few hundred ms in practice; the
+  // poll stops as soon as the in-flight DELETE clears the flag.
+  useEffect(() => {
+    if (!hasFreshEntryPending()) return;
+    setFreshEntryPending(true);
+    const id = window.setInterval(() => {
+      if (!hasFreshEntryPending()) {
+        setFreshEntryPending(false);
+        window.clearInterval(id);
+      }
+    }, 50);
+    return () => window.clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (!isBackendSyncEnabled()) return;
@@ -65,6 +82,10 @@ export function SignedInDraftHydration({
     if (finishedUserIdRef.current === userId) return;
 
     if (syncDraftParam === "1" || hasTransferPendingFlag()) {
+      return;
+    }
+
+    if (freshEntryPending) {
       return;
     }
 
@@ -122,6 +143,7 @@ export function SignedInDraftHydration({
     replaceState,
     pathname,
     router,
+    freshEntryPending,
   ]);
 
   if (!loadingHydration) return null;

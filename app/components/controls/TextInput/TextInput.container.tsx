@@ -73,7 +73,9 @@ const TextInputContainer = forwardRef<HTMLInputElement, TextInputProps>(
     const sizeStyles =
       inputSize === "small"
         ? {
-            input: "h-[32px] px-[10px] py-[6px] text-[14px]",
+            // 16px on narrow viewports prevents iOS Safari focus zoom (causes horizontal scroll).
+            input:
+              "h-[32px] px-[10px] py-[6px] text-[16px] md:text-[14px]",
             label: "text-[12px] leading-[16px] font-medium",
             container: "gap-[6px]",
             radius: "var(--measures-radius-200,8px)",

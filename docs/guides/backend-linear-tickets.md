@@ -632,9 +632,9 @@ _Section B — Final Review screen `+` button per category:_
 
 **Depends on:** Tickets 1–8 complete enough to deploy a vertical slice.
 
-**Server / admin:** Cloudron admin access on `my.medlab.host` granted. Scope of this ticket is the **handoff doc + cutover plan** — exactly what's in place, what the side-by-side cutover looks like, and what open product/infra questions remain. The steady-state operator runbook is split out into [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) (we write it after we've done the work).
+**Server / admin:** Cloudron admin access on `my.medlab.host` granted. Scope of this ticket is the **handoff doc + cutover plan** — exactly what's in place, what the side-by-side cutover looks like, and closed product/infra decisions. The steady-state operator runbook is [`ops-runbook.md`](ops-runbook.md) ([CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) — **Done**).
 
-**Goal:** Short doc that captures (a) granted access + auto-injected vs. manually-set env vars + platform settings, (b) the side-by-side → apex cutover plan with the legacy `communityrule.info` service, and (c) the remaining open questions (apex vs. permanent-subdomain final URL, legacy `rules` data communication, container registry choice).
+**Goal:** Short doc that captures (a) granted access + auto-injected vs. manually-set env vars + platform settings, (b) the side-by-side → apex cutover plan with the legacy `communityrule.info` service, and (c) closed product/infra decisions (final URL, legacy rules archive, container registry).
 
 **Platform context:** Target is **Cloudron at MEDLab** (`my.medlab.host`). The legacy `communityrule.info` is a single Cloudron **LAMP** app (`lamp.cloudronapp.php74@5.1.2`, 512 MiB at apex) hosting **three things stuffed into one container** under `/app/data/public/`: the static marketing site, the Express/MySQL backend at [`CommunityRule/CommunityRuleBackend`](https://git.medlab.host/CommunityRule/CommunityRuleBackend) (kept alive by a 30-min `run.sh` watchdog on port 3000; MySQL is the LAMP package's bundled MySQL, not a Cloudron addon), and the Flask chatbot at [`CommunityRule/CommunityRuleChatBot`](https://git.medlab.host/CommunityRule/CommunityRuleChatBot) (currently crash-looping with `ModuleNotFoundError`, last touched May 2024). New app is a properly packaged Cloudron app (Docker image + `CloudronManifest.json`, **postgresql + sendmail + localstorage** addons) and replaces all three — **no data migration**. Cloudron's container supervisor replaces the watchdog.
 
@@ -646,7 +646,7 @@ _Section B — Final Review screen `+` button per category:_
    - **§3 Env vars** split into Cloudron auto-injected (`CLOUDRON_POSTGRESQL_URL`, `CLOUDRON_MAIL_SMTP_*`) vs. manually-set (`SESSION_SECRET`, `SMTP_FROM`, `NEXT_PUBLIC_ENABLE_BACKEND_SYNC`). Notes that addons are manifest-declared, not platform-enabled, and that platform mail is SES-relayed on `communityrule.info` with custom-from allowed.
    - **§4 Platform settings** (`httpPort: 3000`, `healthCheckPath: /api/health`, 512 MiB to start, automatic backups already on).
    - **§5 Cutover plan** — staging at `staging.communityrule.info`, soft-launch, apex cutover at scheduled low-traffic window (~5–15 min downtime).
-   - **§6 Open questions** — apex vs. permanent subdomain final URL; legacy `rules` data communication; container registry choice.
+   - **§6 Decisions** — final URL (`communityrule.info` apex); legacy `rules` export to Gitea archive (§6.1); container registry (Gitea, done).
    - **§7 Old vs new deltas** (LAMP-package detail, watchdog, OTP→magic link, sender, API surface, chatbot).
    - **§8 Follow-up tickets** (the six tickets below).
 2. Cross-links: [`docs/guides/backend-roadmap.md`](backend-roadmap.md) §11 (environments — names Cloudron at MEDLab) and §8 (migrations policy — never rewrite applied migrations).
@@ -656,7 +656,7 @@ _Section B — Final Review screen `+` button per category:_
 - [x] Admin handoff covers exactly the access that was needed (most self-serve via Cloudron admin login).
 - [x] Cutover plan is side-by-side and explicitly avoids in-place apex replacement.
 - [x] Six follow-up tickets enumerated and linked, with CR-99 + CR-101 scope corrected to reflect that legacy is one LAMP slot containing marketing + backend + chatbot (all retire together).
-- [x] Open product/infra questions surfaced rather than assumed.
+- [x] Closed product/infra decisions documented (§6 + §6.1).
 
 **Files:** [`docs/guides/ops-backend-deploy.md`](ops-backend-deploy.md), [`docs/guides/backend-roadmap.md`](backend-roadmap.md), [`docs/README.md`](../README.md), [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
@@ -672,9 +672,9 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 | 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | `[Backend] Container image registry: choose, build, push` | **Done** — first image `0.1.0` verified |
 | 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | `[Backend] Cloudron staging install + smoke` | Cloudron CLI token (§2) — **next** |
 | 4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | `[Backend] Cloudron production install + apex cutover` | CR-98 green for the agreed overlap window |
-| 5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | `[Backend] Steady-state operator runbook` | CR-98 (write what we actually did) |
+| 5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | `[Backend] Steady-state operator runbook` | **Done** — [ops-runbook.md](ops-runbook.md) |
 | 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | `[Backend] Decommission legacy CommunityRule LAMP app` | CR-99 + sign-off window |
-| 7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | `[Backend] Decide fate of legacy rules table (read-only export?)` | must resolve before CR-99 maintenance window |
+| 7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | `[Backend] Legacy rules archive export` | execute during CR-99 window (§6.1) |
 
 ### PR plan (CR-96 – CR-102)
 
@@ -684,16 +684,16 @@ All six are titled `[Backend] …`, assigned to Vinod, in the **community-rule**
 | ----- | ------ | ---------------- | ---- | ------ | ---------- |
 | 1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names) | `adilallo/Backend/BridgeCloudronEnv` — *[Backend] Cloudron-native environment variables* | repo | **Done** | — |
 | 2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push) | Container registry packaging + `docker-release.sh` | repo | **Done** | — |
-| — | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | TBD — optional repo PR if export tooling/docs needed | product / repo | **Parallel** | row count from legacy MySQL (pre–CR-99 backup) |
+| — | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export) | — (ops during CR-99; [ops-backend-deploy.md §6.1](ops-backend-deploy.md#61-legacy-rules-archive-cr-102)) | ops | **Parallel** | CR-99 window |
 | 3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke) | — (ops checklist; [ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98)) | ops | **Next** | Cloudron CLI token only |
-| 4 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | TBD — `docs/guides/ops-runbook.md` | docs | Backlog | CR-98 (write what we actually did) |
-| 5 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | — (ops; maintenance window) | ops | Backlog | CR-98 green + CR-102 resolved |
+| 4 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook) | [`ops-runbook.md`](ops-runbook.md) | docs | **Done** | — |
+| 5 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover) | — (ops; maintenance window + §6.1 export) | ops | Backlog | CR-98 green |
 | 6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app) | — (ops; uninstall LAMP slot) | ops | Backlog | CR-99 + sign-off window |
 
 **What's next:** **CR-98** — staging install + smoke at `staging.communityrule.info`
 ([ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98)).
-Start **CR-102** product decision in parallel so it is resolved before the CR-99
-cutover window.
+**CR-102** (legacy rules Gitea export) runs during the CR-99 cutover window
+([§6.1](ops-backend-deploy.md#61-legacy-rules-archive-cr-102)).
 
 **Per-ticket detail:**
 
@@ -705,7 +705,7 @@ cutover window.
    - **Configure:** `SESSION_SECRET`, `SMTP_FROM`, `NEXT_PUBLIC_ENABLE_BACKEND_SYNC=true`, `UPLOAD_ROOT=/app/data/uploads`.
    - **Acceptance:** `GET /api/health` → `{"ok":true,"database":"connected"}`; magic-link sign-in end-to-end; publish a rule succeeds.
 4. **Cloudron production install + DNS cutover.** Acceptance: production subdomain resolves to the new app; old subdomain still works during overlap; sign-in + publish succeed against production; backups confirmed.
-5. **Steady-state operator runbook.** Lives at `docs/guides/ops-runbook.md` (sibling to the handoff). Covers deploy a new version, rollback, restore drill cadence, multi-instance limitations from [`backend-roadmap.md`](backend-roadmap.md) §5/§7. Acceptance: a fresh reader can deploy + roll back using only this doc.
+5. **Steady-state operator runbook.** **Done** — [`docs/guides/ops-runbook.md`](ops-runbook.md). Covers deploy, rollback, restore drill, single-instance limits.
 6. **Decommission legacy Express/MySQL backend.** Acceptance: old Cloudron app stopped + uninstalled; old MySQL addon backed up once and removed; legacy Gitea repo README updated to point at this app. Priority: Low.
 
 ---
@@ -848,10 +848,10 @@ Tickets **10–11** can be deferred without blocking the core “auth + drafts +
 |       12.1 | [CR-96](https://linear.app/community-rule/issue/CR-96/backend-bridge-cloudron-env-vars-to-canonical-names)                 | Cloudron-native env vars | **Done** |
 |       12.2 | [CR-97](https://linear.app/community-rule/issue/CR-97/backend-container-image-registry-choose-build-push)                  | Container image registry + CI | **Done** — image `0.1.0` |
 |       12.3 | [CR-98](https://linear.app/community-rule/issue/CR-98/backend-cloudron-staging-install-smoke)                              | Cloudron staging install + smoke | **Next** — [ops-backend-deploy.md §10](ops-backend-deploy.md#10-staging-install--smoke-cr-98) |
-|       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)                    | Production install + apex cutover | Ops — after CR-98 + CR-102 |
-|       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | Steady-state operator runbook | Docs PR — after CR-98 |
+|       12.4 | [CR-99](https://linear.app/community-rule/issue/CR-99/backend-cloudron-production-install-apex-cutover)                    | Production install + apex cutover | Ops — after CR-98; includes §6.1 export |
+|       12.5 | [CR-100](https://linear.app/community-rule/issue/CR-100/backend-steady-state-operator-runbook)                             | Steady-state operator runbook | **Done** — [ops-runbook.md](ops-runbook.md) |
 |       12.6 | [CR-101](https://linear.app/community-rule/issue/CR-101/backend-decommission-legacy-communityrule-lamp-app)                | Decommission legacy LAMP app | Ops — after CR-99 + sign-off |
-|       12.7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export)        | Legacy `rules` table fate / export | **Parallel** — before CR-99 |
+|       12.7 | [CR-102](https://linear.app/community-rule/issue/CR-102/backend-decide-fate-of-legacy-rules-table-read-only-export)        | Legacy rules Gitea archive export | Ops — during CR-99 window (§6.1) |
 |         13 | [CR-84](https://linear.app/community-rule/issue/CR-84/backend-api-error-contract-request-id-logging)                        | API errors + request-id logging         | — |
 |         14 | [CR-85](https://linear.app/community-rule/issue/CR-85/backend-custom-session-lifecycle-cleanup-invalidation-policy)         | Session lifecycle + cleanup **Done**    | — |
 |         15 | [CR-86](https://linear.app/community-rule/issue/CR-86/backend-profile-dashboard-account-figma-profile)                      | Profile + account (Figma 22143:900069)  | — |

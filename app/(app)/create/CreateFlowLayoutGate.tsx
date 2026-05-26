@@ -1,28 +1,12 @@
-"use client";
-
-import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
-import { useTranslation } from "../../contexts/MessagesContext";
+import CreateFlowLayoutClient from "./CreateFlowLayoutClient";
 
-function CreateFlowLayoutLoading() {
-  const t = useTranslation("controlsChrome");
-  return (
-    <div
-      className="flex h-screen min-h-0 flex-col overflow-hidden bg-black"
-      aria-busy="true"
-      aria-label={t("loadingCreateFlow")}
-    />
-  );
-}
-
-const CreateFlowLayoutClient = dynamic(
-  () => import("./CreateFlowLayoutClient"),
-  {
-    ssr: false,
-    loading: () => <CreateFlowLayoutLoading />,
-  },
-);
-
+/**
+ * Server-renders the create-flow chrome shell so users see real layout instead
+ * of a black `aria-busy` div while the client bundle hydrates. The provider
+ * inside `CreateFlowLayoutClient` defers `localStorage` reads to a mount-once
+ * effect so SSR + first client render align.
+ */
 export default function CreateFlowLayoutGate({
   children,
 }: {

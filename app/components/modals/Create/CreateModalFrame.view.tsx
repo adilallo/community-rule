@@ -22,6 +22,8 @@ export type CreateModalFrameViewProps = {
   overlayRef: RefObject<HTMLDivElement | null>;
   dialogRef: RefObject<HTMLDivElement | null>;
   children: ReactNode;
+  /** Rendered below the dialog card on the backdrop (e.g. “Back to home”). */
+  belowCard?: ReactNode;
 };
 
 /**
@@ -37,28 +39,34 @@ export function CreateModalFrameView({
   overlayRef,
   dialogRef,
   children,
+  belowCard,
 }: CreateModalFrameViewProps) {
   if (!isOpen) return null;
 
   const content = (
-    <>
-      <div
-        ref={overlayRef}
-        className={backdropOverlayClasses[backdropVariant]}
-        onClick={onOverlayClick}
-        aria-hidden="true"
-      />
+    <div
+      ref={overlayRef}
+      className={`${backdropOverlayClasses[backdropVariant]} flex flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8`}
+      onClick={onOverlayClick}
+      role="presentation"
+    >
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
-        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[var(--color-surface-default-primary)] rounded-[var(--radius-500,20px)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] w-[560px] max-h-[90vh] flex min-h-0 flex-col overflow-hidden z-[9999] ${className}`}
+        className={`flex min-h-0 max-h-[90vh] w-full max-w-[560px] shrink-0 flex-col overflow-hidden rounded-[var(--radius-500,20px)] bg-[var(--color-surface-default-primary)] shadow-[0px_0px_48px_0px_rgba(0,0,0,0.1)] z-[9999] ${className}`}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
-    </>
+      {belowCard ? (
+        <div className="shrink-0" onClick={(e) => e.stopPropagation()}>
+          {belowCard}
+        </div>
+      ) : null}
+    </div>
   );
 
   if (typeof window !== "undefined") {

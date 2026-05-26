@@ -23,7 +23,7 @@ import {
 import type { CreateFlowStep } from "../create/types";
 import { clearAnonymousCreateFlowStorage } from "../create/utils/anonymousDraftStorage";
 import { clearCoreValueDetailsLocalStorage } from "../create/utils/coreValueDetailsLocalStorage";
-import { prepareFreshCreateFlowEntry } from "../create/utils/prepareFreshCreateFlowEntry";
+import { prepareFreshCreateFlowEntrySync } from "../create/utils/prepareFreshCreateFlowEntry";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import {
   ProfilePageSignedOutView,
@@ -253,10 +253,8 @@ export default function ProfilePageClient() {
   }, [draft, router]);
 
   const handleStartNewCustomRule = useCallback(() => {
-    void (async () => {
-      await prepareFreshCreateFlowEntry();
-      router.push("/create");
-    })();
+    prepareFreshCreateFlowEntrySync({ signedIn: true });
+    router.push("/create/informational");
   }, [router]);
 
   const handleRequestDeleteDraft = useCallback(() => {

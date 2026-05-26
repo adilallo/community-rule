@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Create from "../Create";
 import TextInput from "../../controls/TextInput";
 import TextArea from "../../controls/TextArea";
@@ -72,6 +73,15 @@ export function AskOrganizerInquiryModalView({
       ariaLabel={copy.ariaDialog}
       footerContent={footer}
       footerClassName="!h-auto min-h-[112px] shrink-0 flex flex-col justify-end pb-8 pt-3 px-4"
+      belowCard={
+        <Link
+          href="/"
+          className="font-inter font-normal text-[14px] leading-[20px] text-[var(--color-content-invert-tertiary,#2d2d2d)] text-center hover:opacity-90"
+          onClick={() => onClose()}
+        >
+          {copy.backToHome}
+        </Link>
+      }
     >
       {success ? (
         <div className="flex flex-col gap-3 py-2">

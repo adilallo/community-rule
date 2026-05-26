@@ -134,12 +134,16 @@ describe("User Journey Integration", () => {
     const blueskyLink = screen.getByRole("link", {
       name: "Follow us on Bluesky",
     });
-    const gitlabLink = screen.getByRole("link", {
-      name: "Follow us on GitLab",
+    const giteaLink = screen.getByRole("link", {
+      name: "View source on Gitea",
+    });
+    const mastodonLink = screen.getByRole("link", {
+      name: "Follow us on Mastodon",
     });
 
     expect(blueskyLink).toBeInTheDocument();
-    expect(gitlabLink).toBeInTheDocument();
+    expect(giteaLink).toBeInTheDocument();
+    expect(mastodonLink).toBeInTheDocument();
   });
 
   test("user explores features and benefits", async () => {
@@ -179,9 +183,11 @@ describe("User Journey Integration", () => {
     });
 
     const blueskyLink = screen.getByRole("link", { name: /Bluesky/i });
-    const gitlabLink = screen.getByRole("link", { name: /GitLab/i });
+    const giteaLink = screen.getByRole("link", { name: /Gitea/i });
+    const mastodonLink = screen.getByRole("link", { name: /Mastodon/i });
     expect(blueskyLink).toBeInTheDocument();
-    expect(gitlabLink).toBeInTheDocument();
+    expect(giteaLink).toBeInTheDocument();
+    expect(mastodonLink).toBeInTheDocument();
   });
 
   test("user completes the full journey from discovery to action", async () => {

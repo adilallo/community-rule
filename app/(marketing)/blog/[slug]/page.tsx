@@ -126,7 +126,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     headline: post.frontmatter.title,
     description: post.frontmatter.description,
     author: {
-      "@type": "Person",
+      "@type": "Organization",
       name: post.frontmatter.author,
     },
     publisher: {

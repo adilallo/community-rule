@@ -222,10 +222,15 @@ export const Interactive = {
       });
       await userEvent.click(blueskyLink);
 
-      const gitlabLink = canvas.getByRole("link", {
-        name: /follow us on gitlab/i,
+      const giteaLink = canvas.getByRole("link", {
+        name: /view source on gitea/i,
       });
-      await userEvent.click(gitlabLink);
+      await userEvent.click(giteaLink);
+
+      const mastodonLink = canvas.getByRole("link", {
+        name: /follow us on mastodon/i,
+      });
+      await userEvent.click(mastodonLink);
     });
   },
 };
@@ -264,10 +269,15 @@ export const HoverStates = {
       await userEvent.hover(blueskyLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      const gitlabLink = canvas.getByRole("link", {
-        name: /follow us on gitlab/i,
+      const giteaLink = canvas.getByRole("link", {
+        name: /view source on gitea/i,
       });
-      await userEvent.hover(gitlabLink);
+      await userEvent.hover(giteaLink);
+
+      const mastodonLink = canvas.getByRole("link", {
+        name: /follow us on mastodon/i,
+      });
+      await userEvent.hover(mastodonLink);
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
   },

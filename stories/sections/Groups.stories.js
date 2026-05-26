@@ -20,7 +20,7 @@ const sampleItems = [
         width={36}
       />
     ),
-    title: "Worker's cooperatives",
+    title: "Worker cooperatives",
     description:
       "Employee-owned businesses often need to clarify how power is shared, decisions are made, and how processes operate within their organizations.",
   },

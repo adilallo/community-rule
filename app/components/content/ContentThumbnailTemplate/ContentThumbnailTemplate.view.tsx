@@ -9,7 +9,41 @@ function ContentThumbnailTemplateView({
   variant,
   sizing,
   backgroundImage,
+  backgroundImageSmd,
 }: ContentThumbnailTemplateViewProps) {
+  if (variant === "responsive") {
+    // Single card; <picture> swaps the orientation-specific image at smd
+    // (530px), aspect-ratio and content positioning switch via Tailwind.
+    return (
+      <Link
+        href={`/blog/${post.slug}`}
+        className={`group block w-full transition-transform duration-200 hover:scale-[1.02] ${className}`}
+      >
+        <div className="relative aspect-[320/225.5] w-full overflow-hidden smd:aspect-[260/390]">
+          <div className="absolute inset-0 z-0">
+            <picture>
+              {backgroundImageSmd ? (
+                <source
+                  media="(min-width: 530px)"
+                  srcSet={backgroundImageSmd}
+                />
+              ) : null}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={backgroundImage}
+                alt=""
+                className="pointer-events-none size-full object-cover"
+              />
+            </picture>
+          </div>
+          <div className="absolute left-[4.375%] top-[6.099%] z-20 w-[71.875%] smd:left-[6.923%] smd:top-[4.615%] smd:w-[76.923%]">
+            <ContentContainer post={post} size="xs" />
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
   if (variant === "vertical") {
     if (sizing === "fixed") {
       return (

@@ -11,7 +11,8 @@
   },
   "ariaLabels": {
     "followBluesky": "Follow us on Bluesky",
-    "followGitlab": "Follow us on GitLab",
+    "viewSourceGitea": "View source on Gitea",
+    "followMastodon": "Follow us on Mastodon",
     "featureToolsAndServices": "Feature tools and services",
     "askOrganizerContact": "Ask an organizer - Contact an organizer for help"
   }

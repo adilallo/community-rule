@@ -22,7 +22,7 @@ describe("TripleTextBlock", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Stacked headline" }),
+      screen.getByRole("heading", { level: 3, name: "Stacked headline" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Wide headline" }),
@@ -44,9 +44,32 @@ describe("TripleTextBlock", () => {
     );
 
     expect(screen.getAllByRole("heading", { name: "Only headline" })).toHaveLength(
-      1,
+      2,
     );
-    expect(screen.getByText("Only body.")).toBeInTheDocument();
+    const stackedHeading = screen.getByRole("heading", {
+      level: 3,
+      name: "Only headline",
+    });
+    expect(stackedHeading).toHaveClass("text-[24px]");
+    expect(screen.getAllByText("Only body.")).toHaveLength(2);
+  });
+
+  it("default preset uses use-cases-matched baseline horizontal padding", () => {
+    const { container } = render(
+      <TripleTextBlock
+        columns={[
+          {
+            title: "Only headline",
+            description: "Only body.",
+          },
+        ]}
+      />,
+    );
+
+    const section = container.querySelector("section");
+    expect(section).toBeTruthy();
+    expect(section).toHaveClass("px-[var(--spacing-scale-032)]");
+    expect(section).not.toHaveClass("px-[calc(var(--spacing-scale-032)+var(--spacing-scale-096))]");
   });
 
   it("useCases preset renders persistent section heading, column h3 titles, dual paragraphs, outline CTA", () => {

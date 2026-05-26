@@ -166,6 +166,30 @@ describe("MultiSelect – behaviour specifics", () => {
     expect(handleConfirm).toHaveBeenCalledWith("custom-1", "NewOption");
   });
 
+  it("allows spaces in custom chip labels", async () => {
+    const handleConfirm = vi.fn();
+    const customOptions = [
+      { id: "custom-1", label: "", state: "custom" as const },
+    ];
+    render(
+      <MultiSelect
+        options={customOptions}
+        onCustomChipConfirm={handleConfirm}
+      />,
+    );
+
+    const input = screen.getByPlaceholderText("Type to add");
+    await userEvent.type(input, "Mutual aid network");
+
+    const checkButton = screen.getByRole("button", { name: "Confirm" });
+    await userEvent.click(checkButton);
+
+    expect(handleConfirm).toHaveBeenCalledWith(
+      "custom-1",
+      "Mutual aid network",
+    );
+  });
+
   it("handles custom chip close", async () => {
     const handleClose = vi.fn();
     const customOptions = [

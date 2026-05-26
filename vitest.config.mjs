@@ -13,6 +13,33 @@ export default defineConfig({
         }
       },
     },
+    // Stub .svg imports as inert React components so SVGR-style imports
+    // (`import Foo from "./foo.svg"; <Foo />`) work without webpack/turbopack.
+    // `enforce: "pre"` so we run before Vite's default asset handler that would
+    // otherwise return the URL string.
+    {
+      name: "svg-mock",
+      enforce: "pre",
+      async resolveId(source, importer) {
+        if (!source.endsWith(".svg")) return null;
+        const resolved = await this.resolve(source, importer, {
+          skipSelf: true,
+        });
+        if (!resolved) return null;
+        return { ...resolved, id: `${resolved.id}?svg-mock` };
+      },
+      load(id) {
+        if (id.endsWith(".svg?svg-mock")) {
+          return `import * as React from "react";
+const SvgMock = React.forwardRef(function SvgMock(props, ref) {
+  return React.createElement("svg", { ref, ...props });
+});
+export default SvgMock;
+export const ReactComponent = SvgMock;
+`;
+        }
+      },
+    },
   ],
   esbuild: {
     target: "node18",

@@ -1,5 +1,9 @@
 import dynamic from "next/dynamic";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+import MarketingNavigation from "../components/navigation/MarketingNavigation";
+import { MessagesProvider } from "../contexts/MessagesContext";
+import { AuthModalProvider } from "../contexts/AuthModalContext";
+import marketingMessages from "../../messages/en/marketing";
 
 // Site footer is part of the public marketing chrome only — not rendered for
 // signed-in product surfaces, admin dashboards, or dev previews. See
@@ -13,9 +17,19 @@ const Footer = dynamic(() => import("../components/navigation/Footer"), {
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
-    <>
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </>
+    <MessagesProvider messages={marketingMessages}>
+      <AuthModalProvider>
+        {/*
+         * MarketingNavigation reads `usePathname()` to decide chromeless paths
+         * (uncached data under `cacheComponents`). Suspense lets the static
+         * shell prerender; the nav streams in with the correct visibility.
+         */}
+        <Suspense fallback={null}>
+          <MarketingNavigation />
+        </Suspense>
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </AuthModalProvider>
+    </MessagesProvider>
   );
 }

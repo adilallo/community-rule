@@ -13,9 +13,9 @@ export default {
 
 - **Mobile**: 3 rows × 2 columns grid with 32px gaps
 - **SM**: 2 rows × 3 columns grid with 48px row gap and 32px column gap
-- **MD**: Single row with space-between layout and 24px gap between text and logos
+- **MD+**: Centered flex-wrap row of logos
 - **LG**: Larger logo sizes and 64px horizontal padding
-- **XL**: Largest logo sizes, 160px horizontal padding, and 14px label text
+- **XL**: Largest logo sizes and 160px horizontal padding
 
 ## Animations & Transitions
 
@@ -28,7 +28,7 @@ export default {
 
 ## Props
 
-- **logos** (optional): Array of logo objects with src, alt, size, and order properties. If not provided, uses default partner logos.
+- **logos** (optional): Array of logo objects with src, alt, and size properties. If not provided, uses default partner logos.
 
 ## Usage Examples
 
@@ -40,13 +40,11 @@ export default {
       src: "assets/logos/partners/cu-boulder.svg", 
       alt: "CU Boulder",
       size: "h-10 lg:h-12 xl:h-[60px]",
-      order: "order-1 sm:order-2"
     },
     { 
       src: "assets/logos/partners/food-not-bombs.svg", 
       alt: "Food Not Bombs",
       size: "h-11 lg:h-14 xl:h-[70px]",
-      order: "order-2 sm:order-1"
     }
   ]} 
 />
@@ -65,7 +63,7 @@ This will fall back to the default partner logos.`,
     logos: {
       control: "object",
       description:
-        "Array of logo objects with src, alt, size, and order properties. If not provided, uses default partner logos.",
+        "Array of logo objects with src, alt, and size properties. If not provided, uses default partner logos.",
     },
   },
 };

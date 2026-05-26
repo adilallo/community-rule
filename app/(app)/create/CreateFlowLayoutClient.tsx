@@ -12,6 +12,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CreateFlowProvider, useCreateFlow } from "./context/CreateFlowContext";
 import { useCreateFlowNavigation } from "./hooks/useCreateFlowNavigation";
 import { useCreateFlowExit } from "./hooks/useCreateFlowExit";
+import { usePrefetchMethodFacetRecommendations } from "./hooks/usePrefetchMethodFacetRecommendations";
 import { useCreateFlowFinalize } from "./hooks/useCreateFlowFinalize";
 import { useTemplateReviewActions } from "./hooks/useTemplateReviewActions";
 import { useCompletedRuleShareExport } from "./hooks/useCompletedRuleShareExport";
@@ -167,6 +168,7 @@ function CreateFlowLayoutContent({
     replaceState,
     markCreateFlowInteraction,
   } = useCreateFlow();
+  usePrefetchMethodFacetRecommendations();
   const manageStakeholdersIntent =
     searchParams?.get(CREATE_FLOW_MANAGE_STAKEHOLDERS_QUERY) ===
     CREATE_FLOW_MANAGE_STAKEHOLDERS_VALUE;
@@ -692,7 +694,7 @@ function CreateFlowLayoutContent({
         }`.trim()}
       />
       <main
-        className={`flex min-h-0 flex-1 w-full ${mainContentClass} ${mainResponsiveLayout}`}
+        className={`flex min-h-0 min-w-0 flex-1 w-full max-w-full overflow-x-hidden ${mainContentClass} ${mainResponsiveLayout}`}
       >
         {children}
       </main>

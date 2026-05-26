@@ -23,7 +23,7 @@ All three retire together when the new app goes live. The chatbot is **not** bei
 ## What does NOT carry over
 
 - **No user accounts.** New sign-ins start fresh.
-- **No published rules from the old database.** We'll count the existing `rules` table before cutover and decide whether to publish a read-only archive (CSV/JSON) somewhere for anyone looking for their old work.
+- **No published rules from the old database.** Pre-cutover rules are exported to a read-only Gitea archive (`CommunityRule/legacy-rules-archive` on `git.medlab.host`); they are not imported into the new app. See [`docs/guides/ops-backend-deploy.md`](guides/ops-backend-deploy.md) §6.1.
 - **No chatbot.**
 
 ## How the cutover will work
@@ -35,7 +35,7 @@ until the new one is verified.
    `staging.communityrule.info` (auto-provisioned by Cloudron). Legacy app at the apex is not touched. Quiet testing within MEDLab/stakeholders.
 2. **Cutover phase.** When staging is green and we're ready, schedule a low-traffic window. During the window (roughly 5–15 minutes of apex downtime):
    - Take a final backup of the legacy app (Cloudron one-click).
-   - Pull a copy of the legacy `rules` table if we decided to publish an archive.
+   - Export the legacy `rules` + `version_history` tables to the Gitea archive (see ops-backend-deploy §6.1).
    - Uninstall the legacy app at the apex `communityrule.info`.
    - Move the new app to the apex.
    - Smoke-test, confirm backups are on, done.
@@ -53,6 +53,7 @@ Roughly this order:
 3. **Install at staging** subdomain, smoke test, soft launch (CR-98).
 4. **Apex cutover window** — the brief downtime above.
 5. **Uninstall legacy**, archive legacy repos.
-6. **Write the steady-state runbook** based on what actually worked.
+6. ~~**Write the steady-state runbook** based on what actually worked
+   ([`ops-runbook.md`](guides/ops-runbook.md), CR-100).~~ **Done.**
 
 Staging should be ready to deploy in 1-2 weeks, and we can go from there.

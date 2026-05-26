@@ -53,6 +53,16 @@ describe("Button (behavioral tests)", () => {
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
+  it("uses fast transitions and touch-friendly press feedback", () => {
+    render(<Button buttonType="filled">Press me</Button>);
+
+    const button = screen.getByRole("button", { name: "Press me" });
+    expect(button.className).toContain("touch-manipulation");
+    expect(button.className).toContain("duration-150");
+    expect(button.className).not.toContain("duration-500");
+    expect(button.className).toContain("active:scale-[0.98]");
+  });
+
   it("renders as a link when href is provided", () => {
     render(
       <Button href="/learn" buttonType="filled" palette="default">

@@ -5,18 +5,91 @@ import { clearCoreValueDetailsLocalStorage } from "./coreValueDetailsLocalStorag
 import { isBackendSyncEnabled } from "../../../../lib/create/backendSyncEnabled";
 
 /**
+ * Sentinel set on click and cleared once the in-flight DELETE settles. Read by
+ * {@link SignedInDraftHydration} so it skips the server draft fetch while the
+ * fresh-entry cleanup is racing the user's first paint of `/create`.
+ */
+export const FRESH_ENTRY_PENDING_KEY = "create:fresh-entry-pending";
+
+export type PrepareFreshCreateFlowEntryOptions = {
+  /**
+   * When `true`, and backend sync is on, also `DELETE /api/drafts/me`.
+   * Omit or pass `false` for guests — they have no server draft to clear.
+   */
+  signedIn?: boolean;
+};
+
+export function hasFreshEntryPending(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.sessionStorage.getItem(FRESH_ENTRY_PENDING_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function setFreshEntryPending(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(FRESH_ENTRY_PENDING_KEY, "1");
+  } catch {
+    /* ignore — sessionStorage may be unavailable */
+  }
+}
+
+function clearFreshEntryPending(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(FRESH_ENTRY_PENDING_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearServerDraftWhenSignedIn(signedIn: boolean): void {
+  if (!signedIn || !isBackendSyncEnabled()) return;
+  setFreshEntryPending();
+  void deleteServerDraft().finally(clearFreshEntryPending);
+}
+
+/**
  * Call **before** navigating into `/create` from marketing or profile “new rule”
  * entry points so signed-in + sync matches an anonymous fresh start: wipe
- * `localStorage` draft keys and, when sync is on, `DELETE /api/drafts/me`.
- * Anonymous `DELETE` is harmless (401). Await ensures the server draft is gone
- * before mount so {@link SignedInDraftHydration} does not rehydrate stale work.
+ * `localStorage` draft keys and, when sync is on and the user is signed in,
+ * `DELETE /api/drafts/me`.
+ *
+ * Synchronous variant: returns immediately after clearing local state and
+ * scheduling the server draft delete in the background. Sets a sessionStorage
+ * sentinel that {@link SignedInDraftHydration} checks before fetching, so the
+ * brief race window does not hydrate from a not-yet-deleted server draft.
  *
  * Do **not** use for “Continue draft” — that path should load the server draft.
  */
-export async function prepareFreshCreateFlowEntry(): Promise<void> {
+export function prepareFreshCreateFlowEntrySync(
+  options: PrepareFreshCreateFlowEntryOptions = {},
+): void {
+  const signedIn = options.signedIn === true;
   clearAnonymousCreateFlowStorage();
   clearCoreValueDetailsLocalStorage();
-  if (isBackendSyncEnabled()) {
+  clearServerDraftWhenSignedIn(signedIn);
+}
+
+/**
+ * Awaitable variant kept for callers that genuinely need the DELETE to settle
+ * before continuing (e.g. tests, programmatic reset flows). Most click handlers
+ * should use {@link prepareFreshCreateFlowEntrySync} for instant navigation.
+ */
+export async function prepareFreshCreateFlowEntry(
+  options: PrepareFreshCreateFlowEntryOptions = {},
+): Promise<void> {
+  const signedIn = options.signedIn === true;
+  clearAnonymousCreateFlowStorage();
+  clearCoreValueDetailsLocalStorage();
+  if (!signedIn || !isBackendSyncEnabled()) return;
+  setFreshEntryPending();
+  try {
     await deleteServerDraft();
+  } finally {
+    clearFreshEntryPending();
   }
 }

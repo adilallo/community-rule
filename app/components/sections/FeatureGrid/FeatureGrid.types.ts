@@ -13,7 +13,6 @@ export interface Feature {
   panelHeight: number;
   panelImageClassName?: string;
   ariaLabel: string;
-  href: string;
 }
 
 export interface FeatureGridViewProps extends FeatureGridProps {

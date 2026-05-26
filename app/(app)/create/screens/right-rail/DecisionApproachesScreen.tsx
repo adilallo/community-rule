@@ -108,7 +108,8 @@ export function DecisionApproachesScreen() {
     [da.methods, selectedIds, state.customMethodCardMetaById],
   );
 
-  const { sampleCards, compactCardIds, methodById } = useMethodCardDeckOrdering(
+  const { sampleCards, compactCardIds, methodById, recommendationsReady } =
+    useMethodCardDeckOrdering(
     "decisionApproaches",
     mergedMethods,
     selectedIds,
@@ -761,36 +762,41 @@ export function DecisionApproachesScreen() {
         </div>
       }
     >
-      <div className="flex w-full min-w-0 flex-col items-stretch gap-6 py-0">
-        <CardStack
-          cards={sampleCards}
-          selectedIds={selectedIds}
-          onCardSelect={handleCardSelect}
-          expanded={expanded}
-          onToggleExpand={handleToggleExpand}
-          hasMore={true}
-          toggleLabel={da.cardStack.toggleSeeAll}
-          showLessLabel={da.cardStack.toggleShowLess}
-          title=""
-          description={
-            expanded ? (
-              <>
-                {da.cardStack.expandedStackDescriptionBefore}
-                <InlineTextButton onClick={handleOpenAddWizard}>
-                  {da.sidebar.descriptionLinkLabel}
-                </InlineTextButton>
-                {da.cardStack.expandedStackDescriptionAfter}
-              </>
-            ) : (
-              ""
-            )
-          }
-          layout="singleStack"
-          compactRecommendedLimit={5}
-          compactCardIds={compactCardIds}
-          className="w-full"
-          headerLockupSize={mdUp ? "L" : "M"}
-        />
+      <div
+        className="flex w-full min-w-0 flex-col items-stretch gap-6 py-0"
+        aria-busy={!recommendationsReady}
+      >
+        {recommendationsReady && (
+          <CardStack
+            cards={sampleCards}
+            selectedIds={selectedIds}
+            onCardSelect={handleCardSelect}
+            expanded={expanded}
+            onToggleExpand={handleToggleExpand}
+            hasMore={true}
+            toggleLabel={da.cardStack.toggleSeeAll}
+            showLessLabel={da.cardStack.toggleShowLess}
+            title=""
+            description={
+              expanded ? (
+                <>
+                  {da.cardStack.expandedStackDescriptionBefore}
+                  <InlineTextButton onClick={handleOpenAddWizard}>
+                    {da.sidebar.descriptionLinkLabel}
+                  </InlineTextButton>
+                  {da.cardStack.expandedStackDescriptionAfter}
+                </>
+              ) : (
+                ""
+              )
+            }
+            layout="singleStack"
+            compactRecommendedLimit={5}
+            compactCardIds={compactCardIds}
+            className="w-full"
+            headerLockupSize={mdUp ? "L" : "M"}
+          />
+        )}
       </div>
 
       <Create

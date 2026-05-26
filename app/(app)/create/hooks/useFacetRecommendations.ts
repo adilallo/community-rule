@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { buildFacetQueryString } from "../../../../lib/create/buildFacetQueryString";
 import type { MethodFacetApiSectionId } from "../../../../lib/create/customRuleFacets";
+import {
+  buildFacetRecommendationRequestKey,
+  getCachedFacetScores,
+  loadFacetScores,
+} from "../../../../lib/create/facetRecommendationsLoad";
 import { useCreateFlow } from "../context/CreateFlowContext";
 
 /**
@@ -25,6 +30,34 @@ export type FacetRecommendationsResult = {
 
 const EMPTY_SCORES: Record<string, number> = {};
 
+function initialFacetRecommendationsResult(
+  section: RecommendationSection,
+  queryString: string,
+): FacetRecommendationsResult {
+  const hasAnyFacets = queryString.length > 0;
+  if (!hasAnyFacets) {
+    return {
+      isReady: true,
+      scoresBySlug: EMPTY_SCORES,
+      hasAnyFacets: false,
+    };
+  }
+  const requestKey = buildFacetRecommendationRequestKey(section, queryString);
+  const cached = getCachedFacetScores(requestKey);
+  if (cached) {
+    return {
+      isReady: true,
+      scoresBySlug: cached,
+      hasAnyFacets: true,
+    };
+  }
+  return {
+    isReady: false,
+    scoresBySlug: EMPTY_SCORES,
+    hasAnyFacets: true,
+  };
+}
+
 /**
  * Calls `GET /api/create-flow/methods?section=<section>&facet.*=...` for the
  * card-deck step `section` and returns a `slug → score` map for re-ranking
@@ -46,14 +79,9 @@ export function useFacetRecommendations(
   );
   const hasAnyFacets = queryString.length > 0;
 
-  const [result, setResult] = useState<FacetRecommendationsResult>({
-    isReady: !hasAnyFacets,
-    scoresBySlug: EMPTY_SCORES,
-    hasAnyFacets,
-  });
-
-  // Track the last successful request input so we don't re-fetch on every state poke.
-  const lastQueryRef = useRef<string | null>(null);
+  const [result, setResult] = useState<FacetRecommendationsResult>(() =>
+    initialFacetRecommendationsResult(section, queryString),
+  );
 
   useEffect(() => {
     if (!hasAnyFacets) {
@@ -62,51 +90,34 @@ export function useFacetRecommendations(
         scoresBySlug: EMPTY_SCORES,
         hasAnyFacets: false,
       });
-      lastQueryRef.current = null;
       return;
     }
-    const requestKey = `${section}?${queryString}`;
-    if (lastQueryRef.current === requestKey) return;
-    lastQueryRef.current = requestKey;
 
-    const ctrl = new AbortController();
-    setResult((prev) => ({ ...prev, isReady: false, hasAnyFacets: true }));
-    fetch(`/api/create-flow/methods?section=${section}&${queryString}`, {
-      credentials: "include",
-      signal: ctrl.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`status ${res.status}`);
-        return (await res.json()) as {
-          methods?: { slug: string; matches?: { score?: number } }[];
-        };
-      })
-      .then((json) => {
-        const scoresBySlug: Record<string, number> = {};
-        for (const m of json.methods ?? []) {
-          if (typeof m.slug === "string") {
-            scoresBySlug[m.slug] = m.matches?.score ?? 0;
-          }
-        }
-        setResult({ isReady: true, scoresBySlug, hasAnyFacets: true });
-      })
-      .catch((e) => {
-        if ((e as { name?: string }).name === "AbortError") return;
-        setResult({
-          isReady: true,
-          scoresBySlug: EMPTY_SCORES,
-          hasAnyFacets: true,
-        });
+    const requestKey = buildFacetRecommendationRequestKey(section, queryString);
+    const cached = getCachedFacetScores(requestKey);
+    if (cached) {
+      setResult({
+        isReady: true,
+        scoresBySlug: cached,
+        hasAnyFacets: true,
       });
+      return;
+    }
+
+    let cancelled = false;
+    setResult((prev) =>
+      prev.isReady && prev.hasAnyFacets
+        ? { ...prev, isReady: false }
+        : { isReady: false, scoresBySlug: EMPTY_SCORES, hasAnyFacets: true },
+    );
+
+    void loadFacetScores(section, queryString).then((scoresBySlug) => {
+      if (cancelled) return;
+      setResult({ isReady: true, scoresBySlug, hasAnyFacets: true });
+    });
 
     return () => {
-      ctrl.abort();
-      // Clear the dedup key so React 19 Strict Mode's mount → unmount → mount
-      // cycle (and any future remount) re-issues the request instead of
-      // returning early on the same key.
-      if (lastQueryRef.current === requestKey) {
-        lastQueryRef.current = null;
-      }
+      cancelled = true;
     };
   }, [section, queryString, hasAnyFacets]);
 

@@ -1,10 +1,41 @@
 import createMDX from "@next/mdx";
 
 /* eslint-env node */
+
+/** Keep viewBox and unique clip/mask IDs when multiple SVGR icons share a page. */
+const svgrLoaderOptions = {
+  svgoConfig: {
+    plugins: [
+      {
+        name: "preset-default",
+        params: {
+          overrides: {
+            removeViewBox: false,
+          },
+        },
+      },
+      {
+        name: "prefixIds",
+        params: {
+          prefixClassNames: false,
+        },
+      },
+    ],
+  },
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
   serverExternalPackages: ["@prisma/client"],
+  // React Compiler — annotation mode: opt-in via the `"use memo"` directive at
+  // the top of a component/hook. With no annotations in the codebase yet, this
+  // is plumbing only (no behavior change). Migrate hand-written `useMemo`/
+  // `useCallback` containers incrementally and rely on `eslint-plugin-react-
+  // compiler` to surface any code that the compiler bails on.
+  reactCompiler: {
+    compilationMode: "annotation",
+  },
   /**
    * `next dev --turbopack` does not use `webpack()`; without this, `.svg`
    * imports resolve as asset URLs and {@link app/components/asset/icon/Icon.tsx}
@@ -14,7 +45,12 @@ const nextConfig = {
     rules: {
       "*.svg": {
         condition: { not: "foreign" },
-        loaders: ["@svgr/webpack"],
+        loaders: [
+          {
+            loader: "@svgr/webpack",
+            options: svgrLoaderOptions,
+          },
+        ],
         as: "*.js",
       },
     },
@@ -23,13 +59,20 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ["react", "react-dom"],
+    // Cache Components (the Next 16 successor to `experimental.ppr`) — components
+    // without `"use cache"` are dynamic by default, and any cookies/headers
+    // access outside a `<Suspense>` boundary becomes a build-time error. The
+    // `(app)` and `(admin)` layouts wrap `<ConditionalNavigation />` in
+    // `<Suspense>` so the static shell prerenders while the session-aware nav
+    // streams in. Replaces the prior `force-dynamic` route-segment exports.
+    cacheComponents: true,
   },
   // Compression
   compress: true,
   // Image optimization
   images: {
     formats: ["image/webp", "image/avif"],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
@@ -70,6 +113,18 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Long-cache static marketing art (avatars, vectors, case-study, etc.)
+        // since the file content is hashed into the URL by Next at request time
+        // through the image optimizer for raster, and changes require a deploy.
+        source: "/assets/:path*\\.(svg|png|webp|avif|jpg|jpeg)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
     ];
   },
   webpack(config, { dev, isServer }) {
@@ -77,7 +132,7 @@ const nextConfig = {
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.[jt]sx?$/,
-      use: ["@svgr/webpack"],
+      use: [{ loader: "@svgr/webpack", options: svgrLoaderOptions }],
     });
 
     // Bundle analysis - only in production builds

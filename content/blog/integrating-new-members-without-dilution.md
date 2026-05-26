@@ -1,7 +1,7 @@
 ---
 title: "Integrating New Members Without Dilution"
 description: "How to Bring New People In Without Everything Falling Apart"
-author: "Author name"
+author: "CommunityRule"
 date: "2025-08-05"
 related:
   - "making-decisions-without-hierarchy"
